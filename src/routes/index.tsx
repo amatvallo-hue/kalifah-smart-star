@@ -1,8 +1,11 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { BookOpen, Calculator, Globe, Sparkles, Trophy, Flame, Target, PenLine } from "lucide-react";
+import { createFileRoute, Link, redirect } from "@tanstack/react-router";
+import { BookOpen, Calculator, Globe, Sparkles, Trophy, Flame, Target, PenLine, LogOut } from "lucide-react";
+import { useServerFn } from "@tanstack/react-start";
+import { useRouter } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SubjectCard } from "@/components/SubjectCard";
 import heroKids from "@/assets/hero-kids.png";
+import { getCurrentUser, logoutUser } from "@/lib/auth.functions";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -11,20 +14,39 @@ export const Route = createFileRoute("/")({
       { name: "description", content: "Portal pembelajaran Islamik untuk kanak-kanak Malaysia. Kuiz, latihan dan ganjaran bintang." },
     ],
   }),
+  loader: async () => {
+    const user = await getCurrentUser();
+    if (!user) throw redirect({ to: "/login" });
+    return { user };
+  },
   component: Dashboard,
+  errorComponent: ({ error }) => (
+    <div className="flex min-h-screen items-center justify-center p-6 text-center">
+      <p className="text-destructive">Ralat: {error.message}</p>
+    </div>
+  ),
 });
 
 function Dashboard() {
-  const studentName = "Ahmad";
+  const { user } = Route.useLoaderData();
+  const router = useRouter();
+  const logout = useServerFn(logoutUser);
   const totalStars = 42;
   const streak = 5;
 
+  async function handleLogout() {
+    await logout();
+    await router.invalidate();
+    router.navigate({ to: "/login" });
+  }
+
+  const firstName = user.name.split(" ")[0];
+
   return (
     <div className="min-h-screen bg-background">
-      <SiteHeader stars={totalStars} />
+      <SiteHeader stars={totalStars} userName={firstName} onLogout={handleLogout} />
 
       <main className="container mx-auto px-4 py-8">
-        {/* Hero */}
         <section className="relative overflow-hidden rounded-[2rem] bg-gradient-hero p-6 shadow-card md:p-10">
           <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-gold/20 blur-3xl" />
           <div className="absolute -bottom-10 -left-10 h-40 w-40 rounded-full bg-primary/20 blur-3xl" />
@@ -38,7 +60,7 @@ function Dashboard() {
               <h1 className="mt-4 font-display text-4xl font-extrabold leading-tight text-foreground md:text-5xl">
                 Selamat datang,
                 <br />
-                <span className="text-primary">{studentName}!</span> 🌟
+                <span className="text-primary">{firstName}!</span> 🌟
               </h1>
               <p className="mt-3 max-w-md text-base text-muted-foreground">
                 Hari ini hari yang hebat untuk belajar perkara baru. Mari mulakan pengembaraan kamu!
@@ -59,6 +81,13 @@ function Dashboard() {
                   <PenLine className="h-5 w-5 text-primary" />
                   Latihan Bertulis
                 </Link>
+                <button
+                  onClick={handleLogout}
+                  className="inline-flex items-center gap-2 rounded-full bg-card/60 px-5 py-3 font-display font-extrabold text-muted-foreground shadow-soft transition hover:text-destructive"
+                >
+                  <LogOut className="h-5 w-5" />
+                  Log Keluar
+                </button>
               </div>
             </div>
 
@@ -74,14 +103,12 @@ function Dashboard() {
           </div>
         </section>
 
-        {/* Stats */}
         <section className="mt-6 grid gap-4 sm:grid-cols-3">
           <StatTile icon={Trophy} label="Jumlah Bintang" value={totalStars} tone="gold" />
           <StatTile icon={Flame} label="Hari Berturut-turut" value={`${streak} hari`} tone="rose" />
           <StatTile icon={BookOpen} label="Kuiz Selesai" value={12} tone="emerald" />
         </section>
 
-        {/* Subjects */}
         <section className="mt-10">
           <div className="flex items-end justify-between">
             <div>
@@ -93,42 +120,13 @@ function Dashboard() {
           </div>
 
           <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            <SubjectCard
-              to="/kuiz"
-              title="Pendidikan Islam"
-              description="Rukun Iman, doa harian & sirah."
-              icon={BookOpen}
-              progress={75}
-              tone="emerald"
-            />
-            <SubjectCard
-              to="/kuiz"
-              title="Matematik"
-              description="Tambah, tolak, darab & bahagi."
-              icon={Calculator}
-              progress={60}
-              tone="gold"
-            />
-            <SubjectCard
-              to="/kuiz"
-              title="Bahasa Melayu"
-              description="Tatabahasa & karangan ringkas."
-              icon={PenLine}
-              progress={45}
-              tone="sky"
-            />
-            <SubjectCard
-              to="/kuiz"
-              title="Sains & Dunia"
-              description="Alam sekitar dan ciptaan Allah."
-              icon={Globe}
-              progress={30}
-              tone="rose"
-            />
+            <SubjectCard to="/kuiz" title="Pendidikan Islam" description="Rukun Iman, doa harian & sirah." icon={BookOpen} progress={75} tone="emerald" />
+            <SubjectCard to="/kuiz" title="Matematik" description="Tambah, tolak, darab & bahagi." icon={Calculator} progress={60} tone="gold" />
+            <SubjectCard to="/kuiz" title="Bahasa Melayu" description="Tatabahasa & karangan ringkas." icon={PenLine} progress={45} tone="sky" />
+            <SubjectCard to="/kuiz" title="Sains & Dunia" description="Alam sekitar dan ciptaan Allah." icon={Globe} progress={30} tone="rose" />
           </div>
         </section>
 
-        {/* Daily mission */}
         <section className="mt-10 grid gap-5 lg:grid-cols-3">
           <div className="rounded-3xl bg-card p-6 shadow-card lg:col-span-2">
             <h3 className="font-display text-xl font-extrabold text-foreground">Misi Hari Ini</h3>
@@ -138,21 +136,12 @@ function Dashboard() {
                 { task: "Hafal doa sebelum makan", done: true },
                 { task: "Selesaikan 5 soalan matematik", done: false },
               ].map((m, i) => (
-                <li
-                  key={i}
-                  className="flex items-center justify-between rounded-2xl border border-border/60 bg-background/60 p-4"
-                >
-                  <span className={`font-bold ${m.done ? "text-muted-foreground line-through" : "text-foreground"}`}>
-                    {m.task}
-                  </span>
+                <li key={i} className="flex items-center justify-between rounded-2xl border border-border/60 bg-background/60 p-4">
+                  <span className={`font-bold ${m.done ? "text-muted-foreground line-through" : "text-foreground"}`}>{m.task}</span>
                   {m.done ? (
-                    <span className="rounded-full bg-success/15 px-3 py-1 font-display text-xs font-extrabold text-success">
-                      ✓ Selesai
-                    </span>
+                    <span className="rounded-full bg-success/15 px-3 py-1 font-display text-xs font-extrabold text-success">✓ Selesai</span>
                   ) : (
-                    <span className="rounded-full bg-gold/20 px-3 py-1 font-display text-xs font-extrabold text-gold-foreground">
-                      Belum
-                    </span>
+                    <span className="rounded-full bg-gold/20 px-3 py-1 font-display text-xs font-extrabold text-gold-foreground">Belum</span>
                   )}
                 </li>
               ))}
@@ -162,9 +151,7 @@ function Dashboard() {
           <div className="rounded-3xl bg-gradient-primary p-6 text-primary-foreground shadow-soft">
             <Sparkles className="h-8 w-8" />
             <h3 className="mt-3 font-display text-xl font-extrabold">Pesanan Hari Ini</h3>
-            <p className="mt-2 text-sm opacity-95">
-              "Menuntut ilmu itu wajib ke atas setiap Muslim."
-            </p>
+            <p className="mt-2 text-sm opacity-95">"Menuntut ilmu itu wajib ke atas setiap Muslim."</p>
             <p className="mt-2 text-xs opacity-80">— Hadis Riwayat Ibnu Majah</p>
           </div>
         </section>
