@@ -23,21 +23,14 @@ export function SiteHeader({
         </Link>
 
         <nav className="hidden items-center gap-1 md:flex">
-          {[
-            { to: "/", label: "Dashboard" },
-            { to: "/kuiz", label: "Kuiz" },
-            { to: "/latihan", label: "Latihan" },
-          ].map((item) => (
-            <Link
-              key={item.to}
-              to={item.to}
-              activeOptions={{ exact: true }}
-              className="rounded-full px-4 py-2 font-display text-sm font-bold text-muted-foreground transition hover:bg-secondary hover:text-foreground"
-              activeProps={{ className: "bg-secondary text-primary" }}
-            >
-              {item.label}
-            </Link>
-          ))}
+          <Link
+            to="/"
+            activeOptions={{ exact: true }}
+            className="rounded-full px-4 py-2 font-display text-sm font-bold text-muted-foreground transition hover:bg-secondary hover:text-foreground"
+            activeProps={{ className: "bg-secondary text-primary" }}
+          >
+            Pilih Darjah
+          </Link>
         </nav>
 
         <div className="flex items-center gap-2">
