@@ -1,11 +1,11 @@
-import { createFileRoute, Link, redirect } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { BookOpen, Calculator, Globe, Sparkles, Trophy, Flame, Target, PenLine, LogOut } from "lucide-react";
-import { useServerFn } from "@tanstack/react-start";
-import { useRouter } from "@tanstack/react-router";
+import { useEffect } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SubjectCard } from "@/components/SubjectCard";
 import heroKids from "@/assets/hero-kids.png";
-import { getCurrentUser, logoutUser } from "@/lib/auth.functions";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/use-auth";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -14,33 +14,35 @@ export const Route = createFileRoute("/")({
       { name: "description", content: "Portal pembelajaran Islamik untuk kanak-kanak Malaysia. Kuiz, latihan dan ganjaran bintang." },
     ],
   }),
-  loader: async () => {
-    const user = await getCurrentUser();
-    if (!user) throw redirect({ to: "/login" });
-    return { user };
-  },
+  ssr: false,
   component: Dashboard,
-  errorComponent: ({ error }) => (
-    <div className="flex min-h-screen items-center justify-center p-6 text-center">
-      <p className="text-destructive">Ralat: {error.message}</p>
-    </div>
-  ),
 });
 
 function Dashboard() {
-  const { user } = Route.useLoaderData();
-  const router = useRouter();
-  const logout = useServerFn(logoutUser);
+  const navigate = useNavigate();
+  const { user, loading } = useAuth();
   const totalStars = 42;
   const streak = 5;
 
+  useEffect(() => {
+    if (!loading && !user) navigate({ to: "/login" });
+  }, [loading, user, navigate]);
+
   async function handleLogout() {
-    await logout();
-    await router.invalidate();
-    router.navigate({ to: "/login" });
+    await supabase.auth.signOut();
+    navigate({ to: "/login" });
   }
 
-  const firstName = user.name.split(" ")[0];
+  if (loading || !user) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <p className="text-muted-foreground">Memuatkan...</p>
+      </div>
+    );
+  }
+
+  const displayName = (user.user_metadata?.name as string) || user.email || "Pelajar";
+  const firstName = displayName.split(" ")[0];
 
   return (
     <div className="min-h-screen bg-background">

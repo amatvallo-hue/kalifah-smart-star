@@ -1,8 +1,7 @@
-import { createFileRoute, Link, useNavigate, useRouter } from "@tanstack/react-router";
-import { useServerFn } from "@tanstack/react-start";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
 import { LogIn, Mail, Lock, Sparkles } from "lucide-react";
-import { loginUser } from "@/lib/auth.functions";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/login")({
   head: () => ({
@@ -15,9 +14,7 @@ export const Route = createFileRoute("/login")({
 });
 
 function LoginPage() {
-  const login = useServerFn(loginUser);
   const navigate = useNavigate();
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -27,15 +24,13 @@ function LoginPage() {
     e.preventDefault();
     setError(null);
     setLoading(true);
-    try {
-      await login({ data: { email, password } });
-      await router.invalidate();
-      // Hard navigate so the new session cookie is picked up by the loader
-      window.location.href = "/";
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Gagal log masuk");
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) {
+      setError(error.message);
       setLoading(false);
+      return;
     }
+    navigate({ to: "/" });
   }
 
   return (
