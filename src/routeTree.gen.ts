@@ -9,8 +9,20 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as LatihanRouteImport } from './routes/latihan'
+import { Route as KuizRouteImport } from './routes/kuiz'
 import { Route as IndexRouteImport } from './routes/index'
 
+const LatihanRoute = LatihanRouteImport.update({
+  id: '/latihan',
+  path: '/latihan',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const KuizRoute = KuizRouteImport.update({
+  id: '/kuiz',
+  path: '/kuiz',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -19,28 +31,50 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/kuiz': typeof KuizRoute
+  '/latihan': typeof LatihanRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/kuiz': typeof KuizRoute
+  '/latihan': typeof LatihanRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/kuiz': typeof KuizRoute
+  '/latihan': typeof LatihanRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/kuiz' | '/latihan'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/kuiz' | '/latihan'
+  id: '__root__' | '/' | '/kuiz' | '/latihan'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  KuizRoute: typeof KuizRoute
+  LatihanRoute: typeof LatihanRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/latihan': {
+      id: '/latihan'
+      path: '/latihan'
+      fullPath: '/latihan'
+      preLoaderRoute: typeof LatihanRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/kuiz': {
+      id: '/kuiz'
+      path: '/kuiz'
+      fullPath: '/kuiz'
+      preLoaderRoute: typeof KuizRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -53,17 +87,9 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  KuizRoute: KuizRoute,
+  LatihanRoute: LatihanRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
