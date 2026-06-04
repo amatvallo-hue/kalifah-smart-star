@@ -14,6 +14,8 @@ import { Route as LatihanRouteImport } from './routes/latihan'
 import { Route as KuizRouteImport } from './routes/kuiz'
 import { Route as DaftarRouteImport } from './routes/daftar'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DarjahDarjahIdRouteImport } from './routes/darjah.$darjahId'
+import { Route as DarjahDarjahIdSubjekIdRouteImport } from './routes/darjah.$darjahId.$subjekId'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -40,6 +42,16 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DarjahDarjahIdRoute = DarjahDarjahIdRouteImport.update({
+  id: '/darjah/$darjahId',
+  path: '/darjah/$darjahId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DarjahDarjahIdSubjekIdRoute = DarjahDarjahIdSubjekIdRouteImport.update({
+  id: '/$subjekId',
+  path: '/$subjekId',
+  getParentRoute: () => DarjahDarjahIdRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -47,6 +59,8 @@ export interface FileRoutesByFullPath {
   '/kuiz': typeof KuizRoute
   '/latihan': typeof LatihanRoute
   '/login': typeof LoginRoute
+  '/darjah/$darjahId': typeof DarjahDarjahIdRouteWithChildren
+  '/darjah/$darjahId/$subjekId': typeof DarjahDarjahIdSubjekIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -54,6 +68,8 @@ export interface FileRoutesByTo {
   '/kuiz': typeof KuizRoute
   '/latihan': typeof LatihanRoute
   '/login': typeof LoginRoute
+  '/darjah/$darjahId': typeof DarjahDarjahIdRouteWithChildren
+  '/darjah/$darjahId/$subjekId': typeof DarjahDarjahIdSubjekIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -62,13 +78,37 @@ export interface FileRoutesById {
   '/kuiz': typeof KuizRoute
   '/latihan': typeof LatihanRoute
   '/login': typeof LoginRoute
+  '/darjah/$darjahId': typeof DarjahDarjahIdRouteWithChildren
+  '/darjah/$darjahId/$subjekId': typeof DarjahDarjahIdSubjekIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/daftar' | '/kuiz' | '/latihan' | '/login'
+  fullPaths:
+    | '/'
+    | '/daftar'
+    | '/kuiz'
+    | '/latihan'
+    | '/login'
+    | '/darjah/$darjahId'
+    | '/darjah/$darjahId/$subjekId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/daftar' | '/kuiz' | '/latihan' | '/login'
-  id: '__root__' | '/' | '/daftar' | '/kuiz' | '/latihan' | '/login'
+  to:
+    | '/'
+    | '/daftar'
+    | '/kuiz'
+    | '/latihan'
+    | '/login'
+    | '/darjah/$darjahId'
+    | '/darjah/$darjahId/$subjekId'
+  id:
+    | '__root__'
+    | '/'
+    | '/daftar'
+    | '/kuiz'
+    | '/latihan'
+    | '/login'
+    | '/darjah/$darjahId'
+    | '/darjah/$darjahId/$subjekId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -77,6 +117,7 @@ export interface RootRouteChildren {
   KuizRoute: typeof KuizRoute
   LatihanRoute: typeof LatihanRoute
   LoginRoute: typeof LoginRoute
+  DarjahDarjahIdRoute: typeof DarjahDarjahIdRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -116,8 +157,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/darjah/$darjahId': {
+      id: '/darjah/$darjahId'
+      path: '/darjah/$darjahId'
+      fullPath: '/darjah/$darjahId'
+      preLoaderRoute: typeof DarjahDarjahIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/darjah/$darjahId/$subjekId': {
+      id: '/darjah/$darjahId/$subjekId'
+      path: '/$subjekId'
+      fullPath: '/darjah/$darjahId/$subjekId'
+      preLoaderRoute: typeof DarjahDarjahIdSubjekIdRouteImport
+      parentRoute: typeof DarjahDarjahIdRoute
+    }
   }
 }
+
+interface DarjahDarjahIdRouteChildren {
+  DarjahDarjahIdSubjekIdRoute: typeof DarjahDarjahIdSubjekIdRoute
+}
+
+const DarjahDarjahIdRouteChildren: DarjahDarjahIdRouteChildren = {
+  DarjahDarjahIdSubjekIdRoute: DarjahDarjahIdSubjekIdRoute,
+}
+
+const DarjahDarjahIdRouteWithChildren = DarjahDarjahIdRoute._addFileChildren(
+  DarjahDarjahIdRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
@@ -125,6 +192,7 @@ const rootRouteChildren: RootRouteChildren = {
   KuizRoute: KuizRoute,
   LatihanRoute: LatihanRoute,
   LoginRoute: LoginRoute,
+  DarjahDarjahIdRoute: DarjahDarjahIdRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
