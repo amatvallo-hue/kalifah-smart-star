@@ -50,8 +50,14 @@ export async function verifyPassword(password: string, stored: string): Promise<
   return diff === 0;
 }
 
+function ensureSessionPassword(): string {
+  const raw = process.env.SESSION_SECRET || "dev-only-insecure-fallback-please-set-SESSION_SECRET";
+  // useSession requires a password of at least 32 characters.
+  return raw.length >= 32 ? raw : (raw + "x").padEnd(32, "0kalifah_session_pad_0123456789");
+}
+
 export const sessionConfig = {
-  password: process.env.SESSION_SECRET || "dev-only-insecure-fallback-please-set-SESSION_SECRET-32+chars",
+  password: ensureSessionPassword(),
   name: "kalifah_session",
   maxAge: 60 * 60 * 24 * 30,
   cookie: {
