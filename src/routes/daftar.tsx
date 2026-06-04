@@ -32,10 +32,9 @@ function DaftarPage() {
     try {
       await register({ data: { name, email, password } });
       await router.invalidate();
-      navigate({ to: "/" });
+      window.location.href = "/";
     } catch (err) {
       setError(err instanceof Error ? err.message : "Gagal mendaftar");
-    } finally {
       setLoading(false);
     }
   }

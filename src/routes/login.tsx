@@ -30,10 +30,10 @@ function LoginPage() {
     try {
       await login({ data: { email, password } });
       await router.invalidate();
-      navigate({ to: "/" });
+      // Hard navigate so the new session cookie is picked up by the loader
+      window.location.href = "/";
     } catch (err) {
       setError(err instanceof Error ? err.message : "Gagal log masuk");
-    } finally {
       setLoading(false);
     }
   }
