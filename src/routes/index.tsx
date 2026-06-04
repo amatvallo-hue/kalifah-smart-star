@@ -41,7 +41,19 @@ function Dashboard() {
     );
   }
 
-  const displayName = (user.user_metadata?.name as string) || user.email || "Pelajar";
+  const metaName =
+    (user.user_metadata?.name as string | undefined) ||
+    (user.user_metadata?.full_name as string | undefined) ||
+    (user.user_metadata?.display_name as string | undefined);
+  const emailLocal = user.email ? user.email.split("@")[0].replace(/[._-]+/g, " ") : "";
+  const prettyEmail = emailLocal
+    ? emailLocal
+        .split(" ")
+        .filter(Boolean)
+        .map((p) => p.charAt(0).toUpperCase() + p.slice(1))
+        .join(" ")
+    : "";
+  const displayName = (metaName && metaName.trim()) || prettyEmail || "Pelajar";
   const firstName = displayName.split(" ")[0];
 
   return (

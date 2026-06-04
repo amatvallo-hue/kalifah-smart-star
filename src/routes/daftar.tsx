@@ -33,7 +33,7 @@ function DaftarPage() {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
-      options: { data: { name }, emailRedirectTo: redirectTo },
+      options: { data: { name, full_name: name, display_name: name }, emailRedirectTo: redirectTo },
     });
     if (error) {
       setError(error.message);
