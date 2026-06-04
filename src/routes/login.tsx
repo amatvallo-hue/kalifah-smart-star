@@ -10,6 +10,7 @@ export const Route = createFileRoute("/login")({
       { name: "description", content: "Log masuk ke portal pembelajaran Kalifah.my." },
     ],
   }),
+  ssr: false,
   component: LoginPage,
 });
 
