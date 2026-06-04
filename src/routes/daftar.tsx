@@ -1,8 +1,7 @@
-import { createFileRoute, Link, useNavigate, useRouter } from "@tanstack/react-router";
-import { useServerFn } from "@tanstack/react-start";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
 import { UserPlus, User, Mail, Lock } from "lucide-react";
-import { registerUser } from "@/lib/auth.functions";
+import { supabase } from "@/integrations/supabase/client";
 import { AuthShell, Field } from "./login";
 
 export const Route = createFileRoute("/daftar")({
@@ -16,25 +15,34 @@ export const Route = createFileRoute("/daftar")({
 });
 
 function DaftarPage() {
-  const register = useServerFn(registerUser);
   const navigate = useNavigate();
-  const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [info, setInfo] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     setError(null);
+    setInfo(null);
     setLoading(true);
-    try {
-      await register({ data: { name, email, password } });
-      await router.invalidate();
-      window.location.href = "/";
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Gagal mendaftar");
+    const redirectTo = typeof window !== "undefined" ? `${window.location.origin}/` : undefined;
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: { data: { name }, emailRedirectTo: redirectTo },
+    });
+    if (error) {
+      setError(error.message);
+      setLoading(false);
+      return;
+    }
+    if (data.session) {
+      navigate({ to: "/" });
+    } else {
+      setInfo("Akaun dicipta. Sila semak emel anda untuk pengesahan, kemudian log masuk.");
       setLoading(false);
     }
   }
@@ -49,6 +57,11 @@ function DaftarPage() {
         {error && (
           <div className="rounded-2xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm font-bold text-destructive">
             {error}
+          </div>
+        )}
+        {info && (
+          <div className="rounded-2xl border border-primary/30 bg-primary/10 px-4 py-3 text-sm font-bold text-primary">
+            {info}
           </div>
         )}
 
