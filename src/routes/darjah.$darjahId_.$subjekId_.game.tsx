@@ -13,7 +13,7 @@ export const Route = createFileRoute("/darjah/$darjahId_/$subjekId_/game")({
   component: GameSubjekPage,
 });
 
-type Soalan = { soalan: string; jawapan: string };
+type Soalan = { soalan: string; jawapan: string; options?: string[] };
 
 const BANK: Record<string, Soalan[]> = {
   "1:matematik": [
@@ -28,9 +28,27 @@ const BANK: Record<string, Soalan[]> = {
     { soalan: "10 oren - 3 = ?", jawapan: "7" },
     { soalan: "1, 2, 3, ___, 5 = ?", jawapan: "4" },
   ],
+  "1:bahasa-melayu": [
+    { soalan: "Huruf vokal ialah?", jawapan: "C", options: ["A) b", "B) c", "C) a", "D) d"] },
+    { soalan: "'bu' + 'nga' = ?", jawapan: "B", options: ["A) bunag", "B) bunga", "C) gabung", "D) buag"] },
+    { soalan: "Haiwan ini 🐱?", jawapan: "C", options: ["A) anjing", "B) arnab", "C) kucing", "D) harimau"] },
+    { soalan: "Lawan 'besar' ialah?", jawapan: "C", options: ["A) tinggi", "B) panjang", "C) kecil", "D) lebar"] },
+    { soalan: "Ejaan betul?", jawapan: "C", options: ["A) kocing", "B) kuching", "C) kucing", "D) kusing"] },
+    { soalan: "Suku kata 'bola'?", jawapan: "B", options: ["A) 1", "B) 2", "C) 3", "D) 4"] },
+    { soalan: "'ku' + 'cing' = ?", jawapan: "B", options: ["A) kucng", "B) kucing", "C) kuing", "D) kucig"] },
+    { soalan: "Lawan 'panas' ialah?", jawapan: "A", options: ["A) sejuk", "B) panjang", "C) besar", "D) tinggi"] },
+    { soalan: "Huruf 'u' ialah?", jawapan: "B", options: ["A) konsonan", "B) vokal", "C) nombor", "D) simbol"] },
+    { soalan: "Pilih ayat betul:", jawapan: "B", options: ["A) Makan saya nasi", "B) Saya makan nasi", "C) Nasi saya makan", "D) Saya nasi makan"] },
+  ],
 };
 
-const TOTAL_TIME = 60;
+const TIME_MAP: Record<string, number> = {
+  "1:bahasa-melayu": 10,
+};
+
+function totalTimeFor(darjahId: string, subjekId: string) {
+  return TIME_MAP[`${darjahId}:${subjekId}`] ?? 60;
+}
 
 function normalize(s: string) {
   return s.trim().toLowerCase().replace(/\s+/g, " ");
@@ -44,12 +62,13 @@ function GameSubjekPage() {
   const subjek = getSubjek(subjekId);
 
   const soalanList = useMemo(() => BANK[`${darjahId}:${subjekId}`] ?? [], [darjahId, subjekId]);
+  const totalTime = totalTimeFor(darjahId, subjekId);
 
   const [started, setStarted] = useState(false);
   const [idx, setIdx] = useState(0);
   const [jwp, setJwp] = useState("");
   const [markah, setMarkah] = useState(0);
-  const [masa, setMasa] = useState(TOTAL_TIME);
+  const [masa, setMasa] = useState(totalTime);
   const [habis, setHabis] = useState(false);
   const [flash, setFlash] = useState<null | "ok" | "no">(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -100,7 +119,7 @@ function GameSubjekPage() {
     setIdx(0);
     setJwp("");
     setMarkah(0);
-    setMasa(TOTAL_TIME);
+    setMasa(totalTime);
     setHabis(false);
     setTimeout(() => inputRef.current?.focus(), 50);
   }
@@ -156,7 +175,7 @@ function GameSubjekPage() {
             <Trophy className="mx-auto h-12 w-12 text-gold" />
             <h2 className="mt-3 font-display text-3xl font-extrabold text-foreground">Sedia untuk berlumba?</h2>
             <p className="mt-2 text-muted-foreground">
-              Jawab {soalanList.length} soalan Matematik dalam {TOTAL_TIME} saat. Semakin banyak betul, semakin banyak bintang!
+              Jawab {soalanList.length} soalan {subjek.title} dalam {totalTime} saat. Semakin banyak betul, semakin banyak bintang!
             </p>
             <button
               onClick={mula}
@@ -186,7 +205,7 @@ function GameSubjekPage() {
             <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-muted">
               <div
                 className="h-full bg-gradient-primary transition-all"
-                style={{ width: `${(masa / TOTAL_TIME) * 100}%` }}
+                style={{ width: `${(masa / totalTime) * 100}%` }}
               />
             </div>
 
@@ -194,22 +213,42 @@ function GameSubjekPage() {
               {soalanList[idx].soalan}
             </h2>
 
-            <form onSubmit={hantar} className="mt-6">
-              <input
-                ref={inputRef}
-                value={jwp}
-                onChange={(e) => setJwp(e.target.value)}
-                placeholder="Taip jawapan..."
-                className="w-full rounded-2xl border-2 border-input bg-background p-4 text-center font-display text-2xl font-extrabold text-foreground outline-none transition focus:border-primary"
-              />
-              <button
-                type="submit"
-                disabled={jwp.trim().length === 0}
-                className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-primary px-6 py-4 font-display text-lg font-extrabold text-primary-foreground shadow-soft transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                <Send className="h-5 w-5" /> Hantar
-              </button>
-            </form>
+            {soalanList[idx].options ? (
+              <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                {soalanList[idx].options!.map((opt) => {
+                  const letter = opt.charAt(0);
+                  return (
+                    <button
+                      key={letter}
+                      onClick={() => {
+                        setJwp(letter);
+                        setTimeout(() => hantar(), 50);
+                      }}
+                      className="rounded-2xl border-2 border-input bg-background p-4 text-left font-display text-lg font-extrabold text-foreground transition hover:border-primary hover:bg-secondary"
+                    >
+                      {opt}
+                    </button>
+                  );
+                })}
+              </div>
+            ) : (
+              <form onSubmit={hantar} className="mt-6">
+                <input
+                  ref={inputRef}
+                  value={jwp}
+                  onChange={(e) => setJwp(e.target.value)}
+                  placeholder="Taip jawapan..."
+                  className="w-full rounded-2xl border-2 border-input bg-background p-4 text-center font-display text-2xl font-extrabold text-foreground outline-none transition focus:border-primary"
+                />
+                <button
+                  type="submit"
+                  disabled={jwp.trim().length === 0}
+                  className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-primary px-6 py-4 font-display text-lg font-extrabold text-primary-foreground shadow-soft transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <Send className="h-5 w-5" /> Hantar
+                </button>
+              </form>
+            )}
           </div>
         ) : (
           <div className="mt-6 rounded-3xl bg-gradient-hero p-8 text-center shadow-card">
