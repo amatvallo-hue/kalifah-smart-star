@@ -39,6 +39,14 @@ const ACTIVITIES = [
     tone: "from-rose-400 to-rose-300 text-rose-900",
     to: "/kuiz" as const,
   },
+  {
+    id: "latih-tubi" as const,
+    title: "Latih Tubi",
+    description: "Soalan rawak tanpa had — uji daya tahan!",
+    icon: Zap,
+    tone: "from-emerald-500 to-amber-400 text-white",
+    to: "/kuiz" as const,
+  },
 ];
 
 function AktivitiPage() {
