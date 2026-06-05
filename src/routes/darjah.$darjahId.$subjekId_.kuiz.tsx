@@ -8,7 +8,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { getDarjah, getSubjek } from "@/lib/curriculum";
 import { getQuiz } from "@/lib/quiz-bank";
 
-export const Route = createFileRoute("/darjah/$darjahId/$subjekId/kuiz")({
+export const Route = createFileRoute("/darjah/$darjahId/$subjekId_/kuiz")({
   head: () => ({ meta: [{ title: "Kuiz — Kalifah.my" }] }),
   ssr: false,
   component: KuizPage,
@@ -16,7 +16,7 @@ export const Route = createFileRoute("/darjah/$darjahId/$subjekId/kuiz")({
 
 function KuizPage() {
   const navigate = useNavigate();
-  const { darjahId, subjekId } = useParams({ from: "/darjah/$darjahId/$subjekId/kuiz" });
+  const { darjahId, subjekId } = useParams({ from: "/darjah/$darjahId/$subjekId_/kuiz" });
   const { user, loading } = useAuth();
   const darjah = getDarjah(darjahId);
   const subjek = getSubjek(subjekId);
