@@ -17,6 +17,7 @@ import { Route as DarjahDarjahIdRouteImport } from './routes/darjah.$darjahId'
 import { Route as DarjahDarjahIdSubjekIdRouteImport } from './routes/darjah.$darjahId_.$subjekId'
 import { Route as DarjahDarjahIdSubjekIdLatihanRouteImport } from './routes/darjah.$darjahId_.$subjekId_.latihan'
 import { Route as DarjahDarjahIdSubjekIdKuizRouteImport } from './routes/darjah.$darjahId_.$subjekId_.kuiz'
+import { Route as DarjahDarjahIdSubjekIdLatihanRouteImport } from './routes/darjah.$darjahId_.$subjekId_.latihan'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -58,6 +59,12 @@ const DarjahDarjahIdSubjekIdKuizRoute =
   DarjahDarjahIdSubjekIdKuizRouteImport.update({
     id: '/darjah/$darjahId_/$subjekId_/kuiz',
     path: '/darjah/$darjahId/$subjekId/kuiz',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const DarjahDarjahIdSubjekIdLatihanRoute =
+  DarjahDarjahIdSubjekIdLatihanRouteImport.update({
+    id: '/darjah/$darjahId_/$subjekId_/latihan',
+    path: '/darjah/$darjahId/$subjekId/latihan',
     getParentRoute: () => rootRouteImport,
   } as any)
 
@@ -210,13 +217,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
