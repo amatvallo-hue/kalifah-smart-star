@@ -11,7 +11,6 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LatihanRouteImport } from './routes/latihan'
-import { Route as KuizRouteImport } from './routes/kuiz'
 import { Route as DaftarRouteImport } from './routes/daftar'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DarjahDarjahIdRouteImport } from './routes/darjah.$darjahId'
@@ -26,11 +25,6 @@ const LoginRoute = LoginRouteImport.update({
 const LatihanRoute = LatihanRouteImport.update({
   id: '/latihan',
   path: '/latihan',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const KuizRoute = KuizRouteImport.update({
-  id: '/kuiz',
-  path: '/kuiz',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DaftarRoute = DaftarRouteImport.update({
@@ -63,7 +57,6 @@ const DarjahDarjahIdSubjekIdKuizRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/daftar': typeof DaftarRoute
-  '/kuiz': typeof KuizRoute
   '/latihan': typeof LatihanRoute
   '/login': typeof LoginRoute
   '/darjah/$darjahId': typeof DarjahDarjahIdRoute
@@ -73,7 +66,6 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/daftar': typeof DaftarRoute
-  '/kuiz': typeof KuizRoute
   '/latihan': typeof LatihanRoute
   '/login': typeof LoginRoute
   '/darjah/$darjahId': typeof DarjahDarjahIdRoute
@@ -84,7 +76,6 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/daftar': typeof DaftarRoute
-  '/kuiz': typeof KuizRoute
   '/latihan': typeof LatihanRoute
   '/login': typeof LoginRoute
   '/darjah/$darjahId': typeof DarjahDarjahIdRoute
@@ -96,7 +87,6 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/daftar'
-    | '/kuiz'
     | '/latihan'
     | '/login'
     | '/darjah/$darjahId'
@@ -106,7 +96,6 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/daftar'
-    | '/kuiz'
     | '/latihan'
     | '/login'
     | '/darjah/$darjahId'
@@ -116,7 +105,6 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/daftar'
-    | '/kuiz'
     | '/latihan'
     | '/login'
     | '/darjah/$darjahId'
@@ -127,7 +115,6 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DaftarRoute: typeof DaftarRoute
-  KuizRoute: typeof KuizRoute
   LatihanRoute: typeof LatihanRoute
   LoginRoute: typeof LoginRoute
   DarjahDarjahIdRoute: typeof DarjahDarjahIdRoute
@@ -149,13 +136,6 @@ declare module '@tanstack/react-router' {
       path: '/latihan'
       fullPath: '/latihan'
       preLoaderRoute: typeof LatihanRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/kuiz': {
-      id: '/kuiz'
-      path: '/kuiz'
-      fullPath: '/kuiz'
-      preLoaderRoute: typeof KuizRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/daftar': {
@@ -199,7 +179,6 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DaftarRoute: DaftarRoute,
-  KuizRoute: KuizRoute,
   LatihanRoute: LatihanRoute,
   LoginRoute: LoginRoute,
   DarjahDarjahIdRoute: DarjahDarjahIdRoute,
