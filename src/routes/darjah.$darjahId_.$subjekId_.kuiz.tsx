@@ -94,16 +94,19 @@ function KuizPage() {
   const isMatematikD1 = darjahId === "1" && subjekId === "matematik";
   const isBahasaMelayuD1 = darjahId === "1" && subjekId === "bahasa-melayu";
   const isBahasaInggerisD1 = darjahId === "1" && subjekId === "bahasa-inggeris";
-  const fromBank = isMatematikD1 || isBahasaMelayuD1 || isBahasaInggerisD1 ? [] : getQuiz(darjahId, subjekId);
+  const isJawiD1 = darjahId === "1" && subjekId === "jawi";
+  const fromBank = isMatematikD1 || isBahasaMelayuD1 || isBahasaInggerisD1 || isJawiD1 ? [] : getQuiz(darjahId, subjekId);
   const soalanList: QuizQuestion[] = isMatematikD1
     ? MATEMATIK_D1
     : isBahasaMelayuD1
       ? BAHASA_MELAYU_D1
       : isBahasaInggerisD1
         ? BAHASA_INGGERIS_D1
-        : fromBank && fromBank.length > 0
-          ? fromBank
-          : [];
+        : isJawiD1
+          ? JAWI_D1
+          : fromBank && fromBank.length > 0
+            ? fromBank
+            : [];
 
   const [i, setI] = useState(0);
   const [pilih, setPilih] = useState<number | null>(null);
