@@ -104,6 +104,25 @@ const PENDIDIKAN_ISLAM_D1: QuizQuestion[] = [
   { soalan: "Nabi kita ialah?", pilihan: ["Nabi Isa", "Nabi Musa", "Nabi Ibrahim", "Nabi Muhammad SAW"], jawapan: 3 },
 ];
 
+// Hardcoded soalan Sains Darjah 1
+const SAINS_D1: QuizQuestion[] = [
+  { soalan: "Berapa deria yang kita ada?", pilihan: ["3", "4", "5", "6"], jawapan: 2 },
+  { soalan: "Deria untuk melihat ialah?", pilihan: ["hidung", "telinga", "mata", "tangan"], jawapan: 2 },
+  { soalan: "Deria untuk menghidu ialah?", pilihan: ["mata", "hidung", "telinga", "lidah"], jawapan: 1 },
+  { soalan: "Fungsi telinga ialah?", pilihan: ["melihat", "menghidu", "merasa", "mendengar"], jawapan: 3 },
+  { soalan: "Lidah digunakan untuk?", pilihan: ["melihat", "mendengar", "merasa", "menghidu"], jawapan: 2 },
+  { soalan: "Manakah haiwan?", pilihan: ["pokok", "bunga", "kucing", "rumput"], jawapan: 2 },
+  { soalan: "Makanan arnab ialah?", pilihan: ["daging", "ikan", "sayur dan wortel", "buah sahaja"], jawapan: 2 },
+  { soalan: "Tumbuhan perlukan?", pilihan: ["air sahaja", "cahaya air dan udara", "tanah sahaja", "baja sahaja"], jawapan: 1 },
+  { soalan: "Haiwan yang boleh terbang?", pilihan: ["ikan", "arnab", "burung", "kucing"], jawapan: 2 },
+  { soalan: "Bahagian tumbuhan yang serap air?", pilihan: ["daun", "batang", "bunga", "akar"], jawapan: 3 },
+  { soalan: "Langit berawan gelap bermakna?", pilihan: ["panas terik", "berangin", "akan hujan", "bersalji"], jawapan: 2 },
+  { soalan: "Air berubah jadi wap apabila?", pilihan: ["dibekukan", "dipanaskan", "didinginkan", "dicampur gula"], jawapan: 1 },
+  { soalan: "Sumber cahaya semula jadi ialah?", pilihan: ["lampu", "lilin", "matahari", "suluh"], jawapan: 2 },
+  { soalan: "Ais apabila terdedah kepada haba akan?", pilihan: ["membeku", "membesar", "cair", "mengeras"], jawapan: 2 },
+  { soalan: "Udara yang kita sedut mengandungi?", pilihan: ["karbon dioksida", "hidrogen", "oksigen", "nitrogen"], jawapan: 2 },
+];
+
 function KuizPage() {
   const navigate = useNavigate();
   const { darjahId, subjekId } = useParams({ from: "/darjah/$darjahId_/$subjekId_/kuiz" });
@@ -115,7 +134,8 @@ function KuizPage() {
   const isBahasaInggerisD1 = darjahId === "1" && subjekId === "bahasa-inggeris";
   const isJawiD1 = darjahId === "1" && subjekId === "jawi";
   const isPendidikanIslamD1 = darjahId === "1" && subjekId === "pendidikan-islam";
-  const fromBank = isMatematikD1 || isBahasaMelayuD1 || isBahasaInggerisD1 || isJawiD1 || isPendidikanIslamD1 ? [] : getQuiz(darjahId, subjekId);
+  const isSainsD1 = darjahId === "1" && subjekId === "sains";
+  const fromBank = isMatematikD1 || isBahasaMelayuD1 || isBahasaInggerisD1 || isJawiD1 || isPendidikanIslamD1 || isSainsD1 ? [] : getQuiz(darjahId, subjekId);
   const soalanList: QuizQuestion[] = isMatematikD1
     ? MATEMATIK_D1
     : isBahasaMelayuD1
@@ -126,9 +146,11 @@ function KuizPage() {
           ? JAWI_D1
           : isPendidikanIslamD1
             ? PENDIDIKAN_ISLAM_D1
-            : fromBank && fromBank.length > 0
-              ? fromBank
-              : [];
+            : isSainsD1
+              ? SAINS_D1
+              : fromBank && fromBank.length > 0
+                ? fromBank
+                : [];
 
   const [i, setI] = useState(0);
   const [pilih, setPilih] = useState<number | null>(null);
