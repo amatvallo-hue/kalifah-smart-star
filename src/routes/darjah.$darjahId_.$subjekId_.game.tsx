@@ -125,6 +125,8 @@ function GameSubjekPage() {
   const [habis, setHabis] = useState(false);
   const [flash, setFlash] = useState<null | "ok" | "no">(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const hasCariPerkataan = darjahId === "1" && subjekId === "matematik";
+  const [mode, setMode] = useState<"race" | "cari">("race");
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
