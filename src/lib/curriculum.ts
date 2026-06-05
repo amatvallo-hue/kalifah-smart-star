@@ -1,4 +1,4 @@
-import { BookOpen, Calculator, Globe, Languages, Moon, Heart, PenLine, type LucideIcon } from "lucide-react";
+import { BookOpen, Calculator, Globe, Languages, Moon, PenLine, type LucideIcon } from "lucide-react";
 
 export type Tone = "emerald" | "gold" | "sky" | "rose" | "violet" | "amber" | "teal";
 
