@@ -13,7 +13,7 @@ export const Route = createFileRoute("/darjah/$darjahId_/$subjekId_/game")({
   component: GameSubjekPage,
 });
 
-type Soalan = { soalan: string; jawapan: string };
+type Soalan = { soalan: string; jawapan: string; options?: string[] };
 
 const BANK: Record<string, Soalan[]> = {
   "1:matematik": [
@@ -27,6 +27,18 @@ const BANK: Record<string, Soalan[]> = {
     { soalan: "Siti 4 guli + Abu 5 guli = ?", jawapan: "9" },
     { soalan: "10 oren - 3 = ?", jawapan: "7" },
     { soalan: "1, 2, 3, ___, 5 = ?", jawapan: "4" },
+  ],
+  "1:bahasa-melayu": [
+    { soalan: "Huruf vokal ialah?", jawapan: "C", options: ["A) b", "B) c", "C) a", "D) d"] },
+    { soalan: "'bu' + 'nga' = ?", jawapan: "B", options: ["A) bunag", "B) bunga", "C) gabung", "D) buag"] },
+    { soalan: "Haiwan ini 🐱?", jawapan: "C", options: ["A) anjing", "B) arnab", "C) kucing", "D) harimau"] },
+    { soalan: "Lawan 'besar' ialah?", jawapan: "C", options: ["A) tinggi", "B) panjang", "C) kecil", "D) lebar"] },
+    { soalan: "Ejaan betul?", jawapan: "C", options: ["A) kocing", "B) kuching", "C) kucing", "D) kusing"] },
+    { soalan: "Suku kata 'bola'?", jawapan: "B", options: ["A) 1", "B) 2", "C) 3", "D) 4"] },
+    { soalan: "'ku' + 'cing' = ?", jawapan: "B", options: ["A) kucng", "B) kucing", "C) kuing", "D) kucig"] },
+    { soalan: "Lawan 'panas' ialah?", jawapan: "A", options: ["A) sejuk", "B) panjang", "C) besar", "D) tinggi"] },
+    { soalan: "Huruf 'u' ialah?", jawapan: "B", options: ["A) konsonan", "B) vokal", "C) nombor", "D) simbol"] },
+    { soalan: "Pilih ayat betul:", jawapan: "B", options: ["A) Makan saya nasi", "B) Saya makan nasi", "C) Nasi saya makan", "D) Saya nasi makan"] },
   ],
 };
 
