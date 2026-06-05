@@ -52,6 +52,18 @@ const BANK: Record<string, Soalan[]> = {
     { soalan: "What is this? 🐘", jawapan: "C", options: ["A) lion", "B) giraffe", "C) elephant", "D) horse"] },
     { soalan: "What do you say after receiving?", jawapan: "C", options: ["A) Sorry", "B) Please", "C) Thank you", "D) Excuse me"] },
   ],
+  "1:jawi": [
+    { soalan: "Huruf Jawi → ا ialah?", jawapan: "C", options: ["A) Ba", "B) Ta", "C) Alif", "D) Jim"] },
+    { soalan: "Huruf Jawi → ب ialah?", jawapan: "B", options: ["A) Alif", "B) Ba", "C) Ta", "D) Tha"] },
+    { soalan: "Huruf berbunyi S ialah?", jawapan: "C", options: ["A) ش", "B) ز", "C) س", "D) ص"] },
+    { soalan: "Jawi → اِبُو bermaksud?", jawapan: "B", options: ["A) abang", "B) ibu", "C) adik", "D) ayah"] },
+    { soalan: "Jawi → اَيَه bermaksud?", jawapan: "C", options: ["A) ibu", "B) abang", "C) ayah", "D) kakak"] },
+    { soalan: "Jawi → كُوچيڠ bermaksud?", jawapan: "C", options: ["A) anjing", "B) arnab", "C) kucing", "D) harimau"] },
+    { soalan: "Huruf berbunyi R ialah?", jawapan: "B", options: ["A) د", "B) ر", "C) ز", "D) و"] },
+    { soalan: "Huruf berbunyi K ialah?", jawapan: "C", options: ["A) ق", "B) غ", "C) ک", "D) خ"] },
+    { soalan: "Jawi → بُکُو bermaksud?", jawapan: "C", options: ["A) pen", "B) meja", "C) buku", "D) kerusi"] },
+    { soalan: "Jawi → رومه bermaksud?", jawapan: "C", options: ["A) sekolah", "B) masjid", "C) rumah", "D) kedai"] },
+  ],
 };
 
 const TIME_MAP: Record<string, number> = {
