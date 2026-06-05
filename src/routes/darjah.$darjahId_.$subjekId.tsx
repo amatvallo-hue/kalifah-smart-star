@@ -6,7 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { getDarjah, getSubjek } from "@/lib/curriculum";
 
-export const Route = createFileRoute("/darjah/$darjahId/$subjekId")({
+export const Route = createFileRoute("/darjah/$darjahId_/$subjekId")({
   head: () => ({
     meta: [{ title: "Pilih Aktiviti — Kalifah.my" }],
   }),
