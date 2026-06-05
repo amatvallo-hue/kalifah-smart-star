@@ -62,12 +62,13 @@ function GameSubjekPage() {
   const subjek = getSubjek(subjekId);
 
   const soalanList = useMemo(() => BANK[`${darjahId}:${subjekId}`] ?? [], [darjahId, subjekId]);
+  const totalTime = totalTimeFor(darjahId, subjekId);
 
   const [started, setStarted] = useState(false);
   const [idx, setIdx] = useState(0);
   const [jwp, setJwp] = useState("");
   const [markah, setMarkah] = useState(0);
-  const [masa, setMasa] = useState(TOTAL_TIME);
+  const [masa, setMasa] = useState(totalTime);
   const [habis, setHabis] = useState(false);
   const [flash, setFlash] = useState<null | "ok" | "no">(null);
   const inputRef = useRef<HTMLInputElement>(null);
