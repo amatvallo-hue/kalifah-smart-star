@@ -113,7 +113,7 @@ function AktivitiPage() {
           {ACTIVITIES.map((a) => {
             const linkProps =
               a.id === "kuiz"
-                ? { to: "/darjah/$darjahId/$subjekId/kuiz" as const, params: { darjahId, subjekId } }
+                ? { to: "/darjah/$darjahId/$subjekId_/kuiz" as const, params: { darjahId, subjekId } }
                 : { to: a.to };
             return (
               <Link
