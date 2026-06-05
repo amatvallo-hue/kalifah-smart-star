@@ -13,7 +13,7 @@ export const Route = createFileRoute("/darjah/$darjahId_/$subjekId_/latihan")({
   component: LatihanSubjekPage,
 });
 
-type Soalan = { soalan: string; jawapan: string };
+type Soalan = { soalan: string; jawapan: string; petunjuk?: string };
 
 const BANK: Record<string, Soalan[]> = {
   "1:matematik": [
@@ -25,6 +25,18 @@ const BANK: Record<string, Soalan[]> = {
     { soalan: "Dalam bakul ada 10 oren. 3 dimakan. Berapa tinggal?", jawapan: "7" },
     { soalan: "Isi tempat kosong: 1, 2, 3, ___, 5", jawapan: "4" },
     { soalan: "Isi tempat kosong: 10, ___, 12, 13", jawapan: "11" },
+  ],
+  "1:bahasa-melayu": [
+    { soalan: "Ejakan perkataan untuk gambar 🐘.", jawapan: "gajah", petunjuk: "haiwan besar berbelalai" },
+    { soalan: "Ejakan perkataan untuk gambar 🍎.", jawapan: "epal", petunjuk: "buah berwarna merah" },
+    { soalan: "Ejakan perkataan untuk gambar 🌙.", jawapan: "bulan", petunjuk: "cahaya pada malam hari" },
+    { soalan: "Ejakan perkataan untuk gambar ⭐.", jawapan: "bintang", petunjuk: "ada di langit malam" },
+    { soalan: "Ejakan perkataan untuk gambar 🐟.", jawapan: "ikan", petunjuk: "haiwan dalam air" },
+    { soalan: "Lengkapkan: 'Ibu memasak ___.'", jawapan: "nasi", petunjuk: "apa yang dimasak ibu" },
+    { soalan: "Lengkapkan: 'Langit berwarna ___.'", jawapan: "biru", petunjuk: "tengok langit siang" },
+    { soalan: "Apakah lawan kata 'panas'?", jawapan: "sejuk", petunjuk: "lawan kepada panas" },
+    { soalan: "Apakah lawan kata 'siang'?", jawapan: "malam", petunjuk: "masa yang gelap" },
+    { soalan: "Tulis satu ayat mudah tentang diri anda.", jawapan: "nama saya", petunjuk: "cerita tentang diri sendiri" },
   ],
 };
 
@@ -131,6 +143,9 @@ function LatihanSubjekPage() {
               Soalan {idx + 1} / {soalanList.length}
             </div>
             <h2 className="mt-2 font-display text-2xl font-extrabold text-foreground">{soalan.soalan}</h2>
+            {soalan.petunjuk && (
+              <p className="mt-2 text-sm text-muted-foreground italic">Petunjuk: {soalan.petunjuk}</p>
+            )}
 
             <input
               value={jwp}
