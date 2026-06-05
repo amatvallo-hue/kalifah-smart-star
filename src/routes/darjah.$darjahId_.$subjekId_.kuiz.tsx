@@ -47,6 +47,25 @@ const BAHASA_MELAYU_D1: QuizQuestion[] = [
   { soalan: "Perkataan manakah ada 3 suku kata?", pilihan: ["buku", "meja", "semua", "tin"], jawapan: 2, nota: "se-mu-a = 3 suku kata." },
 ];
 
+// Hardcoded soalan Bahasa Inggeris Darjah 1
+const BAHASA_INGGERIS_D1: QuizQuestion[] = [
+  { soalan: "Which letter comes after D?", pilihan: ["C", "E", "F", "G"], jawapan: 1 },
+  { soalan: "Which word starts with B?", pilihan: ["apple", "cat", "ball", "dog"], jawapan: 2 },
+  { soalan: "How many letters in the alphabet?", pilihan: ["24", "25", "26", "27"], jawapan: 2 },
+  { soalan: "Which is a vowel?", pilihan: ["b", "c", "o", "d"], jawapan: 2 },
+  { soalan: "Which word starts with S?", pilihan: ["tree", "frog", "hat", "sun"], jawapan: 3 },
+  { soalan: "What is this? 🐱", pilihan: ["dog", "rabbit", "cat", "bird"], jawapan: 2 },
+  { soalan: "What colour is the sky?", pilihan: ["red", "green", "yellow", "blue"], jawapan: 3 },
+  { soalan: "What do we use to write?", pilihan: ["ruler", "eraser", "pencil", "scissors"], jawapan: 2 },
+  { soalan: "Opposite of 'big'?", pilihan: ["tall", "long", "small", "wide"], jawapan: 2 },
+  { soalan: "How many days in a week?", pilihan: ["5", "6", "7", "8"], jawapan: 2 },
+  { soalan: "Correct sentence?", pilihan: ["I am name Ali", "Name I Ali is", "My name is Ali", "Ali name my is"], jawapan: 2 },
+  { soalan: "I ___ a student.", pilihan: ["is", "are", "am", "be"], jawapan: 2 },
+  { soalan: "Morning greeting?", pilihan: ["Good night", "Good evening", "Good morning", "Good afternoon"], jawapan: 2 },
+  { soalan: "What do you say after receiving?", pilihan: ["Sorry", "Please", "Thank you", "Excuse me"], jawapan: 2 },
+  { soalan: "What is this? 🐘", pilihan: ["lion", "giraffe", "elephant", "horse"], jawapan: 2 },
+];
+
 function KuizPage() {
   const navigate = useNavigate();
   const { darjahId, subjekId } = useParams({ from: "/darjah/$darjahId_/$subjekId_/kuiz" });
