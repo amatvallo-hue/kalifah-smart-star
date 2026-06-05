@@ -62,6 +62,18 @@ const BANK: Record<string, Soalan[]> = {
       { soalan: "Jawi → سکول bermaksud?", jawapan: "sekolah", petunjuk: "tempat kita belajar" },
       { soalan: "Jawi → ماکن bermaksud?", jawapan: "makan", petunjuk: "aktiviti menggunakan mulut" },
     ],
+    "1:pendidikan-islam": [
+      { soalan: "Namakan rukun Islam yang kedua.", jawapan: "solat", petunjuk: "ibadat 5 kali sehari" },
+      { soalan: "Berapa rakaat solat Zohor?", jawapan: "4 rakaat", petunjuk: "solat tengah hari" },
+      { soalan: "Apakah doa sebelum makan?", jawapan: "bismillahirrahmanirrahim", petunjuk: "bermula dengan nama Allah" },
+      { soalan: "Apakah maksud Alhamdulillah?", jawapan: "segala puji bagi Allah", petunjuk: "ucapan syukur" },
+      { soalan: "Apakah maksud Bismillah?", jawapan: "dengan nama Allah", petunjuk: "bermula dengan nama Allah" },
+      { soalan: "Apakah yang kita ucap bila mendapat sesuatu baik?", jawapan: "alhamdulillah", petunjuk: "ucapan syukur" },
+      { soalan: "Siapakah Nabi kita?", jawapan: "nabi Muhammad SAW", petunjuk: "nabi akhir zaman" },
+      { soalan: "Apakah kitab suci umat Islam?", jawapan: "Al-Quran", petunjuk: "firman Allah" },
+      { soalan: "Namakan 2 adab makan dalam Islam.", jawapan: "makan dengan tangan kanan dan baca bismillah", petunjuk: "cara makan yang diajar Nabi" },
+      { soalan: "Apakah maksud amanah?", jawapan: "boleh dipercayai", petunjuk: "sifat orang yang boleh dipercayai" },
+    ],
   };
 
 function normalize(s: string) {
