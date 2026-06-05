@@ -82,6 +82,7 @@ const TIME_MAP: Record<string, number> = {
   "1:bahasa-melayu": 10,
   "1:bahasa-inggeris": 10,
   "1:jawi": 10,
+  "1:pendidikan-islam": 10,
 };
 
 function totalTimeFor(darjahId: string, subjekId: string) {
