@@ -175,7 +175,7 @@ function GameSubjekPage() {
             <Trophy className="mx-auto h-12 w-12 text-gold" />
             <h2 className="mt-3 font-display text-3xl font-extrabold text-foreground">Sedia untuk berlumba?</h2>
             <p className="mt-2 text-muted-foreground">
-              Jawab {soalanList.length} soalan Matematik dalam {TOTAL_TIME} saat. Semakin banyak betul, semakin banyak bintang!
+              Jawab {soalanList.length} soalan {subjek.title} dalam {totalTime} saat. Semakin banyak betul, semakin banyak bintang!
             </p>
             <button
               onClick={mula}
