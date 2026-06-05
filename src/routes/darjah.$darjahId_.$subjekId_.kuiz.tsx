@@ -28,6 +28,25 @@ const MATEMATIK_D1: QuizQuestion[] = [
   { soalan: "1, 2, 3, ___, 5 = ?", pilihan: ["2", "4", "6", "3"], jawapan: 1 },
 ];
 
+// Hardcoded soalan Bahasa Melayu Darjah 1
+const BAHASA_MELAYU_D1: QuizQuestion[] = [
+  { soalan: "Huruf manakah huruf vokal?", pilihan: ["b", "c", "a", "d"], jawapan: 2, nota: "Huruf vokal: a, e, i, o, u." },
+  { soalan: "Berapa huruf vokal dalam Bahasa Melayu?", pilihan: ["3", "4", "5", "6"], jawapan: 2, nota: "a, e, i, o, u — 5 huruf." },
+  { soalan: "Huruf manakah BUKAN vokal?", pilihan: ["a", "e", "i", "b"], jawapan: 3 },
+  { soalan: "Pilih perkataan bermula dengan huruf vokal:", pilihan: ["bola", "cawan", "epal", "pokok"], jawapan: 2 },
+  { soalan: "'bola' ada berapa suku kata?", pilihan: ["1", "2", "3", "4"], jawapan: 1, nota: "bo-la = 2 suku kata." },
+  { soalan: "Suku kata pertama 'mama' ialah:", pilihan: ["ma", "am", "aa", "mm"], jawapan: 0 },
+  { soalan: "Gabung 'bu' + 'nga' = ?", pilihan: ["bunag", "gabung", "bunga", "buag"], jawapan: 2 },
+  { soalan: "'ku' + 'cing' = ?", pilihan: ["kucng", "kucing", "kuing", "kucig"], jawapan: 1 },
+  { soalan: "Haiwan ini 🐱 ialah?", pilihan: ["anjing", "arnab", "kucing", "harimau"], jawapan: 2 },
+  { soalan: "Pilih ayat yang betul:", pilihan: ["Saya makan nasi sedap", "Saya makan nasi", "Makan saya nasi", "Nasi saya makan"], jawapan: 1 },
+  { soalan: "Lawan kata 'besar' ialah?", pilihan: ["tinggi", "panjang", "kecil", "lebar"], jawapan: 2 },
+  { soalan: "Ejaan yang betul ialah?", pilihan: ["kocing", "kuching", "kucing", "kusing"], jawapan: 2 },
+  { soalan: "'Ali _____ ke sekolah.'", pilihan: ["makan", "tidur", "pergi", "minum"], jawapan: 2 },
+  { soalan: "Huruf 'u' ialah huruf?", pilihan: ["konsonan", "vokal", "nombor", "simbol"], jawapan: 1 },
+  { soalan: "Perkataan manakah ada 3 suku kata?", pilihan: ["buku", "meja", "semua", "tin"], jawapan: 2, nota: "se-mu-a = 3 suku kata." },
+];
+
 function KuizPage() {
   const navigate = useNavigate();
   const { darjahId, subjekId } = useParams({ from: "/darjah/$darjahId_/$subjekId_/kuiz" });
