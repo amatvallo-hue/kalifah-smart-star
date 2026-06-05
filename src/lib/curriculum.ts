@@ -33,7 +33,6 @@ export const SUBJEK_LIST: Subjek[] = [
   { id: "sains", title: "Sains", description: "Alam sekitar dan ciptaan Allah.", icon: Globe, tone: "teal" },
   { id: "jawi", title: "Jawi", description: "Tulisan jawi asas.", icon: Moon, tone: "amber" },
   { id: "pendidikan-islam", title: "Pendidikan Islam", description: "Rukun Iman, doa & sirah.", icon: BookOpen, tone: "emerald" },
-  { id: "pendidikan-moral", title: "Pendidikan Moral", description: "Nilai-nilai murni harian.", icon: Heart, tone: "rose" },
 ];
 
 export function getDarjah(id: string) {
