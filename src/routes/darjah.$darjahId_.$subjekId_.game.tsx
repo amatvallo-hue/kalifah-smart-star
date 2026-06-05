@@ -1,8 +1,9 @@
 import { createFileRoute, Link, useNavigate, useParams } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ArrowLeft, Gamepad2, Send, Sparkles, Timer, Trophy } from "lucide-react";
+import { ArrowLeft, Gamepad2, Send, Sparkles, Timer, Trophy, Search } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { StarReward } from "@/components/StarReward";
+import { CariPerkataan } from "@/components/CariPerkataan";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { getDarjah, getSubjek } from "@/lib/curriculum";
@@ -124,6 +125,8 @@ function GameSubjekPage() {
   const [habis, setHabis] = useState(false);
   const [flash, setFlash] = useState<null | "ok" | "no">(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const hasCariPerkataan = darjahId === "1" && subjekId === "matematik";
+  const [mode, setMode] = useState<"race" | "cari">("race");
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
@@ -217,12 +220,38 @@ function GameSubjekPage() {
             <Gamepad2 className="h-6 w-6" />
           </div>
           <div>
-            <h1 className="font-display text-3xl font-extrabold text-foreground">Quiz Race</h1>
+            <h1 className="font-display text-3xl font-extrabold text-foreground">
+              {hasCariPerkataan && mode === "cari" ? "Cari Perkataan" : "Quiz Race"}
+            </h1>
             <p className="text-sm text-muted-foreground">{darjah.label} • {subjek.title}</p>
           </div>
         </div>
 
-        {!started ? (
+        {hasCariPerkataan && (
+          <div className="mt-5 inline-flex rounded-full bg-secondary p-1">
+            <button
+              onClick={() => setMode("race")}
+              className={`inline-flex items-center gap-2 rounded-full px-4 py-2 font-display text-sm font-extrabold transition ${
+                mode === "race" ? "bg-card text-primary shadow-soft" : "text-muted-foreground"
+              }`}
+            >
+              <Trophy className="h-4 w-4" /> Quiz Race
+            </button>
+            <button
+              onClick={() => setMode("cari")}
+              className={`inline-flex items-center gap-2 rounded-full px-4 py-2 font-display text-sm font-extrabold transition ${
+                mode === "cari" ? "text-white shadow-soft" : "text-muted-foreground"
+              }`}
+              style={mode === "cari" ? { backgroundColor: "#1B8A5A" } : undefined}
+            >
+              <Search className="h-4 w-4" /> Cari Perkataan
+            </button>
+          </div>
+        )}
+
+        {hasCariPerkataan && mode === "cari" ? (
+          <CariPerkataan />
+        ) : !started ? (
           <div className="mt-6 rounded-3xl bg-gradient-hero p-8 text-center shadow-card">
             <Trophy className="mx-auto h-12 w-12 text-gold" />
             <h2 className="mt-3 font-display text-3xl font-extrabold text-foreground">Sedia untuk berlumba?</h2>
