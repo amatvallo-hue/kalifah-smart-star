@@ -205,7 +205,7 @@ function GameSubjekPage() {
             <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-muted">
               <div
                 className="h-full bg-gradient-primary transition-all"
-                style={{ width: `${(masa / TOTAL_TIME) * 100}%` }}
+                style={{ width: `${(masa / totalTime) * 100}%` }}
               />
             </div>
 
