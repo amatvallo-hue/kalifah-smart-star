@@ -119,7 +119,7 @@ function GameSubjekPage() {
     setIdx(0);
     setJwp("");
     setMarkah(0);
-    setMasa(TOTAL_TIME);
+    setMasa(totalTime);
     setHabis(false);
     setTimeout(() => inputRef.current?.focus(), 50);
   }
