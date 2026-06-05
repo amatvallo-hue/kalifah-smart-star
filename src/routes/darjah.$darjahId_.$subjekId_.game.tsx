@@ -40,6 +40,18 @@ const BANK: Record<string, Soalan[]> = {
     { soalan: "Huruf 'u' ialah?", jawapan: "B", options: ["A) konsonan", "B) vokal", "C) nombor", "D) simbol"] },
     { soalan: "Pilih ayat betul:", jawapan: "B", options: ["A) Makan saya nasi", "B) Saya makan nasi", "C) Nasi saya makan", "D) Saya nasi makan"] },
   ],
+  "1:bahasa-inggeris": [
+    { soalan: "What is this? 🐱", jawapan: "C", options: ["A) dog", "B) rabbit", "C) cat", "D) bird"] },
+    { soalan: "Which is a vowel?", jawapan: "C", options: ["A) b", "B) c", "C) o", "D) d"] },
+    { soalan: "Opposite of 'big'?", jawapan: "C", options: ["A) tall", "B) long", "C) small", "D) wide"] },
+    { soalan: "What colour is sky?", jawapan: "D", options: ["A) red", "B) green", "C) yellow", "D) blue"] },
+    { soalan: "Morning greeting?", jawapan: "C", options: ["A) Good night", "B) Good evening", "C) Good morning", "D) Good afternoon"] },
+    { soalan: "Which word starts with S?", jawapan: "D", options: ["A) tree", "B) frog", "C) hat", "D) sun"] },
+    { soalan: "I ___ a student.", jawapan: "C", options: ["A) is", "B) are", "C) am", "D) be"] },
+    { soalan: "What do we use to write?", jawapan: "C", options: ["A) ruler", "B) eraser", "C) pencil", "D) scissors"] },
+    { soalan: "What is this? 🐘", jawapan: "C", options: ["A) lion", "B) giraffe", "C) elephant", "D) horse"] },
+    { soalan: "What do you say after receiving?", jawapan: "C", options: ["A) Sorry", "B) Please", "C) Thank you", "D) Excuse me"] },
+  ],
 };
 
 const TIME_MAP: Record<string, number> = {
