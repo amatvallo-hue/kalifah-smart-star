@@ -57,22 +57,24 @@ function LatihTubiPage() {
     let cancelled = false;
     (async () => {
       setFetching(true);
+      const darjahNum = Number(darjahId);
       const { data, error } = await supabase
         .from("soalan_latih_tubi")
-        .select("id, soalan, pilihan, jawapan")
-        .eq("darjah_id", darjahId)
-        .eq("subjek_id", subjekId);
+        .select("id, soalan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan_betul")
+        .eq("darjah", Number.isFinite(darjahNum) ? darjahNum : darjahId)
+        .eq("subjek", subjekId);
       if (cancelled) return;
       if (error) {
         setErrMsg(error.message);
         setFetching(false);
         return;
       }
-      const rows = (data ?? []).map((r) => ({
+      const letterToIdx: Record<string, number> = { A: 0, B: 1, C: 2, D: 3 };
+      const rows = (data ?? []).map((r: any) => ({
         id: r.id as string,
         soalan: r.soalan as string,
-        pilihan: r.pilihan as string[],
-        jawapan: r.jawapan as number,
+        pilihan: [r.pilihan_a, r.pilihan_b, r.pilihan_c, r.pilihan_d] as string[],
+        jawapan: letterToIdx[String(r.jawapan_betul).toUpperCase()] ?? 0,
       }));
       setBank(rows);
       setOrder(shuffle(rows.map((_, i) => i)));
