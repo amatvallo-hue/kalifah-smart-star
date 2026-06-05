@@ -47,10 +47,22 @@ const BANK: Record<string, Soalan[]> = {
      { soalan: "Complete: 'I eat ___ for breakfast.'", jawapan: "rice", petunjuk: "what do you eat in morning" },
      { soalan: "Complete: 'My favourite colour is ___.'", jawapan: "blue", petunjuk: "what is your favourite colour" },
      { soalan: "Complete: 'I go to ___ every day.'", jawapan: "school", petunjuk: "where do you study" },
-     { soalan: "Name 3 colours in English.", jawapan: "red blue green", petunjuk: "colours of rainbow" },
-     { soalan: "What do you say before sleep?", jawapan: "good night", petunjuk: "greeting at night time" },
-   ],
- };
+      { soalan: "Name 3 colours in English.", jawapan: "red blue green", petunjuk: "colours of rainbow" },
+      { soalan: "What do you say before sleep?", jawapan: "good night", petunjuk: "greeting at night time" },
+    ],
+    "1:jawi": [
+      { soalan: "Apakah nama huruf Jawi → ت ?", jawapan: "ta", petunjuk: "huruf berbunyi T" },
+      { soalan: "Apakah nama huruf Jawi → ج ?", jawapan: "jim", petunjuk: "huruf berbunyi J" },
+      { soalan: "Apakah nama huruf Jawi → ه ?", jawapan: "ha", petunjuk: "huruf berbunyi H" },
+      { soalan: "Apakah nama huruf Jawi → ي ?", jawapan: "ya", petunjuk: "huruf berbunyi Y" },
+      { soalan: "Apakah nama huruf Jawi → ع ?", jawapan: "ain", petunjuk: "huruf Arab berbunyi A kuat" },
+      { soalan: "Tulis perkataan 'ibu' dalam Jawi.", jawapan: "اِبُو", petunjuk: "i-bu 2 suku kata" },
+      { soalan: "Tulis perkataan 'ayah' dalam Jawi.", jawapan: "اَيَه", petunjuk: "a-yah 2 suku kata" },
+      { soalan: "Tulis perkataan 'buku' dalam Jawi.", jawapan: "بُکُو", petunjuk: "bu-ku 2 suku kata" },
+      { soalan: "Jawi → سکول bermaksud?", jawapan: "sekolah", petunjuk: "tempat kita belajar" },
+      { soalan: "Jawi → ماکن bermaksud?", jawapan: "makan", petunjuk: "aktiviti menggunakan mulut" },
+    ],
+  };
 
 function normalize(s: string) {
   return s.trim().toLowerCase().replace(/\s+/g, " ");
