@@ -76,6 +76,18 @@ const BANK: Record<string, Soalan[]> = {
     { soalan: "Nabi kita ialah?", jawapan: "D", options: ["A) Nabi Isa", "B) Nabi Musa", "C) Nabi Ibrahim", "D) Nabi Muhammad SAW"] },
     { soalan: "Ucapan bila bersin?", jawapan: "C", options: ["A) diam sahaja", "B) ketawa", "C) Alhamdulillah", "D) lari"] },
   ],
+  "1:sains": [
+    { soalan: "Berapa deria yang kita ada?", jawapan: "C", options: ["A) 3", "B) 4", "C) 5", "D) 6"] },
+    { soalan: "Deria untuk melihat?", jawapan: "C", options: ["A) hidung", "B) telinga", "C) mata", "D) tangan"] },
+    { soalan: "Manakah haiwan?", jawapan: "C", options: ["A) pokok", "B) bunga", "C) kucing", "D) rumput"] },
+    { soalan: "Haiwan yang boleh terbang?", jawapan: "C", options: ["A) ikan", "B) arnab", "C) burung", "D) kucing"] },
+    { soalan: "Bahagian tumbuhan serap air?", jawapan: "D", options: ["A) daun", "B) batang", "C) bunga", "D) akar"] },
+    { soalan: "Air jadi wap apabila?", jawapan: "B", options: ["A) dibekukan", "B) dipanaskan", "C) didinginkan", "D) dicampur gula"] },
+    { soalan: "Sumber cahaya semula jadi?", jawapan: "C", options: ["A) lampu", "B) lilin", "C) matahari", "D) suluh"] },
+    { soalan: "Ais terdedah haba akan?", jawapan: "C", options: ["A) membeku", "B) membesar", "C) cair", "D) mengeras"] },
+    { soalan: "Langit berawan gelap bermakna?", jawapan: "C", options: ["A) panas terik", "B) berangin", "C) akan hujan", "D) bersalji"] },
+    { soalan: "Makanan arnab ialah?", jawapan: "C", options: ["A) daging", "B) ikan", "C) sayur dan wortel", "D) buah sahaja"] },
+  ],
 };
 
 const TIME_MAP: Record<string, number> = {
@@ -83,6 +95,7 @@ const TIME_MAP: Record<string, number> = {
   "1:bahasa-inggeris": 10,
   "1:jawi": 10,
   "1:pendidikan-islam": 10,
+  "1:sains": 10,
 };
 
 function totalTimeFor(darjahId: string, subjekId: string) {
