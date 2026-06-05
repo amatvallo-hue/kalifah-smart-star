@@ -74,6 +74,18 @@ const BANK: Record<string, Soalan[]> = {
       { soalan: "Namakan 2 adab makan dalam Islam.", jawapan: "makan dengan tangan kanan dan baca bismillah", petunjuk: "cara makan yang diajar Nabi" },
       { soalan: "Apakah maksud amanah?", jawapan: "boleh dipercayai", petunjuk: "sifat orang yang boleh dipercayai" },
     ],
+    "1:sains": [
+      { soalan: "Namakan 5 deria manusia.", jawapan: "penglihatan, pendengaran, penciuman, rasa, sentuhan", petunjuk: "deria yang kita guna setiap hari" },
+      { soalan: "Organ untuk melihat ialah?", jawapan: "mata", petunjuk: "organ pada muka" },
+      { soalan: "Apakah yang kita guna untuk memegang?", jawapan: "tangan", petunjuk: "anggota badan yang ada jari" },
+      { soalan: "Namakan 3 haiwan yang hidup di air.", jawapan: "ikan, ketam, udang", petunjuk: "haiwan dalam sungai atau laut" },
+      { soalan: "Keperluan asas tumbuhan untuk hidup?", jawapan: "air, cahaya matahari, udara", petunjuk: "apa yang tumbuhan perlukan" },
+      { soalan: "Namakan bahagian-bahagian tumbuhan.", jawapan: "akar, batang, daun, bunga, buah", petunjuk: "dari bawah hingga atas" },
+      { soalan: "Apakah yang menyebabkan hujan?", jawapan: "wap air naik ke atas jadi awan turun sebagai hujan", petunjuk: "kitaran air" },
+      { soalan: "Namakan 3 jenis cuaca.", jawapan: "panas, hujan, berangin", petunjuk: "keadaan cuaca yang kita alami" },
+      { soalan: "Air apabila dibekukan bertukar jadi?", jawapan: "ais", petunjuk: "masukkan air dalam peti sejuk" },
+      { soalan: "Namakan 2 cara jimat air.", jawapan: "tutup paip semasa gosok gigi, guna air secukupnya", petunjuk: "cara menjimatkan air di rumah" },
+    ],
   };
 
 function normalize(s: string) {
