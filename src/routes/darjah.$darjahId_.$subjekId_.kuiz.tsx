@@ -54,12 +54,15 @@ function KuizPage() {
   const darjah = getDarjah(darjahId) ?? { id: darjahId, label: `Darjah ${darjahId}`, locked: false };
   const subjek = getSubjek(subjekId) ?? { id: subjekId, title: subjekId.charAt(0).toUpperCase() + subjekId.slice(1) };
   const isMatematikD1 = darjahId === "1" && subjekId === "matematik";
-  const fromBank = isMatematikD1 ? [] : getQuiz(darjahId, subjekId);
+  const isBahasaMelayuD1 = darjahId === "1" && subjekId === "bahasa-melayu";
+  const fromBank = isMatematikD1 || isBahasaMelayuD1 ? [] : getQuiz(darjahId, subjekId);
   const soalanList: QuizQuestion[] = isMatematikD1
     ? MATEMATIK_D1
-    : fromBank && fromBank.length > 0
-      ? fromBank
-      : [];
+    : isBahasaMelayuD1
+      ? BAHASA_MELAYU_D1
+      : fromBank && fromBank.length > 0
+        ? fromBank
+        : [];
 
   const [i, setI] = useState(0);
   const [pilih, setPilih] = useState<number | null>(null);
