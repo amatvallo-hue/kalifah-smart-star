@@ -42,7 +42,13 @@ const BANK: Record<string, Soalan[]> = {
   ],
 };
 
-const TOTAL_TIME = 60;
+const TIME_MAP: Record<string, number> = {
+  "1:bahasa-melayu": 10,
+};
+
+function totalTimeFor(darjahId: string, subjekId: string) {
+  return TIME_MAP[`${darjahId}:${subjekId}`] ?? 60;
+}
 
 function normalize(s: string) {
   return s.trim().toLowerCase().replace(/\s+/g, " ");
