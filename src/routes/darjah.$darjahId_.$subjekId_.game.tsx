@@ -64,6 +64,18 @@ const BANK: Record<string, Soalan[]> = {
     { soalan: "Jawi → بُکُو bermaksud?", jawapan: "C", options: ["A) pen", "B) meja", "C) buku", "D) kerusi"] },
     { soalan: "Jawi → رومه bermaksud?", jawapan: "C", options: ["A) sekolah", "B) masjid", "C) rumah", "D) kedai"] },
   ],
+  "1:pendidikan-islam": [
+    { soalan: "Berapa rukun Islam?", jawapan: "C", options: ["A) 3", "B) 4", "C) 5", "D) 6"] },
+    { soalan: "Berapa kali solat sehari?", jawapan: "C", options: ["A) 3", "B) 4", "C) 5", "D) 6"] },
+    { soalan: "Ucapan bila berjumpa seseorang?", jawapan: "C", options: ["A) Terima kasih", "B) Selamat pagi", "C) Assalamualaikum", "D) Hai"] },
+    { soalan: "Jawapan kepada salam?", jawapan: "C", options: ["A) Assalamualaikum", "B) Alhamdulillah", "C) Waalaikumussalam", "D) Bismillah"] },
+    { soalan: "Kita baca bismillah sebelum?", jawapan: "C", options: ["A) tidur", "B) bermain", "C) makan", "D) berlari"] },
+    { soalan: "Berapa rakaat solat Subuh?", jawapan: "B", options: ["A) 1", "B) 2", "C) 3", "D) 4"] },
+    { soalan: "Adab makan yang betul?", jawapan: "D", options: ["A) tangan kiri", "B) berdiri", "C) berlari", "D) tangan kanan"] },
+    { soalan: "Kitab suci umat Islam?", jawapan: "D", options: ["A) Injil", "B) Zabur", "C) Taurat", "D) Al-Quran"] },
+    { soalan: "Nabi kita ialah?", jawapan: "D", options: ["A) Nabi Isa", "B) Nabi Musa", "C) Nabi Ibrahim", "D) Nabi Muhammad SAW"] },
+    { soalan: "Ucapan bila bersin?", jawapan: "C", options: ["A) diam sahaja", "B) ketawa", "C) Alhamdulillah", "D) lari"] },
+  ],
 };
 
 const TIME_MAP: Record<string, number> = {
