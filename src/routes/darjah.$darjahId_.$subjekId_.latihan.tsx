@@ -143,6 +143,9 @@ function LatihanSubjekPage() {
               Soalan {idx + 1} / {soalanList.length}
             </div>
             <h2 className="mt-2 font-display text-2xl font-extrabold text-foreground">{soalan.soalan}</h2>
+            {soalan.petunjuk && (
+              <p className="mt-2 text-sm text-muted-foreground italic">Petunjuk: {soalan.petunjuk}</p>
+            )}
 
             <input
               value={jwp}
