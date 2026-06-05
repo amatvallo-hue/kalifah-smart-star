@@ -16,7 +16,7 @@ export const Route = createFileRoute("/darjah/$darjahId/$subjekId_/kuiz")({
 
 function KuizPage() {
   const navigate = useNavigate();
-  const { darjahId, subjekId } = useParams({ from: "/darjah/$darjahId/$subjekId/kuiz" });
+  const { darjahId, subjekId } = useParams({ from: "/darjah/$darjahId/$subjekId_/kuiz" });
   const { user, loading } = useAuth();
   const darjah = getDarjah(darjahId);
   const subjek = getSubjek(subjekId);
