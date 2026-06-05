@@ -110,24 +110,30 @@ function AktivitiPage() {
         </section>
 
         <section className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {ACTIVITIES.map((a) => (
-            <Link
-              key={a.id}
-              to={a.to}
-              className="group flex flex-col gap-4 rounded-3xl border border-border/60 bg-card p-6 shadow-card transition hover:-translate-y-1 hover:shadow-soft"
-            >
-              <div className={`flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br ${a.tone} shadow-soft transition group-hover:scale-110`}>
-                <a.icon className="h-8 w-8" strokeWidth={2.5} />
-              </div>
-              <div>
-                <h3 className="font-display text-2xl font-extrabold text-foreground">{a.title}</h3>
-                <p className="mt-1 text-sm text-muted-foreground">{a.description}</p>
-              </div>
-              <span className="mt-auto inline-flex w-fit items-center gap-2 rounded-full bg-gradient-primary px-4 py-2 font-display text-sm font-extrabold text-primary-foreground shadow-soft transition group-hover:translate-x-1">
-                Mula →
-              </span>
-            </Link>
-          ))}
+          {ACTIVITIES.map((a) => {
+            const linkProps =
+              a.id === "kuiz"
+                ? { to: "/darjah/$darjahId/$subjekId/kuiz" as const, params: { darjahId, subjekId } }
+                : { to: a.to };
+            return (
+              <Link
+                key={a.id}
+                {...linkProps}
+                className="group flex flex-col gap-4 rounded-3xl border border-border/60 bg-card p-6 shadow-card transition hover:-translate-y-1 hover:shadow-soft"
+              >
+                <div className={`flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br ${a.tone} shadow-soft transition group-hover:scale-110`}>
+                  <a.icon className="h-8 w-8" strokeWidth={2.5} />
+                </div>
+                <div>
+                  <h3 className="font-display text-2xl font-extrabold text-foreground">{a.title}</h3>
+                  <p className="mt-1 text-sm text-muted-foreground">{a.description}</p>
+                </div>
+                <span className="mt-auto inline-flex w-fit items-center gap-2 rounded-full bg-gradient-primary px-4 py-2 font-display text-sm font-extrabold text-primary-foreground shadow-soft transition group-hover:translate-x-1">
+                  Mula →
+                </span>
+              </Link>
+            );
+          })}
         </section>
       </main>
     </div>
