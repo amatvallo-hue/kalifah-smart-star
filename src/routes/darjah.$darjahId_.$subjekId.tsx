@@ -6,7 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { getDarjah, getSubjek } from "@/lib/curriculum";
 
-export const Route = createFileRoute("/darjah/$darjahId/$subjekId")({
+export const Route = createFileRoute("/darjah/$darjahId_/$subjekId")({
   head: () => ({
     meta: [{ title: "Pilih Aktiviti — Kalifah.my" }],
   }),
@@ -43,7 +43,7 @@ const ACTIVITIES = [
 
 function AktivitiPage() {
   const navigate = useNavigate();
-  const { darjahId, subjekId } = useParams({ from: "/darjah/$darjahId/$subjekId" });
+  const { darjahId, subjekId } = useParams({ from: "/darjah/$darjahId_/$subjekId" });
   const { user, loading } = useAuth();
   const darjah = getDarjah(darjahId);
   const subjek = getSubjek(subjekId);
@@ -113,7 +113,7 @@ function AktivitiPage() {
           {ACTIVITIES.map((a) => {
             const linkProps =
               a.id === "kuiz"
-                ? { to: "/darjah/$darjahId/$subjekId_/kuiz" as const, params: { darjahId, subjekId } }
+                ? { to: "/darjah/$darjahId/$subjekId/kuiz" as const, params: { darjahId, subjekId } }
                 : { to: a.to };
             return (
               <Link

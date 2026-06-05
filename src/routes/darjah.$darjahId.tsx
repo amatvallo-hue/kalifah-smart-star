@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate, useParams } from "@tanstack/react-router";
+import { createFileRoute, Link, Outlet, useNavigate, useParams } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 import { useEffect } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
@@ -55,6 +55,7 @@ function SubjekPage() {
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader stars={42} onLogout={handleLogout} />
+      <Outlet />
       <main className="container mx-auto px-4 py-8">
         <Link to="/" className="inline-flex items-center gap-2 text-sm font-bold text-muted-foreground hover:text-primary">
           <ArrowLeft className="h-4 w-4" />
