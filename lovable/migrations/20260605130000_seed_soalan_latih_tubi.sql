@@ -2,6 +2,11 @@
 -- Existing schema: id, darjah (int), subjek (text), soalan (text),
 --   pilihan_a, pilihan_b, pilihan_c, pilihan_d (text), jawapan_betul (text 'A'/'B'/'C'/'D')
 
+-- Make idempotent: clear existing Darjah 1 seed rows for these subjects
+DELETE FROM public.soalan_latih_tubi
+WHERE darjah = 1
+  AND subjek IN ('matematik','bahasa-melayu','bahasa-inggeris','jawi','pendidikan-islam','sains');
+
 INSERT INTO public.soalan_latih_tubi (darjah, subjek, soalan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan_betul) VALUES
 -- Matematik Darjah 1
 (1,'matematik','1 + 1 = ?','1','2','3','4','B'),
