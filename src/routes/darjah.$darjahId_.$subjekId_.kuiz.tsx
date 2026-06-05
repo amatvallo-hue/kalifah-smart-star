@@ -66,6 +66,25 @@ const BAHASA_INGGERIS_D1: QuizQuestion[] = [
   { soalan: "What is this? 🐘", pilihan: ["lion", "giraffe", "elephant", "horse"], jawapan: 2 },
 ];
 
+// Hardcoded soalan Jawi Darjah 1
+const JAWI_D1: QuizQuestion[] = [
+  { soalan: "Huruf Jawi → ا ialah?", pilihan: ["Ba", "Ta", "Alif", "Jim"], jawapan: 2 },
+  { soalan: "Huruf Jawi → ب ialah?", pilihan: ["Alif", "Ba", "Ta", "Tha"], jawapan: 1 },
+  { soalan: "Huruf Jawi → د ialah?", pilihan: ["Ra", "Zai", "Wau", "Dal"], jawapan: 3 },
+  { soalan: "Huruf Jawi → م ialah?", pilihan: ["Nun", "Wau", "Mim", "Lam"], jawapan: 2 },
+  { soalan: "Huruf Jawi → ن ialah?", pilihan: ["Mim", "Wau", "Nun", "Ya"], jawapan: 2 },
+  { soalan: "Huruf berbunyi S ialah?", pilihan: ["ش", "ز", "س", "ص"], jawapan: 2 },
+  { soalan: "Huruf berbunyi R ialah?", pilihan: ["د", "ر", "ز", "و"], jawapan: 1 },
+  { soalan: "Huruf berbunyi K ialah?", pilihan: ["ق", "غ", "ک", "خ"], jawapan: 2 },
+  { soalan: "Huruf berbunyi L ialah?", pilihan: ["ن", "م", "ل", "و"], jawapan: 2 },
+  { soalan: "Jawi → اِبُو bermaksud?", pilihan: ["abang", "ibu", "adik", "ayah"], jawapan: 1 },
+  { soalan: "Jawi → اَيَه bermaksud?", pilihan: ["ibu", "abang", "ayah", "kakak"], jawapan: 2 },
+  { soalan: "Jawi → كُوچيڠ bermaksud?", pilihan: ["anjing", "arnab", "kucing", "harimau"], jawapan: 2 },
+  { soalan: "Jawi → بُکُو bermaksud?", pilihan: ["pen", "meja", "buku", "kerusi"], jawapan: 2 },
+  { soalan: "Jawi → رومه bermaksud?", pilihan: ["sekolah", "masjid", "rumah", "kedai"], jawapan: 2 },
+  { soalan: "Huruf berbunyi W ialah?", pilihan: ["ي", "ن", "م", "و"], jawapan: 3 },
+];
+
 function KuizPage() {
   const navigate = useNavigate();
   const { darjahId, subjekId } = useParams({ from: "/darjah/$darjahId_/$subjekId_/kuiz" });
