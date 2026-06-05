@@ -213,22 +213,42 @@ function GameSubjekPage() {
               {soalanList[idx].soalan}
             </h2>
 
-            <form onSubmit={hantar} className="mt-6">
-              <input
-                ref={inputRef}
-                value={jwp}
-                onChange={(e) => setJwp(e.target.value)}
-                placeholder="Taip jawapan..."
-                className="w-full rounded-2xl border-2 border-input bg-background p-4 text-center font-display text-2xl font-extrabold text-foreground outline-none transition focus:border-primary"
-              />
-              <button
-                type="submit"
-                disabled={jwp.trim().length === 0}
-                className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-primary px-6 py-4 font-display text-lg font-extrabold text-primary-foreground shadow-soft transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                <Send className="h-5 w-5" /> Hantar
-              </button>
-            </form>
+            {soalanList[idx].options ? (
+              <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                {soalanList[idx].options!.map((opt) => {
+                  const letter = opt.charAt(0);
+                  return (
+                    <button
+                      key={letter}
+                      onClick={() => {
+                        setJwp(letter);
+                        setTimeout(() => hantar(), 50);
+                      }}
+                      className="rounded-2xl border-2 border-input bg-background p-4 text-left font-display text-lg font-extrabold text-foreground transition hover:border-primary hover:bg-secondary"
+                    >
+                      {opt}
+                    </button>
+                  );
+                })}
+              </div>
+            ) : (
+              <form onSubmit={hantar} className="mt-6">
+                <input
+                  ref={inputRef}
+                  value={jwp}
+                  onChange={(e) => setJwp(e.target.value)}
+                  placeholder="Taip jawapan..."
+                  className="w-full rounded-2xl border-2 border-input bg-background p-4 text-center font-display text-2xl font-extrabold text-foreground outline-none transition focus:border-primary"
+                />
+                <button
+                  type="submit"
+                  disabled={jwp.trim().length === 0}
+                  className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-primary px-6 py-4 font-display text-lg font-extrabold text-primary-foreground shadow-soft transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  <Send className="h-5 w-5" /> Hantar
+                </button>
+              </form>
+            )}
           </div>
         ) : (
           <div className="mt-6 rounded-3xl bg-gradient-hero p-8 text-center shadow-card">
