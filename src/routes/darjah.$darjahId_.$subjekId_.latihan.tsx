@@ -35,10 +35,22 @@ const BANK: Record<string, Soalan[]> = {
     { soalan: "Lengkapkan: 'Ibu memasak ___.'", jawapan: "nasi", petunjuk: "apa yang dimasak ibu" },
     { soalan: "Lengkapkan: 'Langit berwarna ___.'", jawapan: "biru", petunjuk: "tengok langit siang" },
     { soalan: "Apakah lawan kata 'panas'?", jawapan: "sejuk", petunjuk: "lawan kepada panas" },
-    { soalan: "Apakah lawan kata 'siang'?", jawapan: "malam", petunjuk: "masa yang gelap" },
-    { soalan: "Tulis satu ayat mudah tentang diri anda.", jawapan: "nama saya", petunjuk: "cerita tentang diri sendiri" },
-  ],
-};
+     { soalan: "Apakah lawan kata 'siang'?", jawapan: "malam", petunjuk: "masa yang gelap" },
+     { soalan: "Tulis satu ayat mudah tentang diri anda.", jawapan: "nama saya", petunjuk: "cerita tentang diri sendiri" },
+   ],
+   "1:bahasa-inggeris": [
+     { soalan: "Spell the word for 🐘.", jawapan: "elephant", petunjuk: "big animal with long trunk" },
+     { soalan: "Spell the word for 🍎.", jawapan: "apple", petunjuk: "red fruit" },
+     { soalan: "Spell the word for 🌟.", jawapan: "star", petunjuk: "shines in sky at night" },
+     { soalan: "Spell the word for 🐟.", jawapan: "fish", petunjuk: "lives in water" },
+     { soalan: "Spell the word for 🌸.", jawapan: "flower", petunjuk: "beautiful colourful plant" },
+     { soalan: "Complete: 'I eat ___ for breakfast.'", jawapan: "rice", petunjuk: "what do you eat in morning" },
+     { soalan: "Complete: 'My favourite colour is ___.'", jawapan: "blue", petunjuk: "what is your favourite colour" },
+     { soalan: "Complete: 'I go to ___ every day.'", jawapan: "school", petunjuk: "where do you study" },
+     { soalan: "Name 3 colours in English.", jawapan: "red blue green", petunjuk: "colours of rainbow" },
+     { soalan: "What do you say before sleep?", jawapan: "good night", petunjuk: "greeting at night time" },
+   ],
+ };
 
 function normalize(s: string) {
   return s.trim().toLowerCase().replace(/\s+/g, " ");
