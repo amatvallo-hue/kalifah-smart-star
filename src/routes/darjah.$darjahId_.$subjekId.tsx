@@ -116,7 +116,7 @@ function AktivitiPage() {
                 ? { to: "/darjah/$darjahId/$subjekId/kuiz" as const, params: { darjahId, subjekId } }
                 : a.id === "latihan"
                 ? { to: "/darjah/$darjahId/$subjekId/latihan" as const, params: { darjahId, subjekId } }
-                : { to: a.to };
+                : { to: "/darjah/$darjahId/$subjekId/game" as const, params: { darjahId, subjekId } };
             return (
               <Link
                 key={a.id}
