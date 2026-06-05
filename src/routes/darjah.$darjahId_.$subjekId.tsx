@@ -43,7 +43,7 @@ const ACTIVITIES = [
 
 function AktivitiPage() {
   const navigate = useNavigate();
-  const { darjahId, subjekId } = useParams({ from: "/darjah/$darjahId/$subjekId" });
+  const { darjahId, subjekId } = useParams({ from: "/darjah/$darjahId_/$subjekId" });
   const { user, loading } = useAuth();
   const darjah = getDarjah(darjahId);
   const subjek = getSubjek(subjekId);
