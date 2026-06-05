@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate, useParams } from "@tanstack/react-router";
-import { ArrowLeft, Gamepad2, PenLine, Target } from "lucide-react";
+import { ArrowLeft, Gamepad2, PenLine, Target, Zap } from "lucide-react";
 import { useEffect } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
@@ -37,6 +37,14 @@ const ACTIVITIES = [
     description: "Main sambil belajar — seronok!",
     icon: Gamepad2,
     tone: "from-rose-400 to-rose-300 text-rose-900",
+    to: "/kuiz" as const,
+  },
+  {
+    id: "latih-tubi" as const,
+    title: "Latih Tubi",
+    description: "Soalan rawak tanpa had — uji daya tahan!",
+    icon: Zap,
+    tone: "from-emerald-500 to-amber-400 text-white",
     to: "/kuiz" as const,
   },
 ];
@@ -116,6 +124,8 @@ function AktivitiPage() {
                 ? { to: "/darjah/$darjahId/$subjekId/kuiz" as const, params: { darjahId, subjekId } }
                 : a.id === "latihan"
                 ? { to: "/darjah/$darjahId/$subjekId/latihan" as const, params: { darjahId, subjekId } }
+                : a.id === "latih-tubi"
+                ? { to: "/darjah/$darjahId/$subjekId/latih-tubi" as const, params: { darjahId, subjekId } }
                 : { to: "/darjah/$darjahId/$subjekId/game" as const, params: { darjahId, subjekId } };
             return (
               <Link
