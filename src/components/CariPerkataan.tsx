@@ -294,3 +294,31 @@ export const BM_DARJAH1_CLUES: Record<string, string> = {
   IKAN: "Haiwan yang hidup dalam air",
   BULAN: "Cahaya di langit malam",
 };
+
+export const BI_DARJAH1_WORDS: Word[] = [
+  // Across
+  { word: "CAT", row: 0, col: 0, dir: "H" },
+  { word: "DOG", row: 2, col: 0, dir: "H" },
+  { word: "SUN", row: 4, col: 0, dir: "H" },
+  { word: "MOON", row: 6, col: 0, dir: "H" },
+  { word: "BOOK", row: 8, col: 0, dir: "H" },
+  // Down
+  { word: "FISH", row: 0, col: 5, dir: "V" },
+  { word: "BIRD", row: 0, col: 7, dir: "V" },
+  { word: "TREE", row: 1, col: 3, dir: "V" },
+  { word: "BLUE", row: 2, col: 6, dir: "V" },
+  { word: "HAND", row: 4, col: 9, dir: "V" },
+];
+
+export const BI_DARJAH1_CLUES: Record<string, string> = {
+  CAT: "Animal that meows",
+  DOG: "Animal that barks",
+  SUN: "Shines during the day",
+  MOON: "Shines at night",
+  BOOK: "We read this to learn",
+  FISH: "Lives in water",
+  BIRD: "Has wings and can fly",
+  TREE: "Has leaves and roots",
+  BLUE: "Colour of the sky",
+  HAND: "Part of our body",
+};
