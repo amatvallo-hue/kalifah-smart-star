@@ -396,6 +396,12 @@ export const QUIZ_BANK: Record<string, QuizQuestion[]> = {
   "4:jawi": JAWI_D4,
   "4:pendidikan-islam": PI_D4,
   "4:sains": SAINS_D4,
+  "5:bahasa-melayu": BM_D5,
+  "5:matematik": MATE_D5,
+  "5:bahasa-inggeris": BI_D5,
+  "5:jawi": JAWI_D5,
+  "5:pendidikan-islam": PI_D5,
+  "5:sains": SAINS_D5,
 };
 
 export function getQuiz(darjahId: string, subjekId: string): QuizQuestion[] | undefined {
