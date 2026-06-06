@@ -277,6 +277,13 @@ function GameSubjekPage() {
               clues={BM_DARJAH1_CLUES}
               gridSize={10}
             />
+          ) : isBM2 ? (
+            <CariPerkataan
+              words={BM_DARJAH2_WORDS}
+              clues={BM_DARJAH2_CLUES}
+              gridSize={10}
+              title="Cari Perkataan Bahasa Melayu"
+            />
           ) : isBI ? (
             <CariPerkataan
               words={BI_DARJAH1_WORDS}
