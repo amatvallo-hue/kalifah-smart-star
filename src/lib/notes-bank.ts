@@ -982,6 +982,73 @@ export const NOTES_BANK: Record<string, SubjectNotes> = {
       { title: "Kitar Semula", icon: "♻️", items: ["Proses semula bahan buangan — kertas, plastik, logam"] },
     ],
   },
+  "5:bahasa-melayu": {
+    subject: "Bahasa Melayu",
+    sections: [
+      { title: "Novel", icon: "📖", items: ["Karya prosa panjang berbentuk naratif", "Mengandungi plot, watak, latar dan tema"] },
+      { title: "Cerpen", icon: "📄", items: ["Cerita pendek kurang 10000 patah perkataan", "Singkat padat dan berkesan"] },
+      { title: "Tema & Plot", icon: "🎭", items: ["Tema = persoalan utama karya", "Plot = susunan peristiwa dalam cerita"] },
+      { title: "Watak", icon: "👤", items: ["Protagonis = watak utama yang baik", "Antagonis = watak yang menentang protagonis"] },
+      { title: "Latar", icon: "🌍", items: ["Latar tempat = tempat cerita berlaku", "Latar masa = masa cerita berlaku"] },
+      { title: "Imbuhan Sisipan", icon: "✂️", items: ["Imbuhan di tengah kata", "Contoh: geletar, gelegar, gemilang"] },
+      { title: "Simpulan Bahasa", icon: "💬", items: ["Ungkapan pendek dengan makna kiasan", "Contoh: kaki bangku = bodoh"] },
+    ],
+  },
+  "5:matematik": {
+    subject: "Matematik",
+    sections: [
+      { title: "Tambah Tolak", icon: "➕", items: ["Nombor 6 digit. Contoh: 23456 + 34567 = 58023"] },
+      { title: "Darab & Bahagi", icon: "✖️", items: ["Nombor besar: 15 × 15 = 225", "360 ÷ 15 = 24"] },
+      { title: "Pecahan", icon: "🍕", items: ["Tambah tolak pecahan beza penyebut", "2/5 + 3/5 = 1", "3/4 - 1/8 = 5/8"] },
+      { title: "Perpuluhan", icon: "🔢", items: ["1.25 + 2.75 = 4.0"] },
+      { title: "Bulatan", icon: "⭕", items: ["Luas = π × j² (π = 22/7). Jejari 7cm = 154cm²", "Perimeter = π × d. Diameter 14cm = 44cm"] },
+      { title: "Nombor Perdana", icon: "🔢", items: ["Hanya boleh dibahagi 1 dan dirinya", "Antara 20-30: 23 dan 29"] },
+      { title: "Faktor & Gandaan", icon: "📊", items: ["Faktor = nombor yang boleh membahagi", "Gandaan = hasil darab dengan nombor"] },
+    ],
+  },
+  "5:bahasa-inggeris": {
+    subject: "Bahasa Inggeris",
+    sections: [
+      { title: "Complex Sentence", icon: "🔗", items: ["Main clause + subordinate clause", "Example: Although it rained, we went to school."] },
+      { title: "Passive Voice", icon: "🔄", items: ["Subject receives the action", "is/are/was/were + past participle", "Example: The book is read by Ali."] },
+      { title: "Present Perfect", icon: "⏳", items: ["has/have + past participle", "Example: She has finished her homework."] },
+      { title: "Reported Speech", icon: "💬", items: ["Telling what someone said without quoting", "Example: He said he was happy."] },
+      { title: "First Conditional", icon: "1️⃣", items: ["if + present, will + base verb", "Example: If it rains, I will stay home."] },
+      { title: "Second Conditional", icon: "2️⃣", items: ["if + past, would + base verb", "Example: If I were rich, I would buy a car."] },
+      { title: "Idiom", icon: "🎭", items: ["Phrase with figurative meaning", "Example: break a leg = good luck"] },
+    ],
+  },
+  "5:jawi": {
+    subject: "Jawi",
+    sections: [
+      { title: "Ejaan Perkataan Panjang", icon: "✍️", items: ["kemasyarakatan = کماسياراکتن", "kepimpinan = کڤيمڤينن", "pembangunan = ڤمبانڬونن", "keharmonian = کهارمونين", "perjuangan = ڤرجواڠن"] },
+      { title: "6 Huruf Tambahan Jawi", icon: "📌", items: ["ڤ = pa · چ = cha · ڠ = nga · ڬ = ga · ۏ = va · ݢ = ga"] },
+      { title: "Sejarah & Kepentingan", icon: "📜", items: ["Tulisan Jawi berasal dari huruf Arab", "Digunakan di Alam Melayu sejak abad ke-14", "Pewarisan budaya dan identiti bahasa"] },
+    ],
+  },
+  "5:pendidikan-islam": {
+    subject: "Pendidikan Islam",
+    sections: [
+      { title: "Aqidah", icon: "🛡️", items: ["Kepercayaan dan keyakinan dalam Islam"] },
+      { title: "Syariah", icon: "📜", items: ["Undang-undang Islam", "Terbahagi kepada ibadat, muamalat, jenayah, perundangan, keluarga, siasah"] },
+      { title: "Akhlak", icon: "✨", items: ["Budi pekerti yang mulia", "Mahmudah & mazmumah"] },
+      { title: "Sirah Nabi", icon: "📖", items: ["Nabi lahir 570M, terima wahyu usia 40 tahun di Gua Hira", "Dakwah Makkah 13 tahun, Madinah 10 tahun"] },
+      { title: "Fardu Ain", icon: "👤", items: ["Kewajipan individu — solat, puasa, zakat, haji"] },
+      { title: "Fardu Kifayah", icon: "👥", items: ["Kewajipan kolektif — jika dilakukan oleh sebahagian, gugur dari yang lain"] },
+      { title: "Sunnah & Bidaah", icon: "⭐", items: ["Sunnah = amalan Nabi yang digalakkan", "Bidaah = perkara baru dalam agama tanpa asas"] },
+    ],
+  },
+  "5:sains": {
+    subject: "Sains",
+    sections: [
+      { title: "DNA & Gen", icon: "🧬", items: ["DNA = bahan genetik dalam nukleus sel", "Gen = unit pewarisan sifat"] },
+      { title: "Pembiakan", icon: "🌱", items: ["Seks = dua induk", "Aseks = satu induk — keratan, mencambah, bertunas"] },
+      { title: "Ekologi", icon: "🌳", items: ["Kajian hubungan organisma dan persekitaran"] },
+      { title: "Biodiversiti", icon: "🦋", items: ["Kepelbagaian spesies hidupan", "Ancaman: pembalakan haram, pembangunan tanpa kawalan"] },
+      { title: "Kesan Rumah Hijau", icon: "🏠", items: ["Pemanasan bumi akibat gas rumah hijau", "Gas: karbon dioksida, metana, wap air"] },
+      { title: "Tenaga", icon: "⚡", items: ["Nuklear = pembelahan atom", "Geoterma = panas bumi"] },
+    ],
+  },
 };
 
 export function getNotes(darjahId: string, subjekId: string): SubjectNotes | null {
