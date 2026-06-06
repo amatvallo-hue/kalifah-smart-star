@@ -465,7 +465,13 @@ function GameSubjekPage() {
   const isJawi4 = darjahId === "4" && subjekId === "jawi";
   const isPI4 = darjahId === "4" && subjekId === "pendidikan-islam";
   const isSains4 = darjahId === "4" && subjekId === "sains";
-  const hasCariPerkataan = isMate || isMate2 || isMate3 || isMate4 || isBM || isBM2 || isBM3 || isBM4 || isBI || isBI2 || isBI3 || isBI4 || isJawi || isJawi2 || isJawi3 || isJawi4 || isPI || isPI2 || isPI3 || isPI4 || isSains || isSains2 || isSains3 || isSains4;
+  const isBM5 = darjahId === "5" && subjekId === "bahasa-melayu";
+  const isMate5 = darjahId === "5" && subjekId === "matematik";
+  const isBI5 = darjahId === "5" && subjekId === "bahasa-inggeris";
+  const isJawi5 = darjahId === "5" && subjekId === "jawi";
+  const isPI5 = darjahId === "5" && subjekId === "pendidikan-islam";
+  const isSains5 = darjahId === "5" && subjekId === "sains";
+  const hasCariPerkataan = isMate || isMate2 || isMate3 || isMate4 || isMate5 || isBM || isBM2 || isBM3 || isBM4 || isBM5 || isBI || isBI2 || isBI3 || isBI4 || isBI5 || isJawi || isJawi2 || isJawi3 || isJawi4 || isJawi5 || isPI || isPI2 || isPI3 || isPI4 || isPI5 || isSains || isSains2 || isSains3 || isSains4 || isSains5;
 
   const [mode, setMode] = useState<"race" | "cari">("race");
 
