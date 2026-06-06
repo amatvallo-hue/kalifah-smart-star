@@ -5,6 +5,24 @@ export type QuizQuestion = {
   nota?: string;
 };
 
+const SAINS_D2: QuizQuestion[] = [
+  { soalan: "Apakah proses tumbuhan membuat makanan?", pilihan: ["Respirasi", "Fotosintesis", "Evaporasi", "Kondensasi"], jawapan: 1 },
+  { soalan: "Apakah gas yang dihasilkan semasa fotosintesis?", pilihan: ["Karbon dioksida", "Nitrogen", "Oksigen", "Hidrogen"], jawapan: 2 },
+  { soalan: "Apakah gas yang diserap tumbuhan semasa fotosintesis?", pilihan: ["Oksigen", "Nitrogen", "Karbon dioksida", "Hidrogen"], jawapan: 2 },
+  { soalan: "Tiga keadaan jirim ialah?", pilihan: ["pepejal cecair wap", "pepejal cecair gas", "pepejal gas wap", "cecair gas wap"], jawapan: 1 },
+  { soalan: "Contoh pepejal ialah?", pilihan: ["air", "udara", "batu", "wap"], jawapan: 2 },
+  { soalan: "Contoh cecair ialah?", pilihan: ["batu", "kayu", "air", "besi"], jawapan: 2 },
+  { soalan: "Contoh gas ialah?", pilihan: ["batu", "kayu", "air", "udara"], jawapan: 3 },
+  { soalan: "Apakah yang berlaku kepada pepejal apabila dipanaskan?", pilihan: ["membeku", "melebur", "menyejat", "memampat"], jawapan: 1 },
+  { soalan: "Apakah yang berlaku kepada cecair apabila dipanaskan?", pilihan: ["membeku", "melebur", "menyejat", "memampat"], jawapan: 2 },
+  { soalan: "Kitaran air bermula dengan?", pilihan: ["hujan", "awan", "penyejatan", "kondensasi"], jawapan: 2 },
+  { soalan: "Haiwan yang bertelur dipanggil?", pilihan: ["mamalia", "reptilia", "ovipar", "vivipar"], jawapan: 2 },
+  { soalan: "Haiwan yang melahirkan anak dipanggil?", pilihan: ["mamalia", "reptilia", "ovipar", "vivipar"], jawapan: 3 },
+  { soalan: "Magnet menarik benda yang diperbuat daripada?", pilihan: ["kayu", "plastik", "besi", "kaca"], jawapan: 2 },
+  { soalan: "Cahaya bergerak dalam garis?", pilihan: ["bengkok", "lurus", "melengkung", "zigzag"], jawapan: 1 },
+  { soalan: "Kita tidak boleh mendengar bunyi di?", pilihan: ["dalam air", "dalam tanah", "angkasa lepas", "dalam bilik"], jawapan: 2 },
+];
+
 // Key format: `${darjahId}:${subjekId}`
 export const QUIZ_BANK: Record<string, QuizQuestion[]> = {
   "1:matematik": [
@@ -41,6 +59,7 @@ export const QUIZ_BANK: Record<string, QuizQuestion[]> = {
     { soalan: "Apakah antonim 'besar'?", pilihan: ["tinggi", "panjang", "kecil", "lebar"], jawapan: 2 },
     { soalan: "Pilih kata sendi nama:", pilihan: ["berlari", "di", "cantik", "meja"], jawapan: 1 },
   ],
+  "2:sains": SAINS_D2,
 };
 
 export function getQuiz(darjahId: string, subjekId: string): QuizQuestion[] | undefined {
