@@ -450,3 +450,32 @@ export const BM_DARJAH2_CLUES: Record<string, string> = {
   SEKOLAH: "Tempat belajar",
   MEMBACA: "Aktiviti dengan buku",
 };
+
+// Matematik Darjah 2 — 10x10 grid with 10 words.
+export const MATE_DARJAH2_WORDS: Word[] = [
+  // Mendatar
+  { word: "TAMBAH", row: 0, col: 0, dir: "H" },
+  { word: "TOLAK", row: 2, col: 0, dir: "H" },
+  { word: "DARAB", row: 4, col: 0, dir: "H" },
+  { word: "BAHAGI", row: 6, col: 0, dir: "H" },
+  { word: "NOMBOR", row: 8, col: 0, dir: "H" },
+  // Menegak
+  { word: "NILAI", row: 0, col: 5, dir: "V" },
+  { word: "SIFIR", row: 0, col: 7, dir: "V" },
+  { word: "DIGIT", row: 1, col: 3, dir: "V" },
+  { word: "PULUH", row: 2, col: 8, dir: "V" },
+  { word: "RATUS", row: 3, col: 9, dir: "V" },
+];
+
+export const MATE_DARJAH2_CLUES: Record<string, string> = {
+  TAMBAH: "Operasi 25 + 37",
+  TOLAK: "Operasi 84 - 46",
+  DARAB: "Operasi 6 × 3",
+  BAHAGI: "Operasi 20 ÷ 4",
+  NOMBOR: "Angka yang kita kira",
+  SIFIR: "Jadual pendaraban",
+  NILAI: "Berapa banyak digit itu",
+  DIGIT: "Angka dalam nombor",
+  PULUH: "Nilai tempat kedua",
+  RATUS: "Nilai tempat ketiga",
+};
