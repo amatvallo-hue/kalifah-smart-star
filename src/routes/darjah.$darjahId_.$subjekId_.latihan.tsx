@@ -122,6 +122,18 @@ const BANK: Record<string, Soalan[]> = {
     { soalan: "Write the opposite of 'happy'.", jawapan: "sad", petunjuk: "antonym" },
     { soalan: "Write the opposite of 'big'.", jawapan: "small", petunjuk: "antonym" },
   ],
+  "2:jawi": [
+    { soalan: "Tulis perkataan 'sekolah' dalam Jawi.", jawapan: "سکول", petunjuk: "se-ko-lah" },
+    { soalan: "Tulis perkataan 'keluarga' dalam Jawi.", jawapan: "كلوارگا", petunjuk: "ke-lu-ar-ga" },
+    { soalan: "Tulis perkataan 'membaca' dalam Jawi.", jawapan: "ممباچا", petunjuk: "mem-ba-ca" },
+    { soalan: "Tulis perkataan 'berlari' dalam Jawi.", jawapan: "برلاري", petunjuk: "ber-la-ri" },
+    { soalan: "Tulis perkataan 'Malaysia' dalam Jawi.", jawapan: "مليسيا", petunjuk: "Ma-lay-si-a" },
+    { soalan: "Apakah bunyi huruf Jawi ڠ ?", jawapan: "nga", petunjuk: "huruf tambahan Jawi" },
+    { soalan: "Apakah bunyi huruf Jawi چ ?", jawapan: "cha", petunjuk: "huruf tambahan Jawi" },
+    { soalan: "Apakah bunyi huruf Jawi ڤ ?", jawapan: "pa", petunjuk: "huruf tambahan Jawi" },
+    { soalan: "Jawi گورو bermaksud apa?", jawapan: "guru", petunjuk: "orang yang mengajar" },
+    { soalan: "Jawi مليسيا bermaksud apa?", jawapan: "Malaysia", petunjuk: "negara kita" },
+  ],
 };
 
 function normalize(s: string) {
