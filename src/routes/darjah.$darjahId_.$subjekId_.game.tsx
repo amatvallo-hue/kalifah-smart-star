@@ -130,7 +130,8 @@ function GameSubjekPage() {
   const isMate = darjahId === "1" && subjekId === "matematik";
   const isJawi = darjahId === "1" && subjekId === "jawi";
   const isPI = darjahId === "1" && subjekId === "pendidikan-islam";
-  const hasCariPerkataan = isMate || isBM || isBI || isJawi || isPI;
+  const isSains = darjahId === "1" && subjekId === "sains";
+  const hasCariPerkataan = isMate || isBM || isBI || isJawi || isPI || isSains;
   const [mode, setMode] = useState<"race" | "cari">("race");
 
   useEffect(() => {
