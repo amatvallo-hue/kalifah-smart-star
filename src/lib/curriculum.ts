@@ -19,11 +19,11 @@ export interface Subjek {
 
 export const DARJAH_LIST: Darjah[] = [
   { id: "1", label: "Darjah 1", tagline: "Mula pengembaraan!", locked: false },
-  { id: "2", label: "Darjah 2", tagline: "Akan datang", locked: true },
-  { id: "3", label: "Darjah 3", tagline: "Akan datang", locked: true },
-  { id: "4", label: "Darjah 4", tagline: "Akan datang", locked: true },
-  { id: "5", label: "Darjah 5", tagline: "Akan datang", locked: true },
-  { id: "6", label: "Darjah 6", tagline: "Akan datang", locked: true },
+  { id: "2", label: "Darjah 2", tagline: "Teruskan belajar!", locked: false },
+  { id: "3", label: "Darjah 3", tagline: "Naik ke tahap baru!", locked: false },
+  { id: "4", label: "Darjah 4", tagline: "Cabaran lebih hebat!", locked: false },
+  { id: "5", label: "Darjah 5", tagline: "Jadi lebih pandai!", locked: false },
+  { id: "6", label: "Darjah 6", tagline: "Bersedia ke menengah!", locked: false },
 ];
 
 export const SUBJEK_LIST: Subjek[] = [
