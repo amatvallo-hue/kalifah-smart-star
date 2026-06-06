@@ -739,3 +739,159 @@ export const PI_DARJAH3_CLUES: Record<string, string> = {
   WUJUD: "Sifat Allah bermaksud Ada",
   BAQA: "Sifat Allah bermaksud Kekal",
 };
+
+// Bahasa Melayu Darjah 4
+export const BM_DARJAH4_WORDS: Word[] = [
+  { word: "PANTUN", row: 0, col: 0, dir: "H" },
+  { word: "DIALOG", row: 2, col: 0, dir: "H" },
+  { word: "MAJMUK", row: 4, col: 0, dir: "H" },
+  { word: "SENDI", row: 6, col: 0, dir: "H" },
+  { word: "NAFI", row: 8, col: 0, dir: "H" },
+  { word: "IMBUHAN", row: 0, col: 6, dir: "V" },
+  { word: "PENGUAT", row: 0, col: 7, dir: "V" },
+  { word: "BILANGAN", row: 0, col: 8, dir: "V" },
+  { word: "DEDIKASI", row: 0, col: 9, dir: "V" },
+  { word: "TANYA", row: 5, col: 5, dir: "V" },
+];
+export const BM_DARJAH4_CLUES: Record<string, string> = {
+  PANTUN: "Puisi tradisional 4 baris",
+  DIALOG: "Perbualan dua orang atau lebih",
+  MAJMUK: "Gabungan dua perkataan",
+  SENDI: "Kata sendi nama — di, ke",
+  NAFI: "Kata seperti 'tidak'",
+  IMBUHAN: "Tambahan pada kata",
+  PENGUAT: "Kata seperti 'sangat'",
+  BILANGAN: "Menunjukkan jumlah",
+  DEDIKASI: "Bersungguh-sungguh",
+  TANYA: "Kata seperti 'siapa', 'apa'",
+};
+
+// Matematik Darjah 4
+export const MATE_DARJAH4_WORDS: Word[] = [
+  { word: "TAMBAH", row: 0, col: 0, dir: "H" },
+  { word: "TOLAK", row: 2, col: 0, dir: "H" },
+  { word: "DARAB", row: 4, col: 0, dir: "H" },
+  { word: "BAHAGI", row: 6, col: 0, dir: "H" },
+  { word: "SUDUT", row: 8, col: 0, dir: "H" },
+  { word: "PECAHAN", row: 0, col: 6, dir: "V" },
+  { word: "DARJAH", row: 0, col: 7, dir: "V" },
+  { word: "PERIMETER", row: 0, col: 8, dir: "V" },
+  { word: "PERPULUHAN", row: 0, col: 9, dir: "V" },
+  { word: "LUAS", row: 1, col: 5, dir: "V" },
+];
+export const MATE_DARJAH4_CLUES: Record<string, string> = {
+  TAMBAH: "Operasi +",
+  TOLAK: "Operasi −",
+  DARAB: "Operasi ×",
+  BAHAGI: "Operasi ÷",
+  SUDUT: "Tirus, tegak, cakah",
+  PECAHAN: "1/2, 3/4 — bahagian",
+  DARJAH: "Unit ukur sudut",
+  PERIMETER: "Jumlah semua sisi",
+  PERPULUHAN: "Nombor dengan titik",
+  LUAS: "Panjang × lebar",
+};
+
+// Bahasa Inggeris Darjah 4
+export const BI_DARJAH4_WORDS: Word[] = [
+  { word: "PRONOUN", row: 0, col: 0, dir: "H" },
+  { word: "SIMILE", row: 2, col: 0, dir: "H" },
+  { word: "TENSE", row: 4, col: 0, dir: "H" },
+  { word: "CLAUSE", row: 6, col: 0, dir: "H" },
+  { word: "ANGRY", row: 8, col: 0, dir: "H" },
+  { word: "MODERN", row: 0, col: 9, dir: "V" },
+  { word: "FURIOUS", row: 0, col: 8, dir: "V" },
+  { word: "BUZZING", row: 0, col: 7, dir: "V" },
+  { word: "SINGING", row: 3, col: 6, dir: "V" },
+  { word: "COMPOUND", row: 1, col: 9, dir: "V" },
+];
+export const BI_DARJAH4_CLUES: Record<string, string> = {
+  PRONOUN: "Replaces a noun",
+  SIMILE: "Compare using 'like' or 'as'",
+  TENSE: "Time of verb",
+  CLAUSE: "Group of words",
+  ANGRY: "Synonym of furious",
+  MODERN: "Antonym of ancient",
+  FURIOUS: "Synonym of angry",
+  BUZZING: "Sound a bee makes",
+  SINGING: "Action of a singer",
+  COMPOUND: "Two clauses joined",
+};
+
+// Jawi Darjah 4
+export const JAWI_DARJAH4_WORDS: Word[] = [
+  { word: "JAWI", row: 0, col: 0, dir: "H" },
+  { word: "RUMI", row: 2, col: 0, dir: "H" },
+  { word: "EJAAN", row: 4, col: 0, dir: "H" },
+  { word: "HURUF", row: 6, col: 0, dir: "H" },
+  { word: "MELAYU", row: 8, col: 0, dir: "H" },
+  { word: "TULISAN", row: 0, col: 9, dir: "V" },
+  { word: "ARAB", row: 0, col: 8, dir: "V" },
+  { word: "KHAT", row: 0, col: 7, dir: "V" },
+  { word: "BAHASA", row: 0, col: 6, dir: "V" },
+  { word: "BUDAYA", row: 0, col: 5, dir: "V" },
+];
+export const JAWI_DARJAH4_CLUES: Record<string, string> = {
+  JAWI: "Tulisan kita",
+  RUMI: "Tulisan Latin",
+  EJAAN: "Cara susun huruf",
+  HURUF: "Aksara dalam tulisan",
+  MELAYU: "Bahasa kita",
+  TULISAN: "Hasil yang ditulis",
+  ARAB: "Bahasa asal Jawi",
+  KHAT: "Seni tulisan",
+  BAHASA: "Cara berkomunikasi",
+  BUDAYA: "Cara hidup masyarakat",
+};
+
+// Pendidikan Islam Darjah 4
+export const PI_DARJAH4_WORDS: Word[] = [
+  { word: "AKHLAK", row: 0, col: 0, dir: "H" },
+  { word: "SABAR", row: 2, col: 0, dir: "H" },
+  { word: "SYUKUR", row: 4, col: 0, dir: "H" },
+  { word: "HIJRAH", row: 6, col: 0, dir: "H" },
+  { word: "AMANAH", row: 8, col: 0, dir: "H" },
+  { word: "ISTIQAMAH", row: 0, col: 9, dir: "V" },
+  { word: "UKHUWAH", row: 0, col: 8, dir: "V" },
+  { word: "TAWADUK", row: 0, col: 7, dir: "V" },
+  { word: "SIRAH", row: 0, col: 6, dir: "V" },
+  { word: "SOLAT", row: 5, col: 5, dir: "V" },
+];
+export const PI_DARJAH4_CLUES: Record<string, string> = {
+  AKHLAK: "Budi pekerti",
+  SABAR: "Tidak mudah marah",
+  SYUKUR: "Terima kasih kepada Allah",
+  HIJRAH: "Berpindah dari Makkah ke Madinah",
+  AMANAH: "Boleh dipercayai",
+  ISTIQAMAH: "Tetap pendirian",
+  UKHUWAH: "Persaudaraan",
+  TAWADUK: "Rendah diri",
+  SIRAH: "Riwayat hidup Nabi",
+  SOLAT: "Ibadat 5 waktu",
+};
+
+// Sains Darjah 4
+export const SAINS_DARJAH4_WORDS: Word[] = [
+  { word: "HABITAT", row: 0, col: 0, dir: "H" },
+  { word: "SELULAR", row: 2, col: 0, dir: "H" },
+  { word: "TENAGA", row: 4, col: 0, dir: "H" },
+  { word: "SOLAR", row: 6, col: 0, dir: "H" },
+  { word: "ADAPTASI", row: 8, col: 0, dir: "H" },
+  { word: "PENCEMARAN", row: 0, col: 9, dir: "V" },
+  { word: "EKOSISTEM", row: 0, col: 8, dir: "V" },
+  { word: "KINETIK", row: 0, col: 7, dir: "V" },
+  { word: "SEMULA", row: 0, col: 6, dir: "V" },
+  { word: "KITAR", row: 5, col: 5, dir: "V" },
+];
+export const SAINS_DARJAH4_CLUES: Record<string, string> = {
+  HABITAT: "Tempat tinggal organisma",
+  SELULAR: "Berkaitan dengan sel",
+  TENAGA: "Keupayaan untuk lakukan kerja",
+  SOLAR: "Tenaga dari matahari",
+  ADAPTASI: "Penyesuaian dengan persekitaran",
+  PENCEMARAN: "Bahan berbahaya di alam",
+  EKOSISTEM: "Komuniti organisma + persekitaran",
+  KINETIK: "Tenaga pergerakan",
+  SEMULA: "Kitar ___ bahan buangan",
+  KITAR: "___ semula bahan",
+};
