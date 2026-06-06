@@ -283,6 +283,13 @@ function GameSubjekPage() {
               gridSize={10}
               title="Cari Perkataan Pendidikan Islam"
             />
+          ) : isSains ? (
+            <CariPerkataan
+              words={SAINS_DARJAH1_WORDS}
+              clues={SAINS_DARJAH1_CLUES}
+              gridSize={10}
+              title="Cari Perkataan Sains"
+            />
           ) : (
             <CariPerkataan />
           )
