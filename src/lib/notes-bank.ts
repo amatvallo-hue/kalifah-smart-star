@@ -527,6 +527,64 @@ export const NOTES_BANK: Record<string, SubjectNotes> = {
       },
     ],
   },
+  "2:sains": {
+    subject: "Sains",
+    sections: [
+      {
+        title: "Fotosintesis",
+        icon: "🌿",
+        items: [
+          "Tumbuhan buat makanan sendiri",
+          "Perlukan: cahaya matahari, air, karbon dioksida",
+          "Menghasilkan: makanan dan oksigen",
+          "Berlaku di daun yang hijau",
+        ],
+      },
+      {
+        title: "Tiga Keadaan Jirim",
+        icon: "💧",
+        items: [
+          "Pepejal — bentuk tetap, contoh: batu, kayu",
+          "Cecair — mengalir, contoh: air, minyak",
+          "Gas — tidak kelihatan, contoh: udara, oksigen",
+        ],
+      },
+      {
+        title: "Perubahan Jirim",
+        icon: "🔄",
+        items: [
+          "Pepejal + haba = cecair (melebur)",
+          "Cecair + haba = gas (menyejat)",
+          "Gas - haba = cecair (kondensasi)",
+          "Cecair - haba = pepejal (membeku)",
+        ],
+      },
+      {
+        title: "Haiwan Mengikut Pemakanan",
+        icon: "🍃",
+        items: [
+          "Herbivor = makan tumbuhan. Contoh: lembu, arnab",
+          "Karnivor = makan daging. Contoh: harimau, singa",
+          "Omnivor = makan tumbuhan dan daging. Contoh: manusia",
+        ],
+      },
+      {
+        title: "Haiwan Mengikut Pembiakan",
+        icon: "🐣",
+        items: [
+          "Ovipar = bertelur. Contoh: ayam, ikan, katak",
+          "Vivipar = melahirkan anak. Contoh: kucing, lembu",
+        ],
+      },
+      {
+        title: "Kitaran Air",
+        icon: "💦",
+        items: [
+          "Penyejatan → Kondensasi → Hujan → ulang semula",
+        ],
+      },
+    ],
+  },
 };
 
 export function getNotes(darjahId: string, subjekId: string): SubjectNotes | null {
