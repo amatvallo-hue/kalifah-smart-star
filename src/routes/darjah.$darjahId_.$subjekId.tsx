@@ -134,6 +134,8 @@ function AktivitiPage() {
                 ? { to: "/darjah/$darjahId/$subjekId/latihan" as const, params: { darjahId, subjekId } }
                 : a.id === "latih-tubi"
                 ? { to: "/darjah/$darjahId/$subjekId/latih-tubi" as const, params: { darjahId, subjekId } }
+                : a.id === "nota-ringkas"
+                ? { to: "/darjah/$darjahId/$subjekId/nota-ringkas" as const, params: { darjahId, subjekId } }
                 : { to: "/darjah/$darjahId/$subjekId/game" as const, params: { darjahId, subjekId } };
             return (
               <Link
