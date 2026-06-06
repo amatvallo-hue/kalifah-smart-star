@@ -416,7 +416,7 @@ function LatihanSubjekPage() {
         <div className="mt-5 flex items-center gap-3">
           <div
             className="flex h-12 w-12 items-center justify-center rounded-2xl text-primary-foreground shadow-soft"
-            style={isJawiD2 ? { background: "#1B8A5A" } : undefined}
+            style={isJawiMcq ? { background: "#1B8A5A" } : undefined}
           >
             <PenLine className="h-6 w-6" />
           </div>
@@ -432,7 +432,7 @@ function LatihanSubjekPage() {
               Soalan {idx + 1} / {totalSoalan}
             </div>
 
-            {isJawiD2 ? (
+            {isJawiMcq ? (
               <>
                 <h2 className="mt-2 font-display text-2xl font-extrabold text-foreground">{mcq.soalan}</h2>
                 <div className="mt-6 grid grid-cols-2 gap-4">
@@ -499,7 +499,7 @@ function LatihanSubjekPage() {
                 >
                   {semak
                     ? "Betul! 🎉"
-                    : isJawiD2
+                    : isJawiMcq
                       ? `Jawapan betul: ${mcq.pilihan[mcq.betul]}`
                       : `Jawapan betul: ${soalan.jawapan}`}
                 </div>
