@@ -163,7 +163,9 @@ const TIME_MAP: Record<string, number> = {
   "2:matematik": 10,
   "2:bahasa-inggeris": 10,
   "2:jawi": 10,
+  "2:pendidikan-islam": 10,
 };
+
 
 
 function totalTimeFor(darjahId: string, subjekId: string) {
@@ -201,8 +203,10 @@ function GameSubjekPage() {
   const isJawi = darjahId === "1" && subjekId === "jawi";
   const isJawi2 = darjahId === "2" && subjekId === "jawi";
   const isPI = darjahId === "1" && subjekId === "pendidikan-islam";
+  const isPI2 = darjahId === "2" && subjekId === "pendidikan-islam";
   const isSains = darjahId === "1" && subjekId === "sains";
   const hasCariPerkataan = isMate || isMate2 || isBM || isBM2 || isBI || isBI2 || isJawi || isJawi2 || isPI || isSains;
+
   const [mode, setMode] = useState<"race" | "cari">("race");
 
   useEffect(() => {
