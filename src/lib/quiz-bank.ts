@@ -78,6 +78,7 @@ export const QUIZ_BANK: Record<string, QuizQuestion[]> = {
     { soalan: "Pilih kata sendi nama:", pilihan: ["berlari", "di", "cantik", "meja"], jawapan: 1 },
   ],
   "2:sains": SAINS_D2,
+  "3:bahasa-melayu": BAHASA_MELAYU_D3,
 };
 
 export function getQuiz(darjahId: string, subjekId: string): QuizQuestion[] | undefined {
