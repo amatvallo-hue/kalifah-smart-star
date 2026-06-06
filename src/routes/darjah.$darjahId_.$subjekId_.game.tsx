@@ -631,6 +631,18 @@ function GameSubjekPage() {
               gridSize={10}
               title="Cari Perkataan Sains"
             />
+          ) : isBM4 ? (
+            <CariPerkataan words={BM_DARJAH4_WORDS} clues={BM_DARJAH4_CLUES} gridSize={10} title="Cari Perkataan Bahasa Melayu" />
+          ) : isMate4 ? (
+            <CariPerkataan words={MATE_DARJAH4_WORDS} clues={MATE_DARJAH4_CLUES} gridSize={10} title="Cari Perkataan Matematik" />
+          ) : isBI4 ? (
+            <CariPerkataan words={BI_DARJAH4_WORDS} clues={BI_DARJAH4_CLUES} gridSize={10} title="Word Search" />
+          ) : isJawi4 ? (
+            <CariPerkataan words={JAWI_DARJAH4_WORDS} clues={JAWI_DARJAH4_CLUES} gridSize={10} title="Cari Perkataan Jawi" />
+          ) : isPI4 ? (
+            <CariPerkataan words={PI_DARJAH4_WORDS} clues={PI_DARJAH4_CLUES} gridSize={10} title="Cari Perkataan Pendidikan Islam" />
+          ) : isSains4 ? (
+            <CariPerkataan words={SAINS_DARJAH4_WORDS} clues={SAINS_DARJAH4_CLUES} gridSize={10} title="Cari Perkataan Sains" />
           ) : (
             <CariPerkataan />
           )
