@@ -323,6 +323,58 @@ export const NOTES_BANK: Record<string, SubjectNotes> = {
       },
     ],
   },
+  "2:matematik": {
+    subject: "Matematik",
+    sections: [
+      {
+        title: "Tambah & Tolak",
+        icon: "➕",
+        items: [
+          "Tambah nombor dua digit: 25 + 37 = 62",
+          "Tolak nombor dua digit: 84 - 46 = 38",
+          "Kumpulkan puluhan dulu, kemudian sa",
+        ],
+      },
+      {
+        title: "Darab (×)",
+        icon: "✖️",
+        items: [
+          "6 × 3 = 18 (sifir 6)",
+          "8 × 4 = 32 (sifir 8)",
+          "9 × 9 = 81 (sifir 9)",
+          "Sifir 2 hingga 9 perlu dihafal",
+        ],
+      },
+      {
+        title: "Bahagi (÷)",
+        icon: "➗",
+        items: [
+          "20 ÷ 4 = 5",
+          "56 ÷ 7 = 8",
+          "Bahagi = pisahkan kepada kumpulan sama banyak",
+        ],
+      },
+      {
+        title: "Nilai Tempat",
+        icon: "🔢",
+        items: [
+          "357 → 3 ratus, 5 puluh, 7 sa",
+          "Digit 3 bernilai 300",
+          "Digit 5 bernilai 50",
+          "Digit 7 bernilai 7",
+        ],
+      },
+      {
+        title: "Pembundaran",
+        icon: "📐",
+        items: [
+          "47 → bundar ke 50 (lebih dekat ke 50)",
+          "83 → bundar ke 80 (lebih dekat ke 80)",
+          "1–4 ke bawah, 5–9 ke atas",
+        ],
+      },
+    ],
+  },
 };
 
 export function getNotes(darjahId: string, subjekId: string): SubjectNotes | null {
