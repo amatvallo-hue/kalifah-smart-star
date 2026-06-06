@@ -727,6 +727,18 @@ function GameSubjekPage() {
             <CariPerkataan words={PI_DARJAH4_WORDS} clues={PI_DARJAH4_CLUES} gridSize={10} title="Cari Perkataan Pendidikan Islam" />
           ) : isSains4 ? (
             <CariPerkataan words={SAINS_DARJAH4_WORDS} clues={SAINS_DARJAH4_CLUES} gridSize={10} title="Cari Perkataan Sains" />
+          ) : isBM5 ? (
+            <CariPerkataan words={BM_DARJAH5_WORDS} clues={BM_DARJAH5_CLUES} gridSize={10} title="Cari Perkataan Bahasa Melayu" />
+          ) : isMate5 ? (
+            <CariPerkataan words={MATE_DARJAH5_WORDS} clues={MATE_DARJAH5_CLUES} gridSize={10} title="Cari Perkataan Matematik" />
+          ) : isBI5 ? (
+            <CariPerkataan words={BI_DARJAH5_WORDS} clues={BI_DARJAH5_CLUES} gridSize={10} title="Word Search" />
+          ) : isJawi5 ? (
+            <CariPerkataan words={JAWI_DARJAH5_WORDS} clues={JAWI_DARJAH5_CLUES} gridSize={10} title="Cari Perkataan Jawi" />
+          ) : isPI5 ? (
+            <CariPerkataan words={PI_DARJAH5_WORDS} clues={PI_DARJAH5_CLUES} gridSize={10} title="Cari Perkataan Pendidikan Islam" />
+          ) : isSains5 ? (
+            <CariPerkataan words={SAINS_DARJAH5_WORDS} clues={SAINS_DARJAH5_CLUES} gridSize={10} title="Cari Perkataan Sains" />
           ) : (
             <CariPerkataan />
           )
