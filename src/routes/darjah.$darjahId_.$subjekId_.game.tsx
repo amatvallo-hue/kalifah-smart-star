@@ -137,7 +137,20 @@ const BANK: Record<string, Soalan[]> = {
     { soalan: "Jawi برلاري bermaksud?", jawapan: "B", options: ["A)berjalan", "B)berlari", "C)berenang", "D)bermain"] },
     { soalan: "Tulisan Jawi dibaca dari arah?", jawapan: "B", options: ["A)kiri ke kanan", "B)kanan ke kiri", "C)atas ke bawah", "D)bawah ke atas"] },
   ],
+  "2:pendidikan-islam": [
+    { soalan: "Rasul terakhir ialah?", jawapan: "D", options: ["A)Nabi Isa", "B)Nabi Musa", "C)Nabi Ibrahim", "D)Nabi Muhammad SAW"] },
+    { soalan: "Kitab Nabi Muhammad SAW?", jawapan: "D", options: ["A)Zabur", "B)Taurat", "C)Injil", "D)Al-Quran"] },
+    { soalan: "Kitab Nabi Musa?", jawapan: "B", options: ["A)Zabur", "B)Taurat", "C)Injil", "D)Al-Quran"] },
+    { soalan: "Malaikat menyampaikan wahyu?", jawapan: "C", options: ["A)Mikail", "B)Izrail", "C)Jibril", "D)Israfil"] },
+    { soalan: "Malaikat mencabut nyawa?", jawapan: "B", options: ["A)Mikail", "B)Izrail", "C)Jibril", "D)Israfil"] },
+    { soalan: "Malaikat meniup sangkakala?", jawapan: "D", options: ["A)Mikail", "B)Izrail", "C)Jibril", "D)Israfil"] },
+    { soalan: "Sifat Wujud bermaksud?", jawapan: "C", options: ["A)Kekal", "B)Maha Esa", "C)Ada", "D)Sedia Ada"] },
+    { soalan: "Sifat Baqa bermaksud?", jawapan: "A", options: ["A)Kekal", "B)Maha Esa", "C)Ada", "D)Sedia Ada"] },
+    { soalan: "Jumlah Nabi dan Rasul wajib diketahui?", jawapan: "B", options: ["A)20", "B)25", "C)30", "D)35"] },
+    { soalan: "Surah Al-Fatihah ada berapa ayat?", jawapan: "C", options: ["A)5", "B)6", "C)7", "D)8"] },
+  ],
 };
+
 
 
 const TIME_MAP: Record<string, number> = {
