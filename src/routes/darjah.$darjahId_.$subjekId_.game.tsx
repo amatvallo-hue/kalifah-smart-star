@@ -365,6 +365,78 @@ const BANK: Record<string, Soalan[]> = {
     { soalan: "Pembukaan Makkah tahun?", jawapan: "C", options: ["A) 6H", "B) 7H", "C) 8H", "D) 9H"] },
     { soalan: "Apakah fardu ain?", jawapan: "B", options: ["A) Kewajipan kolektif", "B) Kewajipan individu", "C) Sunat", "D) Harus"] },
   ],
+    "6:bahasa-melayu": [
+    { soalan: "Apakah maksud konotasi?", jawapan: "B", options: ["A) Makna literal", "B) Makna tersirat atau tambahan sesuatu perkataan", "C) Makna kamus", "D) Makna terjemahan"] },
+    { soalan: "Apakah denotasi?", jawapan: "C", options: ["A) Makna tersirat", "B) Makna tambahan", "C) Makna literal dalam kamus", "D) Makna kiasan"] },
+    { soalan: "Apakah inversi dalam ayat?", jawapan: "B", options: ["A) Ayat biasa", "B) Subjek diletakkan di belakang predikat", "C) Ayat aktif", "D) Ayat pasif"] },
+    { soalan: "Bahasa surat rasmi?", jawapan: "B", options: ["A) Bahasa santai", "B) Bahasa formal baku dan sopan", "C) Bahasa pasar", "D) Bahasa slanga"] },
+    { soalan: "Format surat rasmi?", jawapan: "C", options: ["A) Alamat dan tarikh sahaja", "B) Tajuk sahaja", "C) Alamat tarikh tajuk isi dan penutup", "D) Nama sahaja"] },
+    { soalan: "Apakah eufemisme?", jawapan: "B", options: ["A) Bahasa kasar", "B) Kata halus menggantikan kata kasar", "C) Bahasa pasar", "D) Bahasa asing"] },
+    { soalan: "Contoh eufemisme?", jawapan: "B", options: ["A) mati", "B) meninggal dunia", "C) bunuh", "D) musnah"] },
+    { soalan: "Apakah laras bahasa?", jawapan: "B", options: ["A) Jenis huruf", "B) Variasi bahasa mengikut bidang atau situasi", "C) Jenis ayat", "D) Jenis perkataan"] },
+    { soalan: "Apakah wacana?", jawapan: "B", options: ["A) Ayat tunggal", "B) Unit bahasa yang lebih besar dari ayat", "C) Perkataan tunggal", "D) Suku kata"] },
+    { soalan: "Apakah kohesi?", jawapan: "B", options: ["A) Percanggahan idea", "B) Kesinambungan dan perkaitan antara ayat", "C) Tiada hubungan", "D) Idea berulang"] },
+  ],
+  "6:matematik": [
+    { soalan: "345678 + 456789 = ?", jawapan: "A", options: ["A) 802467", "B) 802367", "C) 802567", "D) 802267"] },
+    { soalan: "1000000 - 456789 = ?", jawapan: "B", options: ["A) 543111", "B) 543211", "C) 543311", "D) 543411"] },
+    { soalan: "25 × 36 = ?", jawapan: "C", options: ["A) 880", "B) 890", "C) 900", "D) 910"] },
+    { soalan: "1440 ÷ 36 = ?", jawapan: "C", options: ["A) 38", "B) 39", "C) 40", "D) 41"] },
+    { soalan: "3/4 × 2/3 = ?", jawapan: "D", options: ["A) 5/7", "B) 6/12", "C) 1/2", "D) B dan C"] },
+    { soalan: "5/6 ÷ 5/3 = ?", jawapan: "A", options: ["A) 1/2", "B) 1/3", "C) 2/3", "D) 25/18"] },
+    { soalan: "2.5 × 1.4 = ?", jawapan: "B", options: ["A) 3.4", "B) 3.5", "C) 3.6", "D) 3.7"] },
+    { soalan: "Isipadu silinder j=7cm t=10cm = ?", jawapan: "A", options: ["A) 1540cm³", "B) 1640cm³", "C) 1740cm³", "D) 1840cm³"] },
+    { soalan: "Luas permukaan kubus 5cm = ?", jawapan: "C", options: ["A) 100cm²", "B) 125cm²", "C) 150cm²", "D) 175cm²"] },
+    { soalan: "Nisbah 2:3:5 jumlah 200 nilai terbesar = ?", jawapan: "C", options: ["A) 80", "B) 90", "C) 100", "D) 110"] },
+  ],
+  "6:bahasa-inggeris": [
+    { soalan: "What is a narrative essay?", jawapan: "B", options: ["A) arguing a point", "B) telling a story", "C) describing something", "D) explaining a process"] },
+    { soalan: "What is an expository essay?", jawapan: "C", options: ["A) telling a story", "B) arguing a point", "C) explaining or informing", "D) describing something"] },
+    { soalan: "What is an argumentative essay?", jawapan: "B", options: ["A) telling a story", "B) arguing and persuading", "C) describing something", "D) explaining a process"] },
+    { soalan: "What is a descriptive essay?", jawapan: "D", options: ["A) telling a story", "B) arguing a point", "C) explaining", "D) describing vividly"] },
+    { soalan: "What is the thesis statement?", jawapan: "B", options: ["A) conclusion", "B) main argument of essay", "C) introduction", "D) body paragraph"] },
+    { soalan: "What is a topic sentence?", jawapan: "B", options: ["A) last sentence", "B) main idea of paragraph", "C) supporting detail", "D) conclusion"] },
+    { soalan: "What is a supporting detail?", jawapan: "B", options: ["A) main idea", "B) evidence that supports topic sentence", "C) conclusion", "D) thesis"] },
+    { soalan: "What is a transition word?", jawapan: "C", options: ["A) noun", "B) verb", "C) word that connects ideas", "D) adjective"] },
+    { soalan: "Example of transition word?", jawapan: "C", options: ["A) run", "B) beautiful", "C) furthermore", "D) quickly"] },
+    { soalan: "What is active voice?", jawapan: "B", options: ["A) subject receives action", "B) subject does action", "C) no subject", "D) no verb"] },
+  ],
+  "6:jawi": [
+    { soalan: "Ejaan Jawi 'kesukarelaan'?", jawapan: "A", options: ["A) کسوکاريلاءن", "B) کيسوکاريلاءن", "C) کسوکرلاءن", "D) کيسوکرلاءن"] },
+    { soalan: "Ejaan Jawi 'pembangunan insan'?", jawapan: "C", options: ["A) ڤمبانڬونن انسن", "B) ڤمبانڬونن اينسن", "C) ڤمبانڬونن انسان", "D) ڤمبانڬونن اينسان"] },
+    { soalan: "Ejaan Jawi 'kelestarian alam'?", jawapan: "C", options: ["A) کلستارين الم", "B) کيلستارين الم", "C) کلستاريان الم", "D) کيلستاريان الم"] },
+    { soalan: "Ejaan Jawi 'kemampanan'?", jawapan: "A", options: ["A) کمامڤانن", "B) کيمامڤانن", "C) کمامڤنن", "D) کيمامڤنن"] },
+    { soalan: "Ejaan Jawi 'kesejahteraan'?", jawapan: "C", options: ["A) کسجاهتراءن", "B) کيسجاهتراءن", "C) کسيجاهتراءن", "D) کيسيجاهتراءن"] },
+    { soalan: "Ejaan Jawi 'kewarganegaraan'?", jawapan: "A", options: ["A) کوارڬانيڬاراءن", "B) کيوارڬانيڬاراءن", "C) کوارڬنيڬاراءن", "D) کوارڬانيڬارأن"] },
+    { soalan: "Ejaan Jawi 'kepelbagaian'?", jawapan: "A", options: ["A) کڤلباڬاين", "B) کيڤلباڬاين", "C) کڤلبڬاين", "D) کيڤلبڬاين"] },
+    { soalan: "Ejaan Jawi 'kesinambungan'?", jawapan: "C", options: ["A) کسينمبوڠن", "B) کيسينمبوڠن", "C) کسينامبوڠن", "D) کيسينامبوڠن"] },
+    { soalan: "Ejaan Jawi 'pemberdayaan'?", jawapan: "A", options: ["A) ڤمبرداياءن", "B) ڤيمبرداياءن", "C) ڤمبيرداياءن", "D) ڤيمبيرداياءن"] },
+    { soalan: "Ejaan Jawi 'pengantarabangsaan'?", jawapan: "C", options: ["A) ڤڠنتارابڠساءن", "B) ڤيڠنتارابڠساءن", "C) ڤڠانتارابڠساءن", "D) ڤيڠانتارابڠساءن"] },
+  ],
+  "6:pendidikan-islam": [
+    { soalan: "Apakah maksud tauhid?", jawapan: "B", options: ["A) mempercayai banyak tuhan", "B) mengesakan Allah", "C) mempercayai malaikat", "D) mempercayai kitab"] },
+    { soalan: "Tiga bahagian tauhid ialah?", jawapan: "A", options: ["A) rububiyyah uluhiyyah asma wassifat", "B) iman islam ihsan", "C) aqidah syariah akhlak", "D) wajib sunat harus"] },
+    { soalan: "Apakah tauhid rububiyyah?", jawapan: "B", options: ["A) mengesakan Allah dalam ibadat", "B) mengesakan Allah sebagai pencipta", "C) mengesakan nama dan sifat Allah", "D) mengesakan Rasul"] },
+    { soalan: "Apakah tauhid uluhiyyah?", jawapan: "C", options: ["A) mengesakan Allah sebagai pencipta", "B) mengesakan nama Allah", "C) mengesakan Allah dalam ibadat", "D) mengesakan Rasul"] },
+    { soalan: "Apakah tauhid asma wassifat?", jawapan: "C", options: ["A) mengesakan Allah sebagai pencipta", "B) mengesakan dalam ibadat", "C) mengesakan nama dan sifat Allah", "D) mengesakan Rasul"] },
+    { soalan: "Apakah syirik?", jawapan: "B", options: ["A) mengesakan Allah", "B) menyekutukan Allah", "C) mempercayai Allah", "D) berdoa kepada Allah"] },
+    { soalan: "Syirik besar contohnya?", jawapan: "C", options: ["A) riak", "B) sum'ah", "C) menyembah berhala", "D) ujub"] },
+    { soalan: "Syirik kecil contohnya?", jawapan: "B", options: ["A) menyembah berhala", "B) riak", "C) kafir", "D) murtad"] },
+    { soalan: "Apakah maksud riak?", jawapan: "B", options: ["A) ikhlas", "B) beramal untuk dipuji manusia", "C) beramal kerana Allah", "D) beramal ikhlas"] },
+    { soalan: "Apakah maksud nifak?", jawapan: "C", options: ["A) jujur", "B) ikhlas", "C) munafik berpura-pura Islam", "D) berani"] },
+  ],
+  "6:sains": [
+    { soalan: "Apakah evolusi?", jawapan: "B", options: ["A) perubahan mendadak", "B) perubahan perlahan spesies dari generasi ke generasi", "C) pembiakan cepat", "D) kepupusan spesies"] },
+    { soalan: "Siapa pencetus teori evolusi?", jawapan: "C", options: ["A) Newton", "B) Einstein", "C) Darwin", "D) Pasteur"] },
+    { soalan: "Apakah seleksi semula jadi?", jawapan: "B", options: ["A) pemilihan manusia", "B) proses alam memilih yang terbaik untuk hidup", "C) pembiakan terpilih", "D) evolusi"] },
+    { soalan: "Apakah fosil?", jawapan: "B", options: ["A) batu biasa", "B) sisa atau kesan organisma purba dalam batuan", "C) mineral", "D) kristal"] },
+    { soalan: "Apakah spesies?", jawapan: "B", options: ["A) individu tunggal", "B) kumpulan organisma yang boleh membiak antara satu sama lain", "C) genus", "D) kingdom"] },
+    { soalan: "Apakah ekosistem akuatik?", jawapan: "B", options: ["A) ekosistem darat", "B) ekosistem air", "C) ekosistem udara", "D) ekosistem gurun"] },
+    { soalan: "Apakah ekosistem terestrial?", jawapan: "B", options: ["A) ekosistem air", "B) ekosistem darat", "C) ekosistem udara", "D) ekosistem lautan"] },
+    { soalan: "Apakah perubahan iklim?", jawapan: "B", options: ["A) cuaca harian", "B) perubahan jangka panjang dalam iklim bumi", "C) musim biasa", "D) angin biasa"] },
+    { soalan: "Punca utama perubahan iklim?", jawapan: "B", options: ["A) aktiviti semula jadi sahaja", "B) aktiviti manusia terutama pembakaran bahan api fosil", "C) cuaca sahaja", "D) musim sahaja"] },
+    { soalan: "Apakah pembangunan lestari?", jawapan: "B", options: ["A) pembangunan pesat", "B) pembangunan yang memenuhi keperluan kini tanpa menjejaskan masa depan", "C) pembangunan lambat", "D) tiada pembangunan"] },
+  ],
   "5:sains": [
     { soalan: "Apakah DNA?", jawapan: "B", options: ["A) Protein", "B) Bahan genetik dalam sel", "C) Vitamin", "D) Mineral"] },
     { soalan: "DNA terdapat dalam?", jawapan: "C", options: ["A) Sitoplasma", "B) Dinding sel", "C) Nukleus", "D) Membran sel"] },
@@ -411,6 +483,12 @@ const TIME_MAP: Record<string, number> = {
   "5:jawi": 10,
   "5:pendidikan-islam": 10,
   "5:sains": 10,
+  "6:bahasa-melayu": 10,
+  "6:matematik": 10,
+  "6:bahasa-inggeris": 10,
+  "6:jawi": 10,
+  "6:pendidikan-islam": 10,
+  "6:sains": 10,
 };
 
 
@@ -471,7 +549,13 @@ function GameSubjekPage() {
   const isJawi5 = darjahId === "5" && subjekId === "jawi";
   const isPI5 = darjahId === "5" && subjekId === "pendidikan-islam";
   const isSains5 = darjahId === "5" && subjekId === "sains";
-  const hasCariPerkataan = isMate || isMate2 || isMate3 || isMate4 || isMate5 || isBM || isBM2 || isBM3 || isBM4 || isBM5 || isBI || isBI2 || isBI3 || isBI4 || isBI5 || isJawi || isJawi2 || isJawi3 || isJawi4 || isJawi5 || isPI || isPI2 || isPI3 || isPI4 || isPI5 || isSains || isSains2 || isSains3 || isSains4 || isSains5;
+  const isBM6 = darjahId === "6" && subjekId === "bahasa-melayu";
+  const isMate6 = darjahId === "6" && subjekId === "matematik";
+  const isBI6 = darjahId === "6" && subjekId === "bahasa-inggeris";
+  const isJawi6 = darjahId === "6" && subjekId === "jawi";
+  const isPI6 = darjahId === "6" && subjekId === "pendidikan-islam";
+  const isSains6 = darjahId === "6" && subjekId === "sains";
+  const hasCariPerkataan = isMate || isMate2 || isMate3 || isMate4 || isMate5 || isBM || isBM2 || isBM3 || isBM4 || isBM5 || isBI || isBI2 || isBI3 || isBI4 || isBI5 || isJawi || isJawi2 || isJawi3 || isJawi4 || isJawi5 || isPI || isPI2 || isPI3 || isPI4 || isPI5 || isSains || isSains2 || isSains3 || isSains4 || isSains5 || isBM6 || isMate6 || isBI6 || isJawi6 || isPI6 || isSains6;
 
   const [mode, setMode] = useState<"race" | "cari">("race");
 
@@ -739,6 +823,18 @@ function GameSubjekPage() {
             <CariPerkataan words={PI_DARJAH5_WORDS} clues={PI_DARJAH5_CLUES} gridSize={10} title="Cari Perkataan Pendidikan Islam" />
           ) : isSains5 ? (
             <CariPerkataan words={SAINS_DARJAH5_WORDS} clues={SAINS_DARJAH5_CLUES} gridSize={10} title="Cari Perkataan Sains" />
+          ) : isBM6 ? (
+            <CariPerkataan words={BM_DARJAH6_WORDS} clues={BM_DARJAH6_CLUES} gridSize={15} title="Cari Perkataan Bahasa Melayu" />
+          ) : isMate6 ? (
+            <CariPerkataan words={MATE_DARJAH6_WORDS} clues={MATE_DARJAH6_CLUES} gridSize={15} title="Cari Perkataan Matematik" />
+          ) : isBI6 ? (
+            <CariPerkataan words={BI_DARJAH6_WORDS} clues={BI_DARJAH6_CLUES} gridSize={15} title="Word Search" />
+          ) : isJawi6 ? (
+            <CariPerkataan words={JAWI_DARJAH6_WORDS} clues={JAWI_DARJAH6_CLUES} gridSize={15} title="Cari Perkataan Jawi" />
+          ) : isPI6 ? (
+            <CariPerkataan words={PI_DARJAH6_WORDS} clues={PI_DARJAH6_CLUES} gridSize={15} title="Cari Perkataan Pendidikan Islam" />
+          ) : isSains6 ? (
+            <CariPerkataan words={SAINS_DARJAH6_WORDS} clues={SAINS_DARJAH6_CLUES} gridSize={15} title="Cari Perkataan Sains" />
           ) : (
             <CariPerkataan />
           )

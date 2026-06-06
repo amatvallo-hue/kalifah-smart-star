@@ -347,6 +347,114 @@ const SAINS_D5: QuizQuestion[] = [
   { soalan: "Gas rumah hijau contohnya?", pilihan: ["oksigen", "nitrogen", "karbon dioksida", "hidrogen"], jawapan: 2 },
 ];
 
+const BM_D6: QuizQuestion[] = [
+  { soalan: "Apakah maksud konotasi?", pilihan: ["Makna literal", "Makna tersirat atau tambahan sesuatu perkataan", "Makna kamus", "Makna terjemahan"], jawapan: 1 },
+  { soalan: "Apakah denotasi?", pilihan: ["Makna tersirat", "Makna tambahan", "Makna literal dalam kamus", "Makna kiasan"], jawapan: 2 },
+  { soalan: "Apakah maksud inversi dalam ayat?", pilihan: ["Ayat biasa", "Subjek diletakkan di belakang predikat", "Ayat aktif", "Ayat pasif"], jawapan: 1 },
+  { soalan: "Apakah ciri-ciri bahasa surat rasmi?", pilihan: ["Bahasa santai", "Bahasa formal baku dan sopan", "Bahasa pasar", "Bahasa slanga"], jawapan: 1 },
+  { soalan: "Format surat rasmi mengandungi?", pilihan: ["Alamat dan tarikh sahaja", "Tajuk sahaja", "Alamat tarikh tajuk isi dan penutup", "Nama sahaja"], jawapan: 2 },
+  { soalan: "Apakah maksud eufemisme?", pilihan: ["Bahasa kasar", "Kata halus menggantikan kata kasar", "Bahasa pasar", "Bahasa asing"], jawapan: 1 },
+  { soalan: "Contoh eufemisme?", pilihan: ["mati", "meninggal dunia", "bunuh", "musnah"], jawapan: 1 },
+  { soalan: "Apakah laras bahasa?", pilihan: ["Jenis huruf", "Variasi bahasa mengikut bidang atau situasi", "Jenis ayat", "Jenis perkataan"], jawapan: 1 },
+  { soalan: "Laras bahasa sains contohnya?", pilihan: ["bahasa santai", "fotosintesis osmosis", "bahasa slanga", "bahasa pasar"], jawapan: 1 },
+  { soalan: "Apakah wacana?", pilihan: ["Ayat tunggal", "Unit bahasa yang lebih besar dari ayat", "Perkataan tunggal", "Suku kata"], jawapan: 1 },
+  { soalan: "Apakah kohesi dalam wacana?", pilihan: ["Percanggahan idea", "Kesinambungan dan perkaitan antara ayat", "Tiada hubungan", "Idea berulang"], jawapan: 1 },
+  { soalan: "Apakah koherensi dalam wacana?", pilihan: ["Percanggahan idea", "Hubungan makna yang logik antara idea", "Ayat tidak berkaitan", "Idea berulang"], jawapan: 1 },
+  { soalan: "Apakah kata hubung syarat?", pilihan: ["dan", "atau", "jika sekiranya", "tetapi"], jawapan: 2 },
+  { soalan: "Apakah kata hubung konsesif?", pilihan: ["dan", "atau", "jika", "walaupun meskipun"], jawapan: 3 },
+  { soalan: "Apakah kata hubung kausatif?", pilihan: ["dan", "kerana sebab", "jika", "walaupun"], jawapan: 1 },
+];
+
+const MATE_D6: QuizQuestion[] = [
+  { soalan: "345678 + 456789 = ?", pilihan: ["802467", "802367", "802567", "802267"], jawapan: 0 },
+  { soalan: "1000000 - 456789 = ?", pilihan: ["543111", "543211", "543311", "543411"], jawapan: 1 },
+  { soalan: "25 × 36 = ?", pilihan: ["880", "890", "900", "910"], jawapan: 2 },
+  { soalan: "1440 ÷ 36 = ?", pilihan: ["38", "39", "40", "41"], jawapan: 2 },
+  { soalan: "3/4 × 2/3 = ?", pilihan: ["5/7", "6/12", "1/2", "B dan C"], jawapan: 3 },
+  { soalan: "5/6 ÷ 5/3 = ?", pilihan: ["1/2", "1/3", "2/3", "25/18"], jawapan: 0 },
+  { soalan: "2.5 × 1.4 = ?", pilihan: ["3.4", "3.5", "3.6", "3.7"], jawapan: 1 },
+  { soalan: "Isipadu silinder jejari 7cm tinggi 10cm = ?", pilihan: ["1540cm³", "1640cm³", "1740cm³", "1840cm³"], jawapan: 0 },
+  { soalan: "Luas permukaan kubus 5cm = ?", pilihan: ["100cm²", "125cm²", "150cm²", "175cm²"], jawapan: 2 },
+  { soalan: "Nisbah 2:3:5 jumlah 200 nilai terbesar = ?", pilihan: ["80", "90", "100", "110"], jawapan: 2 },
+  { soalan: "Peratusan untung beli RM80 jual RM100 = ?", pilihan: ["20%", "25%", "30%", "35%"], jawapan: 1 },
+  { soalan: "Peratusan rugi beli RM100 jual RM80 = ?", pilihan: ["15%", "20%", "25%", "30%"], jawapan: 1 },
+  { soalan: "Faedah kompaun RM1000 5% 2 tahun = ?", pilihan: ["RM1100", "RM1102.50", "RM1105", "RM1110"], jawapan: 1 },
+  { soalan: "Min bagi 5, 8, 11, 14, 17 = ?", pilihan: ["10", "11", "12", "13"], jawapan: 1 },
+  { soalan: "Kebarangkalian dadu nombor genap = ?", pilihan: ["1/6", "1/3", "1/2", "2/3"], jawapan: 2 },
+];
+
+const BI_D6: QuizQuestion[] = [
+  { soalan: "What is a narrative essay?", pilihan: ["arguing a point", "telling a story", "describing something", "explaining a process"], jawapan: 1 },
+  { soalan: "What is an expository essay?", pilihan: ["telling a story", "arguing a point", "explaining or informing", "describing something"], jawapan: 2 },
+  { soalan: "What is an argumentative essay?", pilihan: ["telling a story", "arguing and persuading", "describing something", "explaining a process"], jawapan: 1 },
+  { soalan: "What is a descriptive essay?", pilihan: ["telling a story", "arguing a point", "explaining", "describing vividly"], jawapan: 3 },
+  { soalan: "What is the thesis statement?", pilihan: ["conclusion", "main argument of essay", "introduction", "body paragraph"], jawapan: 1 },
+  { soalan: "What is a topic sentence?", pilihan: ["last sentence", "main idea of paragraph", "supporting detail", "conclusion"], jawapan: 1 },
+  { soalan: "What is a supporting detail?", pilihan: ["main idea", "evidence that supports topic sentence", "conclusion", "thesis"], jawapan: 1 },
+  { soalan: "What is a transition word?", pilihan: ["noun", "verb", "word that connects ideas", "adjective"], jawapan: 2 },
+  { soalan: "Example of a transition word?", pilihan: ["run", "beautiful", "furthermore", "quickly"], jawapan: 2 },
+  { soalan: "What is active voice?", pilihan: ["subject receives action", "subject does action", "no subject", "no verb"], jawapan: 1 },
+  { soalan: "What is passive voice?", pilihan: ["subject does action", "subject receives action", "no subject", "no verb"], jawapan: 1 },
+  { soalan: "Change to active: The book was read by Ali.", pilihan: ["Ali reads book", "Ali read the book", "Ali is reading", "Ali was reading"], jawapan: 1 },
+  { soalan: "What is a rhetorical question?", pilihan: ["question needing answer", "question asked for effect not answer", "yes/no question", "open question"], jawapan: 1 },
+  { soalan: "What is irony?", pilihan: ["literal meaning", "saying opposite of what is meant", "simile", "metaphor"], jawapan: 1 },
+  { soalan: "What is a citation?", pilihan: ["conclusion", "introduction", "reference to source", "topic sentence"], jawapan: 2 },
+];
+
+const JAWI_D6: QuizQuestion[] = [
+  { soalan: "Ejaan Jawi bagi kesukarelaan?", pilihan: ["کسوکاريلاءن", "کيسوکاريلاءن", "کسوکرلاءن", "کيسوکرلاءن"], jawapan: 0 },
+  { soalan: "Ejaan Jawi bagi pembangunan insan?", pilihan: ["ڤمبانڬونن انسن", "ڤمبانڬونن اينسن", "ڤمبانڬونن انسان", "ڤمبانڬونن اينسان"], jawapan: 2 },
+  { soalan: "Ejaan Jawi bagi kelestarian alam?", pilihan: ["کلستارين الم", "کيلستارين الم", "کلستاريان الم", "کيلستاريان الم"], jawapan: 2 },
+  { soalan: "Ejaan Jawi bagi kemampanan?", pilihan: ["کمامڤانن", "کيمامڤانن", "کمامڤنن", "کيمامڤنن"], jawapan: 0 },
+  { soalan: "Ejaan Jawi bagi kesejahteraan?", pilihan: ["کسجاهتراءن", "کيسجاهتراءن", "کسيجاهتراءن", "کيسيجاهتراءن"], jawapan: 2 },
+  { soalan: "Ejaan Jawi bagi kewarganegaraan?", pilihan: ["کوارڬانيڬاراءن", "کيوارڬانيڬاراءن", "کوارڬنيڬاراءن", "کوارڬانيڬارأن"], jawapan: 0 },
+  { soalan: "Ejaan Jawi bagi kepelbagaian?", pilihan: ["کڤلباڬاين", "کيڤلباڬاين", "کڤلبڬاين", "کيڤلبڬاين"], jawapan: 0 },
+  { soalan: "Ejaan Jawi bagi kesinambungan?", pilihan: ["کسينمبوڠن", "کيسينمبوڠن", "کسينامبوڠن", "کيسينامبوڠن"], jawapan: 2 },
+  { soalan: "Ejaan Jawi bagi pemberdayaan?", pilihan: ["ڤمبرداياءن", "ڤيمبرداياءن", "ڤمبيرداياءن", "ڤيمبيرداياءن"], jawapan: 0 },
+  { soalan: "Ejaan Jawi bagi pengantarabangsaan?", pilihan: ["ڤڠنتارابڠساءن", "ڤيڠنتارابڠساءن", "ڤڠانتارابڠساءن", "ڤيڠانتارابڠساءن"], jawapan: 2 },
+  { soalan: "Jawi کسيجاهتراءن bermaksud?", pilihan: ["kemampanan", "kesejahteraan", "kelestarian", "kesukarelaan"], jawapan: 1 },
+  { soalan: "Jawi کڤلباڬاين bermaksud?", pilihan: ["kepelbagaian", "kesinambungan", "kemampanan", "kesejahteraan"], jawapan: 0 },
+  { soalan: "Jawi کوارڬانيڬاراءن bermaksud?", pilihan: ["kepelbagaian", "kewarganegaraan", "kesinambungan", "kemampanan"], jawapan: 1 },
+  { soalan: "Berapa huruf Jawi asas?", pilihan: ["26", "28", "30", "32"], jawapan: 2 },
+  { soalan: "Berapa huruf tambahan Jawi Melayu?", pilihan: ["4", "5", "6", "7"], jawapan: 2 },
+];
+
+const PI_D6: QuizQuestion[] = [
+  { soalan: "Apakah maksud tauhid?", pilihan: ["mempercayai banyak tuhan", "mengesakan Allah", "mempercayai malaikat", "mempercayai kitab"], jawapan: 1 },
+  { soalan: "Tiga bahagian tauhid ialah?", pilihan: ["rububiyyah uluhiyyah asma wassifat", "iman islam ihsan", "aqidah syariah akhlak", "wajib sunat harus"], jawapan: 0 },
+  { soalan: "Apakah tauhid rububiyyah?", pilihan: ["mengesakan Allah dalam ibadat", "mengesakan Allah sebagai pencipta", "mengesakan nama dan sifat Allah", "mengesakan Rasul"], jawapan: 1 },
+  { soalan: "Apakah tauhid uluhiyyah?", pilihan: ["mengesakan Allah sebagai pencipta", "mengesakan nama Allah", "mengesakan Allah dalam ibadat", "mengesakan Rasul"], jawapan: 2 },
+  { soalan: "Apakah tauhid asma wassifat?", pilihan: ["mengesakan Allah sebagai pencipta", "mengesakan dalam ibadat", "mengesakan nama dan sifat Allah", "mengesakan Rasul"], jawapan: 2 },
+  { soalan: "Apakah syirik?", pilihan: ["mengesakan Allah", "menyekutukan Allah", "mempercayai Allah", "berdoa kepada Allah"], jawapan: 1 },
+  { soalan: "Syirik besar contohnya?", pilihan: ["riak", "sum'ah", "menyembah berhala", "ujub"], jawapan: 2 },
+  { soalan: "Syirik kecil contohnya?", pilihan: ["menyembah berhala", "riak", "kafir", "murtad"], jawapan: 1 },
+  { soalan: "Apakah maksud riak?", pilihan: ["ikhlas", "beramal untuk dipuji manusia", "beramal kerana Allah", "beramal ikhlas"], jawapan: 1 },
+  { soalan: "Apakah maksud nifak?", pilihan: ["jujur", "ikhlas", "munafik berpura-pura Islam", "berani"], jawapan: 2 },
+  { soalan: "Ciri munafik ialah?", pilihan: ["jujur", "amanah", "berdusta bila bercakap", "menepati janji"], jawapan: 2 },
+  { soalan: "Apakah maksud riddah?", pilihan: ["masuk Islam", "keluar dari Islam", "berpindah agama", "tidak beragama"], jawapan: 1 },
+  { soalan: "Apakah pengertian jihad sebenar?", pilihan: ["berperang sahaja", "bersungguh-sungguh berjuang di jalan Allah dalam semua aspek", "berperang fizikal", "jihad harta sahaja"], jawapan: 1 },
+  { soalan: "Perang yang dibenarkan dalam Islam ialah?", pilihan: ["perang kerana harta", "perang kerana membela Islam dan mempertahankan diri", "perang kerana dendam", "perang kerana tanah"], jawapan: 1 },
+  { soalan: "Apakah maksud amar makruf nahi mungkar?", pilihan: ["berdiam diri", "menyuruh kebaikan melarang kemungkaran", "hanya melarang", "hanya menyuruh"], jawapan: 1 },
+];
+
+const SAINS_D6: QuizQuestion[] = [
+  { soalan: "Apakah evolusi?", pilihan: ["perubahan mendadak", "perubahan perlahan spesies dari generasi ke generasi", "pembiakan cepat", "kepupusan spesies"], jawapan: 1 },
+  { soalan: "Siapa pencetus teori evolusi?", pilihan: ["Newton", "Einstein", "Darwin", "Pasteur"], jawapan: 2 },
+  { soalan: "Apakah seleksi semula jadi?", pilihan: ["pemilihan manusia", "proses alam memilih yang terbaik untuk hidup", "pembiakan terpilih", "evolusi"], jawapan: 1 },
+  { soalan: "Apakah fosil?", pilihan: ["batu biasa", "sisa atau kesan organisma purba dalam batuan", "mineral", "kristal"], jawapan: 1 },
+  { soalan: "Apakah spesies?", pilihan: ["individu tunggal", "kumpulan organisma yang boleh membiak antara satu sama lain", "genus", "kingdom"], jawapan: 1 },
+  { soalan: "Apakah ekosistem akuatik?", pilihan: ["ekosistem darat", "ekosistem air", "ekosistem udara", "ekosistem gurun"], jawapan: 1 },
+  { soalan: "Apakah ekosistem terestrial?", pilihan: ["ekosistem air", "ekosistem darat", "ekosistem udara", "ekosistem lautan"], jawapan: 1 },
+  { soalan: "Apakah perubahan iklim?", pilihan: ["cuaca harian", "perubahan jangka panjang dalam iklim bumi", "musim biasa", "angin biasa"], jawapan: 1 },
+  { soalan: "Punca utama perubahan iklim?", pilihan: ["aktiviti semula jadi sahaja", "aktiviti manusia terutama pembakaran bahan api fosil", "cuaca sahaja", "musim sahaja"], jawapan: 1 },
+  { soalan: "Apakah pembangunan lestari?", pilihan: ["pembangunan pesat", "pembangunan yang memenuhi keperluan kini tanpa menjejaskan masa depan", "pembangunan lambat", "tiada pembangunan"], jawapan: 1 },
+  { soalan: "Apakah jejak karbon?", pilihan: ["kesan tapak kaki", "jumlah karbon dioksida yang dihasilkan aktiviti manusia", "jenis karbon", "sumber karbon"], jawapan: 1 },
+  { soalan: "Cara kurangkan jejak karbon?", pilihan: ["guna lebih tenaga", "guna tenaga boleh diperbaharui dan kurangkan pembaziran", "buat lebih kilang", "bakar lebih bahan api"], jawapan: 1 },
+  { soalan: "Apakah tenaga boleh diperbaharui?", pilihan: ["minyak", "arang batu", "solar angin air", "gas asli"], jawapan: 2 },
+  { soalan: "Apakah impak teknologi terhadap alam sekitar?", pilihan: ["tiada impak", "pencemaran dan kemusnahan habitat", "baik sahaja", "tidak berkaitan"], jawapan: 1 },
+  { soalan: "Cara pelihara alam sekitar?", pilihan: ["buang sampah merata", "bakar hutan", "kitar semula jimat tenaga dan air", "buka ladang baru"], jawapan: 2 },
+];
+
 // Key format: `${darjahId}:${subjekId}`
 export const QUIZ_BANK: Record<string, QuizQuestion[]> = {
   "1:matematik": [
@@ -402,6 +510,12 @@ export const QUIZ_BANK: Record<string, QuizQuestion[]> = {
   "5:jawi": JAWI_D5,
   "5:pendidikan-islam": PI_D5,
   "5:sains": SAINS_D5,
+  "6:bahasa-melayu": BM_D6,
+  "6:matematik": MATE_D6,
+  "6:bahasa-inggeris": BI_D6,
+  "6:jawi": JAWI_D6,
+  "6:pendidikan-islam": PI_D6,
+  "6:sains": SAINS_D6,
 };
 
 export function getQuiz(darjahId: string, subjekId: string): QuizQuestion[] | undefined {

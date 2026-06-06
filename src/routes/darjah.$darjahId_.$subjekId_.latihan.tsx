@@ -42,6 +42,19 @@ const JAWI_D4_MCQ: SoalanMcq[] = [
   { soalan: "Pilih ejaan Jawi bagi 'kemasyarakatan'", pilihan: ["کماسياراکتن", "کيماسياراکتن", "کماسارکتن", "کيماسارکتن"], betul: 0 },
 ];
 
+const JAWI_D6_MCQ: SoalanMcq[] = [
+  { soalan: "Pilih ejaan Jawi bagi 'kesukarelaan'", pilihan: ["کسوکاريلاءن", "کيسوکاريلاءن", "کسوکرلاءن", "کيسوکرلاءن"], betul: 0 },
+  { soalan: "Pilih ejaan Jawi bagi 'pembangunan insan'", pilihan: ["ڤمبانڬونن انسن", "ڤمبانڬونن اينسن", "ڤمبانڬونن انسان", "ڤمبانڬونن اينسان"], betul: 2 },
+  { soalan: "Pilih ejaan Jawi bagi 'kelestarian alam'", pilihan: ["کلستارين الم", "کيلستارين الم", "کلستاريان الم", "کيلستاريان الم"], betul: 2 },
+  { soalan: "Pilih ejaan Jawi bagi 'kemampanan'", pilihan: ["کمامڤانن", "کيمامڤانن", "کمامڤنن", "کيمامڤنن"], betul: 0 },
+  { soalan: "Pilih ejaan Jawi bagi 'kesejahteraan'", pilihan: ["کسجاهتراءن", "کيسجاهتراءن", "کسيجاهتراءن", "کيسيجاهتراءن"], betul: 2 },
+  { soalan: "Pilih ejaan Jawi bagi 'kewarganegaraan'", pilihan: ["کوارڬانيڬاراءن", "کيوارڬانيڬاراءن", "کوارڬنيڬاراءن", "کوارڬانيڬارأن"], betul: 0 },
+  { soalan: "Pilih ejaan Jawi bagi 'kepelbagaian'", pilihan: ["کڤلباڬاين", "کيڤلباڬاين", "کڤلبڬاين", "کيڤلبڬاين"], betul: 0 },
+  { soalan: "Pilih ejaan Jawi bagi 'kesinambungan'", pilihan: ["کسينمبوڠن", "کيسينمبوڠن", "کسينامبوڠن", "کيسينامبوڠن"], betul: 2 },
+  { soalan: "Pilih ejaan Jawi bagi 'pemberdayaan'", pilihan: ["ڤمبرداياءن", "ڤيمبرداياءن", "ڤمبيرداياءن", "ڤيمبيرداياءن"], betul: 0 },
+  { soalan: "Pilih ejaan Jawi bagi 'pengantarabangsaan'", pilihan: ["ڤڠنتارابڠساءن", "ڤيڠنتارابڠساءن", "ڤڠانتارابڠساءن", "ڤيڠانتارابڠساءن"], betul: 2 },
+];
+
 const JAWI_D5_MCQ: SoalanMcq[] = [
   { soalan: "Pilih ejaan Jawi bagi 'kemasyarakatan'", pilihan: ["کماسياراکتن", "کيماسياراکتن", "کماسارکتن", "کيماسارکتن"], betul: 0 },
   { soalan: "Pilih ejaan Jawi bagi 'kepimpinan'", pilihan: ["کڤيمڤينن", "کيڤيمڤينن", "کڤمڤينن", "کيڤمڤينن"], betul: 0 },
@@ -367,6 +380,66 @@ const BANK: Record<string, Soalan[]> = {
     { soalan: "Apakah fardu kifayah?", jawapan: "kewajipan kolektif", petunjuk: "wajib kolektif" },
     { soalan: "Apakah sunnah?", jawapan: "sesuatu yang dilakukan Nabi dan digalakkan", petunjuk: "amalan Nabi" },
   ],
+  "6:bahasa-melayu": [
+    { soalan: "Apakah konotasi?", jawapan: "makna tersirat atau tambahan sesuatu perkataan", petunjuk: "makna tambahan" },
+    { soalan: "Apakah denotasi?", jawapan: "makna literal dalam kamus", petunjuk: "makna kamus" },
+    { soalan: "Apakah eufemisme?", jawapan: "kata halus menggantikan kata kasar", petunjuk: "kata halus" },
+    { soalan: "Contoh eufemisme?", jawapan: "meninggal dunia gantikan mati", petunjuk: "contoh kata halus" },
+    { soalan: "Apakah laras bahasa?", jawapan: "variasi bahasa mengikut bidang atau situasi", petunjuk: "jenis bahasa" },
+    { soalan: "Format surat rasmi?", jawapan: "alamat tarikh tajuk isi dan penutup", petunjuk: "bahagian surat" },
+    { soalan: "Apakah wacana?", jawapan: "unit bahasa yang lebih besar dari ayat", petunjuk: "unit bahasa" },
+    { soalan: "Apakah kohesi?", jawapan: "kesinambungan dan perkaitan antara ayat", petunjuk: "kesinambungan" },
+    { soalan: "Kata hubung syarat contohnya?", jawapan: "jika sekiranya andainya", petunjuk: "syarat" },
+    { soalan: "Kata hubung konsesif contohnya?", jawapan: "walaupun meskipun sungguhpun", petunjuk: "konsesif" },
+  ],
+  "6:matematik": [
+    { soalan: "Kirakan: 345678 + 456789 = ___", jawapan: "802467", petunjuk: "tambah lajur kanan dulu" },
+    { soalan: "Kirakan: 1000000 - 456789 = ___", jawapan: "543211", petunjuk: "pinjam dari puluh / ratus" },
+    { soalan: "Kirakan: 25 × 36 = ___", jawapan: "900", petunjuk: "sifir 25" },
+    { soalan: "Kirakan: 1440 ÷ 36 = ___", jawapan: "40", petunjuk: "bahagi 36" },
+    { soalan: "Kirakan: 3/4 × 2/3 = ___", jawapan: "1/2", petunjuk: "darab pecahan" },
+    { soalan: "Kirakan: 5/6 ÷ 5/3 = ___", jawapan: "1/2", petunjuk: "bahagi pecahan" },
+    { soalan: "Kirakan: 2.5 × 1.4 = ___", jawapan: "3.5", petunjuk: "darab perpuluhan" },
+    { soalan: "Isipadu silinder j=7cm t=10cm = ___", jawapan: "1540cm³", petunjuk: "π = 22/7" },
+    { soalan: "Nisbah 2:3:5 jumlah 200 nilai terbesar = ___", jawapan: "100", petunjuk: "bahagikan mengikut nisbah" },
+    { soalan: "Peratusan untung beli RM80 jual RM100 = ___", jawapan: "25%", petunjuk: "(jual - beli) / beli × 100%" },
+  ],
+  "6:bahasa-inggeris": [
+    { soalan: "Apakah narrative essay?", jawapan: "essay yang menceritakan kisah", petunjuk: "story essay" },
+    { soalan: "Apakah thesis statement?", jawapan: "hujah utama sesebuah esei", petunjuk: "main argument" },
+    { soalan: "Apakah topic sentence?", jawapan: "idea utama perenggan", petunjuk: "main idea paragraph" },
+    { soalan: "Tulis transition word contoh?", jawapan: "furthermore moreover however therefore", petunjuk: "connecting words" },
+    { soalan: "Tukar passive ke active: The letter was written by Sarah", jawapan: "Sarah wrote the letter", petunjuk: "subject does action" },
+    { soalan: "Apakah rhetorical question?", jawapan: "soalan yang ditanya untuk kesan bukan untuk dijawab", petunjuk: "effect not answer" },
+    { soalan: "Apakah irony?", jawapan: "berkata berlawanan dengan maksud sebenar", petunjuk: "opposite meaning" },
+    { soalan: "Tulis argumentative essay introduction?", jawapan: "introduce topic state thesis", petunjuk: "intro + thesis" },
+    { soalan: "Apakah citation?", jawapan: "rujukan kepada sumber maklumat", petunjuk: "reference" },
+    { soalan: "Tulis example of irony?", jawapan: "What a beautiful day said during storm", petunjuk: "opposite of what is meant" },
+  ],
+  "6:pendidikan-islam": [
+    { soalan: "Apakah tauhid?", jawapan: "mengesakan Allah", petunjuk: "satu tuhan" },
+    { soalan: "Tiga bahagian tauhid?", jawapan: "rububiyyah uluhiyyah asma wassifat", petunjuk: "tiga bahagian" },
+    { soalan: "Apakah syirik?", jawapan: "menyekutukan Allah", petunjuk: "sekutu" },
+    { soalan: "Beza syirik besar dan kecil?", jawapan: "besar menyembah berhala kecil riak", petunjuk: "perbandingan syirik" },
+    { soalan: "Apakah riak?", jawapan: "beramal untuk dipuji manusia", petunjuk: "pamer amal" },
+    { soalan: "Apakah nifak?", jawapan: "berpura-pura Islam munafik", petunjuk: "munafik" },
+    { soalan: "Ciri munafik?", jawapan: "berdusta bila bercakap khianat bila diamanahkan ingkar bila berjanji", petunjuk: "ciri-ciri" },
+    { soalan: "Apakah riddah?", jawapan: "keluar dari Islam", petunjuk: "tinggalkan Islam" },
+    { soalan: "Apakah jihad sebenar?", jawapan: "bersungguh-sungguh berjuang di jalan Allah dalam semua aspek", petunjuk: "berjuang" },
+    { soalan: "Apakah amar makruf nahi mungkar?", jawapan: "menyuruh kebaikan melarang kemungkaran", petunjuk: "suruh baik larang mungkar" },
+  ],
+  "6:sains": [
+    { soalan: "Apakah evolusi?", jawapan: "perubahan perlahan spesies dari generasi ke generasi", petunjuk: "evolution" },
+    { soalan: "Siapa pencetus teori evolusi?", jawapan: "Charles Darwin", petunjuk: "scientist" },
+    { soalan: "Apakah seleksi semula jadi?", jawapan: "proses alam memilih yang terbaik untuk hidup", petunjuk: "natural selection" },
+    { soalan: "Apakah fosil?", jawapan: "sisa atau kesan organisma purba dalam batuan", petunjuk: "fossil" },
+    { soalan: "Apakah perubahan iklim?", jawapan: "perubahan jangka panjang dalam iklim bumi", petunjuk: "climate change" },
+    { soalan: "Punca utama perubahan iklim?", jawapan: "aktiviti manusia pembakaran bahan api fosil", petunjuk: "human activity" },
+    { soalan: "Apakah pembangunan lestari?", jawapan: "pembangunan yang memenuhi keperluan kini tanpa menjejaskan masa depan", petunjuk: "sustainable development" },
+    { soalan: "Apakah jejak karbon?", jawapan: "jumlah karbon dioksida yang dihasilkan aktiviti manusia", petunjuk: "carbon footprint" },
+    { soalan: "Cara kurangkan jejak karbon?", jawapan: "guna tenaga boleh diperbaharui kurangkan pembaziran", petunjuk: "reduce carbon" },
+    { soalan: "Cara pelihara alam sekitar?", jawapan: "kitar semula jimat tenaga dan air tanam pokok", petunjuk: "save environment" },
+  ],
   "5:sains": [
     { soalan: "Apakah DNA?", jawapan: "bahan genetik dalam sel yang membawa maklumat pewarisan", petunjuk: "materi genetik" },
     { soalan: "Apakah gen?", jawapan: "unit pewarisan sifat", petunjuk: "unit heredity" },
@@ -395,9 +468,10 @@ function LatihanSubjekPage() {
   const isJawiD2 = darjahId === "2" && subjekId === "jawi";
   const isJawiD4 = darjahId === "4" && subjekId === "jawi";
   const isJawiD5 = darjahId === "5" && subjekId === "jawi";
-  const isJawiMcq = isJawiD2 || isJawiD4 || isJawiD5;
+  const isJawiD6 = darjahId === "6" && subjekId === "jawi";
+  const isJawiMcq = isJawiD2 || isJawiD4 || isJawiD5 || isJawiD6;
   const soalanList = useMemo(() => (isJawiMcq ? [] : (BANK[`${darjahId}:${subjekId}`] ?? [])), [darjahId, subjekId, isJawiMcq]);
-  const mcqList = isJawiD2 ? JAWI_D2_MCQ : isJawiD4 ? JAWI_D4_MCQ : isJawiD5 ? JAWI_D5_MCQ : [];
+  const mcqList = isJawiD2 ? JAWI_D2_MCQ : isJawiD4 ? JAWI_D4_MCQ : isJawiD5 ? JAWI_D5_MCQ : isJawiD6 ? JAWI_D6_MCQ : [];
   const totalSoalan = isJawiMcq ? mcqList.length : soalanList.length;
   const [pilihan, setPilihan] = useState<number | null>(null);
 
