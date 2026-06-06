@@ -425,6 +425,54 @@ export const NOTES_BANK: Record<string, SubjectNotes> = {
       },
     ],
   },
+  "2:jawi": {
+    subject: "Jawi",
+    sections: [
+      {
+        title: "Huruf Tambahan Jawi Melayu",
+        icon: "📌",
+        items: [
+          "ڤ = pa (contoh: ڤاڤن = papan)",
+          "چ = cha (contoh: چيندي = cenderai)",
+          "ڠ = nga (contoh: ڠن = ngan)",
+          "ڬ = ga (contoh: ڬاجه = gajah)",
+          "ۏ = va (contoh: ۏيتمين = vitamin)",
+          "Jumlah huruf tambahan = 6 huruf",
+        ],
+      },
+      {
+        title: "Cara Menulis Jawi",
+        icon: "✍️",
+        items: [
+          "Ditulis dari kanan ke kiri",
+          "Menggunakan huruf Arab sebagai asas",
+          "Ada 6 huruf tambahan khas untuk Bahasa Melayu",
+        ],
+      },
+      {
+        title: "Ejaan Jawi Perkataan Penting",
+        icon: "📝",
+        items: [
+          "sekolah = سکول",
+          "keluarga = كلوارگا",
+          "Malaysia = مليسيا",
+          "membaca = ممباچا",
+          "berlari = برلاري",
+          "guru = گورو",
+          "pelajar = ڤليجر",
+        ],
+      },
+      {
+        title: "Tips Menulis Jawi",
+        icon: "💡",
+        items: [
+          "Ingat huruf yang ada titik",
+          "Beza ب (ba) dan ت (ta) dan ث (tha)",
+          "Huruf disambung kecuali 6 huruf: ا د ذ ر ز و",
+        ],
+      },
+    ],
+  },
 };
 
 export function getNotes(darjahId: string, subjekId: string): SubjectNotes | null {
