@@ -70,7 +70,7 @@ function SubjekPage() {
             Pilih <span className="text-primary">Subjek</span> kamu
           </h1>
           <p className="mt-2 max-w-lg text-muted-foreground">
-            Setiap subjek ada kuiz, latihan bertulis dan game yang menyeronokkan!
+            Setiap subjek ada nota ringkas, latih tubi, game, kuiz dan latihan bertulis yang menyeronokkan!
           </p>
         </section>
 
