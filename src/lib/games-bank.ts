@@ -162,46 +162,46 @@ export const PADANKAN: Record<string, PJPair[]> = {
 
 // ─────────────────────── SUSUN AYAT ───────────────────────
 const SA_BM: SAItem[] = [
-  { ayat: "Saya makan nasi di rumah", perkataan: ["Saya", "makan", "nasi", "di", "rumah"] },
-  { ayat: "Adik bermain bola di padang", perkataan: ["Adik", "bermain", "bola", "di", "padang"] },
-  { ayat: "Ibu memasak di dapur", perkataan: ["Ibu", "memasak", "di", "dapur"] },
-  { ayat: "Kakak membaca buku cerita", perkataan: ["Kakak", "membaca", "buku", "cerita"] },
-  { ayat: "Burung itu terbang tinggi", perkataan: ["Burung", "itu", "terbang", "tinggi"] },
+  { ayat: "Ibu memasak nasi di dapur", perkataan: ["Ibu", "memasak", "nasi", "di", "dapur"] },
+  { ayat: "Ali pergi ke sekolah setiap hari", perkataan: ["Ali", "pergi", "ke", "sekolah", "setiap", "hari"] },
+  { ayat: "Rajin belajar supaya berjaya dalam peperiksaan", perkataan: ["Rajin", "belajar", "supaya", "berjaya", "dalam", "peperiksaan"] },
+  { ayat: "Buku adalah jendela ilmu pengetahuan", perkataan: ["Buku", "adalah", "jendela", "ilmu", "pengetahuan"] },
+  { ayat: "Kita mesti menghormati ibu bapa kita", perkataan: ["Kita", "mesti", "menghormati", "ibu", "bapa", "kita"] },
 ];
 const SA_MATE: SAItem[] = [
   { ayat: "Dua tambah tiga sama dengan lima", perkataan: ["Dua", "tambah", "tiga", "sama", "dengan", "lima"] },
-  { ayat: "Sepuluh tolak empat sama dengan enam", perkataan: ["Sepuluh", "tolak", "empat", "sama", "dengan", "enam"] },
-  { ayat: "Segitiga mempunyai tiga sisi", perkataan: ["Segitiga", "mempunyai", "tiga", "sisi"] },
-  { ayat: "Satu jam ada enam puluh minit", perkataan: ["Satu", "jam", "ada", "enam", "puluh", "minit"] },
-  { ayat: "Satu kilogram bersamaan seribu gram", perkataan: ["Satu", "kilogram", "bersamaan", "seribu", "gram"] },
+  { ayat: "Panjang segi empat ialah enam sentimeter", perkataan: ["Panjang", "segi", "empat", "ialah", "enam", "sentimeter"] },
+  { ayat: "Luas segiempat sama dengan panjang darab lebar", perkataan: ["Luas", "segiempat", "sama", "dengan", "panjang", "darab", "lebar"] },
+  { ayat: "Faktor bagi dua belas ialah satu dua tiga empat enam dua belas", perkataan: ["Faktor", "bagi", "dua", "belas", "ialah", "satu", "dua", "tiga", "empat", "enam", "dua", "belas"] },
+  { ayat: "Sudut tegak mempunyai sembilan puluh darjah", perkataan: ["Sudut", "tegak", "mempunyai", "sembilan", "puluh", "darjah"] },
 ];
 const SA_BI: SAItem[] = [
-  { ayat: "I go to school every day", perkataan: ["I", "go", "to", "school", "every", "day"] },
-  { ayat: "She is reading a book", perkataan: ["She", "is", "reading", "a", "book"] },
-  { ayat: "The cat is on the mat", perkataan: ["The", "cat", "is", "on", "the", "mat"] },
-  { ayat: "We play football in the field", perkataan: ["We", "play", "football", "in", "the", "field"] },
-  { ayat: "My mother cooks delicious food", perkataan: ["My", "mother", "cooks", "delicious", "food"] },
+  { ayat: "She is reading a book in the library", perkataan: ["She", "is", "reading", "a", "book", "in", "the", "library"] },
+  { ayat: "The children are playing football in the field", perkataan: ["The", "children", "are", "playing", "football", "in", "the", "field"] },
+  { ayat: "He went to school yesterday morning", perkataan: ["He", "went", "to", "school", "yesterday", "morning"] },
+  { ayat: "They will finish their homework tonight", perkataan: ["They", "will", "finish", "their", "homework", "tonight"] },
+  { ayat: "The book was read by Ali carefully", perkataan: ["The", "book", "was", "read", "by", "Ali", "carefully"] },
 ];
 const SA_JAWI: SAItem[] = [
-  { ayat: "Saya pergi ke sekolah", perkataan: ["Saya", "pergi", "ke", "sekolah"] },
-  { ayat: "Ibu memasak di dapur", perkataan: ["Ibu", "memasak", "di", "dapur"] },
-  { ayat: "Ayah membaca surat khabar", perkataan: ["Ayah", "membaca", "surat", "khabar"] },
-  { ayat: "Adik bermain di taman", perkataan: ["Adik", "bermain", "di", "taman"] },
-  { ayat: "Kami solat di masjid", perkataan: ["Kami", "solat", "di", "masjid"] },
+  { ayat: "Tulisan Jawi dibaca dari kanan ke kiri", perkataan: ["Tulisan", "Jawi", "dibaca", "dari", "kanan", "ke", "kiri"] },
+  { ayat: "Bahasa Melayu boleh ditulis dalam tulisan Jawi", perkataan: ["Bahasa", "Melayu", "boleh", "ditulis", "dalam", "tulisan", "Jawi"] },
+  { ayat: "Terdapat enam huruf tambahan dalam tulisan Jawi", perkataan: ["Terdapat", "enam", "huruf", "tambahan", "dalam", "tulisan", "Jawi"] },
+  { ayat: "Huruf Alif ialah huruf Jawi yang pertama", perkataan: ["Huruf", "Alif", "ialah", "huruf", "Jawi", "yang", "pertama"] },
+  { ayat: "Kita mesti menjaga warisan tulisan Jawi", perkataan: ["Kita", "mesti", "menjaga", "warisan", "tulisan", "Jawi"] },
 ];
 const SA_PI: SAItem[] = [
-  { ayat: "Solat itu tiang agama", perkataan: ["Solat", "itu", "tiang", "agama"] },
-  { ayat: "Kita wajib menghormati ibu bapa", perkataan: ["Kita", "wajib", "menghormati", "ibu", "bapa"] },
-  { ayat: "Membaca Al-Quran adalah ibadah", perkataan: ["Membaca", "Al-Quran", "adalah", "ibadah"] },
-  { ayat: "Puasa mengajar kita bersabar", perkataan: ["Puasa", "mengajar", "kita", "bersabar"] },
-  { ayat: "Berbuat baik kepada semua orang", perkataan: ["Berbuat", "baik", "kepada", "semua", "orang"] },
+  { ayat: "Kita wajib menunaikan solat lima waktu sehari", perkataan: ["Kita", "wajib", "menunaikan", "solat", "lima", "waktu", "sehari"] },
+  { ayat: "Bulan Ramadan adalah bulan untuk berpuasa", perkataan: ["Bulan", "Ramadan", "adalah", "bulan", "untuk", "berpuasa"] },
+  { ayat: "Kita mesti berakhlak mulia dalam kehidupan", perkataan: ["Kita", "mesti", "berakhlak", "mulia", "dalam", "kehidupan"] },
+  { ayat: "Nabi Muhammad SAW adalah rasul terakhir", perkataan: ["Nabi", "Muhammad", "SAW", "adalah", "rasul", "terakhir"] },
+  { ayat: "Membaca Al-Quran adalah amalan yang mulia", perkataan: ["Membaca", "Al-Quran", "adalah", "amalan", "yang", "mulia"] },
 ];
 const SA_SAINS: SAItem[] = [
-  { ayat: "Tumbuhan memerlukan cahaya matahari untuk hidup", perkataan: ["Tumbuhan", "memerlukan", "cahaya", "matahari", "untuk", "hidup"] },
-  { ayat: "Bumi mengelilingi matahari setiap tahun", perkataan: ["Bumi", "mengelilingi", "matahari", "setiap", "tahun"] },
-  { ayat: "Air membeku pada suhu sifar darjah", perkataan: ["Air", "membeku", "pada", "suhu", "sifar", "darjah"] },
-  { ayat: "Ikan bernafas menggunakan insang di air", perkataan: ["Ikan", "bernafas", "menggunakan", "insang", "di", "air"] },
-  { ayat: "Manusia mempunyai lima deria utama", perkataan: ["Manusia", "mempunyai", "lima", "deria", "utama"] },
+  { ayat: "Tumbuhan memerlukan cahaya air dan udara untuk hidup", perkataan: ["Tumbuhan", "memerlukan", "cahaya", "air", "dan", "udara", "untuk", "hidup"] },
+  { ayat: "Fotosintesis berlaku di dalam daun yang hijau", perkataan: ["Fotosintesis", "berlaku", "di", "dalam", "daun", "yang", "hijau"] },
+  { ayat: "Tiga keadaan jirim ialah pepejal cecair dan gas", perkataan: ["Tiga", "keadaan", "jirim", "ialah", "pepejal", "cecair", "dan", "gas"] },
+  { ayat: "Bumi mengelilingi matahari dalam tempoh satu tahun", perkataan: ["Bumi", "mengelilingi", "matahari", "dalam", "tempoh", "satu", "tahun"] },
+  { ayat: "Kitar semula dapat mengurangkan pencemaran alam sekitar", perkataan: ["Kitar", "semula", "dapat", "mengurangkan", "pencemaran", "alam", "sekitar"] },
 ];
 
 export const SUSUN_AYAT: Record<string, SAItem[]> = {
