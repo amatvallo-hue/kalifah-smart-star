@@ -16,6 +16,30 @@ export const Route = createFileRoute("/darjah/$darjahId_/$subjekId")({
 
 const ACTIVITIES = [
   {
+    id: "nota-ringkas" as const,
+    title: "Nota Ringkas",
+    description: "Rujukan ringkas sebelum buat kuiz.",
+    icon: BookOpen,
+    tone: "from-emerald-600 to-emerald-400 text-white",
+    to: "/nota-ringkas" as const,
+  },
+  {
+    id: "latih-tubi" as const,
+    title: "Latih Tubi",
+    description: "Soalan rawak tanpa had — uji daya tahan!",
+    icon: Zap,
+    tone: "from-emerald-500 to-amber-400 text-white",
+    to: "/kuiz" as const,
+  },
+  {
+    id: "game" as const,
+    title: "Game",
+    description: "Main sambil belajar — seronok!",
+    icon: Gamepad2,
+    tone: "from-rose-400 to-rose-300 text-rose-900",
+    to: "/kuiz" as const,
+  },
+  {
     id: "kuiz" as const,
     title: "Kuiz",
     description: "Jawab soalan & kumpul bintang.",
@@ -30,30 +54,6 @@ const ACTIVITIES = [
     icon: PenLine,
     tone: "from-gold to-gold/80 text-gold-foreground",
     to: "/latihan" as const,
-  },
-  {
-    id: "game" as const,
-    title: "Game",
-    description: "Main sambil belajar — seronok!",
-    icon: Gamepad2,
-    tone: "from-rose-400 to-rose-300 text-rose-900",
-    to: "/kuiz" as const,
-  },
-  {
-    id: "latih-tubi" as const,
-    title: "Latih Tubi",
-    description: "Soalan rawak tanpa had — uji daya tahan!",
-    icon: Zap,
-    tone: "from-emerald-500 to-amber-400 text-white",
-    to: "/kuiz" as const,
-  },
-  {
-    id: "nota-ringkas" as const,
-    title: "Nota Ringkas",
-    description: "Rujukan ringkas sebelum buat kuiz.",
-    icon: BookOpen,
-    tone: "from-emerald-600 to-emerald-400 text-white",
-    to: "/nota-ringkas" as const,
   },
 ];
 
