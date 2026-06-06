@@ -42,6 +42,19 @@ const JAWI_D4_MCQ: SoalanMcq[] = [
   { soalan: "Pilih ejaan Jawi bagi 'kemasyarakatan'", pilihan: ["کماسياراکتن", "کيماسياراکتن", "کماسارکتن", "کيماسارکتن"], betul: 0 },
 ];
 
+const JAWI_D5_MCQ: SoalanMcq[] = [
+  { soalan: "Pilih ejaan Jawi bagi 'kemasyarakatan'", pilihan: ["کماسياراکتن", "کيماسياراکتن", "کماسارکتن", "کيماسارکتن"], betul: 0 },
+  { soalan: "Pilih ejaan Jawi bagi 'kepimpinan'", pilihan: ["کڤيمڤينن", "کيڤيمڤينن", "کڤمڤينن", "کيڤمڤينن"], betul: 0 },
+  { soalan: "Pilih ejaan Jawi bagi 'pembangunan'", pilihan: ["ڤمباڠونن", "ڤيمباڠونن", "ڤمبانڬونن", "ڤيمبانڬونن"], betul: 2 },
+  { soalan: "Pilih ejaan Jawi bagi 'keharmonian'", pilihan: ["کهارمونين", "کيهارمونين", "کهرمونين", "کيهرمونين"], betul: 0 },
+  { soalan: "Pilih ejaan Jawi bagi 'perjuangan'", pilihan: ["ڤرجواڠن", "ڤيرجواڠن", "ڤرجوڠن", "ڤيرجوڠن"], betul: 0 },
+  { soalan: "Pilih ejaan Jawi bagi 'kejayaan'", pilihan: ["کجاياءن", "کيجاياءن", "کجايأن", "کيجايأن"], betul: 0 },
+  { soalan: "Pilih ejaan Jawi bagi 'semangat'", pilihan: ["سماڠت", "سيماڠت", "سمڠت", "سيمڠت"], betul: 0 },
+  { soalan: "Pilih ejaan Jawi bagi 'keberanian'", pilihan: ["کبرانين", "کيبرانين", "کبراءنين", "کيبراءنين"], betul: 2 },
+  { soalan: "Pilih ejaan Jawi bagi 'ketabahan'", pilihan: ["کتابهن", "کيتابهن", "کتبهن", "کيتبهن"], betul: 0 },
+  { soalan: "Pilih ejaan Jawi bagi 'kesabaran'", pilihan: ["کصبارن", "کيصبارن", "کسبارن", "کيسبارن"], betul: 2 },
+];
+
 
 const BANK: Record<string, Soalan[]> = {
   "1:matematik": [
@@ -381,9 +394,10 @@ function LatihanSubjekPage() {
 
   const isJawiD2 = darjahId === "2" && subjekId === "jawi";
   const isJawiD4 = darjahId === "4" && subjekId === "jawi";
-  const isJawiMcq = isJawiD2 || isJawiD4;
+  const isJawiD5 = darjahId === "5" && subjekId === "jawi";
+  const isJawiMcq = isJawiD2 || isJawiD4 || isJawiD5;
   const soalanList = useMemo(() => (isJawiMcq ? [] : (BANK[`${darjahId}:${subjekId}`] ?? [])), [darjahId, subjekId, isJawiMcq]);
-  const mcqList = isJawiD2 ? JAWI_D2_MCQ : isJawiD4 ? JAWI_D4_MCQ : [];
+  const mcqList = isJawiD2 ? JAWI_D2_MCQ : isJawiD4 ? JAWI_D4_MCQ : isJawiD5 ? JAWI_D5_MCQ : [];
   const totalSoalan = isJawiMcq ? mcqList.length : soalanList.length;
   const [pilihan, setPilihan] = useState<number | null>(null);
 
