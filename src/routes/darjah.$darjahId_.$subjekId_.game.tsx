@@ -149,6 +149,18 @@ const BANK: Record<string, Soalan[]> = {
     { soalan: "Jumlah Nabi dan Rasul wajib diketahui?", jawapan: "B", options: ["A)20", "B)25", "C)30", "D)35"] },
     { soalan: "Surah Al-Fatihah ada berapa ayat?", jawapan: "C", options: ["A)5", "B)6", "C)7", "D)8"] },
   ],
+  "2:sains": [
+    { soalan: "Proses tumbuhan buat makanan?", jawapan: "B", options: ["A)Respirasi", "B)Fotosintesis", "C)Evaporasi", "D)Kondensasi"] },
+    { soalan: "Gas dihasilkan semasa fotosintesis?", jawapan: "C", options: ["A)Karbon dioksida", "B)Nitrogen", "C)Oksigen", "D)Hidrogen"] },
+    { soalan: "Tiga keadaan jirim?", jawapan: "B", options: ["A)pepejal cecair wap", "B)pepejal cecair gas", "C)pepejal gas wap", "D)cecair gas wap"] },
+    { soalan: "Contoh pepejal?", jawapan: "C", options: ["A)air", "B)udara", "C)batu", "D)wap"] },
+    { soalan: "Contoh cecair?", jawapan: "C", options: ["A)batu", "B)kayu", "C)air", "D)besi"] },
+    { soalan: "Contoh gas?", jawapan: "D", options: ["A)batu", "B)kayu", "C)air", "D)udara"] },
+    { soalan: "Pepejal dipanaskan akan?", jawapan: "B", options: ["A)membeku", "B)melebur", "C)menyejat", "D)memampat"] },
+    { soalan: "Haiwan bertelur dipanggil?", jawapan: "C", options: ["A)mamalia", "B)reptilia", "C)ovipar", "D)vivipar"] },
+    { soalan: "Magnet menarik benda dari?", jawapan: "C", options: ["A)kayu", "B)plastik", "C)besi", "D)kaca"] },
+    { soalan: "Cahaya bergerak dalam garis?", jawapan: "B", options: ["A)bengkok", "B)lurus", "C)melengkung", "D)zigzag"] },
+  ],
 };
 
 
@@ -164,6 +176,7 @@ const TIME_MAP: Record<string, number> = {
   "2:bahasa-inggeris": 10,
   "2:jawi": 10,
   "2:pendidikan-islam": 10,
+  "2:sains": 10,
 };
 
 
