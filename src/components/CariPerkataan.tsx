@@ -623,3 +623,119 @@ export const BM_DARJAH3_CLUES: Record<string, string> = {
   ABSTRAK: "Tidak dapat dilihat",
   ULANG: "Kata yang diulang",
 };
+
+// Matematik Darjah 3 — 10x10 grid with 10 words.
+export const MATE_DARJAH3_WORDS: Word[] = [
+  // Mendatar
+  { word: "TAMBAH", row: 0, col: 0, dir: "H" },
+  { word: "TOLAK", row: 2, col: 0, dir: "H" },
+  { word: "DARAB", row: 4, col: 0, dir: "H" },
+  { word: "BAHAGI", row: 6, col: 0, dir: "H" },
+  { word: "LUAS", row: 8, col: 0, dir: "H" },
+  // Menegak
+  { word: "PERIMETER", row: 0, col: 9, dir: "V" },
+  { word: "PECAHAN", row: 0, col: 7, dir: "V" },
+  { word: "SIFIR", row: 0, col: 8, dir: "V" },
+  { word: "DIGIT", row: 5, col: 8, dir: "V" },
+  { word: "RATUS", row: 1, col: 6, dir: "V" },
+];
+
+export const MATE_DARJAH3_CLUES: Record<string, string> = {
+  TAMBAH: "Operasi 234 + 567",
+  TOLAK: "Operasi 856 - 378",
+  DARAB: "Operasi 7 × 8",
+  BAHAGI: "Operasi 72 ÷ 8",
+  LUAS: "Panjang × lebar",
+  PERIMETER: "Jumlah semua sisi",
+  PECAHAN: "1/2, 3/4 — bahagian",
+  DIGIT: "Angka 0–9",
+  RATUS: "Nilai tempat ketiga",
+  SIFIR: "Jadual pendaraban",
+};
+
+// Bahasa Inggeris Darjah 3 — 10x10 grid with 10 words.
+export const BI_DARJAH3_WORDS: Word[] = [
+  // Across
+  { word: "BRAVE", row: 0, col: 0, dir: "H" },
+  { word: "HAPPY", row: 2, col: 0, dir: "H" },
+  { word: "WROTE", row: 4, col: 0, dir: "H" },
+  { word: "LEAVES", row: 6, col: 0, dir: "H" },
+  { word: "SIMILE", row: 8, col: 0, dir: "H" },
+  // Down
+  { word: "QUICKLY", row: 0, col: 9, dir: "V" },
+  { word: "BECAUSE", row: 0, col: 8, dir: "V" },
+  { word: "ARTICLE", row: 0, col: 7, dir: "V" },
+  { word: "PLURAL", row: 0, col: 6, dir: "V" },
+  { word: "TENSE", row: 0, col: 5, dir: "V" },
+];
+
+export const BI_DARJAH3_CLUES: Record<string, string> = {
+  BRAVE: "Antonym of cowardly",
+  HAPPY: "Synonym of joyful",
+  WROTE: "Past tense of write",
+  LEAVES: "Plural of leaf",
+  SIMILE: "Comparing using 'like' or 'as'",
+  QUICKLY: "Adverb of quick",
+  BECAUSE: "Conjunction for reason",
+  ARTICLE: "a / an / the",
+  PLURAL: "More than one",
+  TENSE: "Time of verb",
+};
+
+// Jawi Darjah 3 — 10x10 grid with 10 words.
+export const JAWI_DARJAH3_WORDS: Word[] = [
+  // Mendatar
+  { word: "ALIF", row: 0, col: 0, dir: "H" },
+  { word: "JAWI", row: 2, col: 0, dir: "H" },
+  { word: "KHAT", row: 4, col: 0, dir: "H" },
+  { word: "HURUF", row: 6, col: 0, dir: "H" },
+  { word: "TULIS", row: 8, col: 0, dir: "H" },
+  // Menegak
+  { word: "TULISAN", row: 0, col: 9, dir: "V" },
+  { word: "MELAYU", row: 0, col: 8, dir: "V" },
+  { word: "EJAAN", row: 0, col: 7, dir: "V" },
+  { word: "RUMI", row: 0, col: 6, dir: "V" },
+  { word: "ARAB", row: 0, col: 5, dir: "V" },
+];
+
+export const JAWI_DARJAH3_CLUES: Record<string, string> = {
+  ALIF: "Huruf Jawi pertama — ا",
+  JAWI: "Tulisan kita",
+  KHAT: "Seni tulisan Arab",
+  HURUF: "Aksara dalam tulisan",
+  TULIS: "Cara merakam perkataan",
+  TULISAN: "Hasil yang ditulis",
+  MELAYU: "Bahasa kita",
+  EJAAN: "Cara susun huruf",
+  RUMI: "Tulisan Latin",
+  ARAB: "Bahasa asal tulisan Jawi",
+};
+
+// Pendidikan Islam Darjah 3 — 10x10 grid with 10 words.
+export const PI_DARJAH3_WORDS: Word[] = [
+  // Mendatar
+  { word: "JIBRIL", row: 0, col: 0, dir: "H" },
+  { word: "MIKAIL", row: 2, col: 0, dir: "H" },
+  { word: "IZRAIL", row: 4, col: 0, dir: "H" },
+  { word: "TAURAT", row: 6, col: 0, dir: "H" },
+  { word: "INJIL", row: 8, col: 0, dir: "H" },
+  // Menegak
+  { word: "ISRAFIL", row: 0, col: 9, dir: "V" },
+  { word: "ZABUR", row: 0, col: 8, dir: "V" },
+  { word: "QURAN", row: 0, col: 7, dir: "V" },
+  { word: "WUJUD", row: 0, col: 6, dir: "V" },
+  { word: "BAQA", row: 5, col: 8, dir: "V" },
+];
+
+export const PI_DARJAH3_CLUES: Record<string, string> = {
+  JIBRIL: "Malaikat menyampaikan wahyu",
+  MIKAIL: "Malaikat menurunkan hujan",
+  IZRAIL: "Malaikat mencabut nyawa",
+  TAURAT: "Kitab Nabi Musa",
+  INJIL: "Kitab Nabi Isa",
+  ISRAFIL: "Malaikat meniup sangkakala",
+  QURAN: "Kitab Nabi Muhammad SAW",
+  ZABUR: "Kitab Nabi Daud",
+  WUJUD: "Sifat Allah bermaksud Ada",
+  BAQA: "Sifat Allah bermaksud Kekal",
+};
