@@ -86,6 +86,18 @@ const BANK: Record<string, Soalan[]> = {
       { soalan: "Air apabila dibekukan bertukar jadi?", jawapan: "ais", petunjuk: "masukkan air dalam peti sejuk" },
       { soalan: "Namakan 2 cara jimat air.", jawapan: "tutup paip semasa gosok gigi, guna air secukupnya", petunjuk: "cara menjimatkan air di rumah" },
     ],
+    "2:bahasa-melayu": [
+      { soalan: "Tulis ayat lengkap menggunakan perkataan 'berlari'.", jawapan: "ali berlari di padang", petunjuk: "buat ayat dengan kata kerja berlari" },
+      { soalan: "Apakah imbuhan dalam perkataan 'membantu'?", jawapan: "mem", petunjuk: "imbuhan awalan" },
+      { soalan: "Tulis antonim bagi perkataan 'rajin'.", jawapan: "malas", petunjuk: "lawan kata rajin" },
+      { soalan: "Tulis sinonim bagi perkataan 'gembira'.", jawapan: "suka", petunjuk: "perkataan yang sama maksud" },
+      { soalan: "Tulis ayat tanya menggunakan perkataan 'bila'.", jawapan: "bila ibu akan pulang", petunjuk: "ayat yang bertanya" },
+      { soalan: "Apakah kata nama dalam ayat 'Adik makan nasi'?", jawapan: "adik dan nasi", petunjuk: "nama orang atau benda" },
+      { soalan: "Tulis ayat perintah.", jawapan: "tolong ambil buku itu", petunjuk: "ayat yang menyuruh" },
+      { soalan: "Apakah maksud peribahasa 'bagai aur dengan tebing'?", jawapan: "saling membantu antara satu sama lain", petunjuk: "peribahasa tentang kerjasama" },
+      { soalan: "Tulis kata adjektif bagi sifat orang yang baik hati.", jawapan: "pemurah", petunjuk: "kata sifat" },
+      { soalan: "Tulis ayat menggunakan kata hubung 'dan'.", jawapan: "ali dan abu pergi ke sekolah", petunjuk: "gabungkan dua ayat" },
+    ],
   };
 
 function normalize(s: string) {
