@@ -718,8 +718,7 @@ function GameSubjekPage() {
         {mode === "padan" && <PadankanJawapanGame subjekId={subjekId} />}
         {mode === "susun" && <SusunAyatGame subjekId={subjekId} />}
 
-        {(mode === "race" || mode === "cari") && (
-        hasCariPerkataan && mode === "cari" ? (
+        {(mode === "betul" || mode === "padan" || mode === "susun") ? null : hasCariPerkataan && mode === "cari" ? (
           isBM ? (
             <CariPerkataan
               words={BM_DARJAH1_WORDS}
@@ -975,7 +974,7 @@ function GameSubjekPage() {
               Main Lagi
             </button>
           </div>
-        ))}
+        )}
       </main>
     </div>
   );
