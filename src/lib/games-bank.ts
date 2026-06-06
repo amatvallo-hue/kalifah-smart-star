@@ -176,11 +176,11 @@ const SA_MATE: SAItem[] = [
   { ayat: "Sudut tegak mempunyai sembilan puluh darjah", perkataan: ["Sudut", "tegak", "mempunyai", "sembilan", "puluh", "darjah"] },
 ];
 const SA_BI: SAItem[] = [
-  { ayat: "I go to school every day", perkataan: ["I", "go", "to", "school", "every", "day"] },
-  { ayat: "She is reading a book", perkataan: ["She", "is", "reading", "a", "book"] },
-  { ayat: "The cat is on the mat", perkataan: ["The", "cat", "is", "on", "the", "mat"] },
-  { ayat: "We play football in the field", perkataan: ["We", "play", "football", "in", "the", "field"] },
-  { ayat: "My mother cooks delicious food", perkataan: ["My", "mother", "cooks", "delicious", "food"] },
+  { ayat: "She is reading a book in the library", perkataan: ["She", "is", "reading", "a", "book", "in", "the", "library"] },
+  { ayat: "The children are playing football in the field", perkataan: ["The", "children", "are", "playing", "football", "in", "the", "field"] },
+  { ayat: "He went to school yesterday morning", perkataan: ["He", "went", "to", "school", "yesterday", "morning"] },
+  { ayat: "They will finish their homework tonight", perkataan: ["They", "will", "finish", "their", "homework", "tonight"] },
+  { ayat: "The book was read by Ali carefully", perkataan: ["The", "book", "was", "read", "by", "Ali", "carefully"] },
 ];
 const SA_JAWI: SAItem[] = [
   { ayat: "Saya pergi ke sekolah", perkataan: ["Saya", "pergi", "ke", "sekolah"] },
