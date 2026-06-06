@@ -8,15 +8,22 @@ export type Word = {
   dir: "H" | "V";
 };
 
-const DEFAULT_GRID_SIZE = 8;
+const DEFAULT_GRID_SIZE = 10;
 
 // Default (Matematik Darjah 1) words — 1-based in spec, converted to 0-based.
 const DEFAULT_WORDS: Word[] = [
+  // Mendatar
   { word: "SATU", row: 0, col: 0, dir: "H" },
-  { word: "TIGA", row: 0, col: 2, dir: "V" },
-  { word: "LIMA", row: 5, col: 0, dir: "H" },
-  { word: "DUA", row: 7, col: 1, dir: "H" },
-  { word: "TAMBAH", row: 3, col: 1, dir: "H" },
+  { word: "DUA", row: 2, col: 0, dir: "H" },
+  { word: "LIMA", row: 4, col: 0, dir: "H" },
+  { word: "TAMBAH", row: 6, col: 0, dir: "H" },
+  { word: "BULATAN", row: 8, col: 0, dir: "H" },
+  // Menegak
+  { word: "TIGA", row: 0, col: 5, dir: "V" },
+  { word: "LAPAN", row: 0, col: 7, dir: "V" },
+  { word: "TOLAK", row: 1, col: 3, dir: "V" },
+  { word: "SAMA", row: 2, col: 8, dir: "V" },
+  { word: "SEGITIGA", row: 1, col: 9, dir: "V" },
 ];
 
 const DEFAULT_CLUES: Record<string, string> = {
@@ -24,7 +31,12 @@ const DEFAULT_CLUES: Record<string, string> = {
   DUA: "Nombor 2",
   TIGA: "Nombor 3",
   LIMA: "Nombor 5",
-  TAMBAH: "Operasi +",
+  LAPAN: "Nombor 8",
+  TAMBAH: "Operasi 3 + 4",
+  TOLAK: "Operasi 10 - 3",
+  SAMA: "Tanda = dalam matematik",
+  BULATAN: "Bentuk tanpa sisi",
+  SEGITIGA: "Bentuk dengan 3 sisi",
 };
 
 type CariPerkataanProps = {
