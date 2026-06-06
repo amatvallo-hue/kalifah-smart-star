@@ -14,6 +14,21 @@ export const Route = createFileRoute("/darjah/$darjahId_/$subjekId_/latihan")({
 });
 
 type Soalan = { soalan: string; jawapan: string; petunjuk?: string };
+type SoalanMcq = { soalan: string; pilihan: string[]; betul: number };
+
+const JAWI_D2_MCQ: SoalanMcq[] = [
+  { soalan: "Pilih ejaan Jawi bagi 'sekolah'", pilihan: ["سکوله", "سکول", "سکولا", "سکولة"], betul: 1 },
+  { soalan: "Pilih ejaan Jawi bagi 'keluarga'", pilihan: ["كلوارگ", "كلوارگا", "كلورگا", "كلواگا"], betul: 1 },
+  { soalan: "Pilih ejaan Jawi bagi 'membaca'", pilihan: ["ممباچ", "ممباچا", "مامباچا", "ممبچا"], betul: 1 },
+  { soalan: "Pilih ejaan Jawi bagi 'berlari'", pilihan: ["برلاري", "بيرلاري", "برلارى", "بيرلارى"], betul: 0 },
+  { soalan: "Pilih ejaan Jawi bagi 'Malaysia'", pilihan: ["مليسيا", "ملايسيا", "ملاسيا", "ماليسيا"], betul: 0 },
+  { soalan: "Pilih ejaan Jawi bagi 'guru'", pilihan: ["گورو", "گوروا", "گورا", "گوروه"], betul: 0 },
+  { soalan: "Pilih ejaan Jawi bagi 'pelajar'", pilihan: ["ڤليجر", "ڤلاجر", "ڤليجار", "ڤلجار"], betul: 0 },
+  { soalan: "Pilih ejaan Jawi bagi 'hospital'", pilihan: ["هوسڤيتل", "هسڤيتل", "هوسڤيتال", "هسڤيتال"], betul: 0 },
+  { soalan: "Pilih ejaan Jawi bagi 'membeli'", pilihan: ["ممبيلي", "ممبلي", "مامبيلي", "ممبيل"], betul: 0 },
+  { soalan: "Pilih ejaan Jawi bagi 'bersekolah'", pilihan: ["برسکول", "بيرسکول", "برسکوله", "بيرسکوله"], betul: 0 },
+];
+
 
 const BANK: Record<string, Soalan[]> = {
   "1:matematik": [
