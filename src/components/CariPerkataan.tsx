@@ -478,6 +478,8 @@ export const MATE_DARJAH2_CLUES: Record<string, string> = {
   DIGIT: "Angka dalam nombor",
   PULUH: "Nilai tempat kedua",
   RATUS: "Nilai tempat ketiga",
+};
+
 export const BI_DARJAH2_WORDS: Word[] = [
   // Across
   { word: "CATS", row: 0, col: 0, dir: "H" },
