@@ -131,6 +131,114 @@ const SAINS_D3: QuizQuestion[] = [
   { soalan: "Pemanasan global disebabkan oleh?", pilihan: ["lebih banyak pokok", "lebih banyak hujan", "peningkatan gas rumah hijau", "lebih banyak angin"], jawapan: 2 },
 ];
 
+const BM_D4: QuizQuestion[] = [
+  { soalan: "Apakah ayat majmuk?", pilihan: ["Ayat tunggal", "Gabungan dua ayat atau lebih", "Ayat pendek", "Ayat panjang"], jawapan: 1 },
+  { soalan: "Pilih ayat majmuk:", pilihan: ["Ali pergi ke sekolah", "Ali pergi ke sekolah dan Abu duduk di rumah", "Ali dan Abu", "Pergi ke sekolah"], jawapan: 1 },
+  { soalan: "Apakah kata sendi nama?", pilihan: ["dan", "tetapi", "di", "cantik"], jawapan: 2 },
+  { soalan: "Apakah imbuhan apitan ke...an dalam?", pilihan: ["kebaikan", "berlari", "memukul", "jalan raya"], jawapan: 0 },
+  { soalan: "Pilih kata tanya:", pilihan: ["dan", "tetapi", "di", "siapa"], jawapan: 3 },
+  { soalan: "Apakah maksud peribahasa 'seperti air di daun keladi'?", pilihan: ["Tidak bertanggungjawab", "Tidak kekal", "Sangat setia", "Sangat rajin"], jawapan: 1 },
+  { soalan: "Pilih kata penguat:", pilihan: ["sangat", "dan", "di", "berlari"], jawapan: 0 },
+  { soalan: "Apakah pantun?", pilihan: ["Puisi bebas", "Puisi tradisional 4 baris", "Cerita panjang", "Dialog"], jawapan: 1 },
+  { soalan: "Bahagian pantun yang mengandungi maksud?", pilihan: ["Pembayang", "Maksud", "Rima", "Irama"], jawapan: 1 },
+  { soalan: "Pilih kata nafi:", pilihan: ["sangat", "tidak", "di", "dan"], jawapan: 1 },
+  { soalan: "Apakah dialog?", pilihan: ["Cerita pendek", "Perbualan antara dua orang atau lebih", "Puisi", "Pantun"], jawapan: 1 },
+  { soalan: "Imbuhan men dalam 'menyanyi'?", pilihan: ["me", "men", "meny", "nyanyi"], jawapan: 2 },
+  { soalan: "Pilih kata bilangan:", pilihan: ["cantik", "berlari", "tiga orang", "di"], jawapan: 2 },
+  { soalan: "Apakah maksud 'dedikasi'?", pilihan: ["Malas", "Bersungguh-sungguh", "Cuai", "Tidak serius"], jawapan: 1 },
+  { soalan: "Pilih kata majmuk:", pilihan: ["budak-budak", "jalan raya", "cantik", "berlari"], jawapan: 1 },
+];
+
+const MATE_D4: QuizQuestion[] = [
+  { soalan: "2345 + 3456 = ?", pilihan: ["5791", "5801", "5811", "5821"], jawapan: 1 },
+  { soalan: "8765 - 4321 = ?", pilihan: ["4334", "4344", "4444", "4454"], jawapan: 2 },
+  { soalan: "12 × 8 = ?", pilihan: ["86", "96", "106", "116"], jawapan: 1 },
+  { soalan: "144 ÷ 12 = ?", pilihan: ["10", "11", "12", "13"], jawapan: 2 },
+  { soalan: "2/3 + 1/3 = ?", pilihan: ["3/3", "1", "3/6", "A dan B"], jawapan: 3 },
+  { soalan: "3/4 - 1/2 = ?", pilihan: ["1/4", "2/4", "1/2", "2/2"], jawapan: 0 },
+  { soalan: "0.75 + 0.25 = ?", pilihan: ["0.9", "1.0", "1.1", "1.2"], jawapan: 1 },
+  { soalan: "Luas segiempat 12cm × 8cm = ?", pilihan: ["80cm²", "86cm²", "96cm²", "106cm²"], jawapan: 2 },
+  { soalan: "Perimeter segiempat 12cm × 8cm = ?", pilihan: ["36cm", "40cm", "44cm", "48cm"], jawapan: 1 },
+  { soalan: "Sudut tegak berapa darjah?", pilihan: ["45", "90", "180", "360"], jawapan: 1 },
+  { soalan: "Sudut tirus kurang daripada?", pilihan: ["45 darjah", "90 darjah", "180 darjah", "360 darjah"], jawapan: 1 },
+  { soalan: "12345 + 23456 = ?", pilihan: ["35791", "35801", "35811", "35821"], jawapan: 1 },
+  { soalan: "50000 - 23456 = ?", pilihan: ["26444", "26544", "26644", "26744"], jawapan: 1 },
+  { soalan: "25 × 4 = ?", pilihan: ["90", "95", "100", "105"], jawapan: 2 },
+  { soalan: "200 ÷ 8 = ?", pilihan: ["23", "24", "25", "26"], jawapan: 2 },
+];
+
+const BI_D4: QuizQuestion[] = [
+  { soalan: "What is a compound sentence?", pilihan: ["One main clause", "Two or more main clauses joined", "A short sentence", "A long sentence"], jawapan: 1 },
+  { soalan: "Choose compound sentence:", pilihan: ["She runs fast", "She runs fast and he walks slowly", "Running fast", "Fast runner"], jawapan: 1 },
+  { soalan: "What is present continuous tense?", pilihan: ["I eat", "I ate", "I am eating", "I will eat"], jawapan: 2 },
+  { soalan: "She ___ singing now.", pilihan: ["am", "is", "are", "be"], jawapan: 1 },
+  { soalan: "They ___ playing football now.", pilihan: ["am", "is", "are", "be"], jawapan: 2 },
+  { soalan: "What is a pronoun?", pilihan: ["naming word", "word that replaces noun", "action word", "describing word"], jawapan: 1 },
+  { soalan: "Choose pronoun:", pilihan: ["book", "run", "she", "quickly"], jawapan: 2 },
+  { soalan: "Synonym of 'angry'?", pilihan: ["happy", "furious", "sad", "tired"], jawapan: 1 },
+  { soalan: "Antonym of 'ancient'?", pilihan: ["old", "modern", "antique", "historical"], jawapan: 1 },
+  { soalan: "What is alliteration?", pilihan: ["rhyming words", "repetition of same sound at start of words", "simile", "metaphor"], jawapan: 1 },
+  { soalan: "Example of alliteration?", pilihan: ["She is like a rose", "Peter Piper picked peppers", "The moon is a coin", "He runs quickly"], jawapan: 1 },
+  { soalan: "Choose correct sentence:", pilihan: ["He dont go", "He doesnt go", "He does not go", "both B and C"], jawapan: 3 },
+  { soalan: "Past continuous: She ___ when I called.", pilihan: ["sleep", "sleeps", "was sleeping", "slept"], jawapan: 2 },
+  { soalan: "Choose possessive pronoun:", pilihan: ["she", "her", "hers", "herself"], jawapan: 2 },
+  { soalan: "What is onomatopoeia?", pilihan: ["comparing using like", "word that sounds like its meaning", "direct comparison", "same sound repetition"], jawapan: 1 },
+];
+
+const JAWI_D4: QuizQuestion[] = [
+  { soalan: "Ejaan Jawi bagi 'kecemerlangan'?", pilihan: ["کچمرلڠن", "کيچمرلاڠن", "کچمرلاڠن", "کيچمرلڠن"], jawapan: 2 },
+  { soalan: "Ejaan Jawi bagi 'persekitaran'?", pilihan: ["ڤرسيکيتارن", "ڤيرسيکيتارن", "ڤرسکيتارن", "ڤيرسکيتارن"], jawapan: 0 },
+  { soalan: "Ejaan Jawi bagi 'pembangunan'?", pilihan: ["ڤمباڠونن", "ڤيمباڠونن", "ڤمبانڬونن", "ڤيمبانڬونن"], jawapan: 2 },
+  { soalan: "Ejaan Jawi bagi 'keselamatan'?", pilihan: ["کسلامتن", "کيسلامتن", "کسيلامتن", "کيسيلامتن"], jawapan: 2 },
+  { soalan: "Ejaan Jawi bagi 'tanggungjawab'?", pilihan: ["تاڠڬوڠجاوب", "تڠڬوڠجاوب", "تاڠڬوڠجوب", "تڠڬوڠجوب"], jawapan: 0 },
+  { soalan: "Jawi ڤمبانڬونن bermaksud?", pilihan: ["persekitaran", "pembangunan", "keselamatan", "tanggungjawab"], jawapan: 1 },
+  { soalan: "Jawi کسيلامتن bermaksud?", pilihan: ["persekitaran", "pembangunan", "keselamatan", "tanggungjawab"], jawapan: 2 },
+  { soalan: "Jawi تاڠڬوڠجاوب bermaksud?", pilihan: ["persekitaran", "pembangunan", "keselamatan", "tanggungjawab"], jawapan: 3 },
+  { soalan: "Berapa huruf Jawi asas?", pilihan: ["26", "28", "30", "32"], jawapan: 2 },
+  { soalan: "Berapa huruf tambahan Jawi Melayu?", pilihan: ["4", "5", "6", "7"], jawapan: 2 },
+  { soalan: "Ejaan Jawi bagi 'perkhidmatan'?", pilihan: ["ڤرخدمتن", "ڤيرخدمتن", "ڤرخيدمتن", "ڤيرخيدمتن"], jawapan: 2 },
+  { soalan: "Ejaan Jawi bagi 'kebebasan'?", pilihan: ["کببسن", "کيببسن", "کببيسن", "کيببيسن"], jawapan: 2 },
+  { soalan: "Ejaan Jawi bagi 'pengetahuan'?", pilihan: ["ڤڠتاهوان", "ڤيڠتاهوان", "ڤڠيتاهوان", "ڤيڠيتاهوان"], jawapan: 2 },
+  { soalan: "Ejaan Jawi bagi 'kepimpinan'?", pilihan: ["کڤيمڤينن", "کيڤيمڤينن", "کڤمڤينن", "کيڤمڤينن"], jawapan: 0 },
+  { soalan: "Ejaan Jawi bagi 'kemasyarakatan'?", pilihan: ["کماسياراکتن", "کيماسياراکتن", "کماسارکتن", "کيماسارکتن"], jawapan: 0 },
+];
+
+const PI_D4: QuizQuestion[] = [
+  { soalan: "Apakah maksud akhlak?", pilihan: ["Ilmu", "Budi pekerti", "Ibadat", "Aqidah"], jawapan: 1 },
+  { soalan: "Akhlak mulia contohnya?", pilihan: ["dengki", "sombong", "tolong-menolong", "bakhil"], jawapan: 2 },
+  { soalan: "Apakah maksud ukhuwah?", pilihan: ["persaingan", "persaudaraan", "permusuhan", "perdebatan"], jawapan: 1 },
+  { soalan: "Solat berjemaah lebih afdal berapa kali ganda?", pilihan: ["17", "27", "37", "47"], jawapan: 1 },
+  { soalan: "Apakah maksud amanah?", pilihan: ["berbohong", "boleh dipercayai", "sombong", "dengki"], jawapan: 1 },
+  { soalan: "Apakah maksud istiqamah?", pilihan: ["berubah-ubah", "tidak konsisten", "tetap pendirian", "tidak sabar"], jawapan: 2 },
+  { soalan: "Sirah Nabi bermaksud?", pilihan: ["hadis Nabi", "riwayat hidup Nabi", "doa Nabi", "sifat Nabi"], jawapan: 1 },
+  { soalan: "Nabi Muhammad SAW lahir pada tahun?", pilihan: ["570M", "580M", "590M", "600M"], jawapan: 0 },
+  { soalan: "Nabi Muhammad SAW mula menerima wahyu pada usia?", pilihan: ["30", "35", "40", "45"], jawapan: 2 },
+  { soalan: "Peristiwa hijrah bermaksud?", pilihan: ["perang", "perpindahan dari Makkah ke Madinah", "kematian", "kelahiran"], jawapan: 1 },
+  { soalan: "Tahun hijrah bermula pada?", pilihan: ["610M", "620M", "622M", "630M"], jawapan: 2 },
+  { soalan: "Sahabat yang menemani Nabi hijrah?", pilihan: ["Umar", "Uthman", "Ali", "Abu Bakar"], jawapan: 3 },
+  { soalan: "Apakah maksud tawaduk?", pilihan: ["sombong", "rendah diri", "pemarah", "dengki"], jawapan: 1 },
+  { soalan: "Apakah maksud syukur?", pilihan: ["tidak bersyukur", "berterima kasih atas nikmat Allah", "sombong", "tamak"], jawapan: 1 },
+  { soalan: "Apakah maksud sabar?", pilihan: ["mudah marah", "tidak mudah marah dan tabah", "suka mengalah", "tidak peduli"], jawapan: 1 },
+];
+
+const SAINS_D4: QuizQuestion[] = [
+  { soalan: "Apakah sel?", pilihan: ["Unit terkecil makhluk hidup", "Organ", "Tisu", "Sistem"], jawapan: 0 },
+  { soalan: "Sel tumbuhan berbeza dari sel haiwan kerana ada?", pilihan: ["nukleus", "dinding sel", "sitoplasma", "membran"], jawapan: 1 },
+  { soalan: "Apakah fungsi kloroplas?", pilihan: ["menyimpan makanan", "kawalan sel", "fotosintesis", "pernafasan"], jawapan: 2 },
+  { soalan: "Apakah ekosistem?", pilihan: ["sekumpulan haiwan", "sekumpulan tumbuhan", "komuniti organisma dan persekitaran", "rantaian makanan"], jawapan: 2 },
+  { soalan: "Apakah habitat?", pilihan: ["makanan haiwan", "tempat tinggal organisma", "musuh semulajadi", "rantaian makanan"], jawapan: 1 },
+  { soalan: "Apakah adaptasi?", pilihan: ["perpindahan", "penyesuaian diri dengan persekitaran", "pembiakan", "pemakanan"], jawapan: 1 },
+  { soalan: "Tenaga boleh wujud dalam berapa bentuk?", pilihan: ["3", "4", "5", "banyak"], jawapan: 3 },
+  { soalan: "Contoh tenaga kinetik?", pilihan: ["batu diam", "air mengalir", "spring termampat", "bateri"], jawapan: 1 },
+  { soalan: "Contoh tenaga keupayaan?", pilihan: ["bola bergerak", "air mengalir", "batu di atas meja", "cahaya"], jawapan: 2 },
+  { soalan: "Apakah tenaga boleh diperbaharui?", pilihan: ["minyak", "arang batu", "gas asli", "solar"], jawapan: 3 },
+  { soalan: "Apakah tenaga tidak boleh diperbaharui?", pilihan: ["angin", "solar", "minyak", "air"], jawapan: 2 },
+  { soalan: "Apakah pencemaran udara?", pilihan: ["air kotor", "udara tercemar", "tanah kotor", "bunyi bising"], jawapan: 1 },
+  { soalan: "Apakah pencemaran air?", pilihan: ["udara tercemar", "air tercemar", "tanah kotor", "bunyi bising"], jawapan: 1 },
+  { soalan: "Cara jimat tenaga elektrik?", pilihan: ["tinggalkan lampu hidup", "padam lampu bila keluar", "buka semua tingkap", "biarkan kipas hidup"], jawapan: 1 },
+  { soalan: "Apakah kitar semula?", pilihan: ["buang sampah", "proses semula bahan", "bakar sampah", "tanam sampah"], jawapan: 1 },
+];
+
 // Key format: `${darjahId}:${subjekId}`
 export const QUIZ_BANK: Record<string, QuizQuestion[]> = {
   "1:matematik": [
