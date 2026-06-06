@@ -378,3 +378,31 @@ export const PI_DARJAH1_CLUES: Record<string, string> = {
   DOA: "Permohonan kepada Allah",
   QURAN: "Kitab suci umat Islam",
 };
+
+export const SAINS_DARJAH1_WORDS: Word[] = [
+  // Mendatar
+  { word: "MATA", row: 0, col: 0, dir: "H" },
+  { word: "HIDUNG", row: 2, col: 0, dir: "H" },
+  { word: "LIDAH", row: 4, col: 0, dir: "H" },
+  { word: "HUJAN", row: 6, col: 0, dir: "H" },
+  { word: "AWAN", row: 8, col: 0, dir: "H" },
+  // Menegak
+  { word: "TELINGA", row: 0, col: 7, dir: "V" },
+  { word: "AKAR", row: 0, col: 5, dir: "V" },
+  { word: "DAUN", row: 1, col: 3, dir: "V" },
+  { word: "BUNGA", row: 2, col: 8, dir: "V" },
+  { word: "HAIWAN", row: 3, col: 9, dir: "V" },
+];
+
+export const SAINS_DARJAH1_CLUES: Record<string, string> = {
+  MATA: "Deria untuk melihat",
+  HIDUNG: "Deria untuk menghidu",
+  TELINGA: "Deria untuk mendengar",
+  LIDAH: "Deria untuk merasa",
+  AKAR: "Bahagian tumbuhan yang menyerap air",
+  DAUN: "Bahagian tumbuhan yang hijau",
+  BUNGA: "Bahagian tumbuhan yang cantik",
+  HUJAN: "Air yang turun dari langit",
+  AWAN: "Berkumpul di langit sebelum hujan",
+  HAIWAN: "Makhluk hidup yang bergerak",
+};

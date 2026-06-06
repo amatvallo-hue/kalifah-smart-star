@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, Gamepad2, Send, Sparkles, Timer, Trophy, Search } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { StarReward } from "@/components/StarReward";
-import { CariPerkataan, BM_DARJAH1_WORDS, BM_DARJAH1_CLUES, BI_DARJAH1_WORDS, BI_DARJAH1_CLUES, JAWI_DARJAH1_WORDS, JAWI_DARJAH1_CLUES, PI_DARJAH1_WORDS, PI_DARJAH1_CLUES } from "@/components/CariPerkataan";
+import { CariPerkataan, BM_DARJAH1_WORDS, BM_DARJAH1_CLUES, BI_DARJAH1_WORDS, BI_DARJAH1_CLUES, JAWI_DARJAH1_WORDS, JAWI_DARJAH1_CLUES, PI_DARJAH1_WORDS, PI_DARJAH1_CLUES, SAINS_DARJAH1_WORDS, SAINS_DARJAH1_CLUES } from "@/components/CariPerkataan";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { getDarjah, getSubjek } from "@/lib/curriculum";
@@ -130,7 +130,8 @@ function GameSubjekPage() {
   const isMate = darjahId === "1" && subjekId === "matematik";
   const isJawi = darjahId === "1" && subjekId === "jawi";
   const isPI = darjahId === "1" && subjekId === "pendidikan-islam";
-  const hasCariPerkataan = isMate || isBM || isBI || isJawi || isPI;
+  const isSains = darjahId === "1" && subjekId === "sains";
+  const hasCariPerkataan = isMate || isBM || isBI || isJawi || isPI || isSains;
   const [mode, setMode] = useState<"race" | "cari">("race");
 
   useEffect(() => {
@@ -281,6 +282,13 @@ function GameSubjekPage() {
               clues={PI_DARJAH1_CLUES}
               gridSize={10}
               title="Cari Perkataan Pendidikan Islam"
+            />
+          ) : isSains ? (
+            <CariPerkataan
+              words={SAINS_DARJAH1_WORDS}
+              clues={SAINS_DARJAH1_CLUES}
+              gridSize={10}
+              title="Cari Perkataan Sains"
             />
           ) : (
             <CariPerkataan />
