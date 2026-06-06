@@ -59,6 +59,7 @@ export const QUIZ_BANK: Record<string, QuizQuestion[]> = {
     { soalan: "Apakah antonim 'besar'?", pilihan: ["tinggi", "panjang", "kecil", "lebar"], jawapan: 2 },
     { soalan: "Pilih kata sendi nama:", pilihan: ["berlari", "di", "cantik", "meja"], jawapan: 1 },
   ],
+  "2:sains": SAINS_D2,
 };
 
 export function getQuiz(darjahId: string, subjekId: string): QuizQuestion[] | undefined {
