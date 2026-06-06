@@ -125,6 +125,18 @@ const BANK: Record<string, Soalan[]> = {
     { soalan: "Choose the verb:", jawapan: "C", options: ["A) beautiful", "B) quickly", "C) swim", "D) and"] },
     { soalan: "Opposite of happy?", jawapan: "B", options: ["A) angry", "B) sad", "C) scared", "D) tired"] },
   ],
+  "2:jawi": [
+    { soalan: "Ejaan Jawi bagi sekolah?", jawapan: "B", options: ["A)سکوله", "B)سکول", "C)سکولا", "D)سکولة"] },
+    { soalan: "Ejaan Jawi bagi keluarga?", jawapan: "B", options: ["A)كلوارگ", "B)كلوارگا", "C)كلورگا", "D)كلواگا"] },
+    { soalan: "Ejaan Jawi bagi Malaysia?", jawapan: "A", options: ["A)مليسيا", "B)ملايسيا", "C)ملاسيا", "D)ماليسيا"] },
+    { soalan: "Huruf Jawi ڠ berbunyi?", jawapan: "A", options: ["A)nga", "B)ga", "C)na", "D)ma"] },
+    { soalan: "Huruf Jawi چ berbunyi?", jawapan: "B", options: ["A)ja", "B)cha", "C)sha", "D)za"] },
+    { soalan: "Huruf Jawi ڤ berbunyi?", jawapan: "C", options: ["A)ba", "B)fa", "C)pa", "D)wa"] },
+    { soalan: "Jawi گورو bermaksud?", jawapan: "B", options: ["A)pelajar", "B)guru", "C)doktor", "D)polis"] },
+    { soalan: "Jawi ڤليجر bermaksud?", jawapan: "C", options: ["A)guru", "B)doktor", "C)pelajar", "D)polis"] },
+    { soalan: "Jawi برلاري bermaksud?", jawapan: "B", options: ["A)berjalan", "B)berlari", "C)berenang", "D)bermain"] },
+    { soalan: "Tulisan Jawi dibaca dari arah?", jawapan: "B", options: ["A)kiri ke kanan", "B)kanan ke kiri", "C)atas ke bawah", "D)bawah ke atas"] },
+  ],
 };
 
 
