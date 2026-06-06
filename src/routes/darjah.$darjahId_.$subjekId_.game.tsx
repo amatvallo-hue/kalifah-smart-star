@@ -327,6 +327,13 @@ function GameSubjekPage() {
               gridSize={10}
               title="Word Search"
             />
+          ) : isBI2 ? (
+            <CariPerkataan
+              words={BI_DARJAH2_WORDS}
+              clues={BI_DARJAH2_CLUES}
+              gridSize={10}
+              title="Word Search"
+            />
           ) : isJawi ? (
             <CariPerkataan
               words={JAWI_DARJAH1_WORDS}
