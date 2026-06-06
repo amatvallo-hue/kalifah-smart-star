@@ -590,7 +590,7 @@ function GameSubjekPage() {
     );
   }
 
-  if (!darjah || !subjek || soalanList.length === 0) {
+  if (!darjah || !subjek) {
     return (
       <div className="min-h-screen bg-background">
         <SiteHeader onLogout={handleLogout} />
