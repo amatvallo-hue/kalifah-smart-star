@@ -161,6 +161,18 @@ const BANK: Record<string, Soalan[]> = {
     { soalan: "Apakah nama malaikat yang mencabut nyawa?", jawapan: "Izrail", petunjuk: "malaikat maut" },
     { soalan: "Apakah nama malaikat yang meniup sangkakala?", jawapan: "Israfil", petunjuk: "malaikat yang meniup sangkakala hari kiamat" },
   ],
+  "2:sains": [
+    { soalan: "Apakah proses tumbuhan membuat makanan?", jawapan: "Fotosintesis", petunjuk: "proses menggunakan cahaya matahari" },
+    { soalan: "Namakan 3 keadaan jirim.", jawapan: "Pepejal, cecair, gas", petunjuk: "tiga bentuk bahan" },
+    { soalan: "Berikan contoh pepejal.", jawapan: "batu, kayu, besi", petunjuk: "benda yang keras dan tidak berubah bentuk" },
+    { soalan: "Berikan contoh cecair.", jawapan: "air, minyak, susu", petunjuk: "benda yang boleh mengalir" },
+    { soalan: "Berikan contoh gas.", jawapan: "udara, oksigen, karbon dioksida", petunjuk: "benda yang tidak kelihatan" },
+    { soalan: "Apakah yang berlaku kepada ais apabila dipanaskan?", jawapan: "Melebur menjadi air", petunjuk: "pepejal bertukar cecair" },
+    { soalan: "Apakah yang berlaku kepada air apabila dipanaskan?", jawapan: "Menyejat menjadi wap", petunjuk: "cecair bertukar gas" },
+    { soalan: "Namakan 2 haiwan ovipar.", jawapan: "ayam, ikan, katak, burung", petunjuk: "haiwan yang bertelur" },
+    { soalan: "Namakan 2 haiwan vivipar.", jawapan: "kucing, anjing, lembu, manusia", petunjuk: "haiwan yang melahirkan anak" },
+    { soalan: "Apakah yang menyebabkan magnet menarik benda?", jawapan: "Daya tarikan magnet", petunjuk: "kuasa magnet menarik besi" },
+  ],
 };
 
 function normalize(s: string) {
