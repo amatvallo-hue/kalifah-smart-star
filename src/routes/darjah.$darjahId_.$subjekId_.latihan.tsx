@@ -110,6 +110,18 @@ const BANK: Record<string, Soalan[]> = {
     { soalan: "56 epal dibahagi sama rata kepada 7 kanak-kanak. Berapa epal setiap orang?", jawapan: "8", petunjuk: "56 ÷ 7" },
     { soalan: "Harga baju RM75. Harga seluar RM38. Berapa jumlah harga?", jawapan: "rm113", petunjuk: "75 + 38" },
   ],
+  "2:bahasa-inggeris": [
+    { soalan: "Write the plural of 'cat'.", jawapan: "cats", petunjuk: "add s" },
+    { soalan: "Write the plural of 'box'.", jawapan: "boxes", petunjuk: "add es" },
+    { soalan: "Write the plural of 'child'.", jawapan: "children", petunjuk: "irregular plural" },
+    { soalan: "Write the past tense of 'run'.", jawapan: "ran", petunjuk: "irregular verb" },
+    { soalan: "Write the past tense of 'eat'.", jawapan: "ate", petunjuk: "irregular verb" },
+    { soalan: "Write the past tense of 'go'.", jawapan: "went", petunjuk: "irregular verb" },
+    { soalan: "Write the past tense of 'play'.", jawapan: "played", petunjuk: "add ed" },
+    { soalan: "Write one sentence using the word 'beautiful'.", jawapan: "the flower is beautiful", petunjuk: "use adjective in a sentence" },
+    { soalan: "Write the opposite of 'happy'.", jawapan: "sad", petunjuk: "antonym" },
+    { soalan: "Write the opposite of 'big'.", jawapan: "small", petunjuk: "antonym" },
+  ],
 };
 
 function normalize(s: string) {
