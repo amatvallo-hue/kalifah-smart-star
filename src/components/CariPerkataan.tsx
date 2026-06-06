@@ -507,3 +507,32 @@ export const BI_DARJAH2_CLUES: Record<string, string> = {
   WOMEN: "Plural of woman",
   SLOWLY: "Opposite of quickly",
 };
+
+// Jawi Darjah 2 — 10x10 grid with 10 words (nama huruf & istilah Jawi).
+export const JAWI_DARJAH2_WORDS: Word[] = [
+  // Mendatar
+  { word: "ALIF", row: 0, col: 0, dir: "H" },
+  { word: "MIM", row: 2, col: 0, dir: "H" },
+  { word: "JAWI", row: 4, col: 0, dir: "H" },
+  { word: "KHAT", row: 6, col: 0, dir: "H" },
+  { word: "RUMI", row: 8, col: 0, dir: "H" },
+  // Menegak
+  { word: "WAU", row: 0, col: 4, dir: "V" },
+  { word: "NUN", row: 0, col: 6, dir: "V" },
+  { word: "HURUF", row: 1, col: 8, dir: "V" },
+  { word: "TULIS", row: 1, col: 9, dir: "V" },
+  { word: "ARAB", row: 5, col: 5, dir: "V" },
+];
+
+export const JAWI_DARJAH2_CLUES: Record<string, string> = {
+  ALIF: "Huruf Jawi pertama — ا",
+  MIM: "Huruf Jawi — م",
+  JAWI: "Tulisan kita",
+  KHAT: "Seni tulisan Arab",
+  RUMI: "Tulisan Latin",
+  NUN: "Huruf Jawi — ن",
+  WAU: "Huruf Jawi — و",
+  HURUF: "Aksara dalam tulisan",
+  ARAB: "Bahasa asal tulisan Jawi",
+  TULIS: "Cara merakam perkataan",
+};
