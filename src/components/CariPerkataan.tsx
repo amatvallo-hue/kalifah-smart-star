@@ -350,3 +350,31 @@ export const JAWI_DARJAH1_CLUES: Record<string, string> = {
   WAU: "Huruf Jawi — و",
   YA: "Huruf Jawi — ي",
 };
+
+export const PI_DARJAH1_WORDS: Word[] = [
+  // Mendatar
+  { word: "SOLAT", row: 0, col: 0, dir: "H" },
+  { word: "PUASA", row: 2, col: 0, dir: "H" },
+  { word: "SUBUH", row: 4, col: 0, dir: "H" },
+  { word: "ZOHOR", row: 6, col: 0, dir: "H" },
+  { word: "ASAR", row: 8, col: 0, dir: "H" },
+  // Menegak
+  { word: "MAGHRIB", row: 0, col: 6, dir: "V" },
+  { word: "ISYAK", row: 0, col: 8, dir: "V" },
+  { word: "IMAN", row: 1, col: 3, dir: "V" },
+  { word: "DOA", row: 2, col: 5, dir: "V" },
+  { word: "QURAN", row: 3, col: 9, dir: "V" },
+];
+
+export const PI_DARJAH1_CLUES: Record<string, string> = {
+  SOLAT: "Ibadat yang dilakukan 5 kali sehari",
+  PUASA: "Menahan lapar dan dahaga",
+  SUBUH: "Solat waktu pagi",
+  ZOHOR: "Solat waktu tengah hari",
+  ASAR: "Solat waktu petang",
+  MAGHRIB: "Solat waktu senja",
+  ISYAK: "Solat waktu malam",
+  IMAN: "Kepercayaan kepada Allah",
+  DOA: "Permohonan kepada Allah",
+  QURAN: "Kitab suci umat Islam",
+};
