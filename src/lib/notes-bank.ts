@@ -624,6 +624,297 @@ export const NOTES_BANK: Record<string, SubjectNotes> = {
       },
     ],
   },
+  "3:matematik": {
+    subject: "Matematik",
+    sections: [
+      {
+        title: "Tambah & Tolak 4 Digit",
+        icon: "➕",
+        items: [
+          "Tambah lajur dari kanan: sa, puluh, ratus, ribu",
+          "Contoh: 2345 + 1234 = 3579",
+          "Tolak dengan pinjam apabila digit lebih kecil",
+          "Contoh: 5000 - 2345 = 2655",
+        ],
+      },
+      {
+        title: "Darab & Bahagi (Sifir 6–9)",
+        icon: "✖️",
+        items: [
+          "7 × 8 = 56  ·  9 × 6 = 54",
+          "72 ÷ 8 = 9  ·  63 ÷ 7 = 9",
+          "Hafal sifir 6, 7, 8, 9 dengan baik",
+        ],
+      },
+      {
+        title: "Pecahan",
+        icon: "🍕",
+        items: [
+          "Penyebut sama: terus tambah pengangka. 1/4 + 2/4 = 3/4",
+          "Penyebut berbeza: samakan dulu. 1/2 = 2/4, jadi 1/2 + 1/4 = 3/4",
+          "Tolak sama caranya: 3/4 - 1/4 = 2/4",
+        ],
+      },
+      {
+        title: "Perpuluhan",
+        icon: "🔢",
+        items: [
+          "Titik perpuluhan memisahkan sa dan persepuluh",
+          "0.5 + 0.3 = 0.8",
+          "Susun titik perpuluhan dalam satu lajur sebelum kira",
+        ],
+      },
+      {
+        title: "Luas & Perimeter",
+        icon: "📐",
+        items: [
+          "Luas segiempat = panjang × lebar",
+          "Contoh: 6cm × 4cm = 24 cm²",
+          "Perimeter = jumlah semua sisi",
+          "Contoh segitiga: 3 + 4 + 5 = 12 cm",
+        ],
+      },
+      {
+        title: "Pembundaran",
+        icon: "🎯",
+        items: [
+          "Bundar 456 ke ratus terdekat → 500",
+          "1–4 ke bawah, 5–9 ke atas",
+          "Nilai digit: 4 dalam 3456 ialah 400",
+        ],
+      },
+    ],
+  },
+  "3:bahasa-inggeris": {
+    subject: "Bahasa Inggeris",
+    sections: [
+      {
+        title: "Simple Present Tense",
+        icon: "📝",
+        items: [
+          "Used for habits and facts.",
+          "I/You/We/They + verb. She/He/It + verb-s.",
+          "Example: She goes to school every day.",
+        ],
+      },
+      {
+        title: "Simple Past Tense",
+        icon: "⏪",
+        items: [
+          "Regular: add -ed (play → played)",
+          "Irregular: write → wrote, go → went, eat → ate",
+          "Example: She went to school yesterday.",
+        ],
+      },
+      {
+        title: "Future Tense",
+        icon: "⏩",
+        items: [
+          "Use 'will' or 'will be' + verb",
+          "Example: They will be playing tomorrow.",
+        ],
+      },
+      {
+        title: "Articles (a / an / the)",
+        icon: "📖",
+        items: [
+          "a = before consonant sound (a book)",
+          "an = before vowel sound (an elephant)",
+          "the = specific thing (the sun)",
+        ],
+      },
+      {
+        title: "Adjective vs Adverb",
+        icon: "🔤",
+        items: [
+          "Adjective describes a noun: beautiful flower",
+          "Adverb describes a verb: runs quickly",
+        ],
+      },
+      {
+        title: "Simile & Conjunction",
+        icon: "✨",
+        items: [
+          "Simile = comparing using 'like' or 'as'",
+          "Example: She is as fast as a cheetah",
+          "Conjunction: and, but, or, because",
+        ],
+      },
+    ],
+  },
+  "3:jawi": {
+    subject: "Jawi",
+    sections: [
+      {
+        title: "6 Huruf Tambahan Jawi",
+        icon: "📌",
+        items: [
+          "ڤ = pa  ·  چ = cha  ·  ڠ = nga",
+          "ڬ = ga  ·  ۏ = va  ·  ݢ (varian) = ga",
+          "Huruf khas untuk bunyi Bahasa Melayu",
+        ],
+      },
+      {
+        title: "Ejaan Perkataan Panjang",
+        icon: "✍️",
+        items: [
+          "perpustakaan = ڤرڤوستاکان",
+          "kemerdekaan = کمرديکاءن",
+          "pembelajaran = ڤمبلاجاران",
+          "kecemerlangan = کچمرلاڠن",
+        ],
+      },
+      {
+        title: "Perbezaan Jawi & Rumi",
+        icon: "🔁",
+        items: [
+          "Jawi ditulis dari kanan ke kiri",
+          "Rumi ditulis dari kiri ke kanan",
+          "Jawi guna huruf Arab + 6 huruf tambahan",
+        ],
+      },
+      {
+        title: "Perkataan Penting",
+        icon: "📖",
+        items: [
+          "مدرسة = sekolah",
+          "معلم = guru",
+          "كتاب = buku",
+          "مدينة = bandar",
+          "نيڬارا = negara",
+        ],
+      },
+    ],
+  },
+  "3:pendidikan-islam": {
+    subject: "Pendidikan Islam",
+    sections: [
+      {
+        title: "25 Nabi & Rasul",
+        icon: "📌",
+        items: [
+          "Wajib diketahui: 25 Nabi dan Rasul",
+          "Nabi Hud diutus kepada kaum Ad",
+          "Nabi Soleh diutus kepada kaum Thamud",
+          "Nabi Muhammad SAW adalah rasul terakhir",
+        ],
+      },
+      {
+        title: "4 Kitab Allah",
+        icon: "📖",
+        items: [
+          "Zabur → Nabi Daud",
+          "Taurat → Nabi Musa",
+          "Injil → Nabi Isa",
+          "Al-Quran → Nabi Muhammad SAW",
+        ],
+      },
+      {
+        title: "10 Malaikat",
+        icon: "👼",
+        items: [
+          "Jibril → wahyu  ·  Mikail → rezeki & hujan",
+          "Israfil → tiup sangkakala  ·  Izrail → cabut nyawa",
+          "Munkar & Nakir → soal di kubur",
+          "Raqib & Atid → catat amalan",
+          "Malik → jaga neraka  ·  Ridwan → jaga syurga",
+        ],
+      },
+      {
+        title: "Sifat Wajib Allah",
+        icon: "✨",
+        items: [
+          "Wujud = Ada  ·  Qidam = Sedia Ada",
+          "Baqa = Kekal  ·  Wahdaniah = Maha Esa",
+        ],
+      },
+      {
+        title: "Rukun Islam & Iman",
+        icon: "🕌",
+        items: [
+          "Rukun Islam: Syahadah, Solat, Puasa, Zakat, Haji",
+          "Rukun Iman: Allah, Malaikat, Kitab, Rasul, Hari Akhirat, Qada & Qadar",
+          "Bulan puasa = Ramadan. Zakat fitrah dibayar dalam Ramadan",
+        ],
+      },
+      {
+        title: "Sifat Mahmudah & Mazmumah",
+        icon: "⚖️",
+        items: [
+          "Mahmudah (terpuji): jujur, amanah, sabar, pemurah",
+          "Mazmumah (keji): dengki, sombong, bakhil, dusta",
+          "Kaabah terletak di Makkah",
+        ],
+      },
+    ],
+  },
+  "3:sains": {
+    subject: "Sains",
+    sections: [
+      {
+        title: "Fotosintesis",
+        icon: "🌿",
+        items: [
+          "Tumbuhan buat makanan menggunakan cahaya matahari",
+          "Perlukan: cahaya, air, karbon dioksida",
+          "Menghasilkan: makanan dan oksigen",
+        ],
+      },
+      {
+        title: "3 Keadaan Jirim",
+        icon: "💧",
+        items: [
+          "Pepejal — bentuk tetap (batu, kayu)",
+          "Cecair — mengalir (air, minyak)",
+          "Gas — tidak kelihatan (udara, oksigen)",
+        ],
+      },
+      {
+        title: "Ovipar vs Vivipar",
+        icon: "🐣",
+        items: [
+          "Ovipar = bertelur (ayam, ikan, katak)",
+          "Vivipar = melahirkan anak (kucing, lembu, manusia)",
+        ],
+      },
+      {
+        title: "Herbivor, Karnivor, Omnivor",
+        icon: "🍃",
+        items: [
+          "Herbivor = makan tumbuhan (lembu, arnab)",
+          "Karnivor = makan daging (harimau, singa)",
+          "Omnivor = makan kedua-duanya (manusia, ayam)",
+        ],
+      },
+      {
+        title: "Sistem Suria",
+        icon: "🪐",
+        items: [
+          "8 planet dalam sistem suria",
+          "Bumi mengelilingi matahari dalam 1 tahun",
+          "Planet: Utarid, Zuhrah, Bumi, Marikh, Musytari, Zuhal, Uranus, Neptun",
+        ],
+      },
+      {
+        title: "Rantaian Makanan & Gerhana",
+        icon: "🌑",
+        items: [
+          "Rantaian makanan bermula dengan tumbuhan",
+          "Gerhana matahari: bumi masuk bayang bulan",
+          "Gerhana bulan: bulan masuk bayang bumi",
+        ],
+      },
+      {
+        title: "Graviti & Pemanasan Global",
+        icon: "🌍",
+        items: [
+          "Graviti menarik benda ke arah bawah (pusat bumi)",
+          "Pemanasan global = peningkatan suhu bumi akibat gas rumah hijau",
+          "Cara cegah: tanam pokok, kurang asap kenderaan",
+        ],
+      },
+    ],
+  },
 };
 
 export function getNotes(darjahId: string, subjekId: string): SubjectNotes | null {
