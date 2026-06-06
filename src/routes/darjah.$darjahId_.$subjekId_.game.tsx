@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, Gamepad2, Send, Sparkles, Timer, Trophy, Search } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { StarReward } from "@/components/StarReward";
-import { CariPerkataan, BM_DARJAH1_WORDS, BM_DARJAH1_CLUES, BM_DARJAH2_WORDS, BM_DARJAH2_CLUES, BM_DARJAH3_WORDS, BM_DARJAH3_CLUES, BI_DARJAH1_WORDS, BI_DARJAH1_CLUES, BI_DARJAH2_WORDS, BI_DARJAH2_CLUES, BI_DARJAH3_WORDS, BI_DARJAH3_CLUES, JAWI_DARJAH1_WORDS, JAWI_DARJAH1_CLUES, JAWI_DARJAH2_WORDS, JAWI_DARJAH2_CLUES, JAWI_DARJAH3_WORDS, JAWI_DARJAH3_CLUES, PI_DARJAH1_WORDS, PI_DARJAH1_CLUES, PI_DARJAH2_WORDS, PI_DARJAH2_CLUES, PI_DARJAH3_WORDS, PI_DARJAH3_CLUES, SAINS_DARJAH1_WORDS, SAINS_DARJAH1_CLUES, SAINS_DARJAH2_WORDS, SAINS_DARJAH2_CLUES, MATE_DARJAH2_WORDS, MATE_DARJAH2_CLUES, MATE_DARJAH3_WORDS, MATE_DARJAH3_CLUES } from "@/components/CariPerkataan";
+import { CariPerkataan, BM_DARJAH1_WORDS, BM_DARJAH1_CLUES, BM_DARJAH2_WORDS, BM_DARJAH2_CLUES, BM_DARJAH3_WORDS, BM_DARJAH3_CLUES, BM_DARJAH4_WORDS, BM_DARJAH4_CLUES, BI_DARJAH1_WORDS, BI_DARJAH1_CLUES, BI_DARJAH2_WORDS, BI_DARJAH2_CLUES, BI_DARJAH3_WORDS, BI_DARJAH3_CLUES, BI_DARJAH4_WORDS, BI_DARJAH4_CLUES, JAWI_DARJAH1_WORDS, JAWI_DARJAH1_CLUES, JAWI_DARJAH2_WORDS, JAWI_DARJAH2_CLUES, JAWI_DARJAH3_WORDS, JAWI_DARJAH3_CLUES, JAWI_DARJAH4_WORDS, JAWI_DARJAH4_CLUES, PI_DARJAH1_WORDS, PI_DARJAH1_CLUES, PI_DARJAH2_WORDS, PI_DARJAH2_CLUES, PI_DARJAH3_WORDS, PI_DARJAH3_CLUES, PI_DARJAH4_WORDS, PI_DARJAH4_CLUES, SAINS_DARJAH1_WORDS, SAINS_DARJAH1_CLUES, SAINS_DARJAH2_WORDS, SAINS_DARJAH2_CLUES, SAINS_DARJAH4_WORDS, SAINS_DARJAH4_CLUES, MATE_DARJAH2_WORDS, MATE_DARJAH2_CLUES, MATE_DARJAH3_WORDS, MATE_DARJAH3_CLUES, MATE_DARJAH4_WORDS, MATE_DARJAH4_CLUES } from "@/components/CariPerkataan";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { getDarjah, getSubjek } from "@/lib/curriculum";
@@ -233,6 +233,78 @@ const BANK: Record<string, Soalan[]> = {
     { soalan: "Gerhana matahari berlaku?", jawapan: "A", options: ["A) bumi masuk bayang bulan", "B) bulan masuk bayang bumi", "C) matahari hilang", "D) bumi berhenti berputar"] },
     { soalan: "Pemanasan global disebabkan?", jawapan: "C", options: ["A) lebih pokok", "B) lebih hujan", "C) gas rumah hijau", "D) lebih angin"] },
   ],
+  "4:bahasa-melayu": [
+    { soalan: "Apakah ayat majmuk?", jawapan: "B", options: ["A) Ayat tunggal", "B) Gabungan dua ayat atau lebih", "C) Ayat pendek", "D) Ayat panjang"] },
+    { soalan: "Pilih ayat majmuk:", jawapan: "B", options: ["A) Ali pergi ke sekolah", "B) Ali pergi ke sekolah dan Abu duduk", "C) Ali dan Abu", "D) Pergi ke sekolah"] },
+    { soalan: "Kata sendi nama?", jawapan: "C", options: ["A) dan", "B) tetapi", "C) di", "D) cantik"] },
+    { soalan: "Kata tanya?", jawapan: "D", options: ["A) dan", "B) tetapi", "C) di", "D) siapa"] },
+    { soalan: "Maksud 'air di daun keladi'?", jawapan: "B", options: ["A) Tidak bertanggungjawab", "B) Tidak kekal", "C) Sangat setia", "D) Sangat rajin"] },
+    { soalan: "Kata penguat?", jawapan: "A", options: ["A) sangat", "B) dan", "C) di", "D) berlari"] },
+    { soalan: "Apakah pantun?", jawapan: "B", options: ["A) Puisi bebas", "B) Puisi tradisional 4 baris", "C) Cerita panjang", "D) Dialog"] },
+    { soalan: "Kata nafi?", jawapan: "B", options: ["A) sangat", "B) tidak", "C) di", "D) dan"] },
+    { soalan: "Apakah dialog?", jawapan: "B", options: ["A) Cerita pendek", "B) Perbualan dua orang atau lebih", "C) Puisi", "D) Pantun"] },
+    { soalan: "Kata bilangan?", jawapan: "C", options: ["A) cantik", "B) berlari", "C) tiga orang", "D) di"] },
+  ],
+  "4:matematik": [
+    { soalan: "2345 + 3456 = ?", jawapan: "B", options: ["A) 5791", "B) 5801", "C) 5811", "D) 5821"] },
+    { soalan: "8765 - 4321 = ?", jawapan: "C", options: ["A) 4334", "B) 4344", "C) 4444", "D) 4454"] },
+    { soalan: "12 × 8 = ?", jawapan: "B", options: ["A) 86", "B) 96", "C) 106", "D) 116"] },
+    { soalan: "144 ÷ 12 = ?", jawapan: "C", options: ["A) 10", "B) 11", "C) 12", "D) 13"] },
+    { soalan: "3/4 - 1/2 = ?", jawapan: "A", options: ["A) 1/4", "B) 2/4", "C) 1/2", "D) 2/2"] },
+    { soalan: "0.75 + 0.25 = ?", jawapan: "B", options: ["A) 0.9", "B) 1.0", "C) 1.1", "D) 1.2"] },
+    { soalan: "Luas 12cm × 8cm = ?", jawapan: "C", options: ["A) 80cm²", "B) 86cm²", "C) 96cm²", "D) 106cm²"] },
+    { soalan: "Perimeter 12cm × 8cm = ?", jawapan: "B", options: ["A) 36cm", "B) 40cm", "C) 44cm", "D) 48cm"] },
+    { soalan: "Sudut tegak berapa darjah?", jawapan: "B", options: ["A) 45", "B) 90", "C) 180", "D) 360"] },
+    { soalan: "25 × 4 = ?", jawapan: "C", options: ["A) 90", "B) 95", "C) 100", "D) 105"] },
+  ],
+  "4:bahasa-inggeris": [
+    { soalan: "What is a compound sentence?", jawapan: "B", options: ["A) One main clause", "B) Two or more main clauses joined", "C) A short sentence", "D) A long sentence"] },
+    { soalan: "Present continuous tense?", jawapan: "C", options: ["A) I eat", "B) I ate", "C) I am eating", "D) I will eat"] },
+    { soalan: "She ___ singing now.", jawapan: "B", options: ["A) am", "B) is", "C) are", "D) be"] },
+    { soalan: "They ___ playing now.", jawapan: "C", options: ["A) am", "B) is", "C) are", "D) be"] },
+    { soalan: "Choose pronoun:", jawapan: "C", options: ["A) book", "B) run", "C) she", "D) quickly"] },
+    { soalan: "Synonym of angry?", jawapan: "B", options: ["A) happy", "B) furious", "C) sad", "D) tired"] },
+    { soalan: "Antonym of ancient?", jawapan: "B", options: ["A) old", "B) modern", "C) antique", "D) historical"] },
+    { soalan: "Example of alliteration?", jawapan: "B", options: ["A) She is like a rose", "B) Peter Piper picked peppers", "C) The moon is a coin", "D) He runs quickly"] },
+    { soalan: "Past continuous: She ___ when I called.", jawapan: "C", options: ["A) sleep", "B) sleeps", "C) was sleeping", "D) slept"] },
+    { soalan: "Possessive pronoun?", jawapan: "C", options: ["A) she", "B) her", "C) hers", "D) herself"] },
+  ],
+  "4:jawi": [
+    { soalan: "Ejaan Jawi 'kecemerlangan'?", jawapan: "C", options: ["A) کچمرلڠن", "B) کيچمرلاڠن", "C) کچمرلاڠن", "D) کيچمرلڠن"] },
+    { soalan: "Ejaan Jawi 'persekitaran'?", jawapan: "A", options: ["A) ڤرسيکيتارن", "B) ڤيرسيکيتارن", "C) ڤرسکيتارن", "D) ڤيرسکيتارن"] },
+    { soalan: "Ejaan Jawi 'pembangunan'?", jawapan: "C", options: ["A) ڤمباڠونن", "B) ڤيمباڠونن", "C) ڤمبانڬونن", "D) ڤيمبانڬونن"] },
+    { soalan: "Ejaan Jawi 'keselamatan'?", jawapan: "C", options: ["A) کسلامتن", "B) کيسلامتن", "C) کسيلامتن", "D) کيسيلامتن"] },
+    { soalan: "Ejaan Jawi 'tanggungjawab'?", jawapan: "A", options: ["A) تاڠڬوڠجاوب", "B) تڠڬوڠجاوب", "C) تاڠڬوڠجوب", "D) تڠڬوڠجوب"] },
+    { soalan: "Jawi کسيلامتن bermaksud?", jawapan: "C", options: ["A) persekitaran", "B) pembangunan", "C) keselamatan", "D) tanggungjawab"] },
+    { soalan: "Berapa huruf Jawi asas?", jawapan: "C", options: ["A) 26", "B) 28", "C) 30", "D) 32"] },
+    { soalan: "Berapa huruf tambahan Jawi?", jawapan: "C", options: ["A) 4", "B) 5", "C) 6", "D) 7"] },
+    { soalan: "Ejaan Jawi 'kebebasan'?", jawapan: "C", options: ["A) کببسن", "B) کيببسن", "C) کببيسن", "D) کيببيسن"] },
+    { soalan: "Ejaan Jawi 'kepimpinan'?", jawapan: "A", options: ["A) کڤيمڤينن", "B) کيڤيمڤينن", "C) کڤمڤينن", "D) کيڤمڤينن"] },
+  ],
+  "4:pendidikan-islam": [
+    { soalan: "Maksud akhlak?", jawapan: "B", options: ["A) Ilmu", "B) Budi pekerti", "C) Ibadat", "D) Aqidah"] },
+    { soalan: "Maksud ukhuwah?", jawapan: "B", options: ["A) persaingan", "B) persaudaraan", "C) permusuhan", "D) perdebatan"] },
+    { soalan: "Solat berjemaah lebih afdal berapa kali ganda?", jawapan: "B", options: ["A) 17", "B) 27", "C) 37", "D) 47"] },
+    { soalan: "Maksud amanah?", jawapan: "B", options: ["A) berbohong", "B) boleh dipercayai", "C) sombong", "D) dengki"] },
+    { soalan: "Maksud istiqamah?", jawapan: "C", options: ["A) berubah-ubah", "B) tidak konsisten", "C) tetap pendirian", "D) tidak sabar"] },
+    { soalan: "Nabi Muhammad SAW lahir tahun?", jawapan: "A", options: ["A) 570M", "B) 580M", "C) 590M", "D) 600M"] },
+    { soalan: "Nabi terima wahyu usia?", jawapan: "C", options: ["A) 30", "B) 35", "C) 40", "D) 45"] },
+    { soalan: "Tahun hijrah?", jawapan: "C", options: ["A) 610M", "B) 620M", "C) 622M", "D) 630M"] },
+    { soalan: "Sahabat menemani Nabi hijrah?", jawapan: "D", options: ["A) Umar", "B) Uthman", "C) Ali", "D) Abu Bakar"] },
+    { soalan: "Maksud tawaduk?", jawapan: "B", options: ["A) sombong", "B) rendah diri", "C) pemarah", "D) dengki"] },
+  ],
+  "4:sains": [
+    { soalan: "Apakah sel?", jawapan: "A", options: ["A) Unit terkecil makhluk hidup", "B) Organ", "C) Tisu", "D) Sistem"] },
+    { soalan: "Sel tumbuhan beza dari sel haiwan kerana?", jawapan: "B", options: ["A) nukleus", "B) dinding sel", "C) sitoplasma", "D) membran"] },
+    { soalan: "Fungsi kloroplas?", jawapan: "C", options: ["A) simpan makanan", "B) kawalan sel", "C) fotosintesis", "D) pernafasan"] },
+    { soalan: "Apakah ekosistem?", jawapan: "C", options: ["A) sekumpulan haiwan", "B) sekumpulan tumbuhan", "C) komuniti organisma + persekitaran", "D) rantaian makanan"] },
+    { soalan: "Apakah habitat?", jawapan: "B", options: ["A) makanan haiwan", "B) tempat tinggal organisma", "C) musuh semulajadi", "D) rantaian makanan"] },
+    { soalan: "Apakah adaptasi?", jawapan: "B", options: ["A) perpindahan", "B) penyesuaian diri", "C) pembiakan", "D) pemakanan"] },
+    { soalan: "Contoh tenaga kinetik?", jawapan: "B", options: ["A) batu diam", "B) air mengalir", "C) spring termampat", "D) bateri"] },
+    { soalan: "Tenaga boleh diperbaharui?", jawapan: "D", options: ["A) minyak", "B) arang batu", "C) gas asli", "D) solar"] },
+    { soalan: "Tenaga tidak boleh diperbaharui?", jawapan: "C", options: ["A) angin", "B) solar", "C) minyak", "D) air"] },
+    { soalan: "Apakah kitar semula?", jawapan: "B", options: ["A) buang sampah", "B) proses semula bahan", "C) bakar sampah", "D) tanam sampah"] },
+  ],
 };
 
 
@@ -255,6 +327,12 @@ const TIME_MAP: Record<string, number> = {
   "3:jawi": 10,
   "3:pendidikan-islam": 10,
   "3:sains": 10,
+  "4:bahasa-melayu": 10,
+  "4:matematik": 10,
+  "4:bahasa-inggeris": 10,
+  "4:jawi": 10,
+  "4:pendidikan-islam": 10,
+  "4:sains": 10,
 };
 
 
@@ -303,7 +381,13 @@ function GameSubjekPage() {
   const isJawi3 = darjahId === "3" && subjekId === "jawi";
   const isPI3 = darjahId === "3" && subjekId === "pendidikan-islam";
   const isSains3 = darjahId === "3" && subjekId === "sains";
-  const hasCariPerkataan = isMate || isMate2 || isMate3 || isBM || isBM2 || isBM3 || isBI || isBI2 || isBI3 || isJawi || isJawi2 || isJawi3 || isPI || isPI2 || isPI3 || isSains || isSains2 || isSains3;
+  const isBM4 = darjahId === "4" && subjekId === "bahasa-melayu";
+  const isMate4 = darjahId === "4" && subjekId === "matematik";
+  const isBI4 = darjahId === "4" && subjekId === "bahasa-inggeris";
+  const isJawi4 = darjahId === "4" && subjekId === "jawi";
+  const isPI4 = darjahId === "4" && subjekId === "pendidikan-islam";
+  const isSains4 = darjahId === "4" && subjekId === "sains";
+  const hasCariPerkataan = isMate || isMate2 || isMate3 || isMate4 || isBM || isBM2 || isBM3 || isBM4 || isBI || isBI2 || isBI3 || isBI4 || isJawi || isJawi2 || isJawi3 || isJawi4 || isPI || isPI2 || isPI3 || isPI4 || isSains || isSains2 || isSains3 || isSains4;
 
   const [mode, setMode] = useState<"race" | "cari">("race");
 
@@ -547,6 +631,18 @@ function GameSubjekPage() {
               gridSize={10}
               title="Cari Perkataan Sains"
             />
+          ) : isBM4 ? (
+            <CariPerkataan words={BM_DARJAH4_WORDS} clues={BM_DARJAH4_CLUES} gridSize={10} title="Cari Perkataan Bahasa Melayu" />
+          ) : isMate4 ? (
+            <CariPerkataan words={MATE_DARJAH4_WORDS} clues={MATE_DARJAH4_CLUES} gridSize={10} title="Cari Perkataan Matematik" />
+          ) : isBI4 ? (
+            <CariPerkataan words={BI_DARJAH4_WORDS} clues={BI_DARJAH4_CLUES} gridSize={10} title="Word Search" />
+          ) : isJawi4 ? (
+            <CariPerkataan words={JAWI_DARJAH4_WORDS} clues={JAWI_DARJAH4_CLUES} gridSize={10} title="Cari Perkataan Jawi" />
+          ) : isPI4 ? (
+            <CariPerkataan words={PI_DARJAH4_WORDS} clues={PI_DARJAH4_CLUES} gridSize={10} title="Cari Perkataan Pendidikan Islam" />
+          ) : isSains4 ? (
+            <CariPerkataan words={SAINS_DARJAH4_WORDS} clues={SAINS_DARJAH4_CLUES} gridSize={10} title="Cari Perkataan Sains" />
           ) : (
             <CariPerkataan />
           )

@@ -29,6 +29,19 @@ const JAWI_D2_MCQ: SoalanMcq[] = [
   { soalan: "Pilih ejaan Jawi bagi 'bersekolah'", pilihan: ["برسکول", "بيرسکول", "برسکوله", "بيرسکوله"], betul: 0 },
 ];
 
+const JAWI_D4_MCQ: SoalanMcq[] = [
+  { soalan: "Pilih ejaan Jawi bagi 'kecemerlangan'", pilihan: ["کچمرلڠن", "کيچمرلاڠن", "کچمرلاڠن", "کيچمرلڠن"], betul: 2 },
+  { soalan: "Pilih ejaan Jawi bagi 'persekitaran'", pilihan: ["ڤرسيکيتارن", "ڤيرسيکيتارن", "ڤرسکيتارن", "ڤيرسکيتارن"], betul: 0 },
+  { soalan: "Pilih ejaan Jawi bagi 'pembangunan'", pilihan: ["ڤمباڠونن", "ڤيمباڠونن", "ڤمبانڬونن", "ڤيمبانڬونن"], betul: 2 },
+  { soalan: "Pilih ejaan Jawi bagi 'keselamatan'", pilihan: ["کسلامتن", "کيسلامتن", "کسيلامتن", "کيسيلامتن"], betul: 2 },
+  { soalan: "Pilih ejaan Jawi bagi 'tanggungjawab'", pilihan: ["تاڠڬوڠجاوب", "تڠڬوڠجاوب", "تاڠڬوڠجوب", "تڠڬوڠجوب"], betul: 0 },
+  { soalan: "Pilih ejaan Jawi bagi 'perkhidmatan'", pilihan: ["ڤرخدمتن", "ڤيرخدمتن", "ڤرخيدمتن", "ڤيرخيدمتن"], betul: 2 },
+  { soalan: "Pilih ejaan Jawi bagi 'kebebasan'", pilihan: ["کببسن", "کيببسن", "کببيسن", "کيببيسن"], betul: 2 },
+  { soalan: "Pilih ejaan Jawi bagi 'pengetahuan'", pilihan: ["ڤڠتاهوان", "ڤيڠتاهوان", "ڤڠيتاهوان", "ڤيڠيتاهوان"], betul: 2 },
+  { soalan: "Pilih ejaan Jawi bagi 'kepimpinan'", pilihan: ["کڤيمڤينن", "کيڤيمڤينن", "کڤمڤينن", "کيڤمڤينن"], betul: 0 },
+  { soalan: "Pilih ejaan Jawi bagi 'kemasyarakatan'", pilihan: ["کماسياراکتن", "کيماسياراکتن", "کماسارکتن", "کيماسارکتن"], betul: 0 },
+];
+
 
 const BANK: Record<string, Soalan[]> = {
   "1:matematik": [
@@ -233,6 +246,66 @@ const BANK: Record<string, Soalan[]> = {
     { soalan: "Apakah gerhana matahari?", jawapan: "bumi masuk bayang bulan", petunjuk: "bulan halang cahaya" },
     { soalan: "Apakah pemanasan global?", jawapan: "peningkatan suhu bumi akibat gas rumah hijau", petunjuk: "isu alam sekitar" },
   ],
+  "4:bahasa-melayu": [
+    { soalan: "Tulis ayat majmuk menggunakan kata hubung 'dan'.", jawapan: "Ali makan nasi dan Abu minum air", petunjuk: "gabungkan dua ayat dengan 'dan'" },
+    { soalan: "Apa maksud peribahasa 'seperti air di daun keladi'?", jawapan: "Tidak kekal", petunjuk: "tentang sifat yang berubah-ubah" },
+    { soalan: "Tulis pantun 4 baris mudah.", jawapan: "Buah cempedak di luar pagar/Ambil galah tolong jolokkan/Saya budak baru belajar/Kalau salah tolong tunjukkan", petunjuk: "2 baris pembayang + 2 baris maksud" },
+    { soalan: "Apakah kata sendi nama?", jawapan: "kata yang menunjukkan tempat seperti di ke dari", petunjuk: "contoh: di, ke, dari" },
+    { soalan: "Tulis ayat menggunakan kata penguat 'sangat'.", jawapan: "Bunga itu sangat cantik", petunjuk: "tambah 'sangat' sebelum sifat" },
+    { soalan: "Apakah imbuhan apitan 'ke...an'?", jawapan: "imbuhan yang hadir di awal dan akhir kata", petunjuk: "ada di permulaan dan penghujung" },
+    { soalan: "Tulis dialog dua orang.", jawapan: "Ali:Selamat pagi. Abu:Selamat pagi juga", petunjuk: "perbualan ringkas" },
+    { soalan: "Apakah bahagian pantun yang mengandungi maksud?", jawapan: "Maksud", petunjuk: "2 baris terakhir pantun" },
+    { soalan: "Tulis kata nafi dalam ayat.", jawapan: "Saya tidak suka makan sayur", petunjuk: "guna 'tidak' atau 'bukan'" },
+    { soalan: "Apakah kata bilangan?", jawapan: "kata yang menunjukkan jumlah seperti tiga orang dua buah", petunjuk: "menunjukkan kuantiti" },
+  ],
+  "4:matematik": [
+    { soalan: "2345 + 3456 = ___", jawapan: "5801", petunjuk: "tambah lajur kanan dulu" },
+    { soalan: "8765 - 4321 = ___", jawapan: "4444", petunjuk: "tolak lajur kanan dulu" },
+    { soalan: "12 × 8 = ___", jawapan: "96", petunjuk: "sifir 12" },
+    { soalan: "144 ÷ 12 = ___", jawapan: "12", petunjuk: "sifir 12 songsang" },
+    { soalan: "2/3 + 1/3 = ___", jawapan: "1", petunjuk: "penyebut sama, tambah pengangka" },
+    { soalan: "3/4 - 1/2 = ___", jawapan: "1/4", petunjuk: "samakan penyebut dulu" },
+    { soalan: "0.75 + 0.25 = ___", jawapan: "1.0", petunjuk: "susun titik perpuluhan" },
+    { soalan: "Luas segiempat 12cm × 8cm = ___", jawapan: "96cm²", petunjuk: "panjang × lebar" },
+    { soalan: "Perimeter segiempat 12cm × 8cm = ___", jawapan: "40cm", petunjuk: "2(p + l)" },
+    { soalan: "Sudut tegak berapa darjah?", jawapan: "90 darjah", petunjuk: "sudut siku-siku" },
+  ],
+  "4:bahasa-inggeris": [
+    { soalan: "Write a compound sentence using 'and'.", jawapan: "She sings and he dances", petunjuk: "two clauses joined by 'and'" },
+    { soalan: "Write in present continuous: She/sing.", jawapan: "She is singing", petunjuk: "is + verb-ing" },
+    { soalan: "Write an example of alliteration.", jawapan: "Peter Piper picked peppers", petunjuk: "same starting sound" },
+    { soalan: "Write an example of onomatopoeia.", jawapan: "The bee buzzed", petunjuk: "word sounds like meaning" },
+    { soalan: "Replace noun with pronoun: 'Ali runs fast'.", jawapan: "He runs fast", petunjuk: "Ali is male" },
+    { soalan: "Write a synonym of 'angry'.", jawapan: "furious", petunjuk: "very angry" },
+    { soalan: "Write an antonym of 'ancient'.", jawapan: "modern", petunjuk: "opposite of old" },
+    { soalan: "Fill in: They ___ playing now.", jawapan: "are", petunjuk: "to be with they" },
+    { soalan: "Write a sentence using possessive pronoun.", jawapan: "The book is hers", petunjuk: "hers/his/theirs" },
+    { soalan: "Write a compound sentence using 'but'.", jawapan: "She is smart but lazy", petunjuk: "contrast two ideas" },
+  ],
+  "4:pendidikan-islam": [
+    { soalan: "Apakah maksud akhlak?", jawapan: "budi pekerti", petunjuk: "sifat yang mulia" },
+    { soalan: "Apakah maksud ukhuwah?", jawapan: "persaudaraan", petunjuk: "sesama Muslim" },
+    { soalan: "Apakah maksud amanah?", jawapan: "boleh dipercayai", petunjuk: "sifat yang dipercayai" },
+    { soalan: "Apakah maksud istiqamah?", jawapan: "tetap pendirian", petunjuk: "konsisten dalam amalan" },
+    { soalan: "Bila Nabi Muhammad SAW lahir?", jawapan: "570M", petunjuk: "tahun gajah" },
+    { soalan: "Bila Nabi mula terima wahyu?", jawapan: "usia 40 tahun", petunjuk: "di Gua Hira" },
+    { soalan: "Apakah peristiwa hijrah?", jawapan: "perpindahan Nabi dari Makkah ke Madinah", petunjuk: "tahun 622M" },
+    { soalan: "Siapa menemani Nabi hijrah?", jawapan: "Abu Bakar", petunjuk: "sahabat akrab Nabi" },
+    { soalan: "Apakah maksud tawaduk?", jawapan: "rendah diri", petunjuk: "tidak sombong" },
+    { soalan: "Apakah maksud syukur?", jawapan: "berterima kasih atas nikmat Allah", petunjuk: "ucap Alhamdulillah" },
+  ],
+  "4:sains": [
+    { soalan: "Apakah sel?", jawapan: "unit terkecil makhluk hidup", petunjuk: "binaan asas hidupan" },
+    { soalan: "Apakah ekosistem?", jawapan: "komuniti organisma dan persekitaran", petunjuk: "interaksi hidupan + alam" },
+    { soalan: "Apakah habitat?", jawapan: "tempat tinggal organisma", petunjuk: "rumah haiwan/tumbuhan" },
+    { soalan: "Apakah adaptasi?", jawapan: "penyesuaian diri dengan persekitaran", petunjuk: "cara hidup di habitat" },
+    { soalan: "Contoh tenaga kinetik.", jawapan: "air mengalir bola bergerak", petunjuk: "tenaga pergerakan" },
+    { soalan: "Contoh tenaga keupayaan.", jawapan: "batu di atas meja spring termampat", petunjuk: "tenaga tersimpan" },
+    { soalan: "Contoh tenaga boleh diperbaharui.", jawapan: "solar angin air", petunjuk: "sumber tidak habis" },
+    { soalan: "Contoh tenaga tidak boleh diperbaharui.", jawapan: "minyak arang batu gas asli", petunjuk: "sumber fosil" },
+    { soalan: "Apakah pencemaran udara?", jawapan: "udara tercemar bahan berbahaya", petunjuk: "asap, gas toksik" },
+    { soalan: "Cara kitar semula.", jawapan: "proses semula bahan seperti kertas plastik logam", petunjuk: "kurangkan sampah" },
+  ],
 };
 
 function normalize(s: string) {
@@ -247,9 +320,11 @@ function LatihanSubjekPage() {
   const subjek = getSubjek(subjekId);
 
   const isJawiD2 = darjahId === "2" && subjekId === "jawi";
-  const soalanList = useMemo(() => (isJawiD2 ? [] : (BANK[`${darjahId}:${subjekId}`] ?? [])), [darjahId, subjekId, isJawiD2]);
-  const mcqList = isJawiD2 ? JAWI_D2_MCQ : [];
-  const totalSoalan = isJawiD2 ? mcqList.length : soalanList.length;
+  const isJawiD4 = darjahId === "4" && subjekId === "jawi";
+  const isJawiMcq = isJawiD2 || isJawiD4;
+  const soalanList = useMemo(() => (isJawiMcq ? [] : (BANK[`${darjahId}:${subjekId}`] ?? [])), [darjahId, subjekId, isJawiMcq]);
+  const mcqList = isJawiD2 ? JAWI_D2_MCQ : isJawiD4 ? JAWI_D4_MCQ : [];
+  const totalSoalan = isJawiMcq ? mcqList.length : soalanList.length;
   const [pilihan, setPilihan] = useState<number | null>(null);
 
   const [idx, setIdx] = useState(0);
@@ -341,7 +416,7 @@ function LatihanSubjekPage() {
         <div className="mt-5 flex items-center gap-3">
           <div
             className="flex h-12 w-12 items-center justify-center rounded-2xl text-primary-foreground shadow-soft"
-            style={isJawiD2 ? { background: "#1B8A5A" } : undefined}
+            style={isJawiMcq ? { background: "#1B8A5A" } : undefined}
           >
             <PenLine className="h-6 w-6" />
           </div>
@@ -357,7 +432,7 @@ function LatihanSubjekPage() {
               Soalan {idx + 1} / {totalSoalan}
             </div>
 
-            {isJawiD2 ? (
+            {isJawiMcq ? (
               <>
                 <h2 className="mt-2 font-display text-2xl font-extrabold text-foreground">{mcq.soalan}</h2>
                 <div className="mt-6 grid grid-cols-2 gap-4">
@@ -424,7 +499,7 @@ function LatihanSubjekPage() {
                 >
                   {semak
                     ? "Betul! 🎉"
-                    : isJawiD2
+                    : isJawiMcq
                       ? `Jawapan betul: ${mcq.pilihan[mcq.betul]}`
                       : `Jawapan betul: ${soalan.jawapan}`}
                 </div>
