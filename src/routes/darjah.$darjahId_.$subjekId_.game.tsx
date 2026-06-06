@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, Gamepad2, Send, Sparkles, Timer, Trophy, Search } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { StarReward } from "@/components/StarReward";
-import { CariPerkataan, BM_DARJAH1_WORDS, BM_DARJAH1_CLUES, BM_DARJAH2_WORDS, BM_DARJAH2_CLUES, BI_DARJAH1_WORDS, BI_DARJAH1_CLUES, BI_DARJAH2_WORDS, BI_DARJAH2_CLUES, JAWI_DARJAH1_WORDS, JAWI_DARJAH1_CLUES, PI_DARJAH1_WORDS, PI_DARJAH1_CLUES, SAINS_DARJAH1_WORDS, SAINS_DARJAH1_CLUES, MATE_DARJAH2_WORDS, MATE_DARJAH2_CLUES } from "@/components/CariPerkataan";
+import { CariPerkataan, BM_DARJAH1_WORDS, BM_DARJAH1_CLUES, BM_DARJAH2_WORDS, BM_DARJAH2_CLUES, BI_DARJAH1_WORDS, BI_DARJAH1_CLUES, BI_DARJAH2_WORDS, BI_DARJAH2_CLUES, JAWI_DARJAH1_WORDS, JAWI_DARJAH1_CLUES, JAWI_DARJAH2_WORDS, JAWI_DARJAH2_CLUES, PI_DARJAH1_WORDS, PI_DARJAH1_CLUES, SAINS_DARJAH1_WORDS, SAINS_DARJAH1_CLUES, MATE_DARJAH2_WORDS, MATE_DARJAH2_CLUES } from "@/components/CariPerkataan";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { getDarjah, getSubjek } from "@/lib/curriculum";
@@ -189,7 +189,7 @@ function GameSubjekPage() {
   const isJawi2 = darjahId === "2" && subjekId === "jawi";
   const isPI = darjahId === "1" && subjekId === "pendidikan-islam";
   const isSains = darjahId === "1" && subjekId === "sains";
-  const hasCariPerkataan = isMate || isMate2 || isBM || isBM2 || isBI || isBI2 || isJawi || isPI || isSains;
+  const hasCariPerkataan = isMate || isMate2 || isBM || isBM2 || isBI || isBI2 || isJawi || isJawi2 || isPI || isSains;
   const [mode, setMode] = useState<"race" | "cari">("race");
 
   useEffect(() => {
@@ -352,6 +352,13 @@ function GameSubjekPage() {
             <CariPerkataan
               words={JAWI_DARJAH1_WORDS}
               clues={JAWI_DARJAH1_CLUES}
+              gridSize={10}
+              title="Cari Perkataan Jawi"
+            />
+          ) : isJawi2 ? (
+            <CariPerkataan
+              words={JAWI_DARJAH2_WORDS}
+              clues={JAWI_DARJAH2_CLUES}
               gridSize={10}
               title="Cari Perkataan Jawi"
             />
