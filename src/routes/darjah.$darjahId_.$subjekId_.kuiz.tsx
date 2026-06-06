@@ -180,19 +180,21 @@ function KuizPage() {
     ? MATEMATIK_D1
     : isMatematikD2
       ? MATEMATIK_D2
-      : isBahasaMelayuD1
-        ? BAHASA_MELAYU_D1
-        : isBahasaInggerisD1
-          ? BAHASA_INGGERIS_D1
-          : isJawiD1
-            ? JAWI_D1
-            : isPendidikanIslamD1
-              ? PENDIDIKAN_ISLAM_D1
-              : isSainsD1
-                ? SAINS_D1
-                : fromBank && fromBank.length > 0
-                  ? fromBank
-                  : [];
+      : isBahasaInggerisD2
+        ? BAHASA_INGGERIS_D2
+        : isBahasaMelayuD1
+          ? BAHASA_MELAYU_D1
+          : isBahasaInggerisD1
+            ? BAHASA_INGGERIS_D1
+            : isJawiD1
+              ? JAWI_D1
+              : isPendidikanIslamD1
+                ? PENDIDIKAN_ISLAM_D1
+                : isSainsD1
+                  ? SAINS_D1
+                  : fromBank && fromBank.length > 0
+                    ? fromBank
+                    : [];
 
   const [i, setI] = useState(0);
   const [pilih, setPilih] = useState<number | null>(null);
