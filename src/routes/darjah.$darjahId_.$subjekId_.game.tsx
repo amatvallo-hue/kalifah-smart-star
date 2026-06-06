@@ -169,6 +169,7 @@ function GameSubjekPage() {
   const isBM = darjahId === "1" && subjekId === "bahasa-melayu";
   const isBM2 = darjahId === "2" && subjekId === "bahasa-melayu";
   const isBI = darjahId === "1" && subjekId === "bahasa-inggeris";
+  const isBI2 = darjahId === "2" && subjekId === "bahasa-inggeris";
   const isMate = darjahId === "1" && subjekId === "matematik";
   const isMate2 = darjahId === "2" && subjekId === "matematik";
   const isJawi = darjahId === "1" && subjekId === "jawi";
