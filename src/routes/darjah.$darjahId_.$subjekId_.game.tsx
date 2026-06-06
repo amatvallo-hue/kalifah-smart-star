@@ -327,6 +327,12 @@ const TIME_MAP: Record<string, number> = {
   "3:jawi": 10,
   "3:pendidikan-islam": 10,
   "3:sains": 10,
+  "4:bahasa-melayu": 10,
+  "4:matematik": 10,
+  "4:bahasa-inggeris": 10,
+  "4:jawi": 10,
+  "4:pendidikan-islam": 10,
+  "4:sains": 10,
 };
 
 
