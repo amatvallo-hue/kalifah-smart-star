@@ -128,7 +128,8 @@ function GameSubjekPage() {
   const isBM = darjahId === "1" && subjekId === "bahasa-melayu";
   const isBI = darjahId === "1" && subjekId === "bahasa-inggeris";
   const isMate = darjahId === "1" && subjekId === "matematik";
-  const hasCariPerkataan = isMate || isBM || isBI;
+  const isJawi = darjahId === "1" && subjekId === "jawi";
+  const hasCariPerkataan = isMate || isBM || isBI || isJawi;
   const [mode, setMode] = useState<"race" | "cari">("race");
 
   useEffect(() => {
