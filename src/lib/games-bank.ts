@@ -183,11 +183,11 @@ const SA_BI: SAItem[] = [
   { ayat: "The book was read by Ali carefully", perkataan: ["The", "book", "was", "read", "by", "Ali", "carefully"] },
 ];
 const SA_JAWI: SAItem[] = [
-  { ayat: "Saya pergi ke sekolah", perkataan: ["Saya", "pergi", "ke", "sekolah"] },
-  { ayat: "Ibu memasak di dapur", perkataan: ["Ibu", "memasak", "di", "dapur"] },
-  { ayat: "Ayah membaca surat khabar", perkataan: ["Ayah", "membaca", "surat", "khabar"] },
-  { ayat: "Adik bermain di taman", perkataan: ["Adik", "bermain", "di", "taman"] },
-  { ayat: "Kami solat di masjid", perkataan: ["Kami", "solat", "di", "masjid"] },
+  { ayat: "Tulisan Jawi dibaca dari kanan ke kiri", perkataan: ["Tulisan", "Jawi", "dibaca", "dari", "kanan", "ke", "kiri"] },
+  { ayat: "Bahasa Melayu boleh ditulis dalam tulisan Jawi", perkataan: ["Bahasa", "Melayu", "boleh", "ditulis", "dalam", "tulisan", "Jawi"] },
+  { ayat: "Terdapat enam huruf tambahan dalam tulisan Jawi", perkataan: ["Terdapat", "enam", "huruf", "tambahan", "dalam", "tulisan", "Jawi"] },
+  { ayat: "Huruf Alif ialah huruf Jawi yang pertama", perkataan: ["Huruf", "Alif", "ialah", "huruf", "Jawi", "yang", "pertama"] },
+  { ayat: "Kita mesti menjaga warisan tulisan Jawi", perkataan: ["Kita", "mesti", "menjaga", "warisan", "tulisan", "Jawi"] },
 ];
 const SA_PI: SAItem[] = [
   { ayat: "Solat itu tiang agama", perkataan: ["Solat", "itu", "tiang", "agama"] },
