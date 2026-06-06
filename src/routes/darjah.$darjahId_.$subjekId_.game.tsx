@@ -126,8 +126,9 @@ function GameSubjekPage() {
   const [flash, setFlash] = useState<null | "ok" | "no">(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const isBM = darjahId === "1" && subjekId === "bahasa-melayu";
+  const isBI = darjahId === "1" && subjekId === "bahasa-inggeris";
   const isMate = darjahId === "1" && subjekId === "matematik";
-  const hasCariPerkataan = isMate || isBM;
+  const hasCariPerkataan = isMate || isBM || isBI;
   const [mode, setMode] = useState<"race" | "cari">("race");
 
   useEffect(() => {
