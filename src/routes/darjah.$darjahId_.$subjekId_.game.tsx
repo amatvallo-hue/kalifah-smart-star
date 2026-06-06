@@ -560,7 +560,8 @@ function GameSubjekPage() {
   const isSains6 = darjahId === "6" && subjekId === "sains";
   const hasCariPerkataan = isMate || isMate2 || isMate3 || isMate4 || isMate5 || isBM || isBM2 || isBM3 || isBM4 || isBM5 || isBI || isBI2 || isBI3 || isBI4 || isBI5 || isJawi || isJawi2 || isJawi3 || isJawi4 || isJawi5 || isPI || isPI2 || isPI3 || isPI4 || isPI5 || isSains || isSains2 || isSains3 || isSains4 || isSains5 || isBM6 || isMate6 || isBI6 || isJawi6 || isPI6 || isSains6;
 
-  const [mode, setMode] = useState<"race" | "cari">("race");
+  const hasRace = soalanList.length > 0;
+  const [mode, setMode] = useState<"race" | "cari" | "betul" | "padan" | "susun">(hasRace ? "race" : "betul");
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
