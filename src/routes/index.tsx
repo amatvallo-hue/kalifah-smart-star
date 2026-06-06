@@ -1,10 +1,11 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { Lock, Sparkles, Star, LogOut } from "lucide-react";
-import { useEffect } from "react";
+import { Lock, Sparkles, Star, LogOut, X } from "lucide-react";
+import { useEffect, useState } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
-import { DARJAH_LIST } from "@/lib/curriculum";
+import { useProfile } from "@/hooks/use-profile";
+import { DARJAH_LIST, type Darjah } from "@/lib/curriculum";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -20,6 +21,8 @@ export const Route = createFileRoute("/")({
 function DarjahDashboard() {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
+  const { profile, loading: profileLoading } = useProfile();
+  const [upgradeFor, setUpgradeFor] = useState<Darjah | null>(null);
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
@@ -30,13 +33,15 @@ function DarjahDashboard() {
     navigate({ to: "/login" });
   }
 
-  if (loading || !user) {
+  if (loading || !user || profileLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
         <p className="text-muted-foreground">Memuatkan...</p>
       </div>
     );
   }
+
+  const darjahAkses = profile?.darjah_akses ?? [1];
 
   const metaName =
     (user.user_metadata?.name as string | undefined) ||
@@ -86,14 +91,23 @@ function DarjahDashboard() {
               <h2 className="font-display text-2xl font-extrabold text-foreground md:text-3xl">
                 Pilih Darjah Kamu
               </h2>
-              <p className="text-sm text-muted-foreground">Mula dengan Darjah 1. Lain-lain akan datang!</p>
+              <p className="text-sm text-muted-foreground">Darjah yang berkunci memerlukan langganan.</p>
             </div>
           </div>
 
           <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {DARJAH_LIST.map((d, i) => (
-              <DarjahCard key={d.id} darjah={d} index={i} />
-            ))}
+            {DARJAH_LIST.map((d, i) => {
+              const hasAccess = darjahAkses.includes(Number(d.id));
+              return (
+                <DarjahCard
+                  key={d.id}
+                  darjah={d}
+                  index={i}
+                  hasAccess={hasAccess}
+                  onLockedClick={() => setUpgradeFor(d)}
+                />
+              );
+            })}
           </div>
         </section>
 
@@ -101,11 +115,25 @@ function DarjahDashboard() {
           © {new Date().getFullYear()} Kalifah.my — Belajar dengan ceria & berkat.
         </footer>
       </main>
+
+      {upgradeFor && (
+        <UpgradeModal darjah={upgradeFor} onClose={() => setUpgradeFor(null)} />
+      )}
     </div>
   );
 }
 
-function DarjahCard({ darjah, index }: { darjah: typeof DARJAH_LIST[number]; index: number }) {
+function DarjahCard({
+  darjah,
+  index,
+  hasAccess,
+  onLockedClick,
+}: {
+  darjah: Darjah;
+  index: number;
+  hasAccess: boolean;
+  onLockedClick: () => void;
+}) {
   const palettes = [
     "from-primary to-primary-glow text-primary-foreground",
     "from-gold to-gold/80 text-gold-foreground",
@@ -117,25 +145,35 @@ function DarjahCard({ darjah, index }: { darjah: typeof DARJAH_LIST[number]; ind
   const tone = palettes[index % palettes.length];
 
   const inner = (
-    <div className="relative flex h-full flex-col justify-between gap-6 rounded-3xl border border-border/60 bg-card p-6 shadow-card transition group-hover:-translate-y-1 group-hover:shadow-soft">
-      {darjah.locked && (
-        <div className="absolute right-4 top-4 flex items-center gap-1.5 rounded-full bg-muted px-3 py-1 font-display text-[10px] font-extrabold uppercase tracking-wide text-muted-foreground">
+    <div
+      className={`relative flex h-full flex-col justify-between gap-6 rounded-3xl border border-border/60 bg-card p-6 shadow-card transition group-hover:-translate-y-1 group-hover:shadow-soft ${
+        !hasAccess ? "opacity-80" : ""
+      }`}
+    >
+      {!hasAccess && (
+        <div className="absolute right-4 top-4 flex items-center gap-1.5 rounded-full bg-gold/90 px-3 py-1 font-display text-[10px] font-extrabold uppercase tracking-wide text-gold-foreground shadow-soft">
           <Lock className="h-3 w-3" />
-          Akan Datang
+          Naik Taraf
         </div>
       )}
-      <div className={`flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br ${tone} shadow-soft transition group-hover:scale-110`}>
+      <div
+        className={`flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br ${tone} shadow-soft transition group-hover:scale-110 ${
+          !hasAccess ? "grayscale" : ""
+        }`}
+      >
         <span className="font-display text-4xl font-extrabold">{darjah.id}</span>
       </div>
       <div>
-        <h3 className="font-display text-2xl font-extrabold text-foreground">{darjah.label}</h3>
+        <h3 className="font-display text-2xl font-extrabold text-foreground">
+          {darjah.label} {!hasAccess && <span className="ml-1">🔒</span>}
+        </h3>
         <p className="mt-1 text-sm text-muted-foreground">{darjah.tagline}</p>
       </div>
       <div className="flex items-center justify-between">
-        {darjah.locked ? (
+        {!hasAccess ? (
           <span className="inline-flex items-center gap-1 text-xs font-bold text-muted-foreground">
             <Lock className="h-3.5 w-3.5" />
-            Belum dibuka
+            Belum dilanggan
           </span>
         ) : (
           <span className="inline-flex items-center gap-1 rounded-full bg-gold/20 px-3 py-1 font-display text-xs font-extrabold text-gold-foreground">
@@ -147,12 +185,69 @@ function DarjahCard({ darjah, index }: { darjah: typeof DARJAH_LIST[number]; ind
     </div>
   );
 
-  if (darjah.locked) {
-    return <div className="group cursor-not-allowed opacity-70">{inner}</div>;
+  if (!hasAccess) {
+    return (
+      <button type="button" onClick={onLockedClick} className="group cursor-pointer text-left">
+        {inner}
+      </button>
+    );
   }
   return (
     <Link to="/darjah/$darjahId" params={{ darjahId: darjah.id }} className="group">
       {inner}
     </Link>
+  );
+}
+
+function UpgradeModal({ darjah, onClose }: { darjah: Darjah; onClose: () => void }) {
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <div
+        className="relative w-full max-w-md rounded-3xl bg-card p-8 shadow-card"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          onClick={onClose}
+          aria-label="Tutup"
+          className="absolute right-4 top-4 rounded-full p-2 text-muted-foreground transition hover:bg-muted"
+        >
+          <X className="h-5 w-5" />
+        </button>
+        <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-primary to-primary-glow shadow-soft">
+          <Lock className="h-10 w-10 text-primary-foreground" />
+        </div>
+        <h3 className="mt-5 text-center font-display text-2xl font-extrabold text-foreground">
+          Anda belum melanggan {darjah.label}
+        </h3>
+        <p className="mt-2 text-center text-sm text-muted-foreground">
+          Naik taraf untuk akses penuh kepada semua subjek, nota, latih tubi, game, kuiz dan latihan {darjah.label}.
+        </p>
+        <div className="mt-6 rounded-2xl bg-muted/50 p-5 text-center">
+          <p className="font-display text-xs font-bold uppercase tracking-wide text-muted-foreground">
+            Harga langganan
+          </p>
+          <p className="mt-1 font-display text-4xl font-extrabold text-primary">
+            RM19.90
+          </p>
+          <p className="text-xs text-muted-foreground">untuk satu darjah</p>
+        </div>
+        <button
+          type="button"
+          className="mt-6 w-full rounded-full bg-gradient-to-r from-gold to-gold/80 px-6 py-3.5 font-display text-base font-extrabold text-gold-foreground shadow-soft transition hover:opacity-90"
+        >
+          Langgan Sekarang
+        </button>
+        <button
+          type="button"
+          onClick={onClose}
+          className="mt-3 w-full rounded-full px-6 py-2.5 font-display text-sm font-bold text-muted-foreground transition hover:text-foreground"
+        >
+          Batal
+        </button>
+      </div>
+    </div>
   );
 }
