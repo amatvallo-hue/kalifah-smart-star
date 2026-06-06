@@ -355,6 +355,13 @@ function GameSubjekPage() {
               gridSize={10}
               title="Cari Perkataan Jawi"
             />
+          ) : isJawi2 ? (
+            <CariPerkataan
+              words={JAWI_DARJAH2_WORDS}
+              clues={JAWI_DARJAH2_CLUES}
+              gridSize={10}
+              title="Cari Perkataan Jawi"
+            />
           ) : isPI ? (
             <CariPerkataan
               words={PI_DARJAH1_WORDS}
