@@ -1052,3 +1052,159 @@ export const SAINS_DARJAH5_CLUES: Record<string, string> = {
   SPESIES: "Kumpulan organisma yang sama",
 };
 
+
+// Bahasa Melayu Darjah 6 — 15x15 grid with 10 words.
+export const BM_DARJAH6_WORDS: Word[] = [
+  { word: "KONOTASI", row: 0, col: 0, dir: "H" },
+  { word: "WACANA", row: 2, col: 0, dir: "H" },
+  { word: "LARAS", row: 4, col: 0, dir: "H" },
+  { word: "SURAT", row: 6, col: 0, dir: "H" },
+  { word: "KOHESI", row: 8, col: 0, dir: "H" },
+  { word: "DENOTASI", row: 0, col: 9, dir: "V" },
+  { word: "EUFEMISME", row: 0, col: 8, dir: "V" },
+  { word: "BAHASA", row: 1, col: 5, dir: "V" },
+  { word: "FORMAL", row: 1, col: 6, dir: "V" },
+  { word: "INVERSI", row: 1, col: 7, dir: "V" },
+];
+export const BM_DARJAH6_CLUES: Record<string, string> = {
+  KONOTASI: "Makna tersirat atau tambahan sesuatu perkataan",
+  DENOTASI: "Makna literal dalam kamus",
+  WACANA: "Unit bahasa yang lebih besar dari ayat",
+  LARAS: "Variasi bahasa mengikut bidang atau situasi",
+  SURAT: "Format rasmi mengandungi alamat, tarikh, tajuk, isi, penutup",
+  KOHESI: "Kesinambungan dan perkaitan antara ayat",
+  EUFEMISME: "Kata halus menggantikan kata kasar",
+  BAHASA: "Laras ___ = variasi bahasa",
+  FORMAL: "Bahasa baku dan sopan",
+  INVERSI: "Subjek diletakkan di belakang predikat",
+};
+
+// Matematik Darjah 6 — 15x15 grid with 10 words.
+export const MATE_DARJAH6_WORDS: Word[] = [
+  { word: "NISBAH", row: 0, col: 0, dir: "H" },
+  { word: "FAEDAH", row: 2, col: 0, dir: "H" },
+  { word: "UNTUNG", row: 4, col: 0, dir: "H" },
+  { word: "RUGI", row: 6, col: 0, dir: "H" },
+  { word: "SILINDER", row: 8, col: 0, dir: "H" },
+  { word: "PERATUSAN", row: 0, col: 9, dir: "V" },
+  { word: "KEBOLEHAN", row: 0, col: 8, dir: "V" },
+  { word: "PECAHAN", row: 1, col: 6, dir: "V" },
+  { word: "ISIPADU", row: 1, col: 7, dir: "V" },
+  { word: "MIN", row: 1, col: 5, dir: "V" },
+];
+export const MATE_DARJAH6_CLUES: Record<string, string> = {
+  NISBAH: "Bahagikan mengikut nisbah",
+  FAEDAH: "Keuntungan daripada pelaburan",
+  UNTUNG: "Keuntungan dalam perniagaan",
+  RUGI: "Kerugian dalam perniagaan",
+  SILINDER: "Bentuk tiub dengan dua bulatan",
+  PERATUSAN: "Per 100",
+  KEBOLEHAN: "Kemungkinan atau probabiliti",
+  PECAHAN: "Nombor dalam bentuk a/b",
+  ISIPADU: "Ruang dalam bentuk tiga dimensi",
+  MIN: "Purata",
+};
+
+// Bahasa Inggeris Darjah 6 — 15x15 grid with 10 words.
+export const BI_DARJAH6_WORDS: Word[] = [
+  { word: "NARRATIVE", row: 0, col: 0, dir: "H" },
+  { word: "THESIS", row: 2, col: 0, dir: "H" },
+  { word: "IRONY", row: 4, col: 0, dir: "H" },
+  { word: "ACTIVE", row: 6, col: 0, dir: "H" },
+  { word: "PASSIVE", row: 8, col: 0, dir: "H" },
+  { word: "EXPOSITORY", row: 0, col: 9, dir: "V" },
+  { word: "CITATION", row: 0, col: 8, dir: "V" },
+  { word: "RHETORICAL", row: 0, col: 7, dir: "V" },
+  { word: "TRANSITION", row: 0, col: 6, dir: "V" },
+  { word: "CLAUSE", row: 0, col: 5, dir: "V" },
+];
+export const BI_DARJAH6_CLUES: Record<string, string> = {
+  NARRATIVE: "Telling a story",
+  THESIS: "Main argument of essay",
+  IRONY: "Saying opposite of what is meant",
+  ACTIVE: "Subject does action",
+  PASSIVE: "Subject receives action",
+  EXPOSITORY: "Explaining or informing",
+  CITATION: "Reference to source",
+  RHETORICAL: "Question asked for effect not answer",
+  TRANSITION: "Word that connects ideas",
+  CLAUSE: "Group of words with subject and verb",
+};
+
+// Jawi Darjah 6 — 15x15 grid with 10 words.
+export const JAWI_DARJAH6_WORDS: Word[] = [
+  { word: "JAWI", row: 0, col: 0, dir: "H" },
+  { word: "MELAYU", row: 2, col: 0, dir: "H" },
+  { word: "WARISAN", row: 4, col: 0, dir: "H" },
+  { word: "BUDAYA", row: 6, col: 0, dir: "H" },
+  { word: "EJAAN", row: 8, col: 0, dir: "H" },
+  { word: "TULISAN", row: 0, col: 9, dir: "V" },
+  { word: "KHAT", row: 0, col: 8, dir: "V" },
+  { word: "ARAB", row: 0, col: 7, dir: "V" },
+  { word: "BAHASA", row: 0, col: 6, dir: "V" },
+  { word: "SEJARAH", row: 0, col: 5, dir: "V" },
+];
+export const JAWI_DARJAH6_CLUES: Record<string, string> = {
+  JAWI: "Tulisan kita",
+  MELAYU: "Bahasa kita",
+  WARISAN: "Harta pusaka budaya",
+  BUDAYA: "Cara hidup masyarakat",
+  EJAAN: "Cara susun huruf",
+  TULISAN: "Hasil yang ditulis",
+  KHAT: "Seni tulisan",
+  ARAB: "Bahasa asal tulisan Jawi",
+  BAHASA: "Cara berkomunikasi",
+  SEJARAH: "Perkembangan tulisan Jawi",
+};
+
+// Pendidikan Islam Darjah 6 — 15x15 grid with 10 words.
+export const PI_DARJAH6_WORDS: Word[] = [
+  { word: "TAUHID", row: 0, col: 0, dir: "H" },
+  { word: "SYIRIK", row: 2, col: 0, dir: "H" },
+  { word: "JIHAD", row: 4, col: 0, dir: "H" },
+  { word: "RIDDAH", row: 6, col: 0, dir: "H" },
+  { word: "NIFAK", row: 8, col: 0, dir: "H" },
+  { word: "RIAK", row: 0, col: 9, dir: "V" },
+  { word: "AQIDAH", row: 0, col: 8, dir: "V" },
+  { word: "IKHLAS", row: 0, col: 7, dir: "V" },
+  { word: "AMANAH", row: 0, col: 6, dir: "V" },
+  { word: "TAWADUK", row: 0, col: 5, dir: "V" },
+];
+export const PI_DARJAH6_CLUES: Record<string, string> = {
+  TAUHID: "Mengesakan Allah",
+  SYIRIK: "Menyekutukan Allah",
+  JIHAD: "Berjuang di jalan Allah",
+  RIDDAH: "Keluar dari Islam",
+  NIFAK: "Munafik berpura-pura Islam",
+  RIAK: "Beramal untuk dipuji manusia",
+  AQIDAH: "Kepercayaan dalam Islam",
+  IKHLAS: "Beramal kerana Allah",
+  AMANAH: "Boleh dipercayai",
+  TAWADUK: "Rendah diri",
+};
+
+// Sains Darjah 6 — 15x15 grid with 10 words.
+export const SAINS_DARJAH6_WORDS: Word[] = [
+  { word: "EVOLUSI", row: 0, col: 0, dir: "H" },
+  { word: "FOSIL", row: 2, col: 0, dir: "H" },
+  { word: "DARWIN", row: 4, col: 0, dir: "H" },
+  { word: "LESTARI", row: 6, col: 0, dir: "H" },
+  { word: "IKLIM", row: 8, col: 0, dir: "H" },
+  { word: "SELEKSI", row: 0, col: 9, dir: "V" },
+  { word: "SPESIES", row: 0, col: 8, dir: "V" },
+  { word: "KARBON", row: 0, col: 7, dir: "V" },
+  { word: "EKOSISTEM", row: 0, col: 6, dir: "V" },
+  { word: "BIODIVERSITI", row: 0, col: 5, dir: "V" },
+];
+export const SAINS_DARJAH6_CLUES: Record<string, string> = {
+  EVOLUSI: "Perubahan perlahan spesies dari generasi ke generasi",
+  FOSIL: "Sisa organisma purba dalam batuan",
+  DARWIN: "Pencetus teori evolusi",
+  LESTARI: "Pembangunan tanpa menjejaskan masa depan",
+  IKLIM: "Perubahan jangka panjang dalam iklim bumi",
+  SELEKSI: "Alam memilih yang terbaik untuk hidup",
+  SPESIES: "Kumpulan organisma yang boleh membiak antara satu sama lain",
+  KARBON: "Jejak ___ = CO2 yang dihasilkan aktiviti manusia",
+  EKOSISTEM: "Komuniti organisma dan persekitaran",
+  BIODIVERSITI: "Kepelbagaian spesies hidupan",
+};
