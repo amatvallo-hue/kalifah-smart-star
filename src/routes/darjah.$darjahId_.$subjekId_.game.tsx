@@ -89,6 +89,18 @@ const BANK: Record<string, Soalan[]> = {
     { soalan: "Langit berawan gelap bermakna?", jawapan: "C", options: ["A) panas terik", "B) berangin", "C) akan hujan", "D) bersalji"] },
     { soalan: "Makanan arnab ialah?", jawapan: "C", options: ["A) daging", "B) ikan", "C) sayur dan wortel", "D) buah sahaja"] },
   ],
+  "2:bahasa-melayu": [
+    { soalan: "Antonim 'rajin'?", jawapan: "B", options: ["A) pandai", "B) malas", "C) sihat", "D) kuat"] },
+    { soalan: "Sinonim 'gembira'?", jawapan: "C", options: ["A) sedih", "B) marah", "C) suka", "D) takut"] },
+    { soalan: "Kata nama dalam ayat?", jawapan: "D", options: ["A) berlari", "B) cantik", "C) dengan", "D) meja"] },
+    { soalan: "Kata kerja ialah?", jawapan: "C", options: ["A) meja", "B) cantik", "C) berlari", "D) dengan"] },
+    { soalan: "Kata adjektif ialah?", jawapan: "C", options: ["A) berlari", "B) meja", "C) cantik", "D) dengan"] },
+    { soalan: "Kata hubung ialah?", jawapan: "D", options: ["A) meja", "B) cantik", "C) berlari", "D) dan"] },
+    { soalan: "Kata sendi nama ialah?", jawapan: "B", options: ["A) berlari", "B) di", "C) cantik", "D) meja"] },
+    { soalan: "Imbuhan dalam 'berlari'?", jawapan: "A", options: ["A) ber", "B) lari", "C) ri", "D) berl"] },
+    { soalan: "Imbuhan dalam 'pemimpin'?", jawapan: "B", options: ["A) pe", "B) pem", "C) mimpin", "D) in"] },
+    { soalan: "Antonim 'besar'?", jawapan: "C", options: ["A) tinggi", "B) panjang", "C) kecil", "D) lebar"] },
+  ],
 };
 
 const TIME_MAP: Record<string, number> = {
@@ -97,7 +109,9 @@ const TIME_MAP: Record<string, number> = {
   "1:jawi": 10,
   "1:pendidikan-islam": 10,
   "1:sains": 10,
+  "2:bahasa-melayu": 10,
 };
+
 
 function totalTimeFor(darjahId: string, subjekId: string) {
   return TIME_MAP[`${darjahId}:${subjekId}`] ?? 60;
