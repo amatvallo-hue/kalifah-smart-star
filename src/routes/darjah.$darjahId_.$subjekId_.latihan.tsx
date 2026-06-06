@@ -162,7 +162,12 @@ function LatihanSubjekPage() {
   const darjah = getDarjah(darjahId);
   const subjek = getSubjek(subjekId);
 
-  const soalanList = useMemo(() => BANK[`${darjahId}:${subjekId}`] ?? [], [darjahId, subjekId]);
+  const isJawiD2 = darjahId === "2" && subjekId === "jawi";
+  const soalanList = useMemo(() => (isJawiD2 ? [] : (BANK[`${darjahId}:${subjekId}`] ?? [])), [darjahId, subjekId, isJawiD2]);
+  const mcqList = isJawiD2 ? JAWI_D2_MCQ : [];
+  const totalSoalan = isJawiD2 ? mcqList.length : soalanList.length;
+  const [pilihan, setPilihan] = useState<number | null>(null);
+
   const [idx, setIdx] = useState(0);
   const [jwp, setJwp] = useState("");
   const [semak, setSemak] = useState<null | boolean>(null);
