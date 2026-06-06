@@ -149,12 +149,12 @@ function NotaRingkasPage() {
         {notes && (
           <div className="mt-8 text-center">
             <Link
-              to="/darjah/$darjahId/$subjekId/kuiz"
+              to="/darjah/$darjahId/$subjekId/latih-tubi"
               params={{ darjahId, subjekId }}
               className="inline-flex items-center justify-center gap-2 rounded-2xl px-8 py-4 font-display text-lg font-extrabold text-white shadow-soft transition hover:-translate-y-0.5"
               style={{ backgroundColor: "#1B8A5A" }}
             >
-              Mula Kuiz →
+              Mula Latih Tubi →
             </Link>
           </div>
         )}
