@@ -197,11 +197,11 @@ const SA_PI: SAItem[] = [
   { ayat: "Membaca Al-Quran adalah amalan yang mulia", perkataan: ["Membaca", "Al-Quran", "adalah", "amalan", "yang", "mulia"] },
 ];
 const SA_SAINS: SAItem[] = [
-  { ayat: "Tumbuhan memerlukan cahaya matahari untuk hidup", perkataan: ["Tumbuhan", "memerlukan", "cahaya", "matahari", "untuk", "hidup"] },
-  { ayat: "Bumi mengelilingi matahari setiap tahun", perkataan: ["Bumi", "mengelilingi", "matahari", "setiap", "tahun"] },
-  { ayat: "Air membeku pada suhu sifar darjah", perkataan: ["Air", "membeku", "pada", "suhu", "sifar", "darjah"] },
-  { ayat: "Ikan bernafas menggunakan insang di air", perkataan: ["Ikan", "bernafas", "menggunakan", "insang", "di", "air"] },
-  { ayat: "Manusia mempunyai lima deria utama", perkataan: ["Manusia", "mempunyai", "lima", "deria", "utama"] },
+  { ayat: "Tumbuhan memerlukan cahaya air dan udara untuk hidup", perkataan: ["Tumbuhan", "memerlukan", "cahaya", "air", "dan", "udara", "untuk", "hidup"] },
+  { ayat: "Fotosintesis berlaku di dalam daun yang hijau", perkataan: ["Fotosintesis", "berlaku", "di", "dalam", "daun", "yang", "hijau"] },
+  { ayat: "Tiga keadaan jirim ialah pepejal cecair dan gas", perkataan: ["Tiga", "keadaan", "jirim", "ialah", "pepejal", "cecair", "dan", "gas"] },
+  { ayat: "Bumi mengelilingi matahari dalam tempoh satu tahun", perkataan: ["Bumi", "mengelilingi", "matahari", "dalam", "tempoh", "satu", "tahun"] },
+  { ayat: "Kitar semula dapat mengurangkan pencemaran alam sekitar", perkataan: ["Kitar", "semula", "dapat", "mengurangkan", "pencemaran", "alam", "sekitar"] },
 ];
 
 export const SUSUN_AYAT: Record<string, SAItem[]> = {
