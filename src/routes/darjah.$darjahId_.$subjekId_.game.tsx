@@ -136,6 +136,7 @@ const TIME_MAP: Record<string, number> = {
   "1:sains": 10,
   "2:bahasa-melayu": 10,
   "2:matematik": 10,
+  "2:bahasa-inggeris": 10,
 };
 
 
