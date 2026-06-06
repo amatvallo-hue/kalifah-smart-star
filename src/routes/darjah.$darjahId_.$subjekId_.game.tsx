@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, Gamepad2, Send, Sparkles, Timer, Trophy, Search } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { StarReward } from "@/components/StarReward";
-import { CariPerkataan, BM_DARJAH1_WORDS, BM_DARJAH1_CLUES, BM_DARJAH2_WORDS, BM_DARJAH2_CLUES, BM_DARJAH3_WORDS, BM_DARJAH3_CLUES, BI_DARJAH1_WORDS, BI_DARJAH1_CLUES, BI_DARJAH2_WORDS, BI_DARJAH2_CLUES, JAWI_DARJAH1_WORDS, JAWI_DARJAH1_CLUES, JAWI_DARJAH2_WORDS, JAWI_DARJAH2_CLUES, PI_DARJAH1_WORDS, PI_DARJAH1_CLUES, PI_DARJAH2_WORDS, PI_DARJAH2_CLUES, SAINS_DARJAH1_WORDS, SAINS_DARJAH1_CLUES, SAINS_DARJAH2_WORDS, SAINS_DARJAH2_CLUES, MATE_DARJAH2_WORDS, MATE_DARJAH2_CLUES } from "@/components/CariPerkataan";
+import { CariPerkataan, BM_DARJAH1_WORDS, BM_DARJAH1_CLUES, BM_DARJAH2_WORDS, BM_DARJAH2_CLUES, BM_DARJAH3_WORDS, BM_DARJAH3_CLUES, BI_DARJAH1_WORDS, BI_DARJAH1_CLUES, BI_DARJAH2_WORDS, BI_DARJAH2_CLUES, BI_DARJAH3_WORDS, BI_DARJAH3_CLUES, JAWI_DARJAH1_WORDS, JAWI_DARJAH1_CLUES, JAWI_DARJAH2_WORDS, JAWI_DARJAH2_CLUES, JAWI_DARJAH3_WORDS, JAWI_DARJAH3_CLUES, PI_DARJAH1_WORDS, PI_DARJAH1_CLUES, PI_DARJAH2_WORDS, PI_DARJAH2_CLUES, PI_DARJAH3_WORDS, PI_DARJAH3_CLUES, SAINS_DARJAH1_WORDS, SAINS_DARJAH1_CLUES, SAINS_DARJAH2_WORDS, SAINS_DARJAH2_CLUES, MATE_DARJAH2_WORDS, MATE_DARJAH2_CLUES, MATE_DARJAH3_WORDS, MATE_DARJAH3_CLUES } from "@/components/CariPerkataan";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { getDarjah, getSubjek } from "@/lib/curriculum";
@@ -173,6 +173,66 @@ const BANK: Record<string, Soalan[]> = {
     { soalan: "Maksud bersatu teguh bercerai roboh?", jawapan: "B", options: ["A) Perpecahan kuat", "B) Perpaduan kuat", "C) Bergaduh baik", "D) Bersatu susah"] },
     { soalan: "Perkataan majmuk betul?", jawapan: "B", options: ["A) jalanraya", "B) jalan raya", "C) jalan-raya", "D) jalan_raya"] },
   ],
+  "3:matematik": [
+    { soalan: "234 + 567 = ?", jawapan: "B", options: ["A) 791", "B) 801", "C) 811", "D) 821"] },
+    { soalan: "856 - 378 = ?", jawapan: "B", options: ["A) 468", "B) 478", "C) 488", "D) 498"] },
+    { soalan: "7 × 8 = ?", jawapan: "B", options: ["A) 54", "B) 56", "C) 58", "D) 60"] },
+    { soalan: "72 ÷ 8 = ?", jawapan: "C", options: ["A) 7", "B) 8", "C) 9", "D) 10"] },
+    { soalan: "63 ÷ 7 = ?", jawapan: "C", options: ["A) 7", "B) 8", "C) 9", "D) 10"] },
+    { soalan: "Bundarkan 456 ke ratus?", jawapan: "C", options: ["A) 400", "B) 450", "C) 500", "D) 460"] },
+    { soalan: "1/2 + 1/4 = ?", jawapan: "C", options: ["A) 1/6", "B) 2/6", "C) 3/4", "D) 2/4"] },
+    { soalan: "0.5 + 0.3 = ?", jawapan: "B", options: ["A) 0.7", "B) 0.8", "C) 0.9", "D) 1.0"] },
+    { soalan: "Luas 6cm × 4cm = ?", jawapan: "B", options: ["A) 20cm²", "B) 24cm²", "C) 28cm²", "D) 32cm²"] },
+    { soalan: "Perimeter 3+4+5 cm = ?", jawapan: "B", options: ["A) 10cm", "B) 12cm", "C) 14cm", "D) 16cm"] },
+  ],
+  "3:bahasa-inggeris": [
+    { soalan: "Correct sentence?", jawapan: "B", options: ["A) She go to market", "B) She goes to market", "C) She going to market", "D) She gone to market"] },
+    { soalan: "Past tense of 'write'?", jawapan: "D", options: ["A) writed", "B) writes", "C) written", "D) wrote"] },
+    { soalan: "Plural of 'leaf'?", jawapan: "C", options: ["A) leafs", "B) leafes", "C) leaves", "D) leafies"] },
+    { soalan: "Choose adjective:", jawapan: "C", options: ["A) run", "B) book", "C) beautiful", "D) and"] },
+    { soalan: "Choose adverb:", jawapan: "B", options: ["A) beautiful", "B) quickly", "C) swim", "D) table"] },
+    { soalan: "I ___ reading a book now.", jawapan: "A", options: ["A) am", "B) is", "C) are", "D) be"] },
+    { soalan: "She ___ to school yesterday.", jawapan: "C", options: ["A) go", "B) goes", "C) went", "D) going"] },
+    { soalan: "Synonym of 'happy'?", jawapan: "C", options: ["A) sad", "B) angry", "C) joyful", "D) tired"] },
+    { soalan: "Antonym of 'brave'?", jawapan: "C", options: ["A) bold", "B) fearless", "C) cowardly", "D) strong"] },
+    { soalan: "Example of simile?", jawapan: "B", options: ["A) The cat runs", "B) She is as fast as a cheetah", "C) He runs quickly", "D) The flower is beautiful"] },
+  ],
+  "3:jawi": [
+    { soalan: "Ejaan Jawi 'perpustakaan'?", jawapan: "A", options: ["A) ڤرڤوستاکان", "B) ڤرڤستاکان", "C) ڤرڤوسطاکان", "D) ڤرڤستکان"] },
+    { soalan: "Ejaan Jawi 'kemerdekaan'?", jawapan: "C", options: ["A) کمرديکان", "B) کمردیکاءن", "C) کمرديکاءن", "D) کيمرديکان"] },
+    { soalan: "Ejaan Jawi 'pembelajaran'?", jawapan: "B", options: ["A) ڤمبلاجرن", "B) ڤمبلاجاران", "C) ڤيمبلاجاران", "D) ڤمبلجران"] },
+    { soalan: "Huruf Jawi ڬ berbunyi?", jawapan: "B", options: ["A) ka", "B) ga", "C) ha", "D) na"] },
+    { soalan: "Huruf Jawi ۏ berbunyi?", jawapan: "B", options: ["A) wa", "B) va", "C) fa", "D) ba"] },
+    { soalan: "Jawi مدرسة bermaksud?", jawapan: "C", options: ["A) rumah", "B) masjid", "C) sekolah", "D) kedai"] },
+    { soalan: "Jawi معلم bermaksud?", jawapan: "B", options: ["A) pelajar", "B) guru", "C) doktor", "D) polis"] },
+    { soalan: "Jawi كتاب bermaksud?", jawapan: "C", options: ["A) pen", "B) meja", "C) buku", "D) kerusi"] },
+    { soalan: "Berapa huruf Jawi asas?", jawapan: "C", options: ["A) 26", "B) 28", "C) 30", "D) 32"] },
+    { soalan: "Berapa huruf tambahan Jawi?", jawapan: "C", options: ["A) 4", "B) 5", "C) 6", "D) 7"] },
+  ],
+  "3:pendidikan-islam": [
+    { soalan: "Jumlah nabi & rasul wajib diketahui?", jawapan: "B", options: ["A) 20", "B) 25", "C) 30", "D) 35"] },
+    { soalan: "Nabi diutus kepada kaum Ad?", jawapan: "B", options: ["A) Nabi Nuh", "B) Nabi Hud", "C) Nabi Soleh", "D) Nabi Lut"] },
+    { soalan: "Kitab Zabur diturunkan kepada?", jawapan: "C", options: ["A) Nabi Musa", "B) Nabi Isa", "C) Nabi Daud", "D) Nabi Muhammad"] },
+    { soalan: "Tugas malaikat Jibril?", jawapan: "B", options: ["A) menurunkan hujan", "B) menyampaikan wahyu", "C) mencabut nyawa", "D) meniup sangkakala"] },
+    { soalan: "Sifat Wujud bermaksud?", jawapan: "B", options: ["A) Kekal", "B) Ada", "C) Maha Esa", "D) Sedia Ada"] },
+    { soalan: "Surah Al-Fatihah ada berapa ayat?", jawapan: "C", options: ["A) 5", "B) 6", "C) 7", "D) 8"] },
+    { soalan: "Solat Jumaat wajib bagi?", jawapan: "B", options: ["A) semua orang", "B) lelaki Islam baligh", "C) perempuan Islam", "D) kanak-kanak"] },
+    { soalan: "Bulan puasa ialah?", jawapan: "C", options: ["A) Syawal", "B) Zulhijjah", "C) Ramadan", "D) Muharram"] },
+    { soalan: "Sifat mahmudah contohnya?", jawapan: "C", options: ["A) dengki", "B) sombong", "C) jujur", "D) bakhil"] },
+    { soalan: "Kaabah terletak di?", jawapan: "C", options: ["A) Madinah", "B) Palestin", "C) Makkah", "D) Taif"] },
+  ],
+  "3:sains": [
+    { soalan: "Proses tumbuhan buat makanan?", jawapan: "B", options: ["A) Respirasi", "B) Fotosintesis", "C) Evaporasi", "D) Kondensasi"] },
+    { soalan: "Tiga keadaan jirim?", jawapan: "B", options: ["A) pepejal cecair wap", "B) pepejal cecair gas", "C) pepejal gas wap", "D) cecair gas wap"] },
+    { soalan: "Haiwan bertelur dipanggil?", jawapan: "C", options: ["A) mamalia", "B) reptilia", "C) ovipar", "D) vivipar"] },
+    { soalan: "Haiwan melahirkan anak?", jawapan: "D", options: ["A) mamalia", "B) reptilia", "C) ovipar", "D) vivipar"] },
+    { soalan: "Magnet menarik benda dari?", jawapan: "C", options: ["A) kayu", "B) plastik", "C) besi", "D) kaca"] },
+    { soalan: "Berapa planet sistem suria?", jawapan: "B", options: ["A) 7", "B) 8", "C) 9", "D) 10"] },
+    { soalan: "Gas diserap semasa fotosintesis?", jawapan: "C", options: ["A) Oksigen", "B) Nitrogen", "C) Karbon dioksida", "D) Hidrogen"] },
+    { soalan: "Rantaian makanan bermula dengan?", jawapan: "B", options: ["A) haiwan", "B) tumbuhan", "C) manusia", "D) bakteria"] },
+    { soalan: "Gerhana matahari berlaku?", jawapan: "A", options: ["A) bumi masuk bayang bulan", "B) bulan masuk bayang bumi", "C) matahari hilang", "D) bumi berhenti berputar"] },
+    { soalan: "Pemanasan global disebabkan?", jawapan: "C", options: ["A) lebih pokok", "B) lebih hujan", "C) gas rumah hijau", "D) lebih angin"] },
+  ],
 };
 
 
@@ -190,6 +250,11 @@ const TIME_MAP: Record<string, number> = {
   "2:pendidikan-islam": 10,
   "2:sains": 10,
   "3:bahasa-melayu": 10,
+  "3:matematik": 10,
+  "3:bahasa-inggeris": 10,
+  "3:jawi": 10,
+  "3:pendidikan-islam": 10,
+  "3:sains": 10,
 };
 
 
