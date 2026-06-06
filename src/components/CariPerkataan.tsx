@@ -1,17 +1,17 @@
 import { useMemo, useState } from "react";
 import { Sparkles, Search } from "lucide-react";
 
-type Word = {
+export type Word = {
   word: string;
   row: number; // 0-based
   col: number; // 0-based
   dir: "H" | "V";
 };
 
-const GRID_SIZE = 8;
+const DEFAULT_GRID_SIZE = 8;
 
-// Words from spec (1-based in spec, convert to 0-based)
-const WORDS: Word[] = [
+// Default (Matematik Darjah 1) words — 1-based in spec, converted to 0-based.
+const DEFAULT_WORDS: Word[] = [
   { word: "SATU", row: 0, col: 0, dir: "H" },
   { word: "TIGA", row: 0, col: 2, dir: "V" },
   { word: "LIMA", row: 5, col: 0, dir: "H" },
@@ -19,7 +19,7 @@ const WORDS: Word[] = [
   { word: "TAMBAH", row: 3, col: 1, dir: "H" },
 ];
 
-const CLUES: Record<string, string> = {
+const DEFAULT_CLUES: Record<string, string> = {
   SATU: "Nombor 1",
   DUA: "Nombor 2",
   TIGA: "Nombor 3",
@@ -27,23 +27,31 @@ const CLUES: Record<string, string> = {
   TAMBAH: "Operasi +",
 };
 
-// Build the 8x8 grid with words placed; fill the rest with deterministic letters
-function buildGrid(): string[][] {
-  const grid: string[][] = Array.from({ length: GRID_SIZE }, () =>
-    Array.from({ length: GRID_SIZE }, () => "")
+type CariPerkataanProps = {
+  words?: Word[];
+  clues?: Record<string, string>;
+  gridSize?: number;
+  title?: string;
+};
+
+// Build the grid with words placed; fill the rest with deterministic letters
+function buildGrid(words: Word[], size: number): string[][] {
+  const grid: string[][] = Array.from({ length: size }, () =>
+    Array.from({ length: size }, () => "")
   );
-  for (const w of WORDS) {
+  for (const w of words) {
     for (let i = 0; i < w.word.length; i++) {
       const r = w.dir === "H" ? w.row : w.row + i;
       const c = w.dir === "H" ? w.col + i : w.col;
-      grid[r][c] = w.word[i];
+      if (r >= 0 && r < size && c >= 0 && c < size) {
+        grid[r][c] = w.word[i];
+      }
     }
   }
-  // Deterministic filler so layout is stable
   const filler = "BCDFHJKNPQRSWYZ";
   let seed = 7;
-  for (let r = 0; r < GRID_SIZE; r++) {
-    for (let c = 0; c < GRID_SIZE; c++) {
+  for (let r = 0; r < size; r++) {
+    for (let c = 0; c < size; c++) {
       if (!grid[r][c]) {
         seed = (seed * 9301 + 49297) % 233280;
         grid[r][c] = filler[seed % filler.length];
@@ -58,7 +66,6 @@ type Cell = { r: number; c: number };
 function cellsBetween(a: Cell, b: Cell): Cell[] | null {
   const dr = b.r - a.r;
   const dc = b.c - a.c;
-  // must be straight: horizontal, vertical, or 45° diagonal
   if (!(dr === 0 || dc === 0 || Math.abs(dr) === Math.abs(dc))) return null;
   const len = Math.max(Math.abs(dr), Math.abs(dc)) + 1;
   const sr = Math.sign(dr);
@@ -72,8 +79,13 @@ function cellKey(r: number, c: number) {
   return `${r},${c}`;
 }
 
-export function CariPerkataan() {
-  const grid = useMemo(buildGrid, []);
+export function CariPerkataan({
+  words = DEFAULT_WORDS,
+  clues = DEFAULT_CLUES,
+  gridSize = DEFAULT_GRID_SIZE,
+  title = "Cari Perkataan",
+}: CariPerkataanProps = {}) {
+  const grid = useMemo(() => buildGrid(words, gridSize), [words, gridSize]);
   const [first, setFirst] = useState<Cell | null>(null);
   const [found, setFound] = useState<Record<string, Cell[]>>({});
   const [flash, setFlash] = useState<null | "ok" | "no">(null);
@@ -86,7 +98,7 @@ export function CariPerkataan() {
     return set;
   }, [found]);
 
-  const allFound = Object.keys(found).length === WORDS.length;
+  const allFound = Object.keys(found).length === words.length;
 
   function handleClick(r: number, c: number) {
     if (allFound) return;
@@ -105,7 +117,7 @@ export function CariPerkataan() {
     }
     const text = path.map((p) => grid[p.r][p.c]).join("");
     const rev = text.split("").reverse().join("");
-    const match = WORDS.find(
+    const match = words.find(
       (w) => !found[w.word] && (w.word === text || w.word === rev)
     );
     if (match) {
@@ -135,7 +147,7 @@ export function CariPerkataan() {
           </div>
           <div>
             <h2 className="font-display text-2xl font-extrabold text-foreground">
-              Cari Perkataan
+              {title}
             </h2>
             <p className="text-xs text-muted-foreground">
               Klik huruf pertama, kemudian huruf terakhir.
@@ -146,7 +158,7 @@ export function CariPerkataan() {
           className="rounded-full px-3 py-1 font-display text-sm font-extrabold text-white"
           style={{ backgroundColor: "#F5A623" }}
         >
-          {Object.keys(found).length}/{WORDS.length}
+          {Object.keys(found).length}/{words.length}
         </span>
       </div>
 
@@ -159,7 +171,7 @@ export function CariPerkataan() {
             : ""
         }`}
         style={{
-          gridTemplateColumns: `repeat(${GRID_SIZE}, minmax(0, 1fr))`,
+          gridTemplateColumns: `repeat(${gridSize}, minmax(0, 1fr))`,
           backgroundColor: "#F5F7F4",
         }}
       >
@@ -171,7 +183,7 @@ export function CariPerkataan() {
               <button
                 key={`${r}-${c}`}
                 onClick={() => handleClick(r, c)}
-                className="aspect-square rounded-md font-display text-base font-extrabold uppercase transition active:scale-95 sm:text-lg"
+                className="aspect-square rounded-md font-display text-sm font-extrabold uppercase transition active:scale-95 sm:text-base"
                 style={{
                   backgroundColor: isFound
                     ? "#1B8A5A"
@@ -194,12 +206,12 @@ export function CariPerkataan() {
           Senarai Perkataan
         </h3>
         <ul className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2">
-          {WORDS.map((w) => {
+          {words.map((w) => {
             const done = !!found[w.word];
             return (
               <li
                 key={w.word}
-                className="flex items-center justify-between rounded-xl border px-3 py-2"
+                className="flex items-center justify-between gap-2 rounded-xl border px-3 py-2"
                 style={{
                   borderColor: done ? "#1B8A5A" : "#E2E8E0",
                   backgroundColor: done ? "#E8F5EE" : "#FFFFFF",
@@ -213,8 +225,8 @@ export function CariPerkataan() {
                 >
                   {w.word}
                 </span>
-                <span className="text-xs text-muted-foreground">
-                  {CLUES[w.word]}
+                <span className="text-right text-xs text-muted-foreground">
+                  {clues[w.word]}
                 </span>
               </li>
             );
@@ -252,3 +264,33 @@ export function CariPerkataan() {
     </div>
   );
 }
+
+// Bahasa Melayu Darjah 1 — 10x10 grid with 10 words.
+// Spec rows/cols are 1-based; convert to 0-based here.
+export const BM_DARJAH1_WORDS: Word[] = [
+  // Mendatar
+  { word: "IBU", row: 0, col: 0, dir: "H" },
+  { word: "AYAH", row: 2, col: 0, dir: "H" },
+  { word: "ADIK", row: 4, col: 0, dir: "H" },
+  { word: "BUKU", row: 6, col: 0, dir: "H" },
+  { word: "MEJA", row: 8, col: 0, dir: "H" },
+  // Menegak
+  { word: "API", row: 0, col: 5, dir: "V" },
+  { word: "AIR", row: 0, col: 7, dir: "V" },
+  { word: "EPAL", row: 1, col: 3, dir: "V" },
+  { word: "IKAN", row: 2, col: 6, dir: "V" },
+  { word: "BULAN", row: 4, col: 9, dir: "V" },
+];
+
+export const BM_DARJAH1_CLUES: Record<string, string> = {
+  IBU: "Perempuan yang melahirkan kita",
+  AYAH: "Lelaki yang menjaga keluarga",
+  ADIK: "Ahli keluarga yang lebih muda",
+  BUKU: "Tempat kita belajar membaca",
+  MEJA: "Tempat kita letak buku",
+  API: "Panas dan menyala-nyala",
+  AIR: "Kita minum setiap hari",
+  EPAL: "Buah berwarna merah",
+  IKAN: "Haiwan yang hidup dalam air",
+  BULAN: "Cahaya di langit malam",
+};
