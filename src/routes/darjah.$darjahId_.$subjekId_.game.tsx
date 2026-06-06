@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, Gamepad2, Send, Sparkles, Timer, Trophy, Search } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { StarReward } from "@/components/StarReward";
-import { CariPerkataan, BM_DARJAH1_WORDS, BM_DARJAH1_CLUES } from "@/components/CariPerkataan";
+import { CariPerkataan, BM_DARJAH1_WORDS, BM_DARJAH1_CLUES, BI_DARJAH1_WORDS, BI_DARJAH1_CLUES } from "@/components/CariPerkataan";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { getDarjah, getSubjek } from "@/lib/curriculum";
@@ -126,8 +126,9 @@ function GameSubjekPage() {
   const [flash, setFlash] = useState<null | "ok" | "no">(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const isBM = darjahId === "1" && subjekId === "bahasa-melayu";
+  const isBI = darjahId === "1" && subjekId === "bahasa-inggeris";
   const isMate = darjahId === "1" && subjekId === "matematik";
-  const hasCariPerkataan = isMate || isBM;
+  const hasCariPerkataan = isMate || isBM || isBI;
   const [mode, setMode] = useState<"race" | "cari">("race");
 
   useEffect(() => {
@@ -257,6 +258,13 @@ function GameSubjekPage() {
               words={BM_DARJAH1_WORDS}
               clues={BM_DARJAH1_CLUES}
               gridSize={10}
+            />
+          ) : isBI ? (
+            <CariPerkataan
+              words={BI_DARJAH1_WORDS}
+              clues={BI_DARJAH1_CLUES}
+              gridSize={10}
+              title="Word Search"
             />
           ) : (
             <CariPerkataan />
