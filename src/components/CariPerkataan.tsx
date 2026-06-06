@@ -479,3 +479,31 @@ export const MATE_DARJAH2_CLUES: Record<string, string> = {
   PULUH: "Nilai tempat kedua",
   RATUS: "Nilai tempat ketiga",
 };
+
+export const BI_DARJAH2_WORDS: Word[] = [
+  // Across
+  { word: "CATS", row: 0, col: 0, dir: "H" },
+  { word: "WENT", row: 2, col: 0, dir: "H" },
+  { word: "SWIM", row: 4, col: 0, dir: "H" },
+  { word: "HAPPY", row: 6, col: 0, dir: "H" },
+  { word: "PLAYED", row: 8, col: 0, dir: "H" },
+  // Down
+  { word: "BOOK", row: 0, col: 6, dir: "V" },
+  { word: "RUNS", row: 0, col: 4, dir: "V" },
+  { word: "TEETH", row: 1, col: 8, dir: "V" },
+  { word: "WOMEN", row: 0, col: 5, dir: "V" },
+  { word: "SLOWLY", row: 1, col: 9, dir: "V" },
+];
+
+export const BI_DARJAH2_CLUES: Record<string, string> = {
+  CATS: "Plural of cat",
+  WENT: "Past tense of go",
+  SWIM: "Action in water",
+  HAPPY: "Opposite of sad",
+  PLAYED: "Past tense of play",
+  BOOK: "We read this",
+  RUNS: "He ___ fast",
+  TEETH: "Plural of tooth",
+  WOMEN: "Plural of woman",
+  SLOWLY: "Opposite of quickly",
+};
