@@ -381,7 +381,13 @@ function GameSubjekPage() {
   const isJawi3 = darjahId === "3" && subjekId === "jawi";
   const isPI3 = darjahId === "3" && subjekId === "pendidikan-islam";
   const isSains3 = darjahId === "3" && subjekId === "sains";
-  const hasCariPerkataan = isMate || isMate2 || isMate3 || isBM || isBM2 || isBM3 || isBI || isBI2 || isBI3 || isJawi || isJawi2 || isJawi3 || isPI || isPI2 || isPI3 || isSains || isSains2 || isSains3;
+  const isBM4 = darjahId === "4" && subjekId === "bahasa-melayu";
+  const isMate4 = darjahId === "4" && subjekId === "matematik";
+  const isBI4 = darjahId === "4" && subjekId === "bahasa-inggeris";
+  const isJawi4 = darjahId === "4" && subjekId === "jawi";
+  const isPI4 = darjahId === "4" && subjekId === "pendidikan-islam";
+  const isSains4 = darjahId === "4" && subjekId === "sains";
+  const hasCariPerkataan = isMate || isMate2 || isMate3 || isMate4 || isBM || isBM2 || isBM3 || isBM4 || isBI || isBI2 || isBI3 || isBI4 || isJawi || isJawi2 || isJawi3 || isJawi4 || isPI || isPI2 || isPI3 || isPI4 || isSains || isSains2 || isSains3 || isSains4;
 
   const [mode, setMode] = useState<"race" | "cari">("race");
 
