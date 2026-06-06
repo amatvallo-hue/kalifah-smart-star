@@ -259,6 +259,13 @@ function GameSubjekPage() {
               clues={BM_DARJAH1_CLUES}
               gridSize={10}
             />
+          ) : isBI ? (
+            <CariPerkataan
+              words={BI_DARJAH1_WORDS}
+              clues={BI_DARJAH1_CLUES}
+              gridSize={10}
+              title="Word Search"
+            />
           ) : (
             <CariPerkataan />
           )
