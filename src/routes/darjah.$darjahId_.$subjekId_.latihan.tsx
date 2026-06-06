@@ -29,6 +29,19 @@ const JAWI_D2_MCQ: SoalanMcq[] = [
   { soalan: "Pilih ejaan Jawi bagi 'bersekolah'", pilihan: ["برسکول", "بيرسکول", "برسکوله", "بيرسکوله"], betul: 0 },
 ];
 
+const JAWI_D4_MCQ: SoalanMcq[] = [
+  { soalan: "Pilih ejaan Jawi bagi 'kecemerlangan'", pilihan: ["کچمرلڠن", "کيچمرلاڠن", "کچمرلاڠن", "کيچمرلڠن"], betul: 2 },
+  { soalan: "Pilih ejaan Jawi bagi 'persekitaran'", pilihan: ["ڤرسيکيتارن", "ڤيرسيکيتارن", "ڤرسکيتارن", "ڤيرسکيتارن"], betul: 0 },
+  { soalan: "Pilih ejaan Jawi bagi 'pembangunan'", pilihan: ["ڤمباڠونن", "ڤيمباڠونن", "ڤمبانڬونن", "ڤيمبانڬونن"], betul: 2 },
+  { soalan: "Pilih ejaan Jawi bagi 'keselamatan'", pilihan: ["کسلامتن", "کيسلامتن", "کسيلامتن", "کيسيلامتن"], betul: 2 },
+  { soalan: "Pilih ejaan Jawi bagi 'tanggungjawab'", pilihan: ["تاڠڬوڠجاوب", "تڠڬوڠجاوب", "تاڠڬوڠجوب", "تڠڬوڠجوب"], betul: 0 },
+  { soalan: "Pilih ejaan Jawi bagi 'perkhidmatan'", pilihan: ["ڤرخدمتن", "ڤيرخدمتن", "ڤرخيدمتن", "ڤيرخيدمتن"], betul: 2 },
+  { soalan: "Pilih ejaan Jawi bagi 'kebebasan'", pilihan: ["کببسن", "کيببسن", "کببيسن", "کيببيسن"], betul: 2 },
+  { soalan: "Pilih ejaan Jawi bagi 'pengetahuan'", pilihan: ["ڤڠتاهوان", "ڤيڠتاهوان", "ڤڠيتاهوان", "ڤيڠيتاهوان"], betul: 2 },
+  { soalan: "Pilih ejaan Jawi bagi 'kepimpinan'", pilihan: ["کڤيمڤينن", "کيڤيمڤينن", "کڤمڤينن", "کيڤمڤينن"], betul: 0 },
+  { soalan: "Pilih ejaan Jawi bagi 'kemasyarakatan'", pilihan: ["کماسياراکتن", "کيماسياراکتن", "کماسارکتن", "کيماسارکتن"], betul: 0 },
+];
+
 
 const BANK: Record<string, Soalan[]> = {
   "1:matematik": [
