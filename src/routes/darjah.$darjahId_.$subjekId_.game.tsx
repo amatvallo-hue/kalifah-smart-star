@@ -1,9 +1,12 @@
 import { createFileRoute, Link, useNavigate, useParams } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ArrowLeft, Gamepad2, Send, Sparkles, Timer, Trophy, Search } from "lucide-react";
+import { ArrowLeft, Gamepad2, Send, Sparkles, Timer, Trophy, Search, CheckSquare, Link2, AlignLeft } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { StarReward } from "@/components/StarReward";
 import { CariPerkataan, BM_DARJAH1_WORDS, BM_DARJAH1_CLUES, BM_DARJAH2_WORDS, BM_DARJAH2_CLUES, BM_DARJAH3_WORDS, BM_DARJAH3_CLUES, BM_DARJAH4_WORDS, BM_DARJAH4_CLUES, BM_DARJAH5_WORDS, BM_DARJAH5_CLUES, BM_DARJAH6_WORDS, BM_DARJAH6_CLUES, BI_DARJAH1_WORDS, BI_DARJAH1_CLUES, BI_DARJAH2_WORDS, BI_DARJAH2_CLUES, BI_DARJAH3_WORDS, BI_DARJAH3_CLUES, BI_DARJAH4_WORDS, BI_DARJAH4_CLUES, BI_DARJAH5_WORDS, BI_DARJAH5_CLUES, BI_DARJAH6_WORDS, BI_DARJAH6_CLUES, JAWI_DARJAH1_WORDS, JAWI_DARJAH1_CLUES, JAWI_DARJAH2_WORDS, JAWI_DARJAH2_CLUES, JAWI_DARJAH3_WORDS, JAWI_DARJAH3_CLUES, JAWI_DARJAH4_WORDS, JAWI_DARJAH4_CLUES, JAWI_DARJAH5_WORDS, JAWI_DARJAH5_CLUES, JAWI_DARJAH6_WORDS, JAWI_DARJAH6_CLUES, PI_DARJAH1_WORDS, PI_DARJAH1_CLUES, PI_DARJAH2_WORDS, PI_DARJAH2_CLUES, PI_DARJAH3_WORDS, PI_DARJAH3_CLUES, PI_DARJAH4_WORDS, PI_DARJAH4_CLUES, PI_DARJAH5_WORDS, PI_DARJAH5_CLUES, PI_DARJAH6_WORDS, PI_DARJAH6_CLUES, SAINS_DARJAH1_WORDS, SAINS_DARJAH1_CLUES, SAINS_DARJAH2_WORDS, SAINS_DARJAH2_CLUES, SAINS_DARJAH4_WORDS, SAINS_DARJAH4_CLUES, SAINS_DARJAH5_WORDS, SAINS_DARJAH5_CLUES, SAINS_DARJAH6_WORDS, SAINS_DARJAH6_CLUES, MATE_DARJAH2_WORDS, MATE_DARJAH2_CLUES, MATE_DARJAH3_WORDS, MATE_DARJAH3_CLUES, MATE_DARJAH4_WORDS, MATE_DARJAH4_CLUES, MATE_DARJAH5_WORDS, MATE_DARJAH5_CLUES, MATE_DARJAH6_WORDS, MATE_DARJAH6_CLUES } from "@/components/CariPerkataan";
+import { BetulSalahGame } from "@/components/games/BetulSalahGame";
+import { PadankanJawapanGame } from "@/components/games/PadankanJawapanGame";
+import { SusunAyatGame } from "@/components/games/SusunAyatGame";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { getDarjah, getSubjek } from "@/lib/curriculum";
@@ -557,7 +560,8 @@ function GameSubjekPage() {
   const isSains6 = darjahId === "6" && subjekId === "sains";
   const hasCariPerkataan = isMate || isMate2 || isMate3 || isMate4 || isMate5 || isBM || isBM2 || isBM3 || isBM4 || isBM5 || isBI || isBI2 || isBI3 || isBI4 || isBI5 || isJawi || isJawi2 || isJawi3 || isJawi4 || isJawi5 || isPI || isPI2 || isPI3 || isPI4 || isPI5 || isSains || isSains2 || isSains3 || isSains4 || isSains5 || isBM6 || isMate6 || isBI6 || isJawi6 || isPI6 || isSains6;
 
-  const [mode, setMode] = useState<"race" | "cari">("race");
+  const hasRace = soalanList.length > 0;
+  const [mode, setMode] = useState<"race" | "cari" | "betul" | "padan" | "susun">(hasRace ? "race" : "betul");
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
@@ -586,7 +590,7 @@ function GameSubjekPage() {
     );
   }
 
-  if (!darjah || !subjek || soalanList.length === 0) {
+  if (!darjah || !subjek) {
     return (
       <div className="min-h-screen bg-background">
         <SiteHeader onLogout={handleLogout} />
@@ -652,35 +656,70 @@ function GameSubjekPage() {
           </div>
           <div>
             <h1 className="font-display text-3xl font-extrabold text-foreground">
-              {hasCariPerkataan && mode === "cari" ? "Cari Perkataan" : "Quiz Race"}
+              {mode === "cari" ? "Cari Perkataan" : mode === "betul" ? "Betul atau Salah" : mode === "padan" ? "Padankan Jawapan" : mode === "susun" ? "Susun Ayat" : "Quiz Race"}
             </h1>
             <p className="text-sm text-muted-foreground">{darjah.label} • {subjek.title}</p>
           </div>
         </div>
 
-        {hasCariPerkataan && (
-          <div className="mt-5 inline-flex rounded-full bg-secondary p-1">
+        <div className="mt-5 flex flex-wrap gap-2 rounded-2xl bg-secondary p-2">
+          {hasRace && (
             <button
               onClick={() => setMode("race")}
-              className={`inline-flex items-center gap-2 rounded-full px-4 py-2 font-display text-sm font-extrabold transition ${
-                mode === "race" ? "bg-card text-primary shadow-soft" : "text-muted-foreground"
+              className={`inline-flex items-center gap-2 rounded-xl px-3 py-2 font-display text-sm font-extrabold transition ${
+                mode === "race" ? "text-white shadow-soft" : "text-muted-foreground"
               }`}
+              style={mode === "race" ? { backgroundColor: "#1B8A5A" } : undefined}
             >
               <Trophy className="h-4 w-4" /> Quiz Race
             </button>
+          )}
+          {hasCariPerkataan && (
             <button
               onClick={() => setMode("cari")}
-              className={`inline-flex items-center gap-2 rounded-full px-4 py-2 font-display text-sm font-extrabold transition ${
+              className={`inline-flex items-center gap-2 rounded-xl px-3 py-2 font-display text-sm font-extrabold transition ${
                 mode === "cari" ? "text-white shadow-soft" : "text-muted-foreground"
               }`}
               style={mode === "cari" ? { backgroundColor: "#1B8A5A" } : undefined}
             >
               <Search className="h-4 w-4" /> Cari Perkataan
             </button>
-          </div>
-        )}
+          )}
+          <button
+            onClick={() => setMode("betul")}
+            className={`inline-flex items-center gap-2 rounded-xl px-3 py-2 font-display text-sm font-extrabold transition ${
+              mode === "betul" ? "text-white shadow-soft" : "text-muted-foreground"
+            }`}
+            style={mode === "betul" ? { backgroundColor: "#1B8A5A" } : undefined}
+          >
+            <CheckSquare className="h-4 w-4" /> Betul/Salah
+          </button>
+          <button
+            onClick={() => setMode("padan")}
+            className={`inline-flex items-center gap-2 rounded-xl px-3 py-2 font-display text-sm font-extrabold transition ${
+              mode === "padan" ? "text-white shadow-soft" : "text-muted-foreground"
+            }`}
+            style={mode === "padan" ? { backgroundColor: "#F5A623", color: "#1a1a1a" } : undefined}
+          >
+            <Link2 className="h-4 w-4" /> Padankan
+          </button>
+          <button
+            onClick={() => setMode("susun")}
+            className={`inline-flex items-center gap-2 rounded-xl px-3 py-2 font-display text-sm font-extrabold transition ${
+              mode === "susun" ? "text-white shadow-soft" : "text-muted-foreground"
+            }`}
+            style={mode === "susun" ? { backgroundColor: "#F5A623", color: "#1a1a1a" } : undefined}
+          >
+            <AlignLeft className="h-4 w-4" /> Susun Ayat
+          </button>
+        </div>
 
-        {hasCariPerkataan && mode === "cari" ? (
+        {mode === "betul" && <BetulSalahGame subjekId={subjekId} />}
+        {mode === "padan" && <PadankanJawapanGame subjekId={subjekId} />}
+        {mode === "susun" && <SusunAyatGame subjekId={subjekId} />}
+
+        {(mode === "race" || mode === "cari") && (
+        hasCariPerkataan && mode === "cari" ? (
           isBM ? (
             <CariPerkataan
               words={BM_DARJAH1_WORDS}
@@ -936,7 +975,7 @@ function GameSubjekPage() {
               Main Lagi
             </button>
           </div>
-        )}
+        ))}
       </main>
     </div>
   );
