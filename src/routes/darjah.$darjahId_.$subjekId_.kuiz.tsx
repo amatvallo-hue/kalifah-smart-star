@@ -123,6 +123,25 @@ const MATEMATIK_D2: QuizQuestion[] = [
   { soalan: "100 - 45 = ?", pilihan: ["45", "55", "65", "75"], jawapan: 1 },
 ];
 
+// Hardcoded soalan Bahasa Inggeris Darjah 2
+const BAHASA_INGGERIS_D2: QuizQuestion[] = [
+  { soalan: "Choose the correct sentence:", pilihan: ["She go to school", "She goes to school", "She going to school", "She gone to school"], jawapan: 1 },
+  { soalan: "What is the plural of 'cat'?", pilihan: ["cats", "cates", "caties", "catss"], jawapan: 0 },
+  { soalan: "What is the plural of 'box'?", pilihan: ["boxs", "boxes", "boxies", "boxess"], jawapan: 1 },
+  { soalan: "Choose the correct word: 'The dog ___ loudly.'", pilihan: ["bark", "barks", "barking", "barked"], jawapan: 1 },
+  { soalan: "What is the opposite of 'happy'?", pilihan: ["angry", "sad", "scared", "tired"], jawapan: 1 },
+  { soalan: "Choose the adjective:", pilihan: ["run", "quickly", "beautiful", "and"], jawapan: 2 },
+  { soalan: "What is the past tense of 'run'?", pilihan: ["runned", "runs", "ran", "running"], jawapan: 2 },
+  { soalan: "Choose the correct sentence:", pilihan: ["I has a book", "I have a book", "I having a book", "I had have a book"], jawapan: 1 },
+  { soalan: "What is the plural of 'child'?", pilihan: ["childs", "childes", "children", "childrens"], jawapan: 2 },
+  { soalan: "Choose the verb:", pilihan: ["beautiful", "quickly", "swim", "and"], jawapan: 2 },
+  { soalan: "What is the past tense of 'eat'?", pilihan: ["eated", "eats", "eating", "ate"], jawapan: 3 },
+  { soalan: "Choose the correct word: 'She ___ a teacher.'", pilihan: ["am", "is", "are", "be"], jawapan: 1 },
+  { soalan: "What is the plural of 'fish'?", pilihan: ["fishs", "fishes", "fish", "fishies"], jawapan: 2 },
+  { soalan: "Choose the adverb:", pilihan: ["beautiful", "quickly", "swim", "and"], jawapan: 1 },
+  { soalan: "What is the past tense of 'go'?", pilihan: ["goed", "goes", "went", "going"], jawapan: 2 },
+];
+
 // Hardcoded soalan Sains Darjah 1
 const SAINS_D1: QuizQuestion[] = [
   { soalan: "Berapa deria yang kita ada?", pilihan: ["3", "4", "5", "6"], jawapan: 2 },
