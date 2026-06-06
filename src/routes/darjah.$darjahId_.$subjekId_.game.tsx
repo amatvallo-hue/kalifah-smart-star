@@ -101,6 +101,18 @@ const BANK: Record<string, Soalan[]> = {
     { soalan: "Imbuhan dalam 'pemimpin'?", jawapan: "B", options: ["A) pe", "B) pem", "C) mimpin", "D) in"] },
     { soalan: "Antonim 'besar'?", jawapan: "C", options: ["A) tinggi", "B) panjang", "C) kecil", "D) lebar"] },
   ],
+  "2:matematik": [
+    { soalan: "25 + 37 = ?", jawapan: "B", options: ["A) 52", "B) 62", "C) 72", "D) 82"] },
+    { soalan: "84 - 46 = ?", jawapan: "B", options: ["A) 28", "B) 38", "C) 48", "D) 58"] },
+    { soalan: "6 × 3 = ?", jawapan: "C", options: ["A) 12", "B) 15", "C) 18", "D) 21"] },
+    { soalan: "8 × 4 = ?", jawapan: "C", options: ["A) 24", "B) 28", "C) 32", "D) 36"] },
+    { soalan: "20 ÷ 4 = ?", jawapan: "C", options: ["A) 3", "B) 4", "C) 5", "D) 6"] },
+    { soalan: "7 × 5 = ?", jawapan: "B", options: ["A) 30", "B) 35", "C) 40", "D) 45"] },
+    { soalan: "48 ÷ 8 = ?", jawapan: "C", options: ["A) 4", "B) 5", "C) 6", "D) 7"] },
+    { soalan: "9 × 6 = ?", jawapan: "B", options: ["A) 48", "B) 54", "C) 60", "D) 66"] },
+    { soalan: "56 ÷ 7 = ?", jawapan: "C", options: ["A) 6", "B) 7", "C) 8", "D) 9"] },
+    { soalan: "100 - 45 = ?", jawapan: "B", options: ["A) 45", "B) 55", "C) 65", "D) 75"] },
+  ],
 };
 
 const TIME_MAP: Record<string, number> = {
@@ -110,6 +122,7 @@ const TIME_MAP: Record<string, number> = {
   "1:pendidikan-islam": 10,
   "1:sains": 10,
   "2:bahasa-melayu": 10,
+  "2:matematik": 10,
 };
 
 
