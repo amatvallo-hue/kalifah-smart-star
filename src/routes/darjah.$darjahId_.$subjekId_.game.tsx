@@ -512,6 +512,41 @@ function GameSubjekPage() {
               gridSize={10}
               title="Cari Perkataan Bahasa Melayu"
             />
+          ) : isMate3 ? (
+            <CariPerkataan
+              words={MATE_DARJAH3_WORDS}
+              clues={MATE_DARJAH3_CLUES}
+              gridSize={10}
+              title="Cari Perkataan Matematik"
+            />
+          ) : isBI3 ? (
+            <CariPerkataan
+              words={BI_DARJAH3_WORDS}
+              clues={BI_DARJAH3_CLUES}
+              gridSize={10}
+              title="Word Search"
+            />
+          ) : isJawi3 ? (
+            <CariPerkataan
+              words={JAWI_DARJAH3_WORDS}
+              clues={JAWI_DARJAH3_CLUES}
+              gridSize={10}
+              title="Cari Perkataan Jawi"
+            />
+          ) : isPI3 ? (
+            <CariPerkataan
+              words={PI_DARJAH3_WORDS}
+              clues={PI_DARJAH3_CLUES}
+              gridSize={10}
+              title="Cari Perkataan Pendidikan Islam"
+            />
+          ) : isSains3 ? (
+            <CariPerkataan
+              words={SAINS_DARJAH2_WORDS}
+              clues={SAINS_DARJAH2_CLUES}
+              gridSize={10}
+              title="Cari Perkataan Sains"
+            />
           ) : (
             <CariPerkataan />
           )
