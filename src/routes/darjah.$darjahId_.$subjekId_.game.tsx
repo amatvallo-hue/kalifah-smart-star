@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, Gamepad2, Send, Sparkles, Timer, Trophy, Search } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { StarReward } from "@/components/StarReward";
-import { CariPerkataan, BM_DARJAH1_WORDS, BM_DARJAH1_CLUES, BM_DARJAH2_WORDS, BM_DARJAH2_CLUES, BI_DARJAH1_WORDS, BI_DARJAH1_CLUES, BI_DARJAH2_WORDS, BI_DARJAH2_CLUES, JAWI_DARJAH1_WORDS, JAWI_DARJAH1_CLUES, JAWI_DARJAH2_WORDS, JAWI_DARJAH2_CLUES, PI_DARJAH1_WORDS, PI_DARJAH1_CLUES, PI_DARJAH2_WORDS, PI_DARJAH2_CLUES, SAINS_DARJAH1_WORDS, SAINS_DARJAH1_CLUES, SAINS_DARJAH2_WORDS, SAINS_DARJAH2_CLUES, MATE_DARJAH2_WORDS, MATE_DARJAH2_CLUES } from "@/components/CariPerkataan";
+import { CariPerkataan, BM_DARJAH1_WORDS, BM_DARJAH1_CLUES, BM_DARJAH2_WORDS, BM_DARJAH2_CLUES, BM_DARJAH3_WORDS, BM_DARJAH3_CLUES, BI_DARJAH1_WORDS, BI_DARJAH1_CLUES, BI_DARJAH2_WORDS, BI_DARJAH2_CLUES, JAWI_DARJAH1_WORDS, JAWI_DARJAH1_CLUES, JAWI_DARJAH2_WORDS, JAWI_DARJAH2_CLUES, PI_DARJAH1_WORDS, PI_DARJAH1_CLUES, PI_DARJAH2_WORDS, PI_DARJAH2_CLUES, SAINS_DARJAH1_WORDS, SAINS_DARJAH1_CLUES, SAINS_DARJAH2_WORDS, SAINS_DARJAH2_CLUES, MATE_DARJAH2_WORDS, MATE_DARJAH2_CLUES } from "@/components/CariPerkataan";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { getDarjah, getSubjek } from "@/lib/curriculum";
@@ -161,6 +161,18 @@ const BANK: Record<string, Soalan[]> = {
     { soalan: "Magnet menarik benda dari?", jawapan: "C", options: ["A)kayu", "B)plastik", "C)besi", "D)kaca"] },
     { soalan: "Cahaya bergerak dalam garis?", jawapan: "B", options: ["A)bengkok", "B)lurus", "C)melengkung", "D)zigzag"] },
   ],
+  "3:bahasa-melayu": [
+    { soalan: "Ayat pasif?", jawapan: "B", options: ["A) Ali membaca buku", "B) Buku dibaca oleh Ali", "C) Buku membaca Ali", "D) Ali buku membaca"] },
+    { soalan: "Kata adjektif?", jawapan: "C", options: ["A) berlari", "B) dengan", "C) indah", "D) meja"] },
+    { soalan: "Kata kerja transitif?", jawapan: "C", options: ["A) tidur", "B) berlari", "C) memukul", "D) duduk"] },
+    { soalan: "Sinonim indah?", jawapan: "C", options: ["A) hodoh", "B) buruk", "C) cantik", "D) kotor"] },
+    { soalan: "Antonim rajin?", jawapan: "B", options: ["A) pandai", "B) malas", "C) sihat", "D) kuat"] },
+    { soalan: "Kata nama abstrak?", jawapan: "C", options: ["A) meja", "B) kucing", "C) kasih sayang", "D) buku"] },
+    { soalan: "Imbuhan dalam kebersihan?", jawapan: "A", options: ["A) ke...an", "B) ke", "C) an", "D) bersih"] },
+    { soalan: "Kata ulang budak?", jawapan: "B", options: ["A) budak budak", "B) budak-budak", "C) budakbudak", "D) budaks"] },
+    { soalan: "Maksud bersatu teguh bercerai roboh?", jawapan: "B", options: ["A) Perpecahan kuat", "B) Perpaduan kuat", "C) Bergaduh baik", "D) Bersatu susah"] },
+    { soalan: "Perkataan majmuk betul?", jawapan: "B", options: ["A) jalanraya", "B) jalan raya", "C) jalan-raya", "D) jalan_raya"] },
+  ],
 };
 
 
@@ -177,6 +189,7 @@ const TIME_MAP: Record<string, number> = {
   "2:jawi": 10,
   "2:pendidikan-islam": 10,
   "2:sains": 10,
+  "3:bahasa-melayu": 10,
 };
 
 
@@ -219,7 +232,8 @@ function GameSubjekPage() {
   const isPI2 = darjahId === "2" && subjekId === "pendidikan-islam";
   const isSains = darjahId === "1" && subjekId === "sains";
   const isSains2 = darjahId === "2" && subjekId === "sains";
-  const hasCariPerkataan = isMate || isMate2 || isBM || isBM2 || isBI || isBI2 || isJawi || isJawi2 || isPI || isPI2 || isSains || isSains2;
+  const isBM3 = darjahId === "3" && subjekId === "bahasa-melayu";
+  const hasCariPerkataan = isMate || isMate2 || isBM || isBM2 || isBM3 || isBI || isBI2 || isJawi || isJawi2 || isPI || isPI2 || isSains || isSains2;
 
   const [mode, setMode] = useState<"race" | "cari">("race");
 
@@ -420,6 +434,13 @@ function GameSubjekPage() {
               clues={SAINS_DARJAH2_CLUES}
               gridSize={10}
               title="Cari Perkataan Sains"
+            />
+          ) : isBM3 ? (
+            <CariPerkataan
+              words={BM_DARJAH3_WORDS}
+              clues={BM_DARJAH3_CLUES}
+              gridSize={10}
+              title="Cari Perkataan Bahasa Melayu"
             />
           ) : (
             <CariPerkataan />
