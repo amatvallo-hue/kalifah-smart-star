@@ -42,6 +42,19 @@ const JAWI_D4_MCQ: SoalanMcq[] = [
   { soalan: "Pilih ejaan Jawi bagi 'kemasyarakatan'", pilihan: ["کماسياراکتن", "کيماسياراکتن", "کماسارکتن", "کيماسارکتن"], betul: 0 },
 ];
 
+const JAWI_D5_MCQ: SoalanMcq[] = [
+  { soalan: "Pilih ejaan Jawi bagi 'kemasyarakatan'", pilihan: ["کماسياراکتن", "کيماسياراکتن", "کماسارکتن", "کيماسارکتن"], betul: 0 },
+  { soalan: "Pilih ejaan Jawi bagi 'kepimpinan'", pilihan: ["کڤيمڤينن", "کيڤيمڤينن", "کڤمڤينن", "کيڤمڤينن"], betul: 0 },
+  { soalan: "Pilih ejaan Jawi bagi 'pembangunan'", pilihan: ["ڤمباڠونن", "ڤيمباڠونن", "ڤمبانڬونن", "ڤيمبانڬونن"], betul: 2 },
+  { soalan: "Pilih ejaan Jawi bagi 'keharmonian'", pilihan: ["کهارمونين", "کيهارمونين", "کهرمونين", "کيهرمونين"], betul: 0 },
+  { soalan: "Pilih ejaan Jawi bagi 'perjuangan'", pilihan: ["ڤرجواڠن", "ڤيرجواڠن", "ڤرجوڠن", "ڤيرجوڠن"], betul: 0 },
+  { soalan: "Pilih ejaan Jawi bagi 'kejayaan'", pilihan: ["کجاياءن", "کيجاياءن", "کجايأن", "کيجايأن"], betul: 0 },
+  { soalan: "Pilih ejaan Jawi bagi 'semangat'", pilihan: ["سماڠت", "سيماڠت", "سمڠت", "سيمڠت"], betul: 0 },
+  { soalan: "Pilih ejaan Jawi bagi 'keberanian'", pilihan: ["کبرانين", "کيبرانين", "کبراءنين", "کيبراءنين"], betul: 2 },
+  { soalan: "Pilih ejaan Jawi bagi 'ketabahan'", pilihan: ["کتابهن", "کيتابهن", "کتبهن", "کيتبهن"], betul: 0 },
+  { soalan: "Pilih ejaan Jawi bagi 'kesabaran'", pilihan: ["کصبارن", "کيصبارن", "کسبارن", "کيسبارن"], betul: 2 },
+];
+
 
 const BANK: Record<string, Soalan[]> = {
   "1:matematik": [
@@ -306,6 +319,66 @@ const BANK: Record<string, Soalan[]> = {
     { soalan: "Apakah pencemaran udara?", jawapan: "udara tercemar bahan berbahaya", petunjuk: "asap, gas toksik" },
     { soalan: "Cara kitar semula.", jawapan: "proses semula bahan seperti kertas plastik logam", petunjuk: "kurangkan sampah" },
   ],
+  "5:bahasa-melayu": [
+    { soalan: "Apakah tema?", jawapan: "persoalan utama yang disampaikan dalam karya", petunjuk: "mesej utama karya sastera" },
+    { soalan: "Apakah plot?", jawapan: "susunan peristiwa dalam cerita", petunjuk: "urutan cerita dari mula hingga tamat" },
+    { soalan: "Beza protagonis dan antagonis.", jawapan: "protagonis watak baik antagonis watak jahat atau menentang", petunjuk: "watak utama vs watak lawan" },
+    { soalan: "Apakah latar tempat?", jawapan: "tempat cerita berlaku", petunjuk: "lokasi dalam cerita" },
+    { soalan: "Apakah sudut pandangan pertama?", jawapan: "pencerita menggunakan aku atau saya", petunjuk: "told from I perspective" },
+    { soalan: "Contoh imbuhan sisipan.", jawapan: "geletar gelegar gemilang", petunjuk: "el, em, er, in di tengah kata" },
+    { soalan: "Apakah kata terbitan?", jawapan: "kata yang menerima imbuhan", petunjuk: "kata asal + imbuhan" },
+    { soalan: "Apakah simpulan bahasa?", jawapan: "ungkapan pendek dengan makna kiasan", petunjuk: "bukan literal" },
+    { soalan: "Contoh simpulan bahasa.", jawapan: "kaki bangku bermaksud bodoh", petunjuk: "contoh ungkapan kiasan" },
+    { soalan: "Beza cerpen dan novel.", jawapan: "cerpen lebih pendek novel lebih panjang dan kompleks", petunjuk: "perbandingan genre" },
+  ],
+  "5:matematik": [
+    { soalan: "Kirakan: 23456 + 34567 = ___", jawapan: "58023", petunjuk: "tambah lajur kanan dulu" },
+    { soalan: "Kirakan: 75000 - 34567 = ___", jawapan: "40433", petunjuk: "pinjam dari puluh / ratus" },
+    { soalan: "Kirakan: 15 × 15 = ___", jawapan: "225", petunjuk: "sifir 15" },
+    { soalan: "Kirakan: 360 ÷ 15 = ___", jawapan: "24", petunjuk: "bahagi 15" },
+    { soalan: "Kirakan: 2/5 + 3/5 = ___", jawapan: "1", petunjuk: "penyebut sama" },
+    { soalan: "Kirakan: 3/4 - 1/8 = ___", jawapan: "5/8", petunjuk: "samakan penyebut dulu" },
+    { soalan: "Kirakan: 1.25 + 2.75 = ___", jawapan: "4.0", petunjuk: "susun titik perpuluhan" },
+    { soalan: "Luas bulatan jejari 7cm = ___", jawapan: "154cm²", petunjuk: "π = 22/7" },
+    { soalan: "Perimeter bulatan diameter 14cm = ___", jawapan: "44cm", petunjuk: "π × d" },
+    { soalan: "Faktor bagi 24 = ___", jawapan: "1,2,3,4,6,8,12,24", petunjuk: "semua nombor yang boleh bahagi 24" },
+  ],
+  "5:bahasa-inggeris": [
+    { soalan: "Write a complex sentence using although.", jawapan: "Although it rained we went to school", petunjuk: "main + subordinate clause" },
+    { soalan: "Change to passive: Ali reads the book.", jawapan: "The book is read by Ali", petunjuk: "subject receives action" },
+    { soalan: "Write a present perfect sentence.", jawapan: "She has finished her homework", petunjuk: "has/have + past participle" },
+    { soalan: "Write a first conditional sentence.", jawapan: "If it rains I will stay home", petunjuk: "if + present, will + base" },
+    { soalan: "Write a second conditional sentence.", jawapan: "If I were rich I would buy a car", petunjuk: "if + past, would + base" },
+    { soalan: "Change to reported speech: He said I am happy.", jawapan: "He said he was happy", petunjuk: "backshift tense" },
+    { soalan: "Write a sentence with subject-verb agreement.", jawapan: "The children are playing", petunjuk: "plural subject + plural verb" },
+    { soalan: "Write an example of an idiom.", jawapan: "break a leg means good luck", petunjuk: "figurative meaning" },
+    { soalan: "Write an example of direct speech.", jawapan: "She said I love reading", petunjuk: "exact words in quotes" },
+    { soalan: "Write an example of indirect speech.", jawapan: "She said she loved reading", petunjuk: "reported without quotes" },
+  ],
+  "5:pendidikan-islam": [
+    { soalan: "Apakah aqidah?", jawapan: "kepercayaan dan keyakinan dalam Islam", petunjuk: "rukun iman" },
+    { soalan: "Apakah syariah?", jawapan: "undang-undang Islam", petunjuk: "peraturan Islam" },
+    { soalan: "Tiga bahagian Islam.", jawapan: "aqidah syariah akhlak", petunjuk: "tiga komponen utama" },
+    { soalan: "Apakah muamalat?", jawapan: "urusan sesama manusia", petunjuk: "hubungan manusia" },
+    { soalan: "Tempoh Nabi dakwah di Makkah.", jawapan: "13 tahun", petunjuk: "dakwah awal" },
+    { soalan: "Tempoh Nabi dakwah di Madinah.", jawapan: "10 tahun", petunjuk: "dakwah akhir" },
+    { soalan: "Pembukaan Makkah berlaku tahun berapa?", jawapan: "8H", petunjuk: "tahun hijrah" },
+    { soalan: "Apakah fardu ain?", jawapan: "kewajipan individu", petunjuk: "wajib bagi setiap individu" },
+    { soalan: "Apakah fardu kifayah?", jawapan: "kewajipan kolektif", petunjuk: "wajib kolektif" },
+    { soalan: "Apakah sunnah?", jawapan: "sesuatu yang dilakukan Nabi dan digalakkan", petunjuk: "amalan Nabi" },
+  ],
+  "5:sains": [
+    { soalan: "Apakah DNA?", jawapan: "bahan genetik dalam sel yang membawa maklumat pewarisan", petunjuk: "materi genetik" },
+    { soalan: "Apakah gen?", jawapan: "unit pewarisan sifat", petunjuk: "unit heredity" },
+    { soalan: "Beza pembiakan seks dan aseks.", jawapan: "seks dua induk aseks satu induk", petunjuk: "perbandingan" },
+    { soalan: "Contoh pembiakan aseks.", jawapan: "keratan batang mencambah bertunas", petunjuk: "tumbuhan tanpa biji" },
+    { soalan: "Apakah ekologi?", jawapan: "kajian hubungan organisma dengan persekitaran", petunjuk: "study of organisms and environment" },
+    { soalan: "Apakah biodiversiti?", jawapan: "kepelbagaian spesies hidupan", petunjuk: "variety of life" },
+    { soalan: "Ancaman kepada biodiversiti.", jawapan: "pembalakan haram pembangunan tanpa kawalan pemburuan", petunjuk: "ancaman alam" },
+    { soalan: "Cara pelihara biodiversiti.", jawapan: "taman negara rizab alam kitar semula", petunjuk: "conservation methods" },
+    { soalan: "Apakah kesan rumah hijau?", jawapan: "pemanasan bumi akibat gas rumah hijau", petunjuk: "greenhouse effect" },
+    { soalan: "Contoh gas rumah hijau.", jawapan: "karbon dioksida metana wap air", petunjuk: "greenhouse gases" },
+  ],
 };
 
 function normalize(s: string) {
@@ -321,9 +394,10 @@ function LatihanSubjekPage() {
 
   const isJawiD2 = darjahId === "2" && subjekId === "jawi";
   const isJawiD4 = darjahId === "4" && subjekId === "jawi";
-  const isJawiMcq = isJawiD2 || isJawiD4;
+  const isJawiD5 = darjahId === "5" && subjekId === "jawi";
+  const isJawiMcq = isJawiD2 || isJawiD4 || isJawiD5;
   const soalanList = useMemo(() => (isJawiMcq ? [] : (BANK[`${darjahId}:${subjekId}`] ?? [])), [darjahId, subjekId, isJawiMcq]);
-  const mcqList = isJawiD2 ? JAWI_D2_MCQ : isJawiD4 ? JAWI_D4_MCQ : [];
+  const mcqList = isJawiD2 ? JAWI_D2_MCQ : isJawiD4 ? JAWI_D4_MCQ : isJawiD5 ? JAWI_D5_MCQ : [];
   const totalSoalan = isJawiMcq ? mcqList.length : soalanList.length;
   const [pilihan, setPilihan] = useState<number | null>(null);
 

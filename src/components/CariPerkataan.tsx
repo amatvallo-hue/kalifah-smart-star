@@ -895,3 +895,160 @@ export const SAINS_DARJAH4_CLUES: Record<string, string> = {
   SEMULA: "Kitar ___ bahan buangan",
   KITAR: "___ semula bahan",
 };
+
+// Bahasa Melayu Darjah 5
+export const BM_DARJAH5_WORDS: Word[] = [
+  { word: "NOVEL", row: 0, col: 0, dir: "H" },
+  { word: "CERPEN", row: 2, col: 0, dir: "H" },
+  { word: "TEMA", row: 4, col: 0, dir: "H" },
+  { word: "PLOT", row: 6, col: 0, dir: "H" },
+  { word: "WATAK", row: 8, col: 0, dir: "H" },
+  { word: "LATAR", row: 0, col: 9, dir: "V" },
+  { word: "SUDUT", row: 0, col: 7, dir: "V" },
+  { word: "IMBUHAN", row: 0, col: 5, dir: "V" },
+  { word: "BAHASA", row: 0, col: 3, dir: "V" },
+  { word: "PROSA", row: 5, col: 1, dir: "V" },
+];
+export const BM_DARJAH5_CLUES: Record<string, string> = {
+  NOVEL: "Karya prosa panjang berbentuk naratif",
+  CERPEN: "Cerita pendek kurang 10000 patah perkataan",
+  TEMA: "Persoalan utama karya",
+  PLOT: "Susunan peristiwa dalam cerita",
+  WATAK: "Orang dalam cerita",
+  LATAR: "Tempat dan masa cerita",
+  SUDUT: "___ pandangan: cara pencerita melihat cerita",
+  IMBUHAN: "Tambahan pada kata",
+  BAHASA: "Gaya ___: cara pengarang menggunakan bahasa",
+  PROSA: "Karya ___: bentuk tulisan bebas dari pantun",
+};
+
+// Matematik Darjah 5
+export const MATE_DARJAH5_WORDS: Word[] = [
+  { word: "PERDANA", row: 0, col: 0, dir: "H" },
+  { word: "FAKTOR", row: 2, col: 0, dir: "H" },
+  { word: "GANDAAN", row: 4, col: 0, dir: "H" },
+  { word: "BULATAN", row: 6, col: 0, dir: "H" },
+  { word: "JEJARI", row: 8, col: 0, dir: "H" },
+  { word: "PECAHAN", row: 0, col: 9, dir: "V" },
+  { word: "PERPULUHAN", row: 0, col: 7, dir: "V" },
+  { word: "DIAMETER", row: 0, col: 5, dir: "V" },
+  { word: "PERIMETER", row: 0, col: 3, dir: "V" },
+  { word: "LUAS", row: 5, col: 1, dir: "V" },
+];
+export const MATE_DARJAH5_CLUES: Record<string, string> = {
+  PERDANA: "Nombor yang hanya boleh dibahagi 1 dan dirinya",
+  FAKTOR: "Nombor yang boleh membahagi dengan tepat",
+  GANDAAN: "Hasil darab sesuatu nombor",
+  BULATAN: "Bentuk melengkung tanpa sudut",
+  JEJARI: "Jarak dari pusat ke tepi bulatan",
+  PECAHAN: "Nombor dalam bentut a/b",
+  PERPULUHAN: "Nombor dengan titik",
+  DIAMETER: "Garis lurus melalui pusat bulatan",
+  PERIMETER: "Jumlah semua sisi",
+  LUAS: "Ruang dalam bentuk",
+};
+
+// Bahasa Inggeris Darjah 5
+export const BI_DARJAH5_WORDS: Word[] = [
+  { word: "PASSIVE", row: 0, col: 0, dir: "H" },
+  { word: "IDIOM", row: 2, col: 0, dir: "H" },
+  { word: "COMPLEX", row: 4, col: 0, dir: "H" },
+  { word: "REPORTED", row: 6, col: 0, dir: "H" },
+  { word: "PERFECT", row: 8, col: 0, dir: "H" },
+  { word: "CONDITIONAL", row: 0, col: 9, dir: "V" },
+  { word: "CLAUSE", row: 0, col: 7, dir: "V" },
+  { word: "SPEECH", row: 0, col: 5, dir: "V" },
+  { word: "SUBJECT", row: 0, col: 3, dir: "V" },
+  { word: "AGREEMENT", row: 5, col: 1, dir: "V" },
+];
+export const BI_DARJAH5_CLUES: Record<string, string> = {
+  PASSIVE: "Subject receives the action",
+  IDIOM: "Phrase with figurative meaning",
+  COMPLEX: "Main clause + subordinate clause",
+  REPORTED: "Telling what someone said",
+  PERFECT: "Present ___: has/have + past participle",
+  CONDITIONAL: "If-then sentence",
+  CLAUSE: "Group of words with subject and verb",
+  SPEECH: "Reported ___: indirect quotation",
+  SUBJECT: "___-verb agreement: match in number",
+  AGREEMENT: "Subject-verb ___",
+};
+
+// Jawi Darjah 5
+export const JAWI_DARJAH5_WORDS: Word[] = [
+  { word: "JAWI", row: 0, col: 0, dir: "H" },
+  { word: "EJAAN", row: 2, col: 0, dir: "H" },
+  { word: "HURUF", row: 4, col: 0, dir: "H" },
+  { word: "MELAYU", row: 6, col: 0, dir: "H" },
+  { word: "BAHASA", row: 8, col: 0, dir: "H" },
+  { word: "TULISAN", row: 0, col: 9, dir: "V" },
+  { word: "KHAT", row: 0, col: 7, dir: "V" },
+  { word: "ARAB", row: 0, col: 5, dir: "V" },
+  { word: "BUDAYA", row: 0, col: 3, dir: "V" },
+  { word: "WARISAN", row: 5, col: 1, dir: "V" },
+];
+export const JAWI_DARJAH5_CLUES: Record<string, string> = {
+  JAWI: "Tulisan kita",
+  EJAAN: "Cara susun huruf",
+  HURUF: "Aksara dalam tulisan",
+  MELAYU: "Bahasa kita",
+  BAHASA: "Cara berkomunikasi",
+  TULISAN: "Hasil yang ditulis",
+  KHAT: "Seni tulisan",
+  ARAB: "Bahasa asal Jawi",
+  BUDAYA: "Cara hidup masyarakat",
+  WARISAN: "Pewarisan budaya",
+};
+
+// Pendidikan Islam Darjah 5
+export const PI_DARJAH5_WORDS: Word[] = [
+  { word: "AQIDAH", row: 0, col: 0, dir: "H" },
+  { word: "SYARIAH", row: 2, col: 0, dir: "H" },
+  { word: "AKHLAK", row: 4, col: 0, dir: "H" },
+  { word: "SUNNAH", row: 6, col: 0, dir: "H" },
+  { word: "HIJRAH", row: 8, col: 0, dir: "H" },
+  { word: "MUAMALAT", row: 0, col: 9, dir: "V" },
+  { word: "FARDU", row: 0, col: 7, dir: "V" },
+  { word: "IBADAT", row: 0, col: 5, dir: "V" },
+  { word: "SIRAH", row: 0, col: 3, dir: "V" },
+  { word: "DAKWAH", row: 5, col: 1, dir: "V" },
+];
+export const PI_DARJAH5_CLUES: Record<string, string> = {
+  AQIDAH: "Kepercayaan dan keyakinan dalam Islam",
+  SYARIAH: "Undang-undang Islam",
+  AKHLAK: "Budi pekerti",
+  SUNNAH: "Amalan Nabi yang digalakkan",
+  HIJRAH: "Berpindah dari Makkah ke Madinah",
+  MUAMALAT: "Urusan sesama manusia",
+  FARDU: "Kewajipan dalam Islam",
+  IBADAT: "Segala perbuatan kerana Allah",
+  SIRAH: "Riwayat hidup Nabi",
+  DAKWAH: "Menyeru kepada kebaikan",
+};
+
+// Sains Darjah 5
+export const SAINS_DARJAH5_WORDS: Word[] = [
+  { word: "EKOLOGI", row: 0, col: 0, dir: "H" },
+  { word: "HABITAT", row: 2, col: 0, dir: "H" },
+  { word: "TENAGA", row: 4, col: 0, dir: "H" },
+  { word: "NUKLEAR", row: 6, col: 0, dir: "H" },
+  { word: "BIODIVERSITI", row: 8, col: 0, dir: "H" },
+  { word: "DNA", row: 0, col: 9, dir: "V" },
+  { word: "KROMOSOM", row: 0, col: 7, dir: "V" },
+  { word: "EKOSISTEM", row: 0, col: 5, dir: "V" },
+  { word: "GEOTERMA", row: 0, col: 3, dir: "V" },
+  { word: "SPESIES", row: 5, col: 1, dir: "V" },
+];
+export const SAINS_DARJAH5_CLUES: Record<string, string> = {
+  EKOLOGI: "Kajian hubungan organisma dengan persekitaran",
+  HABITAT: "Tempat tinggal organisma",
+  TENAGA: "Keupayaan untuk lakukan kerja",
+  NUKLEAR: "Tenaga dari pembelahan atom",
+  BIODIVERSITI: "Kepelbagaian spesies hidupan",
+  DNA: "Bahan genetik dalam sel",
+  KROMOSOM: "DNA yang tergulung",
+  EKOSISTEM: "Komuniti organisma dan persekitaran",
+  GEOTERMA: "Tenaga panas bumi",
+  SPESIES: "Kumpulan organisma yang sama",
+};
+

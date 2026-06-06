@@ -239,6 +239,114 @@ const SAINS_D4: QuizQuestion[] = [
   { soalan: "Apakah kitar semula?", pilihan: ["buang sampah", "proses semula bahan", "bakar sampah", "tanam sampah"], jawapan: 1 },
 ];
 
+const BM_D5: QuizQuestion[] = [
+  { soalan: "Apakah novel?", pilihan: ["Puisi panjang", "Prosa panjang berbentuk cerpen", "Karya prosa panjang berbentuk naratif", "Dialog panjang"], jawapan: 2 },
+  { soalan: "Apakah cerpen?", pilihan: ["Novel pendek", "Cerita pendek kurang 10000 patah perkataan", "Puisi", "Drama"], jawapan: 1 },
+  { soalan: "Apakah tema dalam karya sastera?", pilihan: ["Watak", "Latar", "Persoalan utama yang disampaikan", "Plot"], jawapan: 2 },
+  { soalan: "Apakah plot?", pilihan: ["Watak utama", "Susunan peristiwa dalam cerita", "Latar tempat", "Tema"], jawapan: 1 },
+  { soalan: "Apakah watak protagonis?", pilihan: ["Watak jahat", "Watak utama yang baik", "Watak sampingan", "Watak neutral"], jawapan: 1 },
+  { soalan: "Apakah watak antagonis?", pilihan: ["Watak baik", "Watak utama", "Watak yang menentang protagonis", "Watak sampingan"], jawapan: 2 },
+  { soalan: "Apakah latar tempat?", pilihan: ["Masa cerita berlaku", "Tempat cerita berlaku", "Suasana cerita", "Watak cerita"], jawapan: 1 },
+  { soalan: "Apakah latar masa?", pilihan: ["Tempat cerita berlaku", "Masa cerita berlaku", "Suasana cerita", "Watak cerita"], jawapan: 1 },
+  { soalan: "Apakah sudut pandangan pertama?", pilihan: ["Pencerita luar", "Pencerita menggunakan aku atau saya", "Pencerita ketiga", "Pencerita kedua"], jawapan: 1 },
+  { soalan: "Apakah gaya bahasa?", pilihan: ["Tema karya", "Cara pengarang menggunakan bahasa", "Plot cerita", "Watak cerita"], jawapan: 1 },
+  { soalan: "Apakah imbuhan sisipan?", pilihan: ["Imbuhan di depan", "Imbuhan di belakang", "Imbuhan di tengah kata", "Imbuhan di depan dan belakang"], jawapan: 2 },
+  { soalan: "Contoh imbuhan sisipan?", pilihan: ["berlari", "geletar", "kebaikan", "memukul"], jawapan: 1 },
+  { soalan: "Apakah kata terbitan?", pilihan: ["Kata asal", "Kata yang menerima imbuhan", "Kata majmuk", "Kata ulang"], jawapan: 1 },
+  { soalan: "Apakah maksud simpulan bahasa?", pilihan: ["Peribahasa panjang", "Ungkapan pendek dengan makna kiasan", "Pantun", "Sajak"], jawapan: 1 },
+  { soalan: "Contoh simpulan bahasa?", pilihan: ["bersatu teguh bercerai roboh", "kaki bangku", "seperti air di daun keladi", "melentur buluh"], jawapan: 1 },
+];
+
+const MATE_D5: QuizQuestion[] = [
+  { soalan: "23456 + 34567 = ?", pilihan: ["58023", "58013", "58033", "58043"], jawapan: 0 },
+  { soalan: "75000 - 34567 = ?", pilihan: ["40333", "40433", "40533", "40633"], jawapan: 1 },
+  { soalan: "15 × 15 = ?", pilihan: ["215", "225", "235", "245"], jawapan: 1 },
+  { soalan: "360 ÷ 15 = ?", pilihan: ["22", "23", "24", "25"], jawapan: 2 },
+  { soalan: "2/5 + 3/5 = ?", pilihan: ["5/5", "1", "5/10", "A dan B"], jawapan: 3 },
+  { soalan: "3/4 - 1/8 = ?", pilihan: ["5/8", "6/8", "7/8", "2/4"], jawapan: 0 },
+  { soalan: "1.25 + 2.75 = ?", pilihan: ["3.9", "4.0", "4.1", "4.2"], jawapan: 1 },
+  { soalan: "Luas bulatan jejari 7cm = ?", pilihan: ["144cm²", "154cm²", "164cm²", "174cm²"], jawapan: 1 },
+  { soalan: "Perimeter bulatan diameter 14cm = ?", pilihan: ["44cm", "54cm", "64cm", "74cm"], jawapan: 0 },
+  { soalan: "Apakah nombor perdana?", pilihan: ["nombor boleh dibahagi banyak", "nombor hanya boleh dibahagi 1 dan dirinya", "nombor genap", "nombor ganjil"], jawapan: 1 },
+  { soalan: "Nombor perdana antara 20 hingga 30?", pilihan: ["21,23", "23,29", "21,27", "23,27"], jawapan: 1 },
+  { soalan: "345678 + 234567 = ?", pilihan: ["580245", "580145", "580345", "580045"], jawapan: 0 },
+  { soalan: "500000 - 234567 = ?", pilihan: ["265333", "265433", "265533", "265633"], jawapan: 1 },
+  { soalan: "25 × 25 = ?", pilihan: ["615", "625", "635", "645"], jawapan: 1 },
+  { soalan: "1000 ÷ 25 = ?", pilihan: ["38", "39", "40", "41"], jawapan: 2 },
+];
+
+const BI_D5: QuizQuestion[] = [
+  { soalan: "What is a complex sentence?", pilihan: ["one clause", "two independent clauses", "one main and one subordinate clause", "three clauses"], jawapan: 2 },
+  { soalan: "Choose subordinating conjunction:", pilihan: ["and", "but", "or", "although"], jawapan: 3 },
+  { soalan: "What is passive voice?", pilihan: ["subject does action", "subject receives action", "no subject", "no object"], jawapan: 1 },
+  { soalan: "Example of passive voice:", pilihan: ["Ali reads book", "Book is read by Ali", "Ali is reading", "Reading book"], jawapan: 1 },
+  { soalan: "Present perfect: She ___ finished.", pilihan: ["is", "was", "will", "has"], jawapan: 3 },
+  { soalan: "What is reported speech?", pilihan: ["direct speech", "telling what someone said without quoting", "question", "command"], jawapan: 1 },
+  { soalan: "Direct to reported: He said I am happy.", pilihan: ["He said he is happy", "He said he was happy", "He told happy", "He said am happy"], jawapan: 1 },
+  { soalan: "What is conditional sentence?", pilihan: ["statement", "if-then sentence", "question", "command"], jawapan: 1 },
+  { soalan: "First conditional: If it rains ___", pilihan: ["I stay home", "I stayed home", "I will stay home", "I would stay home"], jawapan: 2 },
+  { soalan: "Second conditional: If I were rich ___", pilihan: ["I will buy car", "I would buy car", "I buy car", "I bought car"], jawapan: 1 },
+  { soalan: "What is subject-verb agreement?", pilihan: ["subject and verb match in number", "subject and object match", "verb and object match", "no agreement needed"], jawapan: 0 },
+  { soalan: "Choose correct: The children ___ playing.", pilihan: ["is", "was", "are", "has"], jawapan: 2 },
+  { soalan: "What is direct speech?", pilihan: ["reported speech", "exact words in quotes", "indirect speech", "paraphrase"], jawapan: 1 },
+  { soalan: "Choose correct reported speech: She said she likes music.", pilihan: ["She said I like music", "She said she liked music", "She told liked music", "She says she like music"], jawapan: 1 },
+  { soalan: "What is an idiom?", pilihan: ["literal phrase", "phrase with figurative meaning", "simile", "metaphor"], jawapan: 1 },
+];
+
+const JAWI_D5: QuizQuestion[] = [
+  { soalan: "Ejaan Jawi bagi kemasyarakatan?", pilihan: ["کماسياراکتن", "کيماسياراکتن", "کماسارکتن", "کيماسارکتن"], jawapan: 0 },
+  { soalan: "Ejaan Jawi bagi kepimpinan?", pilihan: ["کڤيمڤينن", "کيڤيمڤينن", "کڤمڤينن", "کيڤمڤينن"], jawapan: 0 },
+  { soalan: "Ejaan Jawi bagi pembangunan?", pilihan: ["ڤمباڠونن", "ڤيمباڠونن", "ڤمبانڬونن", "ڤيمبانڬونن"], jawapan: 2 },
+  { soalan: "Ejaan Jawi bagi keharmonian?", pilihan: ["کهارمونين", "کيهارمونين", "کهرمونين", "کيهرمونين"], jawapan: 0 },
+  { soalan: "Ejaan Jawi bagi perjuangan?", pilihan: ["ڤرجواڠن", "ڤيرجواڠن", "ڤرجوڠن", "ڤيرجوڠن"], jawapan: 0 },
+  { soalan: "Ejaan Jawi bagi kejayaan?", pilihan: ["کجاياءن", "کيجاياءن", "کجايأن", "کيجايأن"], jawapan: 0 },
+  { soalan: "Ejaan Jawi bagi semangat?", pilihan: ["سماڠت", "سيماڠت", "سمڠت", "سيمڠت"], jawapan: 0 },
+  { soalan: "Ejaan Jawi bagi keberanian?", pilihan: ["کبرانين", "کيبرانين", "کبراءنين", "کيبراءنين"], jawapan: 2 },
+  { soalan: "Ejaan Jawi bagi ketabahan?", pilihan: ["کتابهن", "کيتابهن", "کتبهن", "کيتبهن"], jawapan: 0 },
+  { soalan: "Ejaan Jawi bagi kesabaran?", pilihan: ["کصبارن", "کيصبارن", "کسبارن", "کيسبارن"], jawapan: 2 },
+  { soalan: "Ejaan Jawi bagi persatuan?", pilihan: ["ڤرساتوان", "ڤيرساتوان", "ڤرستوان", "ڤيرستوان"], jawapan: 0 },
+  { soalan: "Ejaan Jawi bagi pertubuhan?", pilihan: ["ڤرتوبوهن", "ڤيرتوبوهن", "ڤرتبوهن", "ڤيرتبوهن"], jawapan: 0 },
+  { soalan: "Ejaan Jawi bagi tanggungjawab?", pilihan: ["تاڠڬوڠجاوب", "تڠڬوڠجاوب", "تاڠڬوڠجوب", "تڠڬوڠجوب"], jawapan: 0 },
+  { soalan: "Jawi ڤرجواڠن bermaksud?", pilihan: ["persatuan", "pertubuhan", "perjuangan", "pembangunan"], jawapan: 2 },
+  { soalan: "Jawi کهارمونين bermaksud?", pilihan: ["keharmonian", "keberanian", "ketabahan", "kesabaran"], jawapan: 0 },
+];
+
+const PI_D5: QuizQuestion[] = [
+  { soalan: "Apakah maksud aqidah?", pilihan: ["budi pekerti", "kepercayaan dan keyakinan dalam Islam", "ibadat", "akhlak"], jawapan: 1 },
+  { soalan: "Apakah maksud syariah?", pilihan: ["aqidah", "akhlak", "undang-undang Islam", "budaya"], jawapan: 2 },
+  { soalan: "Islam terdiri dari tiga bahagian iaitu?", pilihan: ["aqidah syariah akhlak", "solat puasa zakat", "iman islam ihsan", "rukun iman rukun islam sirah"], jawapan: 0 },
+  { soalan: "Apakah maksud muamalat?", pilihan: ["ibadat khusus", "urusan sesama manusia", "akhlak", "aqidah"], jawapan: 1 },
+  { soalan: "Apakah maksud ibadat?", pilihan: ["urusan manusia", "segala perbuatan kerana Allah", "akhlak sahaja", "solat sahaja"], jawapan: 1 },
+  { soalan: "Nabi Muhammad SAW menerima wahyu pertama di?", pilihan: ["Masjidil Haram", "Madinah", "Gua Hira", "Padang Arafah"], jawapan: 2 },
+  { soalan: "Tempoh Nabi berdakwah di Makkah?", pilihan: ["10 tahun", "13 tahun", "15 tahun", "23 tahun"], jawapan: 1 },
+  { soalan: "Tempoh Nabi berdakwah di Madinah?", pilihan: ["5 tahun", "8 tahun", "10 tahun", "13 tahun"], jawapan: 2 },
+  { soalan: "Perjanjian Hudaibiyyah berlaku pada tahun?", pilihan: ["4H", "5H", "6H", "7H"], jawapan: 2 },
+  { soalan: "Pembukaan kota Makkah berlaku pada tahun?", pilihan: ["6H", "7H", "8H", "9H"], jawapan: 2 },
+  { soalan: "Haji wida berlaku pada tahun?", pilihan: ["8H", "9H", "10H", "11H"], jawapan: 2 },
+  { soalan: "Apakah maksud fardu ain?", pilihan: ["kewajipan kolektif", "kewajipan individu", "sunat", "harus"], jawapan: 1 },
+  { soalan: "Apakah maksud fardu kifayah?", pilihan: ["kewajipan individu", "kewajipan kolektif", "sunat", "harus"], jawapan: 1 },
+  { soalan: "Apakah maksud sunnah?", pilihan: ["wajib", "haram", "sesuatu yang dilakukan Nabi dan digalakkan", "makruh"], jawapan: 2 },
+  { soalan: "Apakah maksud bidaah?", pilihan: ["sunnah", "perkara baru dalam agama yang tiada asas", "wajib", "harus"], jawapan: 1 },
+];
+
+const SAINS_D5: QuizQuestion[] = [
+  { soalan: "Apakah DNA?", pilihan: ["protein", "bahan genetik dalam sel", "vitamin", "mineral"], jawapan: 1 },
+  { soalan: "DNA terdapat dalam?", pilihan: ["sitoplasma", "dinding sel", "nukleus", "membran sel"], jawapan: 2 },
+  { soalan: "Apakah kromosom?", pilihan: ["sel", "DNA yang tergulung", "protein", "vitamin"], jawapan: 1 },
+  { soalan: "Apakah gen?", pilihan: ["unit pewarisan sifat", "sel", "tisu", "organ"], jawapan: 0 },
+  { soalan: "Apakah pembiakan seks?", pilihan: ["satu induk", "dua induk jantan dan betina", "tanpa benih", "vegetatif"], jawapan: 1 },
+  { soalan: "Apakah pembiakan aseks?", pilihan: ["dua induk", "satu induk tanpa penyatuan gamet", "memerlukan benih", "memerlukan bunga"], jawapan: 1 },
+  { soalan: "Contoh pembiakan aseks pada tumbuhan?", pilihan: ["biji benih", "pendebungaan", "keratan batang", "buah"], jawapan: 2 },
+  { soalan: "Apakah ekologi?", pilihan: ["kajian tentang sel", "kajian tentang hubungan organisma dengan persekitaran", "kajian tentang atom", "kajian tentang planet"], jawapan: 1 },
+  { soalan: "Apakah biodiversiti?", pilihan: ["satu spesies", "kepelbagaian spesies hidupan", "satu ekosistem", "satu habitat"], jawapan: 1 },
+  { soalan: "Ancaman kepada biodiversiti?", pilihan: ["menanam pokok", "pembalakan haram", "kitar semula", "taman negara"], jawapan: 1 },
+  { soalan: "Cara pelihara biodiversiti?", pilihan: ["pembalakan", "pembangunan tanpa kawalan", "taman negara dan rizab alam", "pemburuan"], jawapan: 2 },
+  { soalan: "Apakah tenaga nuklear?", pilihan: ["tenaga matahari", "tenaga angin", "tenaga dari pembelahan atom", "tenaga air"], jawapan: 2 },
+  { soalan: "Apakah tenaga geoterma?", pilihan: ["tenaga matahari", "tenaga panas bumi", "tenaga angin", "tenaga air"], jawapan: 1 },
+  { soalan: "Apakah kesan rumah hijau?", pilihan: ["sejukkan bumi", "panaskan bumi", "tiada kesan", "bersihkan udara"], jawapan: 1 },
+  { soalan: "Gas rumah hijau contohnya?", pilihan: ["oksigen", "nitrogen", "karbon dioksida", "hidrogen"], jawapan: 2 },
+];
+
 // Key format: `${darjahId}:${subjekId}`
 export const QUIZ_BANK: Record<string, QuizQuestion[]> = {
   "1:matematik": [
@@ -288,6 +396,12 @@ export const QUIZ_BANK: Record<string, QuizQuestion[]> = {
   "4:jawi": JAWI_D4,
   "4:pendidikan-islam": PI_D4,
   "4:sains": SAINS_D4,
+  "5:bahasa-melayu": BM_D5,
+  "5:matematik": MATE_D5,
+  "5:bahasa-inggeris": BI_D5,
+  "5:jawi": JAWI_D5,
+  "5:pendidikan-islam": PI_D5,
+  "5:sains": SAINS_D5,
 };
 
 export function getQuiz(darjahId: string, subjekId: string): QuizQuestion[] | undefined {

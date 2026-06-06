@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, Gamepad2, Send, Sparkles, Timer, Trophy, Search } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { StarReward } from "@/components/StarReward";
-import { CariPerkataan, BM_DARJAH1_WORDS, BM_DARJAH1_CLUES, BM_DARJAH2_WORDS, BM_DARJAH2_CLUES, BM_DARJAH3_WORDS, BM_DARJAH3_CLUES, BM_DARJAH4_WORDS, BM_DARJAH4_CLUES, BI_DARJAH1_WORDS, BI_DARJAH1_CLUES, BI_DARJAH2_WORDS, BI_DARJAH2_CLUES, BI_DARJAH3_WORDS, BI_DARJAH3_CLUES, BI_DARJAH4_WORDS, BI_DARJAH4_CLUES, JAWI_DARJAH1_WORDS, JAWI_DARJAH1_CLUES, JAWI_DARJAH2_WORDS, JAWI_DARJAH2_CLUES, JAWI_DARJAH3_WORDS, JAWI_DARJAH3_CLUES, JAWI_DARJAH4_WORDS, JAWI_DARJAH4_CLUES, PI_DARJAH1_WORDS, PI_DARJAH1_CLUES, PI_DARJAH2_WORDS, PI_DARJAH2_CLUES, PI_DARJAH3_WORDS, PI_DARJAH3_CLUES, PI_DARJAH4_WORDS, PI_DARJAH4_CLUES, SAINS_DARJAH1_WORDS, SAINS_DARJAH1_CLUES, SAINS_DARJAH2_WORDS, SAINS_DARJAH2_CLUES, SAINS_DARJAH4_WORDS, SAINS_DARJAH4_CLUES, MATE_DARJAH2_WORDS, MATE_DARJAH2_CLUES, MATE_DARJAH3_WORDS, MATE_DARJAH3_CLUES, MATE_DARJAH4_WORDS, MATE_DARJAH4_CLUES } from "@/components/CariPerkataan";
+import { CariPerkataan, BM_DARJAH1_WORDS, BM_DARJAH1_CLUES, BM_DARJAH2_WORDS, BM_DARJAH2_CLUES, BM_DARJAH3_WORDS, BM_DARJAH3_CLUES, BM_DARJAH4_WORDS, BM_DARJAH4_CLUES, BM_DARJAH5_WORDS, BM_DARJAH5_CLUES, BI_DARJAH1_WORDS, BI_DARJAH1_CLUES, BI_DARJAH2_WORDS, BI_DARJAH2_CLUES, BI_DARJAH3_WORDS, BI_DARJAH3_CLUES, BI_DARJAH4_WORDS, BI_DARJAH4_CLUES, BI_DARJAH5_WORDS, BI_DARJAH5_CLUES, JAWI_DARJAH1_WORDS, JAWI_DARJAH1_CLUES, JAWI_DARJAH2_WORDS, JAWI_DARJAH2_CLUES, JAWI_DARJAH3_WORDS, JAWI_DARJAH3_CLUES, JAWI_DARJAH4_WORDS, JAWI_DARJAH4_CLUES, JAWI_DARJAH5_WORDS, JAWI_DARJAH5_CLUES, PI_DARJAH1_WORDS, PI_DARJAH1_CLUES, PI_DARJAH2_WORDS, PI_DARJAH2_CLUES, PI_DARJAH3_WORDS, PI_DARJAH3_CLUES, PI_DARJAH4_WORDS, PI_DARJAH4_CLUES, PI_DARJAH5_WORDS, PI_DARJAH5_CLUES, SAINS_DARJAH1_WORDS, SAINS_DARJAH1_CLUES, SAINS_DARJAH2_WORDS, SAINS_DARJAH2_CLUES, SAINS_DARJAH4_WORDS, SAINS_DARJAH4_CLUES, SAINS_DARJAH5_WORDS, SAINS_DARJAH5_CLUES, MATE_DARJAH2_WORDS, MATE_DARJAH2_CLUES, MATE_DARJAH3_WORDS, MATE_DARJAH3_CLUES, MATE_DARJAH4_WORDS, MATE_DARJAH4_CLUES, MATE_DARJAH5_WORDS, MATE_DARJAH5_CLUES } from "@/components/CariPerkataan";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { getDarjah, getSubjek } from "@/lib/curriculum";
@@ -305,6 +305,78 @@ const BANK: Record<string, Soalan[]> = {
     { soalan: "Tenaga tidak boleh diperbaharui?", jawapan: "C", options: ["A) angin", "B) solar", "C) minyak", "D) air"] },
     { soalan: "Apakah kitar semula?", jawapan: "B", options: ["A) buang sampah", "B) proses semula bahan", "C) bakar sampah", "D) tanam sampah"] },
   ],
+  "5:bahasa-melayu": [
+    { soalan: "Apakah novel?", jawapan: "C", options: ["A) Puisi panjang", "B) Prosa panjang berbentuk cerpen", "C) Karya prosa panjang berbentuk naratif", "D) Dialog panjang"] },
+    { soalan: "Apakah cerpen?", jawapan: "B", options: ["A) Novel pendek", "B) Cerita pendek kurang 10000 patah perkataan", "C) Puisi", "D) Drama"] },
+    { soalan: "Apakah tema?", jawapan: "C", options: ["A) Watak", "B) Latar", "C) Persoalan utama yang disampaikan", "D) Plot"] },
+    { soalan: "Apakah plot?", jawapan: "B", options: ["A) Watak utama", "B) Susunan peristiwa dalam cerita", "C) Latar tempat", "D) Tema"] },
+    { soalan: "Watak protagonis?", jawapan: "B", options: ["A) Watak jahat", "B) Watak utama yang baik", "C) Watak sampingan", "D) Watak neutral"] },
+    { soalan: "Watak antagonis?", jawapan: "C", options: ["A) Watak baik", "B) Watak utama", "C) Watak yang menentang protagonis", "D) Watak sampingan"] },
+    { soalan: "Latar tempat?", jawapan: "B", options: ["A) Masa cerita berlaku", "B) Tempat cerita berlaku", "C) Suasana cerita", "D) Watak cerita"] },
+    { soalan: "Sudut pandangan pertama?", jawapan: "B", options: ["A) Pencerita luar", "B) Pencerita menggunakan aku atau saya", "C) Pencerita ketiga", "D) Pencerita kedua"] },
+    { soalan: "Gaya bahasa?", jawapan: "B", options: ["A) Tema karya", "B) Cara pengarang menggunakan bahasa", "C) Plot cerita", "D) Watak cerita"] },
+    { soalan: "Imbuhan sisipan?", jawapan: "C", options: ["A) Imbuhan di depan", "B) Imbuhan di belakang", "C) Imbuhan di tengah kata", "D) Imbuhan di depan dan belakang"] },
+  ],
+  "5:matematik": [
+    { soalan: "23456 + 34567 = ?", jawapan: "A", options: ["A) 58023", "B) 58013", "C) 58033", "D) 58043"] },
+    { soalan: "75000 - 34567 = ?", jawapan: "B", options: ["A) 40333", "B) 40433", "C) 40533", "D) 40633"] },
+    { soalan: "15 × 15 = ?", jawapan: "B", options: ["A) 215", "B) 225", "C) 235", "D) 245"] },
+    { soalan: "360 ÷ 15 = ?", jawapan: "C", options: ["A) 22", "B) 23", "C) 24", "D) 25"] },
+    { soalan: "2/5 + 3/5 = ?", jawapan: "D", options: ["A) 5/5", "B) 1", "C) 5/10", "D) A dan B"] },
+    { soalan: "3/4 - 1/8 = ?", jawapan: "A", options: ["A) 5/8", "B) 6/8", "C) 7/8", "D) 2/4"] },
+    { soalan: "1.25 + 2.75 = ?", jawapan: "B", options: ["A) 3.9", "B) 4.0", "C) 4.1", "D) 4.2"] },
+    { soalan: "Luas bulatan jejari 7cm = ?", jawapan: "B", options: ["A) 144cm²", "B) 154cm²", "C) 164cm²", "D) 174cm²"] },
+    { soalan: "Perimeter bulatan diameter 14cm = ?", jawapan: "A", options: ["A) 44cm", "B) 54cm", "C) 64cm", "D) 74cm"] },
+    { soalan: "Apakah nombor perdana?", jawapan: "B", options: ["A) Nombor boleh dibahagi banyak", "B) Nombor hanya boleh dibahagi 1 dan dirinya", "C) Nombor genap", "D) Nombor ganjil"] },
+  ],
+  "5:bahasa-inggeris": [
+    { soalan: "What is a complex sentence?", jawapan: "C", options: ["A) One clause", "B) Two independent clauses", "C) One main and one subordinate clause", "D) Three clauses"] },
+    { soalan: "Choose subordinating conjunction:", jawapan: "D", options: ["A) and", "B) but", "C) or", "D) although"] },
+    { soalan: "What is passive voice?", jawapan: "B", options: ["A) Subject does action", "B) Subject receives action", "C) No subject", "D) No object"] },
+    { soalan: "Example of passive voice:", jawapan: "B", options: ["A) Ali reads book", "B) Book is read by Ali", "C) Ali is reading", "D) Reading book"] },
+    { soalan: "Present perfect: She ___ finished.", jawapan: "D", options: ["A) is", "B) was", "C) will", "D) has"] },
+    { soalan: "What is reported speech?", jawapan: "B", options: ["A) Direct speech", "B) Telling what someone said without quoting", "C) Question", "D) Command"] },
+    { soalan: "Direct to reported: He said I am happy.", jawapan: "B", options: ["A) He said he is happy", "B) He said he was happy", "C) He told happy", "D) He said am happy"] },
+    { soalan: "What is conditional sentence?", jawapan: "B", options: ["A) Statement", "B) If-then sentence", "C) Question", "D) Command"] },
+    { soalan: "First conditional: If it rains ___", jawapan: "C", options: ["A) I stay home", "B) I stayed home", "C) I will stay home", "D) I would stay home"] },
+    { soalan: "Second conditional: If I were rich ___", jawapan: "B", options: ["A) I will buy car", "B) I would buy car", "C) I buy car", "D) I bought car"] },
+  ],
+  "5:jawi": [
+    { soalan: "Ejaan Jawi 'kemasyarakatan'?", jawapan: "A", options: ["A) کماسياراکتن", "B) کيماسياراکتن", "C) کماسارکتن", "D) کيماسارکتن"] },
+    { soalan: "Ejaan Jawi 'kepimpinan'?", jawapan: "A", options: ["A) کڤيمڤينن", "B) کيڤيمڤينن", "C) کڤمڤينن", "D) کيڤمڤينن"] },
+    { soalan: "Ejaan Jawi 'pembangunan'?", jawapan: "C", options: ["A) ڤمباڠونن", "B) ڤيمباڠونن", "C) ڤمبانڬونن", "D) ڤيمبانڬونن"] },
+    { soalan: "Ejaan Jawi 'keharmonian'?", jawapan: "A", options: ["A) کهارمونين", "B) کيهارمونين", "C) کهرمونين", "D) کيهرمونين"] },
+    { soalan: "Ejaan Jawi 'perjuangan'?", jawapan: "A", options: ["A) ڤرجواڠن", "B) ڤيرجواڠن", "C) ڤرجوڠن", "D) ڤيرجوڠن"] },
+    { soalan: "Jawi ڤرجواڠn bermaksud?", jawapan: "C", options: ["A) Persatuan", "B) Pertubuhan", "C) Perjuangan", "D) Pembangunan"] },
+    { soalan: "Jawi کهارمونين bermaksud?", jawapan: "A", options: ["A) Keharmonian", "B) Keberanian", "C) Ketabahan", "D) Kesabaran"] },
+    { soalan: "Ejaan Jawi 'semangat'?", jawapan: "A", options: ["A) سماڠت", "B) سيماڠت", "C) سمڠت", "D) سيمڠت"] },
+    { soalan: "Ejaan Jawi 'keberanian'?", jawapan: "C", options: ["A) کبرانين", "B) کيبرانين", "C) کبراءنين", "D) کيبراءنين"] },
+    { soalan: "Ejaan Jawi 'tanggungjawab'?", jawapan: "A", options: ["A) تاڠڬوڠجاوب", "B) تڠڬوڠجاوب", "C) تاڠڬوڠجوب", "D) تڠڬوڠجوب"] },
+  ],
+  "5:pendidikan-islam": [
+    { soalan: "Apakah aqidah?", jawapan: "B", options: ["A) Budi pekerti", "B) Kepercayaan dan keyakinan dalam Islam", "C) Ibadat", "D) Akhlak"] },
+    { soalan: "Apakah syariah?", jawapan: "C", options: ["A) Aqidah", "B) Akhlak", "C) Undang-undang Islam", "D) Budaya"] },
+    { soalan: "Tiga bahagian Islam?", jawapan: "A", options: ["A) Aqidah syariah akhlak", "B) Solat puasa zakat", "C) Iman islam ihsan", "D) Rukun iman rukun islam sirah"] },
+    { soalan: "Apakah muamalat?", jawapan: "B", options: ["A) Ibadat khusus", "B) Urusan sesama manusia", "C) Akhlak", "D) Aqidah"] },
+    { soalan: "Apakah ibadat?", jawapan: "B", options: ["A) Urusan manusia", "B) Segala perbuatan kerana Allah", "C) Akhlak sahaja", "D) Solat sahaja"] },
+    { soalan: "Nabi terima wahyu pertama di?", jawapan: "C", options: ["A) Masjidil Haram", "B) Madinah", "C) Gua Hira", "D) Padang Arafah"] },
+    { soalan: "Tempoh Nabi berdakwah di Makkah?", jawapan: "B", options: ["A) 10 tahun", "B) 13 tahun", "C) 15 tahun", "D) 23 tahun"] },
+    { soalan: "Tempoh Nabi berdakwah di Madinah?", jawapan: "C", options: ["A) 5 tahun", "B) 8 tahun", "C) 10 tahun", "D) 13 tahun"] },
+    { soalan: "Pembukaan Makkah tahun?", jawapan: "C", options: ["A) 6H", "B) 7H", "C) 8H", "D) 9H"] },
+    { soalan: "Apakah fardu ain?", jawapan: "B", options: ["A) Kewajipan kolektif", "B) Kewajipan individu", "C) Sunat", "D) Harus"] },
+  ],
+  "5:sains": [
+    { soalan: "Apakah DNA?", jawapan: "B", options: ["A) Protein", "B) Bahan genetik dalam sel", "C) Vitamin", "D) Mineral"] },
+    { soalan: "DNA terdapat dalam?", jawapan: "C", options: ["A) Sitoplasma", "B) Dinding sel", "C) Nukleus", "D) Membran sel"] },
+    { soalan: "Apakah kromosom?", jawapan: "B", options: ["A) Sel", "B) DNA yang tergulung", "C) Protein", "D) Vitamin"] },
+    { soalan: "Apakah gen?", jawapan: "A", options: ["A) Unit pewarisan sifat", "B) Sel", "C) Tisu", "D) Organ"] },
+    { soalan: "Pembiakan seks?", jawapan: "B", options: ["A) Satu induk", "B) Dua induk jantan dan betina", "C) Tanpa benih", "D) Vegetatif"] },
+    { soalan: "Pembiakan aseks?", jawapan: "B", options: ["A) Dua induk", "B) Satu induk tanpa penyatuan gamet", "C) Memerlukan benih", "D) Memerlukan bunga"] },
+    { soalan: "Contoh pembiakan aseks tumbuhan?", jawapan: "C", options: ["A) Biji benih", "B) Pendebungaan", "C) Keratan batang", "D) Buah"] },
+    { soalan: "Apakah ekologi?", jawapan: "B", options: ["A) Kajian tentang sel", "B) Kajian hubungan organisma dengan persekitaran", "C) Kajian tentang atom", "D) Kajian tentang planet"] },
+    { soalan: "Apakah biodiversiti?", jawapan: "B", options: ["A) Satu spesies", "B) Kepelbagaian spesies hidupan", "C) Satu ekosistem", "D) Satu habitat"] },
+    { soalan: "Ancaman kepada biodiversiti?", jawapan: "B", options: ["A) Menanam pokok", "B) Pembalakan haram", "C) Kitar semula", "D) Taman negara"] },
+  ],
 };
 
 
@@ -333,6 +405,12 @@ const TIME_MAP: Record<string, number> = {
   "4:jawi": 10,
   "4:pendidikan-islam": 10,
   "4:sains": 10,
+  "5:bahasa-melayu": 10,
+  "5:matematik": 10,
+  "5:bahasa-inggeris": 10,
+  "5:jawi": 10,
+  "5:pendidikan-islam": 10,
+  "5:sains": 10,
 };
 
 
@@ -387,7 +465,13 @@ function GameSubjekPage() {
   const isJawi4 = darjahId === "4" && subjekId === "jawi";
   const isPI4 = darjahId === "4" && subjekId === "pendidikan-islam";
   const isSains4 = darjahId === "4" && subjekId === "sains";
-  const hasCariPerkataan = isMate || isMate2 || isMate3 || isMate4 || isBM || isBM2 || isBM3 || isBM4 || isBI || isBI2 || isBI3 || isBI4 || isJawi || isJawi2 || isJawi3 || isJawi4 || isPI || isPI2 || isPI3 || isPI4 || isSains || isSains2 || isSains3 || isSains4;
+  const isBM5 = darjahId === "5" && subjekId === "bahasa-melayu";
+  const isMate5 = darjahId === "5" && subjekId === "matematik";
+  const isBI5 = darjahId === "5" && subjekId === "bahasa-inggeris";
+  const isJawi5 = darjahId === "5" && subjekId === "jawi";
+  const isPI5 = darjahId === "5" && subjekId === "pendidikan-islam";
+  const isSains5 = darjahId === "5" && subjekId === "sains";
+  const hasCariPerkataan = isMate || isMate2 || isMate3 || isMate4 || isMate5 || isBM || isBM2 || isBM3 || isBM4 || isBM5 || isBI || isBI2 || isBI3 || isBI4 || isBI5 || isJawi || isJawi2 || isJawi3 || isJawi4 || isJawi5 || isPI || isPI2 || isPI3 || isPI4 || isPI5 || isSains || isSains2 || isSains3 || isSains4 || isSains5;
 
   const [mode, setMode] = useState<"race" | "cari">("race");
 
@@ -643,6 +727,18 @@ function GameSubjekPage() {
             <CariPerkataan words={PI_DARJAH4_WORDS} clues={PI_DARJAH4_CLUES} gridSize={10} title="Cari Perkataan Pendidikan Islam" />
           ) : isSains4 ? (
             <CariPerkataan words={SAINS_DARJAH4_WORDS} clues={SAINS_DARJAH4_CLUES} gridSize={10} title="Cari Perkataan Sains" />
+          ) : isBM5 ? (
+            <CariPerkataan words={BM_DARJAH5_WORDS} clues={BM_DARJAH5_CLUES} gridSize={10} title="Cari Perkataan Bahasa Melayu" />
+          ) : isMate5 ? (
+            <CariPerkataan words={MATE_DARJAH5_WORDS} clues={MATE_DARJAH5_CLUES} gridSize={10} title="Cari Perkataan Matematik" />
+          ) : isBI5 ? (
+            <CariPerkataan words={BI_DARJAH5_WORDS} clues={BI_DARJAH5_CLUES} gridSize={10} title="Word Search" />
+          ) : isJawi5 ? (
+            <CariPerkataan words={JAWI_DARJAH5_WORDS} clues={JAWI_DARJAH5_CLUES} gridSize={10} title="Cari Perkataan Jawi" />
+          ) : isPI5 ? (
+            <CariPerkataan words={PI_DARJAH5_WORDS} clues={PI_DARJAH5_CLUES} gridSize={10} title="Cari Perkataan Pendidikan Islam" />
+          ) : isSains5 ? (
+            <CariPerkataan words={SAINS_DARJAH5_WORDS} clues={SAINS_DARJAH5_CLUES} gridSize={10} title="Cari Perkataan Sains" />
           ) : (
             <CariPerkataan />
           )
