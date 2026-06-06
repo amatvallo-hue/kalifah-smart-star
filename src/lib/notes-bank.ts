@@ -280,6 +280,49 @@ export const NOTES_BANK: Record<string, SubjectNotes> = {
       },
     ],
   },
+  "2:bahasa-melayu": {
+    subject: "Bahasa Melayu",
+    sections: [
+      {
+        title: "Jenis-Jenis Ayat",
+        icon: "📝",
+        items: [
+          "Ayat penyata — menyatakan sesuatu. Contoh: Ibu memasak nasi.",
+          "Ayat tanya — bertanya sesuatu. Contoh: Di mana buku saya?",
+          "Ayat perintah — menyuruh. Contoh: Tolong tutup pintu.",
+          "Ayat seru — meluahkan perasaan. Contoh: Alangkah cantiknya!",
+        ],
+      },
+      {
+        title: "Jenis-Jenis Kata",
+        icon: "🔤",
+        items: [
+          "Kata nama — nama orang, haiwan, benda. Contoh: Ali, kucing, meja",
+          "Kata kerja — perbuatan. Contoh: berlari, makan, tidur",
+          "Kata adjektif — sifat. Contoh: cantik, besar, rajin",
+          "Kata hubung — menghubung ayat. Contoh: dan, atau, tetapi",
+          "Kata sendi nama — menunjukkan tempat. Contoh: di, ke, dari",
+        ],
+      },
+      {
+        title: "Imbuhan Awalan",
+        icon: "➕",
+        items: [
+          "ber + lari = berlari",
+          "me + masak = memasak",
+          "pe + mimpin = pemimpin",
+        ],
+      },
+      {
+        title: "Antonim & Sinonim",
+        icon: "⚖️",
+        items: [
+          "Antonim = lawan kata. Rajin ↔ Malas",
+          "Sinonim = sama maksud. Gembira = Suka",
+        ],
+      },
+    ],
+  },
 };
 
 export function getNotes(darjahId: string, subjekId: string): SubjectNotes | null {
