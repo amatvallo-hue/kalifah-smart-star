@@ -565,3 +565,32 @@ export const PI_DARJAH2_CLUES: Record<string, string> = {
   ISRAFIL: "Malaikat meniup sangkakala",
   BAQA: "Sifat Allah bermaksud Kekal",
 };
+
+// Sains Darjah 2 — 10x10 grid with 10 words.
+export const SAINS_DARJAH2_WORDS: Word[] = [
+  // Mendatar
+  { word: "PEPEJAL", row: 0, col: 0, dir: "H" },
+  { word: "CECAIR", row: 2, col: 0, dir: "H" },
+  { word: "OVIPAR", row: 4, col: 0, dir: "H" },
+  { word: "MAGNET", row: 6, col: 0, dir: "H" },
+  { word: "OKSIGEN", row: 8, col: 0, dir: "H" },
+  // Menegak
+  { word: "HUJAN", row: 0, col: 7, dir: "V" },
+  { word: "HABA", row: 0, col: 8, dir: "V" },
+  { word: "DAUN", row: 4, col: 8, dir: "V" },
+  { word: "GAS", row: 5, col: 7, dir: "V" },
+  { word: "AKAR", row: 3, col: 9, dir: "V" },
+];
+
+export const SAINS_DARJAH2_CLUES: Record<string, string> = {
+  PEPEJAL: "keadaan jirim yang keras",
+  CECAIR: "keadaan jirim yang mengalir",
+  OVIPAR: "haiwan yang bertelur",
+  MAGNET: "menarik benda besi",
+  OKSIGEN: "gas yang kita sedut",
+  GAS: "keadaan jirim yang tidak kelihatan",
+  HABA: "tenaga panas",
+  DAUN: "bahagian tumbuhan yang hijau",
+  HUJAN: "air yang turun dari langit",
+  AKAR: "bahagian tumbuhan yang menyerap air",
+};
