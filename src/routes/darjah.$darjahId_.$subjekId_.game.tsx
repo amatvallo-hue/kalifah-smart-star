@@ -974,7 +974,7 @@ function GameSubjekPage() {
               Main Lagi
             </button>
           </div>
-        ))}
+        )}
       </main>
     </div>
   );
