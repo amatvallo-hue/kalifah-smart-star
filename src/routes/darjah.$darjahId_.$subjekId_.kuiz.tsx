@@ -154,7 +154,8 @@ function KuizPage() {
   const isJawiD1 = darjahId === "1" && subjekId === "jawi";
   const isPendidikanIslamD1 = darjahId === "1" && subjekId === "pendidikan-islam";
   const isSainsD1 = darjahId === "1" && subjekId === "sains";
-  const fromBank = isMatematikD1 || isBahasaMelayuD1 || isBahasaInggerisD1 || isJawiD1 || isPendidikanIslamD1 || isSainsD1 ? [] : getQuiz(darjahId, subjekId);
+  const isMatematikD2 = darjahId === "2" && subjekId === "matematik";
+  const fromBank = isMatematikD1 || isBahasaMelayuD1 || isBahasaInggerisD1 || isJawiD1 || isPendidikanIslamD1 || isSainsD1 || isMatematikD2 ? [] : getQuiz(darjahId, subjekId);
   const soalanList: QuizQuestion[] = isMatematikD1
     ? MATEMATIK_D1
     : isBahasaMelayuD1
