@@ -170,10 +170,10 @@ const SA_BM: SAItem[] = [
 ];
 const SA_MATE: SAItem[] = [
   { ayat: "Dua tambah tiga sama dengan lima", perkataan: ["Dua", "tambah", "tiga", "sama", "dengan", "lima"] },
-  { ayat: "Sepuluh tolak empat sama dengan enam", perkataan: ["Sepuluh", "tolak", "empat", "sama", "dengan", "enam"] },
-  { ayat: "Segitiga mempunyai tiga sisi", perkataan: ["Segitiga", "mempunyai", "tiga", "sisi"] },
-  { ayat: "Satu jam ada enam puluh minit", perkataan: ["Satu", "jam", "ada", "enam", "puluh", "minit"] },
-  { ayat: "Satu kilogram bersamaan seribu gram", perkataan: ["Satu", "kilogram", "bersamaan", "seribu", "gram"] },
+  { ayat: "Panjang segi empat ialah enam sentimeter", perkataan: ["Panjang", "segi", "empat", "ialah", "enam", "sentimeter"] },
+  { ayat: "Luas segiempat sama dengan panjang darab lebar", perkataan: ["Luas", "segiempat", "sama", "dengan", "panjang", "darab", "lebar"] },
+  { ayat: "Faktor bagi dua belas ialah satu dua tiga empat enam dua belas", perkataan: ["Faktor", "bagi", "dua", "belas", "ialah", "satu", "dua", "tiga", "empat", "enam", "dua", "belas"] },
+  { ayat: "Sudut tegak mempunyai sembilan puluh darjah", perkataan: ["Sudut", "tegak", "mempunyai", "sembilan", "puluh", "darjah"] },
 ];
 const SA_BI: SAItem[] = [
   { ayat: "I go to school every day", perkataan: ["I", "go", "to", "school", "every", "day"] },
