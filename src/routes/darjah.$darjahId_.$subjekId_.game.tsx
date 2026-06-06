@@ -113,7 +113,20 @@ const BANK: Record<string, Soalan[]> = {
     { soalan: "56 ÷ 7 = ?", jawapan: "C", options: ["A) 6", "B) 7", "C) 8", "D) 9"] },
     { soalan: "100 - 45 = ?", jawapan: "B", options: ["A) 45", "B) 55", "C) 65", "D) 75"] },
   ],
+  "2:bahasa-inggeris": [
+    { soalan: "Plural of cat?", jawapan: "A", options: ["A) cats", "B) cates", "C) caties", "D) catss"] },
+    { soalan: "Plural of box?", jawapan: "B", options: ["A) boxs", "B) boxes", "C) boxies", "D) boxess"] },
+    { soalan: "Plural of child?", jawapan: "C", options: ["A) childs", "B) childes", "C) children", "D) childrens"] },
+    { soalan: "Past tense of run?", jawapan: "C", options: ["A) runned", "B) runs", "C) ran", "D) running"] },
+    { soalan: "Past tense of eat?", jawapan: "D", options: ["A) eated", "B) eats", "C) eating", "D) ate"] },
+    { soalan: "Past tense of go?", jawapan: "C", options: ["A) goed", "B) goes", "C) went", "D) going"] },
+    { soalan: "Past tense of play?", jawapan: "C", options: ["A) plaied", "B) playes", "C) played", "D) playing"] },
+    { soalan: "Choose the adjective:", jawapan: "C", options: ["A) run", "B) quickly", "C) beautiful", "D) and"] },
+    { soalan: "Choose the verb:", jawapan: "C", options: ["A) beautiful", "B) quickly", "C) swim", "D) and"] },
+    { soalan: "Opposite of happy?", jawapan: "B", options: ["A) angry", "B) sad", "C) scared", "D) tired"] },
+  ],
 };
+
 
 const TIME_MAP: Record<string, number> = {
   "1:bahasa-melayu": 10,
