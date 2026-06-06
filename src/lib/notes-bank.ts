@@ -473,6 +473,60 @@ export const NOTES_BANK: Record<string, SubjectNotes> = {
       },
     ],
   },
+  "2:pendidikan-islam": {
+    subject: "Pendidikan Islam",
+    sections: [
+      {
+        title: "25 Nabi dan Rasul",
+        icon: "📌",
+        items: [
+          "Wajib mengetahui 25 Nabi dan Rasul",
+          "Rasul pertama: Nabi Adam AS",
+          "Rasul terakhir: Nabi Muhammad SAW",
+        ],
+      },
+      {
+        title: "4 Kitab Allah",
+        icon: "📖",
+        items: [
+          "Zabur → Nabi Daud AS",
+          "Taurat → Nabi Musa AS",
+          "Injil → Nabi Isa AS",
+          "Al-Quran → Nabi Muhammad SAW",
+        ],
+      },
+      {
+        title: "Malaikat Wajib Diketahui",
+        icon: "👼",
+        items: [
+          "Jibril → menyampaikan wahyu",
+          "Mikail → menurunkan hujan",
+          "Israfil → meniup sangkakala",
+          "Izrail → mencabut nyawa",
+        ],
+      },
+      {
+        title: "Sifat Wajib Allah",
+        icon: "✨",
+        items: [
+          "Wujud = Ada",
+          "Qidam = Sedia Ada",
+          "Baqa = Kekal",
+          "Wahdaniah = Maha Esa",
+        ],
+      },
+      {
+        title: "Surah Penting",
+        icon: "🕌",
+        items: [
+          "Al-Fatihah = 7 ayat — surah pertama",
+          "Al-Ikhlas = 4 ayat",
+          "An-Nas = surah terakhir",
+          "Al-Quran ada 114 surah",
+        ],
+      },
+    ],
+  },
 };
 
 export function getNotes(darjahId: string, subjekId: string): SubjectNotes | null {
