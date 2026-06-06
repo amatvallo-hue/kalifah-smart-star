@@ -161,6 +161,25 @@ const JAWI_D2: QuizQuestion[] = [
   { soalan: "Berapa huruf tambahan dalam tulisan Jawi Melayu?", pilihan: ["4", "5", "6", "7"], jawapan: 2 },
 ];
 
+// Hardcoded soalan Pendidikan Islam Darjah 2
+const PENDIDIKAN_ISLAM_D2: QuizQuestion[] = [
+  { soalan: "Berapa jumlah Nabi dan Rasul yang wajib diketahui?", pilihan: ["20", "25", "30", "35"], jawapan: 1 },
+  { soalan: "Rasul terakhir ialah?", pilihan: ["Nabi Isa", "Nabi Musa", "Nabi Ibrahim", "Nabi Muhammad SAW"], jawapan: 3 },
+  { soalan: "Kitab yang diturunkan kepada Nabi Muhammad SAW?", pilihan: ["Zabur", "Taurat", "Injil", "Al-Quran"], jawapan: 3 },
+  { soalan: "Kitab yang diturunkan kepada Nabi Musa?", pilihan: ["Zabur", "Taurat", "Injil", "Al-Quran"], jawapan: 1 },
+  { soalan: "Kitab yang diturunkan kepada Nabi Isa?", pilihan: ["Zabur", "Taurat", "Injil", "Al-Quran"], jawapan: 2 },
+  { soalan: "Kitab yang diturunkan kepada Nabi Daud?", pilihan: ["Zabur", "Taurat", "Injil", "Al-Quran"], jawapan: 0 },
+  { soalan: "Malaikat yang menyampaikan wahyu ialah?", pilihan: ["Mikail", "Izrail", "Jibril", "Israfil"], jawapan: 2 },
+  { soalan: "Malaikat yang mencabut nyawa ialah?", pilihan: ["Mikail", "Izrail", "Jibril", "Israfil"], jawapan: 1 },
+  { soalan: "Malaikat yang meniup sangkakala ialah?", pilihan: ["Mikail", "Izrail", "Jibril", "Israfil"], jawapan: 3 },
+  { soalan: "Malaikat yang menurunkan hujan ialah?", pilihan: ["Mikail", "Izrail", "Jibril", "Israfil"], jawapan: 0 },
+  { soalan: "Sifat wajib Allah yang bermaksud Ada ialah?", pilihan: ["Baqa", "Wahdaniah", "Wujud", "Qidam"], jawapan: 2 },
+  { soalan: "Sifat wajib Allah yang bermaksud Kekal ialah?", pilihan: ["Baqa", "Wahdaniah", "Wujud", "Qidam"], jawapan: 0 },
+  { soalan: "Sifat wajib Allah yang bermaksud Maha Esa ialah?", pilihan: ["Baqa", "Wahdaniah", "Wujud", "Qidam"], jawapan: 1 },
+  { soalan: "Solat Jumaat wajib bagi?", pilihan: ["semua orang", "lelaki Islam baligh", "perempuan Islam", "kanak-kanak"], jawapan: 1 },
+  { soalan: "Surah Al-Fatihah mempunyai berapa ayat?", pilihan: ["5", "6", "7", "8"], jawapan: 2 },
+];
+
 // Hardcoded soalan Sains Darjah 1
 const SAINS_D1: QuizQuestion[] = [
   { soalan: "Berapa deria yang kita ada?", pilihan: ["3", "4", "5", "6"], jawapan: 2 },
@@ -195,7 +214,8 @@ function KuizPage() {
   const isMatematikD2 = darjahId === "2" && subjekId === "matematik";
   const isBahasaInggerisD2 = darjahId === "2" && subjekId === "bahasa-inggeris";
   const isJawiD2 = darjahId === "2" && subjekId === "jawi";
-  const fromBank = isMatematikD1 || isBahasaMelayuD1 || isBahasaInggerisD1 || isJawiD1 || isPendidikanIslamD1 || isSainsD1 || isMatematikD2 || isBahasaInggerisD2 || isJawiD2 ? [] : getQuiz(darjahId, subjekId);
+  const isPendidikanIslamD2 = darjahId === "2" && subjekId === "pendidikan-islam";
+  const fromBank = isMatematikD1 || isBahasaMelayuD1 || isBahasaInggerisD1 || isJawiD1 || isPendidikanIslamD1 || isSainsD1 || isMatematikD2 || isBahasaInggerisD2 || isJawiD2 || isPendidikanIslamD2 ? [] : getQuiz(darjahId, subjekId);
   const soalanList: QuizQuestion[] = isMatematikD1
     ? MATEMATIK_D1
     : isMatematikD2
@@ -204,7 +224,9 @@ function KuizPage() {
         ? BAHASA_INGGERIS_D2
         : isJawiD2
           ? JAWI_D2
-          : isBahasaMelayuD1
+          : isPendidikanIslamD2
+            ? PENDIDIKAN_ISLAM_D2
+            : isBahasaMelayuD1
           ? BAHASA_MELAYU_D1
           : isBahasaInggerisD1
             ? BAHASA_INGGERIS_D1
