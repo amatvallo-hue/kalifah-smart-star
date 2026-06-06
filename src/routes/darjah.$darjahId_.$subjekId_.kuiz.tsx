@@ -158,19 +158,21 @@ function KuizPage() {
   const fromBank = isMatematikD1 || isBahasaMelayuD1 || isBahasaInggerisD1 || isJawiD1 || isPendidikanIslamD1 || isSainsD1 || isMatematikD2 ? [] : getQuiz(darjahId, subjekId);
   const soalanList: QuizQuestion[] = isMatematikD1
     ? MATEMATIK_D1
-    : isBahasaMelayuD1
-      ? BAHASA_MELAYU_D1
-      : isBahasaInggerisD1
-        ? BAHASA_INGGERIS_D1
-        : isJawiD1
-          ? JAWI_D1
-          : isPendidikanIslamD1
-            ? PENDIDIKAN_ISLAM_D1
-            : isSainsD1
-              ? SAINS_D1
-              : fromBank && fromBank.length > 0
-                ? fromBank
-                : [];
+    : isMatematikD2
+      ? MATEMATIK_D2
+      : isBahasaMelayuD1
+        ? BAHASA_MELAYU_D1
+        : isBahasaInggerisD1
+          ? BAHASA_INGGERIS_D1
+          : isJawiD1
+            ? JAWI_D1
+            : isPendidikanIslamD1
+              ? PENDIDIKAN_ISLAM_D1
+              : isSainsD1
+                ? SAINS_D1
+                : fromBank && fromBank.length > 0
+                  ? fromBank
+                  : [];
 
   const [i, setI] = useState(0);
   const [pilih, setPilih] = useState<number | null>(null);
