@@ -915,6 +915,73 @@ export const NOTES_BANK: Record<string, SubjectNotes> = {
       },
     ],
   },
+  "4:bahasa-melayu": {
+    subject: "Bahasa Melayu",
+    sections: [
+      { title: "Ayat Majmuk", icon: "📌", items: ["Gabungan dua ayat atau lebih menggunakan kata hubung", "Contoh: Ali makan nasi dan Abu minum air"] },
+      { title: "Pantun", icon: "📝", items: ["Puisi tradisional 4 baris", "2 baris pembayang, 2 baris maksud"] },
+      { title: "Kata Sendi Nama", icon: "🔗", items: ["di, ke, dari, pada, untuk"] },
+      { title: "Imbuhan Apitan", icon: "➕", items: ["ke...an, me...kan, di...kan, per...an"] },
+      { title: "Peribahasa", icon: "📖", items: ["Seperti air di daun keladi = tidak kekal", "Seperti aur dengan tebing = saling membantu"] },
+      { title: "Dialog", icon: "💬", items: ["Perbualan antara dua orang atau lebih"] },
+    ],
+  },
+  "4:matematik": {
+    subject: "Matematik",
+    sections: [
+      { title: "Tambah & Tolak", icon: "➕", items: ["Nombor 5 digit. Contoh: 12345 + 23456 = 35801"] },
+      { title: "Darab", icon: "✖️", items: ["Sifir 11, 12, 13, 14, 15", "12 × 8 = 96"] },
+      { title: "Bahagi", icon: "➗", items: ["Nombor besar: 144 ÷ 12 = 12"] },
+      { title: "Pecahan", icon: "🍕", items: ["Tambah/tolak pecahan beza penyebut. Samakan dulu."] },
+      { title: "Perpuluhan", icon: "🔢", items: ["Tambah, tolak, darab: 0.75 + 0.25 = 1.0"] },
+      { title: "Sudut", icon: "📐", items: ["Tirus = kurang 90°", "Tegak = 90°", "Cakah = lebih 90°"] },
+      { title: "Luas & Perimeter", icon: "📏", items: ["Luas = panjang × lebar", "Perimeter = jumlah semua sisi"] },
+    ],
+  },
+  "4:bahasa-inggeris": {
+    subject: "Bahasa Inggeris",
+    sections: [
+      { title: "Compound Sentence", icon: "🔗", items: ["Two clauses joined by and/but/or"] },
+      { title: "Present Continuous", icon: "⏳", items: ["am/is/are + verb-ing", "She is singing now"] },
+      { title: "Past Continuous", icon: "⏪", items: ["was/were + verb-ing", "She was sleeping"] },
+      { title: "Pronouns", icon: "👥", items: ["I, you, he, she, they, we"] },
+      { title: "Possessive Pronouns", icon: "🎁", items: ["mine, yours, his, hers, theirs"] },
+      { title: "Alliteration", icon: "🔤", items: ["Same sound repetition at start", "Peter Piper picked peppers"] },
+      { title: "Onomatopoeia", icon: "🔊", items: ["Word sounds like meaning — buzz, hiss, splash"] },
+    ],
+  },
+  "4:jawi": {
+    subject: "Jawi",
+    sections: [
+      { title: "Ejaan Perkataan Panjang", icon: "✍️", items: ["kecemerlangan = کچمرلاڠن", "persekitaran = ڤرسيکيتارن", "pembangunan = ڤمبانڬونن", "keselamatan = کسيلامتن", "tanggungjawab = تاڠڬوڠجاوب"] },
+      { title: "6 Huruf Tambahan Jawi", icon: "📌", items: ["ڤ = pa · چ = cha · ڠ = nga · ڬ = ga · ۏ = va · ݢ = ga"] },
+      { title: "Perbezaan Jawi & Rumi", icon: "🔁", items: ["Jawi: kanan ke kiri, huruf Arab + 6 tambahan", "Rumi: kiri ke kanan, huruf Latin"] },
+      { title: "Sejarah Tulisan Jawi", icon: "📜", items: ["Tulisan Jawi berasal dari huruf Arab", "Digunakan di Alam Melayu sejak abad ke-14"] },
+    ],
+  },
+  "4:pendidikan-islam": {
+    subject: "Pendidikan Islam",
+    sections: [
+      { title: "Akhlak", icon: "✨", items: ["Budi pekerti yang mulia"] },
+      { title: "Ukhuwah", icon: "🤝", items: ["Persaudaraan sesama Muslim"] },
+      { title: "Sirah Nabi", icon: "📖", items: ["Riwayat hidup Nabi Muhammad SAW", "Lahir 570M, terima wahyu usia 40 tahun"] },
+      { title: "Hijrah", icon: "🕌", items: ["Perpindahan Nabi dari Makkah ke Madinah", "Tahun 622M, ditemani Saidina Abu Bakar"] },
+      { title: "Sifat Mulia", icon: "⭐", items: ["Amanah, istiqamah, tawaduk, syukur, sabar"] },
+    ],
+  },
+  "4:sains": {
+    subject: "Sains",
+    sections: [
+      { title: "Sel", icon: "🔬", items: ["Unit terkecil makhluk hidup", "Sel tumbuhan ada dinding sel & kloroplas"] },
+      { title: "Ekosistem", icon: "🌳", items: ["Komuniti organisma dan persekitaran"] },
+      { title: "Adaptasi", icon: "🦎", items: ["Penyesuaian diri dengan persekitaran"] },
+      { title: "Tenaga Kinetik", icon: "⚡", items: ["Tenaga pergerakan — air mengalir, bola bergerak"] },
+      { title: "Tenaga Keupayaan", icon: "🪨", items: ["Tenaga tersimpan — batu di atas meja, spring termampat"] },
+      { title: "Tenaga Boleh Diperbaharui", icon: "☀️", items: ["Solar, angin, air"] },
+      { title: "Tenaga Tidak Boleh Diperbaharui", icon: "🛢️", items: ["Minyak, arang batu, gas asli"] },
+      { title: "Kitar Semula", icon: "♻️", items: ["Proses semula bahan buangan — kertas, plastik, logam"] },
+    ],
+  },
 };
 
 export function getNotes(darjahId: string, subjekId: string): SubjectNotes | null {
