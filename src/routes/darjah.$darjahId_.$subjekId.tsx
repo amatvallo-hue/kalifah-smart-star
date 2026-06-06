@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate, useParams } from "@tanstack/react-router";
-import { ArrowLeft, Gamepad2, PenLine, Target, Zap } from "lucide-react";
+import { ArrowLeft, BookOpen, Gamepad2, PenLine, Target, Zap } from "lucide-react";
 import { useEffect } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
@@ -46,6 +46,14 @@ const ACTIVITIES = [
     icon: Zap,
     tone: "from-emerald-500 to-amber-400 text-white",
     to: "/kuiz" as const,
+  },
+  {
+    id: "nota-ringkas" as const,
+    title: "Nota Ringkas",
+    description: "Rujukan ringkas sebelum buat kuiz.",
+    icon: BookOpen,
+    tone: "from-emerald-600 to-emerald-400 text-white",
+    to: "/nota-ringkas" as const,
   },
 ];
 
@@ -113,7 +121,7 @@ function AktivitiPage() {
             Pilih <span className="text-primary">Aktiviti</span>
           </h1>
           <p className="mt-2 max-w-lg text-muted-foreground">
-            Tiga cara seronok untuk belajar {subjek.title}!
+            Pelbagai cara seronok untuk belajar {subjek.title}!
           </p>
         </section>
 
@@ -126,6 +134,8 @@ function AktivitiPage() {
                 ? { to: "/darjah/$darjahId/$subjekId/latihan" as const, params: { darjahId, subjekId } }
                 : a.id === "latih-tubi"
                 ? { to: "/darjah/$darjahId/$subjekId/latih-tubi" as const, params: { darjahId, subjekId } }
+                : a.id === "nota-ringkas"
+                ? { to: "/darjah/$darjahId/$subjekId/nota-ringkas" as const, params: { darjahId, subjekId } }
                 : { to: "/darjah/$darjahId/$subjekId/game" as const, params: { darjahId, subjekId } };
             return (
               <Link
