@@ -173,6 +173,18 @@ const BANK: Record<string, Soalan[]> = {
     { soalan: "Namakan 2 haiwan vivipar.", jawapan: "kucing, anjing, lembu, manusia", petunjuk: "haiwan yang melahirkan anak" },
     { soalan: "Apakah yang menyebabkan magnet menarik benda?", jawapan: "Daya tarikan magnet", petunjuk: "kuasa magnet menarik besi" },
   ],
+  "3:bahasa-melayu": [
+    { soalan: "Pilih ayat pasif yang betul.", jawapan: "Buku dibaca oleh Ali", petunjuk: "subjek menerima perbuatan" },
+    { soalan: "Apakah imbuhan dalam perkataan 'kebersihan'?", jawapan: "ke...an", petunjuk: "imbuhan apitan" },
+    { soalan: "Tulis ayat menggunakan kata hubung 'tetapi'.", jawapan: "Ali rajin tetapi adiknya malas", petunjuk: "gabungkan dua ayat bertentangan" },
+    { soalan: "Apakah kata nama abstrak?", jawapan: "kasih sayang", petunjuk: "tidak dapat dilihat atau disentuh" },
+    { soalan: "Tulis sinonim bagi 'indah'.", jawapan: "cantik", petunjuk: "perkataan sama maksud" },
+    { soalan: "Tulis antonim bagi 'rajin'.", jawapan: "malas", petunjuk: "lawan kata rajin" },
+    { soalan: "Apakah maksud peribahasa 'bersatu teguh bercerai roboh'?", jawapan: "Perpaduan itu kuat", petunjuk: "tentang perpaduan" },
+    { soalan: "Tulis ayat aktif menggunakan perkataan 'membaca'.", jawapan: "Ali membaca buku", petunjuk: "subjek + kata kerja + objek" },
+    { soalan: "Apakah kata ulang bagi 'budak'?", jawapan: "budak-budak", petunjuk: "guna sengkang" },
+    { soalan: "Apakah perkataan majmuk bagi 'jalan' dan 'raya'?", jawapan: "jalan raya", petunjuk: "dua perkataan, satu makna" },
+  ],
 };
 
 function normalize(s: string) {

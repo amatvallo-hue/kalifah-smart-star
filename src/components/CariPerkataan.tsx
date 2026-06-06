@@ -594,3 +594,32 @@ export const SAINS_DARJAH2_CLUES: Record<string, string> = {
   HUJAN: "air yang turun dari langit",
   AKAR: "bahagian tumbuhan yang menyerap air",
 };
+
+// Bahasa Melayu Darjah 3 — 10x10 grid with 10 words.
+export const BM_DARJAH3_WORDS: Word[] = [
+  // Mendatar
+  { word: "RAJIN", row: 0, col: 0, dir: "H" },
+  { word: "MALAS", row: 2, col: 0, dir: "H" },
+  { word: "INDAH", row: 4, col: 0, dir: "H" },
+  { word: "AKTIF", row: 6, col: 0, dir: "H" },
+  { word: "PASIF", row: 8, col: 0, dir: "H" },
+  // Menegak
+  { word: "IMBUHAN", row: 0, col: 6, dir: "V" },
+  { word: "AYAT", row: 0, col: 8, dir: "V" },
+  { word: "NAMA", row: 5, col: 8, dir: "V" },
+  { word: "ABSTRAK", row: 1, col: 9, dir: "V" },
+  { word: "ULANG", row: 3, col: 7, dir: "V" },
+];
+
+export const BM_DARJAH3_CLUES: Record<string, string> = {
+  RAJIN: "Antonim malas",
+  MALAS: "Antonim rajin",
+  INDAH: "Sinonim cantik",
+  AKTIF: "Jenis ayat",
+  PASIF: "Jenis ayat",
+  IMBUHAN: "Tambahan pada kata",
+  AYAT: "Rangkaian perkataan",
+  NAMA: "Jenis kata",
+  ABSTRAK: "Tidak dapat dilihat",
+  ULANG: "Kata yang diulang",
+};

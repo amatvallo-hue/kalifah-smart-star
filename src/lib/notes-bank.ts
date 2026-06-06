@@ -585,6 +585,45 @@ export const NOTES_BANK: Record<string, SubjectNotes> = {
       },
     ],
   },
+  "3:bahasa-melayu": {
+    subject: "Bahasa Melayu",
+    sections: [
+      {
+        title: "Ayat Aktif & Pasif",
+        icon: "📌",
+        items: [
+          "Ayat aktif: subjek melakukan perbuatan. Contoh: Ali membaca buku",
+          "Ayat pasif: subjek menerima perbuatan. Contoh: Buku dibaca oleh Ali",
+        ],
+      },
+      {
+        title: "Kata Nama",
+        icon: "🔤",
+        items: [
+          "Kata nama am: meja, kucing, bunga",
+          "Kata nama khas: Ahmad, Kuala Lumpur, Malaysia",
+          "Kata nama abstrak: kasih sayang, keberanian, kejujuran",
+        ],
+      },
+      {
+        title: "Imbuhan",
+        icon: "➕",
+        items: [
+          "ke...an: kebersihan, keindahan, kebaikan",
+          "pe...an: pelajaran, perikanan, pertanian",
+          "me: membaca, menulis, melukis",
+        ],
+      },
+      {
+        title: "Peribahasa",
+        icon: "📖",
+        items: [
+          "Bagai menatang minyak yang penuh = menjaga dengan teliti",
+          "Bersatu teguh bercerai roboh = perpaduan itu kuat",
+        ],
+      },
+    ],
+  },
 };
 
 export function getNotes(darjahId: string, subjekId: string): SubjectNotes | null {
