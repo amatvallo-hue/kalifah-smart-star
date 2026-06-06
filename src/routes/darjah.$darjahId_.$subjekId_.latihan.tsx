@@ -320,9 +320,11 @@ function LatihanSubjekPage() {
   const subjek = getSubjek(subjekId);
 
   const isJawiD2 = darjahId === "2" && subjekId === "jawi";
-  const soalanList = useMemo(() => (isJawiD2 ? [] : (BANK[`${darjahId}:${subjekId}`] ?? [])), [darjahId, subjekId, isJawiD2]);
-  const mcqList = isJawiD2 ? JAWI_D2_MCQ : [];
-  const totalSoalan = isJawiD2 ? mcqList.length : soalanList.length;
+  const isJawiD4 = darjahId === "4" && subjekId === "jawi";
+  const isJawiMcq = isJawiD2 || isJawiD4;
+  const soalanList = useMemo(() => (isJawiMcq ? [] : (BANK[`${darjahId}:${subjekId}`] ?? [])), [darjahId, subjekId, isJawiMcq]);
+  const mcqList = isJawiD2 ? JAWI_D2_MCQ : isJawiD4 ? JAWI_D4_MCQ : [];
+  const totalSoalan = isJawiMcq ? mcqList.length : soalanList.length;
   const [pilihan, setPilihan] = useState<number | null>(null);
 
   const [idx, setIdx] = useState(0);
