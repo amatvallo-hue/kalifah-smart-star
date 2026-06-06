@@ -218,7 +218,8 @@ function GameSubjekPage() {
   const isPI = darjahId === "1" && subjekId === "pendidikan-islam";
   const isPI2 = darjahId === "2" && subjekId === "pendidikan-islam";
   const isSains = darjahId === "1" && subjekId === "sains";
-  const hasCariPerkataan = isMate || isMate2 || isBM || isBM2 || isBI || isBI2 || isJawi || isJawi2 || isPI || isPI2 || isSains;
+  const isSains2 = darjahId === "2" && subjekId === "sains";
+  const hasCariPerkataan = isMate || isMate2 || isBM || isBM2 || isBI || isBI2 || isJawi || isJawi2 || isPI || isPI2 || isSains || isSains2;
 
   const [mode, setMode] = useState<"race" | "cari">("race");
 
