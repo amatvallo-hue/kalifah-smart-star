@@ -23,6 +23,24 @@ const SAINS_D2: QuizQuestion[] = [
   { soalan: "Kita tidak boleh mendengar bunyi di?", pilihan: ["dalam air", "dalam tanah", "angkasa lepas", "dalam bilik"], jawapan: 2 },
 ];
 
+const BAHASA_MELAYU_D3: QuizQuestion[] = [
+  { soalan: "Apakah maksud peribahasa 'bagai menatang minyak yang penuh'?", pilihan: ["Menjaga dengan teliti", "Membuang masa", "Berlaku cuai", "Tidak peduli"], jawapan: 0 },
+  { soalan: "Pilih ayat pasif yang betul:", pilihan: ["Ali membaca buku", "Buku dibaca oleh Ali", "Buku membaca Ali", "Ali buku membaca"], jawapan: 1 },
+  { soalan: "Apakah imbuhan dalam perkataan 'pelajaran'?", pilihan: ["pe...an", "pe", "an", "jar"], jawapan: 0 },
+  { soalan: "Pilih kata adjektif:", pilihan: ["berlari", "dengan", "indah", "meja"], jawapan: 2 },
+  { soalan: "Apakah kata ganti nama diri ketiga?", pilihan: ["saya", "kamu", "dia", "kami"], jawapan: 2 },
+  { soalan: "Pilih ayat yang menggunakan kata hubung dengan betul:", pilihan: ["Ali dan Abu pergi ke sekolah", "Ali pergi dan sekolah", "Ali Abu dan pergi", "Pergi Ali dan Abu"], jawapan: 0 },
+  { soalan: "Apakah maksud peribahasa 'bersatu teguh bercerai roboh'?", pilihan: ["Perpecahan itu kuat", "Perpaduan itu kuat", "Bergaduh itu baik", "Bersatu itu susah"], jawapan: 1 },
+  { soalan: "Pilih perkataan majmuk yang betul:", pilihan: ["jalanraya", "jalan raya", "jalan-raya", "jalan_raya"], jawapan: 1 },
+  { soalan: "Apakah kata ulang bagi 'budak'?", pilihan: ["budak budak", "budak-budak", "budakbudak", "budaks"], jawapan: 1 },
+  { soalan: "Pilih kata kerja transitif:", pilihan: ["tidur", "berlari", "memukul", "duduk"], jawapan: 2 },
+  { soalan: "Apakah imbuhan dalam perkataan 'kebersihan'?", pilihan: ["ke...an", "ke", "an", "bersih"], jawapan: 0 },
+  { soalan: "Pilih ayat tanya yang betul:", pilihan: ["Ke mana kamu pergi", "Ke mana kamu pergi?", "ke mana kamu pergi?", "Ke mana Kamu pergi?"], jawapan: 1 },
+  { soalan: "Apakah maksud kata 'dedikasi'?", pilihan: ["Malas", "Bersungguh-sungguh", "Cuai", "Tidak serius"], jawapan: 1 },
+  { soalan: "Pilih kata nama abstrak:", pilihan: ["meja", "kucing", "kasih sayang", "buku"], jawapan: 2 },
+  { soalan: "Apakah sinonim 'indah'?", pilihan: ["hodoh", "buruk", "cantik", "kotor"], jawapan: 2 },
+];
+
 // Key format: `${darjahId}:${subjekId}`
 export const QUIZ_BANK: Record<string, QuizQuestion[]> = {
   "1:matematik": [
