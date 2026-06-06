@@ -142,6 +142,25 @@ const BAHASA_INGGERIS_D2: QuizQuestion[] = [
   { soalan: "What is the past tense of 'go'?", pilihan: ["goed", "goes", "went", "going"], jawapan: 2 },
 ];
 
+// Hardcoded soalan Jawi Darjah 2
+const JAWI_D2: QuizQuestion[] = [
+  { soalan: "Ejaan Jawi bagi 'sekolah' ialah?", pilihan: ["سکوله", "سکولهٔ", "سکول", "سکولا"], jawapan: 2 },
+  { soalan: "Ejaan Jawi bagi 'keluarga' ialah?", pilihan: ["كلوارگ", "كلوارگا", "كلورگا", "كلواگا"], jawapan: 1 },
+  { soalan: "Ejaan Jawi bagi 'Malaysia' ialah?", pilihan: ["مليسيا", "ملايسيا", "ملاسيا", "ماليسيا"], jawapan: 0 },
+  { soalan: "Ejaan Jawi bagi 'membaca' ialah?", pilihan: ["ممباچ", "ممباچا", "مامباچا", "ممبچا"], jawapan: 1 },
+  { soalan: "Ejaan Jawi bagi 'berlari' ialah?", pilihan: ["برلاري", "بيرلاري", "برلارى", "بيرلارى"], jawapan: 0 },
+  { soalan: "Huruf Jawi ڠ berbunyi?", pilihan: ["nga", "ga", "na", "ma"], jawapan: 0 },
+  { soalan: "Huruf Jawi چ berbunyi?", pilihan: ["ja", "cha", "sha", "za"], jawapan: 1 },
+  { soalan: "Huruf Jawi ڤ berbunyi?", pilihan: ["ba", "fa", "pa", "wa"], jawapan: 2 },
+  { soalan: "Jawi گورو bermaksud?", pilihan: ["pelajar", "guru", "doktor", "polis"], jawapan: 1 },
+  { soalan: "Jawi ڤليجر bermaksud?", pilihan: ["guru", "doktor", "pelajar", "polis"], jawapan: 2 },
+  { soalan: "Jawi مليسيا bermaksud?", pilihan: ["Indonesia", "Thailand", "Malaysia", "Singapura"], jawapan: 2 },
+  { soalan: "Jawi برلاري bermaksud?", pilihan: ["berjalan", "berlari", "berenang", "bermain"], jawapan: 1 },
+  { soalan: "Jawi ممباچا bermaksud?", pilihan: ["menulis", "mengira", "membaca", "melukis"], jawapan: 2 },
+  { soalan: "Tulisan Jawi dibaca dari arah?", pilihan: ["kiri ke kanan", "kanan ke kiri", "atas ke bawah", "bawah ke atas"], jawapan: 1 },
+  { soalan: "Berapa huruf tambahan dalam tulisan Jawi Melayu?", pilihan: ["4", "5", "6", "7"], jawapan: 2 },
+];
+
 // Hardcoded soalan Sains Darjah 1
 const SAINS_D1: QuizQuestion[] = [
   { soalan: "Berapa deria yang kita ada?", pilihan: ["3", "4", "5", "6"], jawapan: 2 },
