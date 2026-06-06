@@ -224,7 +224,9 @@ function KuizPage() {
         ? BAHASA_INGGERIS_D2
         : isJawiD2
           ? JAWI_D2
-          : isBahasaMelayuD1
+          : isPendidikanIslamD2
+            ? PENDIDIKAN_ISLAM_D2
+            : isBahasaMelayuD1
           ? BAHASA_MELAYU_D1
           : isBahasaInggerisD1
             ? BAHASA_INGGERIS_D1
