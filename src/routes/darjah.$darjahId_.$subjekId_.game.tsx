@@ -714,7 +714,12 @@ function GameSubjekPage() {
           </button>
         </div>
 
-        {hasCariPerkataan && mode === "cari" ? (
+        {mode === "betul" && <BetulSalahGame subjekId={subjekId} />}
+        {mode === "padan" && <PadankanJawapanGame subjekId={subjekId} />}
+        {mode === "susun" && <SusunAyatGame subjekId={subjekId} />}
+
+        {(mode === "race" || mode === "cari") && (
+        hasCariPerkataan && mode === "cari" ? (
           isBM ? (
             <CariPerkataan
               words={BM_DARJAH1_WORDS}
