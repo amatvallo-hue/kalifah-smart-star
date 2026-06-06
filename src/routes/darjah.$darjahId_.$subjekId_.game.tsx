@@ -656,33 +656,63 @@ function GameSubjekPage() {
           </div>
           <div>
             <h1 className="font-display text-3xl font-extrabold text-foreground">
-              {hasCariPerkataan && mode === "cari" ? "Cari Perkataan" : "Quiz Race"}
+              {mode === "cari" ? "Cari Perkataan" : mode === "betul" ? "Betul atau Salah" : mode === "padan" ? "Padankan Jawapan" : mode === "susun" ? "Susun Ayat" : "Quiz Race"}
             </h1>
             <p className="text-sm text-muted-foreground">{darjah.label} • {subjek.title}</p>
           </div>
         </div>
 
-        {hasCariPerkataan && (
-          <div className="mt-5 inline-flex rounded-full bg-secondary p-1">
+        <div className="mt-5 flex flex-wrap gap-2 rounded-2xl bg-secondary p-2">
+          {hasRace && (
             <button
               onClick={() => setMode("race")}
-              className={`inline-flex items-center gap-2 rounded-full px-4 py-2 font-display text-sm font-extrabold transition ${
-                mode === "race" ? "bg-card text-primary shadow-soft" : "text-muted-foreground"
+              className={`inline-flex items-center gap-2 rounded-xl px-3 py-2 font-display text-sm font-extrabold transition ${
+                mode === "race" ? "text-white shadow-soft" : "text-muted-foreground"
               }`}
+              style={mode === "race" ? { backgroundColor: "#1B8A5A" } : undefined}
             >
               <Trophy className="h-4 w-4" /> Quiz Race
             </button>
+          )}
+          {hasCariPerkataan && (
             <button
               onClick={() => setMode("cari")}
-              className={`inline-flex items-center gap-2 rounded-full px-4 py-2 font-display text-sm font-extrabold transition ${
+              className={`inline-flex items-center gap-2 rounded-xl px-3 py-2 font-display text-sm font-extrabold transition ${
                 mode === "cari" ? "text-white shadow-soft" : "text-muted-foreground"
               }`}
               style={mode === "cari" ? { backgroundColor: "#1B8A5A" } : undefined}
             >
               <Search className="h-4 w-4" /> Cari Perkataan
             </button>
-          </div>
-        )}
+          )}
+          <button
+            onClick={() => setMode("betul")}
+            className={`inline-flex items-center gap-2 rounded-xl px-3 py-2 font-display text-sm font-extrabold transition ${
+              mode === "betul" ? "text-white shadow-soft" : "text-muted-foreground"
+            }`}
+            style={mode === "betul" ? { backgroundColor: "#1B8A5A" } : undefined}
+          >
+            <CheckSquare className="h-4 w-4" /> Betul/Salah
+          </button>
+          <button
+            onClick={() => setMode("padan")}
+            className={`inline-flex items-center gap-2 rounded-xl px-3 py-2 font-display text-sm font-extrabold transition ${
+              mode === "padan" ? "text-white shadow-soft" : "text-muted-foreground"
+            }`}
+            style={mode === "padan" ? { backgroundColor: "#F5A623", color: "#1a1a1a" } : undefined}
+          >
+            <Link2 className="h-4 w-4" /> Padankan
+          </button>
+          <button
+            onClick={() => setMode("susun")}
+            className={`inline-flex items-center gap-2 rounded-xl px-3 py-2 font-display text-sm font-extrabold transition ${
+              mode === "susun" ? "text-white shadow-soft" : "text-muted-foreground"
+            }`}
+            style={mode === "susun" ? { backgroundColor: "#F5A623", color: "#1a1a1a" } : undefined}
+          >
+            <AlignLeft className="h-4 w-4" /> Susun Ayat
+          </button>
+        </div>
 
         {hasCariPerkataan && mode === "cari" ? (
           isBM ? (
