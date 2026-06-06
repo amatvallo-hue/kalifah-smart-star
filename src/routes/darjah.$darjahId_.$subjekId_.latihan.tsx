@@ -191,7 +191,7 @@ function LatihanSubjekPage() {
     );
   }
 
-  if (!darjah || !subjek || soalanList.length === 0) {
+  if (!darjah || !subjek || totalSoalan === 0) {
     return (
       <div className="min-h-screen bg-background">
         <SiteHeader onLogout={handleLogout} />
@@ -206,6 +206,7 @@ function LatihanSubjekPage() {
   }
 
   const soalan = soalanList[idx];
+  const mcq = mcqList[idx];
 
   function semakJawapan() {
     const betul = normalize(jwp) === normalize(soalan.jawapan);
@@ -213,13 +214,22 @@ function LatihanSubjekPage() {
     if (betul) setBintang((b) => b + 1);
   }
 
+  function pilihKotak(i: number) {
+    if (semak !== null) return;
+    setPilihan(i);
+    const betul = i === mcq.betul;
+    setSemak(betul);
+    if (betul) setBintang((b) => b + 1);
+  }
+
   function seterusnya() {
-    if (idx + 1 >= soalanList.length) {
+    if (idx + 1 >= totalSoalan) {
       setHabis(true);
     } else {
       setIdx(idx + 1);
       setJwp("");
       setSemak(null);
+      setPilihan(null);
     }
   }
 
@@ -227,6 +237,7 @@ function LatihanSubjekPage() {
     setIdx(0);
     setJwp("");
     setSemak(null);
+    setPilihan(null);
     setBintang(0);
     setHabis(false);
   }
@@ -244,7 +255,10 @@ function LatihanSubjekPage() {
         </Link>
 
         <div className="mt-5 flex items-center gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-primary text-primary-foreground shadow-soft">
+          <div
+            className="flex h-12 w-12 items-center justify-center rounded-2xl text-primary-foreground shadow-soft"
+            style={isJawiD2 ? { background: "#1B8A5A" } : undefined}
+          >
             <PenLine className="h-6 w-6" />
           </div>
           <div>
@@ -256,43 +270,86 @@ function LatihanSubjekPage() {
         {!habis ? (
           <div className="mt-6 rounded-3xl bg-card p-6 shadow-card md:p-8">
             <div className="text-xs font-bold text-muted-foreground">
-              Soalan {idx + 1} / {soalanList.length}
+              Soalan {idx + 1} / {totalSoalan}
             </div>
-            <h2 className="mt-2 font-display text-2xl font-extrabold text-foreground">{soalan.soalan}</h2>
-            {soalan.petunjuk && (
-              <p className="mt-2 text-sm text-muted-foreground italic">Petunjuk: {soalan.petunjuk}</p>
+
+            {isJawiD2 ? (
+              <>
+                <h2 className="mt-2 font-display text-2xl font-extrabold text-foreground">{mcq.soalan}</h2>
+                <div className="mt-6 grid grid-cols-2 gap-4">
+                  {mcq.pilihan.map((opt, i) => {
+                    const dipilih = pilihan === i;
+                    const betulIdx = mcq.betul;
+                    let style: React.CSSProperties = { borderColor: "#F5A623", color: "#1B8A5A" };
+                    if (semak !== null) {
+                      if (i === betulIdx) style = { background: "#1B8A5A", borderColor: "#1B8A5A", color: "#fff" };
+                      else if (dipilih) style = { background: "#dc2626", borderColor: "#dc2626", color: "#fff" };
+                      else style = { borderColor: "#e5e7eb", color: "#9ca3af" };
+                    }
+                    return (
+                      <button
+                        key={i}
+                        onClick={() => pilihKotak(i)}
+                        disabled={semak !== null}
+                        style={style}
+                        className="flex min-h-[120px] items-center justify-center rounded-2xl border-4 bg-card p-4 text-5xl font-extrabold shadow-soft transition hover:-translate-y-0.5 disabled:cursor-not-allowed md:min-h-[140px] md:text-6xl"
+                        dir="rtl"
+                      >
+                        {opt}
+                      </button>
+                    );
+                  })}
+                </div>
+              </>
+            ) : (
+              <>
+                <h2 className="mt-2 font-display text-2xl font-extrabold text-foreground">{soalan.soalan}</h2>
+                {soalan.petunjuk && (
+                  <p className="mt-2 text-sm text-muted-foreground italic">Petunjuk: {soalan.petunjuk}</p>
+                )}
+
+                <input
+                  value={jwp}
+                  onChange={(e) => setJwp(e.target.value)}
+                  disabled={semak !== null}
+                  placeholder="Tulis jawapan kamu..."
+                  className="mt-5 w-full rounded-2xl border-2 border-input bg-background p-4 font-display text-xl font-extrabold text-foreground outline-none transition focus:border-primary disabled:opacity-70"
+                />
+
+                {semak === null && (
+                  <button
+                    onClick={semakJawapan}
+                    disabled={jwp.trim().length === 0}
+                    className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-primary px-6 py-4 font-display text-lg font-extrabold text-primary-foreground shadow-soft transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    <Send className="h-5 w-5" /> Semak Jawapan
+                  </button>
+                )}
+              </>
             )}
 
-            <input
-              value={jwp}
-              onChange={(e) => setJwp(e.target.value)}
-              disabled={semak !== null}
-              placeholder="Tulis jawapan kamu..."
-              className="mt-5 w-full rounded-2xl border-2 border-input bg-background p-4 font-display text-xl font-extrabold text-foreground outline-none transition focus:border-primary disabled:opacity-70"
-            />
-
-            {semak === null ? (
-              <button
-                onClick={semakJawapan}
-                disabled={jwp.trim().length === 0}
-                className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-primary px-6 py-4 font-display text-lg font-extrabold text-primary-foreground shadow-soft transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                <Send className="h-5 w-5" /> Semak Jawapan
-              </button>
-            ) : (
+            {semak !== null && (
               <div className="mt-5 space-y-3">
                 <div
-                  className={`rounded-2xl p-4 text-center font-display text-lg font-extrabold ${
-                    semak ? "bg-secondary text-primary" : "bg-rose-100 text-rose-700"
-                  }`}
+                  className="rounded-2xl p-4 text-center font-display text-lg font-extrabold"
+                  style={
+                    semak
+                      ? { background: "#1B8A5A", color: "#fff" }
+                      : { background: "#fee2e2", color: "#b91c1c" }
+                  }
                 >
-                  {semak ? "Betul! 🎉" : `Jawapan betul: ${soalan.jawapan}`}
+                  {semak
+                    ? "Betul! 🎉"
+                    : isJawiD2
+                      ? `Jawapan betul: ${mcq.pilihan[mcq.betul]}`
+                      : `Jawapan betul: ${soalan.jawapan}`}
                 </div>
                 <button
                   onClick={seterusnya}
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-primary px-6 py-4 font-display text-lg font-extrabold text-primary-foreground shadow-soft"
+                  style={{ background: "#1B8A5A" }}
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-2xl px-6 py-4 font-display text-lg font-extrabold text-white shadow-soft"
                 >
-                  {idx + 1 >= soalanList.length ? "Lihat Keputusan" : "Soalan Seterusnya →"}
+                  {idx + 1 >= totalSoalan ? "Lihat Keputusan" : "Soalan Seterusnya →"}
                 </button>
               </div>
             )}
@@ -302,10 +359,10 @@ function LatihanSubjekPage() {
             <Sparkles className="mx-auto h-12 w-12 text-gold" />
             <h2 className="mt-3 font-display text-3xl font-extrabold text-foreground">Syabas! 🎉</h2>
             <p className="mt-2 text-muted-foreground">
-              Kamu jawab betul <span className="font-extrabold text-primary">{bintang}</span> daripada {soalanList.length} soalan.
+              Kamu jawab betul <span className="font-extrabold text-primary">{bintang}</span> daripada {totalSoalan} soalan.
             </p>
             <div className="mt-4 flex justify-center">
-              <StarReward earned={Math.min(3, Math.ceil((bintang / soalanList.length) * 3))} />
+              <StarReward earned={Math.min(3, Math.ceil((bintang / totalSoalan) * 3))} />
             </div>
             <button
               onClick={ulang}
@@ -318,4 +375,5 @@ function LatihanSubjekPage() {
       </main>
     </div>
   );
+
 }
