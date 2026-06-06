@@ -375,6 +375,56 @@ export const NOTES_BANK: Record<string, SubjectNotes> = {
       },
     ],
   },
+  "2:bahasa-inggeris": {
+    subject: "Bahasa Inggeris",
+    sections: [
+      {
+        title: "Plural (Kata Nama Jamak)",
+        icon: "🔢",
+        items: [
+          "Tambah s: cat → cats, dog → dogs",
+          "Tambah es: box → boxes, bus → buses",
+          "Irregular: child → children, fish → fish, tooth → teeth, foot → feet",
+        ],
+      },
+      {
+        title: "Past Tense (Masa Lampau)",
+        icon: "⏪",
+        items: [
+          "Regular: tambah ed — play → played, walk → walked",
+          "Irregular: go → went, eat → ate, run → ran, see → saw",
+        ],
+      },
+      {
+        title: "Jenis Kata (Parts of Speech)",
+        icon: "🔤",
+        items: [
+          "Noun = nama orang/benda. Contoh: book, Ali",
+          "Verb = perbuatan. Contoh: run, swim, eat",
+          "Adjective = sifat. Contoh: beautiful, big, happy",
+          "Adverb = cara. Contoh: quickly, slowly",
+        ],
+      },
+      {
+        title: "To Be (am, is, are)",
+        icon: "🔗",
+        items: [
+          "I am a student",
+          "She is a teacher",
+          "They are friends",
+        ],
+      },
+      {
+        title: "Article (a, an, the)",
+        icon: "📖",
+        items: [
+          "a = sebelum bunyi konsonan: a cat, a book",
+          "an = sebelum bunyi vokal: an apple, an egg",
+          "the = benda tertentu: the sun, the moon",
+        ],
+      },
+    ],
+  },
 };
 
 export function getNotes(darjahId: string, subjekId: string): SubjectNotes | null {
