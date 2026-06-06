@@ -190,11 +190,11 @@ const SA_JAWI: SAItem[] = [
   { ayat: "Kita mesti menjaga warisan tulisan Jawi", perkataan: ["Kita", "mesti", "menjaga", "warisan", "tulisan", "Jawi"] },
 ];
 const SA_PI: SAItem[] = [
-  { ayat: "Solat itu tiang agama", perkataan: ["Solat", "itu", "tiang", "agama"] },
-  { ayat: "Kita wajib menghormati ibu bapa", perkataan: ["Kita", "wajib", "menghormati", "ibu", "bapa"] },
-  { ayat: "Membaca Al-Quran adalah ibadah", perkataan: ["Membaca", "Al-Quran", "adalah", "ibadah"] },
-  { ayat: "Puasa mengajar kita bersabar", perkataan: ["Puasa", "mengajar", "kita", "bersabar"] },
-  { ayat: "Berbuat baik kepada semua orang", perkataan: ["Berbuat", "baik", "kepada", "semua", "orang"] },
+  { ayat: "Kita wajib menunaikan solat lima waktu sehari", perkataan: ["Kita", "wajib", "menunaikan", "solat", "lima", "waktu", "sehari"] },
+  { ayat: "Bulan Ramadan adalah bulan untuk berpuasa", perkataan: ["Bulan", "Ramadan", "adalah", "bulan", "untuk", "berpuasa"] },
+  { ayat: "Kita mesti berakhlak mulia dalam kehidupan", perkataan: ["Kita", "mesti", "berakhlak", "mulia", "dalam", "kehidupan"] },
+  { ayat: "Nabi Muhammad SAW adalah rasul terakhir", perkataan: ["Nabi", "Muhammad", "SAW", "adalah", "rasul", "terakhir"] },
+  { ayat: "Membaca Al-Quran adalah amalan yang mulia", perkataan: ["Membaca", "Al-Quran", "adalah", "amalan", "yang", "mulia"] },
 ];
 const SA_SAINS: SAItem[] = [
   { ayat: "Tumbuhan memerlukan cahaya matahari untuk hidup", perkataan: ["Tumbuhan", "memerlukan", "cahaya", "matahari", "untuk", "hidup"] },
