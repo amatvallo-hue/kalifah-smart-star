@@ -104,6 +104,25 @@ const PENDIDIKAN_ISLAM_D1: QuizQuestion[] = [
   { soalan: "Nabi kita ialah?", pilihan: ["Nabi Isa", "Nabi Musa", "Nabi Ibrahim", "Nabi Muhammad SAW"], jawapan: 3 },
 ];
 
+// Hardcoded soalan Matematik Darjah 2
+const MATEMATIK_D2: QuizQuestion[] = [
+  { soalan: "25 + 37 = ?", pilihan: ["52", "62", "72", "82"], jawapan: 1 },
+  { soalan: "84 - 46 = ?", pilihan: ["28", "38", "48", "58"], jawapan: 1 },
+  { soalan: "6 × 3 = ?", pilihan: ["12", "15", "18", "21"], jawapan: 2 },
+  { soalan: "8 × 4 = ?", pilihan: ["24", "28", "32", "36"], jawapan: 2 },
+  { soalan: "20 ÷ 4 = ?", pilihan: ["3", "4", "5", "6"], jawapan: 2 },
+  { soalan: "36 ÷ 6 = ?", pilihan: ["4", "5", "6", "7"], jawapan: 2 },
+  { soalan: "45 + 28 = ?", pilihan: ["63", "73", "83", "93"], jawapan: 1 },
+  { soalan: "91 - 54 = ?", pilihan: ["27", "37", "47", "57"], jawapan: 1 },
+  { soalan: "7 × 5 = ?", pilihan: ["30", "35", "40", "45"], jawapan: 1 },
+  { soalan: "48 ÷ 8 = ?", pilihan: ["4", "5", "6", "7"], jawapan: 2 },
+  { soalan: "63 + 19 = ?", pilihan: ["72", "82", "92", "102"], jawapan: 1 },
+  { soalan: "75 - 38 = ?", pilihan: ["27", "37", "47", "57"], jawapan: 1 },
+  { soalan: "9 × 6 = ?", pilihan: ["48", "54", "60", "66"], jawapan: 1 },
+  { soalan: "56 ÷ 7 = ?", pilihan: ["6", "7", "8", "9"], jawapan: 2 },
+  { soalan: "100 - 45 = ?", pilihan: ["45", "55", "65", "75"], jawapan: 1 },
+];
+
 // Hardcoded soalan Sains Darjah 1
 const SAINS_D1: QuizQuestion[] = [
   { soalan: "Berapa deria yang kita ada?", pilihan: ["3", "4", "5", "6"], jawapan: 2 },
@@ -135,22 +154,25 @@ function KuizPage() {
   const isJawiD1 = darjahId === "1" && subjekId === "jawi";
   const isPendidikanIslamD1 = darjahId === "1" && subjekId === "pendidikan-islam";
   const isSainsD1 = darjahId === "1" && subjekId === "sains";
-  const fromBank = isMatematikD1 || isBahasaMelayuD1 || isBahasaInggerisD1 || isJawiD1 || isPendidikanIslamD1 || isSainsD1 ? [] : getQuiz(darjahId, subjekId);
+  const isMatematikD2 = darjahId === "2" && subjekId === "matematik";
+  const fromBank = isMatematikD1 || isBahasaMelayuD1 || isBahasaInggerisD1 || isJawiD1 || isPendidikanIslamD1 || isSainsD1 || isMatematikD2 ? [] : getQuiz(darjahId, subjekId);
   const soalanList: QuizQuestion[] = isMatematikD1
     ? MATEMATIK_D1
-    : isBahasaMelayuD1
-      ? BAHASA_MELAYU_D1
-      : isBahasaInggerisD1
-        ? BAHASA_INGGERIS_D1
-        : isJawiD1
-          ? JAWI_D1
-          : isPendidikanIslamD1
-            ? PENDIDIKAN_ISLAM_D1
-            : isSainsD1
-              ? SAINS_D1
-              : fromBank && fromBank.length > 0
-                ? fromBank
-                : [];
+    : isMatematikD2
+      ? MATEMATIK_D2
+      : isBahasaMelayuD1
+        ? BAHASA_MELAYU_D1
+        : isBahasaInggerisD1
+          ? BAHASA_INGGERIS_D1
+          : isJawiD1
+            ? JAWI_D1
+            : isPendidikanIslamD1
+              ? PENDIDIKAN_ISLAM_D1
+              : isSainsD1
+                ? SAINS_D1
+                : fromBank && fromBank.length > 0
+                  ? fromBank
+                  : [];
 
   const [i, setI] = useState(0);
   const [pilih, setPilih] = useState<number | null>(null);
