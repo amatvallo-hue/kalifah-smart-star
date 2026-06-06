@@ -298,6 +298,13 @@ function GameSubjekPage() {
               gridSize={10}
               title="Cari Perkataan Bahasa Melayu"
             />
+          ) : isMate2 ? (
+            <CariPerkataan
+              words={MATE_DARJAH2_WORDS}
+              clues={MATE_DARJAH2_CLUES}
+              gridSize={10}
+              title="Cari Perkataan Matematik"
+            />
           ) : isBI ? (
             <CariPerkataan
               words={BI_DARJAH1_WORDS}
