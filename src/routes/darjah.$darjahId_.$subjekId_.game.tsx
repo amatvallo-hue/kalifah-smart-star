@@ -140,12 +140,13 @@ function GameSubjekPage() {
   const [flash, setFlash] = useState<null | "ok" | "no">(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const isBM = darjahId === "1" && subjekId === "bahasa-melayu";
+  const isBM2 = darjahId === "2" && subjekId === "bahasa-melayu";
   const isBI = darjahId === "1" && subjekId === "bahasa-inggeris";
   const isMate = darjahId === "1" && subjekId === "matematik";
   const isJawi = darjahId === "1" && subjekId === "jawi";
   const isPI = darjahId === "1" && subjekId === "pendidikan-islam";
   const isSains = darjahId === "1" && subjekId === "sains";
-  const hasCariPerkataan = isMate || isBM || isBI || isJawi || isPI || isSains;
+  const hasCariPerkataan = isMate || isBM || isBM2 || isBI || isJawi || isPI || isSains;
   const [mode, setMode] = useState<"race" | "cari">("race");
 
   useEffect(() => {
