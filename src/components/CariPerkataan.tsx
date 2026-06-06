@@ -418,3 +418,35 @@ export const SAINS_DARJAH1_CLUES: Record<string, string> = {
   AWAN: "Berkumpul di langit sebelum hujan",
   HAIWAN: "Makhluk hidup yang bergerak",
 };
+
+// Bahasa Melayu Darjah 2 — 10x10 grid with 10 words.
+// Spec rows/cols are 1-based; converted to 0-based here.
+// NOTE: menegak listed before mendatar so mendatar letters win on overlaps,
+// keeping the headline antonim/sinonim words (CANTIK etc.) findable.
+export const BM_DARJAH2_WORDS: Word[] = [
+  // Menegak
+  { word: "BUKU", row: 0, col: 5, dir: "V" },
+  { word: "MEJA", row: 0, col: 7, dir: "V" },
+  { word: "SEKOLAH", row: 0, col: 8, dir: "V" },
+  { word: "DAPUR", row: 1, col: 3, dir: "V" },
+  { word: "MEMBACA", row: 1, col: 9, dir: "V" },
+  // Mendatar
+  { word: "RAJIN", row: 0, col: 0, dir: "H" },
+  { word: "MALAS", row: 2, col: 0, dir: "H" },
+  { word: "CANTIK", row: 4, col: 0, dir: "H" },
+  { word: "GEMBIRA", row: 6, col: 0, dir: "H" },
+  { word: "BERLARI", row: 8, col: 0, dir: "H" },
+];
+
+export const BM_DARJAH2_CLUES: Record<string, string> = {
+  RAJIN: "Antonim malas",
+  MALAS: "Antonim rajin",
+  CANTIK: "Kata adjektif sifat",
+  GEMBIRA: "Sinonim suka",
+  BERLARI: "Kata kerja",
+  MEJA: "Tempat letak buku",
+  BUKU: "Tempat kita belajar membaca",
+  DAPUR: "Tempat memasak",
+  SEKOLAH: "Tempat belajar",
+  MEMBACA: "Aktiviti dengan buku",
+};
