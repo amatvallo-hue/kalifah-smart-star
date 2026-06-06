@@ -1049,6 +1049,74 @@ export const NOTES_BANK: Record<string, SubjectNotes> = {
       { title: "Tenaga", icon: "⚡", items: ["Nuklear = pembelahan atom", "Geoterma = panas bumi"] },
     ],
   },
+  "6:bahasa-melayu": {
+    subject: "Bahasa Melayu",
+    sections: [
+      { title: "Konotasi & Denotasi", icon: "📖", items: ["Denotasi = makna literal dalam kamus", "Konotasi = makna tersirat atau tambahan", "Contoh: 'bunga' denotasi tumbuhan, konotasi gadis cantik"] },
+      { title: "Inversi", icon: "🔄", items: ["Subjek diletakkan di belakang predikat", "Contoh: Cantik sungguh gadis itu"] },
+      { title: "Eufemisme", icon: "🌸", items: ["Kata halus menggantikan kata kasar", "Contoh: meninggal dunia (mati), kurang upaya (cacat)"] },
+      { title: "Surat Rasmi", icon: "✉️", items: ["Bahasa formal baku dan sopan", "Format: alamat, tarikh, tajuk, isi, penutup"] },
+      { title: "Laras Bahasa", icon: "🎯", items: ["Variasi bahasa mengikut bidang atau situasi", "Contoh: laras sains, laras undang-undang, laras sastera"] },
+      { title: "Wacana & Kohesi", icon: "🔗", items: ["Wacana = unit bahasa lebih besar dari ayat", "Kohesi = kesinambungan dan perkaitan antara ayat"] },
+    ],
+  },
+  "6:matematik": {
+    subject: "Matematik",
+    sections: [
+      { title: "Nombor Hingga 7 Digit", icon: "🔢", items: ["Juta, ratus ribu, puluh ribu, ribu, ratus, puluh, sa", "Contoh: 1,234,567"] },
+      { title: "Operasi Pecahan", icon: "➗", items: ["Darab: 3/4 × 2/3 = 6/12 = 1/2", "Bahagi: 5/6 ÷ 5/3 = 5/6 × 3/5 = 1/2"] },
+      { title: "Perpuluhan", icon: "🔟", items: ["Darab: 2.5 × 1.4 = 3.5", "Bahagi: 6.4 ÷ 0.8 = 8"] },
+      { title: "Isipadu & Luas Permukaan", icon: "📦", items: ["Silinder = πj²t", "Kubus: isipadu = s³, luas permukaan = 6s²"] },
+      { title: "Nisbah & Kadaran", icon: "⚖️", items: ["Nisbah 2:3:5 jumlah 200 → 40:60:100", "Kadaran membandingkan dua kuantiti"] },
+      { title: "Kebarangkalian", icon: "🎲", items: ["Kemungkinan sesuatu peristiwa berlaku", "Nilai antara 0 dan 1"] },
+    ],
+  },
+  "6:bahasa-inggeris": {
+    subject: "Bahasa Inggeris",
+    sections: [
+      { title: "Essay Types", icon: "📝", items: ["Narrative = tells a story", "Expository = explains/informs", "Argumentative = persuades", "Descriptive = describes vividly"] },
+      { title: "Essay Structure", icon: "🏗️", items: ["Thesis statement = main argument", "Topic sentence = main idea of paragraph", "Supporting details = evidence"] },
+      { title: "Transition Words", icon: "🔗", items: ["furthermore, however, therefore, moreover, in addition"] },
+      { title: "Active vs Passive Voice", icon: "🔄", items: ["Active: subject does action — Ali eats rice", "Passive: subject receives action — Rice is eaten by Ali"] },
+      { title: "Reported Speech", icon: "💬", items: ["Direct: He said, 'I am happy'", "Indirect: He said that he was happy"] },
+      { title: "Conditional Sentences", icon: "❓", items: ["Type 1: If + present, will + verb", "Type 2: If + past, would + verb", "Type 3: If + had + p.p, would have + p.p"] },
+    ],
+  },
+  "6:jawi": {
+    subject: "Jawi",
+    sections: [
+      { title: "Ejaan Perkataan Kompleks", icon: "✍️", items: ["kesukarelaan = کسوکاريلاءن", "pembangunan insan = ڤمبانڬونن انسان", "kelestarian alam = کلستاريان الم"] },
+      { title: "Imbuhan dalam Jawi", icon: "📌", items: ["ke...an, pe...an, per...an, peN...an", "Contoh: kesejahteraan = کسجاهتراءن"] },
+      { title: "Penggunaan Hamzah", icon: "ء", items: ["Hamzah digunakan untuk vokal selepas vokal", "Contoh: keadaan = کاداءن"] },
+      { title: "Sejarah Tulisan Jawi", icon: "📜", items: ["Berasal dari huruf Arab", "Disesuaikan dengan bahasa Melayu", "Warisan budaya Alam Melayu"] },
+      { title: "Khat & Kaligrafi", icon: "🖋️", items: ["Khat Nasakh = tulisan biasa", "Khat Thuluth = tulisan hiasan", "Khat Diwani = tulisan rasmi"] },
+    ],
+  },
+  "6:pendidikan-islam": {
+    subject: "Pendidikan Islam",
+    sections: [
+      { title: "Tauhid", icon: "☝️", items: ["Mengesakan Allah", "Tiga bahagian: Rububiyyah, Uluhiyyah, Asma wa Sifat"] },
+      { title: "Tauhid Rububiyyah", icon: "🌍", items: ["Mengesakan Allah sebagai Pencipta, Pemilik, Pentadbir alam"] },
+      { title: "Tauhid Uluhiyyah", icon: "🤲", items: ["Mengesakan Allah dalam ibadat", "Hanya menyembah Allah"] },
+      { title: "Tauhid Asma wa Sifat", icon: "📿", items: ["Mengesakan nama dan sifat Allah", "Allah mempunyai 99 nama (Asmaul Husna)"] },
+      { title: "Syirik", icon: "⚠️", items: ["Menyekutukan Allah", "Syirik besar: menyembah selain Allah", "Syirik kecil: riak, ujub, sum'ah"] },
+      { title: "Akhlak Mazmumah", icon: "❌", items: ["Riak = beramal untuk dipuji", "Nifak = berpura-pura Islam (munafik)", "Hasad = dengki"] },
+      { title: "Akhlak Mahmudah", icon: "✨", items: ["Ikhlas, sabar, syukur, tawakkal, redha"] },
+    ],
+  },
+  "6:sains": {
+    subject: "Sains",
+    sections: [
+      { title: "Evolusi", icon: "🦕", items: ["Perubahan perlahan spesies dari generasi ke generasi", "Teori Darwin = seleksi semula jadi"] },
+      { title: "Fosil", icon: "🦴", items: ["Sisa atau kesan organisma purba dalam batuan", "Bukti evolusi"] },
+      { title: "Spesies & Biodiversiti", icon: "🦋", items: ["Spesies = kumpulan organisma yang boleh membiak antara satu sama lain", "Biodiversiti = kepelbagaian spesies"] },
+      { title: "Ekosistem", icon: "🌳", items: ["Akuatik = ekosistem air", "Terestrial = ekosistem darat"] },
+      { title: "Perubahan Iklim", icon: "🌡️", items: ["Perubahan jangka panjang dalam iklim bumi", "Punca utama: aktiviti manusia, pembakaran bahan api fosil"] },
+      { title: "Pembangunan Lestari", icon: "♻️", items: ["Memenuhi keperluan kini tanpa menjejaskan masa depan", "Jejak karbon = CO2 dihasilkan aktiviti manusia"] },
+      { title: "Tenaga Boleh Diperbaharui", icon: "⚡", items: ["Solar, angin, air, biomas, geoterma"] },
+      { title: "Cara Pelihara Alam", icon: "🌱", items: ["Kitar semula, jimat tenaga, tanam pokok, kurangkan plastik"] },
+    ],
+  },
 };
 
 export function getNotes(darjahId: string, subjekId: string): SubjectNotes | null {
