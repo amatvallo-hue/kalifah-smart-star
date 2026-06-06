@@ -149,6 +149,7 @@ const TIME_MAP: Record<string, number> = {
   "2:bahasa-melayu": 10,
   "2:matematik": 10,
   "2:bahasa-inggeris": 10,
+  "2:jawi": 10,
 };
 
 
@@ -185,6 +186,7 @@ function GameSubjekPage() {
   const isMate = darjahId === "1" && subjekId === "matematik";
   const isMate2 = darjahId === "2" && subjekId === "matematik";
   const isJawi = darjahId === "1" && subjekId === "jawi";
+  const isJawi2 = darjahId === "2" && subjekId === "jawi";
   const isPI = darjahId === "1" && subjekId === "pendidikan-islam";
   const isSains = darjahId === "1" && subjekId === "sains";
   const hasCariPerkataan = isMate || isMate2 || isBM || isBM2 || isBI || isBI2 || isJawi || isPI || isSains;
