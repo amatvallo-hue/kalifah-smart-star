@@ -202,7 +202,9 @@ function KuizPage() {
       ? MATEMATIK_D2
       : isBahasaInggerisD2
         ? BAHASA_INGGERIS_D2
-        : isBahasaMelayuD1
+        : isJawiD2
+          ? JAWI_D2
+          : isBahasaMelayuD1
           ? BAHASA_MELAYU_D1
           : isBahasaInggerisD1
             ? BAHASA_INGGERIS_D1
