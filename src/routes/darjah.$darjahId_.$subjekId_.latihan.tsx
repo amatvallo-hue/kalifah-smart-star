@@ -149,6 +149,18 @@ const BANK: Record<string, Soalan[]> = {
     { soalan: "Jawi گورو bermaksud apa?", jawapan: "guru", petunjuk: "orang yang mengajar" },
     { soalan: "Jawi مليسيا bermaksud apa?", jawapan: "Malaysia", petunjuk: "negara kita" },
   ],
+  "2:pendidikan-islam": [
+    { soalan: "Namakan kitab yang diturunkan kepada Nabi Muhammad SAW.", jawapan: "Al-Quran", petunjuk: "kitab suci umat Islam" },
+    { soalan: "Namakan malaikat yang menyampaikan wahyu.", jawapan: "Jibril", petunjuk: "malaikat yang berjumpa Nabi" },
+    { soalan: "Berapa jumlah Nabi dan Rasul yang wajib diketahui?", jawapan: "25", petunjuk: "dua puluh lima" },
+    { soalan: "Apakah maksud sifat Wujud Allah?", jawapan: "Allah itu Ada", petunjuk: "sifat wajib Allah pertama" },
+    { soalan: "Apakah maksud sifat Baqa Allah?", jawapan: "Allah itu Kekal", petunjuk: "Allah tidak akan musnah" },
+    { soalan: "Apakah maksud sifat Wahdaniah Allah?", jawapan: "Allah Maha Esa", petunjuk: "Allah hanya satu" },
+    { soalan: "Siapakah Rasul terakhir?", jawapan: "Nabi Muhammad SAW", petunjuk: "nabi akhir zaman" },
+    { soalan: "Berapa ayat dalam Surah Al-Fatihah?", jawapan: "7 ayat", petunjuk: "surah pertama dalam Al-Quran" },
+    { soalan: "Apakah nama malaikat yang mencabut nyawa?", jawapan: "Izrail", petunjuk: "malaikat maut" },
+    { soalan: "Apakah nama malaikat yang meniup sangkakala?", jawapan: "Israfil", petunjuk: "malaikat yang meniup sangkakala hari kiamat" },
+  ],
 };
 
 function normalize(s: string) {
