@@ -96,9 +96,21 @@ const BANK: Record<string, Soalan[]> = {
       { soalan: "Tulis ayat perintah.", jawapan: "tolong ambil buku itu", petunjuk: "ayat yang menyuruh" },
       { soalan: "Apakah maksud peribahasa 'bagai aur dengan tebing'?", jawapan: "saling membantu antara satu sama lain", petunjuk: "peribahasa tentang kerjasama" },
       { soalan: "Tulis kata adjektif bagi sifat orang yang baik hati.", jawapan: "pemurah", petunjuk: "kata sifat" },
-      { soalan: "Tulis ayat menggunakan kata hubung 'dan'.", jawapan: "ali dan abu pergi ke sekolah", petunjuk: "gabungkan dua ayat" },
-    ],
-  };
+    { soalan: "Tulis ayat menggunakan kata hubung 'dan'.", jawapan: "ali dan abu pergi ke sekolah", petunjuk: "gabungkan dua ayat" },
+  ],
+  "2:matematik": [
+    { soalan: "Kirakan: 25 + 37 = ___", jawapan: "62", petunjuk: "tambah puluhan dulu" },
+    { soalan: "Kirakan: 84 - 46 = ___", jawapan: "38", petunjuk: "tolak puluhan dulu" },
+    { soalan: "Kirakan: 6 × 3 = ___", jawapan: "18", petunjuk: "sifir 6" },
+    { soalan: "Kirakan: 8 × 4 = ___", jawapan: "32", petunjuk: "sifir 8" },
+    { soalan: "Kirakan: 20 ÷ 4 = ___", jawapan: "5", petunjuk: "berapa kumpulan 4 dalam 20" },
+    { soalan: "Ali ada 45 guli. Dapat 28 lagi. Berapa jumlah?", jawapan: "73", petunjuk: "45 + 28" },
+    { soalan: "Ibu beli 91 biji telur. Pecah 54. Berapa tinggal?", jawapan: "37", petunjuk: "91 - 54" },
+    { soalan: "Dalam sebuah kotak ada 6 baris pensil. Setiap baris ada 7 pensil. Berapa jumlah pensil?", jawapan: "42", petunjuk: "6 × 7" },
+    { soalan: "56 epal dibahagi sama rata kepada 7 kanak-kanak. Berapa epal setiap orang?", jawapan: "8", petunjuk: "56 ÷ 7" },
+    { soalan: "Harga baju RM75. Harga seluar RM38. Berapa jumlah harga?", jawapan: "rm113", petunjuk: "75 + 38" },
+  ],
+};
 
 function normalize(s: string) {
   return s.trim().toLowerCase().replace(/\s+/g, " ");
