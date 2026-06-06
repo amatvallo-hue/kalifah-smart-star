@@ -162,11 +162,11 @@ export const PADANKAN: Record<string, PJPair[]> = {
 
 // ─────────────────────── SUSUN AYAT ───────────────────────
 const SA_BM: SAItem[] = [
-  { ayat: "Saya makan nasi di rumah", perkataan: ["Saya", "makan", "nasi", "di", "rumah"] },
-  { ayat: "Adik bermain bola di padang", perkataan: ["Adik", "bermain", "bola", "di", "padang"] },
-  { ayat: "Ibu memasak di dapur", perkataan: ["Ibu", "memasak", "di", "dapur"] },
-  { ayat: "Kakak membaca buku cerita", perkataan: ["Kakak", "membaca", "buku", "cerita"] },
-  { ayat: "Burung itu terbang tinggi", perkataan: ["Burung", "itu", "terbang", "tinggi"] },
+  { ayat: "Ibu memasak nasi di dapur", perkataan: ["Ibu", "memasak", "nasi", "di", "dapur"] },
+  { ayat: "Ali pergi ke sekolah setiap hari", perkataan: ["Ali", "pergi", "ke", "sekolah", "setiap", "hari"] },
+  { ayat: "Rajin belajar supaya berjaya dalam peperiksaan", perkataan: ["Rajin", "belajar", "supaya", "berjaya", "dalam", "peperiksaan"] },
+  { ayat: "Buku adalah jendela ilmu pengetahuan", perkataan: ["Buku", "adalah", "jendela", "ilmu", "pengetahuan"] },
+  { ayat: "Kita mesti menghormati ibu bapa kita", perkataan: ["Kita", "mesti", "menghormati", "ibu", "bapa", "kita"] },
 ];
 const SA_MATE: SAItem[] = [
   { ayat: "Dua tambah tiga sama dengan lima", perkataan: ["Dua", "tambah", "tiga", "sama", "dengan", "lima"] },
