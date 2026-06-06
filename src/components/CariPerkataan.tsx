@@ -536,3 +536,32 @@ export const JAWI_DARJAH2_CLUES: Record<string, string> = {
   ARAB: "Bahasa asal tulisan Jawi",
   TULIS: "Cara merakam perkataan",
 };
+
+// Pendidikan Islam Darjah 2 — 10x10 grid with 10 words.
+export const PI_DARJAH2_WORDS: Word[] = [
+  // Mendatar
+  { word: "JIBRIL", row: 0, col: 0, dir: "H" },
+  { word: "MIKAIL", row: 2, col: 0, dir: "H" },
+  { word: "IZRAIL", row: 4, col: 0, dir: "H" },
+  { word: "TAURAT", row: 6, col: 0, dir: "H" },
+  { word: "INJIL", row: 8, col: 0, dir: "H" },
+  // Menegak
+  { word: "QURAN", row: 0, col: 6, dir: "V" },
+  { word: "ZABUR", row: 0, col: 7, dir: "V" },
+  { word: "WUJUD", row: 5, col: 6, dir: "V" },
+  { word: "ISRAFIL", row: 0, col: 8, dir: "V" },
+  { word: "BAQA", row: 2, col: 9, dir: "V" },
+];
+
+export const PI_DARJAH2_CLUES: Record<string, string> = {
+  JIBRIL: "Malaikat menyampaikan wahyu",
+  MIKAIL: "Malaikat menurunkan hujan",
+  IZRAIL: "Malaikat mencabut nyawa",
+  TAURAT: "Kitab Nabi Musa",
+  INJIL: "Kitab Nabi Isa",
+  QURAN: "Kitab Nabi Muhammad SAW",
+  ZABUR: "Kitab Nabi Daud",
+  WUJUD: "Sifat Allah bermaksud Ada",
+  ISRAFIL: "Malaikat meniup sangkakala",
+  BAQA: "Sifat Allah bermaksud Kekal",
+};
