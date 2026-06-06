@@ -267,6 +267,13 @@ function GameSubjekPage() {
               gridSize={10}
               title="Word Search"
             />
+          ) : isJawi ? (
+            <CariPerkataan
+              words={JAWI_DARJAH1_WORDS}
+              clues={JAWI_DARJAH1_CLUES}
+              gridSize={10}
+              title="Cari Perkataan Jawi"
+            />
           ) : (
             <CariPerkataan />
           )
