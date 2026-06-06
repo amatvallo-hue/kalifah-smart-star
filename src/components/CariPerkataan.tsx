@@ -322,3 +322,31 @@ export const BI_DARJAH1_CLUES: Record<string, string> = {
   BLUE: "Colour of the sky",
   HAND: "Part of our body",
 };
+
+export const JAWI_DARJAH1_WORDS: Word[] = [
+  // Mendatar
+  { word: "ALIF", row: 0, col: 0, dir: "H" },
+  { word: "JIM", row: 2, col: 0, dir: "H" },
+  { word: "DAL", row: 4, col: 0, dir: "H" },
+  { word: "MIM", row: 6, col: 0, dir: "H" },
+  { word: "WAU", row: 8, col: 0, dir: "H" },
+  // Menegak
+  { word: "BA", row: 0, col: 5, dir: "V" },
+  { word: "TA", row: 0, col: 7, dir: "V" },
+  { word: "RA", row: 1, col: 3, dir: "V" },
+  { word: "NUN", row: 2, col: 6, dir: "V" },
+  { word: "YA", row: 4, col: 9, dir: "V" },
+];
+
+export const JAWI_DARJAH1_CLUES: Record<string, string> = {
+  ALIF: "Huruf Jawi pertama — ا",
+  BA: "Huruf Jawi — ب",
+  TA: "Huruf Jawi — ت",
+  JIM: "Huruf Jawi — ج",
+  DAL: "Huruf Jawi — د",
+  RA: "Huruf Jawi — ر",
+  MIM: "Huruf Jawi — م",
+  NUN: "Huruf Jawi — ن",
+  WAU: "Huruf Jawi — و",
+  YA: "Huruf Jawi — ي",
+};
