@@ -34,6 +34,14 @@ interface StatsRow {
   bab_selesai: number;
 }
 
+interface BadgeRow {
+  id: string;
+  kod: string;
+  nama: string;
+  ikon: string;
+  created_at: string;
+}
+
 const AKTIVITI_LABEL: Record<string, string> = {
   kuiz: "Kuiz",
   latihan: "Latihan Bertulis",
