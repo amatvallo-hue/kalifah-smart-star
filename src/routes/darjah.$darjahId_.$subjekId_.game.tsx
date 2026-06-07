@@ -729,9 +729,9 @@ function GameSubjekPage() {
           </button>
         </div>
 
-        {mode === "betul" && <BetulSalahGame subjekId={subjekId} />}
-        {mode === "padan" && <PadankanJawapanGame subjekId={subjekId} />}
-        {mode === "susun" && <SusunAyatGame subjekId={subjekId} />}
+        {mode === "betul" && <BetulSalahGame subjekId={subjekId} darjah={darjahId} />}
+        {mode === "padan" && <PadankanJawapanGame subjekId={subjekId} darjah={darjahId} />}
+        {mode === "susun" && <SusunAyatGame subjekId={subjekId} darjah={darjahId} />}
 
         {(mode === "betul" || mode === "padan" || mode === "susun") ? null : hasCariPerkataan && mode === "cari" ? (
           isBM ? (
