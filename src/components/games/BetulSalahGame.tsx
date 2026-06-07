@@ -24,6 +24,7 @@ export function BetulSalahGame({ subjekId, darjah }: { subjekId: string; darjah?
   const [flash, setFlash] = useState<null | "ok" | "no">(null);
   const [nota, setNota] = useState<string | null>(null);
   const [habis, setHabis] = useState(false);
+  const [mulaMasa] = useState(() => Date.now());
 
   useEffect(() => {
     if (habis && darjah) {
@@ -33,6 +34,7 @@ export function BetulSalahGame({ subjekId, darjah }: { subjekId: string; darjah?
         aktiviti: "game-betul",
         markah,
         jumlahSoalan: items.length,
+        masaAmbil: Math.round((Date.now() - mulaMasa) / 1000),
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
