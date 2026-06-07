@@ -21,6 +21,7 @@ function NotaRingkasPage() {
   const darjah = getDarjah(darjahId);
   const subjek = getSubjek(subjekId);
   const notes = getNotes(darjahId, subjekId);
+  const [mulaMasa] = useState(() => Date.now());
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
@@ -34,6 +35,7 @@ function NotaRingkasPage() {
         aktiviti: "nota",
         markah: 1,
         jumlahSoalan: 1,
+        masaAmbil: Math.round((Date.now() - mulaMasa) / 1000),
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
