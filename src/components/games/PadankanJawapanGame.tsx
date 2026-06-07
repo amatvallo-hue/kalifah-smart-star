@@ -26,6 +26,7 @@ export function PadankanJawapanGame({ subjekId, darjah }: { subjekId: string; da
   const [betulSet, setBetulSet] = useState<Set<number>>(new Set());
   const [salahSet, setSalahSet] = useState<Set<number>>(new Set());
   const [cubaan, setCubaan] = useState(0);
+  const [mulaMasa] = useState(() => Date.now());
 
   function pickKiri(i: number) {
     if (betulSet.has(i)) return;
