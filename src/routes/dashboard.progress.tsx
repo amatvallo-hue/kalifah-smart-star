@@ -165,6 +165,56 @@ function ProgressDashboard() {
 
   const babLemah = ringkasanSubjek.filter((r) => r.jumlahAktiviti > 0 && r.purata < 60);
 
+  // ── Sijil tersedia
+  const sijilSubjek = useMemo(() => {
+    // Untuk setiap (darjah, subjek) — jika 5 aktiviti teras siap → sijil tersedia
+    const teras = new Set(["kuiz", "latihan", "latih-tubi", "nota", "game-race"]);
+    const grouped = new Map<string, ProgressRow[]>();
+    progress.forEach((r) => {
+      if (!teras.has(r.aktiviti)) return;
+      const k = `${r.darjah}::${r.subjek}`;
+      if (!grouped.has(k)) grouped.set(k, []);
+      grouped.get(k)!.push(r);
+    });
+    const out: Array<{ darjah: string; subjekId: string; subjekTitle: string; purata: number; tarikh: string }> = [];
+    grouped.forEach((rows, k) => {
+      const set = new Set(rows.map((r) => r.aktiviti));
+      if (set.size < 5) return;
+      const [darjah, subjekId] = k.split("::");
+      const subj = SUBJEK_LIST.find((s) => s.id === subjekId);
+      if (!subj) return;
+      const purata = Math.round(rows.reduce((a, r) => a + Number(r.peratus), 0) / rows.length);
+      const tarikh = rows.map((r) => r.created_at).sort().slice(-1)[0];
+      out.push({ darjah, subjekId, subjekTitle: subj.title, purata, tarikh });
+    });
+    return out;
+  }, [progress]);
+
+  const sijilDarjah = useMemo(() => {
+    // Untuk setiap darjah — jika SEMUA 6 subjek siap → sijil darjah tersedia
+    const teras = new Set(["kuiz", "latihan", "latih-tubi", "nota", "game-race"]);
+    const grouped = new Map<string, Map<string, Set<string>>>(); // darjah -> subjek -> set aktiviti
+    progress.forEach((r) => {
+      if (!teras.has(r.aktiviti)) return;
+      if (!grouped.has(r.darjah)) grouped.set(r.darjah, new Map());
+      const m = grouped.get(r.darjah)!;
+      if (!m.has(r.subjek)) m.set(r.subjek, new Set());
+      m.get(r.subjek)!.add(r.aktiviti);
+    });
+    const out: Array<{ darjah: string; purata: number; tarikh: string }> = [];
+    grouped.forEach((subMap, darjah) => {
+      const semuaSubjekSiap = SUBJEK_LIST.every((sj) => (subMap.get(sj.id)?.size ?? 0) >= 5);
+      if (!semuaSubjekSiap) return;
+      const rows = progress.filter((r) => r.darjah === darjah && teras.has(r.aktiviti));
+      const purata = Math.round(rows.reduce((a, r) => a + Number(r.peratus), 0) / rows.length);
+      const tarikh = rows.map((r) => r.created_at).sort().slice(-1)[0];
+      out.push({ darjah, purata, tarikh });
+    });
+    return out;
+  }, [progress]);
+
+
+
   if (loading || !user) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
