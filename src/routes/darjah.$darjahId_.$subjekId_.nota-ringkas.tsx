@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { getDarjah, getSubjek } from "@/lib/curriculum";
 import { getNotes } from "@/lib/notes-bank";
+import { simpanProgress } from "@/lib/progress";
 
 export const Route = createFileRoute("/darjah/$darjahId_/$subjekId_/nota-ringkas")({
   head: () => ({ meta: [{ title: "Nota Ringkas — Kalifah.my" }] }),
@@ -24,6 +25,19 @@ function NotaRingkasPage() {
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
   }, [loading, user, navigate]);
+
+  useEffect(() => {
+    if (user && notes) {
+      simpanProgress({
+        darjah: darjahId,
+        subjek: subjekId,
+        aktiviti: "nota",
+        markah: 1,
+        jumlahSoalan: 1,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, !!notes]);
 
   async function handleLogout() {
     await supabase.auth.signOut();
