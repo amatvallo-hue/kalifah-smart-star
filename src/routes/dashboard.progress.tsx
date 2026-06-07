@@ -1,12 +1,13 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { ArrowLeft, Award, BookOpen, Clock, Flame, RefreshCw, TrendingUp } from "lucide-react";
+import { ArrowLeft, Award, BookOpen, Clock, Download, Flame, RefreshCw, Share2, TrendingUp, Trophy } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { SUBJEK_LIST } from "@/lib/curriculum";
 import { catatHariAktif } from "@/lib/progress";
 import { sertaiDenganKod } from "@/lib/parent";
+import { downloadSijil, shareSijil, type SijilInput } from "@/lib/sijil";
 
 export const Route = createFileRoute("/dashboard/progress")({
   head: () => ({ meta: [{ title: "Progress Saya — Kalifah.my" }] }),
@@ -165,6 +166,56 @@ function ProgressDashboard() {
 
   const babLemah = ringkasanSubjek.filter((r) => r.jumlahAktiviti > 0 && r.purata < 60);
 
+  // ── Sijil tersedia
+  const sijilSubjek = useMemo(() => {
+    // Untuk setiap (darjah, subjek) — jika 5 aktiviti teras siap → sijil tersedia
+    const teras = new Set(["kuiz", "latihan", "latih-tubi", "nota", "game-race"]);
+    const grouped = new Map<string, ProgressRow[]>();
+    progress.forEach((r) => {
+      if (!teras.has(r.aktiviti)) return;
+      const k = `${r.darjah}::${r.subjek}`;
+      if (!grouped.has(k)) grouped.set(k, []);
+      grouped.get(k)!.push(r);
+    });
+    const out: Array<{ darjah: string; subjekId: string; subjekTitle: string; purata: number; tarikh: string }> = [];
+    grouped.forEach((rows, k) => {
+      const set = new Set(rows.map((r) => r.aktiviti));
+      if (set.size < 5) return;
+      const [darjah, subjekId] = k.split("::");
+      const subj = SUBJEK_LIST.find((s) => s.id === subjekId);
+      if (!subj) return;
+      const purata = Math.round(rows.reduce((a, r) => a + Number(r.peratus), 0) / rows.length);
+      const tarikh = rows.map((r) => r.created_at).sort().slice(-1)[0];
+      out.push({ darjah, subjekId, subjekTitle: subj.title, purata, tarikh });
+    });
+    return out;
+  }, [progress]);
+
+  const sijilDarjah = useMemo(() => {
+    // Untuk setiap darjah — jika SEMUA 6 subjek siap → sijil darjah tersedia
+    const teras = new Set(["kuiz", "latihan", "latih-tubi", "nota", "game-race"]);
+    const grouped = new Map<string, Map<string, Set<string>>>(); // darjah -> subjek -> set aktiviti
+    progress.forEach((r) => {
+      if (!teras.has(r.aktiviti)) return;
+      if (!grouped.has(r.darjah)) grouped.set(r.darjah, new Map());
+      const m = grouped.get(r.darjah)!;
+      if (!m.has(r.subjek)) m.set(r.subjek, new Set());
+      m.get(r.subjek)!.add(r.aktiviti);
+    });
+    const out: Array<{ darjah: string; purata: number; tarikh: string }> = [];
+    grouped.forEach((subMap, darjah) => {
+      const semuaSubjekSiap = SUBJEK_LIST.every((sj) => (subMap.get(sj.id)?.size ?? 0) >= 5);
+      if (!semuaSubjekSiap) return;
+      const rows = progress.filter((r) => r.darjah === darjah && teras.has(r.aktiviti));
+      const purata = Math.round(rows.reduce((a, r) => a + Number(r.peratus), 0) / rows.length);
+      const tarikh = rows.map((r) => r.created_at).sort().slice(-1)[0];
+      out.push({ darjah, purata, tarikh });
+    });
+    return out;
+  }, [progress]);
+
+
+
   if (loading || !user) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
@@ -264,6 +315,15 @@ function ProgressDashboard() {
                 </div>
               )}
             </section>
+
+            {/* Sijil Saya */}
+            <SeksyenSijil
+              namaMurid={user.email?.split("@")[0] ?? "Pelajar"}
+              sijilSubjek={sijilSubjek}
+              sijilDarjah={sijilDarjah}
+            />
+
+
 
             {/* Kad Subjek */}
             <section className="mt-8">
@@ -481,6 +541,146 @@ function KadSertaiKod() {
           )}
         </form>
       )}
+    </div>
+  );
+}
+
+function formatTarikhMs(iso: string): string {
+  const d = new Date(iso);
+  return d.toLocaleDateString("ms-MY", { day: "numeric", month: "long", year: "numeric" });
+}
+
+function SeksyenSijil({
+  namaMurid,
+  sijilSubjek,
+  sijilDarjah,
+}: {
+  namaMurid: string;
+  sijilSubjek: Array<{ darjah: string; subjekId: string; subjekTitle: string; purata: number; tarikh: string }>;
+  sijilDarjah: Array<{ darjah: string; purata: number; tarikh: string }>;
+}) {
+  const semua = [...sijilDarjah.map((s) => ({ ...s, _kind: "darjah" as const })), ...sijilSubjek.map((s) => ({ ...s, _kind: "subjek" as const }))];
+
+  return (
+    <section className="mt-8">
+      <div className="mb-3 flex items-center gap-2">
+        <Trophy className="h-5 w-5" style={{ color: EMAS }} />
+        <h2 className="font-display text-xl font-extrabold text-foreground">Sijil Saya</h2>
+      </div>
+      {semua.length === 0 ? (
+        <div className="rounded-2xl bg-card p-5 text-center shadow-soft">
+          <p className="text-sm text-muted-foreground">
+            Sijil PDF akan tersedia bila kamu siapkan semua 5 aktiviti dalam satu subjek atau semua subjek dalam satu darjah. 📜
+          </p>
+        </div>
+      ) : (
+        <div className="grid gap-3 sm:grid-cols-2">
+          {sijilDarjah.map((s) => (
+            <KadSijil
+              key={`d-${s.darjah}`}
+              warna={EMAS}
+              ikon="🏆"
+              tajuk={`Sijil Tamat Darjah ${s.darjah}`}
+              sari={`Semua subjek lengkap • Purata ${s.purata}%`}
+              input={{
+                jenis: "darjah",
+                namaMurid,
+                tajuk: `Darjah ${s.darjah}`,
+                tarikh: formatTarikhMs(s.tarikh),
+                purata: s.purata,
+                kodSijil: `D${s.darjah}-${namaMurid.slice(0, 3).toUpperCase()}-${s.tarikh.slice(0, 10).replace(/-/g, "")}`,
+              }}
+              namafile={`Sijil-Darjah-${s.darjah}-${namaMurid}.pdf`}
+            />
+          ))}
+          {sijilSubjek.map((s) => (
+            <KadSijil
+              key={`s-${s.darjah}-${s.subjekId}`}
+              warna={HIJAU}
+              ikon="🎓"
+              tajuk={`Sijil ${s.subjekTitle}`}
+              sari={`Darjah ${s.darjah} • Purata ${s.purata}%`}
+              input={{
+                jenis: "subjek",
+                namaMurid,
+                tajuk: `${s.subjekTitle} Darjah ${s.darjah}`,
+                tarikh: formatTarikhMs(s.tarikh),
+                purata: s.purata,
+                kodSijil: `${s.subjekId.slice(0, 3).toUpperCase()}-D${s.darjah}-${namaMurid.slice(0, 3).toUpperCase()}-${s.tarikh.slice(0, 10).replace(/-/g, "")}`,
+              }}
+              namafile={`Sijil-${s.subjekTitle}-D${s.darjah}-${namaMurid}.pdf`}
+            />
+          ))}
+        </div>
+      )}
+    </section>
+  );
+}
+
+function KadSijil({
+  warna,
+  ikon,
+  tajuk,
+  sari,
+  input,
+  namafile,
+}: {
+  warna: string;
+  ikon: string;
+  tajuk: string;
+  sari: string;
+  input: SijilInput;
+  namafile: string;
+}) {
+  const [busy, setBusy] = useState<"dl" | "sh" | null>(null);
+
+  return (
+    <div
+      className="flex flex-col gap-3 rounded-2xl bg-card p-4 shadow-soft sm:flex-row sm:items-center"
+      style={{ border: `2px solid ${warna}55` }}
+    >
+      <div
+        className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl text-3xl"
+        style={{ backgroundColor: `${warna}1f` }}
+      >
+        {ikon}
+      </div>
+      <div className="min-w-0 flex-1">
+        <p className="font-display text-base font-extrabold text-foreground truncate">{tajuk}</p>
+        <p className="text-xs text-muted-foreground truncate">{sari}</p>
+      </div>
+      <div className="flex shrink-0 gap-2">
+        <button
+          onClick={async () => {
+            setBusy("dl");
+            try {
+              await downloadSijil(input, namafile);
+            } finally {
+              setBusy(null);
+            }
+          }}
+          disabled={busy !== null}
+          className="inline-flex items-center gap-1.5 rounded-full px-3 py-2 font-display text-xs font-extrabold text-white shadow-soft disabled:opacity-60"
+          style={{ backgroundColor: warna }}
+        >
+          <Download className="h-3.5 w-3.5" /> {busy === "dl" ? "..." : "PDF"}
+        </button>
+        <button
+          onClick={async () => {
+            setBusy("sh");
+            try {
+              await shareSijil(input, namafile);
+            } finally {
+              setBusy(null);
+            }
+          }}
+          disabled={busy !== null}
+          className="inline-flex items-center gap-1.5 rounded-full px-3 py-2 font-display text-xs font-extrabold disabled:opacity-60"
+          style={{ backgroundColor: `${warna}1f`, color: warna, border: `1.5px solid ${warna}` }}
+        >
+          <Share2 className="h-3.5 w-3.5" /> {busy === "sh" ? "..." : "Kongsi"}
+        </button>
+      </div>
     </div>
   );
 }
