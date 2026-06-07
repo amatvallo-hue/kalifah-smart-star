@@ -31,6 +31,15 @@ export function SiteHeader({
           >
             Pilih Darjah
           </Link>
+          {userName && (
+            <Link
+              to="/dashboard/progress"
+              className="rounded-full px-4 py-2 font-display text-sm font-bold text-muted-foreground transition hover:bg-secondary hover:text-foreground"
+              activeProps={{ className: "bg-secondary text-primary" }}
+            >
+              Progress Saya
+            </Link>
+          )}
         </nav>
 
         <div className="flex items-center gap-2">
