@@ -5,6 +5,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { SUBJEK_LIST } from "@/lib/curriculum";
+import { catatHariAktif } from "@/lib/progress";
 
 export const Route = createFileRoute("/dashboard/progress")({
   head: () => ({ meta: [{ title: "Progress Saya — Kalifah.my" }] }),
@@ -31,6 +32,14 @@ interface StatsRow {
   soalan_dijawab: number;
   masa_belajar: number;
   bab_selesai: number;
+}
+
+interface BadgeRow {
+  id: string;
+  kod: string;
+  nama: string;
+  ikon: string;
+  created_at: string;
 }
 
 const AKTIVITI_LABEL: Record<string, string> = {
@@ -88,6 +97,7 @@ function ProgressDashboard() {
   const { user, loading } = useAuth();
   const [progress, setProgress] = useState<ProgressRow[]>([]);
   const [stats, setStats] = useState<StatsRow[]>([]);
+  const [badges, setBadges] = useState<BadgeRow[]>([]);
   const [fetching, setFetching] = useState(true);
 
   useEffect(() => {
@@ -99,7 +109,9 @@ function ProgressDashboard() {
     let cancelled = false;
     (async () => {
       setFetching(true);
-      const [{ data: p }, { data: s }] = await Promise.all([
+      // Catat hari aktif supaya streak terus jalan walau hanya buka dashboard
+      await catatHariAktif();
+      const [{ data: p }, { data: s }, { data: b }] = await Promise.all([
         supabase
           .from("user_progress")
           .select("id, darjah, subjek, aktiviti, markah, jumlah_soalan, peratus, created_at")
@@ -111,10 +123,16 @@ function ProgressDashboard() {
           .eq("user_id", user.id)
           .order("tarikh", { ascending: false })
           .limit(60),
+        supabase
+          .from("user_badges")
+          .select("id, kod, nama, ikon, created_at")
+          .eq("user_id", user.id)
+          .order("created_at", { ascending: false }),
       ]);
       if (cancelled) return;
       setProgress((p ?? []) as ProgressRow[]);
       setStats((s ?? []) as StatsRow[]);
+      setBadges((b ?? []) as BadgeRow[]);
       setFetching(false);
     })();
     return () => {
@@ -142,10 +160,7 @@ function ProgressDashboard() {
     });
   }, [progress]);
 
-  const lencana = useMemo(() => {
-    const subjekSiap = ringkasanSubjek.filter((r) => r.peratusSiap === 100).length;
-    return subjekSiap + (streak >= 7 ? 1 : 0);
-  }, [ringkasanSubjek, streak]);
+  const lencana = badges.length;
 
   const babLemah = ringkasanSubjek.filter((r) => r.jumlahAktiviti > 0 && r.purata < 60);
 
@@ -220,6 +235,32 @@ function ProgressDashboard() {
           </div>
         ) : (
           <>
+            {/* Lencana */}
+            <section className="mt-8">
+              <h2 className="font-display text-xl font-extrabold text-foreground">Lencana Saya</h2>
+              {badges.length === 0 ? (
+                <div className="mt-3 rounded-2xl bg-card p-5 text-center shadow-soft">
+                  <p className="text-sm text-muted-foreground">
+                    Belum ada lencana. Siapkan aktiviti untuk mengumpul lencana! 🏅
+                  </p>
+                </div>
+              ) : (
+                <div className="mt-4 flex flex-wrap gap-3">
+                  {badges.map((bg) => (
+                    <div
+                      key={bg.id}
+                      className="flex items-center gap-2 rounded-full bg-card px-4 py-2 shadow-soft"
+                      style={{ border: `2px solid ${EMAS}55` }}
+                      title={new Date(bg.created_at).toLocaleDateString("ms-MY")}
+                    >
+                      <span className="text-2xl leading-none">{bg.ikon}</span>
+                      <span className="font-display text-sm font-extrabold text-foreground">{bg.nama}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </section>
+
             {/* Kad Subjek */}
             <section className="mt-8">
               <h2 className="font-display text-xl font-extrabold text-foreground">Ringkasan Subjek</h2>

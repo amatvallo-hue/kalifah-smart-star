@@ -481,6 +481,7 @@ function LatihanSubjekPage() {
   const [semak, setSemak] = useState<null | boolean>(null);
   const [bintang, setBintang] = useState(0);
   const [habis, setHabis] = useState(false);
+  const [mulaMasa] = useState(() => Date.now());
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
@@ -494,6 +495,7 @@ function LatihanSubjekPage() {
         aktiviti: "latihan",
         markah: bintang,
         jumlahSoalan: totalSoalan,
+        masaAmbil: Math.round((Date.now() - mulaMasa) / 1000),
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import { SUBJEK_LIST } from "@/lib/curriculum";
 
 export interface SimpanProgressInput {
   darjah: string;
@@ -9,14 +10,109 @@ export interface SimpanProgressInput {
   masaAmbil?: number; // saat
 }
 
+export interface BadgeRow {
+  id: string;
+  kod: string;
+  nama: string;
+  ikon: string;
+  created_at: string;
+}
+
+const AKTIVITI_TERAS = ["kuiz", "latihan", "latih-tubi", "nota", "game-race"] as const;
+
 function todayKL(): string {
-  // Anggap zon waktu Malaysia untuk konsistensi streak
   const now = new Date();
   const ms = now.getTime() + (8 * 60 - now.getTimezoneOffset()) * 60 * 1000;
   return new Date(ms).toISOString().slice(0, 10);
 }
 
-/** Simpan satu aktiviti selesai + kemas kini statistik harian. Senyap kalau gagal / tetamu. */
+function daysAgoKL(n: number): string {
+  const t = new Date(todayKL() + "T00:00:00Z");
+  t.setUTCDate(t.getUTCDate() - n);
+  return t.toISOString().slice(0, 10);
+}
+
+function kiraStreak(tarikhSet: Set<string>): number {
+  let mula = tarikhSet.has(todayKL()) ? 0 : tarikhSet.has(daysAgoKL(1)) ? 1 : -1;
+  if (mula < 0) return 0;
+  let streak = 0;
+  while (tarikhSet.has(daysAgoKL(mula))) {
+    streak++;
+    mula++;
+  }
+  return streak;
+}
+
+async function awardBadge(userId: string, kod: string, nama: string, ikon: string) {
+  // ON CONFLICT DO NOTHING via ignoreDuplicates
+  await supabase
+    .from("user_badges")
+    .upsert({ user_id: userId, kod, nama, ikon }, { onConflict: "user_id,kod", ignoreDuplicates: true });
+}
+
+async function semakDanBeriLencana(userId: string, input: SimpanProgressInput) {
+  try {
+    // Lencana Cemerlang — markah penuh dalam kuiz
+    if (input.aktiviti === "kuiz" && input.jumlahSoalan > 0 && input.markah >= input.jumlahSoalan) {
+      await awardBadge(userId, "cemerlang", "Cemerlang", "🏆");
+    }
+
+    // Lencana subjek — siap semua aktiviti teras dalam subjek
+    const { data: progSubjek } = await supabase
+      .from("user_progress")
+      .select("aktiviti")
+      .eq("user_id", userId)
+      .eq("subjek", input.subjek);
+    const setAktiviti = new Set((progSubjek ?? []).map((r) => r.aktiviti));
+    const semuaSiap = AKTIVITI_TERAS.every((a) => setAktiviti.has(a));
+    if (semuaSiap) {
+      const sj = SUBJEK_LIST.find((s) => s.id === input.subjek);
+      if (sj) await awardBadge(userId, `subjek-${sj.id}`, `Pakar ${sj.title}`, "🎖️");
+    }
+
+    // Lencana streak — Bintang ⭐ (7) & Emas 🥇 (30)
+    const { data: stats } = await supabase
+      .from("user_stats")
+      .select("tarikh")
+      .eq("user_id", userId)
+      .order("tarikh", { ascending: false })
+      .limit(60);
+    const streak = kiraStreak(new Set((stats ?? []).map((r) => r.tarikh)));
+    if (streak >= 7) await awardBadge(userId, "bintang", "Bintang 7 Hari", "⭐");
+    if (streak >= 30) await awardBadge(userId, "emas", "Emas 30 Hari", "🥇");
+  } catch (e) {
+    console.warn("semakDanBeriLencana gagal:", e);
+  }
+}
+
+/** Catat hari aktif (login/buka dashboard) supaya streak terus berjalan walau tak buat aktiviti. */
+export async function catatHariAktif(): Promise<void> {
+  try {
+    const { data: sess } = await supabase.auth.getSession();
+    const userId = sess.session?.user?.id;
+    if (!userId) return;
+    const tarikh = todayKL();
+    const { data: existing } = await supabase
+      .from("user_stats")
+      .select("id")
+      .eq("user_id", userId)
+      .eq("tarikh", tarikh)
+      .maybeSingle();
+    if (!existing) {
+      await supabase.from("user_stats").insert({
+        user_id: userId,
+        tarikh,
+        soalan_dijawab: 0,
+        masa_belajar: 0,
+        bab_selesai: 0,
+      });
+    }
+  } catch (e) {
+    console.warn("catatHariAktif gagal:", e);
+  }
+}
+
+/** Simpan satu aktiviti selesai + kemas kini statistik harian + beri lencana. Senyap kalau gagal / tetamu. */
 export async function simpanProgress(input: SimpanProgressInput): Promise<void> {
   try {
     const { data: sess } = await supabase.auth.getSession();
@@ -28,37 +124,60 @@ export async function simpanProgress(input: SimpanProgressInput): Promise<void> 
     const peratus = Math.round((markah / jumlah) * 100);
     const masa = Math.max(0, input.masaAmbil ?? 0);
 
-    await supabase.from("user_progress").insert({
-      user_id: userId,
-      darjah: String(input.darjah),
-      subjek: input.subjek,
-      aktiviti: input.aktiviti,
-      markah,
-      jumlah_soalan: jumlah,
-      peratus,
-      masa_ambil: masa,
-    });
-
-    const tarikh = todayKL();
-    const minit = Math.max(1, Math.round(masa / 60));
-
+    // ── 1) DEDUP: simpan rekod terbaik sahaja per (user,darjah,subjek,aktiviti)
     const { data: existing } = await supabase
+      .from("user_progress")
+      .select("id, peratus, masa_ambil")
+      .eq("user_id", userId)
+      .eq("darjah", String(input.darjah))
+      .eq("subjek", input.subjek)
+      .eq("aktiviti", input.aktiviti)
+      .maybeSingle();
+
+    if (!existing) {
+      await supabase.from("user_progress").insert({
+        user_id: userId,
+        darjah: String(input.darjah),
+        subjek: input.subjek,
+        aktiviti: input.aktiviti,
+        markah,
+        jumlah_soalan: jumlah,
+        peratus,
+        masa_ambil: masa,
+      });
+    } else if (peratus > Number(existing.peratus)) {
+      await supabase
+        .from("user_progress")
+        .update({
+          markah,
+          jumlah_soalan: jumlah,
+          peratus,
+          masa_ambil: masa,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", existing.id);
+    }
+
+    // ── 2) STATS HARIAN — sentiasa akumulasi (masa & soalan kekal dikira walau re-attempt)
+    const tarikh = todayKL();
+    const minit = Math.max(0, Math.round(masa / 60));
+    const { data: statRow } = await supabase
       .from("user_stats")
       .select("id, soalan_dijawab, masa_belajar, bab_selesai")
       .eq("user_id", userId)
       .eq("tarikh", tarikh)
       .maybeSingle();
 
-    if (existing) {
+    if (statRow) {
       await supabase
         .from("user_stats")
         .update({
-          soalan_dijawab: (existing.soalan_dijawab ?? 0) + jumlah,
-          masa_belajar: (existing.masa_belajar ?? 0) + minit,
-          bab_selesai: (existing.bab_selesai ?? 0) + 1,
+          soalan_dijawab: (statRow.soalan_dijawab ?? 0) + jumlah,
+          masa_belajar: (statRow.masa_belajar ?? 0) + minit,
+          bab_selesai: (statRow.bab_selesai ?? 0) + (existing ? 0 : 1),
           updated_at: new Date().toISOString(),
         })
-        .eq("id", existing.id);
+        .eq("id", statRow.id);
     } else {
       await supabase.from("user_stats").insert({
         user_id: userId,
@@ -68,6 +187,9 @@ export async function simpanProgress(input: SimpanProgressInput): Promise<void> 
         bab_selesai: 1,
       });
     }
+
+    // ── 3) Lencana
+    await semakDanBeriLencana(userId, input);
   } catch (e) {
     console.warn("simpanProgress gagal:", e);
   }

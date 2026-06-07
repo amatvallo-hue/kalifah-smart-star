@@ -245,6 +245,7 @@ function KuizPage() {
   const [pilih, setPilih] = useState<number | null>(null);
   const [skor, setSkor] = useState(0);
   const [selesai, setSelesai] = useState(false);
+  const [mulaMasa] = useState(() => Date.now());
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
@@ -258,6 +259,7 @@ function KuizPage() {
         aktiviti: "kuiz",
         markah: skor,
         jumlahSoalan: soalanList.length,
+        masaAmbil: Math.round((Date.now() - mulaMasa) / 1000),
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

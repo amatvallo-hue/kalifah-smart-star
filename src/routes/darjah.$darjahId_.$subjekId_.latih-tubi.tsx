@@ -49,6 +49,7 @@ function LatihTubiPage() {
   const [berhenti, setBerhenti] = useState(false);
   const [fetching, setFetching] = useState(true);
   const [errMsg, setErrMsg] = useState<string | null>(null);
+  const [mulaMasa] = useState(() => Date.now());
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
@@ -62,6 +63,7 @@ function LatihTubiPage() {
         aktiviti: "latih-tubi",
         markah: betul,
         jumlahSoalan: jawab,
+        masaAmbil: Math.round((Date.now() - mulaMasa) / 1000),
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
