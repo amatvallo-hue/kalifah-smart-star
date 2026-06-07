@@ -259,6 +259,7 @@ function KuizPage() {
         aktiviti: "kuiz",
         markah: skor,
         jumlahSoalan: soalanList.length,
+        masaAmbil: Math.round((Date.now() - mulaMasa) / 1000),
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
