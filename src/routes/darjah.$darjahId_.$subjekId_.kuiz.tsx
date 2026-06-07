@@ -245,6 +245,7 @@ function KuizPage() {
   const [pilih, setPilih] = useState<number | null>(null);
   const [skor, setSkor] = useState(0);
   const [selesai, setSelesai] = useState(false);
+  const [mulaMasa] = useState(() => Date.now());
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
