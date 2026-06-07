@@ -97,6 +97,7 @@ function ProgressDashboard() {
   const { user, loading } = useAuth();
   const [progress, setProgress] = useState<ProgressRow[]>([]);
   const [stats, setStats] = useState<StatsRow[]>([]);
+  const [badges, setBadges] = useState<BadgeRow[]>([]);
   const [fetching, setFetching] = useState(true);
 
   useEffect(() => {
@@ -108,7 +109,9 @@ function ProgressDashboard() {
     let cancelled = false;
     (async () => {
       setFetching(true);
-      const [{ data: p }, { data: s }] = await Promise.all([
+      // Catat hari aktif supaya streak terus jalan walau hanya buka dashboard
+      await catatHariAktif();
+      const [{ data: p }, { data: s }, { data: b }] = await Promise.all([
         supabase
           .from("user_progress")
           .select("id, darjah, subjek, aktiviti, markah, jumlah_soalan, peratus, created_at")
@@ -120,10 +123,16 @@ function ProgressDashboard() {
           .eq("user_id", user.id)
           .order("tarikh", { ascending: false })
           .limit(60),
+        supabase
+          .from("user_badges")
+          .select("id, kod, nama, ikon, created_at")
+          .eq("user_id", user.id)
+          .order("created_at", { ascending: false }),
       ]);
       if (cancelled) return;
       setProgress((p ?? []) as ProgressRow[]);
       setStats((s ?? []) as StatsRow[]);
+      setBadges((b ?? []) as BadgeRow[]);
       setFetching(false);
     })();
     return () => {
@@ -151,10 +160,7 @@ function ProgressDashboard() {
     });
   }, [progress]);
 
-  const lencana = useMemo(() => {
-    const subjekSiap = ringkasanSubjek.filter((r) => r.peratusSiap === 100).length;
-    return subjekSiap + (streak >= 7 ? 1 : 0);
-  }, [ringkasanSubjek, streak]);
+  const lencana = badges.length;
 
   const babLemah = ringkasanSubjek.filter((r) => r.jumlahAktiviti > 0 && r.purata < 60);
 
