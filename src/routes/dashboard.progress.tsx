@@ -197,7 +197,10 @@ function ProgressDashboard() {
             <p className="text-sm text-muted-foreground">
               Pantau pencapaian dan teruskan belajar setiap hari!
             </p>
-          </div>
+        </div>
+
+        <KadSertaiKod />
+
         </div>
 
         {/* Statistik harian */}
