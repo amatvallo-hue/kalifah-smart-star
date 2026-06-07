@@ -5,6 +5,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { SUBJEK_LIST } from "@/lib/curriculum";
+import { catatHariAktif } from "@/lib/progress";
 
 export const Route = createFileRoute("/dashboard/progress")({
   head: () => ({ meta: [{ title: "Progress Saya — Kalifah.my" }] }),
