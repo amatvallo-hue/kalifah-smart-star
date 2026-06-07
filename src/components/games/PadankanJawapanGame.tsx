@@ -1,7 +1,8 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { RefreshCw, Sparkles } from "lucide-react";
 import { StarReward } from "@/components/StarReward";
 import { getPadankan, type PJPair } from "@/lib/games-bank";
+import { simpanProgress } from "@/lib/progress";
 
 const HIJAU = "#1B8A5A";
 const EMAS = "#F5A623";
@@ -15,7 +16,7 @@ function shuffle<T>(a: T[]): T[] {
   return r;
 }
 
-export function PadankanJawapanGame({ subjekId }: { subjekId: string }) {
+export function PadankanJawapanGame({ subjekId, darjah }: { subjekId: string; darjah?: string }) {
   const [seed, setSeed] = useState(0);
   const pairs = useMemo<PJPair[]>(() => getPadankan(subjekId).slice(0, 8), [subjekId]);
   const kanan = useMemo(() => shuffle(pairs.map((p, i) => ({ ...p, id: i }))), [pairs, seed]);

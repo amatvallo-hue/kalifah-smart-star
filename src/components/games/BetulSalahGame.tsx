@@ -1,7 +1,8 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Check, X, RefreshCw, Sparkles } from "lucide-react";
 import { StarReward } from "@/components/StarReward";
 import { getBetulSalah, type BSItem } from "@/lib/games-bank";
+import { simpanProgress } from "@/lib/progress";
 
 const HIJAU = "#1B8A5A";
 const EMAS = "#F5A623";
@@ -15,7 +16,7 @@ function shuffle<T>(a: T[]): T[] {
   return r;
 }
 
-export function BetulSalahGame({ subjekId }: { subjekId: string }) {
+export function BetulSalahGame({ subjekId, darjah }: { subjekId: string; darjah?: string }) {
   const [seed, setSeed] = useState(0);
   const items = useMemo<BSItem[]>(() => shuffle(getBetulSalah(subjekId)).slice(0, 10), [subjekId, seed]);
   const [idx, setIdx] = useState(0);
@@ -23,6 +24,19 @@ export function BetulSalahGame({ subjekId }: { subjekId: string }) {
   const [flash, setFlash] = useState<null | "ok" | "no">(null);
   const [nota, setNota] = useState<string | null>(null);
   const [habis, setHabis] = useState(false);
+
+  useEffect(() => {
+    if (habis && darjah) {
+      simpanProgress({
+        darjah,
+        subjek: subjekId,
+        aktiviti: "game-betul",
+        markah,
+        jumlahSoalan: items.length,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [habis]);
 
   function jawab(pilih: boolean) {
     if (flash) return;

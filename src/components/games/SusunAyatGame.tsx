@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { RefreshCw, Sparkles, Undo2 } from "lucide-react";
 import { StarReward } from "@/components/StarReward";
 import { getSusunAyat, type SAItem } from "@/lib/games-bank";
+import { simpanProgress } from "@/lib/progress";
 
 const HIJAU = "#1B8A5A";
 const EMAS = "#F5A623";
@@ -17,7 +18,7 @@ function shuffle<T>(a: T[]): T[] {
 
 interface Word { id: number; teks: string }
 
-export function SusunAyatGame({ subjekId }: { subjekId: string }) {
+export function SusunAyatGame({ subjekId, darjah }: { subjekId: string; darjah?: string }) {
   const [seed, setSeed] = useState(0);
   const ayatList = useMemo<SAItem[]>(() => getSusunAyat(subjekId).slice(0, 5), [subjekId]);
   const [idx, setIdx] = useState(0);
