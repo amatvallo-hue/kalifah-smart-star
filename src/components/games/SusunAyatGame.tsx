@@ -35,6 +35,19 @@ export function SusunAyatGame({ subjekId, darjah }: { subjekId: string; darjah?:
     setFlash(null);
   }, [idx, ayatList, seed]);
 
+  useEffect(() => {
+    if (habis && darjah && ayatList.length > 0) {
+      simpanProgress({
+        darjah,
+        subjek: subjekId,
+        aktiviti: "game-susun",
+        markah,
+        jumlahSoalan: ayatList.length,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [habis]);
+
   function pickBank(w: Word) {
     if (flash) return;
     setBank((b) => b.filter((x) => x.id !== w.id));
