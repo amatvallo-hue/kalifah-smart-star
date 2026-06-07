@@ -1,7 +1,8 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { RefreshCw, Sparkles } from "lucide-react";
 import { StarReward } from "@/components/StarReward";
 import { getPadankan, type PJPair } from "@/lib/games-bank";
+import { simpanProgress } from "@/lib/progress";
 
 const HIJAU = "#1B8A5A";
 const EMAS = "#F5A623";
@@ -15,7 +16,7 @@ function shuffle<T>(a: T[]): T[] {
   return r;
 }
 
-export function PadankanJawapanGame({ subjekId }: { subjekId: string }) {
+export function PadankanJawapanGame({ subjekId, darjah }: { subjekId: string; darjah?: string }) {
   const [seed, setSeed] = useState(0);
   const pairs = useMemo<PJPair[]>(() => getPadankan(subjekId).slice(0, 8), [subjekId]);
   const kanan = useMemo(() => shuffle(pairs.map((p, i) => ({ ...p, id: i }))), [pairs, seed]);
@@ -63,9 +64,22 @@ export function PadankanJawapanGame({ subjekId }: { subjekId: string }) {
     setCubaan(0);
   }
 
-  const habis = betulSet.size === pairs.length;
+  const habis = betulSet.size === pairs.length && pairs.length > 0;
   const markah = betulSet.size;
   const bintang = cubaan <= pairs.length + 1 ? 3 : cubaan <= pairs.length + 4 ? 2 : 1;
+
+  useEffect(() => {
+    if (habis && darjah) {
+      simpanProgress({
+        darjah,
+        subjek: subjekId,
+        aktiviti: "game-padan",
+        markah,
+        jumlahSoalan: pairs.length,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [habis]);
 
   return (
     <div className="mt-6 space-y-4">

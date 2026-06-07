@@ -1,0 +1,378 @@
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useEffect, useMemo, useState } from "react";
+import { ArrowLeft, Award, BookOpen, Clock, Flame, RefreshCw, TrendingUp } from "lucide-react";
+import { SiteHeader } from "@/components/SiteHeader";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/use-auth";
+import { SUBJEK_LIST } from "@/lib/curriculum";
+
+export const Route = createFileRoute("/dashboard/progress")({
+  head: () => ({ meta: [{ title: "Progress Saya — Kalifah.my" }] }),
+  ssr: false,
+  component: ProgressDashboard,
+});
+
+const HIJAU = "#1B8A5A";
+const EMAS = "#F5A623";
+
+interface ProgressRow {
+  id: string;
+  darjah: string;
+  subjek: string;
+  aktiviti: string;
+  markah: number;
+  jumlah_soalan: number;
+  peratus: number;
+  created_at: string;
+}
+
+interface StatsRow {
+  tarikh: string;
+  soalan_dijawab: number;
+  masa_belajar: number;
+  bab_selesai: number;
+}
+
+const AKTIVITI_LABEL: Record<string, string> = {
+  kuiz: "Kuiz",
+  latihan: "Latihan Bertulis",
+  "latih-tubi": "Latih Tubi",
+  nota: "Nota Ringkas",
+  "game-race": "Quiz Race",
+  "game-cari": "Cari Perkataan",
+  "game-betul": "Betul atau Salah",
+  "game-padan": "Padankan",
+  "game-susun": "Susun Ayat",
+};
+
+function todayKL(): string {
+  const now = new Date();
+  const ms = now.getTime() + (8 * 60 - now.getTimezoneOffset()) * 60 * 1000;
+  return new Date(ms).toISOString().slice(0, 10);
+}
+
+function daysAgoKL(n: number): string {
+  const t = new Date(todayKL() + "T00:00:00Z");
+  t.setUTCDate(t.getUTCDate() - n);
+  return t.toISOString().slice(0, 10);
+}
+
+function kiraStreak(rows: StatsRow[]): number {
+  if (rows.length === 0) return 0;
+  const set = new Set(rows.map((r) => r.tarikh));
+  let streak = 0;
+  // boleh mula dari hari ini ATAU semalam (kalau belum belajar hari ini)
+  let mula = set.has(todayKL()) ? 0 : set.has(daysAgoKL(1)) ? 1 : -1;
+  if (mula < 0) return 0;
+  while (set.has(daysAgoKL(mula))) {
+    streak++;
+    mula++;
+  }
+  return streak;
+}
+
+function formatTarikh(iso: string) {
+  const d = new Date(iso);
+  const diff = Date.now() - d.getTime();
+  const min = Math.round(diff / 60000);
+  if (min < 1) return "Sebentar tadi";
+  if (min < 60) return `${min} minit lalu`;
+  const jam = Math.round(min / 60);
+  if (jam < 24) return `${jam} jam lalu`;
+  const hari = Math.round(jam / 24);
+  return `${hari} hari lalu`;
+}
+
+function ProgressDashboard() {
+  const navigate = useNavigate();
+  const { user, loading } = useAuth();
+  const [progress, setProgress] = useState<ProgressRow[]>([]);
+  const [stats, setStats] = useState<StatsRow[]>([]);
+  const [fetching, setFetching] = useState(true);
+
+  useEffect(() => {
+    if (!loading && !user) navigate({ to: "/login" });
+  }, [loading, user, navigate]);
+
+  useEffect(() => {
+    if (!user) return;
+    let cancelled = false;
+    (async () => {
+      setFetching(true);
+      const [{ data: p }, { data: s }] = await Promise.all([
+        supabase
+          .from("user_progress")
+          .select("id, darjah, subjek, aktiviti, markah, jumlah_soalan, peratus, created_at")
+          .eq("user_id", user.id)
+          .order("created_at", { ascending: false }),
+        supabase
+          .from("user_stats")
+          .select("tarikh, soalan_dijawab, masa_belajar, bab_selesai")
+          .eq("user_id", user.id)
+          .order("tarikh", { ascending: false })
+          .limit(60),
+      ]);
+      if (cancelled) return;
+      setProgress((p ?? []) as ProgressRow[]);
+      setStats((s ?? []) as StatsRow[]);
+      setFetching(false);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [user]);
+
+  async function handleLogout() {
+    await supabase.auth.signOut();
+    navigate({ to: "/login" });
+  }
+
+  const hariIni = todayKL();
+  const statsHariIni = stats.find((s) => s.tarikh === hariIni);
+  const streak = kiraStreak(stats);
+
+  const ringkasanSubjek = useMemo(() => {
+    return SUBJEK_LIST.map((sj) => {
+      const rows = progress.filter((p) => p.subjek === sj.id);
+      const aktivitiUnik = new Set(rows.map((r) => r.aktiviti)).size;
+      const peratusSiap = Math.min(100, Math.round((aktivitiUnik / 5) * 100));
+      const purata = rows.length === 0 ? 0 : Math.round(rows.reduce((a, r) => a + Number(r.peratus), 0) / rows.length);
+      const darjahTerkini = rows[0]?.darjah ?? "1";
+      return { subjek: sj, aktivitiUnik, peratusSiap, purata, jumlahAktiviti: rows.length, darjahTerkini };
+    });
+  }, [progress]);
+
+  const lencana = useMemo(() => {
+    const subjekSiap = ringkasanSubjek.filter((r) => r.peratusSiap === 100).length;
+    return subjekSiap + (streak >= 7 ? 1 : 0);
+  }, [ringkasanSubjek, streak]);
+
+  const babLemah = ringkasanSubjek.filter((r) => r.jumlahAktiviti > 0 && r.purata < 60);
+
+  if (loading || !user) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <p className="text-muted-foreground">Memuatkan...</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-background">
+      <SiteHeader stars={lencana} userName={user.email?.split("@")[0]} onLogout={handleLogout} />
+      <main className="container mx-auto max-w-5xl px-4 py-8">
+        <Link
+          to="/"
+          className="inline-flex items-center gap-2 text-sm font-bold text-muted-foreground hover:opacity-80"
+          style={{ color: HIJAU }}
+        >
+          <ArrowLeft className="h-4 w-4" /> Kembali ke Pilih Darjah
+        </Link>
+
+        <div className="mt-5 flex items-center gap-3">
+          <div
+            className="flex h-12 w-12 items-center justify-center rounded-2xl text-white shadow-soft"
+            style={{ backgroundColor: HIJAU }}
+          >
+            <TrendingUp className="h-6 w-6" />
+          </div>
+          <div>
+            <h1 className="font-display text-3xl font-extrabold text-foreground">Progress Saya</h1>
+            <p className="text-sm text-muted-foreground">
+              Pantau pencapaian dan teruskan belajar setiap hari!
+            </p>
+          </div>
+        </div>
+
+        {/* Statistik harian */}
+        <section className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-4">
+          <StatKad
+            label="Soalan Hari Ini"
+            nilai={statsHariIni?.soalan_dijawab ?? 0}
+            icon={<BookOpen className="h-5 w-5" />}
+            warna={HIJAU}
+          />
+          <StatKad
+            label="Masa Belajar"
+            nilai={`${statsHariIni?.masa_belajar ?? 0} min`}
+            icon={<Clock className="h-5 w-5" />}
+            warna={EMAS}
+            light
+          />
+          <StatKad
+            label="Streak"
+            nilai={`${streak} 🔥`}
+            icon={<Flame className="h-5 w-5" />}
+            warna="#dc2626"
+          />
+          <StatKad
+            label="Lencana"
+            nilai={lencana}
+            icon={<Award className="h-5 w-5" />}
+            warna={EMAS}
+            light
+          />
+        </section>
+
+        {fetching ? (
+          <div className="mt-8 rounded-3xl bg-card p-10 text-center shadow-card">
+            <p className="text-muted-foreground">Memuatkan data progress...</p>
+          </div>
+        ) : (
+          <>
+            {/* Kad Subjek */}
+            <section className="mt-8">
+              <h2 className="font-display text-xl font-extrabold text-foreground">Ringkasan Subjek</h2>
+              <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {ringkasanSubjek.map((r) => (
+                  <Link
+                    key={r.subjek.id}
+                    to="/darjah/$darjahId/$subjekId"
+                    params={{ darjahId: r.darjahTerkini, subjekId: r.subjek.id }}
+                    className="block rounded-3xl bg-card p-5 shadow-card transition hover:-translate-y-0.5"
+                    style={{ border: `2px solid ${HIJAU}22` }}
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <h3 className="font-display text-lg font-extrabold text-foreground">{r.subjek.title}</h3>
+                      <span
+                        className="rounded-full px-2 py-0.5 text-xs font-extrabold"
+                        style={{ backgroundColor: `${EMAS}33`, color: "#7a5300" }}
+                      >
+                        ⭐ {r.purata}%
+                      </span>
+                    </div>
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      {r.aktivitiUnik}/5 aktiviti • {r.jumlahAktiviti} sesi
+                    </p>
+                    <div className="mt-3 h-3 overflow-hidden rounded-full" style={{ backgroundColor: `${HIJAU}1a` }}>
+                      <div
+                        className="h-full rounded-full transition-all"
+                        style={{ width: `${r.peratusSiap}%`, backgroundColor: HIJAU }}
+                      />
+                    </div>
+                    <p className="mt-2 text-xs font-bold" style={{ color: HIJAU }}>
+                      {r.peratusSiap}% siap
+                    </p>
+                  </Link>
+                ))}
+              </div>
+            </section>
+
+            {/* Bab Lemah */}
+            <section className="mt-8">
+              <h2 className="font-display text-xl font-extrabold text-foreground">Bab Lemah</h2>
+              {babLemah.length === 0 ? (
+                <div className="mt-3 rounded-2xl bg-card p-5 text-center shadow-soft">
+                  <p className="text-sm text-muted-foreground">
+                    Tiada bab lemah! Teruskan usaha yang baik. 🎉
+                  </p>
+                </div>
+              ) : (
+                <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                  {babLemah.map((r) => (
+                    <div
+                      key={r.subjek.id}
+                      className="flex items-center justify-between gap-3 rounded-2xl bg-card p-4 shadow-soft"
+                      style={{ border: "2px solid #fecaca" }}
+                    >
+                      <div>
+                        <p className="font-display text-base font-extrabold text-foreground">
+                          {r.subjek.title}
+                        </p>
+                        <p className="text-xs text-destructive">Purata: {r.purata}%</p>
+                      </div>
+                      <Link
+                        to="/darjah/$darjahId/$subjekId"
+                        params={{ darjahId: r.darjahTerkini, subjekId: r.subjek.id }}
+                        className="inline-flex items-center gap-1 rounded-full px-4 py-2 text-xs font-extrabold text-white shadow-soft"
+                        style={{ backgroundColor: HIJAU }}
+                      >
+                        <RefreshCw className="h-3.5 w-3.5" /> Ulang Kaji
+                      </Link>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </section>
+
+            {/* Aktiviti Terkini */}
+            <section className="mt-8 mb-12">
+              <h2 className="font-display text-xl font-extrabold text-foreground">Aktiviti Terkini</h2>
+              {progress.length === 0 ? (
+                <div className="mt-3 rounded-2xl bg-card p-5 text-center shadow-soft">
+                  <p className="text-sm text-muted-foreground">
+                    Belum ada aktiviti. Mula belajar sekarang!
+                  </p>
+                </div>
+              ) : (
+                <div className="mt-4 overflow-hidden rounded-2xl bg-card shadow-soft">
+                  {progress.slice(0, 5).map((row, i) => {
+                    const sj = SUBJEK_LIST.find((s) => s.id === row.subjek);
+                    return (
+                      <div
+                        key={row.id}
+                        className="flex items-center justify-between gap-3 p-4"
+                        style={{ borderTop: i === 0 ? "none" : "1px solid hsl(var(--border))" }}
+                      >
+                        <div className="min-w-0 flex-1">
+                          <p className="truncate font-display text-sm font-extrabold text-foreground">
+                            {sj?.title ?? row.subjek}
+                            <span className="ml-1 text-muted-foreground">
+                              • {AKTIVITI_LABEL[row.aktiviti] ?? row.aktiviti}
+                            </span>
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            Darjah {row.darjah} • {formatTarikh(row.created_at)}
+                          </p>
+                        </div>
+                        <div className="text-right">
+                          <p
+                            className="font-display text-lg font-extrabold"
+                            style={{ color: Number(row.peratus) >= 60 ? HIJAU : "#dc2626" }}
+                          >
+                            {row.markah}/{row.jumlah_soalan}
+                          </p>
+                          <p className="text-xs text-muted-foreground">{Math.round(Number(row.peratus))}%</p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </section>
+          </>
+        )}
+      </main>
+    </div>
+  );
+}
+
+function StatKad({
+  label,
+  nilai,
+  icon,
+  warna,
+  light,
+}: {
+  label: string;
+  nilai: string | number;
+  icon: React.ReactNode;
+  warna: string;
+  light?: boolean;
+}) {
+  return (
+    <div
+      className="rounded-2xl p-4 shadow-soft"
+      style={{
+        backgroundColor: light ? `${warna}1f` : warna,
+        color: light ? "#1a1a1a" : "#fff",
+      }}
+    >
+      <div className="flex items-center gap-2 text-xs font-extrabold opacity-90">
+        {icon}
+        {label}
+      </div>
+      <p className="mt-2 font-display text-3xl font-extrabold">{nilai}</p>
+    </div>
+  );
+}

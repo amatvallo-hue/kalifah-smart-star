@@ -5,6 +5,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { getDarjah, getSubjek } from "@/lib/curriculum";
+import { simpanProgress } from "@/lib/progress";
 
 export const Route = createFileRoute("/darjah/$darjahId_/$subjekId_/latih-tubi")({
   head: () => ({ meta: [{ title: "Latih Tubi — Kalifah.my" }] }),
@@ -52,6 +53,19 @@ function LatihTubiPage() {
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
   }, [loading, user, navigate]);
+
+  useEffect(() => {
+    if (berhenti && jawab > 0) {
+      simpanProgress({
+        darjah: darjahId,
+        subjek: subjekId,
+        aktiviti: "latih-tubi",
+        markah: betul,
+        jumlahSoalan: jawab,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [berhenti]);
 
   useEffect(() => {
     let cancelled = false;

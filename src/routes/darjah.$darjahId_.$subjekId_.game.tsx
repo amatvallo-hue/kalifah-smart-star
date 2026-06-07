@@ -10,6 +10,7 @@ import { SusunAyatGame } from "@/components/games/SusunAyatGame";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { getDarjah, getSubjek } from "@/lib/curriculum";
+import { simpanProgress } from "@/lib/progress";
 
 export const Route = createFileRoute("/darjah/$darjahId_/$subjekId_/game")({
   head: () => ({ meta: [{ title: "Quiz Race — Kalifah.my" }] }),
@@ -568,6 +569,20 @@ function GameSubjekPage() {
   }, [loading, user, navigate]);
 
   useEffect(() => {
+    if (habis && soalanList.length > 0 && started) {
+      simpanProgress({
+        darjah: darjahId,
+        subjek: subjekId,
+        aktiviti: "game-race",
+        markah: markah,
+        jumlahSoalan: soalanList.length,
+        masaAmbil: totalTime - masa,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [habis]);
+
+  useEffect(() => {
     if (!started || habis) return;
     if (masa <= 0) {
       setHabis(true);
@@ -714,9 +729,9 @@ function GameSubjekPage() {
           </button>
         </div>
 
-        {mode === "betul" && <BetulSalahGame subjekId={subjekId} />}
-        {mode === "padan" && <PadankanJawapanGame subjekId={subjekId} />}
-        {mode === "susun" && <SusunAyatGame subjekId={subjekId} />}
+        {mode === "betul" && <BetulSalahGame subjekId={subjekId} darjah={darjahId} />}
+        {mode === "padan" && <PadankanJawapanGame subjekId={subjekId} darjah={darjahId} />}
+        {mode === "susun" && <SusunAyatGame subjekId={subjekId} darjah={darjahId} />}
 
         {(mode === "betul" || mode === "padan" || mode === "susun") ? null : hasCariPerkataan && mode === "cari" ? (
           isBM ? (

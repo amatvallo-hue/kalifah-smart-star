@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { getDarjah, getSubjek } from "@/lib/curriculum";
 import { getQuiz, type QuizQuestion } from "@/lib/quiz-bank";
+import { simpanProgress } from "@/lib/progress";
 
 export const Route = createFileRoute("/darjah/$darjahId_/$subjekId_/kuiz")({
   head: () => ({ meta: [{ title: "Kuiz — Kalifah.my" }] }),
@@ -248,6 +249,19 @@ function KuizPage() {
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
   }, [loading, user, navigate]);
+
+  useEffect(() => {
+    if (selesai && soalanList.length > 0) {
+      simpanProgress({
+        darjah: darjahId,
+        subjek: subjekId,
+        aktiviti: "kuiz",
+        markah: skor,
+        jumlahSoalan: soalanList.length,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selesai]);
 
   async function handleLogout() {
     await supabase.auth.signOut();

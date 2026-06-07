@@ -6,6 +6,7 @@ import { StarReward } from "@/components/StarReward";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { getDarjah, getSubjek } from "@/lib/curriculum";
+import { simpanProgress } from "@/lib/progress";
 
 export const Route = createFileRoute("/darjah/$darjahId_/$subjekId_/latihan")({
   head: () => ({ meta: [{ title: "Latihan Bertulis — Kalifah.my" }] }),
@@ -484,6 +485,19 @@ function LatihanSubjekPage() {
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
   }, [loading, user, navigate]);
+
+  useEffect(() => {
+    if (habis && totalSoalan > 0) {
+      simpanProgress({
+        darjah: darjahId,
+        subjek: subjekId,
+        aktiviti: "latihan",
+        markah: bintang,
+        jumlahSoalan: totalSoalan,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [habis]);
 
   async function handleLogout() {
     await supabase.auth.signOut();
