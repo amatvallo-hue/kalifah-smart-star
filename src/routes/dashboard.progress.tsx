@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { SUBJEK_LIST } from "@/lib/curriculum";
 import { catatHariAktif } from "@/lib/progress";
+import { sertaiDenganKod } from "@/lib/parent";
 
 export const Route = createFileRoute("/dashboard/progress")({
   head: () => ({ meta: [{ title: "Progress Saya — Kalifah.my" }] }),
@@ -196,7 +197,10 @@ function ProgressDashboard() {
             <p className="text-sm text-muted-foreground">
               Pantau pencapaian dan teruskan belajar setiap hari!
             </p>
-          </div>
+        </div>
+
+        <KadSertaiKod />
+
         </div>
 
         {/* Statistik harian */}
@@ -414,6 +418,69 @@ function StatKad({
         {label}
       </div>
       <p className="mt-2 font-display text-3xl font-extrabold">{nilai}</p>
+    </div>
+  );
+}
+
+function KadSertaiKod() {
+  const [open, setOpen] = useState(false);
+  const [kod, setKod] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [mesej, setMesej] = useState<{ ok: boolean; teks: string } | null>(null);
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!kod.trim()) return;
+    setLoading(true);
+    setMesej(null);
+    const res = await sertaiDenganKod(kod);
+    setLoading(false);
+    if (res.ok) {
+      setMesej({ ok: true, teks: "Berjaya dipautkan kepada ibu bapa!" });
+      setKod("");
+    } else {
+      setMesej({ ok: false, teks: res.mesej ?? "Kod tidak sah." });
+    }
+  }
+
+  return (
+    <div className="mt-4 rounded-2xl bg-card p-4 shadow-soft" style={{ border: `2px solid ${EMAS}55` }}>
+      {!open ? (
+        <button
+          onClick={() => setOpen(true)}
+          className="font-display text-sm font-extrabold hover:opacity-80"
+          style={{ color: HIJAU }}
+        >
+          🔗 Ada kod dari ibu bapa? Klik untuk pautkan akaun
+        </button>
+      ) : (
+        <form onSubmit={submit} className="flex flex-wrap items-center gap-2">
+          <label className="font-display text-sm font-extrabold text-foreground">Kod jemputan ibu bapa:</label>
+          <input
+            value={kod}
+            onChange={(e) => setKod(e.target.value.toUpperCase())}
+            placeholder="ABC123"
+            maxLength={6}
+            className="rounded-xl border-2 border-border px-3 py-2 font-display text-sm uppercase tracking-widest"
+          />
+          <button
+            type="submit"
+            disabled={loading}
+            className="rounded-full px-4 py-2 font-display text-xs font-extrabold text-white disabled:opacity-60"
+            style={{ backgroundColor: HIJAU }}
+          >
+            {loading ? "Memautkan..." : "Pautkan"}
+          </button>
+          <button type="button" onClick={() => { setOpen(false); setMesej(null); }} className="text-xs text-muted-foreground hover:underline">
+            Batal
+          </button>
+          {mesej && (
+            <p className="basis-full text-xs font-bold" style={{ color: mesej.ok ? HIJAU : "#dc2626" }}>
+              {mesej.teks}
+            </p>
+          )}
+        </form>
+      )}
     </div>
   );
 }

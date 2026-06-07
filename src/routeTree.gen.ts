@@ -14,6 +14,7 @@ import { Route as LatihanRouteImport } from './routes/latihan'
 import { Route as DaftarRouteImport } from './routes/daftar'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardProgressRouteImport } from './routes/dashboard.progress'
+import { Route as DashboardIbuBapaRouteImport } from './routes/dashboard.ibu-bapa'
 import { Route as DarjahDarjahIdRouteImport } from './routes/darjah.$darjahId'
 import { Route as DarjahDarjahIdSubjekIdRouteImport } from './routes/darjah.$darjahId_.$subjekId'
 import { Route as DarjahDarjahIdSubjekIdNotaRingkasRouteImport } from './routes/darjah.$darjahId_.$subjekId_.nota-ringkas'
@@ -45,6 +46,11 @@ const IndexRoute = IndexRouteImport.update({
 const DashboardProgressRoute = DashboardProgressRouteImport.update({
   id: '/dashboard/progress',
   path: '/dashboard/progress',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardIbuBapaRoute = DashboardIbuBapaRouteImport.update({
+  id: '/dashboard/ibu-bapa',
+  path: '/dashboard/ibu-bapa',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DarjahDarjahIdRoute = DarjahDarjahIdRouteImport.update({
@@ -94,6 +100,7 @@ export interface FileRoutesByFullPath {
   '/latihan': typeof LatihanRoute
   '/login': typeof LoginRoute
   '/darjah/$darjahId': typeof DarjahDarjahIdRoute
+  '/dashboard/ibu-bapa': typeof DashboardIbuBapaRoute
   '/dashboard/progress': typeof DashboardProgressRoute
   '/darjah/$darjahId/$subjekId': typeof DarjahDarjahIdSubjekIdRoute
   '/darjah/$darjahId/$subjekId/game': typeof DarjahDarjahIdSubjekIdGameRoute
@@ -108,6 +115,7 @@ export interface FileRoutesByTo {
   '/latihan': typeof LatihanRoute
   '/login': typeof LoginRoute
   '/darjah/$darjahId': typeof DarjahDarjahIdRoute
+  '/dashboard/ibu-bapa': typeof DashboardIbuBapaRoute
   '/dashboard/progress': typeof DashboardProgressRoute
   '/darjah/$darjahId/$subjekId': typeof DarjahDarjahIdSubjekIdRoute
   '/darjah/$darjahId/$subjekId/game': typeof DarjahDarjahIdSubjekIdGameRoute
@@ -123,6 +131,7 @@ export interface FileRoutesById {
   '/latihan': typeof LatihanRoute
   '/login': typeof LoginRoute
   '/darjah/$darjahId': typeof DarjahDarjahIdRoute
+  '/dashboard/ibu-bapa': typeof DashboardIbuBapaRoute
   '/dashboard/progress': typeof DashboardProgressRoute
   '/darjah/$darjahId_/$subjekId': typeof DarjahDarjahIdSubjekIdRoute
   '/darjah/$darjahId_/$subjekId_/game': typeof DarjahDarjahIdSubjekIdGameRoute
@@ -139,6 +148,7 @@ export interface FileRouteTypes {
     | '/latihan'
     | '/login'
     | '/darjah/$darjahId'
+    | '/dashboard/ibu-bapa'
     | '/dashboard/progress'
     | '/darjah/$darjahId/$subjekId'
     | '/darjah/$darjahId/$subjekId/game'
@@ -153,6 +163,7 @@ export interface FileRouteTypes {
     | '/latihan'
     | '/login'
     | '/darjah/$darjahId'
+    | '/dashboard/ibu-bapa'
     | '/dashboard/progress'
     | '/darjah/$darjahId/$subjekId'
     | '/darjah/$darjahId/$subjekId/game'
@@ -167,6 +178,7 @@ export interface FileRouteTypes {
     | '/latihan'
     | '/login'
     | '/darjah/$darjahId'
+    | '/dashboard/ibu-bapa'
     | '/dashboard/progress'
     | '/darjah/$darjahId_/$subjekId'
     | '/darjah/$darjahId_/$subjekId_/game'
@@ -182,6 +194,7 @@ export interface RootRouteChildren {
   LatihanRoute: typeof LatihanRoute
   LoginRoute: typeof LoginRoute
   DarjahDarjahIdRoute: typeof DarjahDarjahIdRoute
+  DashboardIbuBapaRoute: typeof DashboardIbuBapaRoute
   DashboardProgressRoute: typeof DashboardProgressRoute
   DarjahDarjahIdSubjekIdRoute: typeof DarjahDarjahIdSubjekIdRoute
   DarjahDarjahIdSubjekIdGameRoute: typeof DarjahDarjahIdSubjekIdGameRoute
@@ -226,6 +239,13 @@ declare module '@tanstack/react-router' {
       path: '/dashboard/progress'
       fullPath: '/dashboard/progress'
       preLoaderRoute: typeof DashboardProgressRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/ibu-bapa': {
+      id: '/dashboard/ibu-bapa'
+      path: '/dashboard/ibu-bapa'
+      fullPath: '/dashboard/ibu-bapa'
+      preLoaderRoute: typeof DashboardIbuBapaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/darjah/$darjahId': {
@@ -286,6 +306,7 @@ const rootRouteChildren: RootRouteChildren = {
   LatihanRoute: LatihanRoute,
   LoginRoute: LoginRoute,
   DarjahDarjahIdRoute: DarjahDarjahIdRoute,
+  DashboardIbuBapaRoute: DashboardIbuBapaRoute,
   DashboardProgressRoute: DashboardProgressRoute,
   DarjahDarjahIdSubjekIdRoute: DarjahDarjahIdSubjekIdRoute,
   DarjahDarjahIdSubjekIdGameRoute: DarjahDarjahIdSubjekIdGameRoute,
