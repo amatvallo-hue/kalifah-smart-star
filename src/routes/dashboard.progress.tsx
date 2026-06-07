@@ -235,6 +235,32 @@ function ProgressDashboard() {
           </div>
         ) : (
           <>
+            {/* Lencana */}
+            <section className="mt-8">
+              <h2 className="font-display text-xl font-extrabold text-foreground">Lencana Saya</h2>
+              {badges.length === 0 ? (
+                <div className="mt-3 rounded-2xl bg-card p-5 text-center shadow-soft">
+                  <p className="text-sm text-muted-foreground">
+                    Belum ada lencana. Siapkan aktiviti untuk mengumpul lencana! 🏅
+                  </p>
+                </div>
+              ) : (
+                <div className="mt-4 flex flex-wrap gap-3">
+                  {badges.map((bg) => (
+                    <div
+                      key={bg.id}
+                      className="flex items-center gap-2 rounded-full bg-card px-4 py-2 shadow-soft"
+                      style={{ border: `2px solid ${EMAS}55` }}
+                      title={new Date(bg.created_at).toLocaleDateString("ms-MY")}
+                    >
+                      <span className="text-2xl leading-none">{bg.ikon}</span>
+                      <span className="font-display text-sm font-extrabold text-foreground">{bg.nama}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </section>
+
             {/* Kad Subjek */}
             <section className="mt-8">
               <h2 className="font-display text-xl font-extrabold text-foreground">Ringkasan Subjek</h2>
