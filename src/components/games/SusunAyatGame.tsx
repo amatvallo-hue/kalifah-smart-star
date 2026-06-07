@@ -27,6 +27,7 @@ export function SusunAyatGame({ subjekId, darjah }: { subjekId: string; darjah?:
   const [markah, setMarkah] = useState(0);
   const [flash, setFlash] = useState<null | "ok" | "no">(null);
   const [habis, setHabis] = useState(false);
+  const [mulaMasa] = useState(() => Date.now());
 
   useEffect(() => {
     if (!ayatList[idx]) return;
@@ -43,6 +44,7 @@ export function SusunAyatGame({ subjekId, darjah }: { subjekId: string; darjah?:
         aktiviti: "game-susun",
         markah,
         jumlahSoalan: ayatList.length,
+        masaAmbil: Math.round((Date.now() - mulaMasa) / 1000),
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
