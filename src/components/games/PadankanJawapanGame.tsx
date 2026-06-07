@@ -64,9 +64,22 @@ export function PadankanJawapanGame({ subjekId, darjah }: { subjekId: string; da
     setCubaan(0);
   }
 
-  const habis = betulSet.size === pairs.length;
+  const habis = betulSet.size === pairs.length && pairs.length > 0;
   const markah = betulSet.size;
   const bintang = cubaan <= pairs.length + 1 ? 3 : cubaan <= pairs.length + 4 ? 2 : 1;
+
+  useEffect(() => {
+    if (habis && darjah) {
+      simpanProgress({
+        darjah,
+        subjek: subjekId,
+        aktiviti: "game-padan",
+        markah,
+        jumlahSoalan: pairs.length,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [habis]);
 
   return (
     <div className="mt-6 space-y-4">
