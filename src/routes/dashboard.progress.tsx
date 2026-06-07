@@ -315,6 +315,15 @@ function ProgressDashboard() {
               )}
             </section>
 
+            {/* Sijil Saya */}
+            <SeksyenSijil
+              namaMurid={user.email?.split("@")[0] ?? "Pelajar"}
+              sijilSubjek={sijilSubjek}
+              sijilDarjah={sijilDarjah}
+            />
+
+
+
             {/* Kad Subjek */}
             <section className="mt-8">
               <h2 className="font-display text-xl font-extrabold text-foreground">Ringkasan Subjek</h2>
