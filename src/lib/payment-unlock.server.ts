@@ -67,28 +67,17 @@ export async function verifyAndUnlock(
   const adminClient = admin();
   const supa = adminClient ?? input.actorClient;
   log(id, "0/6 Supabase writer", {
-    mode: adminClient
-      ? "service_role"
-      : input.actorClient
-        ? "authenticated_user"
-        : "missing",
+    mode: adminClient ? "service_role" : input.actorClient ? "authenticated_user" : "missing",
   });
   if (!supa) {
-    err(
-      id,
-      "0/6 SUPABASE_SERVICE_ROLE_KEY tiada dan tiada user client fallback",
-    );
+    err(id, "0/6 SUPABASE_SERVICE_ROLE_KEY tiada dan tiada user client fallback");
     return { ok: false, reason: "no-supabase-writer" };
   }
 
   log(id, "1/6 cari pesanan");
   const query = input.orderId
     ? supa.from("pesanan").select("*").eq("id", input.orderId).maybeSingle()
-    : supa
-        .from("pesanan")
-        .select("*")
-        .eq("billcode", input.billcode!)
-        .maybeSingle();
+    : supa.from("pesanan").select("*").eq("billcode", input.billcode!).maybeSingle();
   const { data: pesanan, error: pErr } = await query;
   if (pErr) {
     err(id, "1/6 query pesanan ralat", pErr);
@@ -110,10 +99,7 @@ export async function verifyAndUnlock(
     darjah_dipilih: pesanan.darjah_dipilih,
   });
 
-  if (
-    input.requireOwnerUserId &&
-    pesanan.user_id !== input.requireOwnerUserId
-  ) {
+  if (input.requireOwnerUserId && pesanan.user_id !== input.requireOwnerUserId) {
     warn(id, "1/6 pesanan bukan milik user", {
       expected: input.requireOwnerUserId,
       actual: pesanan.user_id,
