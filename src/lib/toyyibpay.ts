@@ -39,6 +39,12 @@ export async function createBill(input: CreateBillInput): Promise<string> {
     body: form,
   });
   const text = await res.text();
+  console.log("[toyyibpay] createBill response", {
+    ok: res.ok,
+    status: res.status,
+    statusText: res.statusText,
+    bodyPreview: text.slice(0, 500),
+  });
   let parsed: unknown;
   try {
     parsed = JSON.parse(text);

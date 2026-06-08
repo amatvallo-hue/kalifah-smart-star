@@ -43,19 +43,37 @@ function HargaPage() {
         },
         body: JSON.stringify({ pakej, darjah }),
       });
-      const data = (await res.json()) as { url?: string; error?: string };
+      const data = (await res.json()) as {
+        url?: string;
+        payment_url?: string;
+        trace_id?: string;
+        error?: string;
+        detail?: unknown;
+      };
       console.log("[harga] respons /api/checkout", { status: res.status, data });
+      const paymentUrl = data.url ?? data.payment_url;
       if (res.status === 401) {
         toast.info("Sila log masuk dahulu");
         navigate({ to: "/login" });
         return;
       }
-      if (!res.ok || !data.url) {
+      if (!res.ok || !paymentUrl) {
+        console.error("[harga] checkout tidak boleh redirect", {
+          status: res.status,
+          ok: res.ok,
+          traceId: data.trace_id,
+          error: data.error,
+          detail: data.detail,
+          paymentUrl,
+        });
         toast.error(data.error ?? "Gagal mula pembayaran");
         return;
       }
-      console.log("[harga] redirect ToyyibPay", data.url);
-      window.location.href = data.url;
+      console.log("[harga] redirect ToyyibPay bermula", {
+        traceId: data.trace_id,
+        paymentUrl,
+      });
+      window.location.assign(paymentUrl);
     } catch (e) {
       console.error("[harga] checkout gagal", e);
       toast.error(e instanceof Error ? e.message : "Ralat tidak diketahui");
