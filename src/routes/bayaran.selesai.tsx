@@ -51,6 +51,25 @@ function BayaranSelesai() {
           });
           const json = await res.json().catch(() => ({}));
           console.log("[bayaran.selesai] confirm-payment", res.status, json);
+          if (!json?.ok) {
+            const tempRes = await fetch("/api/temporary-unlock", {
+              method: "POST",
+              headers: {
+                "content-type": "application/json",
+                authorization: `Bearer ${token}`,
+              },
+              body: JSON.stringify({
+                order_id: search.order,
+                billcode: search.billcode,
+              }),
+            });
+            const tempJson = await tempRes.json().catch(() => ({}));
+            console.log(
+              "[bayaran.selesai] temporary-unlock",
+              tempRes.status,
+              tempJson,
+            );
+          }
         }
       } catch (e) {
         console.error("[bayaran.selesai] confirm-payment ralat", e);
