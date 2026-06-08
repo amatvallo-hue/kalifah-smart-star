@@ -78,12 +78,26 @@ export function SiteHeader({
 
         <div className="flex items-center gap-2">
           {userName && (
-            <div className="hidden items-center gap-2 rounded-full bg-secondary px-3 py-1.5 sm:flex">
-              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-gradient-primary text-primary-foreground">
-                <User className="h-3.5 w-3.5" />
-              </span>
-              <span className="font-display text-sm font-extrabold text-foreground">{userName}</span>
-            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <div className="hidden cursor-pointer items-center gap-2 rounded-full bg-secondary px-3 py-1.5 sm:flex">
+                  <span className="flex h-6 w-6 items-center justify-center rounded-full bg-gradient-primary text-primary-foreground">
+                    <User className="h-3.5 w-3.5" />
+                  </span>
+                  <span className="font-display text-sm font-extrabold text-foreground">{userName}</span>
+                </div>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {profile?.role === "admin" && (
+                  <DropdownMenuItem asChild>
+                    <Link to="/admin" className="flex items-center gap-2">
+                      <LayoutDashboard className="h-4 w-4" />
+                      Admin Dashboard
+                    </Link>
+                  </DropdownMenuItem>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
           )}
           <div className="flex items-center gap-2 rounded-full bg-gradient-gold px-4 py-2 shadow-gold">
             <Star className="h-4 w-4 fill-gold-foreground text-gold-foreground" />
