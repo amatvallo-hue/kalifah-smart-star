@@ -19,6 +19,7 @@ function SubjekPage() {
   const navigate = useNavigate();
   const { darjahId } = useParams({ from: "/darjah/$darjahId" });
   const { user, loading } = useAuth();
+  const { profile, loading: profileLoading } = useProfile();
   const darjah = getDarjah(darjahId);
 
   useEffect(() => {
@@ -30,7 +31,7 @@ function SubjekPage() {
     navigate({ to: "/login" });
   }
 
-  if (loading || !user) {
+  if (loading || !user || profileLoading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
         <p className="text-muted-foreground">Memuatkan...</p>
@@ -38,16 +39,24 @@ function SubjekPage() {
     );
   }
 
-  if (!darjah || darjah.locked) {
+  const darjahAkses = profile?.darjah_akses ?? [];
+  const hasAccess = darjah ? darjahAkses.includes(Number(darjah.id)) : false;
+
+  if (!darjah || !hasAccess) {
     return (
       <div className="min-h-screen bg-background">
         <SiteHeader onLogout={handleLogout} />
         <main className="container mx-auto px-4 py-16 text-center">
           <h1 className="font-display text-3xl font-extrabold text-foreground">Darjah ini belum dibuka</h1>
-          <p className="mt-2 text-muted-foreground">Sila pilih darjah lain yang tersedia.</p>
-          <Link to="/pilih-darjah" className="mt-6 inline-flex items-center gap-2 rounded-full bg-gradient-primary px-6 py-3 font-display font-extrabold text-primary-foreground shadow-soft">
-            <ArrowLeft className="h-4 w-4" /> Kembali
+          <p className="mt-2 text-muted-foreground">Sila pilih pakej untuk membuka darjah ini.</p>
+          <Link to="/harga" className="mt-6 inline-flex items-center gap-2 rounded-full bg-gradient-primary px-6 py-3 font-display font-extrabold text-primary-foreground shadow-soft">
+            Lihat Pakej
           </Link>
+          <div className="mt-3">
+            <Link to="/pilih-darjah" className="inline-flex items-center gap-2 text-sm font-bold text-muted-foreground hover:text-primary">
+              <ArrowLeft className="h-4 w-4" /> Kembali
+            </Link>
+          </div>
         </main>
       </div>
     );
