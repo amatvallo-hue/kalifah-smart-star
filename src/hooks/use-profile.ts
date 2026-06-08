@@ -43,6 +43,7 @@ export function useProfile() {
       }
 
       if (data) {
+        console.log("RAW darjah_akses:", data?.darjah_akses, typeof data?.darjah_akses);
         setProfile({
           id: (data as Profile).id,
           darjah_akses: normalizeDarjahAkses((data as { darjah_akses: unknown }).darjah_akses),
