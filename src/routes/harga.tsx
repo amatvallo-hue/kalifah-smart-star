@@ -27,29 +27,37 @@ function HargaPage() {
   const [loading, setLoading] = useState<PakejId | null>(null);
 
   async function mulaBayar(pakej: PakejId, darjah: number[]) {
+    console.log("[harga] mulaBayar dipanggil", { pakej, darjah });
     setLoading(pakej);
     try {
       const { data: sess } = await supabase.auth.getSession();
-      if (!sess.session) {
-        toast.info("Sila log masuk dahulu");
-        navigate({ to: "/login" });
-        return;
-      }
+      const token = sess.session?.access_token;
+      console.log("[harga] sesi checkout", { adaSesi: !!sess.session, adaToken: !!token });
+
+      console.log("[harga] hantar request /api/checkout", { pakej, darjah });
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${sess.session.access_token}`,
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
         body: JSON.stringify({ pakej, darjah }),
       });
       const data = (await res.json()) as { url?: string; error?: string };
+      console.log("[harga] respons /api/checkout", { status: res.status, data });
+      if (res.status === 401) {
+        toast.info("Sila log masuk dahulu");
+        navigate({ to: "/login" });
+        return;
+      }
       if (!res.ok || !data.url) {
         toast.error(data.error ?? "Gagal mula pembayaran");
         return;
       }
+      console.log("[harga] redirect ToyyibPay", data.url);
       window.location.href = data.url;
     } catch (e) {
+      console.error("[harga] checkout gagal", e);
       toast.error(e instanceof Error ? e.message : "Ralat tidak diketahui");
     } finally {
       setLoading(null);
@@ -57,7 +65,9 @@ function HargaPage() {
   }
 
   function handleKlik(pakej: PakejId) {
+    console.log("[harga] Bayar Sekarang diklik", { pakej });
     if (pakej === "bundle") return mulaBayar("bundle", [1, 2, 3, 4, 5, 6]);
+    console.log("[harga] buka pemilih darjah", { pakej });
     setPickerFor(pakej);
   }
 
@@ -245,7 +255,10 @@ function DarjahPicker({
         <button
           type="button"
           disabled={!valid || loading}
-          onClick={() => onConfirm(selected)}
+          onClick={() => {
+            console.log("[harga] Teruskan ke ToyyibPay diklik", { pakej, selected });
+            onConfirm(selected);
+          }}
           className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full px-5 py-3 font-display text-sm font-extrabold text-white shadow-soft disabled:opacity-50"
           style={{ backgroundColor: HIJAU }}
         >
