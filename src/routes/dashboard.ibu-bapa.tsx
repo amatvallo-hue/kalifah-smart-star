@@ -18,7 +18,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { SUBJEK_LIST, DARJAH_LIST } from "@/lib/curriculum";
-import { padamAnak, senaraikanAnak, type ChildProfile } from "@/lib/parent";
+import { padamAnak, senaraikanAnak, tambahAnak, type ChildProfile } from "@/lib/parent";
 import { ciptaAkaunAnak, normalizeUsername, CHILD_EMAIL_DOMAIN } from "@/lib/child-auth";
 
 export const Route = createFileRoute("/dashboard/ibu-bapa")({
@@ -93,6 +93,7 @@ function ParentDashboard() {
   const [badges, setBadges] = useState<BadgeRow[]>([]);
   const [fetching, setFetching] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
+  const [showKod, setShowKod] = useState(false);
 
   const isChild = !!user?.email?.includes(CHILD_EMAIL_DOMAIN);
 
@@ -252,7 +253,7 @@ function ParentDashboard() {
               <p className="text-sm text-muted-foreground">Pantau pembelajaran anak anda dengan mudah.</p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <button
               onClick={refreshAnak}
               className="inline-flex items-center gap-2 rounded-full bg-card px-4 py-2.5 font-display text-sm font-extrabold text-muted-foreground shadow-soft hover:text-foreground"
@@ -260,7 +261,14 @@ function ParentDashboard() {
               Muat Semula
             </button>
             <button
-              onClick={() => setShowAdd((v) => !v)}
+              onClick={() => { setShowKod((v) => !v); setShowAdd(false); }}
+              className="inline-flex items-center gap-2 rounded-full bg-card px-4 py-2.5 font-display text-sm font-extrabold shadow-soft"
+              style={{ color: EMAS, border: `2px solid ${EMAS}55` }}
+            >
+              Jana Kod Jemputan
+            </button>
+            <button
+              onClick={() => { setShowAdd((v) => !v); setShowKod(false); }}
               className="inline-flex items-center gap-2 rounded-full px-5 py-2.5 font-display text-sm font-extrabold text-white shadow-soft"
               style={{ backgroundColor: HIJAU }}
             >
@@ -269,7 +277,7 @@ function ParentDashboard() {
           </div>
         </div>
 
-        {/* Borang tambah anak */}
+        {/* Borang tambah anak (cipta akaun + auto-link) */}
         {showAdd && (
           <FormTambahAnak
             onAdded={async () => {
@@ -277,6 +285,18 @@ function ParentDashboard() {
               setAnakList(list);
               setShowAdd(false);
               if (!aktifId && list.length > 0) setAktifId(list[0].id);
+            }}
+          />
+        )}
+
+        {/* Borang jana kod jemputan (untuk anak yang sudah ada akaun berasingan) */}
+        {showKod && (
+          <FormJanaKod
+            onAdded={async (newId) => {
+              const list = await senaraikanAnak();
+              setAnakList(list);
+              setShowKod(false);
+              setAktifId(newId);
             }}
           />
         )}
@@ -541,6 +561,71 @@ function FormTambahAnak({ onAdded }: { onAdded: () => void }) {
       </button>
       {err && <p className="mt-2 text-xs text-destructive">{err}</p>}
       {ok && <p className="mt-2 rounded-xl bg-primary/10 p-2 text-xs font-bold text-primary">{ok}</p>}
+    </form>
+  );
+}
+
+
+function FormJanaKod({ onAdded }: { onAdded: (id: string) => void }) {
+  const [nama, setNama] = useState("");
+  const [darjah, setDarjah] = useState("1");
+  const [loading, setLoading] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!nama.trim()) return;
+    setLoading(true);
+    setErr(null);
+    const row = await tambahAnak(nama, darjah);
+    setLoading(false);
+    if (!row) {
+      setErr("Gagal jana kod jemputan.");
+      return;
+    }
+    onAdded(row.id);
+  }
+
+  return (
+    <form onSubmit={submit} className="mt-4 rounded-2xl bg-card p-5 shadow-card" style={{ border: `2px dashed ${EMAS}` }}>
+      <h3 className="font-display text-lg font-extrabold text-foreground">Jana Kod Jemputan</h3>
+      <p className="mt-1 text-xs text-muted-foreground">
+        Guna ini hanya jika anak <b>sudah ada akaun sendiri</b> dan anda ingin pautkannya. Untuk cipta akaun baru, klik <b>Tambah Anak</b>.
+      </p>
+      <div className="mt-4 grid gap-3 sm:grid-cols-2">
+        <label className="block">
+          <span className="mb-1 block text-xs font-extrabold text-foreground">Nama Anak</span>
+          <input
+            value={nama}
+            onChange={(e) => setNama(e.target.value)}
+            placeholder="cth: Aisyah binti Ali"
+            className="w-full rounded-xl border-2 border-border px-4 py-2.5 font-display text-sm"
+            required
+            maxLength={60}
+          />
+        </label>
+        <label className="block">
+          <span className="mb-1 block text-xs font-extrabold text-foreground">Darjah</span>
+          <select
+            value={darjah}
+            onChange={(e) => setDarjah(e.target.value)}
+            className="w-full rounded-xl border-2 border-border px-4 py-2.5 font-display text-sm"
+          >
+            {DARJAH_LIST.map((d) => (
+              <option key={d.id} value={d.id}>{d.label}</option>
+            ))}
+          </select>
+        </label>
+      </div>
+      <button
+        type="submit"
+        disabled={loading}
+        className="mt-4 w-full rounded-xl px-5 py-2.5 font-display text-sm font-extrabold text-white shadow-soft disabled:opacity-60"
+        style={{ backgroundColor: EMAS }}
+      >
+        {loading ? "Menjana kod..." : "Jana Kod Jemputan"}
+      </button>
+      {err && <p className="mt-2 text-xs text-destructive">{err}</p>}
     </form>
   );
 }

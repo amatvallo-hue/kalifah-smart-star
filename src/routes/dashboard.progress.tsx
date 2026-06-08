@@ -7,6 +7,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { SUBJEK_LIST } from "@/lib/curriculum";
 import { catatHariAktif } from "@/lib/progress";
 import { sertaiDenganKod } from "@/lib/parent";
+import { CHILD_EMAIL_DOMAIN } from "@/lib/child-auth";
 import { downloadSijil, shareSijil, type SijilInput } from "@/lib/sijil";
 
 export const Route = createFileRoute("/dashboard/progress")({
@@ -250,7 +251,7 @@ function ProgressDashboard() {
             </p>
         </div>
 
-        <KadSertaiKod />
+        {!user?.email?.includes(CHILD_EMAIL_DOMAIN) && <KadSertaiKod />}
 
         </div>
 
