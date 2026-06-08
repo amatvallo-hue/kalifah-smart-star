@@ -49,7 +49,7 @@ function DaftarPage() {
   }
 
   return (
-    <AuthShell title="Mari mulakan!" subtitle="Daftar akaun pelajar baharu untuk mengumpul bintang.">
+    <AuthShell title="Daftar Akaun Ibu Bapa" subtitle="Cipta akaun untuk memantau prestasi dan kemajuan anak anda.">
       <form onSubmit={onSubmit} className="space-y-4">
         <Field icon={User} label="Nama Pelajar" type="text" value={name} onChange={setName} placeholder="Ahmad bin Ali" autoComplete="name" />
         <Field icon={Mail} label="Email" type="email" value={email} onChange={setEmail} placeholder="contoh@email.com" autoComplete="email" />
