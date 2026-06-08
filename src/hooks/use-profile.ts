@@ -7,6 +7,15 @@ export interface Profile {
   darjah_akses: number[];
 }
 
+function normalizeDarjahAkses(raw: unknown): number[] {
+  const arr = Array.isArray(raw)
+    ? raw.map(Number)
+    : typeof raw === "string"
+    ? raw.replace(/[{}]/g, "").split(",").map(Number).filter(Boolean)
+    : [];
+  return arr.filter((n) => Number.isFinite(n));
+}
+
 export function useProfile() {
   const { user, loading: authLoading } = useAuth();
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -36,13 +45,12 @@ export function useProfile() {
       if (data) {
         setProfile({
           id: (data as Profile).id,
-          darjah_akses: Array.isArray((data as Profile).darjah_akses)
-            ? (data as Profile).darjah_akses
-            : [],
+          darjah_akses: normalizeDarjahAkses((data as { darjah_akses: unknown }).darjah_akses),
         });
         setLoading(false);
         return;
       }
+
 
       // No row visible. Use upsert with ignoreDuplicates so we NEVER
       // overwrite an existing row's darjah_akses with an empty array.
@@ -79,10 +87,9 @@ export function useProfile() {
       if (finalRow) {
         setProfile({
           id: finalRow.id,
-          darjah_akses: Array.isArray(finalRow.darjah_akses)
-            ? finalRow.darjah_akses
-            : [],
+          darjah_akses: normalizeDarjahAkses((finalRow as { darjah_akses: unknown }).darjah_akses),
         });
+
       } else {
         // Truly nothing readable — likely RLS denying SELECT.
         console.warn(
