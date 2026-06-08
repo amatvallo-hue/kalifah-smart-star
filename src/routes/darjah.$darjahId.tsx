@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
+import { useProfile } from "@/hooks/use-profile";
 import { SUBJEK_LIST, getDarjah, TONE_GRADIENT } from "@/lib/curriculum";
 
 export const Route = createFileRoute("/darjah/$darjahId")({
