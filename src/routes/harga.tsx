@@ -1,6 +1,9 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft, Check, Star } from "lucide-react";
-import { HARGA_ASAL, PAKEJ_LIST } from "@/lib/curriculum";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { ArrowLeft, Check, Loader2, Star, X } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
+import { HARGA_ASAL, PAKEJ_LIST, DARJAH_LIST } from "@/lib/curriculum";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/harga")({
   head: () => ({
@@ -16,7 +19,48 @@ export const Route = createFileRoute("/harga")({
 const HIJAU = "#1B8A5A";
 const EMAS = "#F5A623";
 
+type PakejId = "satu" | "perDarjah" | "bundle";
+
 function HargaPage() {
+  const navigate = useNavigate();
+  const [pickerFor, setPickerFor] = useState<PakejId | null>(null);
+  const [loading, setLoading] = useState<PakejId | null>(null);
+
+  async function mulaBayar(pakej: PakejId, darjah: number[]) {
+    setLoading(pakej);
+    try {
+      const { data: sess } = await supabase.auth.getSession();
+      if (!sess.session) {
+        toast.info("Sila log masuk dahulu");
+        navigate({ to: "/login" });
+        return;
+      }
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${sess.session.access_token}`,
+        },
+        body: JSON.stringify({ pakej, darjah }),
+      });
+      const data = (await res.json()) as { url?: string; error?: string };
+      if (!res.ok || !data.url) {
+        toast.error(data.error ?? "Gagal mula pembayaran");
+        return;
+      }
+      window.location.href = data.url;
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Ralat tidak diketahui");
+    } finally {
+      setLoading(null);
+    }
+  }
+
+  function handleKlik(pakej: PakejId) {
+    if (pakej === "bundle") return mulaBayar("bundle", [1, 2, 3, 4, 5, 6]);
+    setPickerFor(pakej);
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b border-border/60 bg-background/85 backdrop-blur">
@@ -54,6 +98,7 @@ function HargaPage() {
         <div className="mt-10 grid gap-6 md:grid-cols-3">
           {PAKEJ_LIST.map((p) => {
             const popular = !!p.popular;
+            const isLoading = loading === p.id;
             return (
               <div
                 key={p.id}
@@ -93,13 +138,16 @@ function HargaPage() {
                   <li className="flex gap-2"><Check className="h-4 w-4 shrink-0" style={{ color: HIJAU }} /> Streak & lencana</li>
                   {p.id === "bundle" && <li className="flex gap-2"><Check className="h-4 w-4 shrink-0" style={{ color: HIJAU }} /> Untuk semua anak (D1–D6)</li>}
                 </ul>
-                <Link
-                  to="/daftar"
-                  className="mt-6 block w-full rounded-full px-5 py-3 text-center font-display text-sm font-extrabold text-white shadow-soft"
+                <button
+                  type="button"
+                  onClick={() => handleKlik(p.id as PakejId)}
+                  disabled={isLoading}
+                  className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full px-5 py-3 font-display text-sm font-extrabold text-white shadow-soft disabled:opacity-60"
                   style={{ backgroundColor: popular ? EMAS : HIJAU }}
                 >
-                  Mula Langganan
-                </Link>
+                  {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
+                  {isLoading ? "Memproses…" : "Bayar Sekarang"}
+                </button>
               </div>
             );
           })}
@@ -107,13 +155,104 @@ function HargaPage() {
 
         <div className="mt-12 rounded-3xl bg-muted/40 p-6 text-center">
           <p className="font-display text-sm font-extrabold text-foreground">
-            Pembayaran selamat akan datang melalui Stripe (kad kredit/debit) & FPX.
+            Pembayaran selamat melalui ToyyibPay — FPX (online banking) & kad kredit/debit.
           </p>
           <p className="mt-1 text-xs text-muted-foreground">
             Untuk pertanyaan langganan, hubungi support@kalifah.my
           </p>
         </div>
       </main>
+
+      {pickerFor && (
+        <DarjahPicker
+          pakej={pickerFor}
+          loading={loading === pickerFor}
+          onClose={() => setPickerFor(null)}
+          onConfirm={(darjah) => mulaBayar(pickerFor, darjah)}
+        />
+      )}
+    </div>
+  );
+}
+
+function DarjahPicker({
+  pakej,
+  loading,
+  onClose,
+  onConfirm,
+}: {
+  pakej: PakejId;
+  loading: boolean;
+  onClose: () => void;
+  onConfirm: (darjah: number[]) => void;
+}) {
+  const [selected, setSelected] = useState<number[]>([]);
+  const min = pakej === "satu" ? 1 : 2;
+  const max = pakej === "satu" ? 1 : 5;
+  const perDarjah = pakej === "satu" ? 29 : 25;
+  const total = perDarjah * selected.length;
+
+  function toggle(n: number) {
+    setSelected((s) => {
+      if (s.includes(n)) return s.filter((x) => x !== n);
+      if (s.length >= max) {
+        if (max === 1) return [n]; // ganti
+        return s;
+      }
+      return [...s, n].sort((a, b) => a - b);
+    });
+  }
+
+  const valid = selected.length >= min && selected.length <= max;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm" onClick={onClose}>
+      <div className="relative w-full max-w-md rounded-3xl bg-card p-7 shadow-card" onClick={(e) => e.stopPropagation()}>
+        <button onClick={onClose} aria-label="Tutup" className="absolute right-4 top-4 rounded-full p-2 text-muted-foreground hover:bg-muted">
+          <X className="h-5 w-5" />
+        </button>
+        <h3 className="font-display text-2xl font-extrabold text-foreground">
+          Pilih Darjah ({min === max ? min : `${min}–${max}`})
+        </h3>
+        <p className="mt-1 text-sm text-muted-foreground">
+          {pakej === "satu" ? "Pilih 1 darjah untuk dilanggan." : "Pilih antara 2 hingga 5 darjah, RM25/darjah."}
+        </p>
+
+        <div className="mt-5 grid grid-cols-3 gap-2">
+          {DARJAH_LIST.map((d) => {
+            const n = Number(d.id);
+            const on = selected.includes(n);
+            return (
+              <button
+                key={d.id}
+                type="button"
+                onClick={() => toggle(n)}
+                className={`rounded-2xl border-2 px-3 py-3 font-display text-sm font-extrabold transition ${
+                  on ? "border-emerald-600 bg-emerald-50 text-emerald-700" : "border-border bg-card text-foreground hover:border-muted-foreground/40"
+                }`}
+              >
+                {d.label}
+              </button>
+            );
+          })}
+        </div>
+
+        <div className="mt-5 flex items-center justify-between rounded-2xl bg-muted/40 px-4 py-3">
+          <span className="font-display text-sm font-bold text-muted-foreground">Jumlah bayaran</span>
+          <span className="font-display text-2xl font-extrabold" style={{ color: HIJAU }}>RM{total}</span>
+        </div>
+
+        <button
+          type="button"
+          disabled={!valid || loading}
+          onClick={() => onConfirm(selected)}
+          className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full px-5 py-3 font-display text-sm font-extrabold text-white shadow-soft disabled:opacity-50"
+          style={{ backgroundColor: HIJAU }}
+        >
+          {loading && <Loader2 className="h-4 w-4 animate-spin" />}
+          {loading ? "Memproses…" : "Teruskan ke ToyyibPay"}
+        </button>
+      </div>
     </div>
   );
 }

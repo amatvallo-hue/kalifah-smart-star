@@ -20,12 +20,15 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardProgressRouteImport } from './routes/dashboard.progress'
 import { Route as DashboardIbuBapaRouteImport } from './routes/dashboard.ibu-bapa'
 import { Route as DarjahDarjahIdRouteImport } from './routes/darjah.$darjahId'
+import { Route as BayaranSelesaiRouteImport } from './routes/bayaran.selesai'
+import { Route as ApiCheckoutRouteImport } from './routes/api.checkout'
 import { Route as DarjahDarjahIdSubjekIdRouteImport } from './routes/darjah.$darjahId_.$subjekId'
 import { Route as DarjahDarjahIdSubjekIdNotaRingkasRouteImport } from './routes/darjah.$darjahId_.$subjekId_.nota-ringkas'
 import { Route as DarjahDarjahIdSubjekIdLatihanRouteImport } from './routes/darjah.$darjahId_.$subjekId_.latihan'
 import { Route as DarjahDarjahIdSubjekIdLatihTubiRouteImport } from './routes/darjah.$darjahId_.$subjekId_.latih-tubi'
 import { Route as DarjahDarjahIdSubjekIdKuizRouteImport } from './routes/darjah.$darjahId_.$subjekId_.kuiz'
 import { Route as DarjahDarjahIdSubjekIdGameRouteImport } from './routes/darjah.$darjahId_.$subjekId_.game'
+import { Route as ApiPublicToyyibpayCallbackRouteImport } from './routes/api.public.toyyibpay.callback'
 
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
@@ -82,6 +85,16 @@ const DarjahDarjahIdRoute = DarjahDarjahIdRouteImport.update({
   path: '/darjah/$darjahId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BayaranSelesaiRoute = BayaranSelesaiRouteImport.update({
+  id: '/bayaran/selesai',
+  path: '/bayaran/selesai',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiCheckoutRoute = ApiCheckoutRouteImport.update({
+  id: '/api/checkout',
+  path: '/api/checkout',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DarjahDarjahIdSubjekIdRoute = DarjahDarjahIdSubjekIdRouteImport.update({
   id: '/darjah/$darjahId_/$subjekId',
   path: '/darjah/$darjahId/$subjekId',
@@ -117,6 +130,12 @@ const DarjahDarjahIdSubjekIdGameRoute =
     path: '/darjah/$darjahId/$subjekId/game',
     getParentRoute: () => rootRouteImport,
   } as any)
+const ApiPublicToyyibpayCallbackRoute =
+  ApiPublicToyyibpayCallbackRouteImport.update({
+    id: '/api/public/toyyibpay/callback',
+    path: '/api/public/toyyibpay/callback',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -127,10 +146,13 @@ export interface FileRoutesByFullPath {
   '/lupa-password': typeof LupaPasswordRoute
   '/pilih-darjah': typeof PilihDarjahRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/api/checkout': typeof ApiCheckoutRoute
+  '/bayaran/selesai': typeof BayaranSelesaiRoute
   '/darjah/$darjahId': typeof DarjahDarjahIdRoute
   '/dashboard/ibu-bapa': typeof DashboardIbuBapaRoute
   '/dashboard/progress': typeof DashboardProgressRoute
   '/darjah/$darjahId/$subjekId': typeof DarjahDarjahIdSubjekIdRoute
+  '/api/public/toyyibpay/callback': typeof ApiPublicToyyibpayCallbackRoute
   '/darjah/$darjahId/$subjekId/game': typeof DarjahDarjahIdSubjekIdGameRoute
   '/darjah/$darjahId/$subjekId/kuiz': typeof DarjahDarjahIdSubjekIdKuizRoute
   '/darjah/$darjahId/$subjekId/latih-tubi': typeof DarjahDarjahIdSubjekIdLatihTubiRoute
@@ -146,10 +168,13 @@ export interface FileRoutesByTo {
   '/lupa-password': typeof LupaPasswordRoute
   '/pilih-darjah': typeof PilihDarjahRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/api/checkout': typeof ApiCheckoutRoute
+  '/bayaran/selesai': typeof BayaranSelesaiRoute
   '/darjah/$darjahId': typeof DarjahDarjahIdRoute
   '/dashboard/ibu-bapa': typeof DashboardIbuBapaRoute
   '/dashboard/progress': typeof DashboardProgressRoute
   '/darjah/$darjahId/$subjekId': typeof DarjahDarjahIdSubjekIdRoute
+  '/api/public/toyyibpay/callback': typeof ApiPublicToyyibpayCallbackRoute
   '/darjah/$darjahId/$subjekId/game': typeof DarjahDarjahIdSubjekIdGameRoute
   '/darjah/$darjahId/$subjekId/kuiz': typeof DarjahDarjahIdSubjekIdKuizRoute
   '/darjah/$darjahId/$subjekId/latih-tubi': typeof DarjahDarjahIdSubjekIdLatihTubiRoute
@@ -166,10 +191,13 @@ export interface FileRoutesById {
   '/lupa-password': typeof LupaPasswordRoute
   '/pilih-darjah': typeof PilihDarjahRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/api/checkout': typeof ApiCheckoutRoute
+  '/bayaran/selesai': typeof BayaranSelesaiRoute
   '/darjah/$darjahId': typeof DarjahDarjahIdRoute
   '/dashboard/ibu-bapa': typeof DashboardIbuBapaRoute
   '/dashboard/progress': typeof DashboardProgressRoute
   '/darjah/$darjahId_/$subjekId': typeof DarjahDarjahIdSubjekIdRoute
+  '/api/public/toyyibpay/callback': typeof ApiPublicToyyibpayCallbackRoute
   '/darjah/$darjahId_/$subjekId_/game': typeof DarjahDarjahIdSubjekIdGameRoute
   '/darjah/$darjahId_/$subjekId_/kuiz': typeof DarjahDarjahIdSubjekIdKuizRoute
   '/darjah/$darjahId_/$subjekId_/latih-tubi': typeof DarjahDarjahIdSubjekIdLatihTubiRoute
@@ -187,10 +215,13 @@ export interface FileRouteTypes {
     | '/lupa-password'
     | '/pilih-darjah'
     | '/reset-password'
+    | '/api/checkout'
+    | '/bayaran/selesai'
     | '/darjah/$darjahId'
     | '/dashboard/ibu-bapa'
     | '/dashboard/progress'
     | '/darjah/$darjahId/$subjekId'
+    | '/api/public/toyyibpay/callback'
     | '/darjah/$darjahId/$subjekId/game'
     | '/darjah/$darjahId/$subjekId/kuiz'
     | '/darjah/$darjahId/$subjekId/latih-tubi'
@@ -206,10 +237,13 @@ export interface FileRouteTypes {
     | '/lupa-password'
     | '/pilih-darjah'
     | '/reset-password'
+    | '/api/checkout'
+    | '/bayaran/selesai'
     | '/darjah/$darjahId'
     | '/dashboard/ibu-bapa'
     | '/dashboard/progress'
     | '/darjah/$darjahId/$subjekId'
+    | '/api/public/toyyibpay/callback'
     | '/darjah/$darjahId/$subjekId/game'
     | '/darjah/$darjahId/$subjekId/kuiz'
     | '/darjah/$darjahId/$subjekId/latih-tubi'
@@ -225,10 +259,13 @@ export interface FileRouteTypes {
     | '/lupa-password'
     | '/pilih-darjah'
     | '/reset-password'
+    | '/api/checkout'
+    | '/bayaran/selesai'
     | '/darjah/$darjahId'
     | '/dashboard/ibu-bapa'
     | '/dashboard/progress'
     | '/darjah/$darjahId_/$subjekId'
+    | '/api/public/toyyibpay/callback'
     | '/darjah/$darjahId_/$subjekId_/game'
     | '/darjah/$darjahId_/$subjekId_/kuiz'
     | '/darjah/$darjahId_/$subjekId_/latih-tubi'
@@ -245,10 +282,13 @@ export interface RootRouteChildren {
   LupaPasswordRoute: typeof LupaPasswordRoute
   PilihDarjahRoute: typeof PilihDarjahRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  ApiCheckoutRoute: typeof ApiCheckoutRoute
+  BayaranSelesaiRoute: typeof BayaranSelesaiRoute
   DarjahDarjahIdRoute: typeof DarjahDarjahIdRoute
   DashboardIbuBapaRoute: typeof DashboardIbuBapaRoute
   DashboardProgressRoute: typeof DashboardProgressRoute
   DarjahDarjahIdSubjekIdRoute: typeof DarjahDarjahIdSubjekIdRoute
+  ApiPublicToyyibpayCallbackRoute: typeof ApiPublicToyyibpayCallbackRoute
   DarjahDarjahIdSubjekIdGameRoute: typeof DarjahDarjahIdSubjekIdGameRoute
   DarjahDarjahIdSubjekIdKuizRoute: typeof DarjahDarjahIdSubjekIdKuizRoute
   DarjahDarjahIdSubjekIdLatihTubiRoute: typeof DarjahDarjahIdSubjekIdLatihTubiRoute
@@ -335,6 +375,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DarjahDarjahIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/bayaran/selesai': {
+      id: '/bayaran/selesai'
+      path: '/bayaran/selesai'
+      fullPath: '/bayaran/selesai'
+      preLoaderRoute: typeof BayaranSelesaiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/checkout': {
+      id: '/api/checkout'
+      path: '/api/checkout'
+      fullPath: '/api/checkout'
+      preLoaderRoute: typeof ApiCheckoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/darjah/$darjahId_/$subjekId': {
       id: '/darjah/$darjahId_/$subjekId'
       path: '/darjah/$darjahId/$subjekId'
@@ -377,6 +431,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DarjahDarjahIdSubjekIdGameRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/toyyibpay/callback': {
+      id: '/api/public/toyyibpay/callback'
+      path: '/api/public/toyyibpay/callback'
+      fullPath: '/api/public/toyyibpay/callback'
+      preLoaderRoute: typeof ApiPublicToyyibpayCallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -389,10 +450,13 @@ const rootRouteChildren: RootRouteChildren = {
   LupaPasswordRoute: LupaPasswordRoute,
   PilihDarjahRoute: PilihDarjahRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  ApiCheckoutRoute: ApiCheckoutRoute,
+  BayaranSelesaiRoute: BayaranSelesaiRoute,
   DarjahDarjahIdRoute: DarjahDarjahIdRoute,
   DashboardIbuBapaRoute: DashboardIbuBapaRoute,
   DashboardProgressRoute: DashboardProgressRoute,
   DarjahDarjahIdSubjekIdRoute: DarjahDarjahIdSubjekIdRoute,
+  ApiPublicToyyibpayCallbackRoute: ApiPublicToyyibpayCallbackRoute,
   DarjahDarjahIdSubjekIdGameRoute: DarjahDarjahIdSubjekIdGameRoute,
   DarjahDarjahIdSubjekIdKuizRoute: DarjahDarjahIdSubjekIdKuizRoute,
   DarjahDarjahIdSubjekIdLatihTubiRoute: DarjahDarjahIdSubjekIdLatihTubiRoute,
@@ -403,13 +467,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
