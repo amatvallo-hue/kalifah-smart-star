@@ -3,8 +3,7 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { getBillTransactions } from "@/lib/toyyibpay";
 import { darjahDibuka, type PakejId } from "@/lib/checkout";
 
-const SUPABASE_URL =
-  process.env.SUPABASE_URL ?? "https://pgpkqbdyxoejwvubluqq.supabase.co";
+const SUPABASE_URL = process.env.SUPABASE_URL ?? "https://pgpkqbdyxoejwvubluqq.supabase.co";
 
 function admin(): SupabaseClient | null {
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
@@ -43,9 +42,7 @@ function err(id: string, step: string, data?: unknown) {
   console.error(`[unlock:${id}] ${step}`, data);
 }
 
-export async function verifyAndUnlock(
-  input: UnlockInput,
-): Promise<UnlockResult> {
+export async function verifyAndUnlock(input: UnlockInput): Promise<UnlockResult> {
   const { traceId: id } = input;
   log(id, "0/6 start", {
     orderId: input.orderId,
@@ -150,22 +147,14 @@ export async function verifyAndUnlock(
   const existing: number[] = Array.isArray(profile?.darjah_akses)
     ? (profile!.darjah_akses as number[])
     : [];
-  const toAdd = darjahDibuka(
-    pesanan.pakej as PakejId,
-    (pesanan.darjah_dipilih as number[]) ?? [],
-  );
-  const merged = Array.from(new Set([...existing, ...toAdd])).sort(
-    (a, b) => a - b,
-  );
+  const toAdd = darjahDibuka(pesanan.pakej as PakejId, (pesanan.darjah_dipilih as number[]) ?? []);
+  const merged = Array.from(new Set([...existing, ...toAdd])).sort((a, b) => a - b);
   log(id, "3/6 darjah_akses calc", { existing, toAdd, merged });
 
   log(id, "4/6 upsert profile darjah_akses");
   const { error: upErr } = await supa
     .from("profiles")
-    .upsert(
-      { id: pesanan.user_id, darjah_akses: merged },
-      { onConflict: "id" },
-    );
+    .upsert({ id: pesanan.user_id, darjah_akses: merged }, { onConflict: "id" });
   if (upErr) {
     err(id, "4/6 upsert profile gagal", upErr);
     return { ok: false, reason: "profile-upsert-failed", orderId: pesanan.id };
