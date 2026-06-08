@@ -18,14 +18,22 @@ function janaKod(): string {
 }
 
 export async function senaraikanAnak(): Promise<ChildProfile[]> {
+  const { data: sess } = await supabase.auth.getSession();
+  const uid = sess.session?.user?.id;
+  if (!uid) {
+    console.warn("senaraikanAnak: tiada sesi pengguna");
+    return [];
+  }
   const { data, error } = await supabase
     .from("child_profiles" as never)
     .select("*")
+    .eq("parent_id", uid)
     .order("created_at", { ascending: true });
   if (error) {
     console.warn("senaraikanAnak gagal:", error);
     return [];
   }
+  console.info(`senaraikanAnak: ${data?.length ?? 0} anak untuk parent ${uid}`);
   return (data ?? []) as unknown as ChildProfile[];
 }
 

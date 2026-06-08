@@ -2,6 +2,8 @@ import { Link } from "@tanstack/react-router";
 import { LogOut, Star, User, Menu } from "lucide-react";
 import { useState } from "react";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
+import { useAuth } from "@/hooks/use-auth";
+import { CHILD_EMAIL_DOMAIN } from "@/lib/child-auth";
 
 export function SiteHeader({
   stars = 0,
@@ -13,6 +15,8 @@ export function SiteHeader({
   onLogout?: () => void;
 }) {
   const [open, setOpen] = useState(false);
+  const { user } = useAuth();
+  const isChild = !!user?.email?.includes(CHILD_EMAIL_DOMAIN);
 
   const navLinks = (
     <>
@@ -25,7 +29,7 @@ export function SiteHeader({
       >
         Pilih Darjah
       </Link>
-      {userName && (
+      {userName && isChild && (
         <Link
           to="/dashboard/progress"
           className="rounded-full px-4 py-2 font-display text-sm font-bold text-muted-foreground transition hover:bg-secondary hover:text-foreground"
@@ -35,7 +39,7 @@ export function SiteHeader({
           Progress Saya
         </Link>
       )}
-      {userName && (
+      {userName && !isChild && (
         <Link
           to="/dashboard/ibu-bapa"
           className="rounded-full px-4 py-2 font-display text-sm font-bold text-muted-foreground transition hover:bg-secondary hover:text-foreground"

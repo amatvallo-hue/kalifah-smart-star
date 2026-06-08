@@ -19,7 +19,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { SUBJEK_LIST, DARJAH_LIST } from "@/lib/curriculum";
 import { padamAnak, senaraikanAnak, type ChildProfile } from "@/lib/parent";
-import { ciptaAkaunAnak, normalizeUsername } from "@/lib/child-auth";
+import { ciptaAkaunAnak, normalizeUsername, CHILD_EMAIL_DOMAIN } from "@/lib/child-auth";
 
 export const Route = createFileRoute("/dashboard/ibu-bapa")({
   head: () => ({ meta: [{ title: "Dashboard Ibu Bapa — Kalifah.my" }] }),
@@ -94,9 +94,18 @@ function ParentDashboard() {
   const [fetching, setFetching] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
 
+  const isChild = !!user?.email?.includes(CHILD_EMAIL_DOMAIN);
+
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
-  }, [loading, user, navigate]);
+    else if (!loading && isChild) navigate({ to: "/dashboard/progress" });
+  }, [loading, user, isChild, navigate]);
+
+  async function refreshAnak() {
+    const list = await senaraikanAnak();
+    setAnakList(list);
+    if (!aktifId && list.length > 0) setAktifId(list[0].id);
+  }
 
   useEffect(() => {
     if (!user) return;
@@ -243,13 +252,21 @@ function ParentDashboard() {
               <p className="text-sm text-muted-foreground">Pantau pembelajaran anak anda dengan mudah.</p>
             </div>
           </div>
-          <button
-            onClick={() => setShowAdd((v) => !v)}
-            className="inline-flex items-center gap-2 rounded-full px-5 py-2.5 font-display text-sm font-extrabold text-white shadow-soft"
-            style={{ backgroundColor: HIJAU }}
-          >
-            <PlusCircle className="h-4 w-4" /> Tambah Anak
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={refreshAnak}
+              className="inline-flex items-center gap-2 rounded-full bg-card px-4 py-2.5 font-display text-sm font-extrabold text-muted-foreground shadow-soft hover:text-foreground"
+            >
+              Muat Semula
+            </button>
+            <button
+              onClick={() => setShowAdd((v) => !v)}
+              className="inline-flex items-center gap-2 rounded-full px-5 py-2.5 font-display text-sm font-extrabold text-white shadow-soft"
+              style={{ backgroundColor: HIJAU }}
+            >
+              <PlusCircle className="h-4 w-4" /> Tambah Anak
+            </button>
+          </div>
         </div>
 
         {/* Borang tambah anak */}
