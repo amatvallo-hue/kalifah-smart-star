@@ -66,6 +66,7 @@ export const Route = createFileRoute("/api/confirm-payment")({
               { status: 404 },
             );
           }
+          console.log(`[confirm:${id}] order verified`, { orderId: ord.id });
 
           const result = await verifyAndUnlock({
             traceId: id,
@@ -73,7 +74,10 @@ export const Route = createFileRoute("/api/confirm-payment")({
             billcode: body.billcode ?? null,
             statusFromCallback: null,
             txnId: null,
+            actorClient: userClient,
+            requireOwnerUserId: userData.user.id,
           });
+          console.log(`[confirm:${id}] unlock result`, result);
           return Response.json(result);
         } catch (e) {
           console.error(`[confirm:${id}] exception`, e);
