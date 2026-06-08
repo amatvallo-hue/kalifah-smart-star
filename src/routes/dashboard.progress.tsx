@@ -251,7 +251,7 @@ function ProgressDashboard() {
             </p>
         </div>
 
-        <KadSertaiKod />
+        {!user?.email?.includes(CHILD_EMAIL_DOMAIN) && <KadSertaiKod />}
 
         </div>
 
