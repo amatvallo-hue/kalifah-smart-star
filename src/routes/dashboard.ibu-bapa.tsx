@@ -252,13 +252,21 @@ function ParentDashboard() {
               <p className="text-sm text-muted-foreground">Pantau pembelajaran anak anda dengan mudah.</p>
             </div>
           </div>
-          <button
-            onClick={() => setShowAdd((v) => !v)}
-            className="inline-flex items-center gap-2 rounded-full px-5 py-2.5 font-display text-sm font-extrabold text-white shadow-soft"
-            style={{ backgroundColor: HIJAU }}
-          >
-            <PlusCircle className="h-4 w-4" /> Tambah Anak
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={refreshAnak}
+              className="inline-flex items-center gap-2 rounded-full bg-card px-4 py-2.5 font-display text-sm font-extrabold text-muted-foreground shadow-soft hover:text-foreground"
+            >
+              Muat Semula
+            </button>
+            <button
+              onClick={() => setShowAdd((v) => !v)}
+              className="inline-flex items-center gap-2 rounded-full px-5 py-2.5 font-display text-sm font-extrabold text-white shadow-soft"
+              style={{ backgroundColor: HIJAU }}
+            >
+              <PlusCircle className="h-4 w-4" /> Tambah Anak
+            </button>
+          </div>
         </div>
 
         {/* Borang tambah anak */}
