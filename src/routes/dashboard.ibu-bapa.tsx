@@ -315,17 +315,6 @@ function ParentDashboard() {
               })}
             </section>
 
-            {anakAktif && !anakAktif.child_user_id && (
-              <KadKodJemputan anak={anakAktif} onPadam={async () => {
-                if (!confirm(`Padam profil ${anakAktif.nama}?`)) return;
-                const ok = await padamAnak(anakAktif.id);
-                if (ok) {
-                  const list = await senaraikanAnak();
-                  setAnakList(list);
-                  setAktifId(list[0]?.id ?? null);
-                }
-              }} />
-            )}
 
             {anakAktif && anakAktif.child_user_id && (
               <>
