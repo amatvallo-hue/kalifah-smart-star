@@ -52,7 +52,11 @@ export const Route = createFileRoute("/api/temporary-unlock")({
 
           if (!body.order_id && !body.billcode) {
             return Response.json(
-              { ok: false, error: "order_id atau billcode diperlukan", trace_id: id },
+              {
+                ok: false,
+                error: "order_id atau billcode diperlukan",
+                trace_id: id,
+              },
               { status: 400 },
             );
           }
@@ -71,7 +75,11 @@ export const Route = createFileRoute("/api/temporary-unlock")({
         } catch (e) {
           console.error(`[temporary-unlock:${id}] exception`, e);
           return Response.json(
-            { ok: false, error: e instanceof Error ? e.message : "ralat", trace_id: id },
+            {
+              ok: false,
+              error: e instanceof Error ? e.message : "ralat",
+              trace_id: id,
+            },
             { status: 500 },
           );
         }
