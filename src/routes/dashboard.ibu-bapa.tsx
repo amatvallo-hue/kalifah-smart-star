@@ -19,7 +19,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { SUBJEK_LIST, DARJAH_LIST } from "@/lib/curriculum";
 import { padamAnak, senaraikanAnak, type ChildProfile } from "@/lib/parent";
-import { ciptaAkaunAnak, normalizeUsername } from "@/lib/child-auth";
+import { ciptaAkaunAnak, normalizeUsername, CHILD_EMAIL_DOMAIN } from "@/lib/child-auth";
 
 export const Route = createFileRoute("/dashboard/ibu-bapa")({
   head: () => ({ meta: [{ title: "Dashboard Ibu Bapa — Kalifah.my" }] }),
