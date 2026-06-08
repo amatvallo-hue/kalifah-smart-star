@@ -566,6 +566,71 @@ function FormTambahAnak({ onAdded }: { onAdded: () => void }) {
 }
 
 
+function FormJanaKod({ onAdded }: { onAdded: (id: string) => void }) {
+  const [nama, setNama] = useState("");
+  const [darjah, setDarjah] = useState("1");
+  const [loading, setLoading] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!nama.trim()) return;
+    setLoading(true);
+    setErr(null);
+    const row = await tambahAnak(nama, darjah);
+    setLoading(false);
+    if (!row) {
+      setErr("Gagal jana kod jemputan.");
+      return;
+    }
+    onAdded(row.id);
+  }
+
+  return (
+    <form onSubmit={submit} className="mt-4 rounded-2xl bg-card p-5 shadow-card" style={{ border: `2px dashed ${EMAS}` }}>
+      <h3 className="font-display text-lg font-extrabold text-foreground">Jana Kod Jemputan</h3>
+      <p className="mt-1 text-xs text-muted-foreground">
+        Guna ini hanya jika anak <b>sudah ada akaun sendiri</b> dan anda ingin pautkannya. Untuk cipta akaun baru, klik <b>Tambah Anak</b>.
+      </p>
+      <div className="mt-4 grid gap-3 sm:grid-cols-2">
+        <label className="block">
+          <span className="mb-1 block text-xs font-extrabold text-foreground">Nama Anak</span>
+          <input
+            value={nama}
+            onChange={(e) => setNama(e.target.value)}
+            placeholder="cth: Aisyah binti Ali"
+            className="w-full rounded-xl border-2 border-border px-4 py-2.5 font-display text-sm"
+            required
+            maxLength={60}
+          />
+        </label>
+        <label className="block">
+          <span className="mb-1 block text-xs font-extrabold text-foreground">Darjah</span>
+          <select
+            value={darjah}
+            onChange={(e) => setDarjah(e.target.value)}
+            className="w-full rounded-xl border-2 border-border px-4 py-2.5 font-display text-sm"
+          >
+            {DARJAH_LIST.map((d) => (
+              <option key={d.id} value={d.id}>{d.label}</option>
+            ))}
+          </select>
+        </label>
+      </div>
+      <button
+        type="submit"
+        disabled={loading}
+        className="mt-4 w-full rounded-xl px-5 py-2.5 font-display text-sm font-extrabold text-white shadow-soft disabled:opacity-60"
+        style={{ backgroundColor: EMAS }}
+      >
+        {loading ? "Menjana kod..." : "Jana Kod Jemputan"}
+      </button>
+      {err && <p className="mt-2 text-xs text-destructive">{err}</p>}
+    </form>
+  );
+}
+
+
 function KadKodJemputan({ anak, onPadam }: { anak: ChildProfile; onPadam: () => void }) {
   const [salin, setSalin] = useState(false);
   function copyKod() {
