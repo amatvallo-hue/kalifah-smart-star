@@ -33,7 +33,7 @@ export function useProfile() {
     (async () => {
       const { data, error } = await supabase
         .from("profiles")
-        .select("id, darjah_akses")
+        .select("id, darjah_akses, role")
         .eq("id", user.id)
         .maybeSingle();
 
