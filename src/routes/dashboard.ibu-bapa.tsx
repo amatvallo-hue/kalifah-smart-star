@@ -284,7 +284,8 @@ function ParentDashboard() {
               const list = await senaraikanAnak();
               setAnakList(list);
               setShowAdd(false);
-              if (!aktifId && list.length > 0) setAktifId(list[0].id);
+              // Fokus pada anak yang baru ditambah (terakhir mengikut created_at asc)
+              if (list.length > 0) setAktifId(list[list.length - 1].id);
             }}
           />
         )}
