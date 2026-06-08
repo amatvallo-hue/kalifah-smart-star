@@ -5,6 +5,7 @@ import { useAuth } from "./use-auth";
 export interface Profile {
   id: string;
   darjah_akses: number[];
+  role?: string;
 }
 
 function normalizeDarjahAkses(raw: unknown): number[] {
