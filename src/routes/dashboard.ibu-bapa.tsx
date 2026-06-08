@@ -6,7 +6,6 @@ import {
   BookOpen,
   Calendar,
   Clock,
-  Copy,
   Flame,
   PlusCircle,
   Target,
@@ -18,7 +17,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { SUBJEK_LIST, DARJAH_LIST } from "@/lib/curriculum";
-import { padamAnak, senaraikanAnak, tambahAnak, type ChildProfile } from "@/lib/parent";
+import { padamAnak, senaraikanAnak, type ChildProfile } from "@/lib/parent";
 import { ciptaAkaunAnak, normalizeUsername, CHILD_EMAIL_DOMAIN } from "@/lib/child-auth";
 
 export const Route = createFileRoute("/dashboard/ibu-bapa")({
@@ -93,7 +92,6 @@ function ParentDashboard() {
   const [badges, setBadges] = useState<BadgeRow[]>([]);
   const [fetching, setFetching] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
-  const [showKod, setShowKod] = useState(false);
 
   const isChild = !!user?.email?.includes(CHILD_EMAIL_DOMAIN);
 
@@ -261,14 +259,7 @@ function ParentDashboard() {
               Muat Semula
             </button>
             <button
-              onClick={() => { setShowKod((v) => !v); setShowAdd(false); }}
-              className="inline-flex items-center gap-2 rounded-full bg-card px-4 py-2.5 font-display text-sm font-extrabold shadow-soft"
-              style={{ color: EMAS, border: `2px solid ${EMAS}55` }}
-            >
-              Jana Kod Jemputan
-            </button>
-            <button
-              onClick={() => { setShowAdd((v) => !v); setShowKod(false); }}
+              onClick={() => setShowAdd((v) => !v)}
               className="inline-flex items-center gap-2 rounded-full px-5 py-2.5 font-display text-sm font-extrabold text-white shadow-soft"
               style={{ backgroundColor: HIJAU }}
             >
@@ -290,17 +281,6 @@ function ParentDashboard() {
           />
         )}
 
-        {/* Borang jana kod jemputan (untuk anak yang sudah ada akaun berasingan) */}
-        {showKod && (
-          <FormJanaKod
-            onAdded={async (newId) => {
-              const list = await senaraikanAnak();
-              setAnakList(list);
-              setShowKod(false);
-              setAktifId(newId);
-            }}
-          />
-        )}
 
         {/* Pemilih anak */}
         {anakList.length === 0 ? (
@@ -335,17 +315,6 @@ function ParentDashboard() {
               })}
             </section>
 
-            {anakAktif && !anakAktif.child_user_id && (
-              <KadKodJemputan anak={anakAktif} onPadam={async () => {
-                if (!confirm(`Padam profil ${anakAktif.nama}?`)) return;
-                const ok = await padamAnak(anakAktif.id);
-                if (ok) {
-                  const list = await senaraikanAnak();
-                  setAnakList(list);
-                  setAktifId(list[0]?.id ?? null);
-                }
-              }} />
-            )}
 
             {anakAktif && anakAktif.child_user_id && (
               <>
@@ -567,110 +536,7 @@ function FormTambahAnak({ onAdded }: { onAdded: () => void }) {
 }
 
 
-function FormJanaKod({ onAdded }: { onAdded: (id: string) => void }) {
-  const [nama, setNama] = useState("");
-  const [darjah, setDarjah] = useState("1");
-  const [loading, setLoading] = useState(false);
-  const [err, setErr] = useState<string | null>(null);
 
-  async function submit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!nama.trim()) return;
-    setLoading(true);
-    setErr(null);
-    const res = await tambahAnak(nama, darjah);
-    setLoading(false);
-    if (!res.ok) {
-      setErr(res.mesej || "Gagal jana kod jemputan.");
-      return;
-    }
-    onAdded(res.row.id);
-  }
-
-  return (
-    <form onSubmit={submit} className="mt-4 rounded-2xl bg-card p-5 shadow-card" style={{ border: `2px dashed ${EMAS}` }}>
-      <h3 className="font-display text-lg font-extrabold text-foreground">Jana Kod Jemputan</h3>
-      <p className="mt-1 text-xs text-muted-foreground">
-        Guna ini hanya jika anak <b>sudah ada akaun sendiri</b> dan anda ingin pautkannya. Untuk cipta akaun baru, klik <b>Tambah Anak</b>.
-      </p>
-      <div className="mt-4 grid gap-3 sm:grid-cols-2">
-        <label className="block">
-          <span className="mb-1 block text-xs font-extrabold text-foreground">Nama Anak</span>
-          <input
-            value={nama}
-            onChange={(e) => setNama(e.target.value)}
-            placeholder="cth: Aisyah binti Ali"
-            className="w-full rounded-xl border-2 border-border px-4 py-2.5 font-display text-sm"
-            required
-            maxLength={60}
-          />
-        </label>
-        <label className="block">
-          <span className="mb-1 block text-xs font-extrabold text-foreground">Darjah</span>
-          <select
-            value={darjah}
-            onChange={(e) => setDarjah(e.target.value)}
-            className="w-full rounded-xl border-2 border-border px-4 py-2.5 font-display text-sm"
-          >
-            {DARJAH_LIST.map((d) => (
-              <option key={d.id} value={d.id}>{d.label}</option>
-            ))}
-          </select>
-        </label>
-      </div>
-      <button
-        type="submit"
-        disabled={loading}
-        className="mt-4 w-full rounded-xl px-5 py-2.5 font-display text-sm font-extrabold text-white shadow-soft disabled:opacity-60"
-        style={{ backgroundColor: EMAS }}
-      >
-        {loading ? "Menjana kod..." : "Jana Kod Jemputan"}
-      </button>
-      {err && <p className="mt-2 text-xs text-destructive">{err}</p>}
-    </form>
-  );
-}
-
-
-function KadKodJemputan({ anak, onPadam }: { anak: ChildProfile; onPadam: () => void }) {
-  const [salin, setSalin] = useState(false);
-  function copyKod() {
-    navigator.clipboard.writeText(anak.kod_jemputan);
-    setSalin(true);
-    setTimeout(() => setSalin(false), 1500);
-  }
-  return (
-    <div className="mt-6 rounded-3xl bg-card p-6 shadow-card" style={{ border: `2px dashed ${EMAS}` }}>
-      <h2 className="font-display text-xl font-extrabold text-foreground">
-        Pautkan akaun {anak.nama}
-      </h2>
-      <p className="mt-1 text-sm text-muted-foreground">
-        Beri kod ini kepada anak. Anak masukkan kod di halaman <b>Progress Saya</b> untuk pautkan akaun mereka.
-      </p>
-      <div className="mt-4 flex flex-wrap items-center gap-3">
-        <div
-          className="rounded-2xl px-6 py-3 font-display text-3xl font-extrabold tracking-widest"
-          style={{ backgroundColor: `${EMAS}22`, color: "#7a5300", border: `2px solid ${EMAS}` }}
-        >
-          {anak.kod_jemputan}
-        </div>
-        <button
-          onClick={copyKod}
-          className="inline-flex items-center gap-2 rounded-full px-4 py-2 font-display text-sm font-extrabold text-white shadow-soft"
-          style={{ backgroundColor: HIJAU }}
-        >
-          <Copy className="h-4 w-4" /> {salin ? "Disalin!" : "Salin kod"}
-        </button>
-        <button
-          onClick={onPadam}
-          className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-extrabold text-destructive hover:bg-destructive/10"
-        >
-          <Trash2 className="h-3.5 w-3.5" /> Padam
-        </button>
-      </div>
-    </div>
-  );
-}
 
 function Seksyen({ tajuk, ikon, children }: { tajuk: string; ikon: React.ReactNode; children: React.ReactNode }) {
   return (
