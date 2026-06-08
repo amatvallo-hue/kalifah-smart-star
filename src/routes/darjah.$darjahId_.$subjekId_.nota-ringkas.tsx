@@ -54,7 +54,7 @@ function NotaRingkasPage() {
     );
   }
 
-  if (!darjah || darjah.locked || !subjek) {
+  if (!darjah || !subjek) {
     return (
       <div className="min-h-screen bg-background">
         <SiteHeader onLogout={handleLogout} />
