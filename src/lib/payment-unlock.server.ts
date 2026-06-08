@@ -129,7 +129,8 @@ export async function verifyAndUnlock(
   }
 
   log(id, "2/6 verify ToyyibPay getBillTransactions", { billcode });
-  let verified = false;
+  let verified = pesanan.status === "paid";
+  if (verified) log(id, "2/6 verify fallback: pesanan status=paid");
   try {
     const txs = await getBillTransactions(secretKey, billcode);
     log(id, "2/6 transactions diterima", {
