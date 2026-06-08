@@ -259,14 +259,7 @@ function ParentDashboard() {
               Muat Semula
             </button>
             <button
-              onClick={() => { setShowKod((v) => !v); setShowAdd(false); }}
-              className="inline-flex items-center gap-2 rounded-full bg-card px-4 py-2.5 font-display text-sm font-extrabold shadow-soft"
-              style={{ color: EMAS, border: `2px solid ${EMAS}55` }}
-            >
-              Jana Kod Jemputan
-            </button>
-            <button
-              onClick={() => { setShowAdd((v) => !v); setShowKod(false); }}
+              onClick={() => setShowAdd((v) => !v)}
               className="inline-flex items-center gap-2 rounded-full px-5 py-2.5 font-display text-sm font-extrabold text-white shadow-soft"
               style={{ backgroundColor: HIJAU }}
             >
