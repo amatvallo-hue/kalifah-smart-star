@@ -18,7 +18,8 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { SUBJEK_LIST, DARJAH_LIST } from "@/lib/curriculum";
-import { padamAnak, senaraikanAnak, tambahAnak, type ChildProfile } from "@/lib/parent";
+import { padamAnak, senaraikanAnak, type ChildProfile } from "@/lib/parent";
+import { ciptaAkaunAnak, normalizeUsername } from "@/lib/child-auth";
 
 export const Route = createFileRoute("/dashboard/ibu-bapa")({
   head: () => ({ meta: [{ title: "Dashboard Ibu Bapa — Kalifah.my" }] }),
@@ -427,61 +428,106 @@ function ParentDashboard() {
 
 function FormTambahAnak({ onAdded }: { onAdded: () => void }) {
   const [nama, setNama] = useState("");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [darjah, setDarjah] = useState("1");
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+  const [ok, setOk] = useState<string | null>(null);
+
+  const unameLive = normalizeUsername(username);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     if (!nama.trim()) return;
     setLoading(true);
     setErr(null);
-    const res = await tambahAnak(nama, darjah);
+    setOk(null);
+    const res = await ciptaAkaunAnak(nama, username, password, darjah);
     setLoading(false);
-    if (!res) {
-      setErr("Gagal menambah anak. Sila cuba lagi.");
+    if (!res.ok) {
+      setErr(res.mesej ?? "Gagal mencipta akaun anak.");
       return;
     }
+    setOk(`Akaun ${nama} berjaya dicipta! Anak boleh log masuk dengan username: ${unameLive}`);
     setNama("");
+    setUsername("");
+    setPassword("");
     onAdded();
   }
 
   return (
     <form onSubmit={submit} className="mt-4 rounded-2xl bg-card p-5 shadow-card" style={{ border: `2px solid ${HIJAU}33` }}>
-      <h3 className="font-display text-lg font-extrabold text-foreground">Tambah Profil Anak</h3>
-      <div className="mt-3 grid gap-3 sm:grid-cols-[1fr_auto_auto]">
-        <input
-          value={nama}
-          onChange={(e) => setNama(e.target.value)}
-          placeholder="Nama anak"
-          className="rounded-xl border-2 border-border px-4 py-2.5 font-display text-sm"
-          required
-          maxLength={60}
-        />
-        <select
-          value={darjah}
-          onChange={(e) => setDarjah(e.target.value)}
-          className="rounded-xl border-2 border-border px-4 py-2.5 font-display text-sm"
-        >
-          {DARJAH_LIST.map((d) => (
-            <option key={d.id} value={d.id}>
-              {d.label}
-            </option>
-          ))}
-        </select>
-        <button
-          type="submit"
-          disabled={loading}
-          className="rounded-xl px-5 py-2.5 font-display text-sm font-extrabold text-white disabled:opacity-60"
-          style={{ backgroundColor: HIJAU }}
-        >
-          {loading ? "Menambah..." : "Tambah"}
-        </button>
+      <h3 className="font-display text-lg font-extrabold text-foreground">Cipta Akaun Anak</h3>
+      <p className="mt-1 text-xs text-muted-foreground">
+        Anak akan log masuk dengan <b>username & password</b> sahaja — tiada emel diperlukan.
+      </p>
+      <div className="mt-4 grid gap-3 sm:grid-cols-2">
+        <label className="block">
+          <span className="mb-1 block text-xs font-extrabold text-foreground">Nama Anak</span>
+          <input
+            value={nama}
+            onChange={(e) => setNama(e.target.value)}
+            placeholder="cth: Aisyah binti Ali"
+            className="w-full rounded-xl border-2 border-border px-4 py-2.5 font-display text-sm"
+            required
+            maxLength={60}
+          />
+        </label>
+        <label className="block">
+          <span className="mb-1 block text-xs font-extrabold text-foreground">Darjah</span>
+          <select
+            value={darjah}
+            onChange={(e) => setDarjah(e.target.value)}
+            className="w-full rounded-xl border-2 border-border px-4 py-2.5 font-display text-sm"
+          >
+            {DARJAH_LIST.map((d) => (
+              <option key={d.id} value={d.id}>{d.label}</option>
+            ))}
+          </select>
+        </label>
+        <label className="block">
+          <span className="mb-1 block text-xs font-extrabold text-foreground">Username</span>
+          <input
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder="cth: aisyah123"
+            className="w-full rounded-xl border-2 border-border px-4 py-2.5 font-display text-sm"
+            required
+            minLength={3}
+            maxLength={30}
+          />
+          {username && unameLive !== username && (
+            <span className="mt-1 block text-[10px] text-muted-foreground">Akan disimpan sebagai: <b>{unameLive}</b></span>
+          )}
+        </label>
+        <label className="block">
+          <span className="mb-1 block text-xs font-extrabold text-foreground">Password</span>
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Minimum 6 aksara"
+            className="w-full rounded-xl border-2 border-border px-4 py-2.5 font-display text-sm"
+            required
+            minLength={6}
+          />
+        </label>
       </div>
+      <button
+        type="submit"
+        disabled={loading}
+        className="mt-4 w-full rounded-xl px-5 py-2.5 font-display text-sm font-extrabold text-white shadow-soft disabled:opacity-60"
+        style={{ backgroundColor: HIJAU }}
+      >
+        {loading ? "Mencipta akaun..." : "Cipta Akaun Anak"}
+      </button>
       {err && <p className="mt-2 text-xs text-destructive">{err}</p>}
+      {ok && <p className="mt-2 rounded-xl bg-primary/10 p-2 text-xs font-bold text-primary">{ok}</p>}
     </form>
   );
 }
+
 
 function KadKodJemputan({ anak, onPadam }: { anak: ChildProfile; onPadam: () => void }) {
   const [salin, setSalin] = useState(false);
