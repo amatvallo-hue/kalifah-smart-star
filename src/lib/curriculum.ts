@@ -40,6 +40,21 @@ export function getDarjah(id: string) {
   return DARJAH_LIST.find((d) => d.id === id);
 }
 
+export function getSubjek(id: string) {
+  return SUBJEK_LIST.find((s) => s.id === id);
+}
+
+export const TONE_GRADIENT: Record<Tone, string> = {
+  emerald: "from-primary to-primary-glow text-primary-foreground",
+  gold: "from-gold to-gold/80 text-gold-foreground",
+  sky: "from-sky-400 to-sky-300 text-sky-900",
+  rose: "from-rose-400 to-rose-300 text-rose-900",
+  violet: "from-violet-400 to-violet-300 text-violet-900",
+  amber: "from-amber-400 to-amber-300 text-amber-900",
+  teal: "from-teal-400 to-teal-300 text-teal-900",
+};
+
+
 // ── HARGA & PAKEJ ────────────────────────────────────────────
 export const HARGA_ASAL = 89; // per darjah, strikethrough
 export interface Pakej {
