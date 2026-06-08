@@ -3,16 +3,11 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import { getBillTransactions } from "@/lib/toyyibpay";
 import { darjahDibuka, type PakejId } from "@/lib/checkout";
 
-const SUPABASE_URL =
-  process.env.SUPABASE_URL ?? "https://pgpkqbdyxoejwvubluqq.supabase.co";
+const SUPABASE_URL = process.env.SUPABASE_URL ?? "https://pgpkqbdyxoejwvubluqq.supabase.co";
 
-function admin(): SupabaseClient {
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!key) {
-    throw new Error(
-      "SUPABASE_SERVICE_ROLE_KEY tiada — Lovable Cloud belum aktif?",
-    );
-  }
+function admin(): SupabaseClient | null {
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
+  if (!key) return null;
   return createClient(SUPABASE_URL, key, {
     auth: { persistSession: false, autoRefreshToken: false },
   });
@@ -24,6 +19,8 @@ export interface UnlockInput {
   statusFromCallback?: string | null;
   txnId?: string | null;
   traceId: string;
+  actorClient?: SupabaseClient;
+  requireOwnerUserId?: string | null;
 }
 
 export interface UnlockResult {
@@ -45,9 +42,7 @@ function err(id: string, step: string, data?: unknown) {
   console.error(`[unlock:${id}] ${step}`, data);
 }
 
-export async function verifyAndUnlock(
-  input: UnlockInput,
-): Promise<UnlockResult> {
+export async function verifyAndUnlock(input: UnlockInput): Promise<UnlockResult> {
   const { traceId: id } = input;
   log(id, "0/6 start", {
     orderId: input.orderId,
@@ -66,16 +61,20 @@ export async function verifyAndUnlock(
     return { ok: false, reason: "no-secret-key" };
   }
 
-  const supa = admin();
+  const adminClient = admin();
+  const supa = adminClient ?? input.actorClient;
+  log(id, "0/6 Supabase writer", {
+    mode: adminClient ? "service_role" : input.actorClient ? "authenticated_user" : "missing",
+  });
+  if (!supa) {
+    err(id, "0/6 SUPABASE_SERVICE_ROLE_KEY tiada dan tiada user client fallback");
+    return { ok: false, reason: "no-supabase-writer" };
+  }
 
   log(id, "1/6 cari pesanan");
   const query = input.orderId
     ? supa.from("pesanan").select("*").eq("id", input.orderId).maybeSingle()
-    : supa
-        .from("pesanan")
-        .select("*")
-        .eq("billcode", input.billcode!)
-        .maybeSingle();
+    : supa.from("pesanan").select("*").eq("billcode", input.billcode!).maybeSingle();
   const { data: pesanan, error: pErr } = await query;
   if (pErr) {
     err(id, "1/6 query pesanan ralat", pErr);
@@ -97,22 +96,14 @@ export async function verifyAndUnlock(
     darjah_dipilih: pesanan.darjah_dipilih,
   });
 
-  if (pesanan.status === "paid") {
-    log(id, "1/6 pesanan sudah paid — pulangkan akses sedia ada");
-    const { data: prof } = await supa
-      .from("profiles")
-      .select("darjah_akses")
-      .eq("id", pesanan.user_id)
-      .maybeSingle();
-    return {
-      ok: true,
-      reason: "already-paid",
-      orderId: pesanan.id,
-      userId: pesanan.user_id,
-      darjahAkses: (prof?.darjah_akses as number[]) ?? [],
-      alreadyPaid: true,
-    };
+  if (input.requireOwnerUserId && pesanan.user_id !== input.requireOwnerUserId) {
+    warn(id, "1/6 pesanan bukan milik user", {
+      expected: input.requireOwnerUserId,
+      actual: pesanan.user_id,
+    });
+    return { ok: false, reason: "unauthorized-order" };
   }
+  if (pesanan.status === "paid") log(id, "1/6 pesanan sudah paid");
 
   const billcode = pesanan.billcode ?? input.billcode;
   if (!billcode) {
@@ -121,7 +112,8 @@ export async function verifyAndUnlock(
   }
 
   log(id, "2/6 verify ToyyibPay getBillTransactions", { billcode });
-  let verified = false;
+  let verified = pesanan.status === "paid";
+  if (verified) log(id, "2/6 verify fallback: pesanan status=paid");
   try {
     const txs = await getBillTransactions(secretKey, billcode);
     log(id, "2/6 transactions diterima", {
@@ -155,22 +147,14 @@ export async function verifyAndUnlock(
   const existing: number[] = Array.isArray(profile?.darjah_akses)
     ? (profile!.darjah_akses as number[])
     : [];
-  const toAdd = darjahDibuka(
-    pesanan.pakej as PakejId,
-    (pesanan.darjah_dipilih as number[]) ?? [],
-  );
-  const merged = Array.from(new Set([...existing, ...toAdd])).sort(
-    (a, b) => a - b,
-  );
+  const toAdd = darjahDibuka(pesanan.pakej as PakejId, (pesanan.darjah_dipilih as number[]) ?? []);
+  const merged = Array.from(new Set([...existing, ...toAdd])).sort((a, b) => a - b);
   log(id, "3/6 darjah_akses calc", { existing, toAdd, merged });
 
   log(id, "4/6 upsert profile darjah_akses");
   const { error: upErr } = await supa
     .from("profiles")
-    .upsert(
-      { id: pesanan.user_id, darjah_akses: merged },
-      { onConflict: "id" },
-    );
+    .upsert({ id: pesanan.user_id, darjah_akses: merged }, { onConflict: "id" });
   if (upErr) {
     err(id, "4/6 upsert profile gagal", upErr);
     return { ok: false, reason: "profile-upsert-failed", orderId: pesanan.id };
