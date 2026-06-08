@@ -6,13 +6,9 @@ import { darjahDibuka, type PakejId } from "@/lib/checkout";
 const SUPABASE_URL =
   process.env.SUPABASE_URL ?? "https://pgpkqbdyxoejwvubluqq.supabase.co";
 
-function admin(): SupabaseClient {
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
-  if (!key) {
-    throw new Error(
-      "SUPABASE_SERVICE_ROLE_KEY tiada — Lovable Cloud belum aktif?",
-    );
-  }
+function admin(): SupabaseClient | null {
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
+  if (!key) return null;
   return createClient(SUPABASE_URL, key, {
     auth: { persistSession: false, autoRefreshToken: false },
   });
@@ -24,6 +20,8 @@ export interface UnlockInput {
   statusFromCallback?: string | null;
   txnId?: string | null;
   traceId: string;
+  actorClient?: SupabaseClient;
+  requireOwnerUserId?: string | null;
 }
 
 export interface UnlockResult {
@@ -66,7 +64,15 @@ export async function verifyAndUnlock(
     return { ok: false, reason: "no-secret-key" };
   }
 
-  const supa = admin();
+  const adminClient = admin();
+  const supa = adminClient ?? input.actorClient;
+  log(id, "0/6 Supabase writer", {
+    mode: adminClient ? "service_role" : input.actorClient ? "authenticated_user" : "missing",
+  });
+  if (!supa) {
+    err(id, "0/6 SUPABASE_SERVICE_ROLE_KEY tiada dan tiada user client fallback");
+    return { ok: false, reason: "no-supabase-writer" };
+  }
 
   log(id, "1/6 cari pesanan");
   const query = input.orderId
@@ -96,6 +102,14 @@ export async function verifyAndUnlock(
     pakej: pesanan.pakej,
     darjah_dipilih: pesanan.darjah_dipilih,
   });
+
+  if (input.requireOwnerUserId && pesanan.user_id !== input.requireOwnerUserId) {
+    warn(id, "1/6 pesanan bukan milik user", {
+      expected: input.requireOwnerUserId,
+      actual: pesanan.user_id,
+    });
+    return { ok: false, reason: "unauthorized-order" };
+  }
 
   if (pesanan.status === "paid") {
     log(id, "1/6 pesanan sudah paid — pulangkan akses sedia ada");
