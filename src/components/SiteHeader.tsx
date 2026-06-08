@@ -1,8 +1,15 @@
 import { Link } from "@tanstack/react-router";
-import { LogOut, Star, User, Menu } from "lucide-react";
+import { LogOut, Star, User, Menu, LayoutDashboard } from "lucide-react";
 import { useState } from "react";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/hooks/use-auth";
+import { useProfile } from "@/hooks/use-profile";
 import { CHILD_EMAIL_DOMAIN } from "@/lib/child-auth";
 
 export function SiteHeader({
