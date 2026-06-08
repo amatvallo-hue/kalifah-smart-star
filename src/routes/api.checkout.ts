@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { createClient } from "@supabase/supabase-js";
-import { pool } from "@/lib/lovable/database";
+import { getPool } from "@/lib/db.server";
 import { createBill } from "@/lib/toyyibpay";
 import { kiraHarga, type PakejId } from "@/lib/checkout";
 
@@ -43,7 +43,7 @@ export const Route = createFileRoute("/api/checkout")({
           const amount = kiraHarga(body.pakej, darjah);
           const amountSen = amount * 100;
 
-          const insertRes = await pool.query<{ id: string }>(
+          const insertRes = await getPool().query<{ id: string }>(
             `INSERT INTO public.pesanan
                (user_id, pakej, darjah_dipilih, amount_sen, status)
              VALUES ($1, $2, $3, $4, 'pending')
@@ -94,7 +94,7 @@ export const Route = createFileRoute("/api/checkout")({
               (user.user_metadata?.phone as string | undefined) ?? undefined,
           });
 
-          await pool.query(
+          await getPool().query(
             `UPDATE public.pesanan SET billcode = $1 WHERE id = $2`,
             [billCode, orderId],
           );

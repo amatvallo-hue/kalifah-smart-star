@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { pool } from "@/lib/lovable/database";
+import { getPool } from "@/lib/db.server";
 import { getBillTransactions } from "@/lib/toyyibpay";
 import { darjahDibuka, type PakejId } from "@/lib/checkout";
 
@@ -40,12 +40,12 @@ export const Route = createFileRoute("/api/public/toyyibpay/callback")({
           }
 
           const pesananRes = orderId
-            ? await pool.query(
+            ? await getPool().query(
                 `SELECT id, user_id, pakej, darjah_dipilih, status
                    FROM public.pesanan WHERE id = $1 LIMIT 1`,
                 [orderId],
               )
-            : await pool.query(
+            : await getPool().query(
                 `SELECT id, user_id, pakej, darjah_dipilih, status
                    FROM public.pesanan WHERE billcode = $1 LIMIT 1`,
                 [billcode],
@@ -59,7 +59,7 @@ export const Route = createFileRoute("/api/public/toyyibpay/callback")({
             return new Response("already processed", { status: 200 });
           }
 
-          const profRes = await pool.query(
+          const profRes = await getPool().query(
             `SELECT darjah_akses FROM public.profiles WHERE id = $1 LIMIT 1`,
             [pesanan.user_id],
           );
@@ -74,14 +74,14 @@ export const Route = createFileRoute("/api/public/toyyibpay/callback")({
             (a, b) => a - b,
           );
 
-          await pool.query(
+          await getPool().query(
             `INSERT INTO public.profiles (id, darjah_akses)
              VALUES ($1, $2)
              ON CONFLICT (id) DO UPDATE SET darjah_akses = EXCLUDED.darjah_akses`,
             [pesanan.user_id, merged],
           );
 
-          await pool.query(
+          await getPool().query(
             `UPDATE public.pesanan
                SET status = 'paid',
                    paid_at = NOW(),
