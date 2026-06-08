@@ -281,17 +281,6 @@ function ParentDashboard() {
           />
         )}
 
-        {/* Borang jana kod jemputan (untuk anak yang sudah ada akaun berasingan) */}
-        {showKod && (
-          <FormJanaKod
-            onAdded={async (newId) => {
-              const list = await senaraikanAnak();
-              setAnakList(list);
-              setShowKod(false);
-              setAktifId(newId);
-            }}
-          />
-        )}
 
         {/* Pemilih anak */}
         {anakList.length === 0 ? (
