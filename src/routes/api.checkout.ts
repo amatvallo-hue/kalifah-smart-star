@@ -1,14 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { createClient } from "@supabase/supabase-js";
-import { getSupabaseAdmin } from "@/integrations/supabase/client.server";
+import { pool } from "@/lib/lovable/database";
 import { createBill } from "@/lib/toyyibpay";
 import { kiraHarga, type PakejId } from "@/lib/checkout";
 
-const SUPABASE_URL =
-  process.env.SUPABASE_URL ?? "https://pgpkqbdyxoejwvubluqq.supabase.co";
+const SUPABASE_URL = "https://pgpkqbdyxoejwvubluqq.supabase.co";
 const SUPABASE_ANON_KEY =
-  process.env.SUPABASE_PUBLISHABLE_KEY ??
-  process.env.SUPABASE_ANON_KEY ??
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBncGtxYmR5eG9land2dWJsdXFxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1NjcyMjAsImV4cCI6MjA5NjE0MzIyMH0.dWoxARe5MfuHuCtMn53z50Kxh_-UjnqGnh8XREzPUUo";
 
 export const Route = createFileRoute("/api/checkout")({
@@ -46,21 +43,17 @@ export const Route = createFileRoute("/api/checkout")({
           const amount = kiraHarga(body.pakej, darjah);
           const amountSen = amount * 100;
 
-          const admin = getSupabaseAdmin();
-          const { data: order, error: orderErr } = await admin
-            .from("pesanan")
-            .insert({
-              user_id: user.id,
-              pakej: body.pakej,
-              darjah_dipilih: darjah,
-              amount_sen: amountSen,
-              status: "pending",
-            })
-            .select("id")
-            .single();
-          if (orderErr || !order) {
+          const insertRes = await pool.query<{ id: string }>(
+            `INSERT INTO public.pesanan
+               (user_id, pakej, darjah_dipilih, amount_sen, status)
+             VALUES ($1, $2, $3, $4, 'pending')
+             RETURNING id`,
+            [user.id, body.pakej, darjah, amountSen],
+          );
+          const orderId = insertRes.rows[0]?.id;
+          if (!orderId) {
             return Response.json(
-              { error: "Gagal cipta pesanan", detail: orderErr?.message },
+              { error: "Gagal cipta pesanan" },
               { status: 500 },
             );
           }
@@ -89,8 +82,8 @@ export const Route = createFileRoute("/api/checkout")({
             billName: "Kalifah.my",
             billDescription: `Langganan ${pakejLabel}`,
             amountSen,
-            externalRef: order.id,
-            returnUrl: `${origin}/bayaran/selesai?order=${order.id}`,
+            externalRef: orderId,
+            returnUrl: `${origin}/bayaran/selesai?order=${orderId}`,
             callbackUrl: `${origin}/api/public/toyyibpay/callback`,
             customerName:
               (user.user_metadata?.name as string | undefined) ??
@@ -101,14 +94,14 @@ export const Route = createFileRoute("/api/checkout")({
               (user.user_metadata?.phone as string | undefined) ?? undefined,
           });
 
-          await admin
-            .from("pesanan")
-            .update({ billcode: billCode })
-            .eq("id", order.id);
+          await pool.query(
+            `UPDATE public.pesanan SET billcode = $1 WHERE id = $2`,
+            [billCode, orderId],
+          );
 
           return Response.json({
             ok: true,
-            order_id: order.id,
+            order_id: orderId,
             billcode: billCode,
             url: `https://toyyibpay.com/${billCode}`,
           });
