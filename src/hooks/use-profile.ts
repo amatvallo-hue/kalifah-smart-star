@@ -36,13 +36,12 @@ export function useProfile() {
       if (data) {
         setProfile({
           id: (data as Profile).id,
-          darjah_akses: Array.isArray((data as Profile).darjah_akses)
-            ? (data as Profile).darjah_akses
-            : [],
+          darjah_akses: normalizeDarjahAkses((data as { darjah_akses: unknown }).darjah_akses),
         });
         setLoading(false);
         return;
       }
+
 
       // No row visible. Use upsert with ignoreDuplicates so we NEVER
       // overwrite an existing row's darjah_akses with an empty array.
