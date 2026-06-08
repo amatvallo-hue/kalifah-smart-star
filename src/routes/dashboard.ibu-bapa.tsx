@@ -577,13 +577,13 @@ function FormJanaKod({ onAdded }: { onAdded: (id: string) => void }) {
     if (!nama.trim()) return;
     setLoading(true);
     setErr(null);
-    const row = await tambahAnak(nama, darjah);
+    const res = await tambahAnak(nama, darjah);
     setLoading(false);
-    if (!row) {
-      setErr("Gagal jana kod jemputan.");
+    if (!res.ok) {
+      setErr(res.mesej || "Gagal jana kod jemputan.");
       return;
     }
-    onAdded(row.id);
+    onAdded(res.row.id);
   }
 
   return (
