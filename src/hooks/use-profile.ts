@@ -87,10 +87,9 @@ export function useProfile() {
       if (finalRow) {
         setProfile({
           id: finalRow.id,
-          darjah_akses: Array.isArray(finalRow.darjah_akses)
-            ? finalRow.darjah_akses
-            : [],
+          darjah_akses: normalizeDarjahAkses((finalRow as { darjah_akses: unknown }).darjah_akses),
         });
+
       } else {
         // Truly nothing readable — likely RLS denying SELECT.
         console.warn(
