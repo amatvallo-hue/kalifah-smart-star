@@ -74,7 +74,7 @@ export function useProfile() {
       // where the row already existed and ignoreDuplicates returned []).
       const { data: reread } = await supabase
         .from("profiles")
-        .select("id, darjah_akses")
+        .select("id, darjah_akses, role")
         .eq("id", user.id)
         .maybeSingle();
 
