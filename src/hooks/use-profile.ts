@@ -91,6 +91,7 @@ export function useProfile() {
         setProfile({
           id: finalRow.id,
           darjah_akses: normalizeDarjahAkses((finalRow as { darjah_akses: unknown }).darjah_akses),
+          role: (finalRow as Profile).role,
         });
 
       } else {
