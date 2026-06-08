@@ -62,7 +62,7 @@ export function useProfile() {
           { id: user.id, darjah_akses: [] },
           { onConflict: "id", ignoreDuplicates: true },
         )
-        .select("id, darjah_akses");
+        .select("id, darjah_akses, role");
 
       if (!mounted) return;
 
