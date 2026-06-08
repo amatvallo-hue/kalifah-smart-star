@@ -21,6 +21,7 @@ import { Route as DashboardProgressRouteImport } from './routes/dashboard.progre
 import { Route as DashboardIbuBapaRouteImport } from './routes/dashboard.ibu-bapa'
 import { Route as DarjahDarjahIdRouteImport } from './routes/darjah.$darjahId'
 import { Route as BayaranSelesaiRouteImport } from './routes/bayaran.selesai'
+import { Route as ApiConfirmPaymentRouteImport } from './routes/api.confirm-payment'
 import { Route as ApiCheckoutRouteImport } from './routes/api.checkout'
 import { Route as DarjahDarjahIdSubjekIdRouteImport } from './routes/darjah.$darjahId_.$subjekId'
 import { Route as DarjahDarjahIdSubjekIdNotaRingkasRouteImport } from './routes/darjah.$darjahId_.$subjekId_.nota-ringkas'
@@ -90,6 +91,11 @@ const BayaranSelesaiRoute = BayaranSelesaiRouteImport.update({
   path: '/bayaran/selesai',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiConfirmPaymentRoute = ApiConfirmPaymentRouteImport.update({
+  id: '/api/confirm-payment',
+  path: '/api/confirm-payment',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiCheckoutRoute = ApiCheckoutRouteImport.update({
   id: '/api/checkout',
   path: '/api/checkout',
@@ -147,6 +153,7 @@ export interface FileRoutesByFullPath {
   '/pilih-darjah': typeof PilihDarjahRoute
   '/reset-password': typeof ResetPasswordRoute
   '/api/checkout': typeof ApiCheckoutRoute
+  '/api/confirm-payment': typeof ApiConfirmPaymentRoute
   '/bayaran/selesai': typeof BayaranSelesaiRoute
   '/darjah/$darjahId': typeof DarjahDarjahIdRoute
   '/dashboard/ibu-bapa': typeof DashboardIbuBapaRoute
@@ -169,6 +176,7 @@ export interface FileRoutesByTo {
   '/pilih-darjah': typeof PilihDarjahRoute
   '/reset-password': typeof ResetPasswordRoute
   '/api/checkout': typeof ApiCheckoutRoute
+  '/api/confirm-payment': typeof ApiConfirmPaymentRoute
   '/bayaran/selesai': typeof BayaranSelesaiRoute
   '/darjah/$darjahId': typeof DarjahDarjahIdRoute
   '/dashboard/ibu-bapa': typeof DashboardIbuBapaRoute
@@ -192,6 +200,7 @@ export interface FileRoutesById {
   '/pilih-darjah': typeof PilihDarjahRoute
   '/reset-password': typeof ResetPasswordRoute
   '/api/checkout': typeof ApiCheckoutRoute
+  '/api/confirm-payment': typeof ApiConfirmPaymentRoute
   '/bayaran/selesai': typeof BayaranSelesaiRoute
   '/darjah/$darjahId': typeof DarjahDarjahIdRoute
   '/dashboard/ibu-bapa': typeof DashboardIbuBapaRoute
@@ -216,6 +225,7 @@ export interface FileRouteTypes {
     | '/pilih-darjah'
     | '/reset-password'
     | '/api/checkout'
+    | '/api/confirm-payment'
     | '/bayaran/selesai'
     | '/darjah/$darjahId'
     | '/dashboard/ibu-bapa'
@@ -238,6 +248,7 @@ export interface FileRouteTypes {
     | '/pilih-darjah'
     | '/reset-password'
     | '/api/checkout'
+    | '/api/confirm-payment'
     | '/bayaran/selesai'
     | '/darjah/$darjahId'
     | '/dashboard/ibu-bapa'
@@ -260,6 +271,7 @@ export interface FileRouteTypes {
     | '/pilih-darjah'
     | '/reset-password'
     | '/api/checkout'
+    | '/api/confirm-payment'
     | '/bayaran/selesai'
     | '/darjah/$darjahId'
     | '/dashboard/ibu-bapa'
@@ -283,6 +295,7 @@ export interface RootRouteChildren {
   PilihDarjahRoute: typeof PilihDarjahRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   ApiCheckoutRoute: typeof ApiCheckoutRoute
+  ApiConfirmPaymentRoute: typeof ApiConfirmPaymentRoute
   BayaranSelesaiRoute: typeof BayaranSelesaiRoute
   DarjahDarjahIdRoute: typeof DarjahDarjahIdRoute
   DashboardIbuBapaRoute: typeof DashboardIbuBapaRoute
@@ -382,6 +395,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BayaranSelesaiRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/confirm-payment': {
+      id: '/api/confirm-payment'
+      path: '/api/confirm-payment'
+      fullPath: '/api/confirm-payment'
+      preLoaderRoute: typeof ApiConfirmPaymentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/checkout': {
       id: '/api/checkout'
       path: '/api/checkout'
@@ -451,6 +471,7 @@ const rootRouteChildren: RootRouteChildren = {
   PilihDarjahRoute: PilihDarjahRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   ApiCheckoutRoute: ApiCheckoutRoute,
+  ApiConfirmPaymentRoute: ApiConfirmPaymentRoute,
   BayaranSelesaiRoute: BayaranSelesaiRoute,
   DarjahDarjahIdRoute: DarjahDarjahIdRoute,
   DashboardIbuBapaRoute: DashboardIbuBapaRoute,
