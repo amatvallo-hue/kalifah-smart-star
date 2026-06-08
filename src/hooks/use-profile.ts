@@ -48,6 +48,7 @@ export function useProfile() {
         setProfile({
           id: (data as Profile).id,
           darjah_akses: normalizeDarjahAkses((data as { darjah_akses: unknown }).darjah_akses),
+          role: (data as Profile).role,
         });
         setLoading(false);
         return;
