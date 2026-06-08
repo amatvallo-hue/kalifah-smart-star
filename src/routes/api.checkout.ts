@@ -7,57 +7,169 @@ const SUPABASE_URL = "https://pgpkqbdyxoejwvubluqq.supabase.co";
 const SUPABASE_ANON_KEY =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBncGtxYmR5eG9land2dWJsdXFxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1NjcyMjAsImV4cCI6MjA5NjE0MzIyMH0.dWoxARe5MfuHuCtMn53z50Kxh_-UjnqGnh8XREzPUUo";
 
+type CheckoutBody = {
+  pakej?: unknown;
+  darjah?: unknown;
+};
+
+function traceId() {
+  return globalThis.crypto?.randomUUID?.() ?? `${Date.now()}-${Math.random()}`;
+}
+
+function isPakejId(value: unknown): value is PakejId {
+  return value === "satu" || value === "perDarjah" || value === "bundle";
+}
+
+function safeError(error: unknown) {
+  if (error instanceof Error) {
+    return { name: error.name, message: error.message, stack: error.stack };
+  }
+  if (error && typeof error === "object") {
+    const e = error as Record<string, unknown>;
+    return {
+      name: e.name,
+      message: e.message,
+      code: e.code,
+      details: e.details,
+      hint: e.hint,
+      status: e.status,
+      statusText: e.statusText,
+    };
+  }
+  return { message: String(error) };
+}
+
+function logStep(id: string, step: string, data?: Record<string, unknown>) {
+  console.log(`[checkout:${id}] ${step}`, data ?? {});
+}
+
+function logWarn(id: string, step: string, data?: Record<string, unknown>) {
+  console.warn(`[checkout:${id}] ${step}`, data ?? {});
+}
+
+function logError(id: string, step: string, error: unknown) {
+  console.error(`[checkout:${id}] ${step}`, safeError(error));
+}
+
+function jsonError(
+  id: string,
+  status: number,
+  error: string,
+  detail?: unknown,
+) {
+  return Response.json(
+    { ok: false, trace_id: id, error, detail },
+    { status },
+  );
+}
+
+function requestOrigin(request: Request) {
+  const origin = request.headers.get("origin");
+  if (origin && origin !== "null") return origin;
+
+  const proto = request.headers.get("x-forwarded-proto") ?? "https";
+  const host =
+    request.headers.get("x-forwarded-host") ??
+    request.headers.get("host") ??
+    "kalifah.my";
+  return `${proto}://${host}`;
+}
+
 export const Route = createFileRoute("/api/checkout")({
   server: {
     handlers: {
       POST: async ({ request }) => {
-        console.log("[checkout] 1/7 received POST");
+        const id = traceId();
+        logStep(id, "1/9 POST diterima", {
+          method: request.method,
+          url: request.url,
+          contentType: request.headers.get("content-type"),
+          origin: request.headers.get("origin"),
+          host: request.headers.get("host"),
+          hasAuthorizationHeader: request.headers.has("authorization"),
+        });
+
         try {
           const auth = request.headers.get("authorization") ?? "";
-          const token = auth.replace(/^Bearer\s+/i, "");
+          const token = auth.replace(/^Bearer\s+/i, "").trim();
           if (!token) {
-            console.warn("[checkout] no auth token");
-            return Response.json(
-              { error: "Tidak log masuk" },
-              { status: 401 },
-            );
+            logWarn(id, "1/9 gagal: tiada bearer token");
+            return jsonError(id, 401, "Tidak log masuk");
           }
 
+          logStep(id, "2/9 semak sesi pengguna", { hasToken: true });
           const userClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
             global: { headers: { Authorization: `Bearer ${token}` } },
-            auth: { persistSession: false },
+            auth: { persistSession: false, autoRefreshToken: false },
           });
+
           const { data: userData, error: userErr } =
             await userClient.auth.getUser();
           if (userErr || !userData.user) {
-            console.warn("[checkout] auth fail", userErr?.message);
-            return Response.json(
-              { error: "Sesi tidak sah" },
-              { status: 401 },
-            );
+            logError(id, "2/9 auth gagal", userErr ?? "user kosong");
+            return jsonError(id, 401, "Sesi tidak sah", safeError(userErr));
           }
+
           const user = userData.user;
-          console.log("[checkout] 2/7 user", user.id);
+          logStep(id, "2/9 auth berjaya", {
+            userId: user.id,
+            emailAda: Boolean(user.email),
+          });
 
-          const body = (await request.json()) as {
-            pakej: PakejId;
-            darjah: number[];
-          };
-          console.log("[checkout] 3/7 body", body);
-          if (!body.pakej || !Array.isArray(body.darjah)) {
-            return Response.json(
-              { error: "Input tidak sah" },
-              { status: 400 },
-            );
+          let body: CheckoutBody;
+          try {
+            body = (await request.json()) as CheckoutBody;
+          } catch (error) {
+            logError(id, "3/9 JSON body tidak sah", error);
+            return jsonError(id, 400, "JSON body tidak sah", safeError(error));
           }
-          const darjah = body.darjah
-            .map((n) => Number(n))
-            .filter((n) => n >= 1 && n <= 6);
-          const amount = kiraHarga(body.pakej, darjah);
-          const amountSen = amount * 100;
-          console.log("[checkout] 4/7 amount", amount, "sen", amountSen);
 
-          const { data: order, error: orderErr } = await userClient
+          logStep(id, "3/9 body diterima", body as Record<string, unknown>);
+          if (!isPakejId(body.pakej) || !Array.isArray(body.darjah)) {
+            logWarn(id, "3/9 input gagal validasi", {
+              pakej: body.pakej,
+              darjahIsArray: Array.isArray(body.darjah),
+            });
+            return jsonError(id, 400, "Input tidak sah");
+          }
+
+          const darjah = Array.from(
+            new Set(
+              body.darjah
+                .map((n) => Number(n))
+                .filter((n) => Number.isInteger(n) && n >= 1 && n <= 6),
+            ),
+          ).sort((a, b) => a - b);
+
+          let amount: number;
+          try {
+            amount = kiraHarga(body.pakej, darjah);
+          } catch (error) {
+            logError(id, "4/9 kira harga gagal", error);
+            return jsonError(id, 400, "Pilihan pakej/darjah tidak sah", safeError(error));
+          }
+
+          const amountSen = amount * 100;
+          logStep(id, "4/9 harga dikira", {
+            pakej: body.pakej,
+            darjah,
+            amountRm: amount,
+            amountSen,
+          });
+
+          logStep(id, "5/9 insert public.pesanan bermula", {
+            userId: user.id,
+            pakej: body.pakej,
+            darjah,
+            amountSen,
+          });
+
+          const {
+            data: order,
+            error: orderErr,
+            status: insertStatus,
+            statusText: insertStatusText,
+          } = await userClient
             .from("pesanan")
             .insert({
               user_id: user.id,
@@ -66,78 +178,131 @@ export const Route = createFileRoute("/api/checkout")({
               amount_sen: amountSen,
               status: "pending",
             })
-            .select("id")
+            .select("id, amount_sen, status, created_at")
             .single();
+
           if (orderErr || !order) {
-            console.error("[checkout] insert pesanan fail", orderErr);
-            return Response.json(
-              {
-                error: "Gagal cipta pesanan",
-                detail: orderErr?.message,
-              },
-              { status: 500 },
-            );
+            logError(id, "5/9 insert public.pesanan gagal", orderErr);
+            return jsonError(id, 500, "Gagal cipta pesanan", {
+              supabase: safeError(orderErr),
+              insertStatus,
+              insertStatusText,
+            });
           }
-          console.log("[checkout] 5/7 order created", order.id);
 
-          const secretKey = process.env.TOYYIBPAY_SECRET_KEY;
+          logStep(id, "5/9 insert public.pesanan berjaya", {
+            orderId: order.id,
+            insertStatus,
+            insertStatusText,
+            orderStatus: order.status,
+            amountSen: order.amount_sen,
+          });
+
+          const secretKey = process.env.TOYYIBPAY_SECRET_KEY?.trim();
+          logStep(id, "6/9 semak TOYYIBPAY_SECRET_KEY", {
+            configured: Boolean(secretKey),
+            length: secretKey?.length ?? 0,
+          });
           if (!secretKey) {
-            console.error("[checkout] TOYYIBPAY_SECRET_KEY missing");
-            return Response.json(
-              { error: "TOYYIBPAY_SECRET_KEY tidak ditetapkan" },
-              { status: 500 },
-            );
+            return jsonError(id, 500, "TOYYIBPAY_SECRET_KEY tidak ditetapkan");
           }
 
-          const origin =
-            request.headers.get("origin") ??
-            `https://${request.headers.get("host") ?? "kalifah.my"}`;
-
+          const origin = requestOrigin(request);
           const pakejLabel =
             body.pakej === "bundle"
               ? "Bundle 6 Darjah"
               : body.pakej === "satu"
                 ? `Darjah ${darjah[0]}`
                 : `${darjah.length} Darjah`;
+          const returnUrl = `${origin}/bayaran/selesai?order=${order.id}`;
+          const callbackUrl = `${origin}/api/public/toyyibpay/callback`;
 
-          console.log("[checkout] 6/7 calling ToyyibPay createBill");
-          const billCode = await createBill({
-            secretKey,
-            billName: "Kalifah.my",
-            billDescription: `Langganan ${pakejLabel}`,
+          logStep(id, "7/9 panggil ToyyibPay createBill bermula", {
+            orderId: order.id,
+            pakejLabel,
             amountSen,
-            externalRef: order.id,
-            returnUrl: `${origin}/bayaran/selesai?order=${order.id}`,
-            callbackUrl: `${origin}/api/public/toyyibpay/callback`,
-            customerName:
-              (user.user_metadata?.name as string | undefined) ??
-              user.email?.split("@")[0] ??
-              "Pelanggan",
-            customerEmail: user.email ?? "noreply@kalifah.my",
-            customerPhone:
-              (user.user_metadata?.phone as string | undefined) ?? undefined,
+            returnUrl,
+            callbackUrl,
+            customerEmailAda: Boolean(user.email),
           });
-          console.log("[checkout] 7/7 billCode", billCode);
 
-          const { error: updErr } = await userClient
+          let billCode: string;
+          try {
+            billCode = await createBill({
+              secretKey,
+              billName: "Kalifah.my",
+              billDescription: `Langganan ${pakejLabel}`,
+              amountSen,
+              externalRef: order.id,
+              returnUrl,
+              callbackUrl,
+              customerName:
+                (user.user_metadata?.name as string | undefined) ??
+                user.email?.split("@")[0] ??
+                "Pelanggan",
+              customerEmail: user.email ?? "noreply@kalifah.my",
+              customerPhone:
+                (user.user_metadata?.phone as string | undefined) ?? undefined,
+            });
+          } catch (error) {
+            logError(id, "7/9 ToyyibPay createBill gagal", error);
+            return jsonError(id, 502, "Gagal cipta bil ToyyibPay", safeError(error));
+          }
+
+          const paymentUrl = `https://toyyibpay.com/${billCode}`;
+          logStep(id, "7/9 ToyyibPay createBill berjaya", {
+            billCode,
+            paymentUrl,
+          });
+
+          logStep(id, "8/9 update billcode public.pesanan bermula", {
+            orderId: order.id,
+            billCode,
+          });
+          const {
+            error: updErr,
+            status: updateStatus,
+            statusText: updateStatusText,
+          } = await userClient
             .from("pesanan")
             .update({ billcode: billCode })
             .eq("id", order.id);
-          if (updErr) console.warn("[checkout] update billcode warn", updErr);
+
+          if (updErr) {
+            logWarn(id, "8/9 update billcode gagal tetapi redirect diteruskan", {
+              supabase: safeError(updErr),
+              updateStatus,
+              updateStatusText,
+            });
+          } else {
+            logStep(id, "8/9 update billcode berjaya", {
+              updateStatus,
+              updateStatusText,
+            });
+          }
+
+          logStep(id, "9/9 pulangkan URL ToyyibPay kepada frontend", {
+            ok: true,
+            orderId: order.id,
+            billCode,
+            paymentUrl,
+          });
 
           return Response.json({
             ok: true,
+            trace_id: id,
             order_id: order.id,
             billcode: billCode,
-            url: `https://toyyibpay.com/${billCode}`,
+            url: paymentUrl,
+            payment_url: paymentUrl,
           });
-        } catch (e) {
-          console.error("[checkout] ralat:", e);
-          return Response.json(
-            {
-              error: e instanceof Error ? e.message : "Ralat tidak diketahui",
-            },
-            { status: 500 },
+        } catch (error) {
+          logError(id, "ralat tidak dijangka", error);
+          return jsonError(
+            id,
+            500,
+            error instanceof Error ? error.message : "Ralat tidak diketahui",
+            safeError(error),
           );
         }
       },
