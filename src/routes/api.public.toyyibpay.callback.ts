@@ -1,18 +1,22 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { createClient } from "@supabase/supabase-js";
-import { getBillTransactions } from "@/lib/toyyibpay";
-import { darjahDibuka, type PakejId } from "@/lib/checkout";
+import { verifyAndUnlock } from "@/lib/payment-unlock.server";
 
-const SUPABASE_URL = "https://pgpkqbdyxoejwvubluqq.supabase.co";
+function traceId() {
+  return globalThis.crypto?.randomUUID?.() ?? `${Date.now()}`;
+}
 
-// Callback dari ToyyibPay (server-to-server). Tiada user session.
 export const Route = createFileRoute("/api/public/toyyibpay/callback")({
   server: {
     handlers: {
       POST: async ({ request }) => {
+        const id = traceId();
+        const ct = request.headers.get("content-type") ?? "";
+        console.log(`[callback:${id}] received`, {
+          ct,
+          ua: request.headers.get("user-agent"),
+        });
+        let body: Record<string, string> = {};
         try {
-          const ct = request.headers.get("content-type") ?? "";
-          let body: Record<string, string> = {};
           if (ct.includes("application/json")) {
             body = (await request.json()) as Record<string, string>;
           } else {
@@ -21,98 +25,63 @@ export const Route = createFileRoute("/api/public/toyyibpay/callback")({
               body[k] = String(v);
             });
           }
-
-          const billcode = body.billcode ?? body.billCode ?? "";
-          const status = String(body.status ?? "");
-          const orderId = body.order_id ?? body.orderid ?? "";
-          const txnId = body.transaction_id ?? body.refno ?? "";
-          console.log("[callback] received", { billcode, status, orderId });
-
-          if (!billcode) {
-            return new Response("missing billcode", { status: 400 });
-          }
-
-          const secretKey = process.env.TOYYIBPAY_SECRET_KEY!;
-          const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-          if (!serviceKey) {
-            console.error(
-              "[callback] SUPABASE_SERVICE_ROLE_KEY missing — cannot grant access",
-            );
-            return new Response("server not configured", { status: 500 });
-          }
-
-          const txs = await getBillTransactions(secretKey, billcode);
-          const verifiedSuccess = txs.some(
-            (t) => String(t.billpaymentStatus) === "1",
-          );
-
-          if (!verifiedSuccess && status !== "1") {
-            return new Response("not paid", { status: 200 });
-          }
-
-          const admin = createClient(SUPABASE_URL, serviceKey, {
-            auth: { persistSession: false, autoRefreshToken: false },
-          });
-
-          const query = orderId
-            ? admin.from("pesanan").select("*").eq("id", orderId).maybeSingle()
-            : admin
-                .from("pesanan")
-                .select("*")
-                .eq("billcode", billcode)
-                .maybeSingle();
-          const { data: pesanan, error: pErr } = await query;
-          if (pErr || !pesanan) {
-            console.error("[callback] pesanan not found", {
-              billcode,
-              orderId,
-            });
-            return new Response("order not found", { status: 200 });
-          }
-          if (pesanan.status === "paid") {
-            return new Response("already processed", { status: 200 });
-          }
-
-          const { data: profile } = await admin
-            .from("profiles")
-            .select("darjah_akses")
-            .eq("id", pesanan.user_id)
-            .maybeSingle();
-
-          const existing: number[] = Array.isArray(profile?.darjah_akses)
-            ? (profile!.darjah_akses as number[])
-            : [];
-          const toAdd = darjahDibuka(
-            pesanan.pakej as PakejId,
-            (pesanan.darjah_dipilih as number[]) ?? [],
-          );
-          const merged = Array.from(new Set([...existing, ...toAdd])).sort(
-            (a, b) => a - b,
-          );
-
-          await admin
-            .from("profiles")
-            .upsert(
-              { id: pesanan.user_id, darjah_akses: merged },
-              { onConflict: "id" },
-            );
-
-          await admin
-            .from("pesanan")
-            .update({
-              status: "paid",
-              paid_at: new Date().toISOString(),
-              toyyib_transaction_id: txnId || null,
-            })
-            .eq("id", pesanan.id);
-
-          return new Response("ok", { status: 200 });
         } catch (e) {
-          console.error("[toyyibpay callback] ralat:", e);
-          return new Response("error", { status: 500 });
+          console.error(`[callback:${id}] parse body gagal`, e);
+        }
+        console.log(`[callback:${id}] body`, body);
+
+        const billcode = body.billcode ?? body.billCode ?? null;
+        const status = String(body.status ?? body.status_id ?? "");
+        const orderId =
+          body.order_id ??
+          body.orderid ??
+          body.billExternalReferenceNo ??
+          body.refno ??
+          null;
+        const txnId = body.transaction_id ?? body.refno ?? null;
+
+        try {
+          const result = await verifyAndUnlock({
+            traceId: id,
+            orderId,
+            billcode,
+            statusFromCallback: status,
+            txnId,
+          });
+          console.log(`[callback:${id}] result`, result);
+          return new Response(JSON.stringify(result), {
+            status: 200,
+            headers: { "content-type": "application/json" },
+          });
+        } catch (e) {
+          console.error(`[callback:${id}] exception`, e);
+          return new Response("error", { status: 200 });
         }
       },
-      GET: async () => new Response("ok"),
+      GET: async ({ request }) => {
+        // ToyyibPay sometimes redirects user via GET with billcode + status_id
+        const id = traceId();
+        const url = new URL(request.url);
+        const billcode = url.searchParams.get("billcode");
+        const status = url.searchParams.get("status_id");
+        const orderId = url.searchParams.get("order_id");
+        console.log(`[callback:${id}] GET`, { billcode, status, orderId });
+        if (billcode || orderId) {
+          try {
+            const result = await verifyAndUnlock({
+              traceId: id,
+              orderId,
+              billcode,
+              statusFromCallback: status,
+              txnId: null,
+            });
+            console.log(`[callback:${id}] GET result`, result);
+          } catch (e) {
+            console.error(`[callback:${id}] GET exception`, e);
+          }
+        }
+        return new Response("ok");
+      },
     },
   },
 });
