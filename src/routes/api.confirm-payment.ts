@@ -21,22 +21,15 @@ export const Route = createFileRoute("/api/confirm-payment")({
           const auth = request.headers.get("authorization") ?? "";
           const token = auth.replace(/^Bearer\s+/i, "").trim();
           if (!token) {
-            return Response.json(
-              { ok: false, error: "Tidak log masuk" },
-              { status: 401 },
-            );
+            return Response.json({ ok: false, error: "Tidak log masuk" }, { status: 401 });
           }
           const userClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
             global: { headers: { Authorization: `Bearer ${token}` } },
             auth: { persistSession: false, autoRefreshToken: false },
           });
-          const { data: userData, error: userErr } =
-            await userClient.auth.getUser();
+          const { data: userData, error: userErr } = await userClient.auth.getUser();
           if (userErr || !userData.user) {
-            return Response.json(
-              { ok: false, error: "Sesi tidak sah" },
-              { status: 401 },
-            );
+            return Response.json({ ok: false, error: "Sesi tidak sah" }, { status: 401 });
           }
           const body = (await request.json().catch(() => ({}))) as {
             order_id?: string;
@@ -49,11 +42,7 @@ export const Route = createFileRoute("/api/confirm-payment")({
 
           // Pastikan order milik user
           const lookup = body.order_id
-            ? userClient
-                .from("pesanan")
-                .select("id, user_id")
-                .eq("id", body.order_id)
-                .maybeSingle()
+            ? userClient.from("pesanan").select("id, user_id").eq("id", body.order_id).maybeSingle()
             : userClient
                 .from("pesanan")
                 .select("id, user_id")
@@ -61,10 +50,7 @@ export const Route = createFileRoute("/api/confirm-payment")({
                 .maybeSingle();
           const { data: ord } = await lookup;
           if (!ord || ord.user_id !== userData.user.id) {
-            return Response.json(
-              { ok: false, error: "Pesanan tidak dijumpai" },
-              { status: 404 },
-            );
+            return Response.json({ ok: false, error: "Pesanan tidak dijumpai" }, { status: 404 });
           }
           console.log(`[confirm:${id}] order verified`, { orderId: ord.id });
 
