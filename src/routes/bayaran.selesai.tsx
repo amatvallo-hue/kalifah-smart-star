@@ -21,9 +21,7 @@ export const Route = createFileRoute("/bayaran/selesai")({
 
 function BayaranSelesai() {
   const search = useSearch({ from: "/bayaran/selesai" });
-  const [state, setState] = useState<"loading" | "paid" | "pending" | "failed">(
-    "loading",
-  );
+  const [state, setState] = useState<"loading" | "paid" | "pending" | "failed">("loading");
 
   useEffect(() => {
     if (!search.order && !search.billcode) {
