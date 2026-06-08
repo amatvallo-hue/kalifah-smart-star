@@ -30,13 +30,13 @@ export function useProfile() {
       if (data) {
         setProfile(data as Profile);
       } else {
-        // Backfill if missing
+        // Backfill jika tiada — default tiada akses
         const { data: inserted } = await supabase
           .from("profiles")
-          .insert({ id: user.id, darjah_akses: [1] })
+          .insert({ id: user.id, darjah_akses: [] })
           .select("id, darjah_akses")
           .single();
-        setProfile((inserted as Profile) ?? { id: user.id, darjah_akses: [1] });
+        setProfile((inserted as Profile) ?? { id: user.id, darjah_akses: [] });
       }
       setLoading(false);
     })();

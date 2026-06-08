@@ -44,7 +44,7 @@ function SubjekPage() {
         <main className="container mx-auto px-4 py-16 text-center">
           <h1 className="font-display text-3xl font-extrabold text-foreground">Darjah ini belum dibuka</h1>
           <p className="mt-2 text-muted-foreground">Sila pilih darjah lain yang tersedia.</p>
-          <Link to="/" className="mt-6 inline-flex items-center gap-2 rounded-full bg-gradient-primary px-6 py-3 font-display font-extrabold text-primary-foreground shadow-soft">
+          <Link to="/pilih-darjah" className="mt-6 inline-flex items-center gap-2 rounded-full bg-gradient-primary px-6 py-3 font-display font-extrabold text-primary-foreground shadow-soft">
             <ArrowLeft className="h-4 w-4" /> Kembali
           </Link>
         </main>
@@ -57,7 +57,7 @@ function SubjekPage() {
       <SiteHeader stars={42} onLogout={handleLogout} />
       <Outlet />
       <main className="container mx-auto px-4 py-8">
-        <Link to="/" className="inline-flex items-center gap-2 text-sm font-bold text-muted-foreground hover:text-primary">
+        <Link to="/pilih-darjah" className="inline-flex items-center gap-2 text-sm font-bold text-muted-foreground hover:text-primary">
           <ArrowLeft className="h-4 w-4" />
           Kembali ke Pilihan Darjah
         </Link>

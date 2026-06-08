@@ -1,7 +1,8 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState, type FormEvent } from "react";
-import { LogIn, Mail, Lock, Sparkles } from "lucide-react";
+import { LogIn, Mail, Lock, Sparkles, User } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { CHILD_EMAIL_DOMAIN, normalizeUsername } from "@/lib/child-auth";
 
 export const Route = createFileRoute("/login")({
   head: () => ({
@@ -16,7 +17,8 @@ export const Route = createFileRoute("/login")({
 
 function LoginPage() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
+  const [mode, setMode] = useState<"parent" | "child">("parent");
+  const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -25,19 +27,48 @@ function LoginPage() {
     e.preventDefault();
     setError(null);
     setLoading(true);
+    const email =
+      mode === "child"
+        ? `${normalizeUsername(identifier)}@${CHILD_EMAIL_DOMAIN}`
+        : identifier.trim();
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) {
-      setError(error.message);
+      setError(mode === "child" ? "Username atau password salah." : error.message);
       setLoading(false);
       return;
     }
-    navigate({ to: "/" });
+    navigate({ to: "/pilih-darjah" });
   }
 
   return (
-    <AuthShell title="Selamat datang kembali!" subtitle="Log masuk untuk teruskan pembelajaran kamu.">
+    <AuthShell title="Selamat datang kembali!" subtitle="Log masuk untuk teruskan pembelajaran.">
+      <div className="mb-5 grid grid-cols-2 gap-2 rounded-full bg-muted p-1">
+        <button
+          type="button"
+          onClick={() => setMode("parent")}
+          className={`rounded-full px-4 py-2 font-display text-sm font-extrabold transition ${
+            mode === "parent" ? "bg-card text-primary shadow-soft" : "text-muted-foreground"
+          }`}
+        >
+          👨‍👩‍👧 Ibu Bapa
+        </button>
+        <button
+          type="button"
+          onClick={() => setMode("child")}
+          className={`rounded-full px-4 py-2 font-display text-sm font-extrabold transition ${
+            mode === "child" ? "bg-card text-primary shadow-soft" : "text-muted-foreground"
+          }`}
+        >
+          🧒 Anak
+        </button>
+      </div>
+
       <form onSubmit={onSubmit} className="space-y-4">
-        <Field icon={Mail} label="Email" type="email" value={email} onChange={setEmail} placeholder="contoh@email.com" autoComplete="email" />
+        {mode === "parent" ? (
+          <Field icon={Mail} label="Email" type="email" value={identifier} onChange={setIdentifier} placeholder="contoh@email.com" autoComplete="email" />
+        ) : (
+          <Field icon={User} label="Username Anak" type="text" value={identifier} onChange={setIdentifier} placeholder="cth: aisyah123" autoComplete="username" />
+        )}
         <Field icon={Lock} label="Kata Laluan" type="password" value={password} onChange={setPassword} placeholder="••••••••" autoComplete="current-password" />
 
         {error && (
@@ -54,6 +85,14 @@ function LoginPage() {
           <LogIn className="h-5 w-5" />
           {loading ? "Sedang log masuk..." : "Log Masuk"}
         </button>
+
+        {mode === "parent" && (
+          <p className="text-center text-xs">
+            <Link to="/lupa-password" className="font-bold text-muted-foreground hover:text-primary hover:underline">
+              Lupa password?
+            </Link>
+          </p>
+        )}
 
         <p className="text-center text-sm text-muted-foreground">
           Belum ada akaun?{" "}

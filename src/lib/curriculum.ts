@@ -17,13 +17,14 @@ export interface Subjek {
   tone: Tone;
 }
 
+// Semua darjah kini berbayar — `locked` ditentukan oleh profile.darjah_akses
 export const DARJAH_LIST: Darjah[] = [
-  { id: "1", label: "Darjah 1", tagline: "Mula pengembaraan!", locked: false },
-  { id: "2", label: "Darjah 2", tagline: "Teruskan belajar!", locked: false },
-  { id: "3", label: "Darjah 3", tagline: "Naik ke tahap baru!", locked: false },
-  { id: "4", label: "Darjah 4", tagline: "Cabaran lebih hebat!", locked: false },
-  { id: "5", label: "Darjah 5", tagline: "Jadi lebih pandai!", locked: false },
-  { id: "6", label: "Darjah 6", tagline: "Bersedia ke menengah!", locked: false },
+  { id: "1", label: "Darjah 1", tagline: "Mula pengembaraan!", locked: true },
+  { id: "2", label: "Darjah 2", tagline: "Teruskan belajar!", locked: true },
+  { id: "3", label: "Darjah 3", tagline: "Naik ke tahap baru!", locked: true },
+  { id: "4", label: "Darjah 4", tagline: "Cabaran lebih hebat!", locked: true },
+  { id: "5", label: "Darjah 5", tagline: "Jadi lebih pandai!", locked: true },
+  { id: "6", label: "Darjah 6", tagline: "Bersedia ke menengah!", locked: true },
 ];
 
 export const SUBJEK_LIST: Subjek[] = [
@@ -52,3 +53,45 @@ export const TONE_GRADIENT: Record<Tone, string> = {
   amber: "from-amber-400 to-amber-300 text-amber-900",
   teal: "from-teal-400 to-teal-300 text-teal-900",
 };
+
+
+// ── HARGA & PAKEJ ────────────────────────────────────────────
+export const HARGA_ASAL = 89; // per darjah, strikethrough
+export interface Pakej {
+  id: "satu" | "perDarjah" | "bundle";
+  nama: string;
+  hargaPerDarjah: number;
+  jumlahDarjah: number | "pilih";
+  jumlahBayar: number;
+  jimat?: number;
+  popular?: boolean;
+  deskripsi: string;
+}
+export const PAKEJ_LIST: Pakej[] = [
+  {
+    id: "satu",
+    nama: "1 Darjah",
+    hargaPerDarjah: 29,
+    jumlahDarjah: 1,
+    jumlahBayar: 29,
+    deskripsi: "Akses penuh satu darjah pilihan selama 1 tahun.",
+  },
+  {
+    id: "perDarjah",
+    nama: "2–5 Darjah",
+    hargaPerDarjah: 25,
+    jumlahDarjah: "pilih",
+    jumlahBayar: 25,
+    deskripsi: "Diskaun untuk keluarga dengan beberapa anak. RM25/darjah/tahun.",
+  },
+  {
+    id: "bundle",
+    nama: "Bundle 6 Darjah",
+    hargaPerDarjah: 25,
+    jumlahDarjah: 6,
+    jumlahBayar: 150,
+    jimat: 89 * 6 - 150,
+    popular: true,
+    deskripsi: "Semua D1–D6 untuk 1 tahun. Pilihan paling berbaloi!",
+  },
+];

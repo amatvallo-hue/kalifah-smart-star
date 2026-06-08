@@ -29,7 +29,7 @@ function DaftarPage() {
     setError(null);
     setInfo(null);
     setLoading(true);
-    const redirectTo = typeof window !== "undefined" ? `${window.location.origin}/` : undefined;
+    const redirectTo = typeof window !== "undefined" ? `${window.location.origin}/pilih-darjah` : undefined;
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -41,7 +41,7 @@ function DaftarPage() {
       return;
     }
     if (data.session) {
-      navigate({ to: "/" });
+      navigate({ to: "/pilih-darjah" });
     } else {
       setInfo("Akaun dicipta. Sila semak emel anda untuk pengesahan, kemudian log masuk.");
       setLoading(false);

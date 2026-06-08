@@ -9,8 +9,12 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as PilihDarjahRouteImport } from './routes/pilih-darjah'
+import { Route as LupaPasswordRouteImport } from './routes/lupa-password'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LatihanRouteImport } from './routes/latihan'
+import { Route as HargaRouteImport } from './routes/harga'
 import { Route as DaftarRouteImport } from './routes/daftar'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardProgressRouteImport } from './routes/dashboard.progress'
@@ -23,6 +27,21 @@ import { Route as DarjahDarjahIdSubjekIdLatihTubiRouteImport } from './routes/da
 import { Route as DarjahDarjahIdSubjekIdKuizRouteImport } from './routes/darjah.$darjahId_.$subjekId_.kuiz'
 import { Route as DarjahDarjahIdSubjekIdGameRouteImport } from './routes/darjah.$darjahId_.$subjekId_.game'
 
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PilihDarjahRoute = PilihDarjahRouteImport.update({
+  id: '/pilih-darjah',
+  path: '/pilih-darjah',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LupaPasswordRoute = LupaPasswordRouteImport.update({
+  id: '/lupa-password',
+  path: '/lupa-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -31,6 +50,11 @@ const LoginRoute = LoginRouteImport.update({
 const LatihanRoute = LatihanRouteImport.update({
   id: '/latihan',
   path: '/latihan',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HargaRoute = HargaRouteImport.update({
+  id: '/harga',
+  path: '/harga',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DaftarRoute = DaftarRouteImport.update({
@@ -97,8 +121,12 @@ const DarjahDarjahIdSubjekIdGameRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/daftar': typeof DaftarRoute
+  '/harga': typeof HargaRoute
   '/latihan': typeof LatihanRoute
   '/login': typeof LoginRoute
+  '/lupa-password': typeof LupaPasswordRoute
+  '/pilih-darjah': typeof PilihDarjahRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/darjah/$darjahId': typeof DarjahDarjahIdRoute
   '/dashboard/ibu-bapa': typeof DashboardIbuBapaRoute
   '/dashboard/progress': typeof DashboardProgressRoute
@@ -112,8 +140,12 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/daftar': typeof DaftarRoute
+  '/harga': typeof HargaRoute
   '/latihan': typeof LatihanRoute
   '/login': typeof LoginRoute
+  '/lupa-password': typeof LupaPasswordRoute
+  '/pilih-darjah': typeof PilihDarjahRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/darjah/$darjahId': typeof DarjahDarjahIdRoute
   '/dashboard/ibu-bapa': typeof DashboardIbuBapaRoute
   '/dashboard/progress': typeof DashboardProgressRoute
@@ -128,8 +160,12 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/daftar': typeof DaftarRoute
+  '/harga': typeof HargaRoute
   '/latihan': typeof LatihanRoute
   '/login': typeof LoginRoute
+  '/lupa-password': typeof LupaPasswordRoute
+  '/pilih-darjah': typeof PilihDarjahRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/darjah/$darjahId': typeof DarjahDarjahIdRoute
   '/dashboard/ibu-bapa': typeof DashboardIbuBapaRoute
   '/dashboard/progress': typeof DashboardProgressRoute
@@ -145,8 +181,12 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/daftar'
+    | '/harga'
     | '/latihan'
     | '/login'
+    | '/lupa-password'
+    | '/pilih-darjah'
+    | '/reset-password'
     | '/darjah/$darjahId'
     | '/dashboard/ibu-bapa'
     | '/dashboard/progress'
@@ -160,8 +200,12 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/daftar'
+    | '/harga'
     | '/latihan'
     | '/login'
+    | '/lupa-password'
+    | '/pilih-darjah'
+    | '/reset-password'
     | '/darjah/$darjahId'
     | '/dashboard/ibu-bapa'
     | '/dashboard/progress'
@@ -175,8 +219,12 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/daftar'
+    | '/harga'
     | '/latihan'
     | '/login'
+    | '/lupa-password'
+    | '/pilih-darjah'
+    | '/reset-password'
     | '/darjah/$darjahId'
     | '/dashboard/ibu-bapa'
     | '/dashboard/progress'
@@ -191,8 +239,12 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DaftarRoute: typeof DaftarRoute
+  HargaRoute: typeof HargaRoute
   LatihanRoute: typeof LatihanRoute
   LoginRoute: typeof LoginRoute
+  LupaPasswordRoute: typeof LupaPasswordRoute
+  PilihDarjahRoute: typeof PilihDarjahRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   DarjahDarjahIdRoute: typeof DarjahDarjahIdRoute
   DashboardIbuBapaRoute: typeof DashboardIbuBapaRoute
   DashboardProgressRoute: typeof DashboardProgressRoute
@@ -206,6 +258,27 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pilih-darjah': {
+      id: '/pilih-darjah'
+      path: '/pilih-darjah'
+      fullPath: '/pilih-darjah'
+      preLoaderRoute: typeof PilihDarjahRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lupa-password': {
+      id: '/lupa-password'
+      path: '/lupa-password'
+      fullPath: '/lupa-password'
+      preLoaderRoute: typeof LupaPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -218,6 +291,13 @@ declare module '@tanstack/react-router' {
       path: '/latihan'
       fullPath: '/latihan'
       preLoaderRoute: typeof LatihanRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/harga': {
+      id: '/harga'
+      path: '/harga'
+      fullPath: '/harga'
+      preLoaderRoute: typeof HargaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/daftar': {
@@ -303,8 +383,12 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DaftarRoute: DaftarRoute,
+  HargaRoute: HargaRoute,
   LatihanRoute: LatihanRoute,
   LoginRoute: LoginRoute,
+  LupaPasswordRoute: LupaPasswordRoute,
+  PilihDarjahRoute: PilihDarjahRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   DarjahDarjahIdRoute: DarjahDarjahIdRoute,
   DashboardIbuBapaRoute: DashboardIbuBapaRoute,
   DashboardProgressRoute: DashboardProgressRoute,
@@ -319,13 +403,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
