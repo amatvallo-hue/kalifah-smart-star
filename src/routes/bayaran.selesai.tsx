@@ -26,25 +26,53 @@ function BayaranSelesai() {
   );
 
   useEffect(() => {
-    if (!search.order) {
+    if (!search.order && !search.billcode) {
       setState(search.status_id === "1" ? "paid" : "failed");
       return;
     }
+    let cancelled = false;
     let tries = 0;
     const poll = async () => {
       tries++;
-      const { data } = await supabase
-        .from("pesanan")
-        .select("status")
-        .eq("id", search.order!)
-        .maybeSingle();
-      if (data?.status === "paid") return setState("paid");
-      if (data?.status === "failed") return setState("failed");
-      if (tries < 8) setTimeout(poll, 1500);
+      try {
+        const { data: sess } = await supabase.auth.getSession();
+        const token = sess.session?.access_token;
+        if (token) {
+          const res = await fetch("/api/confirm-payment", {
+            method: "POST",
+            headers: {
+              "content-type": "application/json",
+              authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              order_id: search.order,
+              billcode: search.billcode,
+            }),
+          });
+          const json = await res.json().catch(() => ({}));
+          console.log("[bayaran.selesai] confirm-payment", res.status, json);
+        }
+      } catch (e) {
+        console.error("[bayaran.selesai] confirm-payment ralat", e);
+      }
+      if (cancelled) return;
+      if (search.order) {
+        const { data } = await supabase
+          .from("pesanan")
+          .select("status")
+          .eq("id", search.order)
+          .maybeSingle();
+        if (data?.status === "paid") return setState("paid");
+        if (data?.status === "failed") return setState("failed");
+      }
+      if (tries < 6) setTimeout(poll, 2000);
       else setState(search.status_id === "1" ? "paid" : "pending");
     };
     poll();
-  }, [search.order, search.status_id]);
+    return () => {
+      cancelled = true;
+    };
+  }, [search.order, search.status_id, search.billcode]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
