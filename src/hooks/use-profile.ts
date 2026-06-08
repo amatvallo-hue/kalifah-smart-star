@@ -5,6 +5,7 @@ import { useAuth } from "./use-auth";
 export interface Profile {
   id: string;
   darjah_akses: number[];
+  role?: string;
 }
 
 function normalizeDarjahAkses(raw: unknown): number[] {
@@ -32,7 +33,7 @@ export function useProfile() {
     (async () => {
       const { data, error } = await supabase
         .from("profiles")
-        .select("id, darjah_akses")
+        .select("id, darjah_akses, role")
         .eq("id", user.id)
         .maybeSingle();
 
@@ -47,6 +48,7 @@ export function useProfile() {
         setProfile({
           id: (data as Profile).id,
           darjah_akses: normalizeDarjahAkses((data as { darjah_akses: unknown }).darjah_akses),
+          role: (data as Profile).role,
         });
         setLoading(false);
         return;
@@ -61,7 +63,7 @@ export function useProfile() {
           { id: user.id, darjah_akses: [] },
           { onConflict: "id", ignoreDuplicates: true },
         )
-        .select("id, darjah_akses");
+        .select("id, darjah_akses, role");
 
       if (!mounted) return;
 
@@ -73,7 +75,7 @@ export function useProfile() {
       // where the row already existed and ignoreDuplicates returned []).
       const { data: reread } = await supabase
         .from("profiles")
-        .select("id, darjah_akses")
+        .select("id, darjah_akses, role")
         .eq("id", user.id)
         .maybeSingle();
 
@@ -89,6 +91,7 @@ export function useProfile() {
         setProfile({
           id: finalRow.id,
           darjah_akses: normalizeDarjahAkses((finalRow as { darjah_akses: unknown }).darjah_akses),
+          role: (finalRow as Profile).role,
         });
 
       } else {
