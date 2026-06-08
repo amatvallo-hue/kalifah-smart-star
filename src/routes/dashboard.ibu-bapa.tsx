@@ -93,6 +93,7 @@ function ParentDashboard() {
   const [badges, setBadges] = useState<BadgeRow[]>([]);
   const [fetching, setFetching] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
+  const [showKod, setShowKod] = useState(false);
 
   const isChild = !!user?.email?.includes(CHILD_EMAIL_DOMAIN);
 
