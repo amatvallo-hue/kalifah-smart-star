@@ -246,6 +246,24 @@ function Subjek() {
       d: "Vocabulary, grammar, reading & simple sentence building.",
       contoh: ["Match the word", "Fill in the blanks", "Quiz"],
     },
+    {
+      ikon: FlaskConical,
+      t: "Sains",
+      d: "Alam semula jadi, sains hayat, fizik asas & eksperimen mudah.",
+      contoh: ["Soal jawab", "Kuiz gambar", "Latih tubi"],
+    },
+    {
+      ikon: BookOpen,
+      t: "Pendidikan Islam",
+      d: "Aqidah, ibadah, sirah, akhlak & al-Quran.",
+      contoh: ["Soal jawab", "Betul/Salah", "Latih tubi"],
+    },
+    {
+      ikon: Moon,
+      t: "Jawi",
+      d: "Tulisan Jawi, ejaan, kosa kata & ayat mudah.",
+      contoh: ["Kenal huruf", "Padankan perkataan", "Latih tubi"],
+    },
   ];
   return (
     <section id="subjek" className="bg-muted/30 py-16">
@@ -253,10 +271,10 @@ function Subjek() {
         <div className="text-center">
           <p className="font-display text-xs font-bold uppercase tracking-widest" style={{ color: EMAS }}>Subjek Utama</p>
           <h2 className="mt-2 font-display text-3xl font-extrabold text-foreground md:text-4xl">
-            Fokus pada 3 subjek teras
+            Fokus pada 6 subjek utama
           </h2>
         </div>
-        <div className="mt-10 grid gap-6 md:grid-cols-3">
+        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {items.map(({ ikon: Ikon, t, d, contoh }) => (
             <div key={t} className="rounded-3xl bg-card p-7 shadow-card">
               <div className="flex h-14 w-14 items-center justify-center rounded-2xl text-white" style={{ backgroundColor: EMAS }}>
