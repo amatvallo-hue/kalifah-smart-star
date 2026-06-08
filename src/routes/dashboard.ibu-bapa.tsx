@@ -94,9 +94,18 @@ function ParentDashboard() {
   const [fetching, setFetching] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
 
+  const isChild = !!user?.email?.includes(CHILD_EMAIL_DOMAIN);
+
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
-  }, [loading, user, navigate]);
+    else if (!loading && isChild) navigate({ to: "/dashboard/progress" });
+  }, [loading, user, isChild, navigate]);
+
+  async function refreshAnak() {
+    const list = await senaraikanAnak();
+    setAnakList(list);
+    if (!aktifId && list.length > 0) setAktifId(list[0].id);
+  }
 
   useEffect(() => {
     if (!user) return;
