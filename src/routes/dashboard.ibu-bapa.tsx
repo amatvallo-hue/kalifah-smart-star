@@ -6,7 +6,6 @@ import {
   BookOpen,
   Calendar,
   Clock,
-  Copy,
   Flame,
   PlusCircle,
   Target,
