@@ -31,8 +31,7 @@ export const Route = createFileRoute("/api/temporary-unlock")({
             global: { headers: { Authorization: `Bearer ${token}` } },
             auth: { persistSession: false, autoRefreshToken: false },
           });
-          const { data: userData, error: userErr } =
-            await userClient.auth.getUser();
+          const { data: userData, error: userErr } = await userClient.auth.getUser();
           if (userErr || !userData.user) {
             return Response.json(
               { ok: false, error: "Sesi tidak sah", trace_id: id },
