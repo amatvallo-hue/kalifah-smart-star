@@ -23,6 +23,7 @@ export function SiteHeader({
 }) {
   const [open, setOpen] = useState(false);
   const { user } = useAuth();
+  const { profile } = useProfile();
   const isChild = !!user?.email?.includes(CHILD_EMAIL_DOMAIN);
 
   const navLinks = (
