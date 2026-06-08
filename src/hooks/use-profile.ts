@@ -7,6 +7,15 @@ export interface Profile {
   darjah_akses: number[];
 }
 
+function normalizeDarjahAkses(raw: unknown): number[] {
+  const arr = Array.isArray(raw)
+    ? raw.map(Number)
+    : typeof raw === "string"
+    ? raw.replace(/[{}]/g, "").split(",").map(Number).filter(Boolean)
+    : [];
+  return arr.filter((n) => Number.isFinite(n));
+}
+
 export function useProfile() {
   const { user, loading: authLoading } = useAuth();
   const [profile, setProfile] = useState<Profile | null>(null);
