@@ -21,22 +21,76 @@ export function useProfile() {
     }
     let mounted = true;
     (async () => {
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from("profiles")
         .select("id, darjah_akses")
         .eq("id", user.id)
         .maybeSingle();
+
       if (!mounted) return;
+
+      if (error) {
+        console.error("[useProfile] SELECT error:", error);
+      }
+
       if (data) {
-        setProfile(data as Profile);
+        setProfile({
+          id: (data as Profile).id,
+          darjah_akses: Array.isArray((data as Profile).darjah_akses)
+            ? (data as Profile).darjah_akses
+            : [],
+        });
+        setLoading(false);
+        return;
+      }
+
+      // No row visible. Use upsert with ignoreDuplicates so we NEVER
+      // overwrite an existing row's darjah_akses with an empty array.
+      const { data: upserted, error: upErr } = await supabase
+        .from("profiles")
+        .upsert(
+          { id: user.id, darjah_akses: [] },
+          { onConflict: "id", ignoreDuplicates: true },
+        )
+        .select("id, darjah_akses");
+
+      if (!mounted) return;
+
+      if (upErr) {
+        console.error("[useProfile] upsert error:", upErr);
+      }
+
+      // Re-read after upsert to get authoritative row (handles the case
+      // where the row already existed and ignoreDuplicates returned []).
+      const { data: reread } = await supabase
+        .from("profiles")
+        .select("id, darjah_akses")
+        .eq("id", user.id)
+        .maybeSingle();
+
+      if (!mounted) return;
+
+      const finalRow =
+        (reread as Profile | null) ??
+        (Array.isArray(upserted) && upserted.length > 0
+          ? (upserted[0] as Profile)
+          : null);
+
+      if (finalRow) {
+        setProfile({
+          id: finalRow.id,
+          darjah_akses: Array.isArray(finalRow.darjah_akses)
+            ? finalRow.darjah_akses
+            : [],
+        });
       } else {
-        // Backfill jika tiada — default tiada akses
-        const { data: inserted } = await supabase
-          .from("profiles")
-          .insert({ id: user.id, darjah_akses: [] })
-          .select("id, darjah_akses")
-          .single();
-        setProfile((inserted as Profile) ?? { id: user.id, darjah_akses: [] });
+        // Truly nothing readable — likely RLS denying SELECT.
+        console.warn(
+          "[useProfile] tiada profile boleh dibaca untuk user",
+          user.id,
+          "— semak RLS policy SELECT pada public.profiles",
+        );
+        setProfile({ id: user.id, darjah_akses: [] });
       }
       setLoading(false);
     })();
