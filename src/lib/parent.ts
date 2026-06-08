@@ -47,17 +47,19 @@ export async function tambahAnak(
   let lastErr = "Tidak dapat menjana kod unik. Cuba lagi.";
   for (let cuba = 0; cuba < 5; cuba++) {
     const kod = janaKod();
+    const username = `anak_${Math.floor(100000 + Math.random() * 900000)}`;
     const { data, error } = await supabase
       .from("child_profiles" as never)
-      .insert({ parent_id: uid, nama: nama.trim(), darjah, kod_jemputan: kod })
+      .insert({ parent_id: uid, nama: nama.trim(), darjah, kod_jemputan: kod, username })
       .select("*")
       .single();
     if (!error && data) return { ok: true, row: data as unknown as ChildProfile };
     if (error) {
       lastErr = error.message;
       console.warn("tambahAnak gagal:", error);
-      // Hanya retry jika konflik kod_jemputan
-      if (!error.message.toLowerCase().includes("kod_jemputan")) {
+      const msg = error.message.toLowerCase();
+      // Retry pada konflik unik (kod_jemputan / username) sahaja
+      if (!msg.includes("kod_jemputan") && !msg.includes("username")) {
         return { ok: false, mesej: error.message };
       }
     }
