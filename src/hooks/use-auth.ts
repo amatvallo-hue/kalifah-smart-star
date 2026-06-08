@@ -8,22 +8,17 @@ export function useAuth() {
 
   useEffect(() => {
     let mounted = true;
-    let settled = false;
 
-    // Subscribe FIRST so we catch INITIAL_SESSION after storage rehydration.
+    // Subscribe FIRST to catch any auth changes during initial restore.
     const { data: sub } = supabase.auth.onAuthStateChange((_evt, session) => {
       if (!mounted) return;
       setUser(session?.user ?? null);
-      if (!settled) {
-        settled = true;
-        setLoading(false);
-      }
     });
 
-    // Fallback: if onAuthStateChange hasn't fired within a tick, use getSession.
+    // Authoritative initial read: getSession() rehydrates from localStorage
+    // before resolving, so this never races with INITIAL_SESSION nulls.
     supabase.auth.getSession().then(({ data }) => {
-      if (!mounted || settled) return;
-      settled = true;
+      if (!mounted) return;
       setUser(data.session?.user ?? null);
       setLoading(false);
     });
