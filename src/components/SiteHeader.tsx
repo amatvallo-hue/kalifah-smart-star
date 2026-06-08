@@ -17,7 +17,7 @@ export function SiteHeader({
   const navLinks = (
     <>
       <Link
-        to="/"
+        to="/pilih-darjah"
         activeOptions={{ exact: true }}
         className="rounded-full px-4 py-2 font-display text-sm font-bold text-muted-foreground transition hover:bg-secondary hover:text-foreground"
         activeProps={{ className: "bg-secondary text-primary" }}
