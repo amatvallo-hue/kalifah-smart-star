@@ -8,14 +8,26 @@ export function useAuth() {
 
   useEffect(() => {
     let mounted = true;
-    supabase.auth.getSession().then(({ data }) => {
+    let settled = false;
+
+    // Subscribe FIRST so we catch INITIAL_SESSION after storage rehydration.
+    const { data: sub } = supabase.auth.onAuthStateChange((_evt, session) => {
       if (!mounted) return;
+      setUser(session?.user ?? null);
+      if (!settled) {
+        settled = true;
+        setLoading(false);
+      }
+    });
+
+    // Fallback: if onAuthStateChange hasn't fired within a tick, use getSession.
+    supabase.auth.getSession().then(({ data }) => {
+      if (!mounted || settled) return;
+      settled = true;
       setUser(data.session?.user ?? null);
       setLoading(false);
     });
-    const { data: sub } = supabase.auth.onAuthStateChange((_evt, session) => {
-      setUser(session?.user ?? null);
-    });
+
     return () => {
       mounted = false;
       sub.subscription.unsubscribe();
