@@ -22,6 +22,7 @@ import { Route as DashboardIbuBapaRouteImport } from './routes/dashboard.ibu-bap
 import { Route as DarjahDarjahIdRouteImport } from './routes/darjah.$darjahId'
 import { Route as BayaranSelesaiRouteImport } from './routes/bayaran.selesai'
 import { Route as ApiTemporaryUnlockRouteImport } from './routes/api.temporary-unlock'
+import { Route as ApiDebugEnvRouteImport } from './routes/api.debug-env'
 import { Route as ApiConfirmPaymentRouteImport } from './routes/api.confirm-payment'
 import { Route as ApiCheckoutRouteImport } from './routes/api.checkout'
 import { Route as DarjahDarjahIdSubjekIdRouteImport } from './routes/darjah.$darjahId_.$subjekId'
@@ -97,6 +98,11 @@ const ApiTemporaryUnlockRoute = ApiTemporaryUnlockRouteImport.update({
   path: '/api/temporary-unlock',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiDebugEnvRoute = ApiDebugEnvRouteImport.update({
+  id: '/api/debug-env',
+  path: '/api/debug-env',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ApiConfirmPaymentRoute = ApiConfirmPaymentRouteImport.update({
   id: '/api/confirm-payment',
   path: '/api/confirm-payment',
@@ -160,6 +166,7 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/api/checkout': typeof ApiCheckoutRoute
   '/api/confirm-payment': typeof ApiConfirmPaymentRoute
+  '/api/debug-env': typeof ApiDebugEnvRoute
   '/api/temporary-unlock': typeof ApiTemporaryUnlockRoute
   '/bayaran/selesai': typeof BayaranSelesaiRoute
   '/darjah/$darjahId': typeof DarjahDarjahIdRoute
@@ -184,6 +191,7 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/api/checkout': typeof ApiCheckoutRoute
   '/api/confirm-payment': typeof ApiConfirmPaymentRoute
+  '/api/debug-env': typeof ApiDebugEnvRoute
   '/api/temporary-unlock': typeof ApiTemporaryUnlockRoute
   '/bayaran/selesai': typeof BayaranSelesaiRoute
   '/darjah/$darjahId': typeof DarjahDarjahIdRoute
@@ -209,6 +217,7 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/api/checkout': typeof ApiCheckoutRoute
   '/api/confirm-payment': typeof ApiConfirmPaymentRoute
+  '/api/debug-env': typeof ApiDebugEnvRoute
   '/api/temporary-unlock': typeof ApiTemporaryUnlockRoute
   '/bayaran/selesai': typeof BayaranSelesaiRoute
   '/darjah/$darjahId': typeof DarjahDarjahIdRoute
@@ -235,6 +244,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/api/checkout'
     | '/api/confirm-payment'
+    | '/api/debug-env'
     | '/api/temporary-unlock'
     | '/bayaran/selesai'
     | '/darjah/$darjahId'
@@ -259,6 +269,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/api/checkout'
     | '/api/confirm-payment'
+    | '/api/debug-env'
     | '/api/temporary-unlock'
     | '/bayaran/selesai'
     | '/darjah/$darjahId'
@@ -283,6 +294,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/api/checkout'
     | '/api/confirm-payment'
+    | '/api/debug-env'
     | '/api/temporary-unlock'
     | '/bayaran/selesai'
     | '/darjah/$darjahId'
@@ -308,6 +320,7 @@ export interface RootRouteChildren {
   ResetPasswordRoute: typeof ResetPasswordRoute
   ApiCheckoutRoute: typeof ApiCheckoutRoute
   ApiConfirmPaymentRoute: typeof ApiConfirmPaymentRoute
+  ApiDebugEnvRoute: typeof ApiDebugEnvRoute
   ApiTemporaryUnlockRoute: typeof ApiTemporaryUnlockRoute
   BayaranSelesaiRoute: typeof BayaranSelesaiRoute
   DarjahDarjahIdRoute: typeof DarjahDarjahIdRoute
@@ -415,6 +428,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiTemporaryUnlockRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/debug-env': {
+      id: '/api/debug-env'
+      path: '/api/debug-env'
+      fullPath: '/api/debug-env'
+      preLoaderRoute: typeof ApiDebugEnvRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/confirm-payment': {
       id: '/api/confirm-payment'
       path: '/api/confirm-payment'
@@ -492,6 +512,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResetPasswordRoute: ResetPasswordRoute,
   ApiCheckoutRoute: ApiCheckoutRoute,
   ApiConfirmPaymentRoute: ApiConfirmPaymentRoute,
+  ApiDebugEnvRoute: ApiDebugEnvRoute,
   ApiTemporaryUnlockRoute: ApiTemporaryUnlockRoute,
   BayaranSelesaiRoute: BayaranSelesaiRoute,
   DarjahDarjahIdRoute: DarjahDarjahIdRoute,
