@@ -23,6 +23,7 @@ import { Route as DarjahDarjahIdRouteImport } from './routes/darjah.$darjahId'
 import { Route as BayaranSelesaiRouteImport } from './routes/bayaran.selesai'
 import { Route as ApiCheckoutRouteImport } from './routes/api.checkout'
 import { Route as DarjahDarjahIdSubjekIdRouteImport } from './routes/darjah.$darjahId_.$subjekId'
+import { Route as ApiPublicDebugEnvRouteImport } from './routes/api.public.debug-env'
 import { Route as DarjahDarjahIdSubjekIdNotaRingkasRouteImport } from './routes/darjah.$darjahId_.$subjekId_.nota-ringkas'
 import { Route as DarjahDarjahIdSubjekIdLatihanRouteImport } from './routes/darjah.$darjahId_.$subjekId_.latihan'
 import { Route as DarjahDarjahIdSubjekIdLatihTubiRouteImport } from './routes/darjah.$darjahId_.$subjekId_.latih-tubi'
@@ -100,6 +101,11 @@ const DarjahDarjahIdSubjekIdRoute = DarjahDarjahIdSubjekIdRouteImport.update({
   path: '/darjah/$darjahId/$subjekId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicDebugEnvRoute = ApiPublicDebugEnvRouteImport.update({
+  id: '/api/public/debug-env',
+  path: '/api/public/debug-env',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DarjahDarjahIdSubjekIdNotaRingkasRoute =
   DarjahDarjahIdSubjekIdNotaRingkasRouteImport.update({
     id: '/darjah/$darjahId_/$subjekId_/nota-ringkas',
@@ -151,6 +157,7 @@ export interface FileRoutesByFullPath {
   '/darjah/$darjahId': typeof DarjahDarjahIdRoute
   '/dashboard/ibu-bapa': typeof DashboardIbuBapaRoute
   '/dashboard/progress': typeof DashboardProgressRoute
+  '/api/public/debug-env': typeof ApiPublicDebugEnvRoute
   '/darjah/$darjahId/$subjekId': typeof DarjahDarjahIdSubjekIdRoute
   '/api/public/toyyibpay/callback': typeof ApiPublicToyyibpayCallbackRoute
   '/darjah/$darjahId/$subjekId/game': typeof DarjahDarjahIdSubjekIdGameRoute
@@ -173,6 +180,7 @@ export interface FileRoutesByTo {
   '/darjah/$darjahId': typeof DarjahDarjahIdRoute
   '/dashboard/ibu-bapa': typeof DashboardIbuBapaRoute
   '/dashboard/progress': typeof DashboardProgressRoute
+  '/api/public/debug-env': typeof ApiPublicDebugEnvRoute
   '/darjah/$darjahId/$subjekId': typeof DarjahDarjahIdSubjekIdRoute
   '/api/public/toyyibpay/callback': typeof ApiPublicToyyibpayCallbackRoute
   '/darjah/$darjahId/$subjekId/game': typeof DarjahDarjahIdSubjekIdGameRoute
@@ -196,6 +204,7 @@ export interface FileRoutesById {
   '/darjah/$darjahId': typeof DarjahDarjahIdRoute
   '/dashboard/ibu-bapa': typeof DashboardIbuBapaRoute
   '/dashboard/progress': typeof DashboardProgressRoute
+  '/api/public/debug-env': typeof ApiPublicDebugEnvRoute
   '/darjah/$darjahId_/$subjekId': typeof DarjahDarjahIdSubjekIdRoute
   '/api/public/toyyibpay/callback': typeof ApiPublicToyyibpayCallbackRoute
   '/darjah/$darjahId_/$subjekId_/game': typeof DarjahDarjahIdSubjekIdGameRoute
@@ -220,6 +229,7 @@ export interface FileRouteTypes {
     | '/darjah/$darjahId'
     | '/dashboard/ibu-bapa'
     | '/dashboard/progress'
+    | '/api/public/debug-env'
     | '/darjah/$darjahId/$subjekId'
     | '/api/public/toyyibpay/callback'
     | '/darjah/$darjahId/$subjekId/game'
@@ -242,6 +252,7 @@ export interface FileRouteTypes {
     | '/darjah/$darjahId'
     | '/dashboard/ibu-bapa'
     | '/dashboard/progress'
+    | '/api/public/debug-env'
     | '/darjah/$darjahId/$subjekId'
     | '/api/public/toyyibpay/callback'
     | '/darjah/$darjahId/$subjekId/game'
@@ -264,6 +275,7 @@ export interface FileRouteTypes {
     | '/darjah/$darjahId'
     | '/dashboard/ibu-bapa'
     | '/dashboard/progress'
+    | '/api/public/debug-env'
     | '/darjah/$darjahId_/$subjekId'
     | '/api/public/toyyibpay/callback'
     | '/darjah/$darjahId_/$subjekId_/game'
@@ -287,6 +299,7 @@ export interface RootRouteChildren {
   DarjahDarjahIdRoute: typeof DarjahDarjahIdRoute
   DashboardIbuBapaRoute: typeof DashboardIbuBapaRoute
   DashboardProgressRoute: typeof DashboardProgressRoute
+  ApiPublicDebugEnvRoute: typeof ApiPublicDebugEnvRoute
   DarjahDarjahIdSubjekIdRoute: typeof DarjahDarjahIdSubjekIdRoute
   ApiPublicToyyibpayCallbackRoute: typeof ApiPublicToyyibpayCallbackRoute
   DarjahDarjahIdSubjekIdGameRoute: typeof DarjahDarjahIdSubjekIdGameRoute
@@ -396,6 +409,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DarjahDarjahIdSubjekIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/debug-env': {
+      id: '/api/public/debug-env'
+      path: '/api/public/debug-env'
+      fullPath: '/api/public/debug-env'
+      preLoaderRoute: typeof ApiPublicDebugEnvRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/darjah/$darjahId_/$subjekId_/nota-ringkas': {
       id: '/darjah/$darjahId_/$subjekId_/nota-ringkas'
       path: '/darjah/$darjahId/$subjekId/nota-ringkas'
@@ -455,6 +475,7 @@ const rootRouteChildren: RootRouteChildren = {
   DarjahDarjahIdRoute: DarjahDarjahIdRoute,
   DashboardIbuBapaRoute: DashboardIbuBapaRoute,
   DashboardProgressRoute: DashboardProgressRoute,
+  ApiPublicDebugEnvRoute: ApiPublicDebugEnvRoute,
   DarjahDarjahIdSubjekIdRoute: DarjahDarjahIdSubjekIdRoute,
   ApiPublicToyyibpayCallbackRoute: ApiPublicToyyibpayCallbackRoute,
   DarjahDarjahIdSubjekIdGameRoute: DarjahDarjahIdSubjekIdGameRoute,
