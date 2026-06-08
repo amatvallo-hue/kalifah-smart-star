@@ -1,7 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { getPool } from "@/lib/db.server";
+import { createClient } from "@supabase/supabase-js";
 import { getBillTransactions } from "@/lib/toyyibpay";
 import { darjahDibuka, type PakejId } from "@/lib/checkout";
+
+const SUPABASE_URL = "https://pgpkqbdyxoejwvubluqq.supabase.co";
 
 // Callback dari ToyyibPay (server-to-server). Tiada user session.
 export const Route = createFileRoute("/api/public/toyyibpay/callback")({
@@ -24,12 +26,21 @@ export const Route = createFileRoute("/api/public/toyyibpay/callback")({
           const status = String(body.status ?? "");
           const orderId = body.order_id ?? body.orderid ?? "";
           const txnId = body.transaction_id ?? body.refno ?? "";
+          console.log("[callback] received", { billcode, status, orderId });
 
           if (!billcode) {
             return new Response("missing billcode", { status: 400 });
           }
 
           const secretKey = process.env.TOYYIBPAY_SECRET_KEY!;
+          const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+          if (!serviceKey) {
+            console.error(
+              "[callback] SUPABASE_SERVICE_ROLE_KEY missing — cannot grant access",
+            );
+            return new Response("server not configured", { status: 500 });
+          }
+
           const txs = await getBillTransactions(secretKey, billcode);
           const verifiedSuccess = txs.some(
             (t) => String(t.billpaymentStatus) === "1",
@@ -39,32 +50,37 @@ export const Route = createFileRoute("/api/public/toyyibpay/callback")({
             return new Response("not paid", { status: 200 });
           }
 
-          const pesananRes = orderId
-            ? await getPool().query(
-                `SELECT id, user_id, pakej, darjah_dipilih, status
-                   FROM public.pesanan WHERE id = $1 LIMIT 1`,
-                [orderId],
-              )
-            : await getPool().query(
-                `SELECT id, user_id, pakej, darjah_dipilih, status
-                   FROM public.pesanan WHERE billcode = $1 LIMIT 1`,
-                [billcode],
-              );
-          const pesanan = pesananRes.rows[0];
-          if (!pesanan) {
-            console.error("[callback] pesanan not found", { billcode, orderId });
+          const admin = createClient(SUPABASE_URL, serviceKey, {
+            auth: { persistSession: false, autoRefreshToken: false },
+          });
+
+          const query = orderId
+            ? admin.from("pesanan").select("*").eq("id", orderId).maybeSingle()
+            : admin
+                .from("pesanan")
+                .select("*")
+                .eq("billcode", billcode)
+                .maybeSingle();
+          const { data: pesanan, error: pErr } = await query;
+          if (pErr || !pesanan) {
+            console.error("[callback] pesanan not found", {
+              billcode,
+              orderId,
+            });
             return new Response("order not found", { status: 200 });
           }
           if (pesanan.status === "paid") {
             return new Response("already processed", { status: 200 });
           }
 
-          const profRes = await getPool().query(
-            `SELECT darjah_akses FROM public.profiles WHERE id = $1 LIMIT 1`,
-            [pesanan.user_id],
-          );
-          const existing: number[] = Array.isArray(profRes.rows[0]?.darjah_akses)
-            ? (profRes.rows[0].darjah_akses as number[])
+          const { data: profile } = await admin
+            .from("profiles")
+            .select("darjah_akses")
+            .eq("id", pesanan.user_id)
+            .maybeSingle();
+
+          const existing: number[] = Array.isArray(profile?.darjah_akses)
+            ? (profile!.darjah_akses as number[])
             : [];
           const toAdd = darjahDibuka(
             pesanan.pakej as PakejId,
@@ -74,21 +90,21 @@ export const Route = createFileRoute("/api/public/toyyibpay/callback")({
             (a, b) => a - b,
           );
 
-          await getPool().query(
-            `INSERT INTO public.profiles (id, darjah_akses)
-             VALUES ($1, $2)
-             ON CONFLICT (id) DO UPDATE SET darjah_akses = EXCLUDED.darjah_akses`,
-            [pesanan.user_id, merged],
-          );
+          await admin
+            .from("profiles")
+            .upsert(
+              { id: pesanan.user_id, darjah_akses: merged },
+              { onConflict: "id" },
+            );
 
-          await getPool().query(
-            `UPDATE public.pesanan
-               SET status = 'paid',
-                   paid_at = NOW(),
-                   toyyib_transaction_id = $1
-             WHERE id = $2`,
-            [txnId || null, pesanan.id],
-          );
+          await admin
+            .from("pesanan")
+            .update({
+              status: "paid",
+              paid_at: new Date().toISOString(),
+              toyyib_transaction_id: txnId || null,
+            })
+            .eq("id", pesanan.id);
 
           return new Response("ok", { status: 200 });
         } catch (e) {
