@@ -253,7 +253,7 @@ function ParentDashboard() {
               <p className="text-sm text-muted-foreground">Pantau pembelajaran anak anda dengan mudah.</p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <button
               onClick={refreshAnak}
               className="inline-flex items-center gap-2 rounded-full bg-card px-4 py-2.5 font-display text-sm font-extrabold text-muted-foreground shadow-soft hover:text-foreground"
@@ -261,7 +261,14 @@ function ParentDashboard() {
               Muat Semula
             </button>
             <button
-              onClick={() => setShowAdd((v) => !v)}
+              onClick={() => { setShowKod((v) => !v); setShowAdd(false); }}
+              className="inline-flex items-center gap-2 rounded-full bg-card px-4 py-2.5 font-display text-sm font-extrabold shadow-soft"
+              style={{ color: EMAS, border: `2px solid ${EMAS}55` }}
+            >
+              Jana Kod Jemputan
+            </button>
+            <button
+              onClick={() => { setShowAdd((v) => !v); setShowKod(false); }}
               className="inline-flex items-center gap-2 rounded-full px-5 py-2.5 font-display text-sm font-extrabold text-white shadow-soft"
               style={{ backgroundColor: HIJAU }}
             >
@@ -270,7 +277,7 @@ function ParentDashboard() {
           </div>
         </div>
 
-        {/* Borang tambah anak */}
+        {/* Borang tambah anak (cipta akaun + auto-link) */}
         {showAdd && (
           <FormTambahAnak
             onAdded={async () => {
@@ -278,6 +285,18 @@ function ParentDashboard() {
               setAnakList(list);
               setShowAdd(false);
               if (!aktifId && list.length > 0) setAktifId(list[0].id);
+            }}
+          />
+        )}
+
+        {/* Borang jana kod jemputan (untuk anak yang sudah ada akaun berasingan) */}
+        {showKod && (
+          <FormJanaKod
+            onAdded={async (newId) => {
+              const list = await senaraikanAnak();
+              setAnakList(list);
+              setShowKod(false);
+              setAktifId(newId);
             }}
           />
         )}
