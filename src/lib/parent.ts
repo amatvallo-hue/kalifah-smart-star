@@ -37,10 +37,14 @@ export async function senaraikanAnak(): Promise<ChildProfile[]> {
   return (data ?? []) as unknown as ChildProfile[];
 }
 
-export async function tambahAnak(nama: string, darjah: string): Promise<ChildProfile | null> {
+export async function tambahAnak(
+  nama: string,
+  darjah: string,
+): Promise<{ ok: true; row: ChildProfile } | { ok: false; mesej: string }> {
   const { data: sess } = await supabase.auth.getSession();
   const uid = sess.session?.user?.id;
-  if (!uid) return null;
+  if (!uid) return { ok: false, mesej: "Anda perlu log masuk semula." };
+  let lastErr = "Tidak dapat menjana kod unik. Cuba lagi.";
   for (let cuba = 0; cuba < 5; cuba++) {
     const kod = janaKod();
     const { data, error } = await supabase
@@ -48,13 +52,17 @@ export async function tambahAnak(nama: string, darjah: string): Promise<ChildPro
       .insert({ parent_id: uid, nama: nama.trim(), darjah, kod_jemputan: kod })
       .select("*")
       .single();
-    if (!error) return data as unknown as ChildProfile;
-    if (!String(error.message).toLowerCase().includes("kod_jemputan")) {
+    if (!error && data) return { ok: true, row: data as unknown as ChildProfile };
+    if (error) {
+      lastErr = error.message;
       console.warn("tambahAnak gagal:", error);
-      return null;
+      // Hanya retry jika konflik kod_jemputan
+      if (!error.message.toLowerCase().includes("kod_jemputan")) {
+        return { ok: false, mesej: error.message };
+      }
     }
   }
-  return null;
+  return { ok: false, mesej: lastErr };
 }
 
 export async function padamAnak(id: string): Promise<boolean> {
