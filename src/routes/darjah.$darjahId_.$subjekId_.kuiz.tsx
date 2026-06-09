@@ -343,6 +343,7 @@ function KuizPage() {
     setPilih(null);
     setSkor(0);
     setSelesai(false);
+    if (showPicker) setSelectedSet(null);
   };
 
   return (
