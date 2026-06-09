@@ -27,6 +27,7 @@ interface ProgressRow {
   markah: number;
   jumlah_soalan: number;
   peratus: number;
+  masa_ambil: number;
   created_at: string;
 }
 
