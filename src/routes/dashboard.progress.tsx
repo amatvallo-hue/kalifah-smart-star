@@ -4,7 +4,8 @@ import { ArrowLeft, Award, BookOpen, Clock, Download, Flame, RefreshCw, Share2, 
 import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
-import { SUBJEK_LIST } from "@/lib/curriculum";
+import { useProfile } from "@/hooks/use-profile";
+import { subjekListUntukRole } from "@/lib/curriculum";
 import { catatHariAktif } from "@/lib/progress";
 import { sertaiDenganKod } from "@/lib/parent";
 import { CHILD_EMAIL_DOMAIN } from "@/lib/child-auth";
