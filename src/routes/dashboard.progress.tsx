@@ -100,6 +100,8 @@ function formatTarikh(iso: string) {
 function ProgressDashboard() {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
+  const { profile } = useProfile();
+  const SUBJEK_LIST = useMemo(() => subjekListUntukRole(profile?.role), [profile?.role]);
   const [progress, setProgress] = useState<ProgressRow[]>([]);
   const [stats, setStats] = useState<StatsRow[]>([]);
   const [badges, setBadges] = useState<BadgeRow[]>([]);
