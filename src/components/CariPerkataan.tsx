@@ -491,9 +491,13 @@ const PI_DARJAH1_CLUES_S2: Record<string, string> = {
   SYAHADAH: "Rukun Islam pertama", MALAIKAT: "Makhluk Allah dari cahaya",
   SYURGA: "Balasan orang beriman", NERAKA: "Balasan orang berdosa",
 };
-const _pickPI_D1 = Math.random() < 0.5;
-export const PI_DARJAH1_WORDS: Word[] = _pickPI_D1 ? PI_DARJAH1_WORDS_S1 : PI_DARJAH1_WORDS_S2;
-export const PI_DARJAH1_CLUES: Record<string, string> = _pickPI_D1 ? PI_DARJAH1_CLUES_S1 : PI_DARJAH1_CLUES_S2;
+export const PI_DARJAH1_WORDS: Word[] = PI_DARJAH1_WORDS_S1;
+export const PI_DARJAH1_CLUES: Record<string, string> = PI_DARJAH1_CLUES_S1;
+export function pickPI_D1(): { words: Word[]; clues: Record<string, string> } {
+  return Math.random() < 0.5
+    ? { words: PI_DARJAH1_WORDS_S1, clues: PI_DARJAH1_CLUES_S1 }
+    : { words: PI_DARJAH1_WORDS_S2, clues: PI_DARJAH1_CLUES_S2 };
+}
 
 const SAINS_DARJAH1_WORDS_S1: Word[] = [
   { word: "MATA", row: 0, col: 0, dir: "H" },
