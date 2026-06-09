@@ -153,6 +153,20 @@ function ProgressDashboard() {
   const statsHariIni = stats.find((s) => s.tarikh === hariIni);
   const streak = kiraStreak(stats);
 
+  // Fallback: if user_stats kosong/outdated, kira dari user_progress hari ini
+  const progressHariIni = useMemo(
+    () => progress.filter((r) => (r.created_at ?? "").slice(0, 10) === hariIni),
+    [progress, hariIni],
+  );
+  const soalanHariIni = Math.max(
+    statsHariIni?.soalan_dijawab ?? 0,
+    progressHariIni.reduce((a, r) => a + (r.jumlah_soalan ?? 0), 0),
+  );
+  const masaHariIni = Math.max(
+    statsHariIni?.masa_belajar ?? 0,
+    Math.round(progressHariIni.reduce((a, r) => a + (r.masa_ambil ?? 0), 0) / 60),
+  );
+
   const ringkasanSubjek = useMemo(() => {
     return SUBJEK_LIST.map((sj) => {
       const rows = progress.filter((p) => p.subjek === sj.id);
