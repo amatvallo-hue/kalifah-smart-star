@@ -46,7 +46,10 @@ type CariPerkataanProps = {
   title?: string;
   /** When provided, called once per round to pick which Set to display.
    *  Takes precedence over `words`/`clues`. */
-  pickBank?: (useSet2: boolean) => { words: Word[]; clues: Record<string, string> };
+  pickBank?: (useSet2: boolean) => {
+    words: Word[];
+    clues: Record<string, string>;
+  };
 };
 
 // Build the grid with words placed; fill the rest with deterministic letters
