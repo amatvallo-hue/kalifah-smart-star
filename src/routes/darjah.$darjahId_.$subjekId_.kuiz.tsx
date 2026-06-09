@@ -6,7 +6,7 @@ import { StarReward } from "@/components/StarReward";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { getDarjah, getSubjek } from "@/lib/curriculum";
-import { getQuiz, type QuizQuestion } from "@/lib/quiz-bank";
+import { getQuiz, getQuizSet2, type QuizQuestion } from "@/lib/quiz-bank";
 import { simpanProgress } from "@/lib/progress";
 
 export const Route = createFileRoute("/darjah/$darjahId_/$subjekId_/kuiz")({
