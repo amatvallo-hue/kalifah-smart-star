@@ -455,25 +455,141 @@ const SAINS_D6: QuizQuestion[] = [
   { soalan: "Cara pelihara alam sekitar?", pilihan: ["buang sampah merata", "bakar hutan", "kitar semula jimat tenaga dan air", "buka ladang baru"], jawapan: 2 },
 ];
 
+// ─────────────── Darjah 1 — Set 1 (existing) and Set 2 (new) ───────────────
+const MATE_D1_S1: QuizQuestion[] = [
+  { soalan: "Nombor apakah selepas 7?", pilihan: ["6", "8", "9", "10"], jawapan: 1, nota: "Selepas 7 ialah 8." },
+  { soalan: "Nombor manakah paling besar?", pilihan: ["5", "12", "8", "15"], jawapan: 3, nota: "15 paling besar." },
+  { soalan: "Nombor apakah sebelum 10?", pilihan: ["11", "10", "9", "8"], jawapan: 2, nota: "Sebelum 10 ialah 9." },
+  { soalan: "3 + 4 = ?", pilihan: ["6", "7", "8", "9"], jawapan: 1 },
+  { soalan: "10 - 3 = ?", pilihan: ["6", "8", "7", "13"], jawapan: 2 },
+  { soalan: "5 + 5 = ?", pilihan: ["9", "10", "11", "55"], jawapan: 1 },
+  { soalan: "8 - 4 = ?", pilihan: ["2", "3", "4", "12"], jawapan: 2 },
+  { soalan: "Bentuk dengan 3 sisi ialah?", pilihan: ["Bulatan", "Segiempat", "Segitiga", "Segilima"], jawapan: 2 },
+  { soalan: "Berapa sisi segiempat?", pilihan: ["2", "3", "4", "5"], jawapan: 2 },
+  { soalan: "Siti ada 4 guli + Abu ada 5 guli = ?", pilihan: ["7", "8", "9", "10"], jawapan: 2 },
+  { soalan: "10 oren - 3 dimakan = ?", pilihan: ["5", "6", "7", "8"], jawapan: 2 },
+  { soalan: "1, 2, 3, ___, 5 — isi tempat kosong:", pilihan: ["2", "4", "6", "3"], jawapan: 1 },
+  { soalan: "10, ___, 12, 13 — isi tempat kosong:", pilihan: ["9", "11", "10", "14"], jawapan: 1 },
+  { soalan: "5 + 6 = ?", pilihan: ["9", "10", "11", "12"], jawapan: 2 },
+  { soalan: "Ali ada 6 epal + 3 lagi = ?", pilihan: ["3", "8", "9", "10"], jawapan: 2 },
+];
+
+const MATE_D1_S2: QuizQuestion[] = [
+  { soalan: "2 + 5 = ?", pilihan: ["5", "6", "7", "8"], jawapan: 2 },
+  { soalan: "9 - 4 = ?", pilihan: ["3", "4", "5", "6"], jawapan: 2 },
+  { soalan: "Nombor apakah selepas 15?", pilihan: ["14", "15", "16", "17"], jawapan: 2 },
+  { soalan: "5 + 5 = ?", pilihan: ["8", "9", "10", "11"], jawapan: 2 },
+  { soalan: "10 - 6 = ?", pilihan: ["3", "4", "5", "6"], jawapan: 1 },
+  { soalan: "4 + 3 = ?", pilihan: ["5", "6", "7", "8"], jawapan: 2 },
+  { soalan: "Nombor apakah sebelum 10?", pilihan: ["7", "8", "9", "11"], jawapan: 2 },
+  { soalan: "6 + 4 = ?", pilihan: ["8", "9", "10", "11"], jawapan: 2 },
+  { soalan: "12 - 5 = ?", pilihan: ["5", "6", "7", "8"], jawapan: 2 },
+  { soalan: "9 + 1 = ?", pilihan: ["8", "9", "10", "11"], jawapan: 2 },
+  { soalan: "15 - 10 = ?", pilihan: ["3", "4", "5", "6"], jawapan: 2 },
+  { soalan: "3 + 6 = ?", pilihan: ["7", "8", "9", "10"], jawapan: 2 },
+  { soalan: "Berapa sisi segitiga?", pilihan: ["2", "3", "4", "5"], jawapan: 1 },
+  { soalan: "20 - 10 = ?", pilihan: ["5", "8", "10", "15"], jawapan: 2 },
+  { soalan: "2 × 4 = ?", pilihan: ["6", "7", "8", "9"], jawapan: 2 },
+];
+
+const BM_D1: QuizQuestion[] = [
+  { soalan: "Huruf vokal yang pertama ialah?", pilihan: ["a", "e", "i", "o"], jawapan: 0 },
+  { soalan: "Berapa suku kata perkataan 'buku'?", pilihan: ["1", "2", "3", "4"], jawapan: 1 },
+  { soalan: "Lawan kata 'panas' ialah?", pilihan: ["basah", "sejuk", "lembab", "kering"], jawapan: 1 },
+  { soalan: "Kata nama ialah?", pilihan: ["berlari", "cantik", "buku", "dengan"], jawapan: 2 },
+  { soalan: "Ayat tanya berakhir dengan?", pilihan: [".", "!", "?", ","], jawapan: 2 },
+  { soalan: "Sinonim 'gembira' ialah?", pilihan: ["sedih", "marah", "suka", "takut"], jawapan: 2 },
+  { soalan: "Imbuhan 'ber-' + 'lari' = ?", pilihan: ["berlari", "melari", "terlari", "dilari"], jawapan: 0 },
+  { soalan: "Kata ganti diri pertama ialah?", pilihan: ["dia", "mereka", "saya", "anda"], jawapan: 2 },
+  { soalan: "Berapa huruf vokal dalam BM?", pilihan: ["3", "4", "5", "6"], jawapan: 2 },
+  { soalan: "'Kucing' ialah kata?", pilihan: ["kerja", "nama", "sifat", "sendi"], jawapan: 1 },
+  { soalan: "Kata sendi nama 'di' digunakan untuk?", pilihan: ["masa", "tempat", "cara", "sebab"], jawapan: 1 },
+  { soalan: "Antonim 'besar' ialah?", pilihan: ["tinggi", "kecil", "pendek", "ringan"], jawapan: 1 },
+  { soalan: "Ayat penyata berakhir dengan?", pilihan: ["?", "!", ".", ","], jawapan: 2 },
+  { soalan: "'Berlari' ialah kata?", pilihan: ["nama", "sifat", "kerja", "sendi"], jawapan: 2 },
+  { soalan: "Berapa suku kata 'sekolah'?", pilihan: ["2", "3", "4", "5"], jawapan: 1 },
+];
+
+const BI_D1: QuizQuestion[] = [
+  { soalan: "What is the opposite of 'hot'?", pilihan: ["warm", "cold", "cool", "icy"], jawapan: 1 },
+  { soalan: "'Apple' is a?", pilihan: ["verb", "adjective", "noun", "pronoun"], jawapan: 2 },
+  { soalan: "We use ___ with 'I'.", pilihan: ["is", "are", "am", "be"], jawapan: 2 },
+  { soalan: "How many days in a week?", pilihan: ["5", "6", "7", "8"], jawapan: 2 },
+  { soalan: "Plural of 'cat' is?", pilihan: ["cates", "cats", "cat", "caties"], jawapan: 1 },
+  { soalan: "'Run' is a?", pilihan: ["noun", "adjective", "verb", "pronoun"], jawapan: 2 },
+  { soalan: "Opposite of 'big' is?", pilihan: ["tall", "short", "small", "thin"], jawapan: 2 },
+  { soalan: "Which is a colour?", pilihan: ["run", "happy", "blue", "eat"], jawapan: 2 },
+  { soalan: "'They' is a?", pilihan: ["noun", "verb", "adjective", "pronoun"], jawapan: 3 },
+  { soalan: "A sentence ends with?", pilihan: [",", ":", ";", "."], jawapan: 3 },
+  { soalan: "Which is an animal?", pilihan: ["table", "chair", "elephant", "book"], jawapan: 2 },
+  { soalan: "Opposite of 'day' is?", pilihan: ["morning", "night", "evening", "noon"], jawapan: 1 },
+  { soalan: "'Beautiful' is an?", pilihan: ["noun", "verb", "adjective", "adverb"], jawapan: 2 },
+  { soalan: "How many months in a year?", pilihan: ["10", "11", "12", "13"], jawapan: 2 },
+  { soalan: "Which is a fruit?", pilihan: ["carrot", "potato", "mango", "onion"], jawapan: 2 },
+];
+
+const SAINS_D1: QuizQuestion[] = [
+  { soalan: "Berapa deria yang dimiliki manusia?", pilihan: ["3", "4", "5", "6"], jawapan: 2 },
+  { soalan: "Deria penglihatan menggunakan?", pilihan: ["hidung", "telinga", "mata", "kulit"], jawapan: 2 },
+  { soalan: "Tumbuhan membuat makanan melalui?", pilihan: ["respirasi", "fotosintesis", "transpirasi", "osmosis"], jawapan: 1 },
+  { soalan: "Air membeku pada suhu?", pilihan: ["10°C", "5°C", "0°C", "-5°C"], jawapan: 2 },
+  { soalan: "Ikan bernafas menggunakan?", pilihan: ["paru-paru", "insang", "kulit", "hidung"], jawapan: 1 },
+  { soalan: "Bumi ialah planet ke berapa?", pilihan: ["1", "2", "3", "4"], jawapan: 2 },
+  { soalan: "Tiga keadaan jirim ialah?", pilihan: ["pepejal, cecair, wap", "pepejal, cecair, gas", "keras, lembut, gas", "padat, cair, angin"], jawapan: 1 },
+  { soalan: "Akar tumbuhan berfungsi untuk?", pilihan: ["fotosintesis", "menyerap air", "menghasilkan buah", "menarik serangga"], jawapan: 1 },
+  { soalan: "Haiwan yang hidup di air dan darat?", pilihan: ["ikan", "katak", "burung", "ular"], jawapan: 1 },
+  { soalan: "Sumber tenaga utama bumi?", pilihan: ["bulan", "bintang", "matahari", "angin"], jawapan: 2 },
+  { soalan: "Deria penciuman menggunakan?", pilihan: ["mata", "telinga", "hidung", "kulit"], jawapan: 2 },
+  { soalan: "Contoh haiwan mamalia ialah?", pilihan: ["ular", "katak", "ikan", "kucing"], jawapan: 3 },
+  { soalan: "Bahagian tumbuhan yang membuat makanan?", pilihan: ["akar", "batang", "daun", "bunga"], jawapan: 2 },
+  { soalan: "Air bertukar menjadi wap apabila?", pilihan: ["dibekukan", "dipanaskan", "diwarnakan", "digerakkan"], jawapan: 1 },
+  { soalan: "Graviti menarik objek ke?", pilihan: ["atas", "tepi", "bawah", "hadapan"], jawapan: 2 },
+];
+
+const PI_D1: QuizQuestion[] = [
+  { soalan: "Berapa Rukun Islam?", pilihan: ["3", "4", "5", "6"], jawapan: 2 },
+  { soalan: "Solat fardu sehari berapa waktu?", pilihan: ["3", "4", "5", "6"], jawapan: 2 },
+  { soalan: "Solat Subuh berapa rakaat?", pilihan: ["1", "2", "3", "4"], jawapan: 1 },
+  { soalan: "Nabi terakhir ialah?", pilihan: ["Nabi Isa AS", "Nabi Musa AS", "Nabi Muhammad SAW", "Nabi Ibrahim AS"], jawapan: 2 },
+  { soalan: "Kitab suci umat Islam ialah?", pilihan: ["Injil", "Taurat", "Zabur", "Al-Quran"], jawapan: 3 },
+  { soalan: "Solat Zohor berapa rakaat?", pilihan: ["2", "3", "4", "5"], jawapan: 2 },
+  { soalan: "Kiblat umat Islam ialah?", pilihan: ["Masjid Nabawi", "Masjidil Aqsa", "Kaabah", "Masjid Al-Azhar"], jawapan: 2 },
+  { soalan: "Rukun Iman ada berapa?", pilihan: ["4", "5", "6", "7"], jawapan: 2 },
+  { soalan: "Bulan puasa ialah?", pilihan: ["Syawal", "Ramadan", "Rejab", "Syaaban"], jawapan: 1 },
+  { soalan: "Bacaan sebelum makan ialah?", pilihan: ["Alhamdulillah", "Bismillah", "Subhanallah", "Allahu Akbar"], jawapan: 1 },
+  { soalan: "Solat Maghrib berapa rakaat?", pilihan: ["2", "3", "4", "5"], jawapan: 1 },
+  { soalan: "Allah SWT mencipta dalam berapa hari?", pilihan: ["5", "6", "7", "8"], jawapan: 1 },
+  { soalan: "Bacaan selepas makan ialah?", pilihan: ["Bismillah", "Alhamdulillah", "Subhanallah", "Masya-Allah"], jawapan: 1 },
+  { soalan: "Wuduk batal jika?", pilihan: ["makan", "tidur nyenyak", "membaca", "berjalan"], jawapan: 1 },
+  { soalan: "Solat Asar berapa rakaat?", pilihan: ["2", "3", "4", "5"], jawapan: 2 },
+];
+
+const JAWI_D1: QuizQuestion[] = [
+  { soalan: "Huruf ا dibaca?", pilihan: ["Ba", "Ta", "Alif", "Jim"], jawapan: 2 },
+  { soalan: "Jawi ditulis dari arah?", pilihan: ["kiri ke kanan", "kanan ke kiri", "atas ke bawah", "bawah ke atas"], jawapan: 1 },
+  { soalan: "Berapa jumlah huruf Jawi?", pilihan: ["26", "30", "37", "40"], jawapan: 2 },
+  { soalan: "Huruf ب dibaca?", pilihan: ["Ta", "Ba", "Jim", "Dal"], jawapan: 1 },
+  { soalan: "كوچيڠ bermaksud?", pilihan: ["anjing", "kucing", "burung", "ikan"], jawapan: 1 },
+  { soalan: "Huruf ر dibaca?", pilihan: ["Dal", "Zai", "Ra", "Wau"], jawapan: 2 },
+  { soalan: "بوكو bermaksud?", pilihan: ["meja", "kerusi", "buku", "pen"], jawapan: 2 },
+  { soalan: "Huruf س dibaca?", pilihan: ["Shin", "Sin", "Sad", "Syin"], jawapan: 1 },
+  { soalan: "Tulisan Jawi berasal dari tulisan?", pilihan: ["Cina", "India", "Arab", "Latin"], jawapan: 2 },
+  { soalan: "Huruf ک dibaca?", pilihan: ["Ga", "Kaf", "Qaf", "Ha"], jawapan: 1 },
+  { soalan: "ايبو bermaksud?", pilihan: ["ayah", "adik", "abang", "ibu"], jawapan: 3 },
+  { soalan: "Huruf ت dibaca?", pilihan: ["Ba", "Ta", "Tha", "Jim"], jawapan: 1 },
+  { soalan: "سكولة bermaksud?", pilihan: ["rumah", "sekolah", "pasar", "taman"], jawapan: 1 },
+  { soalan: "Huruf م dibaca?", pilihan: ["Lam", "Mim", "Nun", "Wau"], jawapan: 1 },
+  { soalan: "Huruf tambahan Jawi yang tidak ada dalam Arab?", pilihan: ["ب", "چ", "ر", "س"], jawapan: 1 },
+];
+
 // Key format: `${darjahId}:${subjekId}`
 export const QUIZ_BANK: Record<string, QuizQuestion[]> = {
-  "1:matematik": [
-    { soalan: "Nombor apakah selepas 7?", pilihan: ["6", "8", "9", "10"], jawapan: 1, nota: "Selepas 7 ialah 8." },
-    { soalan: "Nombor manakah paling besar?", pilihan: ["5", "12", "8", "15"], jawapan: 3, nota: "15 paling besar." },
-    { soalan: "Nombor apakah sebelum 10?", pilihan: ["11", "10", "9", "8"], jawapan: 2, nota: "Sebelum 10 ialah 9." },
-    { soalan: "3 + 4 = ?", pilihan: ["6", "7", "8", "9"], jawapan: 1 },
-    { soalan: "10 - 3 = ?", pilihan: ["6", "8", "7", "13"], jawapan: 2 },
-    { soalan: "5 + 5 = ?", pilihan: ["9", "10", "11", "55"], jawapan: 1 },
-    { soalan: "8 - 4 = ?", pilihan: ["2", "3", "4", "12"], jawapan: 2 },
-    { soalan: "Bentuk dengan 3 sisi ialah?", pilihan: ["Bulatan", "Segiempat", "Segitiga", "Segilima"], jawapan: 2 },
-    { soalan: "Berapa sisi segiempat?", pilihan: ["2", "3", "4", "5"], jawapan: 2 },
-    { soalan: "Siti ada 4 guli + Abu ada 5 guli = ?", pilihan: ["7", "8", "9", "10"], jawapan: 2 },
-    { soalan: "10 oren - 3 dimakan = ?", pilihan: ["5", "6", "7", "8"], jawapan: 2 },
-    { soalan: "1, 2, 3, ___, 5 — isi tempat kosong:", pilihan: ["2", "4", "6", "3"], jawapan: 1 },
-    { soalan: "10, ___, 12, 13 — isi tempat kosong:", pilihan: ["9", "11", "10", "14"], jawapan: 1 },
-    { soalan: "5 + 6 = ?", pilihan: ["9", "10", "11", "12"], jawapan: 2 },
-    { soalan: "Ali ada 6 epal + 3 lagi = ?", pilihan: ["3", "8", "9", "10"], jawapan: 2 },
-  ],
+  "1:matematik": MATE_D1_S1,
+  "1:bahasa-melayu": BM_D1,
+  "1:bahasa-inggeris": BI_D1,
+  "1:sains": SAINS_D1,
+  "1:pendidikan-islam": PI_D1,
+  "1:jawi": JAWI_D1,
   "2:bahasa-melayu": [
     { soalan: "Pilih ayat yang betul:", pilihan: ["Ibu memasak nasi di dapur", "Ibu di dapur memasak nasi", "Memasak ibu nasi di dapur", "Di dapur ibu nasi memasak"], jawapan: 0 },
     { soalan: "Apakah imbuhan dalam perkataan 'berlari'?", pilihan: ["ber", "lari", "ri", "berl"], jawapan: 0 },
@@ -518,6 +634,19 @@ export const QUIZ_BANK: Record<string, QuizQuestion[]> = {
   "6:sains": SAINS_D6,
 };
 
+// Darjah 1 Set 2 alternates — randomly selected per call alongside Set 1.
+const QUIZ_BANK_SET2: Record<string, QuizQuestion[]> = {
+  "1:matematik": MATE_D1_S2,
+};
+
 export function getQuiz(darjahId: string, subjekId: string): QuizQuestion[] | undefined {
-  return QUIZ_BANK[`${darjahId}:${subjekId}`];
+  const key = `${darjahId}:${subjekId}`;
+  const s1 = QUIZ_BANK[key];
+  const s2 = QUIZ_BANK_SET2[key];
+  if (s1 && s2) return Math.random() < 0.5 ? s1 : s2;
+  if (s1) return s1;
+  // Fallback: any darjah for the same subject (subject default).
+  const fallbackKey = Object.keys(QUIZ_BANK).find((k) => k.endsWith(`:${subjekId}`));
+  return fallbackKey ? QUIZ_BANK[fallbackKey] : undefined;
 }
+

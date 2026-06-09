@@ -213,12 +213,221 @@ export const SUSUN_AYAT: Record<string, SAItem[]> = {
   sains: SA_SAINS,
 };
 
+// ─────────────── SET 2 (Darjah 1 alternates) ───────────────
+const BS_MATE_2: BSItem[] = [
+  { teks: "3 + 3 = 6.", betul: true },
+  { teks: "10 - 4 = 5.", betul: false },
+  { teks: "5 + 4 = 9.", betul: true },
+  { teks: "7 - 2 = 4.", betul: false },
+  { teks: "4 + 4 = 8.", betul: true },
+  { teks: "6 + 3 = 10.", betul: false },
+  { teks: "9 - 5 = 4.", betul: true },
+  { teks: "3 × 3 = 8.", betul: false },
+  { teks: "Segi empat ada 4 sisi.", betul: true },
+  { teks: "10 + 10 = 30.", betul: false },
+];
+const BS_BM_2: BSItem[] = [
+  { teks: "'Meja' ialah kata nama.", betul: true },
+  { teks: "Huruf konsonan ialah a, e, i, o, u.", betul: false },
+  { teks: "Lawan 'rajin' ialah 'malas'.", betul: true },
+  { teks: "'Berlari' menggunakan imbuhan 'me-'.", betul: false },
+  { teks: "Ayat perintah berakhir dengan tanda seru.", betul: true },
+  { teks: "'Kami' ialah kata ganti diri ketiga.", betul: false },
+  { teks: "Sinonim 'pandai' ialah 'bijak'.", betul: true },
+  { teks: "'Bunga' mempunyai 3 suku kata.", betul: false },
+  { teks: "Kata adjektif menerangkan kata nama.", betul: true },
+  { teks: "'Di' dan 'ke' ialah kata kerja.", betul: false },
+];
+const BS_BI_2: BSItem[] = [
+  { teks: "A dog says 'meow'.", betul: false },
+  { teks: "Monday is the first day of the week.", betul: true },
+  { teks: "'Ran' is past tense of 'run'.", betul: true },
+  { teks: "We use 'are' with 'he'.", betul: false },
+  { teks: "Red, blue and green are colours.", betul: true },
+  { teks: "A triangle has 4 sides.", betul: false },
+  { teks: "'He' is a pronoun.", betul: true },
+  { teks: "The sun rises in the west.", betul: false },
+  { teks: "January is the first month.", betul: true },
+  { teks: "'Quickly' is an adjective.", betul: false },
+];
+const BS_SAINS_2: BSItem[] = [
+  { teks: "Deria rasa menggunakan lidah.", betul: true },
+  { teks: "Matahari adalah sebuah planet.", betul: false },
+  { teks: "Kupu-kupu termasuk serangga.", betul: true },
+  { teks: "Air mendidih pada 50°C.", betul: false },
+  { teks: "Tumbuhan perlukan cahaya untuk hidup.", betul: true },
+  { teks: "Semua haiwan memakan daging.", betul: false },
+  { teks: "Udara diperlukan untuk bernafas.", betul: true },
+  { teks: "Batu adalah benda hidup.", betul: false },
+  { teks: "Ular adalah reptilia.", betul: true },
+  { teks: "Bulan menghasilkan cahaya sendiri.", betul: false },
+];
+const BS_PI_2: BSItem[] = [
+  { teks: "Solat Isyak 4 rakaat.", betul: true },
+  { teks: "Rukun Iman ada 5 perkara.", betul: false },
+  { teks: "Kita membaca Bismillah sebelum makan.", betul: true },
+  { teks: "Nabi pertama ialah Nabi Isa AS.", betul: false },
+  { teks: "Zakat ialah rukun Islam ketiga.", betul: true },
+  { teks: "Al-Quran diturunkan kepada Nabi Musa AS.", betul: false },
+  { teks: "Solat Jumaat wajib bagi lelaki.", betul: true },
+  { teks: "Kaabah terletak di Madinah.", betul: false },
+  { teks: "Syahadah ialah rukun Islam pertama.", betul: true },
+  { teks: "Malaikat ada 10 yang wajib diketahui.", betul: false },
+];
+const BS_JAWI_2: BSItem[] = [
+  { teks: "Huruf ن dibaca 'Nun'.", betul: true },
+  { teks: "Jawi ditulis kiri ke kanan.", betul: false },
+  { teks: "Huruf ڤ ialah huruf tambahan Jawi.", betul: true },
+  { teks: "Huruf Jawi sama dengan huruf Arab.", betul: false },
+  { teks: "ماء bermaksud 'air'.", betul: true },
+  { teks: "Huruf و dibaca 'Ya'.", betul: false },
+  { teks: "Jawi boleh digunakan menulis BM.", betul: true },
+  { teks: "Huruf ج dibaca 'Dal'.", betul: false },
+  { teks: "روما bermaksud 'rumah'.", betul: true },
+  { teks: "Huruf Alif berbentuk bulat.", betul: false },
+];
+
+const PJ_MATE_2: PJPair[] = [
+  { kiri: "2 + 3", kanan: "5" },
+  { kiri: "10 - 4", kanan: "6" },
+  { kiri: "8 ÷ 2", kanan: "4" },
+  { kiri: "Segi empat", kanan: "4 sisi" },
+  { kiri: "Lima", kanan: "5" },
+  { kiri: "Dozen", kanan: "12" },
+  { kiri: "9 - 3", kanan: "6" },
+  { kiri: "2 × 5", kanan: "10" },
+];
+const PJ_BM_2: PJPair[] = [
+  { kiri: "Antonim 'tinggi'", kanan: "Rendah" },
+  { kiri: "Sinonim 'cepat'", kanan: "Pantas" },
+  { kiri: "Kata kerja", kanan: "Berlari" },
+  { kiri: "Kata nama", kanan: "Buku" },
+  { kiri: "Kata sifat", kanan: "Cantik" },
+  { kiri: "Imbuhan 'me-' + 'tulis'", kanan: "Menulis" },
+  { kiri: "Kata ganti diri kedua", kanan: "Awak" },
+  { kiri: "3 suku kata", kanan: "Sekolah" },
+];
+const PJ_BI_2: PJPair[] = [
+  { kiri: "Opposite of 'cold'", kanan: "Hot" },
+  { kiri: "Plural of 'book'", kanan: "Books" },
+  { kiri: "Animal that barks", kanan: "Dog" },
+  { kiri: "Colour of grass", kanan: "Green" },
+  { kiri: "Day after Monday", kanan: "Tuesday" },
+  { kiri: "Opposite of 'night'", kanan: "Day" },
+  { kiri: "We use ___ with 'they'", kanan: "Are" },
+  { kiri: "Number of days in a week", kanan: "Seven" },
+];
+const PJ_SAINS_2: PJPair[] = [
+  { kiri: "Deria pendengaran", kanan: "Telinga" },
+  { kiri: "Haiwan herbivor", kanan: "Arnab" },
+  { kiri: "Cecair menjadi pepejal", kanan: "Membeku" },
+  { kiri: "Bahagian tumbuhan", kanan: "Akar" },
+  { kiri: "Planet kita", kanan: "Bumi" },
+  { kiri: "Haiwan karnivor", kanan: "Harimau" },
+  { kiri: "Gas untuk bernafas", kanan: "Oksigen" },
+  { kiri: "Pepejal menjadi cecair", kanan: "Mencair" },
+];
+const PJ_PI_2: PJPair[] = [
+  { kiri: "Rukun Islam pertama", kanan: "Syahadah" },
+  { kiri: "Solat Isyak", kanan: "4 rakaat" },
+  { kiri: "Bulan Ramadan", kanan: "Puasa" },
+  { kiri: "Nabi Muhammad SAW", kanan: "Rasul terakhir" },
+  { kiri: "Zakat", kanan: "Rukun Islam ketiga" },
+  { kiri: "Malaikat Jibril", kanan: "Pembawa wahyu" },
+  { kiri: "Hari Jumaat", kanan: "Solat Jumaat" },
+  { kiri: "Syurga", kanan: "Balasan orang beriman" },
+];
+const PJ_JAWI_2: PJPair[] = [
+  { kiri: "ن", kanan: "Nun" },
+  { kiri: "و", kanan: "Wau" },
+  { kiri: "ي", kanan: "Ya" },
+  { kiri: "م", kanan: "Mim" },
+  { kiri: "روما", kanan: "Rumah" },
+  { kiri: "ايبو", kanan: "Ibu" },
+  { kiri: "اير", kanan: "Air" },
+  { kiri: "ڤن", kanan: "Pen" },
+];
+
+const SA_MATE_2: SAItem[] = [
+  { ayat: "Tiga tambah empat sama dengan tujuh", perkataan: ["Tiga", "tambah", "empat", "sama", "dengan", "tujuh"] },
+  { ayat: "Sepuluh tolak lima sama dengan lima", perkataan: ["Sepuluh", "tolak", "lima", "sama", "dengan", "lima"] },
+  { ayat: "Dua darab tiga sama dengan enam", perkataan: ["Dua", "darab", "tiga", "sama", "dengan", "enam"] },
+  { ayat: "Lapan bahagi dua sama dengan empat", perkataan: ["Lapan", "bahagi", "dua", "sama", "dengan", "empat"] },
+  { ayat: "Segi tiga mempunyai tiga bucu dan tiga sisi", perkataan: ["Segi", "tiga", "mempunyai", "tiga", "bucu", "dan", "tiga", "sisi"] },
+];
+const SA_BM_2: SAItem[] = [
+  { ayat: "Adik saya suka makan buah epal", perkataan: ["Adik", "saya", "suka", "makan", "buah", "epal"] },
+  { ayat: "Kucing itu sedang tidur di atas sofa", perkataan: ["Kucing", "itu", "sedang", "tidur", "di", "atas", "sofa"] },
+  { ayat: "Kami pergi ke taman pada hari Ahad", perkataan: ["Kami", "pergi", "ke", "taman", "pada", "hari", "Ahad"] },
+  { ayat: "Guru mengajar murid di dalam kelas", perkataan: ["Guru", "mengajar", "murid", "di", "dalam", "kelas"] },
+  { ayat: "Ibu membeli sayur di pasar pagi", perkataan: ["Ibu", "membeli", "sayur", "di", "pasar", "pagi"] },
+];
+const SA_BI_2: SAItem[] = [
+  { ayat: "The cat is sleeping on the mat", perkataan: ["The", "cat", "is", "sleeping", "on", "the", "mat"] },
+  { ayat: "I like to eat apples and oranges", perkataan: ["I", "like", "to", "eat", "apples", "and", "oranges"] },
+  { ayat: "She goes to school every morning", perkataan: ["She", "goes", "to", "school", "every", "morning"] },
+  { ayat: "We are playing in the garden today", perkataan: ["We", "are", "playing", "in", "the", "garden", "today"] },
+  { ayat: "He drinks milk every morning", perkataan: ["He", "drinks", "milk", "every", "morning"] },
+];
+const SA_SAINS_2: SAItem[] = [
+  { ayat: "Manusia mempunyai lima deria yang penting", perkataan: ["Manusia", "mempunyai", "lima", "deria", "yang", "penting"] },
+  { ayat: "Ikan hidup di dalam air dan bernafas dengan insang", perkataan: ["Ikan", "hidup", "di", "dalam", "air", "dan", "bernafas", "dengan", "insang"] },
+  { ayat: "Daun tumbuhan berwarna hijau kerana klorofil", perkataan: ["Daun", "tumbuhan", "berwarna", "hijau", "kerana", "klorofil"] },
+  { ayat: "Air hujan turun dari awan di langit", perkataan: ["Air", "hujan", "turun", "dari", "awan", "di", "langit"] },
+  { ayat: "Matahari memberikan cahaya dan haba kepada bumi", perkataan: ["Matahari", "memberikan", "cahaya", "dan", "haba", "kepada", "bumi"] },
+];
+const SA_PI_2: SAItem[] = [
+  { ayat: "Solat adalah tiang agama Islam yang utama", perkataan: ["Solat", "adalah", "tiang", "agama", "Islam", "yang", "utama"] },
+  { ayat: "Kita mesti berwuduk sebelum menunaikan solat", perkataan: ["Kita", "mesti", "berwuduk", "sebelum", "menunaikan", "solat"] },
+  { ayat: "Al-Quran adalah panduan hidup umat Islam", perkataan: ["Al-Quran", "adalah", "panduan", "hidup", "umat", "Islam"] },
+  { ayat: "Nabi Muhammad SAW adalah contoh terbaik kita", perkataan: ["Nabi", "Muhammad", "SAW", "adalah", "contoh", "terbaik", "kita"] },
+  { ayat: "Berdoa kepada Allah selepas selesai solat", perkataan: ["Berdoa", "kepada", "Allah", "selepas", "selesai", "solat"] },
+];
+const SA_JAWI_2: SAItem[] = [
+  { ayat: "Tulisan Jawi warisan budaya bangsa Melayu", perkataan: ["Tulisan", "Jawi", "warisan", "budaya", "bangsa", "Melayu"] },
+  { ayat: "Kita mesti belajar menulis huruf Jawi", perkataan: ["Kita", "mesti", "belajar", "menulis", "huruf", "Jawi"] },
+  { ayat: "Huruf Alif ialah huruf pertama dalam Jawi", perkataan: ["Huruf", "Alif", "ialah", "huruf", "pertama", "dalam", "Jawi"] },
+  { ayat: "Bahasa Melayu boleh ditulis dalam tulisan Jawi", perkataan: ["Bahasa", "Melayu", "boleh", "ditulis", "dalam", "tulisan", "Jawi"] },
+  { ayat: "Terdapat tiga puluh tujuh huruf dalam tulisan Jawi", perkataan: ["Terdapat", "tiga", "puluh", "tujuh", "huruf", "dalam", "tulisan", "Jawi"] },
+];
+
+const BS_SET2: Record<string, BSItem[]> = {
+  matematik: BS_MATE_2,
+  "bahasa-melayu": BS_BM_2,
+  "bahasa-inggeris": BS_BI_2,
+  sains: BS_SAINS_2,
+  "pendidikan-islam": BS_PI_2,
+  jawi: BS_JAWI_2,
+};
+const PJ_SET2: Record<string, PJPair[]> = {
+  matematik: PJ_MATE_2,
+  "bahasa-melayu": PJ_BM_2,
+  "bahasa-inggeris": PJ_BI_2,
+  sains: PJ_SAINS_2,
+  "pendidikan-islam": PJ_PI_2,
+  jawi: PJ_JAWI_2,
+};
+const SA_SET2: Record<string, SAItem[]> = {
+  matematik: SA_MATE_2,
+  "bahasa-melayu": SA_BM_2,
+  "bahasa-inggeris": SA_BI_2,
+  sains: SA_SAINS_2,
+  "pendidikan-islam": SA_PI_2,
+  jawi: SA_JAWI_2,
+};
+
+function pickSet<T>(a: T[], b: T[] | undefined): T[] {
+  if (!b) return a;
+  return Math.random() < 0.5 ? a : b;
+}
+
 export function getBetulSalah(subjekId: string): BSItem[] {
-  return BETUL_SALAH[subjekId] ?? BS_BM;
+  return pickSet(BETUL_SALAH[subjekId] ?? BS_BM, BS_SET2[subjekId]);
 }
 export function getPadankan(subjekId: string): PJPair[] {
-  return PADANKAN[subjekId] ?? PJ_BM;
+  return pickSet(PADANKAN[subjekId] ?? PJ_BM, PJ_SET2[subjekId]);
 }
 export function getSusunAyat(subjekId: string): SAItem[] {
-  return SUSUN_AYAT[subjekId] ?? SA_BM;
+  return pickSet(SUSUN_AYAT[subjekId] ?? SA_BM, SA_SET2[subjekId]);
 }
+
