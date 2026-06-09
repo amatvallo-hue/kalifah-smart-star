@@ -344,10 +344,10 @@ const BM_DARJAH1_CLUES_S2: Record<string, string> = {
 // Kept as default (Set 1) for any legacy consumers; new consumers should call pickBM_D1.
 export const BM_DARJAH1_WORDS: Word[] = BM_DARJAH1_WORDS_S1;
 export const BM_DARJAH1_CLUES: Record<string, string> = BM_DARJAH1_CLUES_S1;
-export function pickBM_D1(): { words: Word[]; clues: Record<string, string> } {
-  return Math.random() < 0.5
-    ? { words: BM_DARJAH1_WORDS_S1, clues: BM_DARJAH1_CLUES_S1 }
-    : { words: BM_DARJAH1_WORDS_S2, clues: BM_DARJAH1_CLUES_S2 };
+export function pickBM_D1(useSet2 = false): { words: Word[]; clues: Record<string, string> } {
+  return useSet2
+    ? { words: BM_DARJAH1_WORDS_S2, clues: BM_DARJAH1_CLUES_S2 }
+    : { words: BM_DARJAH1_WORDS_S1, clues: BM_DARJAH1_CLUES_S1 };
 }
 
 const BI_DARJAH1_WORDS_S1: Word[] = [
@@ -393,10 +393,10 @@ const BI_DARJAH1_CLUES_S2: Record<string, string> = {
 };
 export const BI_DARJAH1_WORDS: Word[] = BI_DARJAH1_WORDS_S1;
 export const BI_DARJAH1_CLUES: Record<string, string> = BI_DARJAH1_CLUES_S1;
-export function pickBI_D1(): { words: Word[]; clues: Record<string, string> } {
-  return Math.random() < 0.5
-    ? { words: BI_DARJAH1_WORDS_S1, clues: BI_DARJAH1_CLUES_S1 }
-    : { words: BI_DARJAH1_WORDS_S2, clues: BI_DARJAH1_CLUES_S2 };
+export function pickBI_D1(useSet2 = false): { words: Word[]; clues: Record<string, string> } {
+  return useSet2
+    ? { words: BI_DARJAH1_WORDS_S2, clues: BI_DARJAH1_CLUES_S2 }
+    : { words: BI_DARJAH1_WORDS_S1, clues: BI_DARJAH1_CLUES_S1 };
 }
 
 const JAWI_DARJAH1_WORDS_S1: Word[] = [
@@ -444,10 +444,10 @@ const JAWI_DARJAH1_CLUES_S2: Record<string, string> = {
 };
 export const JAWI_DARJAH1_WORDS: Word[] = JAWI_DARJAH1_WORDS_S1;
 export const JAWI_DARJAH1_CLUES: Record<string, string> = JAWI_DARJAH1_CLUES_S1;
-export function pickJAWI_D1(): { words: Word[]; clues: Record<string, string> } {
-  return Math.random() < 0.5
-    ? { words: JAWI_DARJAH1_WORDS_S1, clues: JAWI_DARJAH1_CLUES_S1 }
-    : { words: JAWI_DARJAH1_WORDS_S2, clues: JAWI_DARJAH1_CLUES_S2 };
+export function pickJAWI_D1(useSet2 = false): { words: Word[]; clues: Record<string, string> } {
+  return useSet2
+    ? { words: JAWI_DARJAH1_WORDS_S2, clues: JAWI_DARJAH1_CLUES_S2 }
+    : { words: JAWI_DARJAH1_WORDS_S1, clues: JAWI_DARJAH1_CLUES_S1 };
 }
 
 const PI_DARJAH1_WORDS_S1: Word[] = [
@@ -495,10 +495,10 @@ const PI_DARJAH1_CLUES_S2: Record<string, string> = {
 };
 export const PI_DARJAH1_WORDS: Word[] = PI_DARJAH1_WORDS_S1;
 export const PI_DARJAH1_CLUES: Record<string, string> = PI_DARJAH1_CLUES_S1;
-export function pickPI_D1(): { words: Word[]; clues: Record<string, string> } {
-  return Math.random() < 0.5
-    ? { words: PI_DARJAH1_WORDS_S1, clues: PI_DARJAH1_CLUES_S1 }
-    : { words: PI_DARJAH1_WORDS_S2, clues: PI_DARJAH1_CLUES_S2 };
+export function pickPI_D1(useSet2 = false): { words: Word[]; clues: Record<string, string> } {
+  return useSet2
+    ? { words: PI_DARJAH1_WORDS_S2, clues: PI_DARJAH1_CLUES_S2 }
+    : { words: PI_DARJAH1_WORDS_S1, clues: PI_DARJAH1_CLUES_S1 };
 }
 
 const SAINS_DARJAH1_WORDS_S1: Word[] = [
@@ -546,10 +546,10 @@ const SAINS_DARJAH1_CLUES_S2: Record<string, string> = {
 };
 export const SAINS_DARJAH1_WORDS: Word[] = SAINS_DARJAH1_WORDS_S1;
 export const SAINS_DARJAH1_CLUES: Record<string, string> = SAINS_DARJAH1_CLUES_S1;
-export function pickSAINS_D1(): { words: Word[]; clues: Record<string, string> } {
-  return Math.random() < 0.5
-    ? { words: SAINS_DARJAH1_WORDS_S1, clues: SAINS_DARJAH1_CLUES_S1 }
-    : { words: SAINS_DARJAH1_WORDS_S2, clues: SAINS_DARJAH1_CLUES_S2 };
+export function pickSAINS_D1(useSet2 = false): { words: Word[]; clues: Record<string, string> } {
+  return useSet2
+    ? { words: SAINS_DARJAH1_WORDS_S2, clues: SAINS_DARJAH1_CLUES_S2 }
+    : { words: SAINS_DARJAH1_WORDS_S1, clues: SAINS_DARJAH1_CLUES_S1 };
 }
 
 // Matematik Darjah 1 — Set 1 (numbers) + Set 2 (operations & shapes).
@@ -590,10 +590,10 @@ const MATE_DARJAH1_CLUES_S2: Record<string, string> = {
 };
 export const MATE_DARJAH1_WORDS: Word[] = MATE_DARJAH1_WORDS_S1;
 export const MATE_DARJAH1_CLUES: Record<string, string> = MATE_DARJAH1_CLUES_S1;
-export function pickMATE_D1(): { words: Word[]; clues: Record<string, string> } {
-  return Math.random() < 0.5
-    ? { words: MATE_DARJAH1_WORDS_S1, clues: MATE_DARJAH1_CLUES_S1 }
-    : { words: MATE_DARJAH1_WORDS_S2, clues: MATE_DARJAH1_CLUES_S2 };
+export function pickMATE_D1(useSet2 = false): { words: Word[]; clues: Record<string, string> } {
+  return useSet2
+    ? { words: MATE_DARJAH1_WORDS_S2, clues: MATE_DARJAH1_CLUES_S2 }
+    : { words: MATE_DARJAH1_WORDS_S1, clues: MATE_DARJAH1_CLUES_S1 };
 }
 
 
