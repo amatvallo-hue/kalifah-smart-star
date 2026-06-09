@@ -68,8 +68,12 @@ async function semakDanBeriLencana(userId: string, input: SimpanProgressInput) {
       .select("aktiviti")
       .eq("user_id", userId)
       .eq("subjek", input.subjek);
-    const setAktiviti = new Set((progSubjek ?? []).map((r) => r.aktiviti));
-    const semuaSiap = AKTIVITI_TERAS.every((a) => setAktiviti.has(a));
+    const setSlot = new Set<string>();
+    (progSubjek ?? []).forEach((r) => {
+      const s = slotTeras(r.aktiviti);
+      if (s) setSlot.add(s);
+    });
+    const semuaSiap = AKTIVITI_TERAS.every((a) => setSlot.has(a));
     if (semuaSiap) {
       const sj = SUBJEK_LIST.find((s) => s.id === input.subjek);
       if (sj) await awardBadge(userId, `subjek-${sj.id}`, `Pakar ${sj.title}`, "🎖️");
