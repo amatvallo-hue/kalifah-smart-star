@@ -440,9 +440,13 @@ const JAWI_DARJAH1_CLUES_S2: Record<string, string> = {
   SIN: "Huruf Jawi — س", MIM: "Huruf Jawi — م",
   NUN: "Huruf Jawi — ن", WAU: "Huruf Jawi — و",
 };
-const _pickJAWI_D1 = Math.random() < 0.5;
-export const JAWI_DARJAH1_WORDS: Word[] = _pickJAWI_D1 ? JAWI_DARJAH1_WORDS_S1 : JAWI_DARJAH1_WORDS_S2;
-export const JAWI_DARJAH1_CLUES: Record<string, string> = _pickJAWI_D1 ? JAWI_DARJAH1_CLUES_S1 : JAWI_DARJAH1_CLUES_S2;
+export const JAWI_DARJAH1_WORDS: Word[] = JAWI_DARJAH1_WORDS_S1;
+export const JAWI_DARJAH1_CLUES: Record<string, string> = JAWI_DARJAH1_CLUES_S1;
+export function pickJAWI_D1(): { words: Word[]; clues: Record<string, string> } {
+  return Math.random() < 0.5
+    ? { words: JAWI_DARJAH1_WORDS_S1, clues: JAWI_DARJAH1_CLUES_S1 }
+    : { words: JAWI_DARJAH1_WORDS_S2, clues: JAWI_DARJAH1_CLUES_S2 };
+}
 
 const PI_DARJAH1_WORDS_S1: Word[] = [
   { word: "SOLAT", row: 0, col: 0, dir: "H" },
