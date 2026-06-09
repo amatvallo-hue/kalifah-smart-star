@@ -18,7 +18,12 @@ export interface BadgeRow {
   created_at: string;
 }
 
-const AKTIVITI_TERAS = ["kuiz", "latihan", "latih-tubi", "nota", "game-race"] as const;
+const AKTIVITI_TERAS = ["kuiz", "latihan", "latih-tubi", "nota", "game"] as const;
+function slotTeras(a: string): string | null {
+  if (a === "kuiz" || a === "latihan" || a === "latih-tubi" || a === "nota") return a;
+  if (a.startsWith("game")) return "game";
+  return null;
+}
 
 function todayKL(): string {
   const now = new Date();
