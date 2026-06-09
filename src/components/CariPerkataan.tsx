@@ -389,9 +389,13 @@ const BI_DARJAH1_CLUES_S2: Record<string, string> = {
   HAPPY: "Feeling of joy", SCHOOL: "Where we learn", WATER: "We drink this",
   APPLE: "A red fruit", HOUSE: "Where we live", CHAIR: "We sit on this", TABLE: "We eat on this",
 };
-const _pickBI_D1 = Math.random() < 0.5;
-export const BI_DARJAH1_WORDS: Word[] = _pickBI_D1 ? BI_DARJAH1_WORDS_S1 : BI_DARJAH1_WORDS_S2;
-export const BI_DARJAH1_CLUES: Record<string, string> = _pickBI_D1 ? BI_DARJAH1_CLUES_S1 : BI_DARJAH1_CLUES_S2;
+export const BI_DARJAH1_WORDS: Word[] = BI_DARJAH1_WORDS_S1;
+export const BI_DARJAH1_CLUES: Record<string, string> = BI_DARJAH1_CLUES_S1;
+export function pickBI_D1(): { words: Word[]; clues: Record<string, string> } {
+  return Math.random() < 0.5
+    ? { words: BI_DARJAH1_WORDS_S1, clues: BI_DARJAH1_CLUES_S1 }
+    : { words: BI_DARJAH1_WORDS_S2, clues: BI_DARJAH1_CLUES_S2 };
+}
 
 const JAWI_DARJAH1_WORDS_S1: Word[] = [
   { word: "ALIF", row: 0, col: 0, dir: "H" },
