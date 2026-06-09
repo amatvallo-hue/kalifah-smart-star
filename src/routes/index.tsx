@@ -265,7 +265,7 @@ function Subjek() {
         <div className="text-center">
           <p className="font-display text-xs font-bold uppercase tracking-widest" style={{ color: EMAS }}>Subjek Utama</p>
           <h2 className="mt-2 font-display text-3xl font-extrabold text-foreground md:text-4xl">
-            Fokus pada 6 subjek utama
+            Fokus pada 5 subjek utama
           </h2>
         </div>
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
