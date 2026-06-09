@@ -161,6 +161,7 @@ export function CariPerkataan({
   function reset() {
     setFound({});
     setFirst(null);
+    setRound((r) => r + 1);
   }
 
   return (
