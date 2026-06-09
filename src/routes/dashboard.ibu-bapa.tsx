@@ -100,12 +100,6 @@ function ParentDashboard() {
     else if (!loading && isChild) navigate({ to: "/dashboard/progress" });
   }, [loading, user, isChild, navigate]);
 
-  async function refreshAnak() {
-    const list = await senaraikanAnak();
-    setAnakList(list);
-    if (!aktifId && list.length > 0) setAktifId(list[0].id);
-  }
-
   useEffect(() => {
     if (!user) return;
     senaraikanAnak().then((list) => {
@@ -118,6 +112,39 @@ function ParentDashboard() {
   const anakAktif = anakList.find((a) => a.id === aktifId) ?? null;
   const anakUserId = anakAktif?.child_user_id ?? null;
 
+  async function fetchAnakData(uid: string, showSpinner = true) {
+    if (showSpinner) setFetching(true);
+    const [{ data: p }, { data: s }, { data: b }] = await Promise.all([
+      supabase
+        .from("user_progress")
+        .select("id, darjah, subjek, aktiviti, markah, jumlah_soalan, peratus, masa_ambil, created_at")
+        .eq("user_id", uid)
+        .order("created_at", { ascending: false }),
+      supabase
+        .from("user_stats")
+        .select("tarikh, soalan_dijawab, masa_belajar, bab_selesai")
+        .eq("user_id", uid)
+        .order("tarikh", { ascending: false })
+        .limit(60),
+      supabase
+        .from("user_badges")
+        .select("id, kod, nama, ikon, created_at")
+        .eq("user_id", uid)
+        .order("created_at", { ascending: false }),
+    ]);
+    setProgress((p ?? []) as ProgressRow[]);
+    setStats((s ?? []) as StatsRow[]);
+    setBadges((b ?? []) as BadgeRow[]);
+    if (showSpinner) setFetching(false);
+  }
+
+  async function refreshAnak() {
+    const list = await senaraikanAnak();
+    setAnakList(list);
+    if (!aktifId && list.length > 0) setAktifId(list[0].id);
+    if (anakUserId) await fetchAnakData(anakUserId, true);
+  }
+
   useEffect(() => {
     if (!anakUserId) {
       setProgress([]);
@@ -127,34 +154,35 @@ function ParentDashboard() {
     }
     let cancelled = false;
     (async () => {
-      setFetching(true);
-      const [{ data: p }, { data: s }, { data: b }] = await Promise.all([
-        supabase
-          .from("user_progress")
-          .select("id, darjah, subjek, aktiviti, markah, jumlah_soalan, peratus, masa_ambil, created_at")
-          .eq("user_id", anakUserId)
-          .order("created_at", { ascending: false }),
-        supabase
-          .from("user_stats")
-          .select("tarikh, soalan_dijawab, masa_belajar, bab_selesai")
-          .eq("user_id", anakUserId)
-          .order("tarikh", { ascending: false })
-          .limit(60),
-        supabase
-          .from("user_badges")
-          .select("id, kod, nama, ikon, created_at")
-          .eq("user_id", anakUserId)
-          .order("created_at", { ascending: false }),
-      ]);
+      await fetchAnakData(anakUserId, true);
       if (cancelled) return;
-      setProgress((p ?? []) as ProgressRow[]);
-      setStats((s ?? []) as StatsRow[]);
-      setBadges((b ?? []) as BadgeRow[]);
-      setFetching(false);
     })();
+
+    // Realtime: auto-refresh when new progress/stats/badges arrive for this child
+    const channel = supabase
+      .channel(`anak-${anakUserId}`)
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "user_progress", filter: `user_id=eq.${anakUserId}` },
+        () => { if (!cancelled) fetchAnakData(anakUserId, false); },
+      )
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "user_stats", filter: `user_id=eq.${anakUserId}` },
+        () => { if (!cancelled) fetchAnakData(anakUserId, false); },
+      )
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "user_badges", filter: `user_id=eq.${anakUserId}` },
+        () => { if (!cancelled) fetchAnakData(anakUserId, false); },
+      )
+      .subscribe();
+
     return () => {
       cancelled = true;
+      supabase.removeChannel(channel);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [anakUserId]);
 
   // ── Pengiraan ringkasan
