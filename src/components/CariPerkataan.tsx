@@ -46,7 +46,7 @@ type CariPerkataanProps = {
   title?: string;
   /** When provided, called once per round to pick which Set to display.
    *  Takes precedence over `words`/`clues`. */
-  pickBank?: () => { words: Word[]; clues: Record<string, string> };
+  pickBank?: (useSet2: boolean) => { words: Word[]; clues: Record<string, string> };
 };
 
 // Build the grid with words placed; fill the rest with deterministic letters
@@ -102,15 +102,16 @@ export function CariPerkataan({
   pickBank,
 }: CariPerkataanProps = {}) {
   const [round, setRound] = useState(0);
+  const [useSet2, setUseSet2] = useState(() => Math.random() > 0.5);
   // Re-roll which Set is used on every new round (Main Lagi).
   const bank = useMemo(() => {
-    if (pickBank) return pickBank();
+    if (pickBank) return pickBank(useSet2);
     return {
       words: wordsProp ?? DEFAULT_WORDS,
       clues: cluesProp ?? DEFAULT_CLUES,
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [round, pickBank, wordsProp, cluesProp]);
+  }, [round, useSet2, pickBank, wordsProp, cluesProp]);
   const words = bank.words;
   const clues = bank.clues;
   const grid = useMemo(() => buildGrid(words, gridSize), [words, gridSize]);
@@ -161,6 +162,7 @@ export function CariPerkataan({
   function reset() {
     setFound({});
     setFirst(null);
+    setUseSet2(Math.random() > 0.5);
     setRound((r) => r + 1);
   }
 
