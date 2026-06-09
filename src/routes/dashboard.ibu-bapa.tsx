@@ -141,8 +141,18 @@ function ParentDashboard() {
   async function refreshAnak() {
     const list = await senaraikanAnak();
     setAnakList(list);
+    const nextAktifId = aktifId ?? list[0]?.id ?? null;
     if (!aktifId && list.length > 0) setAktifId(list[0].id);
-    if (anakUserId) await fetchAnakData(anakUserId, true);
+    const uid =
+      list.find((a) => a.id === nextAktifId)?.child_user_id ?? anakUserId ?? null;
+    if (uid) {
+      await fetchAnakData(uid, true);
+    } else {
+      // No linked child yet — clear stale data so UI reflects reality
+      setProgress([]);
+      setStats([]);
+      setBadges([]);
+    }
   }
 
   useEffect(() => {
