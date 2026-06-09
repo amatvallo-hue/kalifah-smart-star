@@ -118,7 +118,7 @@ function ProgressDashboard() {
       const [{ data: p }, { data: s }, { data: b }] = await Promise.all([
         supabase
           .from("user_progress")
-          .select("id, darjah, subjek, aktiviti, markah, jumlah_soalan, peratus, created_at")
+          .select("id, darjah, subjek, aktiviti, markah, jumlah_soalan, peratus, masa_ambil, created_at")
           .eq("user_id", user.id)
           .order("created_at", { ascending: false }),
         supabase
