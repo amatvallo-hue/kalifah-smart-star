@@ -278,23 +278,20 @@ export function CariPerkataan({
 }
 
 // Bahasa Melayu Darjah 1 — 10x10 grid with 10 words.
-// Spec rows/cols are 1-based; convert to 0-based here.
-export const BM_DARJAH1_WORDS: Word[] = [
-  // Mendatar
+// Set 1 + Set 2 randomly selected at module load.
+const BM_DARJAH1_WORDS_S1: Word[] = [
   { word: "IBU", row: 0, col: 0, dir: "H" },
   { word: "AYAH", row: 2, col: 0, dir: "H" },
   { word: "ADIK", row: 4, col: 0, dir: "H" },
   { word: "BUKU", row: 6, col: 0, dir: "H" },
   { word: "MEJA", row: 8, col: 0, dir: "H" },
-  // Menegak
   { word: "API", row: 0, col: 5, dir: "V" },
   { word: "AIR", row: 0, col: 7, dir: "V" },
   { word: "EPAL", row: 1, col: 3, dir: "V" },
   { word: "IKAN", row: 2, col: 6, dir: "V" },
   { word: "BULAN", row: 4, col: 9, dir: "V" },
 ];
-
-export const BM_DARJAH1_CLUES: Record<string, string> = {
+const BM_DARJAH1_CLUES_S1: Record<string, string> = {
   IBU: "Perempuan yang melahirkan kita",
   AYAH: "Lelaki yang menjaga keluarga",
   ADIK: "Ahli keluarga yang lebih muda",
@@ -306,23 +303,42 @@ export const BM_DARJAH1_CLUES: Record<string, string> = {
   IKAN: "Haiwan yang hidup dalam air",
   BULAN: "Cahaya di langit malam",
 };
+const BM_DARJAH1_WORDS_S2: Word[] = [
+  { word: "SEKOLAH", row: 0, col: 0, dir: "H" },
+  { word: "GURU", row: 1, col: 0, dir: "H" },
+  { word: "MURID", row: 2, col: 0, dir: "H" },
+  { word: "KELAS", row: 3, col: 0, dir: "H" },
+  { word: "BELAJAR", row: 4, col: 0, dir: "H" },
+  { word: "PENSIL", row: 5, col: 0, dir: "H" },
+  { word: "KERTAS", row: 6, col: 0, dir: "H" },
+  { word: "PAPAN", row: 7, col: 0, dir: "H" },
+  { word: "BACA", row: 8, col: 0, dir: "H" },
+  { word: "TULIS", row: 9, col: 0, dir: "H" },
+];
+const BM_DARJAH1_CLUES_S2: Record<string, string> = {
+  SEKOLAH: "Tempat kita belajar", GURU: "Orang yang mengajar",
+  MURID: "Orang yang belajar", KELAS: "Bilik untuk belajar",
+  BELAJAR: "Aktiviti di sekolah", PENSIL: "Alat untuk menulis",
+  KERTAS: "Tempat kita menulis", PAPAN: "Guru menulis di sini",
+  BACA: "Aktiviti membaca buku", TULIS: "Aktiviti menggunakan pensil",
+};
+const _pickBM_D1 = Math.random() < 0.5;
+export const BM_DARJAH1_WORDS: Word[] = _pickBM_D1 ? BM_DARJAH1_WORDS_S1 : BM_DARJAH1_WORDS_S2;
+export const BM_DARJAH1_CLUES: Record<string, string> = _pickBM_D1 ? BM_DARJAH1_CLUES_S1 : BM_DARJAH1_CLUES_S2;
 
-export const BI_DARJAH1_WORDS: Word[] = [
-  // Across
+const BI_DARJAH1_WORDS_S1: Word[] = [
   { word: "CAT", row: 0, col: 0, dir: "H" },
   { word: "DOG", row: 2, col: 0, dir: "H" },
   { word: "SUN", row: 4, col: 0, dir: "H" },
   { word: "MOON", row: 6, col: 0, dir: "H" },
   { word: "BOOK", row: 8, col: 0, dir: "H" },
-  // Down
   { word: "FISH", row: 0, col: 5, dir: "V" },
   { word: "BIRD", row: 0, col: 7, dir: "V" },
   { word: "TREE", row: 1, col: 3, dir: "V" },
   { word: "BLUE", row: 2, col: 6, dir: "V" },
   { word: "HAND", row: 4, col: 9, dir: "V" },
 ];
-
-export const BI_DARJAH1_CLUES: Record<string, string> = {
+const BI_DARJAH1_CLUES_S1: Record<string, string> = {
   CAT: "Animal that meows",
   DOG: "Animal that barks",
   SUN: "Shines during the day",
@@ -334,23 +350,40 @@ export const BI_DARJAH1_CLUES: Record<string, string> = {
   BLUE: "Colour of the sky",
   HAND: "Part of our body",
 };
+const BI_DARJAH1_WORDS_S2: Word[] = [
+  { word: "RED", row: 0, col: 0, dir: "H" },
+  { word: "BLUE", row: 1, col: 0, dir: "H" },
+  { word: "GREEN", row: 2, col: 0, dir: "H" },
+  { word: "HAPPY", row: 3, col: 0, dir: "H" },
+  { word: "SCHOOL", row: 4, col: 0, dir: "H" },
+  { word: "WATER", row: 5, col: 0, dir: "H" },
+  { word: "APPLE", row: 6, col: 0, dir: "H" },
+  { word: "HOUSE", row: 7, col: 0, dir: "H" },
+  { word: "CHAIR", row: 8, col: 0, dir: "H" },
+  { word: "TABLE", row: 9, col: 0, dir: "H" },
+];
+const BI_DARJAH1_CLUES_S2: Record<string, string> = {
+  RED: "Colour of fire", BLUE: "Colour of sky", GREEN: "Colour of grass",
+  HAPPY: "Feeling of joy", SCHOOL: "Where we learn", WATER: "We drink this",
+  APPLE: "A red fruit", HOUSE: "Where we live", CHAIR: "We sit on this", TABLE: "We eat on this",
+};
+const _pickBI_D1 = Math.random() < 0.5;
+export const BI_DARJAH1_WORDS: Word[] = _pickBI_D1 ? BI_DARJAH1_WORDS_S1 : BI_DARJAH1_WORDS_S2;
+export const BI_DARJAH1_CLUES: Record<string, string> = _pickBI_D1 ? BI_DARJAH1_CLUES_S1 : BI_DARJAH1_CLUES_S2;
 
-export const JAWI_DARJAH1_WORDS: Word[] = [
-  // Mendatar
+const JAWI_DARJAH1_WORDS_S1: Word[] = [
   { word: "ALIF", row: 0, col: 0, dir: "H" },
   { word: "JIM", row: 2, col: 0, dir: "H" },
   { word: "DAL", row: 4, col: 0, dir: "H" },
   { word: "MIM", row: 6, col: 0, dir: "H" },
   { word: "WAU", row: 8, col: 0, dir: "H" },
-  // Menegak
   { word: "BA", row: 0, col: 5, dir: "V" },
   { word: "TA", row: 0, col: 7, dir: "V" },
   { word: "RA", row: 1, col: 3, dir: "V" },
   { word: "NUN", row: 2, col: 6, dir: "V" },
   { word: "YA", row: 4, col: 9, dir: "V" },
 ];
-
-export const JAWI_DARJAH1_CLUES: Record<string, string> = {
+const JAWI_DARJAH1_CLUES_S1: Record<string, string> = {
   ALIF: "Huruf Jawi pertama — ا",
   BA: "Huruf Jawi — ب",
   TA: "Huruf Jawi — ت",
@@ -362,23 +395,42 @@ export const JAWI_DARJAH1_CLUES: Record<string, string> = {
   WAU: "Huruf Jawi — و",
   YA: "Huruf Jawi — ي",
 };
+const JAWI_DARJAH1_WORDS_S2: Word[] = [
+  { word: "ALIF", row: 0, col: 0, dir: "H" },
+  { word: "BA", row: 1, col: 0, dir: "H" },
+  { word: "TA", row: 1, col: 3, dir: "H" },
+  { word: "JIM", row: 2, col: 0, dir: "H" },
+  { word: "DAL", row: 2, col: 4, dir: "H" },
+  { word: "RA", row: 3, col: 0, dir: "H" },
+  { word: "SIN", row: 3, col: 3, dir: "H" },
+  { word: "MIM", row: 4, col: 0, dir: "H" },
+  { word: "NUN", row: 4, col: 4, dir: "H" },
+  { word: "WAU", row: 5, col: 0, dir: "H" },
+];
+const JAWI_DARJAH1_CLUES_S2: Record<string, string> = {
+  ALIF: "Huruf Jawi pertama — ا", BA: "Huruf Jawi — ب",
+  TA: "Huruf Jawi — ت", JIM: "Huruf Jawi — ج",
+  DAL: "Huruf Jawi — د", RA: "Huruf Jawi — ر",
+  SIN: "Huruf Jawi — س", MIM: "Huruf Jawi — م",
+  NUN: "Huruf Jawi — ن", WAU: "Huruf Jawi — و",
+};
+const _pickJAWI_D1 = Math.random() < 0.5;
+export const JAWI_DARJAH1_WORDS: Word[] = _pickJAWI_D1 ? JAWI_DARJAH1_WORDS_S1 : JAWI_DARJAH1_WORDS_S2;
+export const JAWI_DARJAH1_CLUES: Record<string, string> = _pickJAWI_D1 ? JAWI_DARJAH1_CLUES_S1 : JAWI_DARJAH1_CLUES_S2;
 
-export const PI_DARJAH1_WORDS: Word[] = [
-  // Mendatar
+const PI_DARJAH1_WORDS_S1: Word[] = [
   { word: "SOLAT", row: 0, col: 0, dir: "H" },
   { word: "PUASA", row: 2, col: 0, dir: "H" },
   { word: "SUBUH", row: 4, col: 0, dir: "H" },
   { word: "ZOHOR", row: 6, col: 0, dir: "H" },
   { word: "ASAR", row: 8, col: 0, dir: "H" },
-  // Menegak
   { word: "MAGHRIB", row: 0, col: 6, dir: "V" },
   { word: "ISYAK", row: 0, col: 8, dir: "V" },
   { word: "IMAN", row: 1, col: 3, dir: "V" },
   { word: "DOA", row: 2, col: 5, dir: "V" },
   { word: "QURAN", row: 3, col: 9, dir: "V" },
 ];
-
-export const PI_DARJAH1_CLUES: Record<string, string> = {
+const PI_DARJAH1_CLUES_S1: Record<string, string> = {
   SOLAT: "Ibadat yang dilakukan 5 kali sehari",
   PUASA: "Menahan lapar dan dahaga",
   SUBUH: "Solat waktu pagi",
@@ -390,23 +442,42 @@ export const PI_DARJAH1_CLUES: Record<string, string> = {
   DOA: "Permohonan kepada Allah",
   QURAN: "Kitab suci umat Islam",
 };
+const PI_DARJAH1_WORDS_S2: Word[] = [
+  { word: "ALLAH", row: 0, col: 0, dir: "H" },
+  { word: "NABI", row: 1, col: 0, dir: "H" },
+  { word: "ISLAM", row: 2, col: 0, dir: "H" },
+  { word: "WUDUK", row: 3, col: 0, dir: "H" },
+  { word: "ZAKAT", row: 4, col: 0, dir: "H" },
+  { word: "HAJI", row: 5, col: 0, dir: "H" },
+  { word: "SYAHADAH", row: 6, col: 0, dir: "H" },
+  { word: "MALAIKAT", row: 7, col: 0, dir: "H" },
+  { word: "SYURGA", row: 8, col: 0, dir: "H" },
+  { word: "NERAKA", row: 9, col: 0, dir: "H" },
+];
+const PI_DARJAH1_CLUES_S2: Record<string, string> = {
+  ALLAH: "Tuhan yang Maha Esa", NABI: "Utusan Allah SWT",
+  ISLAM: "Agama kita", WUDUK: "Bersuci sebelum solat",
+  ZAKAT: "Rukun Islam ketiga", HAJI: "Rukun Islam kelima",
+  SYAHADAH: "Rukun Islam pertama", MALAIKAT: "Makhluk Allah dari cahaya",
+  SYURGA: "Balasan orang beriman", NERAKA: "Balasan orang berdosa",
+};
+const _pickPI_D1 = Math.random() < 0.5;
+export const PI_DARJAH1_WORDS: Word[] = _pickPI_D1 ? PI_DARJAH1_WORDS_S1 : PI_DARJAH1_WORDS_S2;
+export const PI_DARJAH1_CLUES: Record<string, string> = _pickPI_D1 ? PI_DARJAH1_CLUES_S1 : PI_DARJAH1_CLUES_S2;
 
-export const SAINS_DARJAH1_WORDS: Word[] = [
-  // Mendatar
+const SAINS_DARJAH1_WORDS_S1: Word[] = [
   { word: "MATA", row: 0, col: 0, dir: "H" },
   { word: "HIDUNG", row: 2, col: 0, dir: "H" },
   { word: "LIDAH", row: 4, col: 0, dir: "H" },
   { word: "HUJAN", row: 6, col: 0, dir: "H" },
   { word: "AWAN", row: 8, col: 0, dir: "H" },
-  // Menegak
   { word: "TELINGA", row: 0, col: 7, dir: "V" },
   { word: "AKAR", row: 0, col: 5, dir: "V" },
   { word: "DAUN", row: 1, col: 3, dir: "V" },
   { word: "BUNGA", row: 2, col: 8, dir: "V" },
   { word: "HAIWAN", row: 3, col: 9, dir: "V" },
 ];
-
-export const SAINS_DARJAH1_CLUES: Record<string, string> = {
+const SAINS_DARJAH1_CLUES_S1: Record<string, string> = {
   MATA: "Deria untuk melihat",
   HIDUNG: "Deria untuk menghidu",
   TELINGA: "Deria untuk mendengar",
@@ -418,6 +489,49 @@ export const SAINS_DARJAH1_CLUES: Record<string, string> = {
   AWAN: "Berkumpul di langit sebelum hujan",
   HAIWAN: "Makhluk hidup yang bergerak",
 };
+const SAINS_DARJAH1_WORDS_S2: Word[] = [
+  { word: "POKOK", row: 0, col: 0, dir: "H" },
+  { word: "HAIWAN", row: 1, col: 0, dir: "H" },
+  { word: "UDARA", row: 2, col: 0, dir: "H" },
+  { word: "TANAH", row: 3, col: 0, dir: "H" },
+  { word: "BENIH", row: 4, col: 0, dir: "H" },
+  { word: "BUAH", row: 5, col: 0, dir: "H" },
+  { word: "OKSIGEN", row: 6, col: 0, dir: "H" },
+  { word: "KATAK", row: 7, col: 0, dir: "H" },
+  { word: "LANGIT", row: 8, col: 0, dir: "H" },
+  { word: "PANAS", row: 9, col: 0, dir: "H" },
+];
+const SAINS_DARJAH1_CLUES_S2: Record<string, string> = {
+  POKOK: "Tumbuhan yang besar", HAIWAN: "Makhluk hidup yang bergerak",
+  UDARA: "Kita bernafas dengannya", TANAH: "Tumbuhan tumbuh di sini",
+  BENIH: "Asal usul tumbuhan", BUAH: "Hasil daripada tumbuhan",
+  OKSIGEN: "Gas untuk bernafas", KATAK: "Haiwan amfibia",
+  LANGIT: "Tempat awan dan bintang", PANAS: "Tenaga daripada matahari",
+};
+const _pickSAINS_D1 = Math.random() < 0.5;
+export const SAINS_DARJAH1_WORDS: Word[] = _pickSAINS_D1 ? SAINS_DARJAH1_WORDS_S1 : SAINS_DARJAH1_WORDS_S2;
+export const SAINS_DARJAH1_CLUES: Record<string, string> = _pickSAINS_D1 ? SAINS_DARJAH1_CLUES_S1 : SAINS_DARJAH1_CLUES_S2;
+
+// Matematik Darjah 1 — new Set 2 bank (no existing D1 export; Set 2 only).
+export const MATE_DARJAH1_WORDS: Word[] = [
+  { word: "SATU", row: 0, col: 0, dir: "H" },
+  { word: "DUA", row: 1, col: 0, dir: "H" },
+  { word: "TIGA", row: 2, col: 0, dir: "H" },
+  { word: "EMPAT", row: 3, col: 0, dir: "H" },
+  { word: "LIMA", row: 4, col: 0, dir: "H" },
+  { word: "ENAM", row: 5, col: 0, dir: "H" },
+  { word: "TUJUH", row: 6, col: 0, dir: "H" },
+  { word: "LAPAN", row: 7, col: 0, dir: "H" },
+  { word: "SEMBILAN", row: 8, col: 0, dir: "H" },
+  { word: "SEPULUH", row: 9, col: 0, dir: "H" },
+];
+export const MATE_DARJAH1_CLUES: Record<string, string> = {
+  SATU: "Nombor 1", DUA: "Nombor 2", TIGA: "Nombor 3",
+  EMPAT: "Nombor 4", LIMA: "Nombor 5", ENAM: "Nombor 6",
+  TUJUH: "Nombor 7", LAPAN: "Nombor 8", SEMBILAN: "Nombor 9", SEPULUH: "Nombor 10",
+};
+
+
 
 // Bahasa Melayu Darjah 2 — 10x10 grid with 10 words.
 // Spec rows/cols are 1-based; converted to 0-based here.
