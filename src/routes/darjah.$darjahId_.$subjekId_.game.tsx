@@ -11,7 +11,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { getDarjah, getSubjek } from "@/lib/curriculum";
 import { simpanProgress } from "@/lib/progress";
-import { getQuiz } from "@/lib/quiz-bank";
+import { getQuiz, getQuizSet2 } from "@/lib/quiz-bank";
 
 export const Route = createFileRoute("/darjah/$darjahId_/$subjekId_/game")({
   head: () => ({ meta: [{ title: "Quiz Race — Kalifah.my" }] }),
@@ -31,7 +31,7 @@ function toRaceSoalan(q: { soalan: string; pilihan: string[]; jawapan: number })
 
 function getRaceQuestions(darjahId: string, subjekId: string, useSet2: boolean): Soalan[] {
   if (useSet2) {
-    const set2 = getQuiz(darjahId, subjekId, true);
+    const set2 = getQuizSet2(darjahId, subjekId);
     if (set2?.length) return set2.map(toRaceSoalan);
   }
   const set1 = BANK[`${darjahId}:${subjekId}`];
