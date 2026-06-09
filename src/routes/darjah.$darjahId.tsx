@@ -85,7 +85,7 @@ function SubjekPage() {
         </section>
 
         <section className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {SUBJEK_LIST.map((s) => (
+          {subjekListUntukRole(profile?.role).map((s) => (
             <Link
               key={s.id}
               to="/darjah/$darjahId/$subjekId"
