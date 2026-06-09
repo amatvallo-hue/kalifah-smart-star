@@ -734,11 +734,17 @@ function GameSubjekPage() {
         {mode === "susun" && <SusunAyatGame subjekId={subjekId} darjah={darjahId} />}
 
         {(mode === "betul" || mode === "padan" || mode === "susun") ? null : hasCariPerkataan && mode === "cari" ? (
-          isBM ? (
+          isMate ? (
             <CariPerkataan
-              words={BM_DARJAH1_WORDS}
-              clues={BM_DARJAH1_CLUES}
+              pickBank={pickMATE_D1}
               gridSize={10}
+              title="Cari Perkataan Matematik"
+            />
+          ) : isBM ? (
+            <CariPerkataan
+              pickBank={pickBM_D1}
+              gridSize={10}
+              title="Cari Perkataan Bahasa Melayu"
             />
           ) : isBM2 ? (
             <CariPerkataan
@@ -756,8 +762,7 @@ function GameSubjekPage() {
             />
           ) : isBI ? (
             <CariPerkataan
-              words={BI_DARJAH1_WORDS}
-              clues={BI_DARJAH1_CLUES}
+              pickBank={pickBI_D1}
               gridSize={10}
               title="Word Search"
             />
@@ -770,8 +775,7 @@ function GameSubjekPage() {
             />
           ) : isJawi ? (
             <CariPerkataan
-              words={JAWI_DARJAH1_WORDS}
-              clues={JAWI_DARJAH1_CLUES}
+              pickBank={pickJAWI_D1}
               gridSize={10}
               title="Cari Perkataan Jawi"
             />
@@ -784,15 +788,13 @@ function GameSubjekPage() {
             />
           ) : isPI ? (
             <CariPerkataan
-              words={PI_DARJAH1_WORDS}
-              clues={PI_DARJAH1_CLUES}
+              pickBank={pickPI_D1}
               gridSize={10}
               title="Cari Perkataan Pendidikan Islam"
             />
           ) : isSains ? (
             <CariPerkataan
-              words={SAINS_DARJAH1_WORDS}
-              clues={SAINS_DARJAH1_CLUES}
+              pickBank={pickSAINS_D1}
               gridSize={10}
               title="Cari Perkataan Sains"
             />
