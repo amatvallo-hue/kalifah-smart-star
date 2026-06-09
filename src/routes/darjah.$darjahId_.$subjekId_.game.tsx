@@ -650,10 +650,11 @@ function GameSubjekPage() {
     setTimeout(() => inputRef.current?.focus(), 50);
   }
 
-  function hantar(e?: React.FormEvent) {
+  function hantar(e?: React.FormEvent, jawapanOverride?: string) {
     e?.preventDefault();
     if (habis) return;
-    const betul = normalize(jwp) === normalize(soalanList[idx].jawapan);
+    const jawapan = jawapanOverride ?? jwp;
+    const betul = normalize(jawapan) === normalize(soalanList[idx].jawapan);
     if (betul) setMarkah((m) => m + 1);
     setFlash(betul ? "ok" : "no");
     setTimeout(() => setFlash(null), 250);
@@ -663,6 +664,7 @@ function GameSubjekPage() {
     } else {
       setIdx(next);
       setJwp("");
+      setMasa(totalTime);
     }
   }
 
