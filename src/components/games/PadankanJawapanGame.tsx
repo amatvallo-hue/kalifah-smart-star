@@ -18,7 +18,7 @@ function shuffle<T>(a: T[]): T[] {
 
 export function PadankanJawapanGame({ subjekId, darjah }: { subjekId: string; darjah?: string }) {
   const [seed, setSeed] = useState(0);
-  const pairs = useMemo<PJPair[]>(() => getPadankan(subjekId).slice(0, 8), [subjekId]);
+  const pairs = useMemo<PJPair[]>(() => getPadankan(subjekId).slice(0, 8), [subjekId, seed]);
   const kanan = useMemo(() => shuffle(pairs.map((p, i) => ({ ...p, id: i }))), [pairs, seed]);
 
   const [pilihKiri, setPilihKiri] = useState<number | null>(null);

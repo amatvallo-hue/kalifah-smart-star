@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, Gamepad2, Send, Sparkles, Timer, Trophy, Search, CheckSquare, Link2, AlignLeft } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { StarReward } from "@/components/StarReward";
-import { CariPerkataan, BM_DARJAH1_WORDS, BM_DARJAH1_CLUES, BM_DARJAH2_WORDS, BM_DARJAH2_CLUES, BM_DARJAH3_WORDS, BM_DARJAH3_CLUES, BM_DARJAH4_WORDS, BM_DARJAH4_CLUES, BM_DARJAH5_WORDS, BM_DARJAH5_CLUES, BM_DARJAH6_WORDS, BM_DARJAH6_CLUES, BI_DARJAH1_WORDS, BI_DARJAH1_CLUES, BI_DARJAH2_WORDS, BI_DARJAH2_CLUES, BI_DARJAH3_WORDS, BI_DARJAH3_CLUES, BI_DARJAH4_WORDS, BI_DARJAH4_CLUES, BI_DARJAH5_WORDS, BI_DARJAH5_CLUES, BI_DARJAH6_WORDS, BI_DARJAH6_CLUES, JAWI_DARJAH1_WORDS, JAWI_DARJAH1_CLUES, JAWI_DARJAH2_WORDS, JAWI_DARJAH2_CLUES, JAWI_DARJAH3_WORDS, JAWI_DARJAH3_CLUES, JAWI_DARJAH4_WORDS, JAWI_DARJAH4_CLUES, JAWI_DARJAH5_WORDS, JAWI_DARJAH5_CLUES, JAWI_DARJAH6_WORDS, JAWI_DARJAH6_CLUES, PI_DARJAH1_WORDS, PI_DARJAH1_CLUES, PI_DARJAH2_WORDS, PI_DARJAH2_CLUES, PI_DARJAH3_WORDS, PI_DARJAH3_CLUES, PI_DARJAH4_WORDS, PI_DARJAH4_CLUES, PI_DARJAH5_WORDS, PI_DARJAH5_CLUES, PI_DARJAH6_WORDS, PI_DARJAH6_CLUES, SAINS_DARJAH1_WORDS, SAINS_DARJAH1_CLUES, SAINS_DARJAH2_WORDS, SAINS_DARJAH2_CLUES, SAINS_DARJAH4_WORDS, SAINS_DARJAH4_CLUES, SAINS_DARJAH5_WORDS, SAINS_DARJAH5_CLUES, SAINS_DARJAH6_WORDS, SAINS_DARJAH6_CLUES, MATE_DARJAH2_WORDS, MATE_DARJAH2_CLUES, MATE_DARJAH3_WORDS, MATE_DARJAH3_CLUES, MATE_DARJAH4_WORDS, MATE_DARJAH4_CLUES, MATE_DARJAH5_WORDS, MATE_DARJAH5_CLUES, MATE_DARJAH6_WORDS, MATE_DARJAH6_CLUES } from "@/components/CariPerkataan";
+import { CariPerkataan, pickBM_D1, pickBI_D1, pickJAWI_D1, pickPI_D1, pickSAINS_D1, pickMATE_D1, BM_DARJAH2_WORDS, BM_DARJAH2_CLUES, BM_DARJAH3_WORDS, BM_DARJAH3_CLUES, BM_DARJAH4_WORDS, BM_DARJAH4_CLUES, BM_DARJAH5_WORDS, BM_DARJAH5_CLUES, BM_DARJAH6_WORDS, BM_DARJAH6_CLUES, BI_DARJAH2_WORDS, BI_DARJAH2_CLUES, BI_DARJAH3_WORDS, BI_DARJAH3_CLUES, BI_DARJAH4_WORDS, BI_DARJAH4_CLUES, BI_DARJAH5_WORDS, BI_DARJAH5_CLUES, BI_DARJAH6_WORDS, BI_DARJAH6_CLUES, JAWI_DARJAH2_WORDS, JAWI_DARJAH2_CLUES, JAWI_DARJAH3_WORDS, JAWI_DARJAH3_CLUES, JAWI_DARJAH4_WORDS, JAWI_DARJAH4_CLUES, JAWI_DARJAH5_WORDS, JAWI_DARJAH5_CLUES, JAWI_DARJAH6_WORDS, JAWI_DARJAH6_CLUES, PI_DARJAH2_WORDS, PI_DARJAH2_CLUES, PI_DARJAH3_WORDS, PI_DARJAH3_CLUES, PI_DARJAH4_WORDS, PI_DARJAH4_CLUES, PI_DARJAH5_WORDS, PI_DARJAH5_CLUES, PI_DARJAH6_WORDS, PI_DARJAH6_CLUES, SAINS_DARJAH2_WORDS, SAINS_DARJAH2_CLUES, SAINS_DARJAH4_WORDS, SAINS_DARJAH4_CLUES, SAINS_DARJAH5_WORDS, SAINS_DARJAH5_CLUES, SAINS_DARJAH6_WORDS, SAINS_DARJAH6_CLUES, MATE_DARJAH2_WORDS, MATE_DARJAH2_CLUES, MATE_DARJAH3_WORDS, MATE_DARJAH3_CLUES, MATE_DARJAH4_WORDS, MATE_DARJAH4_CLUES, MATE_DARJAH5_WORDS, MATE_DARJAH5_CLUES, MATE_DARJAH6_WORDS, MATE_DARJAH6_CLUES } from "@/components/CariPerkataan";
 import { BetulSalahGame } from "@/components/games/BetulSalahGame";
 import { PadankanJawapanGame } from "@/components/games/PadankanJawapanGame";
 import { SusunAyatGame } from "@/components/games/SusunAyatGame";
@@ -734,11 +734,17 @@ function GameSubjekPage() {
         {mode === "susun" && <SusunAyatGame subjekId={subjekId} darjah={darjahId} />}
 
         {(mode === "betul" || mode === "padan" || mode === "susun") ? null : hasCariPerkataan && mode === "cari" ? (
-          isBM ? (
+          isMate ? (
             <CariPerkataan
-              words={BM_DARJAH1_WORDS}
-              clues={BM_DARJAH1_CLUES}
+              pickBank={pickMATE_D1}
               gridSize={10}
+              title="Cari Perkataan Matematik"
+            />
+          ) : isBM ? (
+            <CariPerkataan
+              pickBank={pickBM_D1}
+              gridSize={10}
+              title="Cari Perkataan Bahasa Melayu"
             />
           ) : isBM2 ? (
             <CariPerkataan
@@ -756,8 +762,7 @@ function GameSubjekPage() {
             />
           ) : isBI ? (
             <CariPerkataan
-              words={BI_DARJAH1_WORDS}
-              clues={BI_DARJAH1_CLUES}
+              pickBank={pickBI_D1}
               gridSize={10}
               title="Word Search"
             />
@@ -770,8 +775,7 @@ function GameSubjekPage() {
             />
           ) : isJawi ? (
             <CariPerkataan
-              words={JAWI_DARJAH1_WORDS}
-              clues={JAWI_DARJAH1_CLUES}
+              pickBank={pickJAWI_D1}
               gridSize={10}
               title="Cari Perkataan Jawi"
             />
@@ -784,15 +788,13 @@ function GameSubjekPage() {
             />
           ) : isPI ? (
             <CariPerkataan
-              words={PI_DARJAH1_WORDS}
-              clues={PI_DARJAH1_CLUES}
+              pickBank={pickPI_D1}
               gridSize={10}
               title="Cari Perkataan Pendidikan Islam"
             />
           ) : isSains ? (
             <CariPerkataan
-              words={SAINS_DARJAH1_WORDS}
-              clues={SAINS_DARJAH1_CLUES}
+              pickBank={pickSAINS_D1}
               gridSize={10}
               title="Cari Perkataan Sains"
             />

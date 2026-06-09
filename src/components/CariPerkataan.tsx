@@ -44,6 +44,9 @@ type CariPerkataanProps = {
   clues?: Record<string, string>;
   gridSize?: number;
   title?: string;
+  /** When provided, called once per round to pick which Set to display.
+   *  Takes precedence over `words`/`clues`. */
+  pickBank?: () => { words: Word[]; clues: Record<string, string> };
 };
 
 // Build the grid with words placed; fill the rest with deterministic letters
@@ -92,11 +95,24 @@ function cellKey(r: number, c: number) {
 }
 
 export function CariPerkataan({
-  words = DEFAULT_WORDS,
-  clues = DEFAULT_CLUES,
+  words: wordsProp,
+  clues: cluesProp,
   gridSize = DEFAULT_GRID_SIZE,
   title = "Cari Perkataan",
+  pickBank,
 }: CariPerkataanProps = {}) {
+  const [round, setRound] = useState(0);
+  // Re-roll which Set is used on every new round (Main Lagi).
+  const bank = useMemo(() => {
+    if (pickBank) return pickBank();
+    return {
+      words: wordsProp ?? DEFAULT_WORDS,
+      clues: cluesProp ?? DEFAULT_CLUES,
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [round, pickBank, wordsProp, cluesProp]);
+  const words = bank.words;
+  const clues = bank.clues;
   const grid = useMemo(() => buildGrid(words, gridSize), [words, gridSize]);
   const [first, setFirst] = useState<Cell | null>(null);
   const [found, setFound] = useState<Record<string, Cell[]>>({});
@@ -145,6 +161,7 @@ export function CariPerkataan({
   function reset() {
     setFound({});
     setFirst(null);
+    setRound((r) => r + 1);
   }
 
   return (
@@ -322,9 +339,14 @@ const BM_DARJAH1_CLUES_S2: Record<string, string> = {
   KERTAS: "Tempat kita menulis", PAPAN: "Guru menulis di sini",
   BACA: "Aktiviti membaca buku", TULIS: "Aktiviti menggunakan pensil",
 };
-const _pickBM_D1 = Math.random() < 0.5;
-export const BM_DARJAH1_WORDS: Word[] = _pickBM_D1 ? BM_DARJAH1_WORDS_S1 : BM_DARJAH1_WORDS_S2;
-export const BM_DARJAH1_CLUES: Record<string, string> = _pickBM_D1 ? BM_DARJAH1_CLUES_S1 : BM_DARJAH1_CLUES_S2;
+// Kept as default (Set 1) for any legacy consumers; new consumers should call pickBM_D1.
+export const BM_DARJAH1_WORDS: Word[] = BM_DARJAH1_WORDS_S1;
+export const BM_DARJAH1_CLUES: Record<string, string> = BM_DARJAH1_CLUES_S1;
+export function pickBM_D1(): { words: Word[]; clues: Record<string, string> } {
+  return Math.random() < 0.5
+    ? { words: BM_DARJAH1_WORDS_S1, clues: BM_DARJAH1_CLUES_S1 }
+    : { words: BM_DARJAH1_WORDS_S2, clues: BM_DARJAH1_CLUES_S2 };
+}
 
 const BI_DARJAH1_WORDS_S1: Word[] = [
   { word: "CAT", row: 0, col: 0, dir: "H" },
@@ -367,9 +389,13 @@ const BI_DARJAH1_CLUES_S2: Record<string, string> = {
   HAPPY: "Feeling of joy", SCHOOL: "Where we learn", WATER: "We drink this",
   APPLE: "A red fruit", HOUSE: "Where we live", CHAIR: "We sit on this", TABLE: "We eat on this",
 };
-const _pickBI_D1 = Math.random() < 0.5;
-export const BI_DARJAH1_WORDS: Word[] = _pickBI_D1 ? BI_DARJAH1_WORDS_S1 : BI_DARJAH1_WORDS_S2;
-export const BI_DARJAH1_CLUES: Record<string, string> = _pickBI_D1 ? BI_DARJAH1_CLUES_S1 : BI_DARJAH1_CLUES_S2;
+export const BI_DARJAH1_WORDS: Word[] = BI_DARJAH1_WORDS_S1;
+export const BI_DARJAH1_CLUES: Record<string, string> = BI_DARJAH1_CLUES_S1;
+export function pickBI_D1(): { words: Word[]; clues: Record<string, string> } {
+  return Math.random() < 0.5
+    ? { words: BI_DARJAH1_WORDS_S1, clues: BI_DARJAH1_CLUES_S1 }
+    : { words: BI_DARJAH1_WORDS_S2, clues: BI_DARJAH1_CLUES_S2 };
+}
 
 const JAWI_DARJAH1_WORDS_S1: Word[] = [
   { word: "ALIF", row: 0, col: 0, dir: "H" },
@@ -414,9 +440,13 @@ const JAWI_DARJAH1_CLUES_S2: Record<string, string> = {
   SIN: "Huruf Jawi — س", MIM: "Huruf Jawi — م",
   NUN: "Huruf Jawi — ن", WAU: "Huruf Jawi — و",
 };
-const _pickJAWI_D1 = Math.random() < 0.5;
-export const JAWI_DARJAH1_WORDS: Word[] = _pickJAWI_D1 ? JAWI_DARJAH1_WORDS_S1 : JAWI_DARJAH1_WORDS_S2;
-export const JAWI_DARJAH1_CLUES: Record<string, string> = _pickJAWI_D1 ? JAWI_DARJAH1_CLUES_S1 : JAWI_DARJAH1_CLUES_S2;
+export const JAWI_DARJAH1_WORDS: Word[] = JAWI_DARJAH1_WORDS_S1;
+export const JAWI_DARJAH1_CLUES: Record<string, string> = JAWI_DARJAH1_CLUES_S1;
+export function pickJAWI_D1(): { words: Word[]; clues: Record<string, string> } {
+  return Math.random() < 0.5
+    ? { words: JAWI_DARJAH1_WORDS_S1, clues: JAWI_DARJAH1_CLUES_S1 }
+    : { words: JAWI_DARJAH1_WORDS_S2, clues: JAWI_DARJAH1_CLUES_S2 };
+}
 
 const PI_DARJAH1_WORDS_S1: Word[] = [
   { word: "SOLAT", row: 0, col: 0, dir: "H" },
@@ -461,9 +491,13 @@ const PI_DARJAH1_CLUES_S2: Record<string, string> = {
   SYAHADAH: "Rukun Islam pertama", MALAIKAT: "Makhluk Allah dari cahaya",
   SYURGA: "Balasan orang beriman", NERAKA: "Balasan orang berdosa",
 };
-const _pickPI_D1 = Math.random() < 0.5;
-export const PI_DARJAH1_WORDS: Word[] = _pickPI_D1 ? PI_DARJAH1_WORDS_S1 : PI_DARJAH1_WORDS_S2;
-export const PI_DARJAH1_CLUES: Record<string, string> = _pickPI_D1 ? PI_DARJAH1_CLUES_S1 : PI_DARJAH1_CLUES_S2;
+export const PI_DARJAH1_WORDS: Word[] = PI_DARJAH1_WORDS_S1;
+export const PI_DARJAH1_CLUES: Record<string, string> = PI_DARJAH1_CLUES_S1;
+export function pickPI_D1(): { words: Word[]; clues: Record<string, string> } {
+  return Math.random() < 0.5
+    ? { words: PI_DARJAH1_WORDS_S1, clues: PI_DARJAH1_CLUES_S1 }
+    : { words: PI_DARJAH1_WORDS_S2, clues: PI_DARJAH1_CLUES_S2 };
+}
 
 const SAINS_DARJAH1_WORDS_S1: Word[] = [
   { word: "MATA", row: 0, col: 0, dir: "H" },
@@ -508,12 +542,16 @@ const SAINS_DARJAH1_CLUES_S2: Record<string, string> = {
   OKSIGEN: "Gas untuk bernafas", KATAK: "Haiwan amfibia",
   LANGIT: "Tempat awan dan bintang", PANAS: "Tenaga daripada matahari",
 };
-const _pickSAINS_D1 = Math.random() < 0.5;
-export const SAINS_DARJAH1_WORDS: Word[] = _pickSAINS_D1 ? SAINS_DARJAH1_WORDS_S1 : SAINS_DARJAH1_WORDS_S2;
-export const SAINS_DARJAH1_CLUES: Record<string, string> = _pickSAINS_D1 ? SAINS_DARJAH1_CLUES_S1 : SAINS_DARJAH1_CLUES_S2;
+export const SAINS_DARJAH1_WORDS: Word[] = SAINS_DARJAH1_WORDS_S1;
+export const SAINS_DARJAH1_CLUES: Record<string, string> = SAINS_DARJAH1_CLUES_S1;
+export function pickSAINS_D1(): { words: Word[]; clues: Record<string, string> } {
+  return Math.random() < 0.5
+    ? { words: SAINS_DARJAH1_WORDS_S1, clues: SAINS_DARJAH1_CLUES_S1 }
+    : { words: SAINS_DARJAH1_WORDS_S2, clues: SAINS_DARJAH1_CLUES_S2 };
+}
 
-// Matematik Darjah 1 — new Set 2 bank (no existing D1 export; Set 2 only).
-export const MATE_DARJAH1_WORDS: Word[] = [
+// Matematik Darjah 1 — Set 1 (numbers) + Set 2 (operations & shapes).
+const MATE_DARJAH1_WORDS_S1: Word[] = [
   { word: "SATU", row: 0, col: 0, dir: "H" },
   { word: "DUA", row: 1, col: 0, dir: "H" },
   { word: "TIGA", row: 2, col: 0, dir: "H" },
@@ -525,11 +563,36 @@ export const MATE_DARJAH1_WORDS: Word[] = [
   { word: "SEMBILAN", row: 8, col: 0, dir: "H" },
   { word: "SEPULUH", row: 9, col: 0, dir: "H" },
 ];
-export const MATE_DARJAH1_CLUES: Record<string, string> = {
+const MATE_DARJAH1_CLUES_S1: Record<string, string> = {
   SATU: "Nombor 1", DUA: "Nombor 2", TIGA: "Nombor 3",
   EMPAT: "Nombor 4", LIMA: "Nombor 5", ENAM: "Nombor 6",
   TUJUH: "Nombor 7", LAPAN: "Nombor 8", SEMBILAN: "Nombor 9", SEPULUH: "Nombor 10",
 };
+const MATE_DARJAH1_WORDS_S2: Word[] = [
+  { word: "TAMBAH", row: 0, col: 0, dir: "H" },
+  { word: "TOLAK", row: 1, col: 0, dir: "H" },
+  { word: "DARAB", row: 2, col: 0, dir: "H" },
+  { word: "BAHAGI", row: 3, col: 0, dir: "H" },
+  { word: "SAMA", row: 4, col: 0, dir: "H" },
+  { word: "GENAP", row: 5, col: 0, dir: "H" },
+  { word: "GANJIL", row: 6, col: 0, dir: "H" },
+  { word: "BULAT", row: 7, col: 0, dir: "H" },
+  { word: "SEGI", row: 8, col: 0, dir: "H" },
+  { word: "SISI", row: 9, col: 0, dir: "H" },
+];
+const MATE_DARJAH1_CLUES_S2: Record<string, string> = {
+  TAMBAH: "Operasi +", TOLAK: "Operasi −", DARAB: "Operasi ×",
+  BAHAGI: "Operasi ÷", SAMA: "Tanda =", GENAP: "2, 4, 6, 8…",
+  GANJIL: "1, 3, 5, 7…", BULAT: "Bentuk tanpa bucu",
+  SEGI: "Segi tiga, segi empat…", SISI: "Garis pada bentuk",
+};
+export const MATE_DARJAH1_WORDS: Word[] = MATE_DARJAH1_WORDS_S1;
+export const MATE_DARJAH1_CLUES: Record<string, string> = MATE_DARJAH1_CLUES_S1;
+export function pickMATE_D1(): { words: Word[]; clues: Record<string, string> } {
+  return Math.random() < 0.5
+    ? { words: MATE_DARJAH1_WORDS_S1, clues: MATE_DARJAH1_CLUES_S1 }
+    : { words: MATE_DARJAH1_WORDS_S2, clues: MATE_DARJAH1_CLUES_S2 };
+}
 
 
 

@@ -20,7 +20,7 @@ interface Word { id: number; teks: string }
 
 export function SusunAyatGame({ subjekId, darjah }: { subjekId: string; darjah?: string }) {
   const [seed, setSeed] = useState(0);
-  const ayatList = useMemo<SAItem[]>(() => getSusunAyat(subjekId).slice(0, 5), [subjekId]);
+  const ayatList = useMemo<SAItem[]>(() => getSusunAyat(subjekId).slice(0, 5), [subjekId, seed]);
   const [idx, setIdx] = useState(0);
   const [bank, setBank] = useState<Word[]>([]);
   const [pilih, setPilih] = useState<Word[]>([]);
