@@ -258,12 +258,6 @@ function Subjek() {
       d: "Aqidah, ibadah, sirah, akhlak & al-Quran.",
       contoh: ["Soal jawab", "Betul/Salah", "Latih tubi"],
     },
-    {
-      ikon: Moon,
-      t: "Jawi",
-      d: "Tulisan Jawi, ejaan, kosa kata & ayat mudah.",
-      contoh: ["Kenal huruf", "Padankan perkataan", "Latih tubi"],
-    },
   ];
   return (
     <section id="subjek" className="bg-muted/30 py-16">
