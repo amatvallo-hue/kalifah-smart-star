@@ -217,7 +217,7 @@ function KuizPage() {
   const isJawiD2 = darjahId === "2" && subjekId === "jawi";
   const isPendidikanIslamD2 = darjahId === "2" && subjekId === "pendidikan-islam";
   const fromBank = isMatematikD1 || isBahasaMelayuD1 || isBahasaInggerisD1 || isJawiD1 || isPendidikanIslamD1 || isSainsD1 || isMatematikD2 || isBahasaInggerisD2 || isJawiD2 || isPendidikanIslamD2 ? [] : getQuiz(darjahId, subjekId);
-  const soalanList: QuizQuestion[] = isMatematikD1
+  const set1List: QuizQuestion[] = isMatematikD1
     ? MATEMATIK_D1
     : isMatematikD2
       ? MATEMATIK_D2
@@ -240,6 +240,11 @@ function KuizPage() {
                   : fromBank && fromBank.length > 0
                     ? fromBank
                     : [];
+
+  const showPicker = isMatematikD1 || isBahasaMelayuD1 || isBahasaInggerisD1 || isJawiD1 || isPendidikanIslamD1 || isSainsD1;
+  const [selectedSet, setSelectedSet] = useState<1 | 2 | null>(showPicker ? null : 1);
+  const set2List = selectedSet === 2 ? (getQuizSet2(darjahId, subjekId) ?? set1List) : set1List;
+  const soalanList: QuizQuestion[] = selectedSet === 2 ? set2List : set1List;
 
   const [i, setI] = useState(0);
   const [pilih, setPilih] = useState<number | null>(null);
