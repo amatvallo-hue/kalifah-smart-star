@@ -637,6 +637,11 @@ export const QUIZ_BANK: Record<string, QuizQuestion[]> = {
 // Darjah 1 Set 2 alternates — selected by components via `useSet2`.
 const QUIZ_BANK_SET2: Record<string, QuizQuestion[]> = {
   "1:matematik": MATE_D1_S2,
+  "1:bahasa-melayu": BM_D1,
+  "1:bahasa-inggeris": BI_D1,
+  "1:sains": SAINS_D1,
+  "1:pendidikan-islam": PI_D1,
+  "1:jawi": JAWI_D1,
 };
 
 export function getQuiz(darjahId: string, subjekId: string, useSet2 = false): QuizQuestion[] | undefined {
