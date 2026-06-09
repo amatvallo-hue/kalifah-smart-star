@@ -92,11 +92,24 @@ function cellKey(r: number, c: number) {
 }
 
 export function CariPerkataan({
-  words = DEFAULT_WORDS,
-  clues = DEFAULT_CLUES,
+  words: wordsProp,
+  clues: cluesProp,
   gridSize = DEFAULT_GRID_SIZE,
   title = "Cari Perkataan",
+  pickBank,
 }: CariPerkataanProps = {}) {
+  const [round, setRound] = useState(0);
+  // Re-roll which Set is used on every new round (Main Lagi).
+  const bank = useMemo(() => {
+    if (pickBank) return pickBank();
+    return {
+      words: wordsProp ?? DEFAULT_WORDS,
+      clues: cluesProp ?? DEFAULT_CLUES,
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [round, pickBank, wordsProp, cluesProp]);
+  const words = bank.words;
+  const clues = bank.clues;
   const grid = useMemo(() => buildGrid(words, gridSize), [words, gridSize]);
   const [first, setFirst] = useState<Cell | null>(null);
   const [found, setFound] = useState<Record<string, Cell[]>>({});
