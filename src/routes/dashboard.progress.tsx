@@ -167,24 +167,22 @@ function ProgressDashboard() {
     Math.round(progressHariIni.reduce((a, r) => a + (r.masa_ambil ?? 0), 0) / 60),
   );
 
-  // Slot teras: 5 jenis aktiviti diperlukan untuk sijil.
-  // "game" slot menerima sebarang varian game (game-race / game-susun / game-padan / game-betul).
-  const SLOT_TERAS = ["kuiz", "latihan", "latih-tubi", "nota", "game"] as const;
-  function slotAktiviti(a: string): string | null {
-    if (a === "kuiz" || a === "latihan" || a === "latih-tubi" || a === "nota") return a;
-    if (a.startsWith("game")) return "game";
-    return null;
+  // Untuk sijil: 4 aktiviti tetap + sekurang-kurangnya 1 varian "game-*".
+  // Untuk bar kemajuan: kira semua aktiviti unik (cap pada 5) supaya setiap
+  // game variant yang berbeza tetap diiktiraf sebagai aktiviti yang disiapkan.
+  const TERAS_TETAP = ["kuiz", "latihan", "latih-tubi", "nota"] as const;
+  function adaGame(rows: { aktiviti: string }[]): boolean {
+    return rows.some((r) => r.aktiviti.startsWith("game"));
+  }
+  function siapSijil(rows: { aktiviti: string }[]): boolean {
+    const set = new Set(rows.map((r) => r.aktiviti));
+    return TERAS_TETAP.every((a) => set.has(a)) && adaGame(rows);
   }
 
   const ringkasanSubjek = useMemo(() => {
     return SUBJEK_LIST.map((sj) => {
       const rows = progress.filter((p) => p.subjek === sj.id);
-      const slotSet = new Set<string>();
-      rows.forEach((r) => {
-        const s = slotAktiviti(r.aktiviti);
-        if (s) slotSet.add(s);
-      });
-      const aktivitiUnik = slotSet.size;
+      const aktivitiUnik = Math.min(5, new Set(rows.map((r) => r.aktiviti)).size);
       const peratusSiap = Math.min(100, Math.round((aktivitiUnik / 5) * 100));
       const purata = rows.length === 0 ? 0 : Math.round(rows.reduce((a, r) => a + Number(r.peratus), 0) / rows.length);
       const darjahTerkini = rows[0]?.darjah ?? "1";
@@ -198,20 +196,15 @@ function ProgressDashboard() {
 
   // ── Sijil tersedia
   const sijilSubjek = useMemo(() => {
-    // Untuk setiap (darjah, subjek) — jika 5 slot teras siap → sijil tersedia
-    const grouped = new Map<string, { rows: ProgressRow[]; slots: Set<string> }>();
+    const grouped = new Map<string, ProgressRow[]>();
     progress.forEach((r) => {
-      const slot = slotAktiviti(r.aktiviti);
-      if (!slot) return;
       const k = `${r.darjah}::${r.subjek}`;
-      if (!grouped.has(k)) grouped.set(k, { rows: [], slots: new Set() });
-      const g = grouped.get(k)!;
-      g.rows.push(r);
-      g.slots.add(slot);
+      if (!grouped.has(k)) grouped.set(k, []);
+      grouped.get(k)!.push(r);
     });
     const out: Array<{ darjah: string; subjekId: string; subjekTitle: string; purata: number; tarikh: string }> = [];
-    grouped.forEach(({ rows, slots }, k) => {
-      if (slots.size < 5) return;
+    grouped.forEach((rows, k) => {
+      if (!siapSijil(rows)) return;
       const [darjah, subjekId] = k.split("::");
       const subj = SUBJEK_LIST.find((s) => s.id === subjekId);
       if (!subj) return;
@@ -223,21 +216,21 @@ function ProgressDashboard() {
   }, [progress]);
 
   const sijilDarjah = useMemo(() => {
-    // Untuk setiap darjah — jika SEMUA subjek siap (5 slot setiap satu) → sijil darjah tersedia
-    const grouped = new Map<string, Map<string, Set<string>>>(); // darjah -> subjek -> set slot
+    const grouped = new Map<string, Map<string, ProgressRow[]>>(); // darjah -> subjek -> rows
     progress.forEach((r) => {
-      const slot = slotAktiviti(r.aktiviti);
-      if (!slot) return;
       if (!grouped.has(r.darjah)) grouped.set(r.darjah, new Map());
       const m = grouped.get(r.darjah)!;
-      if (!m.has(r.subjek)) m.set(r.subjek, new Set());
-      m.get(r.subjek)!.add(slot);
+      if (!m.has(r.subjek)) m.set(r.subjek, []);
+      m.get(r.subjek)!.push(r);
     });
     const out: Array<{ darjah: string; purata: number; tarikh: string }> = [];
     grouped.forEach((subMap, darjah) => {
-      const semuaSubjekSiap = SUBJEK_LIST.every((sj) => (subMap.get(sj.id)?.size ?? 0) >= 5);
+      const semuaSubjekSiap = SUBJEK_LIST.every((sj) => {
+        const rows = subMap.get(sj.id);
+        return !!rows && siapSijil(rows);
+      });
       if (!semuaSubjekSiap) return;
-      const rows = progress.filter((r) => r.darjah === darjah && slotAktiviti(r.aktiviti) !== null);
+      const rows = progress.filter((r) => r.darjah === darjah);
       const purata = Math.round(rows.reduce((a, r) => a + Number(r.peratus), 0) / rows.length);
       const tarikh = rows.map((r) => r.created_at).sort().slice(-1)[0];
       out.push({ darjah, purata, tarikh });
