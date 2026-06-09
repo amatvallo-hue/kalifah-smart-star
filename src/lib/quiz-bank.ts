@@ -634,7 +634,7 @@ export const QUIZ_BANK: Record<string, QuizQuestion[]> = {
   "6:sains": SAINS_D6,
 };
 
-// Darjah 1 Set 2 alternates — randomly selected per call alongside Set 1.
+// Darjah 1 Set 2 alternates — selected by components via `useSet2`.
 const QUIZ_BANK_SET2: Record<string, QuizQuestion[]> = {
   "1:matematik": MATE_D1_S2,
 };

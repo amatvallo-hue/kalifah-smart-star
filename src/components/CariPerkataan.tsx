@@ -297,7 +297,7 @@ export function CariPerkataan({
 }
 
 // Bahasa Melayu Darjah 1 — 10x10 grid with 10 words.
-// Set 1 + Set 2 randomly selected at module load.
+// Set 1 + Set 2 are selected by the CariPerkataan component per round.
 const BM_DARJAH1_WORDS_S1: Word[] = [
   { word: "IBU", row: 0, col: 0, dir: "H" },
   { word: "AYAH", row: 2, col: 0, dir: "H" },
