@@ -6,7 +6,7 @@ import { StarReward } from "@/components/StarReward";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { getDarjah, getSubjek } from "@/lib/curriculum";
-import { getQuiz, type QuizQuestion } from "@/lib/quiz-bank";
+import { getQuiz, getQuizSet2, type QuizQuestion } from "@/lib/quiz-bank";
 import { simpanProgress } from "@/lib/progress";
 
 export const Route = createFileRoute("/darjah/$darjahId_/$subjekId_/kuiz")({
@@ -217,7 +217,7 @@ function KuizPage() {
   const isJawiD2 = darjahId === "2" && subjekId === "jawi";
   const isPendidikanIslamD2 = darjahId === "2" && subjekId === "pendidikan-islam";
   const fromBank = isMatematikD1 || isBahasaMelayuD1 || isBahasaInggerisD1 || isJawiD1 || isPendidikanIslamD1 || isSainsD1 || isMatematikD2 || isBahasaInggerisD2 || isJawiD2 || isPendidikanIslamD2 ? [] : getQuiz(darjahId, subjekId);
-  const soalanList: QuizQuestion[] = isMatematikD1
+  const set1List: QuizQuestion[] = isMatematikD1
     ? MATEMATIK_D1
     : isMatematikD2
       ? MATEMATIK_D2
@@ -240,6 +240,11 @@ function KuizPage() {
                   : fromBank && fromBank.length > 0
                     ? fromBank
                     : [];
+
+  const showPicker = isMatematikD1 || isBahasaMelayuD1 || isBahasaInggerisD1 || isJawiD1 || isPendidikanIslamD1 || isSainsD1;
+  const [selectedSet, setSelectedSet] = useState<1 | 2 | null>(showPicker ? null : 1);
+  const set2List = selectedSet === 2 ? (getQuizSet2(darjahId, subjekId) ?? set1List) : set1List;
+  const soalanList: QuizQuestion[] = selectedSet === 2 ? set2List : set1List;
 
   const [i, setI] = useState(0);
   const [pilih, setPilih] = useState<number | null>(null);
@@ -292,6 +297,45 @@ function KuizPage() {
     );
   }
 
+  if (showPicker && selectedSet === null) {
+    return (
+      <div className="min-h-screen bg-background">
+        <SiteHeader stars={42} onLogout={handleLogout} />
+        <main className="container mx-auto max-w-2xl px-4 py-12">
+          <Link
+            to="/darjah/$darjahId/$subjekId"
+            params={{ darjahId, subjekId }}
+            className="inline-flex items-center gap-2 text-sm font-bold text-muted-foreground hover:text-primary"
+          >
+            <ArrowLeft className="h-4 w-4" /> Kembali
+          </Link>
+          <div className="mt-6 rounded-3xl bg-gradient-hero p-8 text-center shadow-card md:p-12">
+            <h1 className="font-display text-3xl font-extrabold text-foreground md:text-4xl">
+              Pilih Set Kuiz
+            </h1>
+            <p className="mt-2 text-muted-foreground">
+              {subjek.title} — {darjah.label}. Pilih satu set untuk mula.
+            </p>
+            <div className="mt-8 grid gap-4 sm:grid-cols-2">
+              <button
+                onClick={() => setSelectedSet(1)}
+                className="rounded-3xl bg-gradient-primary px-6 py-8 font-display text-2xl font-extrabold text-primary-foreground shadow-soft transition hover:-translate-y-1 hover:shadow-gold"
+              >
+                Kuiz 1
+              </button>
+              <button
+                onClick={() => setSelectedSet(2)}
+                className="rounded-3xl bg-gradient-gold px-6 py-8 font-display text-2xl font-extrabold text-gold-foreground shadow-soft transition hover:-translate-y-1 hover:shadow-gold"
+              >
+                Kuiz 2
+              </button>
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
   if (!soalanList || soalanList.length === 0) {
     return (
       <div className="min-h-screen bg-background">
@@ -338,6 +382,7 @@ function KuizPage() {
     setPilih(null);
     setSkor(0);
     setSelesai(false);
+    if (showPicker) setSelectedSet(null);
   };
 
   return (
