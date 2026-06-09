@@ -44,6 +44,9 @@ type CariPerkataanProps = {
   clues?: Record<string, string>;
   gridSize?: number;
   title?: string;
+  /** When provided, called once per round to pick which Set to display.
+   *  Takes precedence over `words`/`clues`. */
+  pickBank?: () => { words: Word[]; clues: Record<string, string> };
 };
 
 // Build the grid with words placed; fill the rest with deterministic letters
