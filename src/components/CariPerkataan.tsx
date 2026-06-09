@@ -542,9 +542,13 @@ const SAINS_DARJAH1_CLUES_S2: Record<string, string> = {
   OKSIGEN: "Gas untuk bernafas", KATAK: "Haiwan amfibia",
   LANGIT: "Tempat awan dan bintang", PANAS: "Tenaga daripada matahari",
 };
-const _pickSAINS_D1 = Math.random() < 0.5;
-export const SAINS_DARJAH1_WORDS: Word[] = _pickSAINS_D1 ? SAINS_DARJAH1_WORDS_S1 : SAINS_DARJAH1_WORDS_S2;
-export const SAINS_DARJAH1_CLUES: Record<string, string> = _pickSAINS_D1 ? SAINS_DARJAH1_CLUES_S1 : SAINS_DARJAH1_CLUES_S2;
+export const SAINS_DARJAH1_WORDS: Word[] = SAINS_DARJAH1_WORDS_S1;
+export const SAINS_DARJAH1_CLUES: Record<string, string> = SAINS_DARJAH1_CLUES_S1;
+export function pickSAINS_D1(): { words: Word[]; clues: Record<string, string> } {
+  return Math.random() < 0.5
+    ? { words: SAINS_DARJAH1_WORDS_S1, clues: SAINS_DARJAH1_CLUES_S1 }
+    : { words: SAINS_DARJAH1_WORDS_S2, clues: SAINS_DARJAH1_CLUES_S2 };
+}
 
 // Matematik Darjah 1 — new Set 2 bank (no existing D1 export; Set 2 only).
 export const MATE_DARJAH1_WORDS: Word[] = [
