@@ -297,6 +297,45 @@ function KuizPage() {
     );
   }
 
+  if (showPicker && selectedSet === null) {
+    return (
+      <div className="min-h-screen bg-background">
+        <SiteHeader stars={42} onLogout={handleLogout} />
+        <main className="container mx-auto max-w-2xl px-4 py-12">
+          <Link
+            to="/darjah/$darjahId/$subjekId"
+            params={{ darjahId, subjekId }}
+            className="inline-flex items-center gap-2 text-sm font-bold text-muted-foreground hover:text-primary"
+          >
+            <ArrowLeft className="h-4 w-4" /> Kembali
+          </Link>
+          <div className="mt-6 rounded-3xl bg-gradient-hero p-8 text-center shadow-card md:p-12">
+            <h1 className="font-display text-3xl font-extrabold text-foreground md:text-4xl">
+              Pilih Set Kuiz
+            </h1>
+            <p className="mt-2 text-muted-foreground">
+              {subjek.title} — {darjah.label}. Pilih satu set untuk mula.
+            </p>
+            <div className="mt-8 grid gap-4 sm:grid-cols-2">
+              <button
+                onClick={() => setSelectedSet(1)}
+                className="rounded-3xl bg-gradient-primary px-6 py-8 font-display text-2xl font-extrabold text-primary-foreground shadow-soft transition hover:-translate-y-1 hover:shadow-gold"
+              >
+                Kuiz 1
+              </button>
+              <button
+                onClick={() => setSelectedSet(2)}
+                className="rounded-3xl bg-gradient-gold px-6 py-8 font-display text-2xl font-extrabold text-gold-foreground shadow-soft transition hover:-translate-y-1 hover:shadow-gold"
+              >
+                Kuiz 2
+              </button>
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
   if (!soalanList || soalanList.length === 0) {
     return (
       <div className="min-h-screen bg-background">
