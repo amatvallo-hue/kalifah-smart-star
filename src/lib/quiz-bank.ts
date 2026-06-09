@@ -655,3 +655,7 @@ export function getQuiz(darjahId: string, subjekId: string, useSet2 = false): Qu
   return fallbackKey ? QUIZ_BANK[fallbackKey] : undefined;
 }
 
+export function getQuizSet2(darjahId: string, subjekId: string): QuizQuestion[] | undefined {
+  return QUIZ_BANK_SET2[`${darjahId}:${subjekId}`];
+}
+
