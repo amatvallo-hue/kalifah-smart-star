@@ -27,6 +27,7 @@ interface ProgressRow {
   markah: number;
   jumlah_soalan: number;
   peratus: number;
+  masa_ambil: number;
   created_at: string;
 }
 
@@ -117,7 +118,7 @@ function ProgressDashboard() {
       const [{ data: p }, { data: s }, { data: b }] = await Promise.all([
         supabase
           .from("user_progress")
-          .select("id, darjah, subjek, aktiviti, markah, jumlah_soalan, peratus, created_at")
+          .select("id, darjah, subjek, aktiviti, markah, jumlah_soalan, peratus, masa_ambil, created_at")
           .eq("user_id", user.id)
           .order("created_at", { ascending: false }),
         supabase
@@ -151,6 +152,20 @@ function ProgressDashboard() {
   const hariIni = todayKL();
   const statsHariIni = stats.find((s) => s.tarikh === hariIni);
   const streak = kiraStreak(stats);
+
+  // Fallback: if user_stats kosong/outdated, kira dari user_progress hari ini
+  const progressHariIni = useMemo(
+    () => progress.filter((r) => (r.created_at ?? "").slice(0, 10) === hariIni),
+    [progress, hariIni],
+  );
+  const soalanHariIni = Math.max(
+    statsHariIni?.soalan_dijawab ?? 0,
+    progressHariIni.reduce((a, r) => a + (r.jumlah_soalan ?? 0), 0),
+  );
+  const masaHariIni = Math.max(
+    statsHariIni?.masa_belajar ?? 0,
+    Math.round(progressHariIni.reduce((a, r) => a + (r.masa_ambil ?? 0), 0) / 60),
+  );
 
   const ringkasanSubjek = useMemo(() => {
     return SUBJEK_LIST.map((sj) => {
@@ -259,13 +274,13 @@ function ProgressDashboard() {
         <section className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-4">
           <StatKad
             label="Soalan Hari Ini"
-            nilai={statsHariIni?.soalan_dijawab ?? 0}
+            nilai={soalanHariIni}
             icon={<BookOpen className="h-5 w-5" />}
             warna={HIJAU}
           />
           <StatKad
             label="Masa Belajar"
-            nilai={`${statsHariIni?.masa_belajar ?? 0} min`}
+            nilai={`${masaHariIni} min`}
             icon={<Clock className="h-5 w-5" />}
             warna={EMAS}
             light
