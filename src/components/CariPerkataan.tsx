@@ -339,9 +339,14 @@ const BM_DARJAH1_CLUES_S2: Record<string, string> = {
   KERTAS: "Tempat kita menulis", PAPAN: "Guru menulis di sini",
   BACA: "Aktiviti membaca buku", TULIS: "Aktiviti menggunakan pensil",
 };
-const _pickBM_D1 = Math.random() < 0.5;
-export const BM_DARJAH1_WORDS: Word[] = _pickBM_D1 ? BM_DARJAH1_WORDS_S1 : BM_DARJAH1_WORDS_S2;
-export const BM_DARJAH1_CLUES: Record<string, string> = _pickBM_D1 ? BM_DARJAH1_CLUES_S1 : BM_DARJAH1_CLUES_S2;
+// Kept as default (Set 1) for any legacy consumers; new consumers should call pickBM_D1.
+export const BM_DARJAH1_WORDS: Word[] = BM_DARJAH1_WORDS_S1;
+export const BM_DARJAH1_CLUES: Record<string, string> = BM_DARJAH1_CLUES_S1;
+export function pickBM_D1(): { words: Word[]; clues: Record<string, string> } {
+  return Math.random() < 0.5
+    ? { words: BM_DARJAH1_WORDS_S1, clues: BM_DARJAH1_CLUES_S1 }
+    : { words: BM_DARJAH1_WORDS_S2, clues: BM_DARJAH1_CLUES_S2 };
+}
 
 const BI_DARJAH1_WORDS_S1: Word[] = [
   { word: "CAT", row: 0, col: 0, dir: "H" },
