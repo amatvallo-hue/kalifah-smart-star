@@ -550,8 +550,8 @@ export function pickSAINS_D1(): { words: Word[]; clues: Record<string, string> }
     : { words: SAINS_DARJAH1_WORDS_S2, clues: SAINS_DARJAH1_CLUES_S2 };
 }
 
-// Matematik Darjah 1 — new Set 2 bank (no existing D1 export; Set 2 only).
-export const MATE_DARJAH1_WORDS: Word[] = [
+// Matematik Darjah 1 — Set 1 (numbers) + Set 2 (operations & shapes).
+const MATE_DARJAH1_WORDS_S1: Word[] = [
   { word: "SATU", row: 0, col: 0, dir: "H" },
   { word: "DUA", row: 1, col: 0, dir: "H" },
   { word: "TIGA", row: 2, col: 0, dir: "H" },
@@ -563,11 +563,36 @@ export const MATE_DARJAH1_WORDS: Word[] = [
   { word: "SEMBILAN", row: 8, col: 0, dir: "H" },
   { word: "SEPULUH", row: 9, col: 0, dir: "H" },
 ];
-export const MATE_DARJAH1_CLUES: Record<string, string> = {
+const MATE_DARJAH1_CLUES_S1: Record<string, string> = {
   SATU: "Nombor 1", DUA: "Nombor 2", TIGA: "Nombor 3",
   EMPAT: "Nombor 4", LIMA: "Nombor 5", ENAM: "Nombor 6",
   TUJUH: "Nombor 7", LAPAN: "Nombor 8", SEMBILAN: "Nombor 9", SEPULUH: "Nombor 10",
 };
+const MATE_DARJAH1_WORDS_S2: Word[] = [
+  { word: "TAMBAH", row: 0, col: 0, dir: "H" },
+  { word: "TOLAK", row: 1, col: 0, dir: "H" },
+  { word: "DARAB", row: 2, col: 0, dir: "H" },
+  { word: "BAHAGI", row: 3, col: 0, dir: "H" },
+  { word: "SAMA", row: 4, col: 0, dir: "H" },
+  { word: "GENAP", row: 5, col: 0, dir: "H" },
+  { word: "GANJIL", row: 6, col: 0, dir: "H" },
+  { word: "BULAT", row: 7, col: 0, dir: "H" },
+  { word: "SEGI", row: 8, col: 0, dir: "H" },
+  { word: "SISI", row: 9, col: 0, dir: "H" },
+];
+const MATE_DARJAH1_CLUES_S2: Record<string, string> = {
+  TAMBAH: "Operasi +", TOLAK: "Operasi −", DARAB: "Operasi ×",
+  BAHAGI: "Operasi ÷", SAMA: "Tanda =", GENAP: "2, 4, 6, 8…",
+  GANJIL: "1, 3, 5, 7…", BULAT: "Bentuk tanpa bucu",
+  SEGI: "Segi tiga, segi empat…", SISI: "Garis pada bentuk",
+};
+export const MATE_DARJAH1_WORDS: Word[] = MATE_DARJAH1_WORDS_S1;
+export const MATE_DARJAH1_CLUES: Record<string, string> = MATE_DARJAH1_CLUES_S1;
+export function pickMATE_D1(): { words: Word[]; clues: Record<string, string> } {
+  return Math.random() < 0.5
+    ? { words: MATE_DARJAH1_WORDS_S1, clues: MATE_DARJAH1_CLUES_S1 }
+    : { words: MATE_DARJAH1_WORDS_S2, clues: MATE_DARJAH1_CLUES_S2 };
+}
 
 
 
