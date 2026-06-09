@@ -135,6 +135,8 @@ function ParentDashboard() {
     console.log("[ParentDashboard] fetchAnakData", {
       user_id: uid,
       user_progress_rows: p?.length ?? 0,
+      user_stats_rows: s?.length ?? 0,
+      user_badges_rows: b?.length ?? 0,
       errors: {
         user_progress: pError,
         user_stats: sError,
@@ -219,9 +221,13 @@ function ParentDashboard() {
   const minggu = useMemo(() => {
     const p = progress.filter((r) => tarikhMingguIni.has(r.created_at.slice(0, 10)));
     const s = stats.filter((r) => tarikhMingguIni.has(r.tarikh));
-    const soalan = s.reduce((a, r) => a + (r.soalan_dijawab ?? 0), 0);
-    const masa = s.reduce((a, r) => a + (r.masa_belajar ?? 0), 0);
-    const bab = s.reduce((a, r) => a + (r.bab_selesai ?? 0), 0);
+    const soalanStats = s.reduce((a, r) => a + (r.soalan_dijawab ?? 0), 0);
+    const masaStats = s.reduce((a, r) => a + (r.masa_belajar ?? 0), 0);
+    const soalanProg = p.reduce((a, r) => a + (r.jumlah_soalan ?? 0), 0);
+    const masaProg = Math.round(p.reduce((a, r) => a + (r.masa_ambil ?? 0), 0) / 60);
+    const soalan = Math.max(soalanStats, soalanProg);
+    const masa = Math.max(masaStats, masaProg);
+    const bab = Math.max(s.reduce((a, r) => a + (r.bab_selesai ?? 0), 0), p.length);
     const peratus = p.length === 0 ? 0 : Math.round(p.reduce((a, r) => a + Number(r.peratus), 0) / p.length);
     return { soalan, masa, bab, peratus };
   }, [progress, stats, tarikhMingguIni]);
@@ -229,8 +235,12 @@ function ParentDashboard() {
   const bulan = useMemo(() => {
     const p = progress.filter((r) => tarikhBulanIni.has(r.created_at.slice(0, 10)));
     const s = stats.filter((r) => tarikhBulanIni.has(r.tarikh));
-    const soalan = s.reduce((a, r) => a + (r.soalan_dijawab ?? 0), 0);
-    const masa = s.reduce((a, r) => a + (r.masa_belajar ?? 0), 0);
+    const soalanStats = s.reduce((a, r) => a + (r.soalan_dijawab ?? 0), 0);
+    const masaStats = s.reduce((a, r) => a + (r.masa_belajar ?? 0), 0);
+    const soalanProg = p.reduce((a, r) => a + (r.jumlah_soalan ?? 0), 0);
+    const masaProg = Math.round(p.reduce((a, r) => a + (r.masa_ambil ?? 0), 0) / 60);
+    const soalan = Math.max(soalanStats, soalanProg);
+    const masa = Math.max(masaStats, masaProg);
 
     const perSubjek = new Map<string, { jumlah: number; bil: number }>();
     p.forEach((r) => {
