@@ -582,6 +582,96 @@ const JAWI_D1: QuizQuestion[] = [
   { soalan: "Huruf tambahan Jawi yang tidak ada dalam Arab?", pilihan: ["ب", "چ", "ر", "س"], jawapan: 1 },
 ];
 
+const BM_D1_S2: QuizQuestion[] = [
+  { soalan: "Huruf vokal dalam perkataan 'api' ialah?", pilihan: ["a dan p", "a dan i", "p dan i", "a sahaja"], jawapan: 1 },
+  { soalan: "Perkataan manakah dieja dengan betul?", pilihan: ["rummah", "rumah", "ruma", "rhumah"], jawapan: 1 },
+  { soalan: "Lawan kata 'tinggi' ialah?", pilihan: ["rendah", "besar", "panjang", "panas"], jawapan: 0 },
+  { soalan: "Pilih kata kerja.", pilihan: ["meja", "tidur", "merah", "di"], jawapan: 1 },
+  { soalan: "Ayat seruan biasanya berakhir dengan tanda?", pilihan: [".", "?", "!", ","], jawapan: 2 },
+  { soalan: "Perkataan 'bola' mempunyai berapa suku kata?", pilihan: ["1", "2", "3", "4"], jawapan: 1 },
+  { soalan: "Sinonim 'cantik' ialah?", pilihan: ["buruk", "indah", "kotor", "lama"], jawapan: 1 },
+  { soalan: "Pilih kata nama.", pilihan: ["makan", "biru", "pensel", "dan"], jawapan: 2 },
+  { soalan: "Gabungkan suku kata: 'ma' + 'ta' = ?", pilihan: ["mata", "tama", "mtaa", "amat"], jawapan: 0 },
+  { soalan: "Huruf besar bagi 'b' ialah?", pilihan: ["D", "B", "P", "R"], jawapan: 1 },
+  { soalan: "Ayat manakah betul?", pilihan: ["Saya baca buku.", "Buku saya baca saya.", "Baca saya buku.", "Saya buku baca."], jawapan: 0 },
+  { soalan: "Kata ganti diri untuk diri sendiri ialah?", pilihan: ["dia", "mereka", "saya", "kamu"], jawapan: 2 },
+  { soalan: "Lawan kata 'baru' ialah?", pilihan: ["lama", "muda", "cepat", "dekat"], jawapan: 0 },
+  { soalan: "Perkataan 'sekolah' bermula dengan huruf?", pilihan: ["a", "b", "s", "k"], jawapan: 2 },
+  { soalan: "Tanda soal digunakan untuk ayat?", pilihan: ["tanya", "penyata", "seruan", "perintah"], jawapan: 0 },
+];
+
+const BI_D1_S2: QuizQuestion[] = [
+  { soalan: "What is the opposite of 'up'?", pilihan: ["in", "down", "out", "near"], jawapan: 1 },
+  { soalan: "Which word is a colour?", pilihan: ["jump", "table", "green", "sleep"], jawapan: 2 },
+  { soalan: "Choose the correct sentence.", pilihan: ["I am happy.", "I is happy.", "I are happy.", "I be happy."], jawapan: 0 },
+  { soalan: "What animal says 'meow'?", pilihan: ["dog", "cat", "cow", "duck"], jawapan: 1 },
+  { soalan: "Which letter starts 'sun'?", pilihan: ["s", "u", "n", "a"], jawapan: 0 },
+  { soalan: "Plural of 'book' is?", pilihan: ["bookes", "books", "bookies", "book"], jawapan: 1 },
+  { soalan: "We use our eyes to?", pilihan: ["hear", "smell", "see", "taste"], jawapan: 2 },
+  { soalan: "Which is a fruit?", pilihan: ["chair", "apple", "pencil", "door"], jawapan: 1 },
+  { soalan: "What comes after Monday?", pilihan: ["Sunday", "Tuesday", "Friday", "Saturday"], jawapan: 1 },
+  { soalan: "Opposite of 'fast' is?", pilihan: ["slow", "small", "hot", "old"], jawapan: 0 },
+  { soalan: "Choose the verb.", pilihan: ["run", "blue", "desk", "happy"], jawapan: 0 },
+  { soalan: "A sentence starts with a?", pilihan: ["small letter", "capital letter", "number", "comma"], jawapan: 1 },
+  { soalan: "What do we drink?", pilihan: ["water", "stone", "shoe", "paper"], jawapan: 0 },
+  { soalan: "Which word rhymes with 'cat'?", pilihan: ["dog", "hat", "sun", "pen"], jawapan: 1 },
+  { soalan: "How many letters in ABC?", pilihan: ["24", "25", "26", "27"], jawapan: 2 },
+];
+
+const SAINS_D1_S2: QuizQuestion[] = [
+  { soalan: "Deria pendengaran menggunakan?", pilihan: ["mata", "telinga", "hidung", "lidah"], jawapan: 1 },
+  { soalan: "Deria rasa menggunakan?", pilihan: ["lidah", "kulit", "mata", "telinga"], jawapan: 0 },
+  { soalan: "Bahagian tumbuhan yang menyerap air ialah?", pilihan: ["daun", "akar", "bunga", "buah"], jawapan: 1 },
+  { soalan: "Haiwan manakah hidup di air?", pilihan: ["kucing", "ayam", "ikan", "kambing"], jawapan: 2 },
+  { soalan: "Benda hidup memerlukan?", pilihan: ["makanan", "pensel", "kerusi", "batu"], jawapan: 0 },
+  { soalan: "Matahari memberi kita?", pilihan: ["gelap", "cahaya", "ais", "asap"], jawapan: 1 },
+  { soalan: "Ais akan cair jika?", pilihan: ["dipanaskan", "dibekukan", "disimpan sejuk", "ditutup"], jawapan: 0 },
+  { soalan: "Kulit digunakan untuk deria?", pilihan: ["lihat", "dengar", "sentuh", "bau"], jawapan: 2 },
+  { soalan: "Tumbuhan memerlukan cahaya daripada?", pilihan: ["bulan", "matahari", "lampu suluh sahaja", "awan"], jawapan: 1 },
+  { soalan: "Haiwan berkaki empat ialah?", pilihan: ["ikan", "ular", "kucing", "burung"], jawapan: 2 },
+  { soalan: "Air ialah contoh?", pilihan: ["cecair", "pepejal", "gas", "batu"], jawapan: 0 },
+  { soalan: "Batu ialah contoh?", pilihan: ["gas", "cecair", "pepejal", "wap"], jawapan: 2 },
+  { soalan: "Kita menghidu bau dengan?", pilihan: ["mata", "hidung", "telinga", "tangan"], jawapan: 1 },
+  { soalan: "Anak pokok membesar menjadi?", pilihan: ["batu", "pokok dewasa", "air", "awan"], jawapan: 1 },
+  { soalan: "Cuaca hujan biasanya ada?", pilihan: ["awan gelap", "salji", "pasir", "api"], jawapan: 0 },
+];
+
+const PI_D1_S2: QuizQuestion[] = [
+  { soalan: "Rukun Islam pertama ialah?", pilihan: ["Solat", "Syahadah", "Puasa", "Zakat"], jawapan: 1 },
+  { soalan: "Kita berdoa kepada?", pilihan: ["Allah SWT", "manusia", "bulan", "pokok"], jawapan: 0 },
+  { soalan: "Sebelum makan kita membaca?", pilihan: ["Alhamdulillah", "Bismillah", "Subhanallah", "Allahu Akbar"], jawapan: 1 },
+  { soalan: "Selepas makan kita membaca?", pilihan: ["Alhamdulillah", "Bismillah", "Astaghfirullah", "Insya-Allah"], jawapan: 0 },
+  { soalan: "Solat Maghrib berapa rakaat?", pilihan: ["2", "3", "4", "5"], jawapan: 1 },
+  { soalan: "Solat Isyak berapa rakaat?", pilihan: ["2", "3", "4", "5"], jawapan: 2 },
+  { soalan: "Nabi terakhir umat Islam ialah?", pilihan: ["Nabi Adam AS", "Nabi Musa AS", "Nabi Muhammad SAW", "Nabi Isa AS"], jawapan: 2 },
+  { soalan: "Kitab suci umat Islam ialah?", pilihan: ["Al-Quran", "Buku teks", "Majalah", "Kamus"], jawapan: 0 },
+  { soalan: "Ucapan salam ialah?", pilihan: ["Selamat malam", "Assalamualaikum", "Terima kasih", "Maaf"], jawapan: 1 },
+  { soalan: "Jawapan salam ialah?", pilihan: ["Waalaikumussalam", "Selamat tinggal", "Hai", "Tolong"], jawapan: 0 },
+  { soalan: "Kita menjaga kebersihan kerana kebersihan itu sebahagian daripada?", pilihan: ["iman", "mainan", "makanan", "tidur"], jawapan: 0 },
+  { soalan: "Kiblat umat Islam ialah?", pilihan: ["Kaabah", "sekolah", "rumah", "padang"], jawapan: 0 },
+  { soalan: "Bulan umat Islam berpuasa ialah?", pilihan: ["Syawal", "Ramadan", "Rejab", "Zulhijjah"], jawapan: 1 },
+  { soalan: "Bila bersin kita mengucapkan?", pilihan: ["Alhamdulillah", "Bismillah", "Maaf", "Tolong"], jawapan: 0 },
+  { soalan: "Berbuat baik kepada ibu bapa ialah amalan?", pilihan: ["baik", "buruk", "sia-sia", "dilarang"], jawapan: 0 },
+];
+
+const JAWI_D1_S2: QuizQuestion[] = [
+  { soalan: "Huruf ب dibaca?", pilihan: ["Alif", "Ba", "Ta", "Jim"], jawapan: 1 },
+  { soalan: "Huruf ت dibaca?", pilihan: ["Ba", "Ta", "Dal", "Ra"], jawapan: 1 },
+  { soalan: "Huruf ج dibaca?", pilihan: ["Jim", "Dal", "Sin", "Mim"], jawapan: 0 },
+  { soalan: "Huruf د dibaca?", pilihan: ["Ra", "Dal", "Ba", "Nun"], jawapan: 1 },
+  { soalan: "Huruf ر dibaca?", pilihan: ["Sin", "Wau", "Ra", "Ya"], jawapan: 2 },
+  { soalan: "Huruf س dibaca?", pilihan: ["Sin", "Syin", "Sad", "Ta"], jawapan: 0 },
+  { soalan: "Huruf م dibaca?", pilihan: ["Nun", "Mim", "Lam", "Wau"], jawapan: 1 },
+  { soalan: "Huruf ن dibaca?", pilihan: ["Mim", "Nun", "Ba", "Ya"], jawapan: 1 },
+  { soalan: "Huruf و dibaca?", pilihan: ["Wau", "Ya", "Ra", "Dal"], jawapan: 0 },
+  { soalan: "Huruf ي dibaca?", pilihan: ["Alif", "Ba", "Ya", "Lam"], jawapan: 2 },
+  { soalan: "Jawi dibaca dari?", pilihan: ["kiri ke kanan", "kanan ke kiri", "atas ke bawah", "bawah ke atas"], jawapan: 1 },
+  { soalan: "ا ialah huruf?", pilihan: ["Alif", "Ba", "Ta", "Jim"], jawapan: 0 },
+  { soalan: "چ ialah huruf tambahan berbunyi?", pilihan: ["cha", "pa", "nga", "ga"], jawapan: 0 },
+  { soalan: "ڤ ialah huruf tambahan berbunyi?", pilihan: ["fa", "pa", "ba", "wa"], jawapan: 1 },
+  { soalan: "ڠ ialah huruf tambahan berbunyi?", pilihan: ["na", "ga", "nga", "ma"], jawapan: 2 },
+];
+
 // Key format: `${darjahId}:${subjekId}`
 export const QUIZ_BANK: Record<string, QuizQuestion[]> = {
   "1:matematik": MATE_D1_S1,
@@ -637,11 +727,11 @@ export const QUIZ_BANK: Record<string, QuizQuestion[]> = {
 // Darjah 1 Set 2 alternates — selected by components via `useSet2`.
 const QUIZ_BANK_SET2: Record<string, QuizQuestion[]> = {
   "1:matematik": MATE_D1_S2,
-  "1:bahasa-melayu": BM_D1,
-  "1:bahasa-inggeris": BI_D1,
-  "1:sains": SAINS_D1,
-  "1:pendidikan-islam": PI_D1,
-  "1:jawi": JAWI_D1,
+  "1:bahasa-melayu": BM_D1_S2,
+  "1:bahasa-inggeris": BI_D1_S2,
+  "1:sains": SAINS_D1_S2,
+  "1:pendidikan-islam": PI_D1_S2,
+  "1:jawi": JAWI_D1_S2,
 };
 
 export function getQuiz(darjahId: string, subjekId: string, useSet2 = false): QuizQuestion[] | undefined {
