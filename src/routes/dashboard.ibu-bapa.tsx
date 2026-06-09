@@ -114,7 +114,7 @@ function ParentDashboard() {
 
   async function fetchAnakData(uid: string, showSpinner = true) {
     if (showSpinner) setFetching(true);
-    const [{ data: p }, { data: s }, { data: b }] = await Promise.all([
+    const [{ data: p, error: pError }, { data: s, error: sError }, { data: b, error: bError }] = await Promise.all([
       supabase
         .from("user_progress")
         .select("id, darjah, subjek, aktiviti, markah, jumlah_soalan, peratus, masa_ambil, created_at")
@@ -132,6 +132,15 @@ function ParentDashboard() {
         .eq("user_id", uid)
         .order("created_at", { ascending: false }),
     ]);
+    console.log("[ParentDashboard] fetchAnakData", {
+      user_id: uid,
+      user_progress_rows: p?.length ?? 0,
+      errors: {
+        user_progress: pError,
+        user_stats: sError,
+        user_badges: bError,
+      },
+    });
     setProgress((p ?? []) as ProgressRow[]);
     setStats((s ?? []) as StatsRow[]);
     setBadges((b ?? []) as BadgeRow[]);
