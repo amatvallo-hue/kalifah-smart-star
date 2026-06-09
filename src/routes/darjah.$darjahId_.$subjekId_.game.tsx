@@ -477,41 +477,41 @@ const BANK: Record<string, Soalan[]> = {
 
 
 const TIME_MAP: Record<string, number> = {
-  "1:bahasa-melayu": 10,
-  "1:bahasa-inggeris": 10,
-  "1:jawi": 10,
-  "1:pendidikan-islam": 10,
-  "1:sains": 10,
-  "2:bahasa-melayu": 10,
-  "2:matematik": 10,
-  "2:bahasa-inggeris": 10,
-  "2:jawi": 10,
-  "2:pendidikan-islam": 10,
-  "2:sains": 10,
-  "3:bahasa-melayu": 10,
-  "3:matematik": 10,
-  "3:bahasa-inggeris": 10,
-  "3:jawi": 10,
-  "3:pendidikan-islam": 10,
-  "3:sains": 10,
-  "4:bahasa-melayu": 10,
-  "4:matematik": 10,
-  "4:bahasa-inggeris": 10,
-  "4:jawi": 10,
-  "4:pendidikan-islam": 10,
-  "4:sains": 10,
-  "5:bahasa-melayu": 10,
-  "5:matematik": 10,
-  "5:bahasa-inggeris": 10,
-  "5:jawi": 10,
-  "5:pendidikan-islam": 10,
-  "5:sains": 10,
-  "6:bahasa-melayu": 10,
-  "6:matematik": 10,
-  "6:bahasa-inggeris": 10,
-  "6:jawi": 10,
-  "6:pendidikan-islam": 10,
-  "6:sains": 10,
+  "1:bahasa-melayu": 20,
+  "1:bahasa-inggeris": 20,
+  "1:jawi": 20,
+  "1:pendidikan-islam": 20,
+  "1:sains": 20,
+  "2:bahasa-melayu": 20,
+  "2:matematik": 20,
+  "2:bahasa-inggeris": 20,
+  "2:jawi": 20,
+  "2:pendidikan-islam": 20,
+  "2:sains": 20,
+  "3:bahasa-melayu": 20,
+  "3:matematik": 20,
+  "3:bahasa-inggeris": 20,
+  "3:jawi": 20,
+  "3:pendidikan-islam": 20,
+  "3:sains": 20,
+  "4:bahasa-melayu": 20,
+  "4:matematik": 20,
+  "4:bahasa-inggeris": 20,
+  "4:jawi": 20,
+  "4:pendidikan-islam": 20,
+  "4:sains": 20,
+  "5:bahasa-melayu": 20,
+  "5:matematik": 20,
+  "5:bahasa-inggeris": 20,
+  "5:jawi": 20,
+  "5:pendidikan-islam": 20,
+  "5:sains": 20,
+  "6:bahasa-melayu": 20,
+  "6:matematik": 20,
+  "6:bahasa-inggeris": 20,
+  "6:jawi": 20,
+  "6:pendidikan-islam": 20,
+  "6:sains": 20,
 };
 
 
@@ -650,10 +650,11 @@ function GameSubjekPage() {
     setTimeout(() => inputRef.current?.focus(), 50);
   }
 
-  function hantar(e?: React.FormEvent) {
+  function hantar(e?: React.FormEvent, jawapanOverride?: string) {
     e?.preventDefault();
     if (habis) return;
-    const betul = normalize(jwp) === normalize(soalanList[idx].jawapan);
+    const jawapan = jawapanOverride ?? jwp;
+    const betul = normalize(jawapan) === normalize(soalanList[idx].jawapan);
     if (betul) setMarkah((m) => m + 1);
     setFlash(betul ? "ok" : "no");
     setTimeout(() => setFlash(null), 250);
@@ -663,6 +664,7 @@ function GameSubjekPage() {
     } else {
       setIdx(next);
       setJwp("");
+      setMasa(totalTime);
     }
   }
 
@@ -966,7 +968,7 @@ function GameSubjekPage() {
                       key={letter}
                       onClick={() => {
                         setJwp(letter);
-                        setTimeout(() => hantar(), 50);
+                        hantar(undefined, letter);
                       }}
                       className="rounded-2xl border-2 border-input bg-background p-4 text-left font-display text-lg font-extrabold text-foreground transition hover:border-primary hover:bg-secondary"
                     >
