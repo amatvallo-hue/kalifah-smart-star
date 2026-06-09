@@ -634,6 +634,19 @@ export const QUIZ_BANK: Record<string, QuizQuestion[]> = {
   "6:sains": SAINS_D6,
 };
 
+// Darjah 1 Set 2 alternates — randomly selected per call alongside Set 1.
+const QUIZ_BANK_SET2: Record<string, QuizQuestion[]> = {
+  "1:matematik": MATE_D1_S2,
+};
+
 export function getQuiz(darjahId: string, subjekId: string): QuizQuestion[] | undefined {
-  return QUIZ_BANK[`${darjahId}:${subjekId}`];
+  const key = `${darjahId}:${subjekId}`;
+  const s1 = QUIZ_BANK[key];
+  const s2 = QUIZ_BANK_SET2[key];
+  if (s1 && s2) return Math.random() < 0.5 ? s1 : s2;
+  if (s1) return s1;
+  // Fallback: any darjah for the same subject (subject default).
+  const fallbackKey = Object.keys(QUIZ_BANK).find((k) => k.endsWith(`:${subjekId}`));
+  return fallbackKey ? QUIZ_BANK[fallbackKey] : undefined;
 }
+
