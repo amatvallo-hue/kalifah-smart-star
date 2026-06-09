@@ -274,13 +274,13 @@ function ProgressDashboard() {
         <section className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-4">
           <StatKad
             label="Soalan Hari Ini"
-            nilai={statsHariIni?.soalan_dijawab ?? 0}
+            nilai={soalanHariIni}
             icon={<BookOpen className="h-5 w-5" />}
             warna={HIJAU}
           />
           <StatKad
             label="Masa Belajar"
-            nilai={`${statsHariIni?.masa_belajar ?? 0} min`}
+            nilai={`${masaHariIni} min`}
             icon={<Clock className="h-5 w-5" />}
             warna={EMAS}
             light
