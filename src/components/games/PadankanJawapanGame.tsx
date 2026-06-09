@@ -18,8 +18,9 @@ function shuffle<T>(a: T[]): T[] {
 
 export function PadankanJawapanGame({ subjekId, darjah }: { subjekId: string; darjah?: string }) {
   const [useSet2, setUseSet2] = useState(() => Math.random() > 0.5);
-  const pairs = useMemo<PJPair[]>(() => getPadankan(subjekId, useSet2).slice(0, 8), [subjekId, useSet2]);
-  const kanan = useMemo(() => shuffle(pairs.map((p, i) => ({ ...p, id: i }))), [pairs]);
+  const [round, setRound] = useState(0);
+  const pairs = useMemo<PJPair[]>(() => getPadankan(subjekId, useSet2).slice(0, 8), [subjekId, useSet2, round]);
+  const kanan = useMemo(() => shuffle(pairs.map((p, i) => ({ ...p, id: i }))), [pairs, round]);
 
   const [pilihKiri, setPilihKiri] = useState<number | null>(null);
   const [pilihKanan, setPilihKanan] = useState<number | null>(null);
@@ -58,6 +59,7 @@ export function PadankanJawapanGame({ subjekId, darjah }: { subjekId: string; da
 
   function reset() {
     setUseSet2(Math.random() > 0.5);
+    setRound((r) => r + 1);
     setPilihKiri(null);
     setPilihKanan(null);
     setBetulSet(new Set());
