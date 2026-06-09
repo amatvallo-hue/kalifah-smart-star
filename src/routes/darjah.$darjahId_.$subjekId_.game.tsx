@@ -968,7 +968,7 @@ function GameSubjekPage() {
                       key={letter}
                       onClick={() => {
                         setJwp(letter);
-                        setTimeout(() => hantar(), 50);
+                        hantar(undefined, letter);
                       }}
                       className="rounded-2xl border-2 border-input bg-background p-4 text-left font-display text-lg font-extrabold text-foreground transition hover:border-primary hover:bg-secondary"
                     >
