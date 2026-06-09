@@ -17,8 +17,8 @@ function shuffle<T>(a: T[]): T[] {
 }
 
 export function BetulSalahGame({ subjekId, darjah }: { subjekId: string; darjah?: string }) {
-  const [seed, setSeed] = useState(0);
-  const items = useMemo<BSItem[]>(() => shuffle(getBetulSalah(subjekId)).slice(0, 10), [subjekId, seed]);
+  const [useSet2, setUseSet2] = useState(() => Math.random() > 0.5);
+  const items = useMemo<BSItem[]>(() => shuffle(getBetulSalah(subjekId, useSet2)).slice(0, 10), [subjekId, useSet2]);
   const [idx, setIdx] = useState(0);
   const [markah, setMarkah] = useState(0);
   const [flash, setFlash] = useState<null | "ok" | "no">(null);
@@ -57,7 +57,7 @@ export function BetulSalahGame({ subjekId, darjah }: { subjekId: string; darjah?
   }
 
   function reset() {
-    setSeed((s) => s + 1);
+    setUseSet2(Math.random() > 0.5);
     setIdx(0);
     setMarkah(0);
     setFlash(null);
