@@ -16,7 +16,9 @@ import {
 import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
-import { SUBJEK_LIST, DARJAH_LIST } from "@/lib/curriculum";
+import { SUBJEK_LIST as ALL_SUBJEK, DARJAH_LIST } from "@/lib/curriculum";
+// Ibu bapa tidak boleh nampak Jawi
+const SUBJEK_LIST = ALL_SUBJEK.filter((s) => s.id !== "jawi");
 import { padamAnak, senaraikanAnak, type ChildProfile } from "@/lib/parent";
 import { ciptaAkaunAnak, normalizeUsername, CHILD_EMAIL_DOMAIN } from "@/lib/child-auth";
 
