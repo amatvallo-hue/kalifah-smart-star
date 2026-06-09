@@ -19,8 +19,9 @@ function shuffle<T>(a: T[]): T[] {
 interface Word { id: number; teks: string }
 
 export function SusunAyatGame({ subjekId, darjah }: { subjekId: string; darjah?: string }) {
-  const [seed, setSeed] = useState(0);
-  const ayatList = useMemo<SAItem[]>(() => getSusunAyat(subjekId).slice(0, 5), [subjekId, seed]);
+  const [useSet2, setUseSet2] = useState(() => Math.random() > 0.5);
+  const [round, setRound] = useState(0);
+  const ayatList = useMemo<SAItem[]>(() => getSusunAyat(subjekId, useSet2).slice(0, 5), [subjekId, useSet2, round]);
   const [idx, setIdx] = useState(0);
   const [bank, setBank] = useState<Word[]>([]);
   const [pilih, setPilih] = useState<Word[]>([]);
@@ -34,7 +35,7 @@ export function SusunAyatGame({ subjekId, darjah }: { subjekId: string; darjah?:
     setBank(shuffle(ayatList[idx].perkataan.map((teks, id) => ({ id, teks }))));
     setPilih([]);
     setFlash(null);
-  }, [idx, ayatList, seed]);
+  }, [idx, ayatList, round]);
 
   useEffect(() => {
     if (habis && darjah && ayatList.length > 0) {
@@ -77,7 +78,8 @@ export function SusunAyatGame({ subjekId, darjah }: { subjekId: string; darjah?:
   }
 
   function reset() {
-    setSeed((s) => s + 1);
+    setUseSet2(Math.random() > 0.5);
+    setRound((r) => r + 1);
     setIdx(0);
     setMarkah(0);
     setHabis(false);

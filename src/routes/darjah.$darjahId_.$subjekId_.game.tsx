@@ -11,6 +11,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { getDarjah, getSubjek } from "@/lib/curriculum";
 import { simpanProgress } from "@/lib/progress";
+import { getQuiz, getQuizSet2 } from "@/lib/quiz-bank";
 
 export const Route = createFileRoute("/darjah/$darjahId_/$subjekId_/game")({
   head: () => ({ meta: [{ title: "Quiz Race — Kalifah.my" }] }),
@@ -19,6 +20,24 @@ export const Route = createFileRoute("/darjah/$darjahId_/$subjekId_/game")({
 });
 
 type Soalan = { soalan: string; jawapan: string; options?: string[] };
+
+function toRaceSoalan(q: { soalan: string; pilihan: string[]; jawapan: number }): Soalan {
+  return {
+    soalan: q.soalan,
+    jawapan: String.fromCharCode(65 + q.jawapan),
+    options: q.pilihan.map((p, i) => `${String.fromCharCode(65 + i)}) ${p}`),
+  };
+}
+
+function getRaceQuestions(darjahId: string, subjekId: string, useSet2: boolean): Soalan[] {
+  if (useSet2) {
+    const set2 = getQuizSet2(darjahId, subjekId);
+    if (set2?.length) return set2.map(toRaceSoalan);
+  }
+  const set1 = BANK[`${darjahId}:${subjekId}`];
+  if (set1?.length) return set1;
+  return getQuiz(darjahId, subjekId, false)?.map(toRaceSoalan) ?? [];
+}
 
 const BANK: Record<string, Soalan[]> = {
   "1:matematik": [
@@ -512,7 +531,8 @@ function GameSubjekPage() {
   const darjah = getDarjah(darjahId);
   const subjek = getSubjek(subjekId);
 
-  const soalanList = useMemo(() => BANK[`${darjahId}:${subjekId}`] ?? [], [darjahId, subjekId]);
+  const [useRaceSet2, setUseRaceSet2] = useState(() => Math.random() > 0.5);
+  const soalanList = useMemo(() => getRaceQuestions(darjahId, subjekId, useRaceSet2), [darjahId, subjekId, useRaceSet2]);
   const totalTime = totalTimeFor(darjahId, subjekId);
 
   const [started, setStarted] = useState(false);
@@ -620,6 +640,7 @@ function GameSubjekPage() {
   }
 
   function mula() {
+    setUseRaceSet2(Math.random() > 0.5);
     setStarted(true);
     setIdx(0);
     setJwp("");

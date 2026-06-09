@@ -416,18 +416,17 @@ const SA_SET2: Record<string, SAItem[]> = {
   jawi: SA_JAWI_2,
 };
 
-function pickSet<T>(a: T[], b: T[] | undefined): T[] {
-  if (!b) return a;
-  return Math.random() < 0.5 ? a : b;
+function pickSet<T>(set1: T[], set2: T[] | undefined, useSet2: boolean): T[] {
+  return useSet2 && set2 ? set2 : set1;
 }
 
-export function getBetulSalah(subjekId: string): BSItem[] {
-  return pickSet(BETUL_SALAH[subjekId] ?? BS_BM, BS_SET2[subjekId]);
+export function getBetulSalah(subjekId: string, useSet2 = false): BSItem[] {
+  return pickSet(BETUL_SALAH[subjekId] ?? BS_BM, BS_SET2[subjekId], useSet2);
 }
-export function getPadankan(subjekId: string): PJPair[] {
-  return pickSet(PADANKAN[subjekId] ?? PJ_BM, PJ_SET2[subjekId]);
+export function getPadankan(subjekId: string, useSet2 = false): PJPair[] {
+  return pickSet(PADANKAN[subjekId] ?? PJ_BM, PJ_SET2[subjekId], useSet2);
 }
-export function getSusunAyat(subjekId: string): SAItem[] {
-  return pickSet(SUSUN_AYAT[subjekId] ?? SA_BM, SA_SET2[subjekId]);
+export function getSusunAyat(subjekId: string, useSet2 = false): SAItem[] {
+  return pickSet(SUSUN_AYAT[subjekId] ?? SA_BM, SA_SET2[subjekId], useSet2);
 }
 
