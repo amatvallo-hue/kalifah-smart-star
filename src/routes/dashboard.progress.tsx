@@ -194,22 +194,32 @@ function ProgressDashboard() {
 
   const babLemah = ringkasanSubjek.filter((r) => r.jumlahAktiviti > 0 && r.purata < 60);
 
-  // ── Sijil tersedia
+  // ── Sijil tersedia (kumpul per-subjek sahaja supaya aktiviti merentas darjah
+  //    yang sama subjek tetap dikira; darjah pada sijil = darjah paling terkini).
   const sijilSubjek = useMemo(() => {
     const grouped = new Map<string, ProgressRow[]>();
     progress.forEach((r) => {
-      const k = `${r.darjah}::${r.subjek}`;
-      if (!grouped.has(k)) grouped.set(k, []);
-      grouped.get(k)!.push(r);
+      if (!grouped.has(r.subjek)) grouped.set(r.subjek, []);
+      grouped.get(r.subjek)!.push(r);
     });
     const out: Array<{ darjah: string; subjekId: string; subjekTitle: string; purata: number; tarikh: string }> = [];
-    grouped.forEach((rows, k) => {
-      if (!siapSijil(rows)) return;
-      const [darjah, subjekId] = k.split("::");
+    grouped.forEach((rows, subjekId) => {
+      const set = new Set(rows.map((r) => r.aktiviti));
+      const ok = siapSijil(rows);
+      // Diagnostik supaya senang kesan kenapa sijil tak keluar
+      console.debug("[sijilSubjek]", subjekId, {
+        aktiviti: Array.from(set),
+        teras: TERAS_TETAP.map((a) => `${a}:${set.has(a) ? "✓" : "✗"}`),
+        adaGame: adaGame(rows),
+        layak: ok,
+      });
+      if (!ok) return;
       const subj = SUBJEK_LIST.find((s) => s.id === subjekId);
       if (!subj) return;
       const purata = Math.round(rows.reduce((a, r) => a + Number(r.peratus), 0) / rows.length);
-      const tarikh = rows.map((r) => r.created_at).sort().slice(-1)[0];
+      const sortedByTarikh = [...rows].sort((a, b) => a.created_at.localeCompare(b.created_at));
+      const tarikh = sortedByTarikh[sortedByTarikh.length - 1].created_at;
+      const darjah = sortedByTarikh[sortedByTarikh.length - 1].darjah;
       out.push({ darjah, subjekId, subjekTitle: subj.title, purata, tarikh });
     });
     return out;
