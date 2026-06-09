@@ -14,7 +14,7 @@ import {
   ShieldCheck,
   ChevronDown,
   FlaskConical,
-  Moon,
+  
 } from "lucide-react";
 import { useState } from "react";
 import { HARGA_ASAL, PAKEJ_LIST } from "@/lib/curriculum";
@@ -115,7 +115,7 @@ function Hero() {
           </h1>
           <p className="mt-5 max-w-xl text-base text-muted-foreground md:text-lg">
             Portal pembelajaran yang bantu ibu bapa pantau prestasi anak dalam{" "}
-            <b>Bahasa Melayu</b>, <b>Matematik</b>, <b>Bahasa Inggeris</b>, <b>Sains</b>, <b>Pendidikan Islam</b> dan <b>Jawi</b>.
+            <b>Bahasa Melayu</b>, <b>Matematik</b>, <b>Bahasa Inggeris</b>, <b>Sains</b> dan <b>Pendidikan Islam</b>.
             Lebih 2000 soalan latihan & sijil automatik.
           </p>
           <div className="mt-7 flex flex-wrap gap-3">
@@ -258,12 +258,6 @@ function Subjek() {
       d: "Aqidah, ibadah, sirah, akhlak & al-Quran.",
       contoh: ["Soal jawab", "Betul/Salah", "Latih tubi"],
     },
-    {
-      ikon: Moon,
-      t: "Jawi",
-      d: "Tulisan Jawi, ejaan, kosa kata & ayat mudah.",
-      contoh: ["Kenal huruf", "Padankan perkataan", "Latih tubi"],
-    },
   ];
   return (
     <section id="subjek" className="bg-muted/30 py-16">
@@ -271,7 +265,7 @@ function Subjek() {
         <div className="text-center">
           <p className="font-display text-xs font-bold uppercase tracking-widest" style={{ color: EMAS }}>Subjek Utama</p>
           <h2 className="mt-2 font-display text-3xl font-extrabold text-foreground md:text-4xl">
-            Fokus pada 6 subjek utama
+            Fokus pada 5 subjek utama
           </h2>
         </div>
         <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

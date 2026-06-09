@@ -5,7 +5,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { useProfile } from "@/hooks/use-profile";
-import { SUBJEK_LIST, getDarjah, TONE_GRADIENT } from "@/lib/curriculum";
+import { subjekListUntukRole, getDarjah, TONE_GRADIENT } from "@/lib/curriculum";
 
 export const Route = createFileRoute("/darjah/$darjahId")({
   head: () => ({
@@ -85,7 +85,7 @@ function SubjekPage() {
         </section>
 
         <section className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {SUBJEK_LIST.map((s) => (
+          {subjekListUntukRole(profile?.role).map((s) => (
             <Link
               key={s.id}
               to="/darjah/$darjahId/$subjekId"

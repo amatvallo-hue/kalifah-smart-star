@@ -44,6 +44,13 @@ export function getSubjek(id: string) {
   return SUBJEK_LIST.find((s) => s.id === id);
 }
 
+// Jawi disembunyikan daripada pelajar & ibu bapa.
+// Hanya admin boleh melihat/mengakses Jawi untuk penyuntingan kandungan.
+export function subjekListUntukRole(role?: string | null): Subjek[] {
+  if (role === "admin") return SUBJEK_LIST;
+  return SUBJEK_LIST.filter((s) => s.id !== "jawi");
+}
+
 export const TONE_GRADIENT: Record<Tone, string> = {
   emerald: "from-primary to-primary-glow text-primary-foreground",
   gold: "from-gold to-gold/80 text-gold-foreground",
@@ -89,8 +96,8 @@ export const PAKEJ_LIST: Pakej[] = [
     nama: "Bundle 6 Darjah",
     hargaPerDarjah: 25,
     jumlahDarjah: 6,
-    jumlahBayar: 150,
-    jimat: 89 * 6 - 150,
+    jumlahBayar: 120,
+    jimat: 89 * 6 - 120,
     popular: true,
     deskripsi: "Semua D1–D6 untuk 1 tahun. Pilihan paling berbaloi!",
   },
