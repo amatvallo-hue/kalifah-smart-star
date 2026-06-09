@@ -135,6 +135,8 @@ function ParentDashboard() {
     console.log("[ParentDashboard] fetchAnakData", {
       user_id: uid,
       user_progress_rows: p?.length ?? 0,
+      user_stats_rows: s?.length ?? 0,
+      user_badges_rows: b?.length ?? 0,
       errors: {
         user_progress: pError,
         user_stats: sError,
