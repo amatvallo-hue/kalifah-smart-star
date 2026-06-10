@@ -237,6 +237,26 @@ function DashboardMockup() {
         ))}
       </div>
 
+      {/* Insight cards */}
+      <div className="mt-3 grid gap-2 sm:grid-cols-2">
+        <div
+          className="rounded-xl bg-card p-3 shadow-soft"
+          style={{ border: `2px solid ${HIJAU}33` }}
+        >
+          <p className="text-[10px] font-extrabold text-muted-foreground">Subjek Terkuat 💪</p>
+          <p className="mt-1 font-display text-sm font-extrabold text-foreground">Matematik</p>
+          <p className="text-[10px] text-muted-foreground">Purata 88% • 6 aktiviti</p>
+        </div>
+        <div
+          className="rounded-xl p-3 shadow-soft"
+          style={{ border: `2px solid #dc262633`, backgroundColor: "#fef2f2" }}
+        >
+          <p className="text-[10px] font-extrabold text-muted-foreground">Perlukan Perhatian ⚠️</p>
+          <p className="mt-1 font-display text-sm font-extrabold text-foreground">Bahasa Inggeris</p>
+          <p className="text-[10px] text-muted-foreground">Purata 76% • 3 aktiviti</p>
+        </div>
+      </div>
+
       {/* Streak & Lencana */}
       <SectionHead ikon={<Flame className="h-3.5 w-3.5" />} tajuk="Streak & Lencana" />
       <div className="grid grid-cols-3 gap-2">
