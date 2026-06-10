@@ -85,9 +85,17 @@ function kiraStreak(rows: StatsRow[]): number {
   return streak;
 }
 
+function parseIsoUTC(iso: string): Date {
+  // Treat timestamps without timezone info as UTC (Postgres timestamptz
+  // returned by PostgREST is UTC; if the suffix is missing, JS would
+  // otherwise parse it as local browser time and skew "time ago" output).
+  const hasTz = /[zZ]|[+-]\d{2}:?\d{2}$/.test(iso);
+  return new Date(hasTz ? iso : iso.replace(" ", "T") + "Z");
+}
+
 function formatTarikh(iso: string) {
-  const d = new Date(iso);
-  const diff = Date.now() - d.getTime();
+  const d = parseIsoUTC(iso);
+  const diff = Math.max(0, Date.now() - d.getTime());
   const min = Math.round(diff / 60000);
   if (min < 1) return "Sebentar tadi";
   if (min < 60) return `${min} minit lalu`;
