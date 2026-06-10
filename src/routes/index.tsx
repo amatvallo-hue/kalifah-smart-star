@@ -288,10 +288,6 @@ function MockStat({
     </div>
   );
 }
-      </div>
-    </section>
-  );
-}
 
 function Ciri() {
   const items = [
