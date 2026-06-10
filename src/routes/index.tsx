@@ -147,50 +147,147 @@ function Hero() {
         </div>
 
         <div className="relative">
-          <div
-            className="rounded-[2.5rem] bg-card p-8 shadow-card"
-            style={{ border: `2px solid ${HIJAU}22` }}
-          >
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="font-display text-xs font-bold uppercase text-muted-foreground">Progress Aisyah</p>
-                <p className="font-display text-2xl font-extrabold text-foreground">Darjah 3</p>
-              </div>
-              <div className="rounded-full px-3 py-1 text-xs font-extrabold" style={{ backgroundColor: `${EMAS}33`, color: "#7a5300" }}>
-                🔥 7 hari streak
-              </div>
-            </div>
-            <div className="mt-5 space-y-3">
-              {[
-                { sj: "Bahasa Melayu", p: 86, w: HIJAU },
-                { sj: "Matematik", p: 72, w: EMAS },
-                { sj: "Bahasa Inggeris", p: 54, w: "#dc2626" },
-              ].map((r) => (
-                <div key={r.sj}>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="font-bold text-foreground">{r.sj}</span>
-                    <span className="font-extrabold" style={{ color: r.w }}>{r.p}%</span>
-                  </div>
-                  <div className="mt-1 h-2.5 overflow-hidden rounded-full bg-muted">
-                    <div className="h-full transition-all" style={{ width: `${r.p}%`, backgroundColor: r.w }} />
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="mt-5 grid grid-cols-3 gap-2 text-center">
-              {[
-                { l: "Soalan", v: "245" },
-                { l: "Lencana", v: "12" },
-                { l: "Sijil", v: "3" },
-              ].map((s) => (
-                <div key={s.l} className="rounded-2xl p-3" style={{ backgroundColor: `${HIJAU}14` }}>
-                  <p className="font-display text-2xl font-extrabold" style={{ color: HIJAU }}>{s.v}</p>
-                  <p className="text-[10px] font-bold uppercase text-muted-foreground">{s.l}</p>
-                </div>
-              ))}
-            </div>
-          </div>
+          <DashboardMockup />
         </div>
+      </div>
+    </section>
+  );
+}
+
+function DashboardMockup() {
+  const subjects = [
+    { nama: "Bahasa Melayu", purata: 94, siap: 100, aktiviti: 8, terkini: "14/15" },
+    { nama: "Matematik", purata: 88, siap: 80, aktiviti: 6, terkini: "13/15" },
+    { nama: "Pendidikan Islam", purata: 96, siap: 60, aktiviti: 4, terkini: "12/15" },
+    { nama: "Bahasa Inggeris", purata: 76, siap: 40, aktiviti: 3, terkini: null },
+    { nama: "Sains", purata: 82, siap: 40, aktiviti: 3, terkini: null },
+  ];
+  return (
+    <div
+      className="rounded-[2rem] bg-card p-5 shadow-card"
+      style={{ border: `2px solid ${HIJAU}22`, backgroundColor: "#FFFBF2" }}
+    >
+      {/* Header */}
+      <div className="flex items-center gap-3">
+        <div
+          className="flex h-10 w-10 items-center justify-center rounded-2xl text-white shadow-soft"
+          style={{ backgroundColor: HIJAU }}
+        >
+          <Users className="h-5 w-5" />
+        </div>
+        <div>
+          <h3 className="font-display text-lg font-extrabold leading-tight text-foreground">
+            Dashboard Ibu Bapa
+          </h3>
+          <p className="text-[11px] text-muted-foreground">Pantau pembelajaran anak anda</p>
+        </div>
+      </div>
+
+      {/* Pemilih anak */}
+      <div className="mt-4 flex flex-wrap gap-2">
+        <span
+          className="rounded-full px-3 py-1 font-display text-[11px] font-extrabold text-white"
+          style={{ backgroundColor: HIJAU, border: `2px solid ${HIJAU}` }}
+        >
+          Aisyah Sufiya • D5
+        </span>
+        <span
+          className="rounded-full px-3 py-1 font-display text-[11px] font-extrabold"
+          style={{ backgroundColor: `${HIJAU}14`, color: HIJAU, border: `2px solid ${HIJAU}33` }}
+        >
+          Adam Safwan • D3
+        </span>
+      </div>
+
+      {/* Minggu Ini */}
+      <SectionHead ikon={<Calendar className="h-3.5 w-3.5" />} tajuk="Minggu Ini" />
+      <div className="grid grid-cols-4 gap-2">
+        <MockStat label="Soalan" nilai="124" icon={<BookOpen className="h-3.5 w-3.5" />} warna={HIJAU} />
+        <MockStat label="Ketepatan" nilai="92%" icon={<Target className="h-3.5 w-3.5" />} warna={EMAS} light />
+        <MockStat label="Masa" nilai="45m" icon={<Clock className="h-3.5 w-3.5" />} warna={HIJAU} light />
+        <MockStat label="Bab" nilai="18" icon={<TrendingUp className="h-3.5 w-3.5" />} warna={EMAS} />
+      </div>
+
+      {/* Kemajuan Subjek */}
+      <SectionHead ikon={<BookOpen className="h-3.5 w-3.5" />} tajuk="Kemajuan Subjek" />
+      <div className="grid gap-2 sm:grid-cols-2">
+        {subjects.slice(0, 4).map((s) => (
+          <div
+            key={s.nama}
+            className="rounded-xl bg-card p-2.5 shadow-soft"
+            style={{ border: `2px solid ${HIJAU}1f` }}
+          >
+            <div className="flex items-center justify-between gap-1">
+              <h4 className="font-display text-[11px] font-extrabold text-foreground">{s.nama}</h4>
+              <span
+                className="rounded-full px-1.5 py-0.5 text-[9px] font-extrabold"
+                style={{ backgroundColor: `${EMAS}33`, color: "#7a5300" }}
+              >
+                ⭐ {s.purata}%
+              </span>
+            </div>
+            <div className="mt-1.5 h-2 overflow-hidden rounded-full" style={{ backgroundColor: `${HIJAU}1a` }}>
+              <div className="h-full" style={{ width: `${s.siap}%`, backgroundColor: HIJAU }} />
+            </div>
+            <p className="mt-1 text-[9px] text-muted-foreground">
+              {s.siap}% siap • {s.aktiviti} aktiviti
+              {s.terkini && <> • <b>{s.terkini}</b></>}
+            </p>
+          </div>
+        ))}
+      </div>
+
+      {/* Streak & Lencana */}
+      <SectionHead ikon={<Flame className="h-3.5 w-3.5" />} tajuk="Streak & Lencana" />
+      <div className="grid grid-cols-3 gap-2">
+        <MockStat label="Streak" nilai="14 hari 🔥" icon={<Flame className="h-3.5 w-3.5" />} warna="#dc2626" />
+        <MockStat label="Lencana" nilai="12" icon={<Award className="h-3.5 w-3.5" />} warna={EMAS} light />
+        <MockStat label="Bab Siap" nilai="7" icon={<TrendingUp className="h-3.5 w-3.5" />} warna={HIJAU} />
+      </div>
+    </div>
+  );
+}
+
+function SectionHead({ ikon, tajuk }: { ikon: React.ReactNode; tajuk: string }) {
+  return (
+    <div className="mt-4 mb-2 flex items-center gap-1.5">
+      <span
+        className="flex h-5 w-5 items-center justify-center rounded-md text-white"
+        style={{ backgroundColor: HIJAU }}
+      >
+        {ikon}
+      </span>
+      <h4 className="font-display text-xs font-extrabold text-foreground">{tajuk}</h4>
+    </div>
+  );
+}
+
+function MockStat({
+  label,
+  nilai,
+  icon,
+  warna,
+  light,
+}: {
+  label: string;
+  nilai: string;
+  icon: React.ReactNode;
+  warna: string;
+  light?: boolean;
+}) {
+  return (
+    <div
+      className="rounded-xl p-2 shadow-soft"
+      style={{ backgroundColor: light ? `${warna}1f` : warna, color: light ? "#1a1a1a" : "#fff" }}
+    >
+      <div className="flex items-center gap-1 text-[9px] font-extrabold opacity-90">
+        {icon}
+        {label}
+      </div>
+      <p className="mt-1 font-display text-sm font-extrabold leading-tight">{nilai}</p>
+    </div>
+  );
+}
       </div>
     </section>
   );
