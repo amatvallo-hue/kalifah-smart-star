@@ -557,9 +557,26 @@ function ResetPasswordModal({
       return;
     }
     setLoading(true);
-    const { data, error } = await supabase.functions.invoke("reset-child-password", {
-      body: { child_user_id: child.child_user_id, new_password: pw1 },
-    });
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+    const token = session?.access_token ?? "";
+    const res = await fetch(
+      "https://pgpkqbdyxoejwvubluqq.supabase.co/functions/v1/reset-child-password",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          child_user_id: child.child_user_id,
+          new_password: pw1,
+        }),
+      }
+    );
+    const data = await res.json().catch(() => ({ ok: false, error: "Ralat tidak dikenali" }));
+    const error = !res.ok ? { message: data.error || `HTTP ${res.status}` } : null;
     setLoading(false);
     if (error || !data?.ok) {
       const msg = (data && (data as { error?: string }).error) || error?.message || "Gagal reset password.";
