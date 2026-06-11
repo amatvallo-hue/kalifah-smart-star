@@ -1,0 +1,8 @@
+project_id = "pgpkqbdyxoejwvubluqq"
+
+[functions.notify-parent-activity]
+verify_jwt = false
+
+[functions.remind-inactive-students]
+verify_jwt = false
+schedule = "0 0 * * *"
