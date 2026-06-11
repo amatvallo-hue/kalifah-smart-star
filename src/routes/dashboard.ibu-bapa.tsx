@@ -558,10 +558,14 @@ function ResetPasswordModal({
     }
     setLoading(true);
     try {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      const token = session?.access_token ?? "";
+      // Get session — try refresh if null (mobile browsers sometimes lose session)
+      let { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token) {
+        console.warn("[reset-child-password] no session, trying refresh");
+        const refreshed = await supabase.auth.refreshSession();
+        session = refreshed.data.session;
+      }
+      const token = session?.access_token;
       if (!token) {
         const msg = "Sesi tamat. Sila log masuk semula.";
         setErr(msg);
@@ -574,19 +578,30 @@ function ResetPasswordModal({
         "https://pgpkqbdyxoejwvubluqq.supabase.co/functions/v1/reset-child-password";
       console.log("[reset-child-password] calling", url, {
         child_user_id: child.child_user_id,
+        hasToken: !!token,
       });
 
-      const res = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          child_user_id: child.child_user_id,
-          new_password: pw1,
-        }),
-      });
+      let res: Response;
+      try {
+        res = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            child_user_id: child.child_user_id,
+            new_password: pw1,
+          }),
+        });
+      } catch (netErr) {
+        console.error("[reset-child-password] network error", netErr);
+        const msg = "Tiada sambungan internet. Cuba semula.";
+        setErr(msg);
+        toast.error(msg);
+        setLoading(false);
+        return;
+      }
 
       const raw = await res.text();
       let data: { ok?: boolean; success?: boolean; error?: string; message?: string } = {};
@@ -595,12 +610,13 @@ function ResetPasswordModal({
       } catch {
         console.error("[reset-child-password] non-JSON response", res.status, raw);
       }
-      console.log("[reset-child-password] response", res.status, data);
+      console.log("[reset-child-password] response", res.status, "body:", raw);
 
       setLoading(false);
       const succeeded = res.ok && (data?.ok === true || data?.success === true || (data?.error == null && res.status === 200));
       if (!succeeded) {
-        const msg = data?.error || data?.message || `HTTP ${res.status}` || "Gagal reset password.";
+        console.error("[reset-child-password] failed", res.status, raw);
+        const msg = data?.error || data?.message || `Gagal reset password (HTTP ${res.status}).`;
         setErr(msg);
         toast.error(msg);
         return;
@@ -608,8 +624,8 @@ function ResetPasswordModal({
       toast.success("Password berjaya ditukar!");
       onClose();
     } catch (e) {
-      console.error("[reset-child-password] fetch error", e);
-      const msg = e instanceof Error ? e.message : "Ralat rangkaian.";
+      console.error("[reset-child-password] unexpected error", e);
+      const msg = e instanceof Error ? e.message : "Ralat tidak dijangka.";
       setErr(msg);
       toast.error(msg);
       setLoading(false);
