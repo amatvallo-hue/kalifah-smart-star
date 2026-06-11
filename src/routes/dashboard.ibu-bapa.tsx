@@ -12,7 +12,9 @@ import {
   Trash2,
   TrendingUp,
   Users,
+  KeyRound,
 } from "lucide-react";
+import { toast } from "sonner";
 import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
@@ -94,6 +96,7 @@ function ParentDashboard() {
   const [badges, setBadges] = useState<BadgeRow[]>([]);
   const [fetching, setFetching] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
+  const [resetFor, setResetFor] = useState<ChildProfile | null>(null);
 
   const isChild = !!user?.email?.includes(CHILD_EMAIL_DOMAIN);
 
