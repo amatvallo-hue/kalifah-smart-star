@@ -589,7 +589,7 @@ function ResetPasswordModal({
       });
 
       const raw = await res.text();
-      let data: { ok?: boolean; error?: string } = {};
+      let data: { ok?: boolean; success?: boolean; error?: string; message?: string } = {};
       try {
         data = raw ? JSON.parse(raw) : {};
       } catch {
@@ -598,13 +598,14 @@ function ResetPasswordModal({
       console.log("[reset-child-password] response", res.status, data);
 
       setLoading(false);
-      if (!res.ok || !data?.ok) {
-        const msg = data?.error || `HTTP ${res.status}` || "Gagal reset password.";
+      const succeeded = res.ok && (data?.ok === true || data?.success === true || (data?.error == null && res.status === 200));
+      if (!succeeded) {
+        const msg = data?.error || data?.message || `HTTP ${res.status}` || "Gagal reset password.";
         setErr(msg);
         toast.error(msg);
         return;
       }
-      toast.success("Password berjaya ditukar");
+      toast.success("Password berjaya ditukar!");
       onClose();
     } catch (e) {
       console.error("[reset-child-password] fetch error", e);
