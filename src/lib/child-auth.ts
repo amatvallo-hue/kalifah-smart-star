@@ -83,7 +83,23 @@ export async function ciptaAkaunAnak(
     return { ok: false, mesej: insertErr?.message ?? "Gagal simpan profil anak." };
   }
 
-  // 5) Sign out klien sekunder (bersihkan)
+  // 5) Set darjah_akses pada profile anak (guna sesi anak — RLS benarkan
+  //    user kemas kini profile sendiri sahaja). Anak hanya dapat akses
+  //    darjah dia sendiri, bukan dari profil ibu bapa.
+  const darjahNum = Number(darjah);
+  if (Number.isFinite(darjahNum) && darjahNum > 0) {
+    const { error: profErr } = await secondary
+      .from("profiles")
+      .upsert(
+        { id: childUserId, darjah_akses: [darjahNum] },
+        { onConflict: "id" },
+      );
+    if (profErr) {
+      console.error("[ciptaAkaunAnak] gagal set darjah_akses anak:", profErr);
+    }
+  }
+
+  // 6) Sign out klien sekunder (bersihkan)
   await secondary.auth.signOut();
 
   return { ok: true, childId: (row as { id: string }).id, userId: childUserId };
