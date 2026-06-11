@@ -6,3 +6,6 @@ verify_jwt = false
 [functions.remind-inactive-students]
 verify_jwt = false
 schedule = "0 0 * * *"
+
+[functions.reset-child-password]
+verify_jwt = true
