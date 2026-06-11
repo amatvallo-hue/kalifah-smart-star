@@ -557,13 +557,26 @@ function ResetPasswordModal({
       return;
     }
     setLoading(true);
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-    const token = session?.access_token ?? "";
-    const res = await fetch(
-      "https://pgpkqbdyxoejwvubluqq.supabase.co/functions/v1/reset-child-password",
-      {
+    try {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      const token = session?.access_token ?? "";
+      if (!token) {
+        const msg = "Sesi tamat. Sila log masuk semula.";
+        setErr(msg);
+        toast.error(msg);
+        setLoading(false);
+        return;
+      }
+
+      const url =
+        "https://pgpkqbdyxoejwvubluqq.supabase.co/functions/v1/reset-child-password";
+      console.log("[reset-child-password] calling", url, {
+        child_user_id: child.child_user_id,
+      });
+
+      const res = await fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -573,19 +586,33 @@ function ResetPasswordModal({
           child_user_id: child.child_user_id,
           new_password: pw1,
         }),
+      });
+
+      const raw = await res.text();
+      let data: { ok?: boolean; error?: string } = {};
+      try {
+        data = raw ? JSON.parse(raw) : {};
+      } catch {
+        console.error("[reset-child-password] non-JSON response", res.status, raw);
       }
-    );
-    const data = await res.json().catch(() => ({ ok: false, error: "Ralat tidak dikenali" }));
-    const error = !res.ok ? { message: data.error || `HTTP ${res.status}` } : null;
-    setLoading(false);
-    if (error || !data?.ok) {
-      const msg = (data && (data as { error?: string }).error) || error?.message || "Gagal reset password.";
+      console.log("[reset-child-password] response", res.status, data);
+
+      setLoading(false);
+      if (!res.ok || !data?.ok) {
+        const msg = data?.error || `HTTP ${res.status}` || "Gagal reset password.";
+        setErr(msg);
+        toast.error(msg);
+        return;
+      }
+      toast.success("Password berjaya ditukar");
+      onClose();
+    } catch (e) {
+      console.error("[reset-child-password] fetch error", e);
+      const msg = e instanceof Error ? e.message : "Ralat rangkaian.";
       setErr(msg);
       toast.error(msg);
-      return;
+      setLoading(false);
     }
-    toast.success("Password berjaya ditukar");
-    onClose();
   }
 
   return (
