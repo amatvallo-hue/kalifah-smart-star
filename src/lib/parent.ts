@@ -7,6 +7,7 @@ export interface ChildProfile {
   nama: string;
   darjah: string;
   kod_jemputan: string;
+  username: string | null;
   created_at: string;
 }
 

@@ -12,7 +12,9 @@ import {
   Trash2,
   TrendingUp,
   Users,
+  KeyRound,
 } from "lucide-react";
+import { toast } from "sonner";
 import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
@@ -94,6 +96,7 @@ function ParentDashboard() {
   const [badges, setBadges] = useState<BadgeRow[]>([]);
   const [fetching, setFetching] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
+  const [resetFor, setResetFor] = useState<ChildProfile | null>(null);
 
   const isChild = !!user?.email?.includes(CHILD_EMAIL_DOMAIN);
 
@@ -374,6 +377,37 @@ function ParentDashboard() {
               })}
             </section>
 
+            {/* Reset Password Anak */}
+            <Seksyen tajuk="Reset Password Anak" ikon={<KeyRound className="h-5 w-5" />}>
+              <div className="grid gap-3 sm:grid-cols-2">
+                {anakList.map((a) => (
+                  <div
+                    key={a.id}
+                    className="flex items-center justify-between gap-3 rounded-2xl bg-card p-4 shadow-soft"
+                    style={{ border: `2px solid ${HIJAU}1f` }}
+                  >
+                    <div className="min-w-0">
+                      <p className="truncate font-display text-base font-extrabold text-foreground">{a.nama}</p>
+                      <p className="truncate text-xs text-muted-foreground">
+                        @{a.username ?? "—"} • Darjah {a.darjah}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => setResetFor(a)}
+                      disabled={!a.child_user_id}
+                      className="inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-2 font-display text-xs font-extrabold text-white shadow-soft disabled:opacity-50"
+                      style={{ backgroundColor: HIJAU }}
+                      title={!a.child_user_id ? "Anak belum dipautkan" : "Reset password anak"}
+                    >
+                      <KeyRound className="h-3.5 w-3.5" /> Reset Password
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </Seksyen>
+
+
+
 
             {anakAktif && anakAktif.child_user_id && (
               <>
@@ -488,6 +522,114 @@ function ParentDashboard() {
           </>
         )}
       </main>
+      {resetFor && (
+        <ResetPasswordModal child={resetFor} onClose={() => setResetFor(null)} />
+      )}
+    </div>
+  );
+}
+
+function ResetPasswordModal({
+  child,
+  onClose,
+}: {
+  child: ChildProfile;
+  onClose: () => void;
+}) {
+  const [pw1, setPw1] = useState("");
+  const [pw2, setPw2] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    setErr(null);
+    if (pw1.length < 6) {
+      setErr("Password minimum 6 aksara.");
+      return;
+    }
+    if (pw1 !== pw2) {
+      setErr("Password tidak sepadan.");
+      return;
+    }
+    if (!child.child_user_id) {
+      setErr("Anak belum dipautkan.");
+      return;
+    }
+    setLoading(true);
+    const { data, error } = await supabase.functions.invoke("reset-child-password", {
+      body: { child_user_id: child.child_user_id, new_password: pw1 },
+    });
+    setLoading(false);
+    if (error || !data?.ok) {
+      const msg = (data && (data as { error?: string }).error) || error?.message || "Gagal reset password.";
+      setErr(msg);
+      toast.error(msg);
+      return;
+    }
+    toast.success("Password berjaya ditukar");
+    onClose();
+  }
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <form
+        onSubmit={submit}
+        onClick={(e) => e.stopPropagation()}
+        className="w-full max-w-md rounded-3xl bg-card p-6 shadow-card"
+      >
+        <h3 className="font-display text-xl font-extrabold text-foreground">
+          Reset Password — {child.nama}
+        </h3>
+        <p className="mt-1 text-xs text-muted-foreground">
+          Tetapkan password baharu untuk akaun <b>@{child.username ?? "—"}</b>.
+        </p>
+        <label className="mt-4 block">
+          <span className="mb-1 block text-xs font-extrabold text-foreground">Password Baharu</span>
+          <input
+            type="password"
+            value={pw1}
+            onChange={(e) => setPw1(e.target.value)}
+            placeholder="Minimum 6 aksara"
+            minLength={6}
+            required
+            className="w-full rounded-xl border-2 border-border px-4 py-2.5 font-display text-sm"
+          />
+        </label>
+        <label className="mt-3 block">
+          <span className="mb-1 block text-xs font-extrabold text-foreground">Sahkan Password</span>
+          <input
+            type="password"
+            value={pw2}
+            onChange={(e) => setPw2(e.target.value)}
+            placeholder="Taip semula password"
+            minLength={6}
+            required
+            className="w-full rounded-xl border-2 border-border px-4 py-2.5 font-display text-sm"
+          />
+        </label>
+        {err && <p className="mt-3 text-xs text-destructive">{err}</p>}
+        <div className="mt-5 flex gap-2">
+          <button
+            type="button"
+            onClick={onClose}
+            className="flex-1 rounded-full bg-muted px-4 py-2.5 font-display text-sm font-extrabold text-muted-foreground hover:text-foreground"
+          >
+            Batal
+          </button>
+          <button
+            type="submit"
+            disabled={loading}
+            className="flex-1 rounded-full px-4 py-2.5 font-display text-sm font-extrabold text-white shadow-soft disabled:opacity-60"
+            style={{ backgroundColor: HIJAU }}
+          >
+            {loading ? "Menukar..." : "Sahkan"}
+          </button>
+        </div>
+      </form>
     </div>
   );
 }
