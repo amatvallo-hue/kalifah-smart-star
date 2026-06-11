@@ -377,6 +377,37 @@ function ParentDashboard() {
               })}
             </section>
 
+            {/* Reset Password Anak */}
+            <Seksyen tajuk="Reset Password Anak" ikon={<KeyRound className="h-5 w-5" />}>
+              <div className="grid gap-3 sm:grid-cols-2">
+                {anakList.map((a) => (
+                  <div
+                    key={a.id}
+                    className="flex items-center justify-between gap-3 rounded-2xl bg-card p-4 shadow-soft"
+                    style={{ border: `2px solid ${HIJAU}1f` }}
+                  >
+                    <div className="min-w-0">
+                      <p className="truncate font-display text-base font-extrabold text-foreground">{a.nama}</p>
+                      <p className="truncate text-xs text-muted-foreground">
+                        @{a.username ?? "—"} • Darjah {a.darjah}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => setResetFor(a)}
+                      disabled={!a.child_user_id}
+                      className="inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-2 font-display text-xs font-extrabold text-white shadow-soft disabled:opacity-50"
+                      style={{ backgroundColor: HIJAU }}
+                      title={!a.child_user_id ? "Anak belum dipautkan" : "Reset password anak"}
+                    >
+                      <KeyRound className="h-3.5 w-3.5" /> Reset Password
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </Seksyen>
+
+
+
 
             {anakAktif && anakAktif.child_user_id && (
               <>
