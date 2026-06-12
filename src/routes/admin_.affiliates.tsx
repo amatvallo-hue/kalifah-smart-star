@@ -141,7 +141,7 @@ function AdminAffiliatesPage() {
                 </TableRow>
               ) : (
                 rows.map((r) => {
-                  const baki = r.total_komisyen_sen - r.total_dibayar_sen;
+                  const baki = Number(r.total_komisyen_sen) - Number(r.total_dibayar_sen);
                   return (
                     <TableRow key={r.id}>
                       <TableCell className="font-bold">{r.nama}</TableCell>
