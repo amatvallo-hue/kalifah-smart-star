@@ -10,6 +10,7 @@ const SUPABASE_ANON_KEY =
 type CheckoutBody = {
   pakej?: unknown;
   darjah?: unknown;
+  ref_code?: unknown;
 };
 
 function traceId() {
@@ -164,6 +165,11 @@ export const Route = createFileRoute("/api/checkout")({
             amountSen,
           });
 
+          const refCode =
+            typeof body.ref_code === "string" && body.ref_code.trim().length > 0
+              ? body.ref_code.trim().toUpperCase().slice(0, 64)
+              : null;
+
           const {
             data: order,
             error: orderErr,
@@ -177,6 +183,7 @@ export const Route = createFileRoute("/api/checkout")({
               darjah_dipilih: darjah,
               amount_sen: amountSen,
               status: "pending",
+              ref_code: refCode,
             })
             .select("id, amount_sen, status, created_at")
             .single();
