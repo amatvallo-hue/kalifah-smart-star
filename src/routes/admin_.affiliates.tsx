@@ -170,15 +170,19 @@ function AdminAffiliatesPage() {
                 </TableRow>
               ) : (
                 rows.map((r) => {
-                  const komisyen = toNum(r.total_komisyen);
-                  const dibayar = toNum(r.total_dibayar);
+                  console.log("[admin/affiliates] row:", r.id, {
+                    total_komisyen_sen: r.total_komisyen_sen,
+                    total_dibayar_sen: r.total_dibayar_sen,
+                  });
+                  const komisyen = Number(r.total_komisyen_sen) || 0;
+                  const dibayar = Number(r.total_dibayar_sen) || 0;
                   return (
                     <TableRow key={r.id}>
                       <TableCell className="font-bold">{r.nama}</TableCell>
                       <TableCell className="text-sm">{r.email}</TableCell>
                       <TableCell className="font-mono text-sm">{r.ref_code}</TableCell>
-                      <TableCell className="text-right">{rm(komisyen)}</TableCell>
-                      <TableCell className="text-right">{rm(dibayar)}</TableCell>
+                      <TableCell className="text-right">{r.total_komisyen_sen ?? "—"}</TableCell>
+                      <TableCell className="text-right">{r.total_dibayar_sen ?? "—"}</TableCell>
                       <TableCell>
                         <Button
                           size="sm"
