@@ -37,18 +37,10 @@ interface AffRow {
   total_dibayar?: number | string | null;
 }
 
-// Returns ringgit amount from a row, handling both `_sen` (integer sen) and
-// decimal ringgit columns.
-function toRinggit(senVal: unknown, ringgitVal: unknown): number {
-  const sen = parseFloat(String(senVal ?? ""));
-  if (!Number.isNaN(sen) && sen !== 0) return sen / 100;
-  const rgt = parseFloat(String(ringgitVal ?? ""));
-  if (!Number.isNaN(rgt)) return rgt;
-  return 0;
-}
+const toRinggit = (val: any) => `RM ${parseFloat(val || 0).toFixed(2)}`;
 
 function rm(val: number) {
-  return `RM ${(val || 0).toFixed(2)}`;
+  return toRinggit(val);
 }
 
 function AdminAffiliatesPage() {
