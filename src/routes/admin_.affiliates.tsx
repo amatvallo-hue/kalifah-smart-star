@@ -26,8 +26,8 @@ interface AffRow {
   nama: string | null;
   email: string | null;
   ref_code: string | null;
-  total_komisyen_sen: number | string | null;
-  total_dibayar_sen: number | string | null;
+  total_komisyen: number | string | null;
+  total_dibayar: number | string | null;
 }
 
 const toNum = (v: unknown) => {
