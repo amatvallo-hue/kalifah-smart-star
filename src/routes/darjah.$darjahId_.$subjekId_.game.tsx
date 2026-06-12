@@ -8,6 +8,7 @@ import { BetulSalahGame } from "@/components/games/BetulSalahGame";
 import { PadankanJawapanGame } from "@/components/games/PadankanJawapanGame";
 import { SusunAyatGame } from "@/components/games/SusunAyatGame";
 import { MatikDragGame } from "@/components/games/MatikDragGame";
+import { MatikNeonGame } from "@/components/games/MatikNeonGame";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { getDarjah, getSubjek } from "@/lib/curriculum";
