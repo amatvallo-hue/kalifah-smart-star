@@ -34,14 +34,18 @@ function HargaPage() {
       const token = sess.session?.access_token;
       console.log("[harga] sesi checkout", { adaSesi: !!sess.session, adaToken: !!token });
 
-      console.log("[harga] hantar request /api/checkout", { pakej, darjah });
+      const refCode =
+        typeof window !== "undefined"
+          ? window.localStorage.getItem("kalifah_ref") ?? undefined
+          : undefined;
+      console.log("[harga] hantar request /api/checkout", { pakej, darjah, refCode });
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
-        body: JSON.stringify({ pakej, darjah }),
+        body: JSON.stringify({ pakej, darjah, ref_code: refCode }),
       });
       const data = (await res.json()) as {
         url?: string;
