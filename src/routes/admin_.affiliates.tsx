@@ -40,6 +40,11 @@ function AdminAffiliatesPage() {
   const [rows, setRows] = useState<AdminAffiliateRow[]>([]);
   const [marking, setMarking] = useState<string | null>(null);
 
+  async function getToken(): Promise<string> {
+    const { data } = await supabase.auth.getSession();
+    return data.session?.access_token ?? "";
+  }
+
   useEffect(() => {
     if (authLoading) return;
     if (!user) {
@@ -58,7 +63,8 @@ function AdminAffiliatesPage() {
       }
       setIsAdmin(true);
       try {
-        const list = await fetchList();
+        const accessToken = await getToken();
+        const list = await fetchList({ data: { accessToken } });
         setRows(list);
       } catch (e) {
         toast.error(`Gagal muat: ${(e as Error).message}`);
@@ -70,7 +76,8 @@ function AdminAffiliatesPage() {
   async function handleMark(id: string) {
     setMarking(id);
     try {
-      const res = await markPaid({ data: { id } });
+      const accessToken = await getToken();
+      const res = await markPaid({ data: { accessToken, id } });
       setRows((prev) =>
         prev.map((r) =>
           r.id === id

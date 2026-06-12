@@ -1,5 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
-import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { getSupabaseAdmin } from "@/integrations/supabase/client.server";
 
 export interface AdminAffiliateRow {
   id: string;
@@ -10,35 +10,39 @@ export interface AdminAffiliateRow {
   total_dibayar: number;
 }
 
-async function assertAdmin(ctx: { supabase: any; userId: string }) {
-  const { data, error } = await ctx.supabase
-    .from("profiles")
-    .select("role")
-    .eq("id", ctx.userId)
-    .maybeSingle();
-  if (error) throw new Error(error.message);
-  if ((data as { role?: string } | null)?.role !== "admin") {
-    throw new Error("Forbidden: bukan admin");
-  }
-}
-
 function toNum(v: unknown): number {
   if (v == null) return 0;
   const n = parseFloat(String(v));
   return Number.isFinite(n) ? n : 0;
 }
 
-export const listAffiliates = createServerFn({ method: "GET" })
-  .middleware([requireSupabaseAuth])
-  .handler(async ({ context }): Promise<AdminAffiliateRow[]> => {
-    await assertAdmin(context);
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data, error } = await supabaseAdmin
+async function assertAdmin(accessToken: string) {
+  if (!accessToken) throw new Error("Tiada token. Sila log masuk semula.");
+  const admin = getSupabaseAdmin();
+  const { data: u, error: uErr } = await admin.auth.getUser(accessToken);
+  if (uErr || !u.user) throw new Error("Sesi tidak sah.");
+  const { data: p, error: pErr } = await admin
+    .from("profiles")
+    .select("role")
+    .eq("id", u.user.id)
+    .maybeSingle();
+  if (pErr) throw new Error(pErr.message);
+  if ((p as { role?: string } | null)?.role !== "admin") {
+    throw new Error("Bukan admin.");
+  }
+  return admin;
+}
+
+export const listAffiliates = createServerFn({ method: "POST" })
+  .inputValidator((d: { accessToken: string }) => d)
+  .handler(async ({ data }): Promise<AdminAffiliateRow[]> => {
+    const admin = await assertAdmin(data.accessToken);
+    const { data: rows, error } = await admin
       .from("affiliates")
       .select("id,nama,email,ref_code,total_komisyen,total_dibayar")
       .order("created_at", { ascending: false });
     if (error) throw new Error(error.message);
-    return (data ?? []).map((r: any) => ({
+    return (rows ?? []).map((r: any) => ({
       id: r.id,
       nama: r.nama,
       email: r.email,
@@ -49,16 +53,13 @@ export const listAffiliates = createServerFn({ method: "GET" })
   });
 
 export const markAffiliatePaid = createServerFn({ method: "POST" })
-  .middleware([requireSupabaseAuth])
-  .inputValidator((d: { id: string }) => {
-    if (!d?.id || typeof d.id !== "string") throw new Error("id diperlukan");
+  .inputValidator((d: { accessToken: string; id: string }) => {
+    if (!d?.id) throw new Error("id diperlukan");
     return d;
   })
-  .handler(async ({ data, context }) => {
-    await assertAdmin(context);
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-
-    const { data: row, error: selErr } = await supabaseAdmin
+  .handler(async ({ data }) => {
+    const admin = await assertAdmin(data.accessToken);
+    const { data: row, error: selErr } = await admin
       .from("affiliates")
       .select("id,total_komisyen,total_dibayar")
       .eq("id", data.id)
@@ -69,7 +70,7 @@ export const markAffiliatePaid = createServerFn({ method: "POST" })
     const komisyen = toNum((row as any).total_komisyen);
     const dibayar = toNum((row as any).total_dibayar);
 
-    const { error: updErr } = await supabaseAdmin
+    const { error: updErr } = await admin
       .from("affiliates")
       .update({ total_dibayar: dibayar + komisyen, total_komisyen: 0 })
       .eq("id", data.id);
