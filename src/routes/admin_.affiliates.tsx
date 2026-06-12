@@ -31,13 +31,24 @@ interface AffRow {
   ref_code: string;
   total_klik: number;
   total_jualan: number;
-  total_komisyen_sen: number;
-  total_dibayar_sen: number;
+  total_komisyen_sen?: number | string | null;
+  total_dibayar_sen?: number | string | null;
+  total_komisyen?: number | string | null;
+  total_dibayar?: number | string | null;
 }
 
-function rm(sen: number | string | null | undefined) {
-  const val = parseFloat(String(sen ?? 0)) || 0;
-  return `RM ${(val / 100).toFixed(2)}`;
+// Returns ringgit amount from a row, handling both `_sen` (integer sen) and
+// decimal ringgit columns.
+function toRinggit(senVal: unknown, ringgitVal: unknown): number {
+  const sen = parseFloat(String(senVal ?? ""));
+  if (!Number.isNaN(sen) && sen !== 0) return sen / 100;
+  const rgt = parseFloat(String(ringgitVal ?? ""));
+  if (!Number.isNaN(rgt)) return rgt;
+  return 0;
+}
+
+function rm(val: number) {
+  return `RM ${(val || 0).toFixed(2)}`;
 }
 
 function AdminAffiliatesPage() {
@@ -49,10 +60,11 @@ function AdminAffiliatesPage() {
   const [marking, setMarking] = useState<string | null>(null);
 
   async function loadRows() {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("affiliates")
       .select("*")
       .order("created_at", { ascending: false });
+    console.log("[admin/affiliates] raw data:", data, "error:", error);
     setRows((data as AffRow[]) ?? []);
   }
 
@@ -142,8 +154,8 @@ function AdminAffiliatesPage() {
                 </TableRow>
               ) : (
                 rows.map((r) => {
-                  const komisyen = parseFloat(String(r.total_komisyen_sen)) || 0;
-                  const dibayar = parseFloat(String(r.total_dibayar_sen)) || 0;
+                  const komisyen = toRinggit(r.total_komisyen_sen, r.total_komisyen);
+                  const dibayar = toRinggit(r.total_dibayar_sen, r.total_dibayar);
                   const baki = komisyen - dibayar;
                   return (
                     <TableRow key={r.id}>
@@ -156,8 +168,8 @@ function AdminAffiliatesPage() {
                       </TableCell>
                       <TableCell className="text-right">{r.total_klik}</TableCell>
                       <TableCell className="text-right">{r.total_jualan}</TableCell>
-                      <TableCell className="text-right">{rm(r.total_komisyen_sen)}</TableCell>
-                      <TableCell className="text-right">{rm(r.total_dibayar_sen)}</TableCell>
+                      <TableCell className="text-right">{rm(komisyen)}</TableCell>
+                      <TableCell className="text-right">{rm(dibayar)}</TableCell>
                       <TableCell className="text-right font-bold text-primary">
                         {rm(baki)}
                       </TableCell>
