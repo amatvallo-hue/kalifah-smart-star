@@ -60,10 +60,11 @@ function AdminAffiliatesPage() {
   const [marking, setMarking] = useState<string | null>(null);
 
   async function loadRows() {
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("affiliates")
       .select("*")
       .order("created_at", { ascending: false });
+    console.log("[admin/affiliates] raw data:", data, "error:", error);
     setRows((data as AffRow[]) ?? []);
   }
 
