@@ -752,13 +752,25 @@ function GameSubjekPage() {
           >
             <AlignLeft className="h-4 w-4" /> Susun Ayat
           </button>
+          {hasMatikDrag && (
+            <button
+              onClick={() => setMode("matik")}
+              className={`inline-flex items-center gap-2 rounded-xl px-3 py-2 font-display text-sm font-extrabold transition ${
+                mode === "matik" ? "text-white shadow-soft" : "text-muted-foreground"
+              }`}
+              style={mode === "matik" ? { backgroundColor: "#0EA5E9" } : undefined}
+            >
+              <Apple className="h-4 w-4" /> MatikStar (Set 2)
+            </button>
+          )}
         </div>
 
         {mode === "betul" && <BetulSalahGame subjekId={subjekId} darjah={darjahId} />}
         {mode === "padan" && <PadankanJawapanGame subjekId={subjekId} darjah={darjahId} />}
         {mode === "susun" && <SusunAyatGame subjekId={subjekId} darjah={darjahId} />}
+        {mode === "matik" && <MatikDragGame subjekId={subjekId} darjah={darjahId} />}
 
-        {(mode === "betul" || mode === "padan" || mode === "susun") ? null : hasCariPerkataan && mode === "cari" ? (
+        {(mode === "betul" || mode === "padan" || mode === "susun" || mode === "matik") ? null : hasCariPerkataan && mode === "cari" ? (
           isMate ? (
             <CariPerkataan
               pickBank={pickMATE_D1}
