@@ -122,6 +122,29 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const ref = params.get("ref");
+    if (ref && ref.trim().length > 0) {
+      const code = ref.trim().toUpperCase().slice(0, 64);
+      const existing = window.localStorage.getItem("kalifah_ref");
+      window.localStorage.setItem("kalifah_ref", code);
+      if (existing !== code) {
+        // Increment klik untuk ref baru
+        fetch("https://pgpkqbdyxoejwvubluqq.supabase.co/rest/v1/rpc/affiliate_increment_klik", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            apikey:
+              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBncGtxYmR5eG9land2dWJsdXFxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1NjcyMjAsImV4cCI6MjA5NjE0MzIyMH0.dWoxARe5MfuHuCtMn53z50Kxh_-UjnqGnh8XREzPUUo",
+          },
+          body: JSON.stringify({ _ref: code }),
+        }).catch((e) => console.warn("[ref] klik gagal", e));
+      }
+    }
+  }, []);
+
   return (
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
