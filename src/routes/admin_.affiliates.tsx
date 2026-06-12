@@ -79,16 +79,23 @@ function AdminAffiliatesPage() {
 
   async function tandaDibayar(affId: string) {
     setMarking(affId);
-    const { error } = await supabase.rpc("affiliate_tanda_dibayar", {
-      _affiliate_id: affId,
-    });
-    if (error) {
-      toast.error(`Gagal: ${error.message}`);
-    } else {
-      toast.success("Komisyen ditandakan sebagai dibayar.");
-      await loadRows();
+    try {
+      const { error } = await supabase.rpc("affiliate_tanda_dibayar", {
+        _affiliate_id: affId,
+      });
+      if (error) {
+        console.error("affiliate_tanda_dibayar error:", error);
+        toast.error(`Gagal: ${error.message}`);
+      } else {
+        toast.success("Komisyen berjaya ditandakan sebagai dibayar");
+        await loadRows();
+      }
+    } catch (e) {
+      console.error(e);
+      toast.error(`Gagal: ${(e as Error).message}`);
+    } finally {
+      setMarking(null);
     }
-    setMarking(null);
   }
 
   if (authLoading || checking) {
