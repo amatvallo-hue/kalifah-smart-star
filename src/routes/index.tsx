@@ -610,7 +610,7 @@ function Footer() {
           <p className="font-display text-sm font-extrabold text-foreground">Hubungi Kami</p>
           <p className="mt-3 text-sm text-muted-foreground">support@kalifah.my</p>
           <a
-            href="https://wa.me/60111140253"
+            href="https://wa.me/601111402553"
             target="_blank"
             rel="noopener noreferrer"
             className="mt-4 inline-flex items-center gap-2 rounded-full px-5 py-2.5 font-display text-sm font-extrabold text-white shadow-soft transition hover:opacity-90"
