@@ -26,6 +26,9 @@ import { Route as ApiTemporaryUnlockRouteImport } from './routes/api.temporary-u
 import { Route as ApiDebugEnvRouteImport } from './routes/api.debug-env'
 import { Route as ApiConfirmPaymentRouteImport } from './routes/api.confirm-payment'
 import { Route as ApiCheckoutRouteImport } from './routes/api.checkout'
+import { Route as AffiliateDashboardRouteImport } from './routes/affiliate.dashboard'
+import { Route as AffiliateDaftarRouteImport } from './routes/affiliate.daftar'
+import { Route as AdminAffiliatesRouteImport } from './routes/admin.affiliates'
 import { Route as DarjahDarjahIdSubjekIdRouteImport } from './routes/darjah.$darjahId_.$subjekId'
 import { Route as DarjahDarjahIdSubjekIdNotaRingkasRouteImport } from './routes/darjah.$darjahId_.$subjekId_.nota-ringkas'
 import { Route as DarjahDarjahIdSubjekIdLatihanRouteImport } from './routes/darjah.$darjahId_.$subjekId_.latihan'
@@ -119,6 +122,21 @@ const ApiCheckoutRoute = ApiCheckoutRouteImport.update({
   path: '/api/checkout',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AffiliateDashboardRoute = AffiliateDashboardRouteImport.update({
+  id: '/affiliate/dashboard',
+  path: '/affiliate/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AffiliateDaftarRoute = AffiliateDaftarRouteImport.update({
+  id: '/affiliate/daftar',
+  path: '/affiliate/daftar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminAffiliatesRoute = AdminAffiliatesRouteImport.update({
+  id: '/affiliates',
+  path: '/affiliates',
+  getParentRoute: () => AdminRoute,
+} as any)
 const DarjahDarjahIdSubjekIdRoute = DarjahDarjahIdSubjekIdRouteImport.update({
   id: '/darjah/$darjahId_/$subjekId',
   path: '/darjah/$darjahId/$subjekId',
@@ -163,7 +181,7 @@ const ApiPublicToyyibpayCallbackRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRoute
+  '/admin': typeof AdminRouteWithChildren
   '/daftar': typeof DaftarRoute
   '/harga': typeof HargaRoute
   '/latihan': typeof LatihanRoute
@@ -171,6 +189,9 @@ export interface FileRoutesByFullPath {
   '/lupa-password': typeof LupaPasswordRoute
   '/pilih-darjah': typeof PilihDarjahRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/admin/affiliates': typeof AdminAffiliatesRoute
+  '/affiliate/daftar': typeof AffiliateDaftarRoute
+  '/affiliate/dashboard': typeof AffiliateDashboardRoute
   '/api/checkout': typeof ApiCheckoutRoute
   '/api/confirm-payment': typeof ApiConfirmPaymentRoute
   '/api/debug-env': typeof ApiDebugEnvRoute
@@ -189,7 +210,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRoute
+  '/admin': typeof AdminRouteWithChildren
   '/daftar': typeof DaftarRoute
   '/harga': typeof HargaRoute
   '/latihan': typeof LatihanRoute
@@ -197,6 +218,9 @@ export interface FileRoutesByTo {
   '/lupa-password': typeof LupaPasswordRoute
   '/pilih-darjah': typeof PilihDarjahRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/admin/affiliates': typeof AdminAffiliatesRoute
+  '/affiliate/daftar': typeof AffiliateDaftarRoute
+  '/affiliate/dashboard': typeof AffiliateDashboardRoute
   '/api/checkout': typeof ApiCheckoutRoute
   '/api/confirm-payment': typeof ApiConfirmPaymentRoute
   '/api/debug-env': typeof ApiDebugEnvRoute
@@ -216,7 +240,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/admin': typeof AdminRoute
+  '/admin': typeof AdminRouteWithChildren
   '/daftar': typeof DaftarRoute
   '/harga': typeof HargaRoute
   '/latihan': typeof LatihanRoute
@@ -224,6 +248,9 @@ export interface FileRoutesById {
   '/lupa-password': typeof LupaPasswordRoute
   '/pilih-darjah': typeof PilihDarjahRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/admin/affiliates': typeof AdminAffiliatesRoute
+  '/affiliate/daftar': typeof AffiliateDaftarRoute
+  '/affiliate/dashboard': typeof AffiliateDashboardRoute
   '/api/checkout': typeof ApiCheckoutRoute
   '/api/confirm-payment': typeof ApiConfirmPaymentRoute
   '/api/debug-env': typeof ApiDebugEnvRoute
@@ -252,6 +279,9 @@ export interface FileRouteTypes {
     | '/lupa-password'
     | '/pilih-darjah'
     | '/reset-password'
+    | '/admin/affiliates'
+    | '/affiliate/daftar'
+    | '/affiliate/dashboard'
     | '/api/checkout'
     | '/api/confirm-payment'
     | '/api/debug-env'
@@ -278,6 +308,9 @@ export interface FileRouteTypes {
     | '/lupa-password'
     | '/pilih-darjah'
     | '/reset-password'
+    | '/admin/affiliates'
+    | '/affiliate/daftar'
+    | '/affiliate/dashboard'
     | '/api/checkout'
     | '/api/confirm-payment'
     | '/api/debug-env'
@@ -304,6 +337,9 @@ export interface FileRouteTypes {
     | '/lupa-password'
     | '/pilih-darjah'
     | '/reset-password'
+    | '/admin/affiliates'
+    | '/affiliate/daftar'
+    | '/affiliate/dashboard'
     | '/api/checkout'
     | '/api/confirm-payment'
     | '/api/debug-env'
@@ -323,7 +359,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AdminRoute: typeof AdminRoute
+  AdminRoute: typeof AdminRouteWithChildren
   DaftarRoute: typeof DaftarRoute
   HargaRoute: typeof HargaRoute
   LatihanRoute: typeof LatihanRoute
@@ -331,6 +367,8 @@ export interface RootRouteChildren {
   LupaPasswordRoute: typeof LupaPasswordRoute
   PilihDarjahRoute: typeof PilihDarjahRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  AffiliateDaftarRoute: typeof AffiliateDaftarRoute
+  AffiliateDashboardRoute: typeof AffiliateDashboardRoute
   ApiCheckoutRoute: typeof ApiCheckoutRoute
   ApiConfirmPaymentRoute: typeof ApiConfirmPaymentRoute
   ApiDebugEnvRoute: typeof ApiDebugEnvRoute
@@ -469,6 +507,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiCheckoutRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/affiliate/dashboard': {
+      id: '/affiliate/dashboard'
+      path: '/affiliate/dashboard'
+      fullPath: '/affiliate/dashboard'
+      preLoaderRoute: typeof AffiliateDashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/affiliate/daftar': {
+      id: '/affiliate/daftar'
+      path: '/affiliate/daftar'
+      fullPath: '/affiliate/daftar'
+      preLoaderRoute: typeof AffiliateDaftarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/affiliates': {
+      id: '/admin/affiliates'
+      path: '/affiliates'
+      fullPath: '/admin/affiliates'
+      preLoaderRoute: typeof AdminAffiliatesRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/darjah/$darjahId_/$subjekId': {
       id: '/darjah/$darjahId_/$subjekId'
       path: '/darjah/$darjahId/$subjekId'
@@ -521,9 +580,19 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AdminRouteChildren {
+  AdminAffiliatesRoute: typeof AdminAffiliatesRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminAffiliatesRoute: AdminAffiliatesRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AdminRoute: AdminRoute,
+  AdminRoute: AdminRouteWithChildren,
   DaftarRoute: DaftarRoute,
   HargaRoute: HargaRoute,
   LatihanRoute: LatihanRoute,
@@ -531,6 +600,8 @@ const rootRouteChildren: RootRouteChildren = {
   LupaPasswordRoute: LupaPasswordRoute,
   PilihDarjahRoute: PilihDarjahRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  AffiliateDaftarRoute: AffiliateDaftarRoute,
+  AffiliateDashboardRoute: AffiliateDashboardRoute,
   ApiCheckoutRoute: ApiCheckoutRoute,
   ApiConfirmPaymentRoute: ApiConfirmPaymentRoute,
   ApiDebugEnvRoute: ApiDebugEnvRoute,
@@ -551,3 +622,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
