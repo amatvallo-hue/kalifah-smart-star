@@ -35,8 +35,9 @@ interface AffRow {
   total_dibayar_sen: number;
 }
 
-function rm(sen: number) {
-  return `RM ${(sen / 100).toFixed(2)}`;
+function rm(sen: number | string | null | undefined) {
+  const val = parseFloat(String(sen ?? 0)) || 0;
+  return `RM ${(val / 100).toFixed(2)}`;
 }
 
 function AdminAffiliatesPage() {
