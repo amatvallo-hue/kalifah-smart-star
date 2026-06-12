@@ -8,6 +8,7 @@ import { BetulSalahGame } from "@/components/games/BetulSalahGame";
 import { PadankanJawapanGame } from "@/components/games/PadankanJawapanGame";
 import { SusunAyatGame } from "@/components/games/SusunAyatGame";
 import { MatikDragGame } from "@/components/games/MatikDragGame";
+import { MatikNeonGame } from "@/components/games/MatikNeonGame";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { getDarjah, getSubjek } from "@/lib/curriculum";
@@ -584,7 +585,8 @@ function GameSubjekPage() {
 
   const hasRace = soalanList.length > 0;
   const hasMatikDrag = subjekId === "matematik" && (darjahId === "1" || darjahId === "2" || darjahId === "3");
-  const [mode, setMode] = useState<"race" | "cari" | "betul" | "padan" | "susun" | "matik">(hasRace ? "race" : "betul");
+  const hasMatikNeon = subjekId === "matematik" && (darjahId === "4" || darjahId === "5" || darjahId === "6");
+  const [mode, setMode] = useState<"race" | "cari" | "betul" | "padan" | "susun" | "matik" | "matik-neon">(hasRace ? "race" : "betul");
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
@@ -696,7 +698,7 @@ function GameSubjekPage() {
           </div>
           <div>
             <h1 className="font-display text-3xl font-extrabold text-foreground">
-              {mode === "cari" ? "Cari Perkataan" : mode === "betul" ? "Betul atau Salah" : mode === "padan" ? "Padankan Jawapan" : mode === "susun" ? "Susun Ayat" : mode === "matik" ? "MatikStar (Set 2)" : "Quiz Race"}
+              {mode === "cari" ? "Cari Perkataan" : mode === "betul" ? "Betul atau Salah" : mode === "padan" ? "Padankan Jawapan" : mode === "susun" ? "Susun Ayat" : mode === "matik" ? "MatikStar (Set 2)" : mode === "matik-neon" ? "Matik Neon (Set 2)" : "Quiz Race"}
             </h1>
             <p className="text-sm text-muted-foreground">{darjah.label} • {subjek.title}</p>
           </div>
@@ -763,14 +765,26 @@ function GameSubjekPage() {
               <Apple className="h-4 w-4" /> MatikStar (Set 2)
             </button>
           )}
+          {hasMatikNeon && (
+            <button
+              onClick={() => setMode("matik-neon")}
+              className={`inline-flex items-center gap-2 rounded-xl px-3 py-2 font-display text-sm font-extrabold transition ${
+                mode === "matik-neon" ? "text-white shadow-soft" : "text-muted-foreground"
+              }`}
+              style={mode === "matik-neon" ? { backgroundColor: "#7C3AED" } : undefined}
+            >
+              <Sparkles className="h-4 w-4" /> Matik Neon (Set 2)
+            </button>
+          )}
         </div>
 
         {mode === "betul" && <BetulSalahGame subjekId={subjekId} darjah={darjahId} />}
         {mode === "padan" && <PadankanJawapanGame subjekId={subjekId} darjah={darjahId} />}
         {mode === "susun" && <SusunAyatGame subjekId={subjekId} darjah={darjahId} />}
         {mode === "matik" && <MatikDragGame subjekId={subjekId} darjah={darjahId} />}
+        {mode === "matik-neon" && <MatikNeonGame subjekId={subjekId} darjah={darjahId} />}
 
-        {(mode === "betul" || mode === "padan" || mode === "susun" || mode === "matik") ? null : hasCariPerkataan && mode === "cari" ? (
+        {(mode === "betul" || mode === "padan" || mode === "susun" || mode === "matik" || mode === "matik-neon") ? null : hasCariPerkataan && mode === "cari" ? (
           isMate ? (
             <CariPerkataan
               pickBank={pickMATE_D1}
