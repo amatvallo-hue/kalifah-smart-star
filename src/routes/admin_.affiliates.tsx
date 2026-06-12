@@ -35,8 +35,9 @@ interface AffRow {
   total_dibayar_sen: number;
 }
 
-function rm(sen: number) {
-  return `RM ${(sen / 100).toFixed(2)}`;
+function rm(sen: number | string | null | undefined) {
+  const val = parseFloat(String(sen ?? 0)) || 0;
+  return `RM ${(val / 100).toFixed(2)}`;
 }
 
 function AdminAffiliatesPage() {
@@ -87,7 +88,7 @@ function AdminAffiliatesPage() {
         console.error("affiliate_tanda_dibayar error:", error);
         toast.error(`Gagal: ${error.message}`);
       } else {
-        toast.success("Komisyen berjaya ditandakan sebagai dibayar");
+        toast.success("Komisyen berjaya ditandakan dibayar!");
         await loadRows();
       }
     } catch (e) {
@@ -141,7 +142,9 @@ function AdminAffiliatesPage() {
                 </TableRow>
               ) : (
                 rows.map((r) => {
-                  const baki = Number(r.total_komisyen_sen) - Number(r.total_dibayar_sen);
+                  const komisyen = parseFloat(String(r.total_komisyen_sen)) || 0;
+                  const dibayar = parseFloat(String(r.total_dibayar_sen)) || 0;
+                  const baki = komisyen - dibayar;
                   return (
                     <TableRow key={r.id}>
                       <TableCell className="font-bold">{r.nama}</TableCell>
