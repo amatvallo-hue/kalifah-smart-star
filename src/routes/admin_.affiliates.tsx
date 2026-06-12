@@ -93,8 +93,18 @@ function AdminAffiliatesPage() {
         toast.error(`Gagal: ${error.message}`);
       } else {
         toast.success("Komisyen berjaya ditandakan dibayar!");
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        await loadRows();
+        setRows((prev) =>
+          prev.map((r) => {
+            if (r.id !== affId) return r;
+            const komisyen = parseFloat(String(r.total_komisyen ?? 0)) || 0;
+            const dibayar = parseFloat(String(r.total_dibayar ?? 0)) || 0;
+            return {
+              ...r,
+              total_komisyen: 0,
+              total_dibayar: dibayar + komisyen,
+            };
+          }),
+        );
       }
     } catch (e) {
       console.error(e);
