@@ -46,17 +46,36 @@ function AdminAffiliatesPage() {
   const [marking, setMarking] = useState<string | null>(null);
 
   async function loadRows() {
-    const { data, error } = await supabase
-      .from("affiliates")
-      .select("*")
-      .order("created_at", { ascending: false });
-    if (error) {
-      console.error("[admin/affiliates] load error:", error);
-      toast.error(`Gagal muat: ${error.message}`);
-      return;
+    try {
+      const { data: sess } = await supabase.auth.getSession();
+      const token = sess.session?.access_token;
+      if (!token) {
+        toast.error("Sesi tamat. Sila log masuk semula.");
+        return;
+      }
+      const res = await fetch(
+        "https://pgpkqbdyxoejwvubluqq.supabase.co/functions/v1/get-affiliates",
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          cache: "no-store",
+        },
+      );
+      const json = (await res.json()) as { ok: boolean; data?: AffRow[]; error?: string };
+      if (!res.ok || !json.ok) {
+        console.error("[admin/affiliates] load error:", json.error);
+        toast.error(`Gagal muat: ${json.error ?? res.statusText}`);
+        return;
+      }
+      console.log("[admin/affiliates] raw data:", json.data);
+      setRows(json.data ?? []);
+    } catch (e) {
+      console.error("[admin/affiliates] load exception:", e);
+      toast.error(`Gagal muat: ${e instanceof Error ? e.message : String(e)}`);
     }
-    console.log("[admin/affiliates] raw data:", data);
-    setRows((data as AffRow[]) ?? []);
   }
 
   useEffect(() => {
