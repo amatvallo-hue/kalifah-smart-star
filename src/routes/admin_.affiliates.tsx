@@ -1,5 +1,4 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useServerFn } from "@tanstack/react-start";
 import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
@@ -15,11 +14,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import {
-  listAffiliates,
-  markAffiliatePaid,
-  type AdminAffiliateRow,
-} from "@/lib/admin-affiliates.functions";
 
 export const Route = createFileRoute("/admin_/affiliates")({
   head: () => ({ meta: [{ title: "Admin Affiliates — Kalifah.my" }] }),
@@ -27,22 +21,42 @@ export const Route = createFileRoute("/admin_/affiliates")({
   component: AdminAffiliatesPage,
 });
 
+interface AffRow {
+  id: string;
+  nama: string | null;
+  email: string | null;
+  ref_code: string | null;
+  total_komisyen: number | string | null;
+  total_dibayar: number | string | null;
+}
+
+const toNum = (v: unknown) => {
+  if (v == null) return 0;
+  const n = parseFloat(String(v));
+  return Number.isFinite(n) ? n : 0;
+};
 const rm = (v: number) => `RM ${v.toFixed(2)}`;
 
 function AdminAffiliatesPage() {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
-  const fetchList = useServerFn(listAffiliates);
-  const markPaid = useServerFn(markAffiliatePaid);
-
   const [checking, setChecking] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
-  const [rows, setRows] = useState<AdminAffiliateRow[]>([]);
+  const [rows, setRows] = useState<AffRow[]>([]);
   const [marking, setMarking] = useState<string | null>(null);
 
-  async function getToken(): Promise<string> {
-    const { data } = await supabase.auth.getSession();
-    return data.session?.access_token ?? "";
+  async function loadRows() {
+    const { data, error } = await supabase
+      .from("affiliates")
+      .select("*")
+      .order("created_at", { ascending: false });
+    if (error) {
+      console.error("[admin/affiliates] load error:", error);
+      toast.error(`Gagal muat: ${error.message}`);
+      return;
+    }
+    console.log("[admin/affiliates] raw data:", data);
+    setRows((data as AffRow[]) ?? []);
   }
 
   useEffect(() => {
@@ -62,32 +76,36 @@ function AdminAffiliatesPage() {
         return;
       }
       setIsAdmin(true);
-      try {
-        const accessToken = await getToken();
-        const list = await fetchList({ data: { accessToken } });
-        setRows(list);
-      } catch (e) {
-        toast.error(`Gagal muat: ${(e as Error).message}`);
-      }
+      await loadRows();
       setChecking(false);
     })();
-  }, [user, authLoading, navigate, fetchList]);
+  }, [user, authLoading, navigate]);
 
   async function handleMark(id: string) {
     setMarking(id);
     try {
-      const accessToken = await getToken();
-      const res = await markPaid({ data: { accessToken, id } });
+      const row = rows.find((r) => r.id === id);
+      if (!row) {
+        toast.error("Baris tidak ditemui");
+        return;
+      }
+      const komisyen = toNum(row.total_komisyen);
+      const dibayar = toNum(row.total_dibayar);
+
+      const { error } = await supabase
+        .from("affiliates")
+        .update({ total_dibayar: dibayar + komisyen, total_komisyen: 0 })
+        .eq("id", id);
+      if (error) {
+        toast.error(`Gagal: ${error.message}`);
+        return;
+      }
       setRows((prev) =>
         prev.map((r) =>
-          r.id === id
-            ? { ...r, total_komisyen: res.total_komisyen, total_dibayar: res.total_dibayar }
-            : r,
+          r.id === id ? { ...r, total_komisyen: 0, total_dibayar: dibayar + komisyen } : r,
         ),
       );
       toast.success("Komisyen ditandakan dibayar!");
-    } catch (e) {
-      toast.error(`Gagal: ${(e as Error).message}`);
     } finally {
       setMarking(null);
     }
@@ -129,24 +147,28 @@ function AdminAffiliatesPage() {
                   </TableCell>
                 </TableRow>
               ) : (
-                rows.map((r) => (
-                  <TableRow key={r.id}>
-                    <TableCell className="font-bold">{r.nama}</TableCell>
-                    <TableCell className="text-sm">{r.email}</TableCell>
-                    <TableCell className="font-mono text-sm">{r.ref_code}</TableCell>
-                    <TableCell className="text-right">{rm(r.total_komisyen)}</TableCell>
-                    <TableCell className="text-right">{rm(r.total_dibayar)}</TableCell>
-                    <TableCell>
-                      <Button
-                        size="sm"
-                        disabled={r.total_komisyen <= 0 || marking === r.id}
-                        onClick={() => handleMark(r.id)}
-                      >
-                        {marking === r.id ? "Memproses..." : "Tandakan Dibayar"}
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))
+                rows.map((r) => {
+                  const komisyen = toNum(r.total_komisyen);
+                  const dibayar = toNum(r.total_dibayar);
+                  return (
+                    <TableRow key={r.id}>
+                      <TableCell className="font-bold">{r.nama}</TableCell>
+                      <TableCell className="text-sm">{r.email}</TableCell>
+                      <TableCell className="font-mono text-sm">{r.ref_code}</TableCell>
+                      <TableCell className="text-right">{rm(komisyen)}</TableCell>
+                      <TableCell className="text-right">{rm(dibayar)}</TableCell>
+                      <TableCell>
+                        <Button
+                          size="sm"
+                          disabled={komisyen <= 0 || marking === r.id}
+                          onClick={() => handleMark(r.id)}
+                        >
+                          {marking === r.id ? "Memproses..." : "Tandakan Dibayar"}
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
               )}
             </TableBody>
           </Table>
