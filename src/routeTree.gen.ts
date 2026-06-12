@@ -28,7 +28,7 @@ import { Route as ApiConfirmPaymentRouteImport } from './routes/api.confirm-paym
 import { Route as ApiCheckoutRouteImport } from './routes/api.checkout'
 import { Route as AffiliateDashboardRouteImport } from './routes/affiliate.dashboard'
 import { Route as AffiliateDaftarRouteImport } from './routes/affiliate.daftar'
-import { Route as AdminAffiliatesRouteImport } from './routes/admin.affiliates'
+import { Route as AdminAffiliatesRouteImport } from './routes/admin_.affiliates'
 import { Route as DarjahDarjahIdSubjekIdRouteImport } from './routes/darjah.$darjahId_.$subjekId'
 import { Route as DarjahDarjahIdSubjekIdNotaRingkasRouteImport } from './routes/darjah.$darjahId_.$subjekId_.nota-ringkas'
 import { Route as DarjahDarjahIdSubjekIdLatihanRouteImport } from './routes/darjah.$darjahId_.$subjekId_.latihan'
@@ -133,9 +133,9 @@ const AffiliateDaftarRoute = AffiliateDaftarRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminAffiliatesRoute = AdminAffiliatesRouteImport.update({
-  id: '/affiliates',
-  path: '/affiliates',
-  getParentRoute: () => AdminRoute,
+  id: '/admin_/affiliates',
+  path: '/admin/affiliates',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const DarjahDarjahIdSubjekIdRoute = DarjahDarjahIdSubjekIdRouteImport.update({
   id: '/darjah/$darjahId_/$subjekId',
@@ -181,7 +181,7 @@ const ApiPublicToyyibpayCallbackRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRouteWithChildren
+  '/admin': typeof AdminRoute
   '/daftar': typeof DaftarRoute
   '/harga': typeof HargaRoute
   '/latihan': typeof LatihanRoute
@@ -210,7 +210,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRouteWithChildren
+  '/admin': typeof AdminRoute
   '/daftar': typeof DaftarRoute
   '/harga': typeof HargaRoute
   '/latihan': typeof LatihanRoute
@@ -240,7 +240,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/admin': typeof AdminRouteWithChildren
+  '/admin': typeof AdminRoute
   '/daftar': typeof DaftarRoute
   '/harga': typeof HargaRoute
   '/latihan': typeof LatihanRoute
@@ -248,7 +248,7 @@ export interface FileRoutesById {
   '/lupa-password': typeof LupaPasswordRoute
   '/pilih-darjah': typeof PilihDarjahRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/admin/affiliates': typeof AdminAffiliatesRoute
+  '/admin_/affiliates': typeof AdminAffiliatesRoute
   '/affiliate/daftar': typeof AffiliateDaftarRoute
   '/affiliate/dashboard': typeof AffiliateDashboardRoute
   '/api/checkout': typeof ApiCheckoutRoute
@@ -337,7 +337,7 @@ export interface FileRouteTypes {
     | '/lupa-password'
     | '/pilih-darjah'
     | '/reset-password'
-    | '/admin/affiliates'
+    | '/admin_/affiliates'
     | '/affiliate/daftar'
     | '/affiliate/dashboard'
     | '/api/checkout'
@@ -359,7 +359,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AdminRoute: typeof AdminRouteWithChildren
+  AdminRoute: typeof AdminRoute
   DaftarRoute: typeof DaftarRoute
   HargaRoute: typeof HargaRoute
   LatihanRoute: typeof LatihanRoute
@@ -367,6 +367,7 @@ export interface RootRouteChildren {
   LupaPasswordRoute: typeof LupaPasswordRoute
   PilihDarjahRoute: typeof PilihDarjahRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  AdminAffiliatesRoute: typeof AdminAffiliatesRoute
   AffiliateDaftarRoute: typeof AffiliateDaftarRoute
   AffiliateDashboardRoute: typeof AffiliateDashboardRoute
   ApiCheckoutRoute: typeof ApiCheckoutRoute
@@ -521,12 +522,12 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AffiliateDaftarRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin/affiliates': {
-      id: '/admin/affiliates'
-      path: '/affiliates'
+    '/admin_/affiliates': {
+      id: '/admin_/affiliates'
+      path: '/admin/affiliates'
       fullPath: '/admin/affiliates'
       preLoaderRoute: typeof AdminAffiliatesRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof rootRouteImport
     }
     '/darjah/$darjahId_/$subjekId': {
       id: '/darjah/$darjahId_/$subjekId'
@@ -580,19 +581,9 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface AdminRouteChildren {
-  AdminAffiliatesRoute: typeof AdminAffiliatesRoute
-}
-
-const AdminRouteChildren: AdminRouteChildren = {
-  AdminAffiliatesRoute: AdminAffiliatesRoute,
-}
-
-const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AdminRoute: AdminRouteWithChildren,
+  AdminRoute: AdminRoute,
   DaftarRoute: DaftarRoute,
   HargaRoute: HargaRoute,
   LatihanRoute: LatihanRoute,
@@ -600,6 +591,7 @@ const rootRouteChildren: RootRouteChildren = {
   LupaPasswordRoute: LupaPasswordRoute,
   PilihDarjahRoute: PilihDarjahRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  AdminAffiliatesRoute: AdminAffiliatesRoute,
   AffiliateDaftarRoute: AffiliateDaftarRoute,
   AffiliateDashboardRoute: AffiliateDashboardRoute,
   ApiCheckoutRoute: ApiCheckoutRoute,

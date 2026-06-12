@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 
-export const Route = createFileRoute("/admin/affiliates")({
+export const Route = createFileRoute("/admin_/affiliates")({
   head: () => ({ meta: [{ title: "Admin Affiliates — Kalifah.my" }] }),
   ssr: false,
   component: AdminAffiliatesPage,
