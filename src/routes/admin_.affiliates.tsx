@@ -85,27 +85,46 @@ function AdminAffiliatesPage() {
   async function tandaDibayar(affId: string) {
     setMarking(affId);
     try {
-      const { error } = await supabase.rpc("affiliate_tanda_dibayar", {
-        affiliate_uuid: affId,
-      });
-      if (error) {
-        console.error("affiliate_tanda_dibayar error:", error);
-        toast.error(`Gagal: ${error.message}`);
-      } else {
-        toast.success("Komisyen berjaya ditandakan dibayar!");
-        setRows((prev) =>
-          prev.map((r) => {
-            if (r.id !== affId) return r;
-            const komisyen = parseFloat(String(r.total_komisyen ?? 0)) || 0;
-            const dibayar = parseFloat(String(r.total_dibayar ?? 0)) || 0;
-            return {
-              ...r,
-              total_komisyen: 0,
-              total_dibayar: dibayar + komisyen,
-            };
-          }),
-        );
+      const row = rows.find((r) => r.id === affId);
+      if (!row) {
+        toast.error("Baris tidak ditemui");
+        return;
       }
+      const komisyen = parseFloat(String(row.total_komisyen ?? 0)) || 0;
+      const dibayar = parseFloat(String(row.total_dibayar ?? 0)) || 0;
+
+      const { error: updErr } = await supabase
+        .from("affiliates")
+        .update({
+          total_dibayar: dibayar + komisyen,
+          total_komisyen: 0,
+        })
+        .eq("id", affId);
+      if (updErr) {
+        console.error("affiliates update error:", updErr);
+        toast.error(`Gagal: ${updErr.message}`);
+        return;
+      }
+
+      const { error: jualanErr } = await supabase
+        .from("affiliate_jualan")
+        .update({ status_bayar: "dibayar" })
+        .eq("affiliate_id", affId)
+        .eq("status_bayar", "pending");
+      if (jualanErr) {
+        console.error("affiliate_jualan update error:", jualanErr);
+        toast.error(`Gagal: ${jualanErr.message}`);
+        return;
+      }
+
+      toast.success("Komisyen berjaya ditandakan dibayar!");
+      setRows((prev) =>
+        prev.map((r) =>
+          r.id !== affId
+            ? r
+            : { ...r, total_komisyen: 0, total_dibayar: dibayar + komisyen },
+        ),
+      );
     } catch (e) {
       console.error(e);
       toast.error(`Gagal: ${(e as Error).message}`);
