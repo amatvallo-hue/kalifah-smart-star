@@ -1,12 +1,13 @@
 import { createFileRoute, Link, useNavigate, useParams } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ArrowLeft, Gamepad2, Send, Sparkles, Timer, Trophy, Search, CheckSquare, Link2, AlignLeft } from "lucide-react";
+import { ArrowLeft, Gamepad2, Send, Sparkles, Timer, Trophy, Search, CheckSquare, Link2, AlignLeft, Apple } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { StarReward } from "@/components/StarReward";
 import { CariPerkataan, pickBM_D1, pickBI_D1, pickJAWI_D1, pickPI_D1, pickSAINS_D1, pickMATE_D1, BM_DARJAH2_WORDS, BM_DARJAH2_CLUES, BM_DARJAH3_WORDS, BM_DARJAH3_CLUES, BM_DARJAH4_WORDS, BM_DARJAH4_CLUES, BM_DARJAH5_WORDS, BM_DARJAH5_CLUES, BM_DARJAH6_WORDS, BM_DARJAH6_CLUES, BI_DARJAH2_WORDS, BI_DARJAH2_CLUES, BI_DARJAH3_WORDS, BI_DARJAH3_CLUES, BI_DARJAH4_WORDS, BI_DARJAH4_CLUES, BI_DARJAH5_WORDS, BI_DARJAH5_CLUES, BI_DARJAH6_WORDS, BI_DARJAH6_CLUES, JAWI_DARJAH2_WORDS, JAWI_DARJAH2_CLUES, JAWI_DARJAH3_WORDS, JAWI_DARJAH3_CLUES, JAWI_DARJAH4_WORDS, JAWI_DARJAH4_CLUES, JAWI_DARJAH5_WORDS, JAWI_DARJAH5_CLUES, JAWI_DARJAH6_WORDS, JAWI_DARJAH6_CLUES, PI_DARJAH2_WORDS, PI_DARJAH2_CLUES, PI_DARJAH3_WORDS, PI_DARJAH3_CLUES, PI_DARJAH4_WORDS, PI_DARJAH4_CLUES, PI_DARJAH5_WORDS, PI_DARJAH5_CLUES, PI_DARJAH6_WORDS, PI_DARJAH6_CLUES, SAINS_DARJAH2_WORDS, SAINS_DARJAH2_CLUES, SAINS_DARJAH4_WORDS, SAINS_DARJAH4_CLUES, SAINS_DARJAH5_WORDS, SAINS_DARJAH5_CLUES, SAINS_DARJAH6_WORDS, SAINS_DARJAH6_CLUES, MATE_DARJAH2_WORDS, MATE_DARJAH2_CLUES, MATE_DARJAH3_WORDS, MATE_DARJAH3_CLUES, MATE_DARJAH4_WORDS, MATE_DARJAH4_CLUES, MATE_DARJAH5_WORDS, MATE_DARJAH5_CLUES, MATE_DARJAH6_WORDS, MATE_DARJAH6_CLUES } from "@/components/CariPerkataan";
 import { BetulSalahGame } from "@/components/games/BetulSalahGame";
 import { PadankanJawapanGame } from "@/components/games/PadankanJawapanGame";
 import { SusunAyatGame } from "@/components/games/SusunAyatGame";
+import { MatikDragGame } from "@/components/games/MatikDragGame";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { getDarjah, getSubjek } from "@/lib/curriculum";
@@ -582,7 +583,8 @@ function GameSubjekPage() {
   const hasCariPerkataan = isMate || isMate2 || isMate3 || isMate4 || isMate5 || isBM || isBM2 || isBM3 || isBM4 || isBM5 || isBI || isBI2 || isBI3 || isBI4 || isBI5 || isJawi || isJawi2 || isJawi3 || isJawi4 || isJawi5 || isPI || isPI2 || isPI3 || isPI4 || isPI5 || isSains || isSains2 || isSains3 || isSains4 || isSains5 || isBM6 || isMate6 || isBI6 || isJawi6 || isPI6 || isSains6;
 
   const hasRace = soalanList.length > 0;
-  const [mode, setMode] = useState<"race" | "cari" | "betul" | "padan" | "susun">(hasRace ? "race" : "betul");
+  const hasMatikDrag = subjekId === "matematik" && (darjahId === "1" || darjahId === "2" || darjahId === "3");
+  const [mode, setMode] = useState<"race" | "cari" | "betul" | "padan" | "susun" | "matik">(hasRace ? "race" : "betul");
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
@@ -694,7 +696,7 @@ function GameSubjekPage() {
           </div>
           <div>
             <h1 className="font-display text-3xl font-extrabold text-foreground">
-              {mode === "cari" ? "Cari Perkataan" : mode === "betul" ? "Betul atau Salah" : mode === "padan" ? "Padankan Jawapan" : mode === "susun" ? "Susun Ayat" : "Quiz Race"}
+              {mode === "cari" ? "Cari Perkataan" : mode === "betul" ? "Betul atau Salah" : mode === "padan" ? "Padankan Jawapan" : mode === "susun" ? "Susun Ayat" : mode === "matik" ? "MatikStar (Set 2)" : "Quiz Race"}
             </h1>
             <p className="text-sm text-muted-foreground">{darjah.label} • {subjek.title}</p>
           </div>
@@ -750,13 +752,25 @@ function GameSubjekPage() {
           >
             <AlignLeft className="h-4 w-4" /> Susun Ayat
           </button>
+          {hasMatikDrag && (
+            <button
+              onClick={() => setMode("matik")}
+              className={`inline-flex items-center gap-2 rounded-xl px-3 py-2 font-display text-sm font-extrabold transition ${
+                mode === "matik" ? "text-white shadow-soft" : "text-muted-foreground"
+              }`}
+              style={mode === "matik" ? { backgroundColor: "#0EA5E9" } : undefined}
+            >
+              <Apple className="h-4 w-4" /> MatikStar (Set 2)
+            </button>
+          )}
         </div>
 
         {mode === "betul" && <BetulSalahGame subjekId={subjekId} darjah={darjahId} />}
         {mode === "padan" && <PadankanJawapanGame subjekId={subjekId} darjah={darjahId} />}
         {mode === "susun" && <SusunAyatGame subjekId={subjekId} darjah={darjahId} />}
+        {mode === "matik" && <MatikDragGame subjekId={subjekId} darjah={darjahId} />}
 
-        {(mode === "betul" || mode === "padan" || mode === "susun") ? null : hasCariPerkataan && mode === "cari" ? (
+        {(mode === "betul" || mode === "padan" || mode === "susun" || mode === "matik") ? null : hasCariPerkataan && mode === "cari" ? (
           isMate ? (
             <CariPerkataan
               pickBank={pickMATE_D1}
