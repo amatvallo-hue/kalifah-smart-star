@@ -9,3 +9,6 @@ schedule = "0 0 * * *"
 
 [functions.reset-child-password]
 verify_jwt = true
+
+[functions.get-affiliates]
+verify_jwt = true
