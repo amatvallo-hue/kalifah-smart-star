@@ -31,13 +31,24 @@ interface AffRow {
   ref_code: string;
   total_klik: number;
   total_jualan: number;
-  total_komisyen_sen: number;
-  total_dibayar_sen: number;
+  total_komisyen_sen?: number | string | null;
+  total_dibayar_sen?: number | string | null;
+  total_komisyen?: number | string | null;
+  total_dibayar?: number | string | null;
 }
 
-function rm(sen: number | string | null | undefined) {
-  const val = parseFloat(String(sen ?? 0)) || 0;
-  return `RM ${(val / 100).toFixed(2)}`;
+// Returns ringgit amount from a row, handling both `_sen` (integer sen) and
+// decimal ringgit columns.
+function toRinggit(senVal: unknown, ringgitVal: unknown): number {
+  const sen = parseFloat(String(senVal ?? ""));
+  if (!Number.isNaN(sen) && sen !== 0) return sen / 100;
+  const rgt = parseFloat(String(ringgitVal ?? ""));
+  if (!Number.isNaN(rgt)) return rgt;
+  return 0;
+}
+
+function rm(val: number) {
+  return `RM ${(val || 0).toFixed(2)}`;
 }
 
 function AdminAffiliatesPage() {
