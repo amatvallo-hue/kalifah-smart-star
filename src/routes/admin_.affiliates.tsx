@@ -154,8 +154,8 @@ function AdminAffiliatesPage() {
                 </TableRow>
               ) : (
                 rows.map((r) => {
-                  const komisyen = parseFloat(String(r.total_komisyen_sen)) || 0;
-                  const dibayar = parseFloat(String(r.total_dibayar_sen)) || 0;
+                  const komisyen = toRinggit(r.total_komisyen_sen, r.total_komisyen);
+                  const dibayar = toRinggit(r.total_dibayar_sen, r.total_dibayar);
                   const baki = komisyen - dibayar;
                   return (
                     <TableRow key={r.id}>
@@ -168,8 +168,8 @@ function AdminAffiliatesPage() {
                       </TableCell>
                       <TableCell className="text-right">{r.total_klik}</TableCell>
                       <TableCell className="text-right">{r.total_jualan}</TableCell>
-                      <TableCell className="text-right">{rm(r.total_komisyen_sen)}</TableCell>
-                      <TableCell className="text-right">{rm(r.total_dibayar_sen)}</TableCell>
+                      <TableCell className="text-right">{rm(komisyen)}</TableCell>
+                      <TableCell className="text-right">{rm(dibayar)}</TableCell>
                       <TableCell className="text-right font-bold text-primary">
                         {rm(baki)}
                       </TableCell>
