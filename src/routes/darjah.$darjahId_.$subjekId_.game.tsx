@@ -696,7 +696,7 @@ function GameSubjekPage() {
           </div>
           <div>
             <h1 className="font-display text-3xl font-extrabold text-foreground">
-              {mode === "cari" ? "Cari Perkataan" : mode === "betul" ? "Betul atau Salah" : mode === "padan" ? "Padankan Jawapan" : mode === "susun" ? "Susun Ayat" : "Quiz Race"}
+              {mode === "cari" ? "Cari Perkataan" : mode === "betul" ? "Betul atau Salah" : mode === "padan" ? "Padankan Jawapan" : mode === "susun" ? "Susun Ayat" : mode === "matik" ? "MatikStar (Set 2)" : "Quiz Race"}
             </h1>
             <p className="text-sm text-muted-foreground">{darjah.label} • {subjek.title}</p>
           </div>
