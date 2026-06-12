@@ -81,7 +81,7 @@ function AdminAffiliatesPage() {
     setMarking(affId);
     try {
       const { error } = await supabase.rpc("affiliate_tanda_dibayar", {
-        _affiliate_id: affId,
+        affiliate_uuid: affId,
       });
       if (error) {
         console.error("affiliate_tanda_dibayar error:", error);
