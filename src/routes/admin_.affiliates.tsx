@@ -34,6 +34,7 @@ function AdminAffiliates() {
   }, []);
 
   const markPaid = async (row: AffRow) => {
+    console.log('markPaid called', row.id);
     await supabase
       .from("affiliates")
       .update({
