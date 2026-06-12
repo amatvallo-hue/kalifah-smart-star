@@ -26,8 +26,8 @@ interface AffRow {
   nama: string | null;
   email: string | null;
   ref_code: string | null;
-  total_komisyen_sen: number | string | null;
-  total_dibayar_sen: number | string | null;
+  total_komisyen: number | string | null;
+  total_dibayar: number | string | null;
 }
 
 const toNum = (v: unknown) => {
@@ -72,6 +72,7 @@ function AdminAffiliatesPage() {
       }
       console.log("[admin/affiliates] raw data:", json.data);
       setRows(json.data ?? []);
+      console.log("[admin/affiliates] rows JSON:", JSON.stringify(json.data ?? []));
     } catch (e) {
       console.error("[admin/affiliates] load exception:", e);
       toast.error(`Gagal muat: ${e instanceof Error ? e.message : String(e)}`);
@@ -108,12 +109,12 @@ function AdminAffiliatesPage() {
         toast.error("Baris tidak ditemui");
         return;
       }
-      const komisyen = Number(row.total_komisyen_sen) || 0;
-      const dibayar = Number(row.total_dibayar_sen) || 0;
+      const komisyen = Number(row.total_komisyen) || 0;
+      const dibayar = Number(row.total_dibayar) || 0;
 
       const { error } = await supabase
         .from("affiliates")
-        .update({ total_dibayar_sen: dibayar + komisyen, total_komisyen_sen: 0 })
+        .update({ total_dibayar: dibayar + komisyen, total_komisyen: 0 })
         .eq("id", id);
       if (error) {
         toast.error(`Gagal: ${error.message}`);
@@ -122,7 +123,7 @@ function AdminAffiliatesPage() {
       setRows((prev) =>
         prev.map((r) =>
           r.id === id
-            ? { ...r, total_komisyen_sen: 0, total_dibayar_sen: dibayar + komisyen }
+            ? { ...r, total_komisyen: 0, total_dibayar: dibayar + komisyen }
             : r,
         ),
       );
@@ -171,18 +172,18 @@ function AdminAffiliatesPage() {
               ) : (
                 rows.map((r) => {
                   console.log("[admin/affiliates] row:", r.id, {
-                    total_komisyen_sen: r.total_komisyen_sen,
-                    total_dibayar_sen: r.total_dibayar_sen,
+                    total_komisyen: r.total_komisyen,
+                    total_dibayar: r.total_dibayar,
                   });
-                  const komisyen = Number(r.total_komisyen_sen) || 0;
-                  const dibayar = Number(r.total_dibayar_sen) || 0;
+                  const komisyen = Number(r.total_komisyen) || 0;
+                  const dibayar = Number(r.total_dibayar) || 0;
                   return (
                     <TableRow key={r.id}>
                       <TableCell className="font-bold">{r.nama}</TableCell>
                       <TableCell className="text-sm">{r.email}</TableCell>
                       <TableCell className="font-mono text-sm">{r.ref_code}</TableCell>
-                      <TableCell className="text-right">{r.total_komisyen_sen ?? "—"}</TableCell>
-                      <TableCell className="text-right">{r.total_dibayar_sen ?? "—"}</TableCell>
+                      <TableCell className="text-right">{r.total_komisyen ?? "—"}</TableCell>
+                      <TableCell className="text-right">{r.total_dibayar ?? "—"}</TableCell>
                       <TableCell>
                         <Button
                           size="sm"
