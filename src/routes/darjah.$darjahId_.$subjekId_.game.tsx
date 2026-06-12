@@ -585,7 +585,8 @@ function GameSubjekPage() {
 
   const hasRace = soalanList.length > 0;
   const hasMatikDrag = subjekId === "matematik" && (darjahId === "1" || darjahId === "2" || darjahId === "3");
-  const [mode, setMode] = useState<"race" | "cari" | "betul" | "padan" | "susun" | "matik">(hasRace ? "race" : "betul");
+  const hasMatikNeon = subjekId === "matematik" && (darjahId === "4" || darjahId === "5" || darjahId === "6");
+  const [mode, setMode] = useState<"race" | "cari" | "betul" | "padan" | "susun" | "matik" | "matik-neon">(hasRace ? "race" : "betul");
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
