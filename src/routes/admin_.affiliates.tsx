@@ -93,6 +93,7 @@ function AdminAffiliatesPage() {
         toast.error(`Gagal: ${error.message}`);
       } else {
         toast.success("Komisyen berjaya ditandakan dibayar!");
+        await new Promise((resolve) => setTimeout(resolve, 1000));
         await loadRows();
       }
     } catch (e) {
