@@ -154,8 +154,8 @@ function AdminAffiliatesPage() {
                 </TableRow>
               ) : (
                 rows.map((r) => {
-                  const komisyen = toRinggit(r.total_komisyen_sen, r.total_komisyen);
-                  const dibayar = toRinggit(r.total_dibayar_sen, r.total_dibayar);
+                  const komisyen = parseFloat(String(r.total_komisyen ?? 0)) || 0;
+                  const dibayar = parseFloat(String(r.total_dibayar ?? 0)) || 0;
                   const baki = komisyen - dibayar;
                   return (
                     <TableRow key={r.id}>
