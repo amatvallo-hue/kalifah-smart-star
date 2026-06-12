@@ -108,12 +108,12 @@ function AdminAffiliatesPage() {
         toast.error("Baris tidak ditemui");
         return;
       }
-      const komisyen = toNum(row.total_komisyen);
-      const dibayar = toNum(row.total_dibayar);
+      const komisyen = Number(row.total_komisyen_sen) || 0;
+      const dibayar = Number(row.total_dibayar_sen) || 0;
 
       const { error } = await supabase
         .from("affiliates")
-        .update({ total_dibayar: dibayar + komisyen, total_komisyen: 0 })
+        .update({ total_dibayar_sen: dibayar + komisyen, total_komisyen_sen: 0 })
         .eq("id", id);
       if (error) {
         toast.error(`Gagal: ${error.message}`);
@@ -121,7 +121,9 @@ function AdminAffiliatesPage() {
       }
       setRows((prev) =>
         prev.map((r) =>
-          r.id === id ? { ...r, total_komisyen: 0, total_dibayar: dibayar + komisyen } : r,
+          r.id === id
+            ? { ...r, total_komisyen_sen: 0, total_dibayar_sen: dibayar + komisyen }
+            : r,
         ),
       );
       toast.success("Komisyen ditandakan dibayar!");
@@ -129,6 +131,7 @@ function AdminAffiliatesPage() {
       setMarking(null);
     }
   }
+
 
   if (authLoading || checking) {
     return (
