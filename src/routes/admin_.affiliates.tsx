@@ -72,6 +72,7 @@ function AdminAffiliatesPage() {
       }
       console.log("[admin/affiliates] raw data:", json.data);
       setRows(json.data ?? []);
+      console.log("[admin/affiliates] rows JSON:", JSON.stringify(json.data ?? []));
     } catch (e) {
       console.error("[admin/affiliates] load exception:", e);
       toast.error(`Gagal muat: ${e instanceof Error ? e.message : String(e)}`);
