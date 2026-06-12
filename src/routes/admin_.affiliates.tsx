@@ -88,7 +88,7 @@ function AdminAffiliatesPage() {
         console.error("affiliate_tanda_dibayar error:", error);
         toast.error(`Gagal: ${error.message}`);
       } else {
-        toast.success("Komisyen berjaya ditandakan sebagai dibayar");
+        toast.success("Komisyen berjaya ditandakan dibayar!");
         await loadRows();
       }
     } catch (e) {
