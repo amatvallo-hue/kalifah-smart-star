@@ -45,7 +45,7 @@ function AdminAffiliates() {
     setRows((prev) =>
       prev.map((r) =>
         r.id === row.id
-          ? { ...r, total_dibayar: r.total_dibayar + r.total_komisyen, total_komisyen: 0 }
+          ? { ...r, total_dibayar: Number(r.total_dibayar || 0) + Number(r.total_komisyen || 0), total_komisyen: 0 }
           : r,
       ),
     );
