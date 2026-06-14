@@ -34,9 +34,10 @@ interface Props {
   darjahLabel: string;
   subjekId: string;
   subjekTitle: string;
+  subjekKod?: string; // kod dalam table kuiz_soalan, contoh "BM" atau "MT"
 }
 
-export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle }: Props) {
+export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subjekKod = "BM" }: Props) {
   const darjahNum = Number(darjahId);
 
   const [topicList, setTopicList] = useState<string[]>([]);
@@ -65,7 +66,7 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle }: Pr
         .from("kuiz_soalan")
         .select("topik")
         .eq("darjah", darjahNum)
-        .eq("subjek", "BM");
+        .eq("subjek", subjekKod);
       if (cancelled) return;
       if (error) {
         setErrMsg(error.message);
@@ -87,7 +88,7 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle }: Pr
     return () => {
       cancelled = true;
     };
-  }, [darjahNum]);
+  }, [darjahNum, subjekKod]);
 
   useEffect(() => {
     if (selesai && soalanList.length > 0) {
@@ -110,7 +111,7 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle }: Pr
       .from("kuiz_soalan")
       .select("id, soalan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan, penjelasan, topik")
       .eq("darjah", darjahNum)
-      .eq("subjek", "BM")
+      .eq("subjek", subjekKod)
       .eq("topik", pilihTopik);
     if (error) {
       setErrMsg(error.message);
