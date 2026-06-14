@@ -8,6 +8,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { getDarjah, getSubjek } from "@/lib/curriculum";
 import { getQuiz, getQuizSet2, type QuizQuestion } from "@/lib/quiz-bank";
 import { simpanProgress } from "@/lib/progress";
+import { KuizBMTopik } from "@/components/KuizBMTopik";
 
 export const Route = createFileRoute("/darjah/$darjahId_/$subjekId_/kuiz")({
   head: () => ({ meta: [{ title: "Kuiz — Kalifah.my" }] }),
