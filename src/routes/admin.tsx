@@ -30,6 +30,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin")({
@@ -248,12 +250,15 @@ function ManualPayments({ adminEmail }: { adminEmail: string }) {
   if (loading) {
     return <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />;
   }
-  if (rows.length === 0) {
-    return <p className="text-muted-foreground">Tiada pembayaran manual yang menunggu.</p>;
-  }
 
   return (
     <>
+      <div className="mb-4 flex justify-end">
+        <NewManualOrderDialog onCreated={reload} />
+      </div>
+      {rows.length === 0 ? (
+        <p className="text-muted-foreground">Tiada pembayaran manual yang menunggu.</p>
+      ) : (
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -314,6 +319,7 @@ function ManualPayments({ adminEmail }: { adminEmail: string }) {
           </TableBody>
         </Table>
       </div>
+      )}
 
       <Dialog open={!!rejectFor} onOpenChange={(o) => !o && setRejectFor(null)}>
         <DialogContent>
