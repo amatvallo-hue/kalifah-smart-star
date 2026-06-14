@@ -66,7 +66,7 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
         .from("kuiz_soalan")
         .select("topik")
         .eq("darjah", darjahNum)
-        .eq("subjek", "BM");
+        .eq("subjek", subjekKod);
       if (cancelled) return;
       if (error) {
         setErrMsg(error.message);
@@ -88,7 +88,7 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
     return () => {
       cancelled = true;
     };
-  }, [darjahNum]);
+  }, [darjahNum, subjekKod]);
 
   useEffect(() => {
     if (selesai && soalanList.length > 0) {
@@ -111,7 +111,7 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
       .from("kuiz_soalan")
       .select("id, soalan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan, penjelasan, topik")
       .eq("darjah", darjahNum)
-      .eq("subjek", "BM")
+      .eq("subjek", subjekKod)
       .eq("topik", pilihTopik);
     if (error) {
       setErrMsg(error.message);
