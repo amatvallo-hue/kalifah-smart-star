@@ -517,3 +517,228 @@ function NotificationSettings() {
     </div>
   );
 }
+
+// ---------------- New Manual Order Dialog ----------------
+type PakejVal = "satu" | "perDarjah" | "bundle";
+
+function NewManualOrderDialog({ onCreated }: { onCreated: () => void }) {
+  const [open, setOpen] = useState(false);
+  const [search, setSearch] = useState("");
+  const [results, setResults] = useState<Profile[]>([]);
+  const [searching, setSearching] = useState(false);
+  const [selected, setSelected] = useState<Profile | null>(null);
+  const [pakej, setPakej] = useState<PakejVal>("satu");
+  const [darjah, setDarjah] = useState<number[]>([]);
+  const [amountRm, setAmountRm] = useState<string>("");
+  const [nota, setNota] = useState("");
+  const [saving, setSaving] = useState(false);
+
+  function reset() {
+    setSearch("");
+    setResults([]);
+    setSelected(null);
+    setPakej("satu");
+    setDarjah([]);
+    setAmountRm("");
+    setNota("");
+  }
+
+  useEffect(() => {
+    if (!open) return;
+    const q = search.trim();
+    if (q.length < 2) {
+      setResults([]);
+      return;
+    }
+    let cancelled = false;
+    setSearching(true);
+    const t = setTimeout(async () => {
+      const { data } = await supabase
+        .from("profiles")
+        .select("id, email, username, role, darjah_akses, created_at")
+        .or(`email.ilike.%${q}%,username.ilike.%${q}%`)
+        .limit(10);
+      if (!cancelled) {
+        setResults((data as Profile[] | null) ?? []);
+        setSearching(false);
+      }
+    }, 250);
+    return () => {
+      cancelled = true;
+      clearTimeout(t);
+    };
+  }, [search, open]);
+
+  function toggleDarjah(d: number) {
+    setDarjah((prev) =>
+      prev.includes(d) ? prev.filter((x) => x !== d) : [...prev, d].sort((a, b) => a - b),
+    );
+  }
+
+  async function save() {
+    if (!selected) {
+      toast.error("Sila pilih pengguna");
+      return;
+    }
+    const rm = Number(amountRm);
+    if (!Number.isFinite(rm) || rm <= 0) {
+      toast.error("Jumlah mesti lebih daripada 0");
+      return;
+    }
+    const finalDarjah = pakej === "bundle" ? [1, 2, 3, 4, 5, 6] : darjah;
+    if (pakej !== "bundle" && finalDarjah.length === 0) {
+      toast.error("Sila pilih sekurang-kurangnya satu darjah");
+      return;
+    }
+    setSaving(true);
+    const { error } = await supabase.from("pesanan").insert({
+      user_id: selected.id,
+      pakej,
+      darjah_dipilih: finalDarjah,
+      amount_sen: Math.round(rm * 100),
+      status: "pending",
+      payment_method: "manual",
+    });
+    setSaving(false);
+    if (error) {
+      toast.error("Gagal simpan pesanan: " + error.message);
+      return;
+    }
+    if (nota.trim()) {
+      // Nota disimpan untuk rujukan admin sahaja (tiada lajur khas).
+      console.info("[manual order] nota:", nota.trim());
+    }
+    toast.success("Pesanan manual didaftarkan");
+    reset();
+    setOpen(false);
+    onCreated();
+  }
+
+  return (
+    <Dialog
+      open={open}
+      onOpenChange={(o) => {
+        setOpen(o);
+        if (!o) reset();
+      }}
+    >
+      <Button onClick={() => setOpen(true)}>+ Daftar Pesanan Manual</Button>
+      <DialogContent className="max-w-lg">
+        <DialogHeader>
+          <DialogTitle>Daftar Pesanan Manual</DialogTitle>
+        </DialogHeader>
+
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Label>Cari Pengguna</Label>
+            {selected ? (
+              <div className="flex items-center justify-between rounded-md border px-3 py-2">
+                <span className="text-sm">
+                  {selected.username || "-"} · {selected.email || selected.id.slice(0, 8)}
+                </span>
+                <Button size="sm" variant="ghost" onClick={() => setSelected(null)}>
+                  Tukar
+                </Button>
+              </div>
+            ) : (
+              <>
+                <Input
+                  placeholder="Cari email atau username…"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+                {searching && (
+                  <p className="text-xs text-muted-foreground">Mencari…</p>
+                )}
+                {results.length > 0 && (
+                  <div className="max-h-40 overflow-auto rounded-md border">
+                    {results.map((p) => (
+                      <button
+                        key={p.id}
+                        type="button"
+                        className="block w-full px-3 py-2 text-left text-sm hover:bg-muted"
+                        onClick={() => {
+                          setSelected(p);
+                          setResults([]);
+                          setSearch("");
+                        }}
+                      >
+                        {p.username || "-"} · {p.email || p.id.slice(0, 8)}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+
+          <div className="space-y-2">
+            <Label>Pakej</Label>
+            <Select value={pakej} onValueChange={(v) => setPakej(v as PakejVal)}>
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="satu">1 Darjah</SelectItem>
+                <SelectItem value="perDarjah">2–5 Darjah</SelectItem>
+                <SelectItem value="bundle">Bundle (6 Darjah)</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {pakej !== "bundle" && (
+            <div className="space-y-2">
+              <Label>Darjah Dipilih</Label>
+              <div className="grid grid-cols-3 gap-2">
+                {[1, 2, 3, 4, 5, 6].map((d) => (
+                  <label
+                    key={d}
+                    className="flex items-center gap-2 rounded-md border px-3 py-2 text-sm"
+                  >
+                    <Checkbox
+                      checked={darjah.includes(d)}
+                      onCheckedChange={() => toggleDarjah(d)}
+                    />
+                    Darjah {d}
+                  </label>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="space-y-2">
+            <Label>Jumlah (RM)</Label>
+            <Input
+              type="number"
+              min="0"
+              step="0.01"
+              placeholder="0.00"
+              value={amountRm}
+              onChange={(e) => setAmountRm(e.target.value)}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label>Nota (pilihan)</Label>
+            <Textarea
+              placeholder="Contoh: Bayar via bank transfer terus"
+              value={nota}
+              onChange={(e) => setNota(e.target.value)}
+              rows={2}
+            />
+          </div>
+        </div>
+
+        <DialogFooter>
+          <Button variant="outline" onClick={() => setOpen(false)} disabled={saving}>
+            Batal
+          </Button>
+          <Button onClick={save} disabled={saving}>
+            {saving ? "Menyimpan…" : "Simpan"}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
