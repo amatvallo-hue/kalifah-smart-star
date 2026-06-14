@@ -34,9 +34,10 @@ interface Props {
   darjahLabel: string;
   subjekId: string;
   subjekTitle: string;
+  subjekKod?: string; // kod dalam table kuiz_soalan, contoh "BM" atau "MT"
 }
 
-export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle }: Props) {
+export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subjekKod = "BM" }: Props) {
   const darjahNum = Number(darjahId);
 
   const [topicList, setTopicList] = useState<string[]>([]);
