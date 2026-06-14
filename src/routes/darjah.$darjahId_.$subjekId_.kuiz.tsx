@@ -8,6 +8,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { getDarjah, getSubjek } from "@/lib/curriculum";
 import { getQuiz, getQuizSet2, type QuizQuestion } from "@/lib/quiz-bank";
 import { simpanProgress } from "@/lib/progress";
+import { KuizBMTopik } from "@/components/KuizBMTopik";
 
 export const Route = createFileRoute("/darjah/$darjahId_/$subjekId_/kuiz")({
   head: () => ({ meta: [{ title: "Kuiz — Kalifah.my" }] }),
@@ -293,6 +294,24 @@ function KuizPage() {
             <ArrowLeft className="h-4 w-4" /> Kembali
           </Link>
         </main>
+      </div>
+    );
+  }
+
+  // BM Darjah 1-4: Kuiz mengikut topik dari Supabase
+  const isBMTopik =
+    subjekId === "bahasa-melayu" &&
+    (darjahId === "1" || darjahId === "2" || darjahId === "3" || darjahId === "4");
+  if (isBMTopik) {
+    return (
+      <div className="min-h-screen bg-background">
+        <SiteHeader stars={42} onLogout={handleLogout} />
+        <KuizBMTopik
+          darjahId={darjahId}
+          darjahLabel={darjah.label}
+          subjekId={subjekId}
+          subjekTitle={subjek.title}
+        />
       </div>
     );
   }
