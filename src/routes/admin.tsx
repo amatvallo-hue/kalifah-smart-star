@@ -692,6 +692,11 @@ function NewManualOrderDialog({ onCreated }: { onCreated: () => void }) {
                     ))}
                   </div>
                 )}
+                {!searching && search.trim().length >= 2 && results.length === 0 && (
+                  <p className="text-xs text-destructive">
+                    Tiada pengguna dijumpai untuk "{search.trim()}".
+                  </p>
+                )}
               </>
             )}
           </div>
