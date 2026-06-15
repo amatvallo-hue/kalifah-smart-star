@@ -298,14 +298,17 @@ function KuizPage() {
     );
   }
 
-  // Kuiz mengikut topik dari Supabase: BM Darjah 1-5, Matematik Darjah 2-6
+  // Kuiz mengikut topik dari Supabase: BM Darjah 1-5, Matematik Darjah 2-6, Sains Darjah 2-6
   const isBMTopik =
     subjekId === "bahasa-melayu" &&
     (darjahId === "1" || darjahId === "2" || darjahId === "3" || darjahId === "4" || darjahId === "5");
   const isMatematikTopik =
     subjekId === "matematik" &&
     (darjahId === "2" || darjahId === "3" || darjahId === "4" || darjahId === "5" || darjahId === "6");
-  if (isBMTopik || isMatematikTopik) {
+  const isSainsTopik =
+    subjekId === "sains" &&
+    (darjahId === "2" || darjahId === "3" || darjahId === "4" || darjahId === "5" || darjahId === "6");
+  if (isBMTopik || isMatematikTopik || isSainsTopik) {
     return (
       <div className="min-h-screen bg-background">
         <SiteHeader stars={42} onLogout={handleLogout} />
@@ -314,7 +317,7 @@ function KuizPage() {
           darjahLabel={darjah.label}
           subjekId={subjekId}
           subjekTitle={subjek.title}
-          subjekKod={isMatematikTopik ? "MT" : "BM"}
+          subjekKod={isMatematikTopik ? "MT" : isSainsTopik ? "SC" : "BM"}
           showBahasaToggle={isMatematikTopik}
         />
       </div>
