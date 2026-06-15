@@ -57,7 +57,7 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
   const [selesai, setSelesai] = useState(false);
   const [mulaMasa, setMulaMasa] = useState(() => Date.now());
   const [bahasa, setBahasa] = useState<"bm" | "en" | null>(null);
-  const effectiveSubjekKod = showBahasaToggle && bahasa ? (bahasa === "en" ? "MT-EN" : "MT") : subjekKod;
+  const effectiveSubjekKod = showBahasaToggle && bahasa ? (bahasa === "en" ? `${subjekKod}-EN` : subjekKod) : subjekKod;
 
   // Fetch distinct topics for BM, this darjah
   useEffect(() => {
@@ -212,7 +212,7 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
             Pilih <span style={{ color: HIJAU }}>Bahasa</span>
           </h1>
           <p className="mt-2 text-muted-foreground">
-            Pilih bahasa untuk kuiz Matematik {darjahLabel}.
+            Pilih bahasa untuk kuiz {subjekTitle} {darjahLabel}.
           </p>
 
           <div className="mt-8 grid gap-4 sm:grid-cols-2">

@@ -318,7 +318,7 @@ function KuizPage() {
           subjekId={subjekId}
           subjekTitle={subjek.title}
           subjekKod={isMatematikTopik ? "MT" : isSainsTopik ? "SC" : "BM"}
-          showBahasaToggle={isMatematikTopik}
+          showBahasaToggle={isMatematikTopik || isSainsTopik}
         />
       </div>
     );
