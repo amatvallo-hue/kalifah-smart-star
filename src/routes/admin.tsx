@@ -516,7 +516,19 @@ function NotificationSettings() {
 }
 
 // ---------------- New Manual Order Dialog ----------------
-type PakejVal = "satu" | "perDarjah" | "bundle";
+type PakejVal = "single" | "multi" | "bundle";
+
+function computeAmount(count: number): number {
+  if (count <= 0) return 0;
+  if (count === 1) return 29;
+  if (count >= 6) return 150;
+  return 25 * count;
+}
+function pakejFromCount(count: number): PakejVal {
+  if (count >= 6) return "bundle";
+  if (count === 1) return "single";
+  return "multi";
+}
 
 function NewManualOrderDialog({ onCreated }: { onCreated: () => void }) {
   const [open, setOpen] = useState(false);
@@ -524,20 +536,28 @@ function NewManualOrderDialog({ onCreated }: { onCreated: () => void }) {
   const [results, setResults] = useState<Profile[]>([]);
   const [searching, setSearching] = useState(false);
   const [selected, setSelected] = useState<Profile | null>(null);
-  const [pakej, setPakej] = useState<PakejVal>("satu");
   const [darjah, setDarjah] = useState<number[]>([]);
   const [amountRm, setAmountRm] = useState<string>("");
+  const [amountTouched, setAmountTouched] = useState(false);
   const [nota, setNota] = useState("");
   const [saving, setSaving] = useState(false);
+
+  // Pending order check
+  const [pendingOrder, setPendingOrder] = useState<Pesanan | null>(null);
+  const [checkingPending, setCheckingPending] = useState(false);
+  const [forceNew, setForceNew] = useState(false);
+  const [approving, setApproving] = useState(false);
 
   function reset() {
     setSearch("");
     setResults([]);
     setSelected(null);
-    setPakej("satu");
     setDarjah([]);
     setAmountRm("");
+    setAmountTouched(false);
     setNota("");
+    setPendingOrder(null);
+    setForceNew(false);
   }
 
   useEffect(() => {
@@ -566,57 +586,91 @@ function NewManualOrderDialog({ onCreated }: { onCreated: () => void }) {
     };
   }, [search, open]);
 
+  // Check pending order when user selected
+  useEffect(() => {
+    if (!selected) {
+      setPendingOrder(null);
+      setForceNew(false);
+      return;
+    }
+    let cancelled = false;
+    setCheckingPending(true);
+    (async () => {
+      const { data, error } = await supabase
+        .from("pesanan")
+        .select("id, user_id, pakej, darjah_dipilih, amount_sen, status, payment_method, proof_url, created_at")
+        .eq("user_id", selected.id)
+        .eq("status", "pending")
+        .order("created_at", { ascending: false })
+        .limit(1);
+      if (cancelled) return;
+      const found = (data as Pesanan[] | null) ?? [];
+      if (error) console.error("[manual order] pending check error", error);
+      setPendingOrder(found[0] ?? null);
+      setCheckingPending(false);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [selected]);
+
   function toggleDarjah(d: number) {
-    setDarjah((prev) =>
-      prev.includes(d) ? prev.filter((x) => x !== d) : [...prev, d].sort((a, b) => a - b),
-    );
+    setDarjah((prev) => {
+      const next = prev.includes(d) ? prev.filter((x) => x !== d) : [...prev, d].sort((a, b) => a - b);
+      if (!amountTouched) {
+        const amt = computeAmount(next.length);
+        setAmountRm(amt > 0 ? String(amt) : "");
+      }
+      return next;
+    });
+  }
+
+  const showForm = !!selected && (forceNew || !pendingOrder);
+
+  async function useExisting() {
+    if (!pendingOrder) return;
+    setApproving(true);
+    try {
+      const { error } = await supabase.rpc("admin_approve_pesanan", {
+        p_pesanan_id: pendingOrder.id,
+      });
+      if (error) {
+        toast.error("Gagal approve: " + (error.message || "Ralat tidak diketahui"));
+        return;
+      }
+      toast.success("Pesanan sedia ada diluluskan");
+      reset();
+      setOpen(false);
+      onCreated();
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new CustomEvent("admin:refresh-users"));
+      }
+    } finally {
+      setApproving(false);
+    }
   }
 
   async function save() {
-    console.info("[manual order] save() clicked", { selected, search, pakej, darjah, amountRm });
+    if (!selected) {
+      toast.error("Sila pilih pengguna terlebih dahulu");
+      return;
+    }
+    if (darjah.length === 0) {
+      toast.error("Sila pilih sekurang-kurangnya satu darjah");
+      return;
+    }
+    const rm = Number(amountRm);
+    if (!Number.isFinite(rm) || rm <= 0) {
+      toast.error("Jumlah mesti lebih daripada 0");
+      return;
+    }
+    const pakej = pakejFromCount(darjah.length);
     setSaving(true);
     try {
-      let target = selected;
-      if (!target) {
-        const q = search.trim();
-        if (!q) {
-          toast.error("Sila cari dan pilih pengguna terlebih dahulu");
-          return;
-        }
-        const { data, error } = await supabase
-          .from("profiles")
-          .select("id, email, username, role, darjah_akses, created_at")
-          .or(`email.ilike.%${q}%,username.ilike.%${q}%`)
-          .limit(1);
-        if (error) {
-          console.error("[manual order] profile lookup error", error);
-          toast.error("Gagal cari pengguna: " + error.message);
-          return;
-        }
-        const found = (data as Profile[] | null) ?? [];
-        if (found.length === 0) {
-          toast.error(
-            "Pengguna dengan email ini tidak ditemui. Pastikan pengguna telah mendaftar akaun terlebih dahulu.",
-          );
-          return;
-        }
-        target = found[0];
-        setSelected(target);
-      }
-      const rm = Number(amountRm);
-      if (!Number.isFinite(rm) || rm <= 0) {
-        toast.error("Jumlah mesti lebih daripada 0");
-        return;
-      }
-      const finalDarjah = pakej === "bundle" ? [1, 2, 3, 4, 5, 6] : darjah;
-      if (pakej !== "bundle" && finalDarjah.length === 0) {
-        toast.error("Sila pilih sekurang-kurangnya satu darjah");
-        return;
-      }
       const rpcArgs = {
-        p_user_id: target.id,
+        p_user_id: selected.id,
         p_pakej: pakej,
-        p_darjah_dipilih: finalDarjah,
+        p_darjah_dipilih: darjah,
         p_amount_sen: Math.round(rm * 100),
         p_note: nota.trim() || null,
       };
@@ -655,7 +709,7 @@ function NewManualOrderDialog({ onCreated }: { onCreated: () => void }) {
       }}
     >
       <Button onClick={() => setOpen(true)}>+ Daftar Pesanan Manual</Button>
-      <DialogContent className="max-w-lg">
+      <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Daftar Pesanan Manual</DialogTitle>
         </DialogHeader>
@@ -709,73 +763,103 @@ function NewManualOrderDialog({ onCreated }: { onCreated: () => void }) {
             )}
           </div>
 
-          <div className="space-y-2">
-            <Label>Pakej</Label>
-            <Select value={pakej} onValueChange={(v) => setPakej(v as PakejVal)}>
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="satu">1 Darjah</SelectItem>
-                <SelectItem value="perDarjah">2–5 Darjah</SelectItem>
-                <SelectItem value="bundle">Bundle (6 Darjah)</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+          {selected && checkingPending && (
+            <p className="text-xs text-muted-foreground">Menyemak pesanan sedia ada…</p>
+          )}
 
-          {pakej !== "bundle" && (
-            <div className="space-y-2">
-              <Label>Darjah Dipilih</Label>
-              <div className="grid grid-cols-3 gap-2">
-                {[1, 2, 3, 4, 5, 6].map((d) => (
-                  <label
-                    key={d}
-                    className="flex items-center gap-2 rounded-md border px-3 py-2 text-sm"
-                  >
-                    <Checkbox
-                      checked={darjah.includes(d)}
-                      onCheckedChange={() => toggleDarjah(d)}
-                    />
-                    Darjah {d}
-                  </label>
-                ))}
+          {selected && pendingOrder && !forceNew && (
+            <div className="space-y-3 rounded-md border border-amber-500/50 bg-amber-500/10 p-3">
+              <p className="text-sm">
+                ⚠️ User ini sudah ada pesanan <strong>pending</strong>: {pendingOrder.pakej},
+                Darjah {darjahForPesanan(pendingOrder).join(", ") || "-"}, {rm(pendingOrder.amount_sen)}.
+                Didaftar pada{" "}
+                {new Date(pendingOrder.created_at).toLocaleDateString("ms-MY")}.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <Button size="sm" onClick={useExisting} disabled={approving}>
+                  {approving ? "Memproses…" : "Guna Pesanan Sedia Ada"}
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setForceNew(true)}
+                  disabled={approving}
+                >
+                  Buat Pesanan Baru
+                </Button>
               </div>
             </div>
           )}
 
-          <div className="space-y-2">
-            <Label>Jumlah (RM)</Label>
-            <Input
-              type="number"
-              min="0"
-              step="0.01"
-              placeholder="0.00"
-              value={amountRm}
-              onChange={(e) => setAmountRm(e.target.value)}
-            />
-          </div>
+          {showForm && (
+            <>
+              <div className="space-y-2">
+                <Label>Darjah Dipilih</Label>
+                <div className="grid grid-cols-3 gap-2">
+                  {[1, 2, 3, 4, 5, 6].map((d) => (
+                    <label
+                      key={d}
+                      className="flex items-center gap-2 rounded-md border px-3 py-2 text-sm cursor-pointer"
+                    >
+                      <Checkbox
+                        checked={darjah.includes(d)}
+                        onCheckedChange={() => toggleDarjah(d)}
+                      />
+                      Darjah {d}
+                    </label>
+                  ))}
+                </div>
+                {darjah.length > 0 && (
+                  <p className="text-xs text-muted-foreground">
+                    Pakej: <strong>{pakejFromCount(darjah.length)}</strong> ({darjah.length} darjah)
+                  </p>
+                )}
+              </div>
 
-          <div className="space-y-2">
-            <Label>Nota (pilihan)</Label>
-            <Textarea
-              placeholder="Contoh: Bayar via bank transfer terus"
-              value={nota}
-              onChange={(e) => setNota(e.target.value)}
-              rows={2}
-            />
-          </div>
+              <div className="space-y-2">
+                <Label>Jumlah (RM)</Label>
+                <Input
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  placeholder="0.00"
+                  value={amountRm}
+                  onChange={(e) => {
+                    setAmountTouched(true);
+                    setAmountRm(e.target.value);
+                  }}
+                />
+                <p className="text-xs text-muted-foreground">
+                  Auto-kira berdasarkan bilangan darjah. Boleh edit untuk diskaun/promo.
+                </p>
+              </div>
+
+              <div className="space-y-2">
+                <Label>Nota (pilihan)</Label>
+                <Textarea
+                  placeholder="Contoh: Bayar via bank transfer terus"
+                  value={nota}
+                  onChange={(e) => setNota(e.target.value)}
+                  rows={2}
+                />
+              </div>
+            </>
+          )}
         </div>
 
         <DialogFooter>
-          <Button variant="outline" onClick={() => setOpen(false)} disabled={saving}>
+          <Button variant="outline" onClick={() => setOpen(false)} disabled={saving || approving}>
             Batal
           </Button>
-          <Button onClick={save} disabled={saving}>
-            {saving ? "Menyimpan…" : "Simpan"}
-          </Button>
+          {showForm && (
+            <Button onClick={save} disabled={saving || darjah.length === 0}>
+              {saving ? "Menyimpan…" : "Simpan"}
+            </Button>
+          )}
         </DialogFooter>
       </DialogContent>
     </Dialog>
   );
 }
+
 
