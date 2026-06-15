@@ -46,7 +46,9 @@ function LatihTubiPage() {
 
   const isSainsD1Topic = subjekId === "sains" && darjahId === "1";
   const isUpper = darjahId === "4" || darjahId === "5" || darjahId === "6" || isSainsD1Topic;
-  const subjekCode = subjekId === "sains" ? "SC" : subjekId;
+  const showBahasaToggle = subjekId === "sains" && isSainsD1Topic;
+  const [bahasa, setBahasa] = useState<"bm" | "en" | null>(showBahasaToggle ? null : "bm");
+  const subjekCode = subjekId === "sains" ? (bahasa === "en" ? "SC-EN" : "SC") : subjekId;
   const darjahNum = Number(darjahId);
 
   const [bank, setBank] = useState<Soalan[]>([]);
