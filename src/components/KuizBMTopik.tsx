@@ -212,7 +212,7 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
             Pilih <span style={{ color: HIJAU }}>Bahasa</span>
           </h1>
           <p className="mt-2 text-muted-foreground">
-            Pilih bahasa untuk kuiz Matematik {darjahLabel}.
+            Pilih bahasa untuk kuiz {subjekTitle} {darjahLabel}.
           </p>
 
           <div className="mt-8 grid gap-4 sm:grid-cols-2">
