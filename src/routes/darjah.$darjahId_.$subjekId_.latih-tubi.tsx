@@ -128,7 +128,7 @@ function LatihTubiPage() {
         .from("latih_tubi_soalan")
         .select("topik")
         .eq("darjah", Number.isFinite(darjahNum) ? darjahNum : darjahId)
-        .eq("subjek", subjekId);
+        .eq("subjek", subjekCode);
       if (cancelled) return;
       if (error) {
         setErrMsg(error.message);
