@@ -15,6 +15,7 @@ export interface Subjek {
   description: string;
   icon: LucideIcon;
   tone: Tone;
+  emoji: string;
 }
 
 // Semua darjah kini berbayar — `locked` ditentukan oleh profile.darjah_akses
@@ -28,12 +29,12 @@ export const DARJAH_LIST: Darjah[] = [
 ];
 
 export const SUBJEK_LIST: Subjek[] = [
-  { id: "bahasa-melayu", title: "Bahasa Melayu", description: "Tatabahasa & karangan ringkas.", icon: PenLine, tone: "sky" },
-  { id: "bahasa-inggeris", title: "Bahasa Inggeris", description: "Vocabulary & simple sentences.", icon: Languages, tone: "violet" },
-  { id: "matematik", title: "Matematik", description: "Nombor, tambah, tolak & lebih.", icon: Calculator, tone: "gold" },
-  { id: "sains", title: "Sains", description: "Alam sekitar dan ciptaan Allah.", icon: Globe, tone: "teal" },
-  { id: "jawi", title: "Jawi", description: "Tulisan jawi asas.", icon: Moon, tone: "amber" },
-  { id: "pendidikan-islam", title: "Pendidikan Islam", description: "Rukun Iman, doa & sirah.", icon: BookOpen, tone: "emerald" },
+  { id: "bahasa-melayu", title: "Bahasa Melayu", description: "Tatabahasa & karangan ringkas.", icon: PenLine, tone: "sky", emoji: "📖" },
+  { id: "bahasa-inggeris", title: "Bahasa Inggeris", description: "Vocabulary & simple sentences.", icon: Languages, tone: "violet", emoji: "🌍" },
+  { id: "matematik", title: "Matematik", description: "Nombor, tambah, tolak & lebih.", icon: Calculator, tone: "gold", emoji: "🔢" },
+  { id: "sains", title: "Sains", description: "Alam sekitar dan ciptaan Allah.", icon: Globe, tone: "teal", emoji: "🔬" },
+  { id: "jawi", title: "Jawi", description: "Tulisan jawi asas.", icon: Moon, tone: "amber", emoji: "🌙" },
+  { id: "pendidikan-islam", title: "Pendidikan Islam", description: "Rukun Iman, doa & sirah.", icon: BookOpen, tone: "emerald", emoji: "⭐" },
 ];
 
 export function getDarjah(id: string) {
