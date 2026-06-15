@@ -588,7 +588,7 @@ function NewManualOrderDialog({ onCreated }: { onCreated: () => void }) {
         const { data, error } = await supabase
           .from("profiles")
           .select("id, email, username, role, darjah_akses, created_at")
-          .or(`email.ilike.${q},username.ilike.${q}`)
+          .or(`email.ilike.%${q}%,username.ilike.%${q}%`)
           .limit(1);
         if (error) {
           toast.error("Gagal cari pengguna: " + error.message);
