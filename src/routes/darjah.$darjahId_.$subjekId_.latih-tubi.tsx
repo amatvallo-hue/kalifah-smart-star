@@ -154,7 +154,7 @@ function LatihTubiPage() {
       .from("latih_tubi_soalan")
       .select("id, soalan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan, topik, set_label")
       .eq("darjah", Number.isFinite(darjahNum) ? darjahNum : darjahId)
-      .eq("subjek", subjekId)
+      .eq("subjek", subjekCode)
       .eq("topik", topik)
       .eq("set_label", setLabel);
     if (error) {
