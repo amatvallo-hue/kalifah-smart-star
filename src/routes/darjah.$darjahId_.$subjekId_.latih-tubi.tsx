@@ -270,8 +270,51 @@ function LatihTubiPage() {
           )}
         </div>
 
-        {showPicker ? (
+        {needBahasa ? (
+          <div className="mt-8 rounded-3xl bg-card p-6 text-center shadow-card md:p-8">
+            <h2 className="font-display text-2xl font-extrabold text-foreground">Pilih Bahasa</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Pilih bahasa untuk latih tubi {subjek.title} {darjah.label}.
+            </p>
+            <div className="mt-6 grid gap-4 sm:grid-cols-2">
+              <button
+                onClick={() => setBahasa("bm")}
+                className="rounded-3xl border-2 px-6 py-8 font-display text-xl font-extrabold shadow-soft transition hover:-translate-y-1"
+                style={{ borderColor: `${HIJAU}44`, color: HIJAU, backgroundColor: `${HIJAU}10` }}
+              >
+                🇲🇾 Bahasa Melayu
+              </button>
+              <button
+                onClick={() => setBahasa("en")}
+                className="rounded-3xl border-2 px-6 py-8 font-display text-xl font-extrabold shadow-soft transition hover:-translate-y-1"
+                style={{ borderColor: `${EMAS}44`, color: EMAS, backgroundColor: `${EMAS}10` }}
+              >
+                🇬🇧 English
+              </button>
+            </div>
+          </div>
+        ) : showPicker ? (
           <div className="mt-8 rounded-3xl bg-card p-6 shadow-card md:p-8">
+            {showBahasaToggle && bahasa && (
+              <div className="mb-4 flex items-center gap-2">
+                <span
+                  className="rounded-full px-3 py-1 font-display text-xs font-extrabold text-white"
+                  style={{ backgroundColor: bahasa === "en" ? EMAS : HIJAU }}
+                >
+                  {bahasa === "en" ? "🇬🇧 English" : "🇲🇾 Bahasa Melayu"}
+                </span>
+                <button
+                  onClick={() => {
+                    setBahasa(null);
+                    setTopik("");
+                    setSetLabel("");
+                  }}
+                  className="text-xs font-bold text-muted-foreground underline hover:text-primary"
+                >
+                  Tukar bahasa
+                </button>
+              </div>
+            )}
             <h2 className="font-display text-2xl font-extrabold text-foreground">
               Pilih Topik & Set
             </h2>
