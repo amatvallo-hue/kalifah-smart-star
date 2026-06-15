@@ -44,7 +44,9 @@ function LatihTubiPage() {
   const darjah = getDarjah(darjahId) ?? { id: darjahId, label: `Darjah ${darjahId}`, locked: false };
   const subjek = getSubjek(subjekId) ?? { id: subjekId, title: subjekId };
 
-  const isUpper = darjahId === "4" || darjahId === "5" || darjahId === "6";
+  const isSainsD1Topic = subjekId === "sains" && darjahId === "1";
+  const isUpper = darjahId === "4" || darjahId === "5" || darjahId === "6" || isSainsD1Topic;
+  const subjekCode = subjekId === "sains" ? "SC" : subjekId;
   const darjahNum = Number(darjahId);
 
   const [bank, setBank] = useState<Soalan[]>([]);
