@@ -114,7 +114,7 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
       .from("kuiz_soalan")
       .select("id, soalan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan, penjelasan, topik")
       .eq("darjah", darjahNum)
-      .eq("subjek", subjekKod)
+      .eq("subjek", effectiveSubjekKod)
       .eq("topik", pilihTopik);
     if (error) {
       setErrMsg(error.message);
