@@ -576,6 +576,7 @@ function NewManualOrderDialog({ onCreated }: { onCreated: () => void }) {
   }
 
   async function save() {
+    console.info("[manual order] save() clicked", { selected, search, pakej, darjah, amountRm });
     setSaving(true);
     try {
       let target = selected;
@@ -591,6 +592,7 @@ function NewManualOrderDialog({ onCreated }: { onCreated: () => void }) {
           .or(`email.ilike.%${q}%,username.ilike.%${q}%`)
           .limit(1);
         if (error) {
+          console.error("[manual order] profile lookup error", error);
           toast.error("Gagal cari pengguna: " + error.message);
           return;
         }
@@ -614,18 +616,29 @@ function NewManualOrderDialog({ onCreated }: { onCreated: () => void }) {
         toast.error("Sila pilih sekurang-kurangnya satu darjah");
         return;
       }
-      const { error } = await supabase.from("pesanan").insert({
+      const payload = {
         user_id: target.id,
         pakej,
         darjah_dipilih: finalDarjah,
         amount_sen: Math.round(rm * 100),
         status: "pending",
         payment_method: "manual",
-      });
+      };
+      console.info("[manual order] inserting pesanan", payload);
+      const { data: inserted, error } = await supabase
+        .from("pesanan")
+        .insert(payload)
+        .select()
+        .single();
       if (error) {
-        toast.error("Gagal simpan pesanan: " + error.message);
+        console.error("[manual order] insert error", error);
+        toast.error(
+          "Gagal simpan pesanan: " +
+            (error.message || error.details || error.hint || "Ralat tidak diketahui"),
+        );
         return;
       }
+      console.info("[manual order] inserted", inserted);
       if (nota.trim()) {
         console.info("[manual order] nota:", nota.trim());
       }
@@ -633,6 +646,9 @@ function NewManualOrderDialog({ onCreated }: { onCreated: () => void }) {
       reset();
       setOpen(false);
       onCreated();
+    } catch (e: any) {
+      console.error("[manual order] unexpected error", e);
+      toast.error("Ralat tidak dijangka: " + (e?.message ?? String(e)));
     } finally {
       setSaving(false);
     }
