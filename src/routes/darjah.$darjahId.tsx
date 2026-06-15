@@ -65,7 +65,7 @@ function SubjekPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <SiteHeader stars={42} onLogout={handleLogout} />
+      <SiteHeader stars={42} userName={studentName} onLogout={handleLogout} />
       <Outlet />
       <main className="container mx-auto px-4 py-8">
         <Link to="/pilih-darjah" className="inline-flex items-center gap-2 text-sm font-bold text-muted-foreground hover:text-primary">
@@ -78,10 +78,10 @@ function SubjekPage() {
             {darjah.label}
           </span>
           <h1 className="mt-3 font-display text-3xl font-extrabold text-foreground md:text-4xl">
-            Pilih <span className="text-primary">Subjek</span> kamu
+            {studentName ? `Hai, ${studentName.split(' ')[0]}! 👋` : 'Hai! 👋'}
           </h1>
           <p className="mt-2 max-w-lg text-muted-foreground">
-            Setiap subjek ada nota ringkas, latih tubi, game, kuiz dan latihan bertulis yang menyeronokkan!
+            Nak belajar apa hari ini? Pilih subjek kesukaan kamu!
           </p>
         </section>
 
@@ -93,8 +93,11 @@ function SubjekPage() {
               params={{ darjahId, subjekId: s.id }}
               className="group flex flex-col gap-4 rounded-3xl border border-border/60 bg-card p-6 shadow-card transition hover:-translate-y-1 hover:shadow-soft"
             >
-              <div className={`flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br ${TONE_GRADIENT[s.tone]} shadow-soft transition group-hover:scale-110`}>
-                <s.icon className="h-7 w-7" strokeWidth={2.5} />
+              <div className="flex flex-col items-center gap-1">
+                <span className="text-4xl">{s.emoji}</span>
+                <div className={`flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br ${TONE_GRADIENT[s.tone]} shadow-soft transition group-hover:scale-110`}>
+                  <s.icon className="h-4 w-4" strokeWidth={2.5} />
+                </div>
               </div>
               <div>
                 <h3 className="font-display text-xl font-extrabold text-foreground">{s.title}</h3>
