@@ -201,7 +201,42 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
     </div>
   );
 
-  // 1) Topic picker
+  // 1) Language picker (for Matematik only)
+  if (!started && showBahasaToggle && !bahasa) {
+    return (
+      <main className="container mx-auto max-w-3xl px-4 py-8">
+        {backLink}
+        {headerChips}
+        <div className="mt-6 rounded-3xl bg-gradient-hero p-8 text-center shadow-card md:p-10">
+          <h1 className="font-display text-3xl font-extrabold text-foreground md:text-4xl">
+            Pilih <span style={{ color: HIJAU }}>Bahasa</span>
+          </h1>
+          <p className="mt-2 text-muted-foreground">
+            Pilih bahasa untuk kuiz Matematik {darjahLabel}.
+          </p>
+
+          <div className="mt-8 grid gap-4 sm:grid-cols-2">
+            <button
+              onClick={() => setBahasa("bm")}
+              className="rounded-3xl border-2 px-6 py-8 font-display text-xl font-extrabold shadow-soft transition hover:-translate-y-1"
+              style={{ borderColor: `${HIJAU}44`, color: HIJAU, backgroundColor: `${HIJAU}10` }}
+            >
+              🇲🇾 Bahasa Melayu
+            </button>
+            <button
+              onClick={() => setBahasa("en")}
+              className="rounded-3xl border-2 px-6 py-8 font-display text-xl font-extrabold shadow-soft transition hover:-translate-y-1"
+              style={{ borderColor: `${EMAS}44`, color: EMAS, backgroundColor: `${EMAS}10` }}
+            >
+              🇬🇧 English
+            </button>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  // 2) Topic picker
   if (!started) {
     return (
       <main className="container mx-auto max-w-3xl px-4 py-8">
@@ -214,6 +249,23 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
           <p className="mt-2 text-muted-foreground">
             10 soalan dipilih secara rawak untuk topik yang kamu pilih.
           </p>
+
+          {showBahasaToggle && bahasa && (
+            <div className="mt-4 flex items-center gap-2">
+              <span
+                className="rounded-full px-3 py-1 font-display text-xs font-extrabold text-white"
+                style={{ backgroundColor: bahasa === "en" ? EMAS : HIJAU }}
+              >
+                {bahasa === "en" ? "🇬🇧 English" : "🇲🇾 Bahasa Melayu"}
+              </span>
+              <button
+                onClick={() => setBahasa(null)}
+                className="text-xs font-bold text-muted-foreground underline hover:text-primary"
+              >
+                Tukar bahasa
+              </button>
+            </div>
+          )}
 
           {errMsg && (
             <div className="mt-4 rounded-2xl bg-destructive/10 p-3 text-sm font-bold text-destructive">
