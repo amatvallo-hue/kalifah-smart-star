@@ -69,7 +69,7 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
         .from("kuiz_soalan")
         .select("topik")
         .eq("darjah", darjahNum)
-        .eq("subjek", subjekKod);
+        .eq("subjek", effectiveSubjekKod);
       if (cancelled) return;
       if (error) {
         setErrMsg(error.message);
