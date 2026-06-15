@@ -21,6 +21,7 @@ function SubjekPage() {
   const { user, loading } = useAuth();
   const { profile, loading: profileLoading } = useProfile();
   const darjah = getDarjah(darjahId);
+  const studentName = user?.user_metadata?.name as string | undefined;
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
