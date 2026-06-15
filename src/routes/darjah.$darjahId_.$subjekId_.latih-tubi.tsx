@@ -146,7 +146,7 @@ function LatihTubiPage() {
     return () => {
       cancelled = true;
     };
-  }, [isUpper, darjahId, subjekId, darjahNum]);
+  }, [isUpper, darjahId, subjekId, darjahNum, subjekCode]);
 
   async function mulaLatihan() {
     if (!topik || !setLabel) return;
