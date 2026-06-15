@@ -91,7 +91,7 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
     return () => {
       cancelled = true;
     };
-  }, [darjahNum, subjekKod]);
+  }, [darjahNum, effectiveSubjekKod]);
 
   useEffect(() => {
     if (selesai && soalanList.length > 0) {
