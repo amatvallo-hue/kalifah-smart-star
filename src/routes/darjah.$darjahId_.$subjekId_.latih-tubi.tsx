@@ -222,7 +222,8 @@ function LatihTubiPage() {
     }, 700);
   };
 
-  const showPicker = isUpper && !started;
+  const needBahasa = showBahasaToggle && !bahasa && !started;
+  const showPicker = isUpper && !started && !needBahasa;
 
   return (
     <div className="min-h-screen bg-background">
