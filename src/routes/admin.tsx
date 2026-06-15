@@ -576,42 +576,66 @@ function NewManualOrderDialog({ onCreated }: { onCreated: () => void }) {
   }
 
   async function save() {
-    if (!selected) {
-      toast.error("Sila pilih pengguna");
-      return;
-    }
-    const rm = Number(amountRm);
-    if (!Number.isFinite(rm) || rm <= 0) {
-      toast.error("Jumlah mesti lebih daripada 0");
-      return;
-    }
-    const finalDarjah = pakej === "bundle" ? [1, 2, 3, 4, 5, 6] : darjah;
-    if (pakej !== "bundle" && finalDarjah.length === 0) {
-      toast.error("Sila pilih sekurang-kurangnya satu darjah");
-      return;
-    }
     setSaving(true);
-    const { error } = await supabase.from("pesanan").insert({
-      user_id: selected.id,
-      pakej,
-      darjah_dipilih: finalDarjah,
-      amount_sen: Math.round(rm * 100),
-      status: "pending",
-      payment_method: "manual",
-    });
-    setSaving(false);
-    if (error) {
-      toast.error("Gagal simpan pesanan: " + error.message);
-      return;
+    try {
+      let target = selected;
+      if (!target) {
+        const q = search.trim();
+        if (!q) {
+          toast.error("Sila cari dan pilih pengguna terlebih dahulu");
+          return;
+        }
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("id, email, username, role, darjah_akses, created_at")
+          .or(`email.ilike.${q},username.ilike.${q}`)
+          .limit(1);
+        if (error) {
+          toast.error("Gagal cari pengguna: " + error.message);
+          return;
+        }
+        const found = (data as Profile[] | null) ?? [];
+        if (found.length === 0) {
+          toast.error(
+            "Pengguna dengan email ini tidak ditemui. Pastikan pengguna telah mendaftar akaun terlebih dahulu.",
+          );
+          return;
+        }
+        target = found[0];
+        setSelected(target);
+      }
+      const rm = Number(amountRm);
+      if (!Number.isFinite(rm) || rm <= 0) {
+        toast.error("Jumlah mesti lebih daripada 0");
+        return;
+      }
+      const finalDarjah = pakej === "bundle" ? [1, 2, 3, 4, 5, 6] : darjah;
+      if (pakej !== "bundle" && finalDarjah.length === 0) {
+        toast.error("Sila pilih sekurang-kurangnya satu darjah");
+        return;
+      }
+      const { error } = await supabase.from("pesanan").insert({
+        user_id: target.id,
+        pakej,
+        darjah_dipilih: finalDarjah,
+        amount_sen: Math.round(rm * 100),
+        status: "pending",
+        payment_method: "manual",
+      });
+      if (error) {
+        toast.error("Gagal simpan pesanan: " + error.message);
+        return;
+      }
+      if (nota.trim()) {
+        console.info("[manual order] nota:", nota.trim());
+      }
+      toast.success("Pesanan manual didaftarkan");
+      reset();
+      setOpen(false);
+      onCreated();
+    } finally {
+      setSaving(false);
     }
-    if (nota.trim()) {
-      // Nota disimpan untuk rujukan admin sahaja (tiada lajur khas).
-      console.info("[manual order] nota:", nota.trim());
-    }
-    toast.success("Pesanan manual didaftarkan");
-    reset();
-    setOpen(false);
-    onCreated();
   }
 
   return (
