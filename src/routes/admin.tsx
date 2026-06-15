@@ -188,40 +188,30 @@ function ManualPayments({ adminEmail }: { adminEmail: string }) {
   }, []);
 
   async function approve(p: Pesanan) {
-    // 1) Merge darjah_akses
-    const { data: prof } = await supabase
-      .from("profiles")
-      .select("darjah_akses")
-      .eq("id", p.user_id)
-      .maybeSingle();
-    const existing: number[] = Array.isArray((prof as { darjah_akses?: number[] } | null)?.darjah_akses)
-      ? ((prof as { darjah_akses: number[] }).darjah_akses)
-      : [];
-    const merged = Array.from(new Set([...existing, ...darjahForPesanan(p)])).sort((a, b) => a - b);
-    const { error: upErr } = await supabase
-      .from("profiles")
-      .update({ darjah_akses: merged })
-      .eq("id", p.user_id);
-    if (upErr) {
-      toast.error("Gagal kemaskini akses: " + upErr.message);
-      return;
+    try {
+      const { data, error } = await supabase.rpc("admin_approve_pesanan", {
+        p_pesanan_id: p.id,
+      });
+      if (error) {
+        console.error("[approve] rpc error", error);
+        toast.error(
+          "Gagal luluskan pesanan: " +
+            (error.message || error.details || error.hint || "Ralat tidak diketahui"),
+        );
+        return;
+      }
+      console.info("[approve] success", data);
+      toast.success("Pesanan diluluskan");
+      reload();
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new CustomEvent("admin:refresh-users"));
+      }
+    } catch (e) {
+      console.error("[approve] unexpected", e);
+      toast.error(
+        "Ralat tidak dijangka: " + (e instanceof Error ? e.message : String(e)),
+      );
     }
-    // 2) Update pesanan
-    const { error: oErr } = await supabase
-      .from("pesanan")
-      .update({
-        status: "approved",
-        approved_by: adminEmail,
-        approved_at: new Date().toISOString(),
-        paid_at: new Date().toISOString(),
-      })
-      .eq("id", p.id);
-    if (oErr) {
-      toast.error("Gagal kemaskini pesanan: " + oErr.message);
-      return;
-    }
-    toast.success("Pesanan diluluskan");
-    reload();
   }
 
   async function reject() {
@@ -363,6 +353,13 @@ function AllUsers() {
   }
   useEffect(() => {
     reload();
+    const handler = () => {
+      reload();
+    };
+    if (typeof window !== "undefined") {
+      window.addEventListener("admin:refresh-users", handler);
+      return () => window.removeEventListener("admin:refresh-users", handler);
+    }
   }, []);
 
   async function changeRole(id: string, role: string) {
