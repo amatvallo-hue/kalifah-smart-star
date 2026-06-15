@@ -616,22 +616,20 @@ function NewManualOrderDialog({ onCreated }: { onCreated: () => void }) {
         toast.error("Sila pilih sekurang-kurangnya satu darjah");
         return;
       }
-      const payload = {
-        user_id: target.id,
-        pakej,
-        darjah_dipilih: finalDarjah,
-        amount_sen: Math.round(rm * 100),
-        status: "pending",
-        payment_method: "manual",
+      const rpcArgs = {
+        p_user_id: target.id,
+        p_pakej: pakej,
+        p_darjah_dipilih: finalDarjah,
+        p_amount_sen: Math.round(rm * 100),
+        p_note: nota.trim() || null,
       };
-      console.info("[manual order] inserting pesanan", payload);
-      const { data: inserted, error } = await supabase
-        .from("pesanan")
-        .insert(payload)
-        .select()
-        .single();
+      console.info("[manual order] rpc admin_create_manual_pesanan", rpcArgs);
+      const { data: inserted, error } = await supabase.rpc(
+        "admin_create_manual_pesanan",
+        rpcArgs,
+      );
       if (error) {
-        console.error("[manual order] insert error", error);
+        console.error("[manual order] rpc error", error);
         toast.error(
           "Gagal simpan pesanan: " +
             (error.message || error.details || error.hint || "Ralat tidak diketahui"),
@@ -639,9 +637,6 @@ function NewManualOrderDialog({ onCreated }: { onCreated: () => void }) {
         return;
       }
       console.info("[manual order] inserted", inserted);
-      if (nota.trim()) {
-        console.info("[manual order] nota:", nota.trim());
-      }
       toast.success("Pesanan manual didaftarkan");
       reset();
       setOpen(false);
