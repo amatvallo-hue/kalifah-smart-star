@@ -44,7 +44,9 @@ function LatihTubiPage() {
   const darjah = getDarjah(darjahId) ?? { id: darjahId, label: `Darjah ${darjahId}`, locked: false };
   const subjek = getSubjek(subjekId) ?? { id: subjekId, title: subjekId };
 
-  const isUpper = darjahId === "4" || darjahId === "5" || darjahId === "6";
+  const isSainsD1Topic = subjekId === "sains" && darjahId === "1";
+  const isUpper = darjahId === "4" || darjahId === "5" || darjahId === "6" || isSainsD1Topic;
+  const subjekCode = subjekId === "sains" ? "SC" : subjekId;
   const darjahNum = Number(darjahId);
 
   const [bank, setBank] = useState<Soalan[]>([]);
@@ -126,7 +128,7 @@ function LatihTubiPage() {
         .from("latih_tubi_soalan")
         .select("topik")
         .eq("darjah", Number.isFinite(darjahNum) ? darjahNum : darjahId)
-        .eq("subjek", subjekId);
+        .eq("subjek", subjekCode);
       if (cancelled) return;
       if (error) {
         setErrMsg(error.message);
@@ -152,7 +154,7 @@ function LatihTubiPage() {
       .from("latih_tubi_soalan")
       .select("id, soalan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan, topik, set_label")
       .eq("darjah", Number.isFinite(darjahNum) ? darjahNum : darjahId)
-      .eq("subjek", subjekId)
+      .eq("subjek", subjekCode)
       .eq("topik", topik)
       .eq("set_label", setLabel);
     if (error) {
