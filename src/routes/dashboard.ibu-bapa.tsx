@@ -86,6 +86,34 @@ function formatMasa(minit: number): string {
   return sisa === 0 ? `${jam} jam` : `${jam} jam ${sisa} min`;
 }
 
+function parseIsoUTC(iso: string): Date {
+  const hasTz = /[zZ]|[+-]\d{2}:?\d{2}$/.test(iso);
+  return new Date(hasTz ? iso : iso.replace(" ", "T") + "Z");
+}
+function formatTarikh(iso: string): string {
+  const d = parseIsoUTC(iso);
+  const diff = Math.max(0, Date.now() - d.getTime());
+  const min = Math.round(diff / 60000);
+  if (min < 1) return "Sebentar tadi";
+  if (min < 60) return `${min} minit lalu`;
+  const jam = Math.round(min / 60);
+  if (jam < 24) return `${jam} jam lalu`;
+  const hari = Math.round(jam / 24);
+  return `${hari} hari lalu`;
+}
+
+const AKTIVITI_LABEL: Record<string, string> = {
+  kuiz: "Kuiz",
+  latihan: "Latihan Bertulis",
+  "latih-tubi": "Latih Tubi",
+  nota: "Nota Ringkas",
+  "game-race": "Quiz Race",
+  "game-cari": "Cari Perkataan",
+  "game-betul": "Betul atau Salah",
+  "game-padan": "Padankan",
+  "game-susun": "Susun Ayat",
+};
+
 function ParentDashboard() {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
@@ -495,6 +523,50 @@ function ParentDashboard() {
                               <span className="font-display text-xs font-extrabold text-foreground">{b.nama}</span>
                             </div>
                           ))}
+                        </div>
+                      )}
+                    </Seksyen>
+
+                    {/* AKTIVITI TERKINI */}
+                    <Seksyen tajuk="Aktiviti Terkini" ikon={<BookOpen className="h-5 w-5" />}>
+                      {progress.length === 0 ? (
+                        <div className="rounded-2xl bg-card p-5 text-center shadow-soft">
+                          <p className="text-sm text-muted-foreground">Belum ada aktiviti direkodkan.</p>
+                        </div>
+                      ) : (
+                        <div className="overflow-hidden rounded-2xl bg-card shadow-soft">
+                          {progress.slice(0, 10).map((row, i) => {
+                            const sj = SUBJEK_LIST.find((s) => s.id === row.subjek);
+                            const peratus = Number(row.peratus);
+                            return (
+                              <div
+                                key={row.id}
+                                className="flex items-center justify-between gap-3 p-4"
+                                style={{ borderTop: i === 0 ? "none" : "1px solid hsl(var(--border))" }}
+                              >
+                                <div className="min-w-0 flex-1">
+                                  <p className="truncate font-display text-sm font-extrabold text-foreground">
+                                    {sj?.title ?? row.subjek}
+                                    <span className="ml-1 font-normal text-muted-foreground">
+                                      • {AKTIVITI_LABEL[row.aktiviti] ?? row.aktiviti}
+                                    </span>
+                                  </p>
+                                  <p className="text-xs text-muted-foreground">
+                                    Darjah {row.darjah} • {formatTarikh(row.created_at)}
+                                  </p>
+                                </div>
+                                <div className="text-right shrink-0">
+                                  <p
+                                    className="font-display text-lg font-extrabold"
+                                    style={{ color: peratus >= 60 ? HIJAU : "#dc2626" }}
+                                  >
+                                    {row.markah}/{row.jumlah_soalan}
+                                  </p>
+                                  <p className="text-xs text-muted-foreground">{Math.round(peratus)}%</p>
+                                </div>
+                              </div>
+                            );
+                          })}
                         </div>
                       )}
                     </Seksyen>
