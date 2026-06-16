@@ -573,6 +573,57 @@ function ParentDashboard() {
                       </div>
                     </Seksyen>
 
+                    {(() => {
+                      const topikMap = grupTopik(progress);
+                      if (topikMap.size === 0) return null;
+                      return (
+                        <Seksyen tajuk="Latih Tubi — Rekod Topik" ikon={<Target className="h-5 w-5" />}>
+                          <div className="flex flex-col gap-4">
+                            {Array.from(topikMap.entries()).map(([subjekId, rows]) => {
+                              const sj = SUBJEK_LIST.find((s) => s.id === subjekId);
+                              return (
+                                <div key={subjekId}>
+                                  <p className="mb-2 font-display text-sm font-extrabold text-foreground">
+                                    {sj?.title ?? subjekId}
+                                  </p>
+                                  <div className="overflow-hidden rounded-2xl bg-card shadow-soft">
+                                    {rows.sort((a, b) => b.peratus - a.peratus).map((r, i) => (
+                                      <div
+                                        key={r.topik}
+                                        className="flex items-center justify-between gap-3 px-4 py-3"
+                                        style={{ borderTop: i === 0 ? "none" : "1px solid hsl(var(--border))" }}
+                                      >
+                                        <div className="min-w-0 flex-1">
+                                          <p className="truncate text-sm font-bold text-foreground">{r.topik}</p>
+                                          <p className="text-xs text-muted-foreground">
+                                            Darjah {r.darjah} • {formatTarikh(r.created_at)}
+                                          </p>
+                                        </div>
+                                        <div className="flex items-center gap-3 shrink-0">
+                                          <div className="w-16 h-2 rounded-full overflow-hidden" style={{ backgroundColor: `${HIJAU}1a` }}>
+                                            <div
+                                              className="h-full rounded-full"
+                                              style={{ width: `${r.peratus}%`, backgroundColor: r.peratus >= 60 ? HIJAU : "#dc2626" }}
+                                            />
+                                          </div>
+                                          <span
+                                            className="font-display text-sm font-extrabold w-10 text-right"
+                                            style={{ color: r.peratus >= 60 ? HIJAU : "#dc2626" }}
+                                          >
+                                            {Math.round(r.peratus)}%
+                                          </span>
+                                        </div>
+                                      </div>
+                                    ))}
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </Seksyen>
+                      );
+                    })()}
+
                     {/* STREAK & LENCANA */}
                     <Seksyen tajuk="Streak & Lencana" ikon={<Flame className="h-5 w-5" />}>
                       <div className="grid gap-3 md:grid-cols-3">
