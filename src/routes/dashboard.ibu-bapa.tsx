@@ -507,6 +507,11 @@ function ParentDashboard() {
                       </div>
                     </Seksyen>
 
+                    {/* TREND 7 HARI */}
+                    <Seksyen tajuk="Trend 7 Hari" ikon={<TrendingUp className="h-5 w-5" />}>
+                      <TrendChart stats={stats} />
+                    </Seksyen>
+
                     {/* BULAN INI */}
                     <Seksyen tajuk="Bulan Ini" ikon={<TrendingUp className="h-5 w-5" />}>
                       <div className="grid gap-3 md:grid-cols-2">
