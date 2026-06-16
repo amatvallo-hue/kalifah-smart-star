@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
+import { usePoints } from "@/hooks/use-points";
 import { useProfile } from "@/hooks/use-profile";
 import { DARJAH_LIST, PAKEJ_LIST, HARGA_ASAL, type Darjah } from "@/lib/curriculum";
 
