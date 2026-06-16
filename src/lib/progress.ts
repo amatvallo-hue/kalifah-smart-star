@@ -94,28 +94,15 @@ async function semakDanBeriLencana(userId: string, input: SimpanProgressInput) {
   }
 }
 
-/** Catat hari aktif (login/buka dashboard) supaya streak terus berjalan walau tak buat aktiviti. */
 export async function catatHariAktif(): Promise<void> {
   try {
     const { data: sess } = await supabase.auth.getSession();
     const userId = sess.session?.user?.id;
     if (!userId) return;
-    const tarikh = todayKL();
-    const { data: existing } = await supabase
-      .from("user_stats")
-      .select("id")
-      .eq("user_id", userId)
-      .eq("tarikh", tarikh)
-      .maybeSingle();
-    if (!existing) {
-      await supabase.from("user_stats").insert({
-        user_id: userId,
-        tarikh,
-        soalan_dijawab: 0,
-        masa_belajar: 0,
-        bab_selesai: 0,
-      });
-    }
+    await supabase.from("user_stats").upsert(
+      { user_id: userId, tarikh: todayKL(), soalan_dijawab: 0, masa_belajar: 0, bab_selesai: 0 },
+      { onConflict: "user_id,tarikh", ignoreDuplicates: true }
+    );
   } catch (e) {
     console.warn("catatHariAktif gagal:", e);
   }
@@ -167,7 +154,7 @@ export async function simpanProgress(input: SimpanProgressInput): Promise<void> 
         .eq("id", existing.id);
     }
 
-    // ── 2) STATS HARIAN — sentiasa akumulasi (masa & soalan kekal dikira walau re-attempt)
+    // ── 2) STATS HARIAN — upsert atomic supaya tak ada race condition
     const tarikh = todayKL();
     const minit = Math.max(0, Math.round(masa / 60));
     const { data: statRow } = await supabase
@@ -178,23 +165,17 @@ export async function simpanProgress(input: SimpanProgressInput): Promise<void> 
       .maybeSingle();
 
     if (statRow) {
-      await supabase
-        .from("user_stats")
-        .update({
-          soalan_dijawab: (statRow.soalan_dijawab ?? 0) + jumlah,
-          masa_belajar: (statRow.masa_belajar ?? 0) + minit,
-          bab_selesai: (statRow.bab_selesai ?? 0) + (existing ? 0 : 1),
-          updated_at: new Date().toISOString(),
-        })
-        .eq("id", statRow.id);
+      await supabase.from("user_stats").update({
+        soalan_dijawab: (statRow.soalan_dijawab ?? 0) + jumlah,
+        masa_belajar: (statRow.masa_belajar ?? 0) + minit,
+        bab_selesai: (statRow.bab_selesai ?? 0) + (existing ? 0 : 1),
+        updated_at: new Date().toISOString(),
+      }).eq("id", statRow.id);
     } else {
-      await supabase.from("user_stats").insert({
-        user_id: userId,
-        tarikh,
-        soalan_dijawab: jumlah,
-        masa_belajar: minit,
-        bab_selesai: 1,
-      });
+      await supabase.from("user_stats").upsert(
+        { user_id: userId, tarikh, soalan_dijawab: jumlah, masa_belajar: minit, bab_selesai: 1 },
+        { onConflict: "user_id,tarikh", ignoreDuplicates: false }
+      );
     }
 
     // ── 3) Lencana
