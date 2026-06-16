@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
+import { useStreak } from "@/hooks/use-streak";
 import { useProfile } from "@/hooks/use-profile";
 import { subjekListUntukRole, getDarjah, TONE_GRADIENT } from "@/lib/curriculum";
 
@@ -22,6 +23,7 @@ function SubjekPage() {
   const { profile, loading: profileLoading } = useProfile();
   const darjah = getDarjah(darjahId);
   const studentName = user?.user_metadata?.name as string | undefined;
+  const streak = useStreak();
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
