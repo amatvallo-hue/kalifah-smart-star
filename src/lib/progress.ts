@@ -144,6 +144,7 @@ export async function simpanProgress(input: SimpanProgressInput): Promise<void> 
         darjah: String(input.darjah),
         subjek: input.subjek,
         aktiviti: input.aktiviti,
+        topik: input.topik ?? null,
         markah,
         jumlah_soalan: jumlah,
         peratus,
