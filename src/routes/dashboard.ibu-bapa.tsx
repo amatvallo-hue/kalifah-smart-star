@@ -114,6 +114,58 @@ const AKTIVITI_LABEL: Record<string, string> = {
   "game-susun": "Susun Ayat",
 };
 
+const HARI_PENDEK = ["Ahd", "Isn", "Sel", "Rab", "Kha", "Jum", "Sab"];
+
+function TrendChart({ stats }: { stats: StatsRow[] }) {
+  const hari = useMemo(() => {
+    return Array.from({ length: 7 }, (_, i) => {
+      const tarikh = daysAgoKL(6 - i);
+      const row = stats.find((s) => s.tarikh === tarikh);
+      const d = new Date(tarikh + "T00:00:00Z");
+      return {
+        tarikh,
+        label: HARI_PENDEK[d.getUTCDay()],
+        soalan: row?.soalan_dijawab ?? 0,
+        isToday: i === 6,
+      };
+    });
+  }, [stats]);
+
+  const max = Math.max(...hari.map((h) => h.soalan), 1);
+
+  return (
+    <div className="rounded-2xl bg-card p-4 shadow-soft">
+      <div className="flex items-end justify-between gap-2 h-28">
+        {hari.map((h) => (
+          <div key={h.tarikh} className="flex flex-1 flex-col items-center gap-1">
+            <span className="text-[10px] font-bold text-muted-foreground">
+              {h.soalan > 0 ? h.soalan : ""}
+            </span>
+            <div className="w-full flex items-end" style={{ height: "72px" }}>
+              <div
+                className="w-full rounded-t-lg transition-all"
+                style={{
+                  height: `${Math.max(4, (h.soalan / max) * 72)}px`,
+                  backgroundColor: h.isToday ? HIJAU : h.soalan > 0 ? `${HIJAU}88` : `${HIJAU}1a`,
+                }}
+              />
+            </div>
+            <span
+              className="text-[10px] font-extrabold"
+              style={{ color: h.isToday ? HIJAU : "hsl(var(--muted-foreground))" }}
+            >
+              {h.label}
+            </span>
+          </div>
+        ))}
+      </div>
+      <p className="mt-2 text-center text-[10px] text-muted-foreground">
+        Soalan dijawab 7 hari lepas
+      </p>
+    </div>
+  );
+}
+
 function ParentDashboard() {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
