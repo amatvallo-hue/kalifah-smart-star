@@ -8,6 +8,7 @@ export interface SimpanProgressInput {
   markah: number;
   jumlahSoalan: number;
   masaAmbil?: number; // saat
+  topik?: string;
 }
 
 export interface BadgeRow {
