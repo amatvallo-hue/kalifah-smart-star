@@ -115,8 +115,9 @@ function LatihTubiPage() {
         pilihan: [r.pilihan_a, r.pilihan_b, r.pilihan_c, r.pilihan_d] as string[],
         jawapan: letterToIdx(r.jawapan_betul),
       }));
-      setBank(rows);
-      setOrder(shuffle(rows.map((_, i) => i)));
+      const shuffled = shuffle(rows);
+      setBank(shuffled);
+      setOrder(shuffle(shuffled.map((_, i) => i)));
       setFetching(false);
     })();
     return () => {
