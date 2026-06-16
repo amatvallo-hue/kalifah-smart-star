@@ -49,7 +49,8 @@ function LatihTubiPage() {
 
   const isSainsD1Topic = subjekId === "sains" && darjahId === "1";
   const isUpper = isSainsD1Topic;
-  const showBahasaToggle = subjekId === "sains" && isSainsD1Topic;
+  const isMatematik = subjekId === "matematik";
+  const showBahasaToggle = (subjekId === "sains" && isSainsD1Topic) || isMatematik;
   const [bahasa, setBahasa] = useState<"bm" | "en" | null>(showBahasaToggle ? null : "bm");
   const subjekCode = subjekId === "sains" ? (bahasa === "en" ? "SC-EN" : "SC") : subjekId;
   const darjahNum = Number(darjahId);
@@ -62,8 +63,9 @@ function LatihTubiPage() {
   const [salah, setSalah] = useState(0);
   const [jawab, setJawab] = useState(0);
   const [berhenti, setBerhenti] = useState(false);
-  const [fetching, setFetching] = useState(!isUpper);
+  const [fetching, setFetching] = useState(!isUpper && !(isMatematik));
   const [errMsg, setErrMsg] = useState<string | null>(null);
+
   const [mulaMasa, setMulaMasa] = useState(() => Date.now());
 
   // Upper-darjah selection state
