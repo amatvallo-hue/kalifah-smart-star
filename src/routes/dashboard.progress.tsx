@@ -10,6 +10,7 @@ import { catatHariAktif } from "@/lib/progress";
 import { sertaiDenganKod } from "@/lib/parent";
 import { CHILD_EMAIL_DOMAIN } from "@/lib/child-auth";
 import { downloadSijil, shareSijil, type SijilInput } from "@/lib/sijil";
+import { usePoints } from "@/hooks/use-points";
 
 export const Route = createFileRoute("/dashboard/progress")({
   head: () => ({ meta: [{ title: "Progress Saya — Kalifah.my" }] }),
@@ -202,6 +203,7 @@ function ProgressDashboard() {
   }, [progress]);
 
   const lencana = badges.length;
+  const mata = usePoints();
 
   const babLemah = ringkasanSubjek.filter((r) => r.jumlahAktiviti > 0 && r.purata < 60);
 
@@ -271,7 +273,7 @@ function ProgressDashboard() {
 
   return (
     <div className="min-h-screen bg-background">
-      <SiteHeader stars={lencana} userName={user.email?.split("@")[0]} onLogout={handleLogout} />
+      <SiteHeader stars={mata} userName={user.user_metadata?.name as string | undefined} onLogout={handleLogout} />
       <main className="container mx-auto max-w-5xl px-4 py-8">
         <Link
           to="/pilih-darjah"
