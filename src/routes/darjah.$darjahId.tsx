@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
+import { useStreak } from "@/hooks/use-streak";
 import { useProfile } from "@/hooks/use-profile";
 import { subjekListUntukRole, getDarjah, TONE_GRADIENT } from "@/lib/curriculum";
 
@@ -22,6 +23,7 @@ function SubjekPage() {
   const { profile, loading: profileLoading } = useProfile();
   const darjah = getDarjah(darjahId);
   const studentName = user?.user_metadata?.name as string | undefined;
+  const streak = useStreak();
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
@@ -83,6 +85,14 @@ function SubjekPage() {
           <p className="mt-2 max-w-lg text-muted-foreground">
             Nak belajar apa hari ini? Pilih subjek kesukaan kamu!
           </p>
+          {streak > 0 && (
+            <div className="mt-4 inline-flex flex-wrap items-center gap-2 rounded-full bg-orange-50 px-4 py-2 text-orange-700 shadow-soft">
+              <span className="text-lg">🔥</span>
+              <span className="font-display text-sm font-extrabold">{streak} hari berturut-turut!</span>
+              {streak >= 7 && <span className="text-sm font-bold">⭐ Hebat!</span>}
+              {streak >= 30 && <span className="text-sm font-bold">🥇 Luar biasa!</span>}
+            </div>
+          )}
         </section>
 
         <section className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
