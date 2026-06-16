@@ -86,6 +86,7 @@ function LatihTubiPage() {
         markah: betul,
         jumlahSoalan: jawab,
         masaAmbil: Math.round((Date.now() - mulaMasa) / 1000),
+        topik: isUpper && topik ? topik : undefined,
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
