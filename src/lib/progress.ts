@@ -122,14 +122,21 @@ export async function simpanProgress(input: SimpanProgressInput): Promise<void> 
     const masa = Math.max(0, input.masaAmbil ?? 0);
 
     // ── 1) DEDUP: simpan rekod terbaik sahaja per (user,darjah,subjek,aktiviti)
-    const { data: existing } = await supabase
+    let progressQuery = supabase
       .from("user_progress")
       .select("id, peratus, masa_ambil")
       .eq("user_id", userId)
       .eq("darjah", String(input.darjah))
       .eq("subjek", input.subjek)
-      .eq("aktiviti", input.aktiviti)
-      .maybeSingle();
+      .eq("aktiviti", input.aktiviti);
+
+    if (input.topik) {
+      progressQuery = progressQuery.eq("topik", input.topik);
+    } else {
+      progressQuery = progressQuery.is("topik", null);
+    }
+
+    const { data: existing } = await progressQuery.maybeSingle();
 
     if (!existing) {
       await supabase.from("user_progress").insert({
