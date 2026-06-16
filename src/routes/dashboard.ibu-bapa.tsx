@@ -166,6 +166,18 @@ function TrendChart({ stats }: { stats: StatsRow[] }) {
   );
 }
 
+function grupTopik(progress: ProgressRow[]) {
+  const rows = progress.filter((r) => r.aktiviti === "latih-tubi" && (r as any).topik);
+  const map = new Map<string, { subjek: string; darjah: string; topik: string; peratus: number; masa_ambil: number; created_at: string }[]>();
+  rows.forEach((r) => {
+    const topik = (r as any).topik as string;
+    const key = r.subjek;
+    if (!map.has(key)) map.set(key, []);
+    map.get(key)!.push({ subjek: r.subjek, darjah: r.darjah, topik, peratus: Number(r.peratus), masa_ambil: r.masa_ambil ?? 0, created_at: r.created_at });
+  });
+  return map;
+}
+
 function ParentDashboard() {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
