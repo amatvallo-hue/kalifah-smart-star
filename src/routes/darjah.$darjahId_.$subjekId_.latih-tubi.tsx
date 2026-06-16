@@ -49,7 +49,8 @@ function LatihTubiPage() {
 
   const isSainsD1Topic = subjekId === "sains" && darjahId === "1";
   const isUpper = isSainsD1Topic;
-  const showBahasaToggle = subjekId === "sains" && isSainsD1Topic;
+  const isMatematik = subjekId === "matematik";
+  const showBahasaToggle = (subjekId === "sains" && isSainsD1Topic) || isMatematik;
   const [bahasa, setBahasa] = useState<"bm" | "en" | null>(showBahasaToggle ? null : "bm");
   const subjekCode = subjekId === "sains" ? (bahasa === "en" ? "SC-EN" : "SC") : subjekId;
   const darjahNum = Number(darjahId);
@@ -62,8 +63,9 @@ function LatihTubiPage() {
   const [salah, setSalah] = useState(0);
   const [jawab, setJawab] = useState(0);
   const [berhenti, setBerhenti] = useState(false);
-  const [fetching, setFetching] = useState(!isUpper);
+  const [fetching, setFetching] = useState(!isUpper && !(isMatematik));
   const [errMsg, setErrMsg] = useState<string | null>(null);
+
   const [mulaMasa, setMulaMasa] = useState(() => Date.now());
 
   // Upper-darjah selection state
@@ -95,14 +97,20 @@ function LatihTubiPage() {
   // Lower darjah (1-3): existing behaviour from soalan_latih_tubi
   useEffect(() => {
     if (isUpper) return;
+    if (isMatematik && !bahasa) return;
     let cancelled = false;
     (async () => {
       setFetching(true);
+      const subjekQuery = isMatematik
+        ? bahasa === "en"
+          ? "matematik-en"
+          : "matematik"
+        : subjekId;
       const { data, error } = await supabase
         .from("soalan_latih_tubi")
         .select("id, soalan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan_betul")
         .eq("darjah", Number.isFinite(darjahNum) ? darjahNum : darjahId)
-        .eq("subjek", subjekId);
+        .eq("subjek", subjekQuery);
       if (cancelled) return;
       if (error) {
         setErrMsg(error.message);
@@ -123,7 +131,8 @@ function LatihTubiPage() {
     return () => {
       cancelled = true;
     };
-  }, [darjahId, subjekId, isUpper, darjahNum]);
+  }, [darjahId, subjekId, isUpper, darjahNum, isMatematik, bahasa]);
+
 
   // Upper darjah (4-6): fetch distinct topik list
   useEffect(() => {
