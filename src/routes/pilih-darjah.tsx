@@ -24,6 +24,7 @@ function DarjahDashboard() {
   const { user, loading } = useAuth();
   const { profile, loading: profileLoading } = useProfile();
   const [upgradeFor, setUpgradeFor] = useState<Darjah | null>(null);
+  const mata = usePoints();
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
