@@ -45,7 +45,7 @@ function LatihTubiPage() {
   const subjek = getSubjek(subjekId) ?? { id: subjekId, title: subjekId };
 
   const isSainsD1Topic = subjekId === "sains" && darjahId === "1";
-  const isUpper = darjahId === "4" || darjahId === "5" || darjahId === "6" || isSainsD1Topic;
+  const isUpper = isSainsD1Topic;
   const showBahasaToggle = subjekId === "sains" && isSainsD1Topic;
   const [bahasa, setBahasa] = useState<"bm" | "en" | null>(showBahasaToggle ? null : "bm");
   const subjekCode = subjekId === "sains" ? (bahasa === "en" ? "SC-EN" : "SC") : subjekId;
