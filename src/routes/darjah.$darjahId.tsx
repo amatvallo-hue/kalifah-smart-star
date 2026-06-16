@@ -5,6 +5,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { useStreak } from "@/hooks/use-streak";
+import { usePoints } from "@/hooks/use-points";
 import { useProfile } from "@/hooks/use-profile";
 import { subjekListUntukRole, getDarjah, TONE_GRADIENT } from "@/lib/curriculum";
 
@@ -24,6 +25,7 @@ function SubjekPage() {
   const darjah = getDarjah(darjahId);
   const studentName = user?.user_metadata?.name as string | undefined;
   const streak = useStreak();
+  const mata = usePoints();
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
@@ -67,7 +69,7 @@ function SubjekPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <SiteHeader stars={42} userName={studentName} onLogout={handleLogout} />
+      <SiteHeader stars={mata} userName={studentName} onLogout={handleLogout} />
       <Outlet />
       <main className="container mx-auto px-4 py-8">
         <Link to="/pilih-darjah" className="inline-flex items-center gap-2 text-sm font-bold text-muted-foreground hover:text-primary">

@@ -6,6 +6,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { getDarjah, getSubjek } from "@/lib/curriculum";
 import { simpanProgress } from "@/lib/progress";
+import { tambahMata } from "@/lib/tambah-mata";
+import { usePoints } from "@/hooks/use-points";
 
 export const Route = createFileRoute("/darjah/$darjahId_/$subjekId_/latih-tubi")({
   head: () => ({ meta: [{ title: "Latih Tubi — Kalifah.my" }] }),
@@ -43,6 +45,7 @@ function LatihTubiPage() {
   const { user, loading } = useAuth();
   const darjah = getDarjah(darjahId) ?? { id: darjahId, label: `Darjah ${darjahId}`, locked: false };
   const subjek = getSubjek(subjekId) ?? { id: subjekId, title: subjekId };
+  const mata = usePoints();
 
   const isSainsD1Topic = subjekId === "sains" && darjahId === "1";
   const isUpper = isSainsD1Topic;
@@ -204,6 +207,9 @@ function LatihTubiPage() {
     setPilih(idx);
     const isBetul = idx === soalan.jawapan;
     if (isBetul) setBetul((b) => b + 1);
+    if (isBetul && user) {
+      tambahMata({ userId: user.id, mata: 10, sumber: "latih-tubi", darjah: darjahId, subjek: subjekId });
+    }
     else setSalah((s) => s + 1);
     setJawab((j) => j + 1);
     setTimeout(() => {
@@ -227,7 +233,7 @@ function LatihTubiPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <SiteHeader stars={42} onLogout={handleLogout} />
+      <SiteHeader stars={mata} onLogout={handleLogout} />
       <main className="container mx-auto max-w-3xl px-4 py-8">
         <Link
           to="/darjah/$darjahId/$subjekId"
