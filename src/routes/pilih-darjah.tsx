@@ -58,7 +58,7 @@ function DarjahDashboard() {
 
   return (
     <div className="min-h-screen bg-background">
-      <SiteHeader stars={42} userName={firstName} onLogout={handleLogout} />
+      <SiteHeader stars={mata} userName={firstName} onLogout={handleLogout} />
 
       <main className="container mx-auto px-4 py-8">
         <section className="relative overflow-hidden rounded-[2rem] bg-gradient-hero p-6 shadow-card md:p-10">
