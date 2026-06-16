@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
+import { usePoints } from "@/hooks/use-points";
 import { useProfile } from "@/hooks/use-profile";
 import { DARJAH_LIST, PAKEJ_LIST, HARGA_ASAL, type Darjah } from "@/lib/curriculum";
 
@@ -23,6 +24,7 @@ function DarjahDashboard() {
   const { user, loading } = useAuth();
   const { profile, loading: profileLoading } = useProfile();
   const [upgradeFor, setUpgradeFor] = useState<Darjah | null>(null);
+  const mata = usePoints();
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
@@ -56,7 +58,7 @@ function DarjahDashboard() {
 
   return (
     <div className="min-h-screen bg-background">
-      <SiteHeader stars={42} userName={firstName} onLogout={handleLogout} />
+      <SiteHeader stars={mata} userName={firstName} onLogout={handleLogout} />
 
       <main className="container mx-auto px-4 py-8">
         <section className="relative overflow-hidden rounded-[2rem] bg-gradient-hero p-6 shadow-card md:p-10">
