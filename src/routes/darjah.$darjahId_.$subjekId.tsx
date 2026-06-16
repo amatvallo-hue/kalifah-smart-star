@@ -125,15 +125,45 @@ function AktivitiPage() {
           </p>
         </section>
 
-        <section className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {ACTIVITIES.map((a) => {
+
+        {/* Hero — Latih Tubi */}
+        {(() => {
+          const latihTubi = ACTIVITIES.find((a) => a.id === "latih-tubi")!;
+          return (
+            <Link
+              to="/darjah/$darjahId/$subjekId/latih-tubi"
+              params={{ darjahId, subjekId }}
+              className="group mt-8 flex flex-col gap-4 rounded-3xl border-2 border-primary/30 bg-gradient-to-br from-emerald-50 to-amber-50 p-8 shadow-card transition hover:-translate-y-1 hover:shadow-soft dark:from-emerald-950/30 dark:to-amber-950/20"
+            >
+              <div className="flex items-center gap-3">
+                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-amber-400 text-white shadow-soft transition group-hover:scale-110">
+                  <Zap className="h-8 w-8" strokeWidth={2.5} />
+                </div>
+                <span className="rounded-full bg-primary px-4 py-1.5 font-display text-xs font-extrabold text-primary-foreground">
+                  ⚡ Cuba Dulu Ni!
+                </span>
+              </div>
+              <div>
+                <h3 className="font-display text-3xl font-extrabold text-foreground">Latih Tubi</h3>
+                <p className="mt-1 text-base text-muted-foreground">
+                  Soalan rawak tanpa had — makin banyak buat, makin pandai! Ini cara terbaik nak tahu kamu lemah topik mana.
+                </p>
+              </div>
+              <span className="mt-2 inline-flex w-fit items-center gap-2 rounded-full bg-gradient-primary px-6 py-3 font-display text-base font-extrabold text-primary-foreground shadow-soft transition group-hover:translate-x-1">
+                Mula Latih Tubi →
+              </span>
+            </Link>
+          );
+        })()}
+
+        {/* 4 aktiviti lain */}
+        <section className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {ACTIVITIES.filter((a) => a.id !== "latih-tubi").map((a) => {
             const linkProps =
               a.id === "kuiz"
                 ? { to: "/darjah/$darjahId/$subjekId/kuiz" as const, params: { darjahId, subjekId } }
                 : a.id === "latihan"
                 ? { to: "/darjah/$darjahId/$subjekId/latihan" as const, params: { darjahId, subjekId } }
-                : a.id === "latih-tubi"
-                ? { to: "/darjah/$darjahId/$subjekId/latih-tubi" as const, params: { darjahId, subjekId } }
                 : a.id === "nota-ringkas"
                 ? { to: "/darjah/$darjahId/$subjekId/nota-ringkas" as const, params: { darjahId, subjekId } }
                 : { to: "/darjah/$darjahId/$subjekId/game" as const, params: { darjahId, subjekId } };
@@ -141,22 +171,23 @@ function AktivitiPage() {
               <Link
                 key={a.id}
                 {...linkProps}
-                className="group flex flex-col gap-4 rounded-3xl border border-border/60 bg-card p-6 shadow-card transition hover:-translate-y-1 hover:shadow-soft"
+                className="group flex flex-col gap-3 rounded-2xl border border-border/60 bg-card p-5 shadow-card transition hover:-translate-y-1 hover:shadow-soft"
               >
-                <div className={`flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br ${a.tone} shadow-soft transition group-hover:scale-110`}>
-                  <a.icon className="h-8 w-8" strokeWidth={2.5} />
+                <div className={`flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br ${a.tone} shadow-soft transition group-hover:scale-110`}>
+                  <a.icon className="h-6 w-6" strokeWidth={2.5} />
                 </div>
                 <div>
-                  <h3 className="font-display text-2xl font-extrabold text-foreground">{a.title}</h3>
-                  <p className="mt-1 text-sm text-muted-foreground">{a.description}</p>
+                  <h3 className="font-display text-lg font-extrabold text-foreground">{a.title}</h3>
+                  <p className="mt-0.5 text-xs text-muted-foreground">{a.description}</p>
                 </div>
-                <span className="mt-auto inline-flex w-fit items-center gap-2 rounded-full bg-gradient-primary px-4 py-2 font-display text-sm font-extrabold text-primary-foreground shadow-soft transition group-hover:translate-x-1">
+                <span className="mt-auto inline-flex w-fit items-center gap-1 rounded-full bg-secondary px-3 py-1.5 font-display text-xs font-extrabold text-foreground transition group-hover:translate-x-0.5">
                   Mula →
                 </span>
               </Link>
             );
           })}
         </section>
+
       </main>
     </div>
   );
