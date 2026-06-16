@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
+import { usePoints } from "@/hooks/use-points";
 import { getDarjah, getSubjek } from "@/lib/curriculum";
 
 export const Route = createFileRoute("/darjah/$darjahId_/$subjekId")({
@@ -63,6 +64,7 @@ function AktivitiPage() {
   const { user, loading } = useAuth();
   const darjah = getDarjah(darjahId);
   const subjek = getSubjek(subjekId);
+  const mata = usePoints();
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
@@ -97,7 +99,7 @@ function AktivitiPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <SiteHeader stars={42} onLogout={handleLogout} />
+      <SiteHeader stars={mata} onLogout={handleLogout} />
       <main className="container mx-auto px-4 py-8">
         <Link
           to="/darjah/$darjahId"
