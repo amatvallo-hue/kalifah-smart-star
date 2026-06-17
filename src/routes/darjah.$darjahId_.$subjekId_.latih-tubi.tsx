@@ -226,6 +226,7 @@ function LatihTubiPage() {
     setBetul(0);
     setSalah(0);
     setJawab(0);
+    setTopikStats({});
     setBerhenti(false);
     setMulaMasa(Date.now());
     setStarted(true);
