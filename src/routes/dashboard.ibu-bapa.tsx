@@ -630,34 +630,39 @@ function ParentDashboard() {
                                     {sj?.title ?? subjekId}
                                   </p>
                                   <div className="overflow-hidden rounded-2xl bg-card shadow-soft">
-                                    {rows.sort((a, b) => b.peratus - a.peratus).map((r, i) => (
-                                      <div
-                                        key={r.topik}
-                                        className="flex items-center justify-between gap-3 px-4 py-3"
-                                        style={{ borderTop: i === 0 ? "none" : "1px solid hsl(var(--border))" }}
-                                      >
-                                        <div className="min-w-0 flex-1">
-                                          <p className="truncate text-sm font-bold text-foreground">{r.topik}</p>
-                                          <p className="text-xs text-muted-foreground">
-                                            Darjah {r.darjah} • {formatTarikh(r.created_at)}
-                                          </p>
-                                        </div>
-                                        <div className="flex items-center gap-3 shrink-0">
-                                          <div className="w-16 h-2 rounded-full overflow-hidden" style={{ backgroundColor: `${HIJAU}1a` }}>
-                                            <div
-                                              className="h-full rounded-full"
-                                              style={{ width: `${r.peratus}%`, backgroundColor: r.peratus >= 60 ? HIJAU : "#dc2626" }}
-                                            />
+                                    {rows.sort((a, b) => b.peratus - a.peratus).map((r, i) => {
+                                      const warna = warnaTopik(r.peratus);
+                                      return (
+                                        <div
+                                          key={r.topik}
+                                          className="flex items-center justify-between gap-3 px-4 py-3"
+                                          style={{ borderTop: i === 0 ? "none" : "1px solid hsl(var(--border))" }}
+                                        >
+                                          <div className="min-w-0 flex-1">
+                                            <p className="truncate text-sm font-bold text-foreground">{r.topik}</p>
+                                            <p className="text-xs text-muted-foreground">
+                                              Darjah {r.darjah} • {r.jumlah} soalan dijawab • {formatTarikh(r.created_at)}
+                                            </p>
                                           </div>
-                                          <span
-                                            className="font-display text-sm font-extrabold w-10 text-right"
-                                            style={{ color: r.peratus >= 60 ? HIJAU : "#dc2626" }}
-                                          >
-                                            {Math.round(r.peratus)}%
-                                          </span>
+                                          <div className="flex items-center gap-3 shrink-0">
+                                            <div className="w-16 h-2 rounded-full overflow-hidden" style={{ backgroundColor: `${HIJAU}1a` }}>
+                                              <div
+                                                className="h-full rounded-full"
+                                                style={{ width: `${Math.min(100, r.peratus)}%`, backgroundColor: warna }}
+                                              />
+                                            </div>
+                                            <div className="text-right w-16">
+                                              <p className="font-display text-sm font-extrabold leading-tight" style={{ color: warna }}>
+                                                {r.markah}/{r.jumlah}
+                                              </p>
+                                              <p className="text-[10px] font-bold leading-tight" style={{ color: warna }}>
+                                                {r.peratus}%
+                                              </p>
+                                            </div>
+                                          </div>
                                         </div>
-                                      </div>
-                                    ))}
+                                      );
+                                    })}
                                   </div>
                                 </div>
                               );
