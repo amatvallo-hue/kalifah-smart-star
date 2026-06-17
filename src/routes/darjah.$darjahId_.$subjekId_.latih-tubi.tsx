@@ -155,6 +155,7 @@ function LatihTubiPage() {
         soalan: r.soalan as string,
         pilihan: [r.pilihan_a, r.pilihan_b, r.pilihan_c, r.pilihan_d] as string[],
         jawapan: letterToIdx(r.jawapan_betul),
+        topik: (r.topik ?? null) as string | null,
       }));
       const shuffled = shuffle(rows);
       setBank(shuffled);
