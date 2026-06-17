@@ -308,7 +308,10 @@ function KuizPage() {
   const isSainsTopik =
     subjekId === "sains" &&
     (darjahId === "2" || darjahId === "3" || darjahId === "4" || darjahId === "5" || darjahId === "6");
-  if (isBMTopik || isMatematikTopik || isSainsTopik) {
+  const isPITopik =
+    subjekId === "pendidikan-islam" &&
+    ["1","2","3","4","5","6"].includes(darjahId);
+  if (isBMTopik || isMatematikTopik || isSainsTopik || isPITopik) {
     return (
       <div className="min-h-screen bg-background">
         <SiteHeader stars={42} onLogout={handleLogout} />
@@ -317,7 +320,7 @@ function KuizPage() {
           darjahLabel={darjah.label}
           subjekId={subjekId}
           subjekTitle={subjek.title}
-          subjekKod={isMatematikTopik ? "MT" : isSainsTopik ? "SC" : "BM"}
+          subjekKod={isMatematikTopik ? "MT" : isSainsTopik ? "SC" : isPITopik ? "Pendidikan Islam" : "BM"}
           showBahasaToggle={isMatematikTopik || isSainsTopik}
         />
       </div>
