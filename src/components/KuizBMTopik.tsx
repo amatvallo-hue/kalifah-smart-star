@@ -525,7 +525,7 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
           >
             <Sparkles className="mt-0.5 h-5 w-5 shrink-0" />
             <div className="text-sm font-bold">
-              {betul ? "Syabas! Jawapan kamu betul! 🎉" : "Hampir betul! Lihat jawapan betul di atas."}
+              {betul ? tr.betul : tr.salah}
             </div>
           </div>
         )}
