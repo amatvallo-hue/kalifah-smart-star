@@ -121,10 +121,12 @@ export async function simpanProgress(input: SimpanProgressInput): Promise<void> 
     const peratus = Math.round((markah / jumlah) * 100);
     const masa = Math.max(0, input.masaAmbil ?? 0);
 
-    // ── 1) DEDUP: simpan rekod terbaik sahaja per (user,darjah,subjek,aktiviti)
+    // ── 1) Simpan rekod per (user,darjah,subjek,aktiviti[,topik])
+    //    Untuk Latih Tubi + topik: ACCUMULATE (SUM) — track prestasi terkumpul.
+    //    Aktiviti lain: simpan rekod terbaik (DEDUP) sahaja.
     let progressQuery = supabase
       .from("user_progress")
-      .select("id, peratus, masa_ambil")
+      .select("id, peratus, masa_ambil, markah, jumlah_soalan")
       .eq("user_id", userId)
       .eq("darjah", String(input.darjah))
       .eq("subjek", input.subjek)
@@ -137,6 +139,7 @@ export async function simpanProgress(input: SimpanProgressInput): Promise<void> 
     }
 
     const { data: existing } = await progressQuery.maybeSingle();
+    const isLatihTubiTopik = input.aktiviti === "latih-tubi" && !!input.topik;
 
     if (!existing) {
       await supabase.from("user_progress").insert({
@@ -150,6 +153,21 @@ export async function simpanProgress(input: SimpanProgressInput): Promise<void> 
         peratus,
         masa_ambil: masa,
       });
+    } else if (isLatihTubiTopik) {
+      const newMarkah = Number((existing as any).markah ?? 0) + markah;
+      const newJumlah = Number((existing as any).jumlah_soalan ?? 0) + jumlah;
+      const newPeratus = newJumlah > 0 ? Math.round((newMarkah / newJumlah) * 100) : 0;
+      const newMasa = Number(existing.masa_ambil ?? 0) + masa;
+      await supabase
+        .from("user_progress")
+        .update({
+          markah: newMarkah,
+          jumlah_soalan: newJumlah,
+          peratus: newPeratus,
+          masa_ambil: newMasa,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", existing.id);
     } else if (peratus > Number(existing.peratus)) {
       await supabase
         .from("user_progress")

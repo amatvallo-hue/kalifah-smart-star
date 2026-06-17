@@ -20,6 +20,7 @@ interface Soalan {
   soalan: string;
   pilihan: string[];
   jawapan: number;
+  topik?: string | null;
 }
 
 const HIJAU = "#1B8A5A";
@@ -66,6 +67,7 @@ function LatihTubiPage() {
   const [fetching, setFetching] = useState(!isUpper && !(isMatematik));
   const [errMsg, setErrMsg] = useState<string | null>(null);
 
+  const [topikStats, setTopikStats] = useState<Record<string, { betul: number; jumlah: number }>>({});
   const [mulaMasa, setMulaMasa] = useState(() => Date.now());
 
   // Upper-darjah selection state
@@ -81,15 +83,46 @@ function LatihTubiPage() {
 
   useEffect(() => {
     if (berhenti && jawab > 0) {
-      simpanProgress({
-        darjah: darjahId,
-        subjek: subjekId,
-        aktiviti: "latih-tubi",
-        markah: betul,
-        jumlahSoalan: jawab,
-        masaAmbil: Math.round((Date.now() - mulaMasa) / 1000),
-        topik: isUpper && topik ? topik : undefined,
-      });
+      const masaSec = Math.round((Date.now() - mulaMasa) / 1000);
+      if (isUpper && topik) {
+        // Upper darjah: satu topik untuk seluruh sesi
+        simpanProgress({
+          darjah: darjahId,
+          subjek: subjekId,
+          aktiviti: "latih-tubi",
+          markah: betul,
+          jumlahSoalan: jawab,
+          masaAmbil: masaSec,
+          topik,
+        });
+      } else {
+        const entries = Object.entries(topikStats);
+        if (entries.length > 0) {
+          // Lower darjah: satu row per topik (cumulative accumulate)
+          const masaPerSoalan = jawab > 0 ? masaSec / jawab : 0;
+          entries.forEach(([t, s]) => {
+            simpanProgress({
+              darjah: darjahId,
+              subjek: subjekId,
+              aktiviti: "latih-tubi",
+              markah: s.betul,
+              jumlahSoalan: s.jumlah,
+              masaAmbil: Math.round(masaPerSoalan * s.jumlah),
+              topik: t,
+            });
+          });
+        } else {
+          // Fallback: tiada topik pada soalan
+          simpanProgress({
+            darjah: darjahId,
+            subjek: subjekId,
+            aktiviti: "latih-tubi",
+            markah: betul,
+            jumlahSoalan: jawab,
+            masaAmbil: masaSec,
+          });
+        }
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [berhenti]);
@@ -108,7 +141,7 @@ function LatihTubiPage() {
         : subjekId;
       const { data, error } = await supabase
         .from("soalan_latih_tubi")
-        .select("id, soalan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan_betul")
+        .select("id, soalan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan_betul, topik")
         .eq("darjah", Number.isFinite(darjahNum) ? darjahNum : darjahId)
         .eq("subjek", subjekQuery);
       if (cancelled) return;
@@ -122,6 +155,7 @@ function LatihTubiPage() {
         soalan: r.soalan as string,
         pilihan: [r.pilihan_a, r.pilihan_b, r.pilihan_c, r.pilihan_d] as string[],
         jawapan: letterToIdx(r.jawapan_betul),
+        topik: (r.topik ?? null) as string | null,
       }));
       const shuffled = shuffle(rows);
       setBank(shuffled);
@@ -192,6 +226,7 @@ function LatihTubiPage() {
     setBetul(0);
     setSalah(0);
     setJawab(0);
+    setTopikStats({});
     setBerhenti(false);
     setMulaMasa(Date.now());
     setStarted(true);
@@ -223,6 +258,13 @@ function LatihTubiPage() {
     }
     else setSalah((s) => s + 1);
     setJawab((j) => j + 1);
+    const tpk = soalan.topik;
+    if (tpk) {
+      setTopikStats((prev) => {
+        const cur = prev[tpk] ?? { betul: 0, jumlah: 0 };
+        return { ...prev, [tpk]: { betul: cur.betul + (isBetul ? 1 : 0), jumlah: cur.jumlah + 1 } };
+      });
+    }
     setTimeout(() => {
       setPilih(null);
       setCursor((c) => {
@@ -439,13 +481,13 @@ function LatihTubiPage() {
               <button
                 onClick={() => {
                   if (isUpper) {
-                    // Back to picker so user can pick another topic/set
                     setStarted(false);
                     setBank([]);
                     setOrder([]);
                     setBetul(0);
                     setSalah(0);
                     setJawab(0);
+                    setTopikStats({});
                     setCursor(0);
                     setPilih(null);
                     setBerhenti(false);
@@ -453,8 +495,10 @@ function LatihTubiPage() {
                     setBetul(0);
                     setSalah(0);
                     setJawab(0);
+                    setTopikStats({});
                     setCursor(0);
                     setPilih(null);
+                    setMulaMasa(Date.now());
                     setOrder(shuffle(bank.map((_, i) => i)));
                     setBerhenti(false);
                   }

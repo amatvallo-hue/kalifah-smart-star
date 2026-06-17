@@ -43,6 +43,7 @@ interface ProgressRow {
   peratus: number;
   masa_ambil: number;
   created_at: string;
+  topik?: string | null;
 }
 interface StatsRow {
   tarikh: string;
@@ -166,16 +167,58 @@ function TrendChart({ stats }: { stats: StatsRow[] }) {
   );
 }
 
-function grupTopik(progress: ProgressRow[]) {
-  const rows = progress.filter((r) => r.aktiviti === "latih-tubi" && (r as any).topik);
-  const map = new Map<string, { subjek: string; darjah: string; topik: string; peratus: number; masa_ambil: number; created_at: string }[]>();
+interface TopikAgg {
+  subjek: string;
+  darjah: string;
+  topik: string;
+  markah: number;
+  jumlah: number;
+  peratus: number;
+  created_at: string;
+}
+
+function grupTopik(progress: ProgressRow[]): Map<string, TopikAgg[]> {
+  const rows = progress.filter((r) => r.aktiviti === "latih-tubi" && r.topik);
+  // subjek -> topik -> agg
+  const bySubjek = new Map<string, Map<string, TopikAgg>>();
   rows.forEach((r) => {
-    const topik = (r as any).topik as string;
-    const key = r.subjek;
-    if (!map.has(key)) map.set(key, []);
-    map.get(key)!.push({ subjek: r.subjek, darjah: r.darjah, topik, peratus: Number(r.peratus), masa_ambil: r.masa_ambil ?? 0, created_at: r.created_at });
+    const topik = r.topik as string;
+    if (!bySubjek.has(r.subjek)) bySubjek.set(r.subjek, new Map());
+    const tmap = bySubjek.get(r.subjek)!;
+    const cur = tmap.get(topik);
+    const markah = Number(r.markah ?? 0);
+    const jumlah = Number(r.jumlah_soalan ?? 0);
+    if (cur) {
+      cur.markah += markah;
+      cur.jumlah += jumlah;
+      if (r.created_at > cur.created_at) cur.created_at = r.created_at;
+    } else {
+      tmap.set(topik, {
+        subjek: r.subjek,
+        darjah: r.darjah,
+        topik,
+        markah,
+        jumlah,
+        peratus: 0,
+        created_at: r.created_at,
+      });
+    }
   });
-  return map;
+  const out = new Map<string, TopikAgg[]>();
+  bySubjek.forEach((tmap, subjek) => {
+    const arr = Array.from(tmap.values()).map((v) => ({
+      ...v,
+      peratus: v.jumlah > 0 ? Math.round((v.markah / v.jumlah) * 100) : 0,
+    }));
+    out.set(subjek, arr);
+  });
+  return out;
+}
+
+function warnaTopik(p: number): string {
+  if (p >= 80) return HIJAU;
+  if (p < 60) return "#dc2626";
+  return "#7a5300";
 }
 
 function ParentDashboard() {
@@ -214,7 +257,7 @@ function ParentDashboard() {
     const [{ data: p, error: pError }, { data: s, error: sError }, { data: b, error: bError }] = await Promise.all([
       supabase
         .from("user_progress")
-        .select("id, darjah, subjek, aktiviti, markah, jumlah_soalan, peratus, masa_ambil, created_at")
+        .select("id, darjah, subjek, aktiviti, markah, jumlah_soalan, peratus, masa_ambil, created_at, topik")
         .eq("user_id", uid)
         .order("created_at", { ascending: false }),
       supabase
@@ -587,34 +630,39 @@ function ParentDashboard() {
                                     {sj?.title ?? subjekId}
                                   </p>
                                   <div className="overflow-hidden rounded-2xl bg-card shadow-soft">
-                                    {rows.sort((a, b) => b.peratus - a.peratus).map((r, i) => (
-                                      <div
-                                        key={r.topik}
-                                        className="flex items-center justify-between gap-3 px-4 py-3"
-                                        style={{ borderTop: i === 0 ? "none" : "1px solid hsl(var(--border))" }}
-                                      >
-                                        <div className="min-w-0 flex-1">
-                                          <p className="truncate text-sm font-bold text-foreground">{r.topik}</p>
-                                          <p className="text-xs text-muted-foreground">
-                                            Darjah {r.darjah} • {formatTarikh(r.created_at)}
-                                          </p>
-                                        </div>
-                                        <div className="flex items-center gap-3 shrink-0">
-                                          <div className="w-16 h-2 rounded-full overflow-hidden" style={{ backgroundColor: `${HIJAU}1a` }}>
-                                            <div
-                                              className="h-full rounded-full"
-                                              style={{ width: `${r.peratus}%`, backgroundColor: r.peratus >= 60 ? HIJAU : "#dc2626" }}
-                                            />
+                                    {rows.sort((a, b) => b.peratus - a.peratus).map((r, i) => {
+                                      const warna = warnaTopik(r.peratus);
+                                      return (
+                                        <div
+                                          key={r.topik}
+                                          className="flex items-center justify-between gap-3 px-4 py-3"
+                                          style={{ borderTop: i === 0 ? "none" : "1px solid hsl(var(--border))" }}
+                                        >
+                                          <div className="min-w-0 flex-1">
+                                            <p className="truncate text-sm font-bold text-foreground">{r.topik}</p>
+                                            <p className="text-xs text-muted-foreground">
+                                              Darjah {r.darjah} • {r.jumlah} soalan dijawab • {formatTarikh(r.created_at)}
+                                            </p>
                                           </div>
-                                          <span
-                                            className="font-display text-sm font-extrabold w-10 text-right"
-                                            style={{ color: r.peratus >= 60 ? HIJAU : "#dc2626" }}
-                                          >
-                                            {Math.round(r.peratus)}%
-                                          </span>
+                                          <div className="flex items-center gap-3 shrink-0">
+                                            <div className="w-16 h-2 rounded-full overflow-hidden" style={{ backgroundColor: `${HIJAU}1a` }}>
+                                              <div
+                                                className="h-full rounded-full"
+                                                style={{ width: `${Math.min(100, r.peratus)}%`, backgroundColor: warna }}
+                                              />
+                                            </div>
+                                            <div className="text-right w-16">
+                                              <p className="font-display text-sm font-extrabold leading-tight" style={{ color: warna }}>
+                                                {r.markah}/{r.jumlah}
+                                              </p>
+                                              <p className="text-[10px] font-bold leading-tight" style={{ color: warna }}>
+                                                {r.peratus}%
+                                              </p>
+                                            </div>
+                                          </div>
                                         </div>
-                                      </div>
-                                    ))}
+                                      );
+                                    })}
                                   </div>
                                 </div>
                               );
