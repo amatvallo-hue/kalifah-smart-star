@@ -59,7 +59,7 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
   const [bahasa, setBahasa] = useState<"bm" | "en" | null>(null);
   const effectiveSubjekKod = showBahasaToggle && bahasa ? (bahasa === "en" ? `${subjekKod}-EN` : subjekKod) : subjekKod;
   const en = showBahasaToggle && bahasa === "en";
-  const t = {
+  const tr = {
     pilihTopik: en ? "Choose Quiz Topic" : "Pilih Topik Kuiz",
     soalanRawak: en ? "10 questions randomly selected for your chosen topic." : "10 soalan dipilih secara rawak untuk topik yang kamu pilih.",
     mula: en ? "Start" : "Mula",
