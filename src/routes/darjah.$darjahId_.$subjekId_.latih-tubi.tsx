@@ -481,13 +481,13 @@ function LatihTubiPage() {
               <button
                 onClick={() => {
                   if (isUpper) {
-                    // Back to picker so user can pick another topic/set
                     setStarted(false);
                     setBank([]);
                     setOrder([]);
                     setBetul(0);
                     setSalah(0);
                     setJawab(0);
+                    setTopikStats({});
                     setCursor(0);
                     setPilih(null);
                     setBerhenti(false);
@@ -495,8 +495,10 @@ function LatihTubiPage() {
                     setBetul(0);
                     setSalah(0);
                     setJawab(0);
+                    setTopikStats({});
                     setCursor(0);
                     setPilih(null);
+                    setMulaMasa(Date.now());
                     setOrder(shuffle(bank.map((_, i) => i)));
                     setBerhenti(false);
                   }
