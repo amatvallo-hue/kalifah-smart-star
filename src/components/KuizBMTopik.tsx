@@ -270,10 +270,10 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
         {headerChips}
         <div className="mt-6 rounded-3xl bg-gradient-hero p-8 shadow-card md:p-10">
           <h1 className="font-display text-3xl font-extrabold text-foreground md:text-4xl">
-            Pilih <span style={{ color: HIJAU }}>Topik Kuiz</span>
+            <span style={{ color: HIJAU }}>{tr.pilihTopik}</span>
           </h1>
           <p className="mt-2 text-muted-foreground">
-            10 soalan dipilih secara rawak untuk topik yang kamu pilih.
+            {tr.soalanRawak}
           </p>
 
           {showBahasaToggle && bahasa && (
@@ -288,7 +288,7 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
                 onClick={() => setBahasa(null)}
                 className="text-xs font-bold text-muted-foreground underline hover:text-primary"
               >
-                Tukar bahasa
+                {tr.tukarBahasa}
               </button>
             </div>
           )}
