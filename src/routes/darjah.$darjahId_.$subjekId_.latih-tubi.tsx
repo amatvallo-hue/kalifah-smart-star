@@ -20,6 +20,7 @@ interface Soalan {
   soalan: string;
   pilihan: string[];
   jawapan: number;
+  topik?: string | null;
 }
 
 const HIJAU = "#1B8A5A";
