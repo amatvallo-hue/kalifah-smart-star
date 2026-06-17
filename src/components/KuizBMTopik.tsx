@@ -430,7 +430,7 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
                       >
                         <Lightbulb className="mt-0.5 h-4 w-4 shrink-0" style={{ color: EMAS }} />
                         <div>
-                          <span className="font-extrabold">💡 Penjelasan: </span>
+                          <span className="font-extrabold">💡 {tr.penjelasan}</span>
                           {s.penjelasan}
                         </div>
                       </div>
