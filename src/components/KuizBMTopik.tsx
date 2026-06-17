@@ -324,7 +324,7 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
                     </span>
                     <span className="flex-1 text-foreground">{t}</span>
                     <span className="font-display text-sm" style={{ color: EMAS }}>
-                      Mula →
+                      {tr.mula} →
                     </span>
                   </button>
                 ))}
