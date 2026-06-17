@@ -58,6 +58,32 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
   const [mulaMasa, setMulaMasa] = useState(() => Date.now());
   const [bahasa, setBahasa] = useState<"bm" | "en" | null>(null);
   const effectiveSubjekKod = showBahasaToggle && bahasa ? (bahasa === "en" ? `${subjekKod}-EN` : subjekKod) : subjekKod;
+  const en = showBahasaToggle && bahasa === "en";
+  const tr = {
+    pilihTopik: en ? "Choose Quiz Topic" : "Pilih Topik Kuiz",
+    soalanRawak: en ? "10 questions randomly selected for your chosen topic." : "10 soalan dipilih secara rawak untuk topik yang kamu pilih.",
+    mula: en ? "Start" : "Mula",
+    tukarBahasa: en ? "Change language" : "Tukar bahasa",
+    seterusnya: en ? "Next Question →" : "Soalan Seterusnya →",
+    lihatKeputusan: en ? "View Results" : "Lihat Keputusan",
+    betul: en ? "Correct! 🎉" : "Syabas! Jawapan kamu betul! 🎉",
+    salah: en ? "Not quite! See the correct answer above." : "Hampir betul! Lihat jawapan betul di atas.",
+    skor: en ? "Score" : "Skor",
+    soalan: en ? "Question" : "Soalan",
+    memuatTopik: en ? "Loading topic list..." : "Memuatkan senarai topik...",
+    tiadaTopik: en ? `No quiz topics yet for ${subjekTitle} (${darjahLabel}). Stay tuned!` : `Belum ada topik kuiz untuk ${subjekTitle} (${darjahLabel}). Nantikan!`,
+    semakanJawapan: en ? "Answer Review" : "Semakan Jawapan",
+    pilihTopikLain: en ? "Choose Another Topic" : "Pilih Topik Lain",
+    kembali: en ? "Back to Activities" : "Kembali ke Aktiviti",
+    tahniah: en ? "Congratulations! 🎉" : "Tahniah! 🎉",
+    topikLabel: en ? "Topic" : "Topik",
+    skorKamu: en ? "Your score" : "Skor kamu",
+    tiadaJawapan: en ? "(No answer selected)" : "(Tiada jawapan dipilih)",
+    penjelasan: en ? "Explanation: " : "Penjelasan: ",
+    pilihBahasa: en ? "Choose Language" : "Pilih Bahasa",
+    pilihBahasaDesc: en ? `Choose a language for the ${subjekTitle} ${darjahLabel} quiz.` : `Pilih bahasa untuk kuiz ${subjekTitle} ${darjahLabel}.`,
+    mengikutTopik: en ? "Quiz by Topic" : "Kuiz Mengikut Topik",
+  };
 
   // Fetch distinct topics for BM, this darjah
   useEffect(() => {
@@ -183,7 +209,7 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
       params={{ darjahId, subjekId }}
       className="inline-flex items-center gap-2 text-sm font-bold text-muted-foreground hover:text-primary"
     >
-      <ArrowLeft className="h-4 w-4" /> Kembali ke Aktiviti
+      <ArrowLeft className="h-4 w-4" /> {tr.kembali}
     </Link>
   );
 
@@ -196,7 +222,7 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
         {subjekTitle}
       </span>
       <span className="rounded-full px-4 py-1.5 font-display text-xs font-extrabold text-white shadow-soft" style={{ backgroundColor: HIJAU }}>
-        Kuiz Mengikut Topik
+        {tr.mengikutTopik}
       </span>
     </div>
   );
@@ -209,10 +235,10 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
         {headerChips}
         <div className="mt-6 rounded-3xl bg-gradient-hero p-8 text-center shadow-card md:p-10">
           <h1 className="font-display text-3xl font-extrabold text-foreground md:text-4xl">
-            Pilih <span style={{ color: HIJAU }}>Bahasa</span>
+            {tr.pilihBahasa.split(" ")[0]} <span style={{ color: HIJAU }}>{tr.pilihBahasa.split(" ").slice(1).join(" ") || "Bahasa"}</span>
           </h1>
           <p className="mt-2 text-muted-foreground">
-            Pilih bahasa untuk kuiz {subjekTitle} {darjahLabel}.
+            {tr.pilihBahasaDesc}
           </p>
 
           <div className="mt-8 grid gap-4 sm:grid-cols-2">
@@ -244,10 +270,10 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
         {headerChips}
         <div className="mt-6 rounded-3xl bg-gradient-hero p-8 shadow-card md:p-10">
           <h1 className="font-display text-3xl font-extrabold text-foreground md:text-4xl">
-            Pilih <span style={{ color: HIJAU }}>Topik Kuiz</span>
+            <span style={{ color: HIJAU }}>{tr.pilihTopik}</span>
           </h1>
           <p className="mt-2 text-muted-foreground">
-            10 soalan dipilih secara rawak untuk topik yang kamu pilih.
+            {tr.soalanRawak}
           </p>
 
           {showBahasaToggle && bahasa && (
@@ -262,7 +288,7 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
                 onClick={() => setBahasa(null)}
                 className="text-xs font-bold text-muted-foreground underline hover:text-primary"
               >
-                Tukar bahasa
+                {tr.tukarBahasa}
               </button>
             </div>
           )}
@@ -275,10 +301,10 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
 
           <div className="mt-6">
             {loadingTopics ? (
-              <p className="text-sm text-muted-foreground">Memuatkan senarai topik...</p>
+              <p className="text-sm text-muted-foreground">{tr.memuatTopik}</p>
             ) : topicList.length === 0 ? (
               <p className="text-sm text-muted-foreground">
-                Belum ada topik kuiz untuk {subjekTitle} ({darjahLabel}). Nantikan!
+                {tr.tiadaTopik}
               </p>
             ) : (
               <div className="grid gap-3 sm:grid-cols-2">
@@ -298,7 +324,7 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
                     </span>
                     <span className="flex-1 text-foreground">{t}</span>
                     <span className="font-display text-sm" style={{ color: EMAS }}>
-                      Mula →
+                      {tr.mula} →
                     </span>
                   </button>
                 ))}
@@ -325,13 +351,13 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
             <Sparkles className="h-10 w-10 text-white" />
           </div>
           <h2 className="mt-4 font-display text-3xl font-extrabold text-foreground md:text-4xl">
-            Tahniah! 🎉
+            {tr.tahniah}
           </h2>
           <p className="mt-2 text-lg text-muted-foreground">
-            Topik: <span className="font-extrabold">{topik}</span>
+            {tr.topikLabel}: <span className="font-extrabold">{topik}</span>
           </p>
           <p className="mt-1 text-2xl font-extrabold" style={{ color: HIJAU }}>
-            Skor kamu: {skor}/{soalanList.length}
+            {tr.skorKamu}: {skor}/{soalanList.length}
           </p>
           <div className="mt-5 flex flex-wrap justify-center gap-3">
             <button
@@ -339,20 +365,20 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
               className="rounded-full px-6 py-3 font-display font-extrabold text-white shadow-soft transition hover:-translate-y-0.5"
               style={{ backgroundColor: HIJAU }}
             >
-              Pilih Topik Lain
+              {tr.pilihTopikLain}
             </button>
             <Link
               to="/darjah/$darjahId/$subjekId"
               params={{ darjahId, subjekId }}
               className="rounded-full bg-card px-6 py-3 font-display font-extrabold text-foreground shadow-soft transition hover:-translate-y-0.5"
             >
-              Kembali ke Aktiviti
+              {tr.kembali}
             </Link>
           </div>
         </div>
 
         <div className="mt-6 space-y-4">
-          <h3 className="font-display text-xl font-extrabold text-foreground">Semakan Jawapan</h3>
+          <h3 className="font-display text-xl font-extrabold text-foreground">{tr.semakanJawapan}</h3>
           {soalanList.map((s, idx) => {
             const muridIdx = jawapanMurid[idx];
             const betul = muridIdx === s.jawapan;
@@ -394,7 +420,7 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
                     </div>
                     {muridIdx === null && (
                       <p className="mt-2 text-xs italic text-muted-foreground">
-                        (Tiada jawapan dipilih)
+                        {tr.tiadaJawapan}
                       </p>
                     )}
                     {s.penjelasan && s.penjelasan.trim().length > 0 && (
@@ -404,7 +430,7 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
                       >
                         <Lightbulb className="mt-0.5 h-4 w-4 shrink-0" style={{ color: EMAS }} />
                         <div>
-                          <span className="font-extrabold">💡 Penjelasan: </span>
+                          <span className="font-extrabold">💡 {tr.penjelasan}</span>
                           {s.penjelasan}
                         </div>
                       </div>
@@ -430,13 +456,13 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
 
       <div className="mt-5 flex items-center justify-between">
         <span className="font-display text-sm font-extrabold text-muted-foreground">
-          Soalan {i + 1} / {soalanList.length} · {topik}
+          {tr.soalan} {i + 1} / {soalanList.length} · {topik}
         </span>
         <span
           className="rounded-full px-3 py-1 font-display text-xs font-extrabold text-white"
           style={{ backgroundColor: EMAS }}
         >
-          Skor: {skor}
+          {tr.skor}: {skor}
         </span>
       </div>
       <div className="mt-2 h-3 overflow-hidden rounded-full bg-secondary">
@@ -499,7 +525,7 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
           >
             <Sparkles className="mt-0.5 h-5 w-5 shrink-0" />
             <div className="text-sm font-bold">
-              {betul ? "Syabas! Jawapan kamu betul! 🎉" : "Hampir betul! Lihat jawapan betul di atas."}
+              {betul ? tr.betul : tr.salah}
             </div>
           </div>
         )}
@@ -510,7 +536,7 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
           className="mt-6 w-full rounded-2xl px-6 py-4 font-display text-lg font-extrabold text-white shadow-soft transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
           style={{ backgroundColor: HIJAU }}
         >
-          {i + 1 >= soalanList.length ? "Lihat Keputusan" : "Soalan Seterusnya →"}
+          {i + 1 >= soalanList.length ? tr.lihatKeputusan : tr.seterusnya}
         </button>
       </div>
     </main>

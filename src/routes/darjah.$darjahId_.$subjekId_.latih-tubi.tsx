@@ -282,6 +282,20 @@ function LatihTubiPage() {
   };
 
   const needBahasa = showBahasaToggle && !bahasa && !started;
+  const en = bahasa === "en";
+  const t = {
+    dijawab: en ? "ANSWERED" : "Dijawab",
+    betul: en ? "CORRECT" : "Betul",
+    salah: en ? "WRONG" : "Salah",
+    berhenti: en ? "Stop" : "Berhenti",
+    seterusnya: en ? "Next" : "Seterusnya",
+    tamat: en ? "Finish" : "Tamat",
+    cubaLagi: en ? "Try again" : "Main Lagi",
+    syabas: en ? "Well done! 🎉" : "Syabas! 🎉",
+    dahJawab: (n: number) => en ? `You answered ${n} questions.` : `Kamu dah jawab ${n} soalan.`,
+    pilihSetLain: en ? "Choose Another Set" : "Pilih Set Lain",
+    aktivitiLain: en ? "Other Activities" : "Aktiviti Lain",
+  };
   const showPicker = isUpper && !started && !needBahasa;
 
   return (
@@ -464,16 +478,16 @@ function LatihTubiPage() {
         ) : berhenti ? (
           <div className="mt-10 rounded-3xl bg-card p-10 text-center shadow-card">
             <h2 className="font-display text-3xl font-extrabold" style={{ color: HIJAU }}>
-              Syabas! 🎉
+              {t.syabas}
             </h2>
-            <p className="mt-2 text-muted-foreground">Kamu dah jawab {jawab} soalan.</p>
+            <p className="mt-2 text-muted-foreground">{t.dahJawab(jawab)}</p>
             <div className="mt-6 grid grid-cols-2 gap-4">
               <div className="rounded-2xl p-5" style={{ backgroundColor: `${HIJAU}15` }}>
-                <p className="text-xs font-bold uppercase tracking-wide" style={{ color: HIJAU }}>Betul</p>
+                <p className="text-xs font-bold uppercase tracking-wide" style={{ color: HIJAU }}>{t.betul}</p>
                 <p className="font-display text-3xl font-extrabold" style={{ color: HIJAU }}>{betul}</p>
               </div>
               <div className="rounded-2xl bg-destructive/10 p-5">
-                <p className="text-xs font-bold uppercase tracking-wide text-destructive">Salah</p>
+                <p className="text-xs font-bold uppercase tracking-wide text-destructive">{t.salah}</p>
                 <p className="font-display text-3xl font-extrabold text-destructive">{salah}</p>
               </div>
             </div>
@@ -506,7 +520,7 @@ function LatihTubiPage() {
                 className="rounded-full px-6 py-3 font-display font-extrabold text-white shadow-soft transition hover:opacity-90"
                 style={{ backgroundColor: HIJAU }}
               >
-                {isUpper ? "Pilih Set Lain" : "Main Lagi"}
+                {isUpper ? t.pilihSetLain : t.cubaLagi}
               </button>
               <Link
                 to="/darjah/$darjahId/$subjekId"
@@ -514,7 +528,7 @@ function LatihTubiPage() {
                 className="rounded-full px-6 py-3 font-display font-extrabold shadow-soft transition hover:opacity-90"
                 style={{ backgroundColor: EMAS, color: "#1a1a1a" }}
               >
-                Aktiviti Lain
+                {t.aktivitiLain}
               </Link>
             </div>
           </div>
@@ -526,7 +540,7 @@ function LatihTubiPage() {
                 style={{ backgroundColor: `${HIJAU}15`, border: `2px solid ${HIJAU}` }}
               >
                 <p className="text-[10px] font-bold uppercase tracking-wide" style={{ color: HIJAU }}>
-                  Dijawab
+                  {t.dijawab}
                 </p>
                 <p className="font-display text-2xl font-extrabold" style={{ color: HIJAU }}>
                   {jawab}
@@ -537,14 +551,14 @@ function LatihTubiPage() {
                 style={{ backgroundColor: `${EMAS}25`, border: `2px solid ${EMAS}` }}
               >
                 <p className="text-[10px] font-bold uppercase tracking-wide" style={{ color: "#7a5300" }}>
-                  Betul
+                  {t.betul}
                 </p>
                 <p className="font-display text-2xl font-extrabold" style={{ color: "#7a5300" }}>
                   {betul}
                 </p>
               </div>
               <div className="rounded-2xl border-2 border-destructive/40 bg-destructive/10 p-4 text-center">
-                <p className="text-[10px] font-bold uppercase tracking-wide text-destructive">Salah</p>
+                <p className="text-[10px] font-bold uppercase tracking-wide text-destructive">{t.salah}</p>
                 <p className="font-display text-2xl font-extrabold text-destructive">{salah}</p>
               </div>
             </div>
@@ -604,7 +618,7 @@ function LatihTubiPage() {
                 style={{ backgroundColor: HIJAU }}
               >
                 <Square className="h-4 w-4 fill-current" />
-                Berhenti
+                {t.berhenti}
               </button>
             </div>
           </>
