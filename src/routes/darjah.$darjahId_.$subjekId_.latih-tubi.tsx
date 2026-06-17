@@ -540,7 +540,7 @@ function LatihTubiPage() {
                 style={{ backgroundColor: `${HIJAU}15`, border: `2px solid ${HIJAU}` }}
               >
                 <p className="text-[10px] font-bold uppercase tracking-wide" style={{ color: HIJAU }}>
-                  Dijawab
+                  {t.dijawab}
                 </p>
                 <p className="font-display text-2xl font-extrabold" style={{ color: HIJAU }}>
                   {jawab}
@@ -551,14 +551,14 @@ function LatihTubiPage() {
                 style={{ backgroundColor: `${EMAS}25`, border: `2px solid ${EMAS}` }}
               >
                 <p className="text-[10px] font-bold uppercase tracking-wide" style={{ color: "#7a5300" }}>
-                  Betul
+                  {t.betul}
                 </p>
                 <p className="font-display text-2xl font-extrabold" style={{ color: "#7a5300" }}>
                   {betul}
                 </p>
               </div>
               <div className="rounded-2xl border-2 border-destructive/40 bg-destructive/10 p-4 text-center">
-                <p className="text-[10px] font-bold uppercase tracking-wide text-destructive">Salah</p>
+                <p className="text-[10px] font-bold uppercase tracking-wide text-destructive">{t.salah}</p>
                 <p className="font-display text-2xl font-extrabold text-destructive">{salah}</p>
               </div>
             </div>
