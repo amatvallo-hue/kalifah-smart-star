@@ -134,11 +134,14 @@ function LatihTubiPage() {
     let cancelled = false;
     (async () => {
       setFetching(true);
-      const subjekQuery = isMatematik
-        ? bahasa === "en"
-          ? "matematik-en"
-          : "matematik"
-        : subjekId;
+      const subjekQuery =
+        isMatematik
+          ? bahasa === "en"
+            ? "matematik-en"
+            : "matematik"
+          : subjekId === "sains" && bahasa === "en"
+            ? "sains-en"
+            : subjekId;
       const { data, error } = await supabase
         .from("soalan_latih_tubi")
         .select("id, soalan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan_betul, topik")
