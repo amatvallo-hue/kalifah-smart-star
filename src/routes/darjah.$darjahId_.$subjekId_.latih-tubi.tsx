@@ -520,7 +520,7 @@ function LatihTubiPage() {
                 className="rounded-full px-6 py-3 font-display font-extrabold text-white shadow-soft transition hover:opacity-90"
                 style={{ backgroundColor: HIJAU }}
               >
-                {isUpper ? "Pilih Set Lain" : "Main Lagi"}
+                {isUpper ? t.pilihSetLain : t.cubaLagi}
               </button>
               <Link
                 to="/darjah/$darjahId/$subjekId"
@@ -528,7 +528,7 @@ function LatihTubiPage() {
                 className="rounded-full px-6 py-3 font-display font-extrabold shadow-soft transition hover:opacity-90"
                 style={{ backgroundColor: EMAS, color: "#1a1a1a" }}
               >
-                Aktiviti Lain
+                {t.aktivitiLain}
               </Link>
             </div>
           </div>
