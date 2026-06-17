@@ -257,6 +257,13 @@ function LatihTubiPage() {
     }
     else setSalah((s) => s + 1);
     setJawab((j) => j + 1);
+    const tpk = soalan.topik;
+    if (tpk) {
+      setTopikStats((prev) => {
+        const cur = prev[tpk] ?? { betul: 0, jumlah: 0 };
+        return { ...prev, [tpk]: { betul: cur.betul + (isBetul ? 1 : 0), jumlah: cur.jumlah + 1 } };
+      });
+    }
     setTimeout(() => {
       setPilih(null);
       setCursor((c) => {
