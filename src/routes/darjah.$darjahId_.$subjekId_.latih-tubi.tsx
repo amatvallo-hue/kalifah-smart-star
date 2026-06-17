@@ -282,6 +282,20 @@ function LatihTubiPage() {
   };
 
   const needBahasa = showBahasaToggle && !bahasa && !started;
+  const en = bahasa === "en";
+  const t = {
+    dijawab: en ? "ANSWERED" : "Dijawab",
+    betul: en ? "CORRECT" : "Betul",
+    salah: en ? "WRONG" : "Salah",
+    berhenti: en ? "Stop" : "Berhenti",
+    seterusnya: en ? "Next" : "Seterusnya",
+    tamat: en ? "Finish" : "Tamat",
+    cubaLagi: en ? "Try again" : "Main Lagi",
+    syabas: en ? "Well done! 🎉" : "Syabas! 🎉",
+    dahJawab: (n: number) => en ? `You answered ${n} questions.` : `Kamu dah jawab ${n} soalan.`,
+    pilihSetLain: en ? "Choose Another Set" : "Pilih Set Lain",
+    aktivitiLain: en ? "Other Activities" : "Aktiviti Lain",
+  };
   const showPicker = isUpper && !started && !needBahasa;
 
   return (
