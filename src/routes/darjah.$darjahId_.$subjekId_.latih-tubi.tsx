@@ -48,10 +48,10 @@ function LatihTubiPage() {
   const subjek = getSubjek(subjekId) ?? { id: subjekId, title: subjekId };
   const mata = usePoints();
 
-  const isSainsD1Topic = subjekId === "sains" && darjahId === "1";
-  const isUpper = isSainsD1Topic;
+  const isUpper = false;
   const isMatematik = subjekId === "matematik";
-  const showBahasaToggle = (subjekId === "sains" && isSainsD1Topic) || isMatematik;
+  const isSains = subjekId === "sains";
+  const showBahasaToggle = isSains || isMatematik;
   const [bahasa, setBahasa] = useState<"bm" | "en" | null>(showBahasaToggle ? null : "bm");
   const subjekCode = subjekId === "sains" ? (bahasa === "en" ? "SC-EN" : "SC") : subjekId;
   const darjahNum = Number(darjahId);
@@ -64,7 +64,7 @@ function LatihTubiPage() {
   const [salah, setSalah] = useState(0);
   const [jawab, setJawab] = useState(0);
   const [berhenti, setBerhenti] = useState(false);
-  const [fetching, setFetching] = useState(!isUpper && !(isMatematik));
+  const [fetching, setFetching] = useState(!showBahasaToggle);
   const [errMsg, setErrMsg] = useState<string | null>(null);
 
   const [topikStats, setTopikStats] = useState<Record<string, { betul: number; jumlah: number }>>({});
