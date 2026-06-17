@@ -618,7 +618,7 @@ function LatihTubiPage() {
                 style={{ backgroundColor: HIJAU }}
               >
                 <Square className="h-4 w-4 fill-current" />
-                Berhenti
+                {t.berhenti}
               </button>
             </div>
           </>
