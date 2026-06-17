@@ -222,7 +222,7 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
         {subjekTitle}
       </span>
       <span className="rounded-full px-4 py-1.5 font-display text-xs font-extrabold text-white shadow-soft" style={{ backgroundColor: HIJAU }}>
-        Kuiz Mengikut Topik
+        {tr.mengikutTopik}
       </span>
     </div>
   );
