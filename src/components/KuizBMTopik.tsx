@@ -536,7 +536,7 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
           className="mt-6 w-full rounded-2xl px-6 py-4 font-display text-lg font-extrabold text-white shadow-soft transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
           style={{ backgroundColor: HIJAU }}
         >
-          {i + 1 >= soalanList.length ? "Lihat Keputusan" : "Soalan Seterusnya →"}
+          {i + 1 >= soalanList.length ? tr.lihatKeputusan : tr.seterusnya}
         </button>
       </div>
     </main>
