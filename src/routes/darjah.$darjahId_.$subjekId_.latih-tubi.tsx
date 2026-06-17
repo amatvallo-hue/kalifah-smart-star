@@ -130,7 +130,7 @@ function LatihTubiPage() {
   // Lower darjah (1-3): existing behaviour from soalan_latih_tubi
   useEffect(() => {
     if (isUpper) return;
-    if (isMatematik && !bahasa) return;
+    if (showBahasaToggle && !bahasa) return;
     let cancelled = false;
     (async () => {
       setFetching(true);
