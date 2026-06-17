@@ -478,16 +478,16 @@ function LatihTubiPage() {
         ) : berhenti ? (
           <div className="mt-10 rounded-3xl bg-card p-10 text-center shadow-card">
             <h2 className="font-display text-3xl font-extrabold" style={{ color: HIJAU }}>
-              Syabas! 🎉
+              {t.syabas}
             </h2>
-            <p className="mt-2 text-muted-foreground">Kamu dah jawab {jawab} soalan.</p>
+            <p className="mt-2 text-muted-foreground">{t.dahJawab(jawab)}</p>
             <div className="mt-6 grid grid-cols-2 gap-4">
               <div className="rounded-2xl p-5" style={{ backgroundColor: `${HIJAU}15` }}>
-                <p className="text-xs font-bold uppercase tracking-wide" style={{ color: HIJAU }}>Betul</p>
+                <p className="text-xs font-bold uppercase tracking-wide" style={{ color: HIJAU }}>{t.betul}</p>
                 <p className="font-display text-3xl font-extrabold" style={{ color: HIJAU }}>{betul}</p>
               </div>
               <div className="rounded-2xl bg-destructive/10 p-5">
-                <p className="text-xs font-bold uppercase tracking-wide text-destructive">Salah</p>
+                <p className="text-xs font-bold uppercase tracking-wide text-destructive">{t.salah}</p>
                 <p className="font-display text-3xl font-extrabold text-destructive">{salah}</p>
               </div>
             </div>
