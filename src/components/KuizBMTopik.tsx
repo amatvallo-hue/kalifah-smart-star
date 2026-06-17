@@ -58,6 +58,32 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
   const [mulaMasa, setMulaMasa] = useState(() => Date.now());
   const [bahasa, setBahasa] = useState<"bm" | "en" | null>(null);
   const effectiveSubjekKod = showBahasaToggle && bahasa ? (bahasa === "en" ? `${subjekKod}-EN` : subjekKod) : subjekKod;
+  const en = showBahasaToggle && bahasa === "en";
+  const t = {
+    pilihTopik: en ? "Choose Quiz Topic" : "Pilih Topik Kuiz",
+    soalanRawak: en ? "10 questions randomly selected for your chosen topic." : "10 soalan dipilih secara rawak untuk topik yang kamu pilih.",
+    mula: en ? "Start" : "Mula",
+    tukarBahasa: en ? "Change language" : "Tukar bahasa",
+    seterusnya: en ? "Next Question →" : "Soalan Seterusnya →",
+    lihatKeputusan: en ? "View Results" : "Lihat Keputusan",
+    betul: en ? "Correct! 🎉" : "Syabas! Jawapan kamu betul! 🎉",
+    salah: en ? "Not quite! See the correct answer above." : "Hampir betul! Lihat jawapan betul di atas.",
+    skor: en ? "Score" : "Skor",
+    soalan: en ? "Question" : "Soalan",
+    memuatTopik: en ? "Loading topic list..." : "Memuatkan senarai topik...",
+    tiadaTopik: en ? `No quiz topics yet for ${subjekTitle} (${darjahLabel}). Stay tuned!` : `Belum ada topik kuiz untuk ${subjekTitle} (${darjahLabel}). Nantikan!`,
+    semakanJawapan: en ? "Answer Review" : "Semakan Jawapan",
+    pilihTopikLain: en ? "Choose Another Topic" : "Pilih Topik Lain",
+    kembali: en ? "Back to Activities" : "Kembali ke Aktiviti",
+    tahniah: en ? "Congratulations! 🎉" : "Tahniah! 🎉",
+    topikLabel: en ? "Topic" : "Topik",
+    skorKamu: en ? "Your score" : "Skor kamu",
+    tiadaJawapan: en ? "(No answer selected)" : "(Tiada jawapan dipilih)",
+    penjelasan: en ? "Explanation: " : "Penjelasan: ",
+    pilihBahasa: en ? "Choose Language" : "Pilih Bahasa",
+    pilihBahasaDesc: en ? `Choose a language for the ${subjekTitle} ${darjahLabel} quiz.` : `Pilih bahasa untuk kuiz ${subjekTitle} ${darjahLabel}.`,
+    mengikutTopik: en ? "Quiz by Topic" : "Kuiz Mengikut Topik",
+  };
 
   // Fetch distinct topics for BM, this darjah
   useEffect(() => {
