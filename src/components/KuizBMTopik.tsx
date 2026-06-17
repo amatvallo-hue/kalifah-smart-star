@@ -420,7 +420,7 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
                     </div>
                     {muridIdx === null && (
                       <p className="mt-2 text-xs italic text-muted-foreground">
-                        (Tiada jawapan dipilih)
+                        {tr.tiadaJawapan}
                       </p>
                     )}
                     {s.penjelasan && s.penjelasan.trim().length > 0 && (
