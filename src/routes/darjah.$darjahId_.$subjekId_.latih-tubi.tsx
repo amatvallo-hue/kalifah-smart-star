@@ -67,6 +67,7 @@ function LatihTubiPage() {
   const [fetching, setFetching] = useState(!isUpper && !(isMatematik));
   const [errMsg, setErrMsg] = useState<string | null>(null);
 
+  const [topikStats, setTopikStats] = useState<Record<string, { betul: number; jumlah: number }>>({});
   const [mulaMasa, setMulaMasa] = useState(() => Date.now());
 
   // Upper-darjah selection state
