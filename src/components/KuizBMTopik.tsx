@@ -351,13 +351,13 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
             <Sparkles className="h-10 w-10 text-white" />
           </div>
           <h2 className="mt-4 font-display text-3xl font-extrabold text-foreground md:text-4xl">
-            Tahniah! 🎉
+            {tr.tahniah}
           </h2>
           <p className="mt-2 text-lg text-muted-foreground">
-            Topik: <span className="font-extrabold">{topik}</span>
+            {tr.topikLabel}: <span className="font-extrabold">{topik}</span>
           </p>
           <p className="mt-1 text-2xl font-extrabold" style={{ color: HIJAU }}>
-            Skor kamu: {skor}/{soalanList.length}
+            {tr.skorKamu}: {skor}/{soalanList.length}
           </p>
           <div className="mt-5 flex flex-wrap justify-center gap-3">
             <button
@@ -365,20 +365,20 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
               className="rounded-full px-6 py-3 font-display font-extrabold text-white shadow-soft transition hover:-translate-y-0.5"
               style={{ backgroundColor: HIJAU }}
             >
-              Pilih Topik Lain
+              {tr.pilihTopikLain}
             </button>
             <Link
               to="/darjah/$darjahId/$subjekId"
               params={{ darjahId, subjekId }}
               className="rounded-full bg-card px-6 py-3 font-display font-extrabold text-foreground shadow-soft transition hover:-translate-y-0.5"
             >
-              Kembali ke Aktiviti
+              {tr.kembali}
             </Link>
           </div>
         </div>
 
         <div className="mt-6 space-y-4">
-          <h3 className="font-display text-xl font-extrabold text-foreground">Semakan Jawapan</h3>
+          <h3 className="font-display text-xl font-extrabold text-foreground">{tr.semakanJawapan}</h3>
           {soalanList.map((s, idx) => {
             const muridIdx = jawapanMurid[idx];
             const betul = muridIdx === s.jawapan;
