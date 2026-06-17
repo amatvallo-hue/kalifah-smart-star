@@ -43,6 +43,7 @@ interface ProgressRow {
   peratus: number;
   masa_ambil: number;
   created_at: string;
+  topik?: string | null;
 }
 interface StatsRow {
   tarikh: string;
