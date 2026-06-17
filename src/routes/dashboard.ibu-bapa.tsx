@@ -167,16 +167,58 @@ function TrendChart({ stats }: { stats: StatsRow[] }) {
   );
 }
 
-function grupTopik(progress: ProgressRow[]) {
-  const rows = progress.filter((r) => r.aktiviti === "latih-tubi" && (r as any).topik);
-  const map = new Map<string, { subjek: string; darjah: string; topik: string; peratus: number; masa_ambil: number; created_at: string }[]>();
+interface TopikAgg {
+  subjek: string;
+  darjah: string;
+  topik: string;
+  markah: number;
+  jumlah: number;
+  peratus: number;
+  created_at: string;
+}
+
+function grupTopik(progress: ProgressRow[]): Map<string, TopikAgg[]> {
+  const rows = progress.filter((r) => r.aktiviti === "latih-tubi" && r.topik);
+  // subjek -> topik -> agg
+  const bySubjek = new Map<string, Map<string, TopikAgg>>();
   rows.forEach((r) => {
-    const topik = (r as any).topik as string;
-    const key = r.subjek;
-    if (!map.has(key)) map.set(key, []);
-    map.get(key)!.push({ subjek: r.subjek, darjah: r.darjah, topik, peratus: Number(r.peratus), masa_ambil: r.masa_ambil ?? 0, created_at: r.created_at });
+    const topik = r.topik as string;
+    if (!bySubjek.has(r.subjek)) bySubjek.set(r.subjek, new Map());
+    const tmap = bySubjek.get(r.subjek)!;
+    const cur = tmap.get(topik);
+    const markah = Number(r.markah ?? 0);
+    const jumlah = Number(r.jumlah_soalan ?? 0);
+    if (cur) {
+      cur.markah += markah;
+      cur.jumlah += jumlah;
+      if (r.created_at > cur.created_at) cur.created_at = r.created_at;
+    } else {
+      tmap.set(topik, {
+        subjek: r.subjek,
+        darjah: r.darjah,
+        topik,
+        markah,
+        jumlah,
+        peratus: 0,
+        created_at: r.created_at,
+      });
+    }
   });
-  return map;
+  const out = new Map<string, TopikAgg[]>();
+  bySubjek.forEach((tmap, subjek) => {
+    const arr = Array.from(tmap.values()).map((v) => ({
+      ...v,
+      peratus: v.jumlah > 0 ? Math.round((v.markah / v.jumlah) * 100) : 0,
+    }));
+    out.set(subjek, arr);
+  });
+  return out;
+}
+
+function warnaTopik(p: number): string {
+  if (p >= 80) return HIJAU;
+  if (p < 60) return "#dc2626";
+  return "#7a5300";
 }
 
 function ParentDashboard() {
