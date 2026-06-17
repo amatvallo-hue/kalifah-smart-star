@@ -456,13 +456,13 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
 
       <div className="mt-5 flex items-center justify-between">
         <span className="font-display text-sm font-extrabold text-muted-foreground">
-          Soalan {i + 1} / {soalanList.length} · {topik}
+          {tr.soalan} {i + 1} / {soalanList.length} · {topik}
         </span>
         <span
           className="rounded-full px-3 py-1 font-display text-xs font-extrabold text-white"
           style={{ backgroundColor: EMAS }}
         >
-          Skor: {skor}
+          {tr.skor}: {skor}
         </span>
       </div>
       <div className="mt-2 h-3 overflow-hidden rounded-full bg-secondary">
