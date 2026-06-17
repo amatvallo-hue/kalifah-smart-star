@@ -301,10 +301,10 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
 
           <div className="mt-6">
             {loadingTopics ? (
-              <p className="text-sm text-muted-foreground">Memuatkan senarai topik...</p>
+              <p className="text-sm text-muted-foreground">{tr.memuatTopik}</p>
             ) : topicList.length === 0 ? (
               <p className="text-sm text-muted-foreground">
-                Belum ada topik kuiz untuk {subjekTitle} ({darjahLabel}). Nantikan!
+                {tr.tiadaTopik}
               </p>
             ) : (
               <div className="grid gap-3 sm:grid-cols-2">
