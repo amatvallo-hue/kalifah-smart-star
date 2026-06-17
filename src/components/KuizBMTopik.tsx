@@ -209,7 +209,7 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
       params={{ darjahId, subjekId }}
       className="inline-flex items-center gap-2 text-sm font-bold text-muted-foreground hover:text-primary"
     >
-      <ArrowLeft className="h-4 w-4" /> {t.kembali}
+      <ArrowLeft className="h-4 w-4" /> {tr.kembali}
     </Link>
   );
 
