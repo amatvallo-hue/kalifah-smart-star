@@ -83,15 +83,46 @@ function LatihTubiPage() {
 
   useEffect(() => {
     if (berhenti && jawab > 0) {
-      simpanProgress({
-        darjah: darjahId,
-        subjek: subjekId,
-        aktiviti: "latih-tubi",
-        markah: betul,
-        jumlahSoalan: jawab,
-        masaAmbil: Math.round((Date.now() - mulaMasa) / 1000),
-        topik: isUpper && topik ? topik : undefined,
-      });
+      const masaSec = Math.round((Date.now() - mulaMasa) / 1000);
+      if (isUpper && topik) {
+        // Upper darjah: satu topik untuk seluruh sesi
+        simpanProgress({
+          darjah: darjahId,
+          subjek: subjekId,
+          aktiviti: "latih-tubi",
+          markah: betul,
+          jumlahSoalan: jawab,
+          masaAmbil: masaSec,
+          topik,
+        });
+      } else {
+        const entries = Object.entries(topikStats);
+        if (entries.length > 0) {
+          // Lower darjah: satu row per topik (cumulative accumulate)
+          const masaPerSoalan = jawab > 0 ? masaSec / jawab : 0;
+          entries.forEach(([t, s]) => {
+            simpanProgress({
+              darjah: darjahId,
+              subjek: subjekId,
+              aktiviti: "latih-tubi",
+              markah: s.betul,
+              jumlahSoalan: s.jumlah,
+              masaAmbil: Math.round(masaPerSoalan * s.jumlah),
+              topik: t,
+            });
+          });
+        } else {
+          // Fallback: tiada topik pada soalan
+          simpanProgress({
+            darjah: darjahId,
+            subjek: subjekId,
+            aktiviti: "latih-tubi",
+            markah: betul,
+            jumlahSoalan: jawab,
+            masaAmbil: masaSec,
+          });
+        }
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [berhenti]);
