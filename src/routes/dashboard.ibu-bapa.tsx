@@ -215,7 +215,7 @@ function ParentDashboard() {
     const [{ data: p, error: pError }, { data: s, error: sError }, { data: b, error: bError }] = await Promise.all([
       supabase
         .from("user_progress")
-        .select("id, darjah, subjek, aktiviti, markah, jumlah_soalan, peratus, masa_ambil, created_at")
+        .select("id, darjah, subjek, aktiviti, markah, jumlah_soalan, peratus, masa_ambil, created_at, topik")
         .eq("user_id", uid)
         .order("created_at", { ascending: false }),
       supabase
