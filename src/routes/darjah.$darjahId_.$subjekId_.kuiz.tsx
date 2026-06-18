@@ -311,6 +311,9 @@ function KuizPage() {
   const isPITopik =
     subjekId === "pendidikan-islam" &&
     ["1","2","3","4","5","6"].includes(darjahId);
+  const isBITopik =
+    subjekId === "bahasa-inggeris" &&
+    (darjahId === "1" || darjahId === "2" || darjahId === "4" || darjahId === "5" || darjahId === "6");
   if (isBMTopik || isMatematikTopik || isSainsTopik || isPITopik) {
     return (
       <div className="min-h-screen bg-background">
