@@ -314,7 +314,7 @@ function KuizPage() {
   const isBITopik =
     subjekId === "bahasa-inggeris" &&
     (darjahId === "1" || darjahId === "2" || darjahId === "4" || darjahId === "5" || darjahId === "6");
-  if (isBMTopik || isMatematikTopik || isSainsTopik || isPITopik) {
+  if (isBMTopik || isMatematikTopik || isSainsTopik || isPITopik || isBITopik) {
     return (
       <div className="min-h-screen bg-background">
         <SiteHeader stars={42} onLogout={handleLogout} />
