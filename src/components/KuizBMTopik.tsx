@@ -57,25 +57,26 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
   const [selesai, setSelesai] = useState(false);
   const [mulaMasa, setMulaMasa] = useState(() => Date.now());
   const [bahasa, setBahasa] = useState<"bm" | "en" | null>(null);
+  const isEnglish = subjekKod === "Bahasa Inggeris";
   const effectiveSubjekKod = showBahasaToggle && bahasa ? (bahasa === "en" ? `${subjekKod}-EN` : subjekKod) : subjekKod;
-  const en = showBahasaToggle && bahasa === "en";
+  const en = (showBahasaToggle && bahasa === "en") || isEnglish;
   const tr = {
-    pilihTopik: en ? "Choose Quiz Topic" : "Pilih Topik Kuiz",
+    pilihTopik: en ? "Choose Topic" : "Pilih Topik",
     soalanRawak: en ? "10 questions randomly selected for your chosen topic." : "10 soalan dipilih secara rawak untuk topik yang kamu pilih.",
     mula: en ? "Start" : "Mula",
     tukarBahasa: en ? "Change language" : "Tukar bahasa",
     seterusnya: en ? "Next Question →" : "Soalan Seterusnya →",
-    lihatKeputusan: en ? "View Results" : "Lihat Keputusan",
-    betul: en ? "Correct! 🎉" : "Syabas! Jawapan kamu betul! 🎉",
-    salah: en ? "Not quite! See the correct answer above." : "Hampir betul! Lihat jawapan betul di atas.",
+    lihatKeputusan: en ? "Finish" : "Selesai",
+    betul: en ? "Great! Your answer is correct! 🎉" : "Syabas! Jawapan kamu betul! 🎉",
+    salah: en ? "Almost there! Try the next question." : "Hampir betul! Cuba lagi pada soalan seterusnya.",
     skor: en ? "Score" : "Skor",
     soalan: en ? "Question" : "Soalan",
     memuatTopik: en ? "Loading topic list..." : "Memuatkan senarai topik...",
     tiadaTopik: en ? `No quiz topics yet for ${subjekTitle} (${darjahLabel}). Stay tuned!` : `Belum ada topik kuiz untuk ${subjekTitle} (${darjahLabel}). Nantikan!`,
     semakanJawapan: en ? "Answer Review" : "Semakan Jawapan",
-    pilihTopikLain: en ? "Choose Another Topic" : "Pilih Topik Lain",
+    pilihTopikLain: en ? "Try Again" : "Cuba Lagi",
     kembali: en ? "Back to Activities" : "Kembali ke Aktiviti",
-    tahniah: en ? "Congratulations! 🎉" : "Tahniah! 🎉",
+    tahniah: en ? "Well Done! 🎉" : "Tahniah! 🎉",
     topikLabel: en ? "Topic" : "Topik",
     skorKamu: en ? "Your score" : "Skor kamu",
     tiadaJawapan: en ? "(No answer selected)" : "(Tiada jawapan dipilih)",
