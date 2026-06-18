@@ -323,7 +323,7 @@ function KuizPage() {
           darjahLabel={darjah.label}
           subjekId={subjekId}
           subjekTitle={subjek.title}
-          subjekKod={isMatematikTopik ? "MT" : isSainsTopik ? "SC" : isPITopik ? "Pendidikan Islam" : "BM"}
+          subjekKod={isMatematikTopik ? "MT" : isSainsTopik ? "SC" : isPITopik ? "Pendidikan Islam" : isBITopik ? "Bahasa Inggeris" : "BM"}
           showBahasaToggle={isMatematikTopik || isSainsTopik}
         />
       </div>
