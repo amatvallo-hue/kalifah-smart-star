@@ -153,7 +153,7 @@ function NotaRingkasPage() {
         >
           <Lightbulb className="mx-auto h-8 w-8" style={{ color: KUNING }} />
           <p className="mt-2 text-sm font-medium" style={{ color: HIJAU }}>
-            Pilih topik di bawah untuk membaca nota.
+            {isEnglish ? "Choose a topic below to read the notes." : "Pilih topik di bawah untuk membaca nota."}
           </p>
         </div>
 
