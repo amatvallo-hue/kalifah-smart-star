@@ -56,7 +56,7 @@ function NotaRingkasPage() {
         .select("*")
         .eq("darjah", darjahNum)
         .eq("subjek", subjekId)
-        .eq("bahasa", "BM")
+        .eq("bahasa", subjekId === "bahasa-inggeris" ? "EN" : "BM")
         .order("topik");
       if (cancelled) return;
       if (error) {
