@@ -118,6 +118,7 @@ function NotaRingkasPage() {
   }
 
   const selected = notaList.find((n) => n.topik === selectedTopik) ?? null;
+  const isEnglish = subjekId === "bahasa-inggeris";
 
   return (
     <div className="min-h-screen bg-background">
