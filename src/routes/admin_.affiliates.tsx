@@ -82,7 +82,7 @@ function AdminAffiliates() {
                 <tr key={r.id} className="border-t border-border">
                   <td className="px-3 py-2 font-bold">{r.nama}</td>
                   <td className="px-3 py-2">{r.email}</td>
-                  <td className="px-3 py-2 font-mono">{r.ref_code}</td>
+                  <td className="px-3 py-2 font-mono">{r.custom_ref_code ?? r.ref_code}</td>
                   <td className="px-3 py-2">
                     {r.nama_bank} {r.no_akaun_bank}
                   </td>
