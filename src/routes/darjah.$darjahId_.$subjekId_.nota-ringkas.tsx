@@ -204,7 +204,7 @@ function NotaRingkasPage() {
                   icon="🧮"
                   items={selected.formula ?? []}
                 />
-                <SectionList title="Tips & Contoh" icon="💡" items={selected.tips ?? []} />
+                <SectionList title={isEnglish ? "Tips & Examples" : "Tips & Contoh"} icon="💡" items={selected.tips ?? []} />
               </div>
             )}
 
