@@ -19,15 +19,18 @@ export const Route = createFileRoute("/affiliate/daftar")({
   component: DaftarAffiliatePage,
 });
 
-function generateRefCode(nama: string): string {
-  const base = nama
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-zA-Z]/g, "")
-    .toUpperCase()
-    .slice(0, 10);
-  const rand = Math.floor(1000 + Math.random() * 9000);
-  return `${base || "AFFIL"}${rand}`;
+async function getNextCikguCode(): Promise<string> {
+  const { data } = await supabase
+    .from("affiliates")
+    .select("custom_ref_code")
+    .like("custom_ref_code", "cikgu%")
+    .order("custom_ref_code", { ascending: false })
+    .limit(1);
+
+  const last = data?.[0]?.custom_ref_code;
+  const lastNum = last ? parseInt(last.replace("cikgu", ""), 10) : 0;
+  const nextNum = (isNaN(lastNum) ? 0 : lastNum) + 1;
+  return `cikgu${String(nextNum).padStart(2, "0")}`;
 }
 
 function DaftarAffiliatePage() {
@@ -82,39 +85,23 @@ function DaftarAffiliatePage() {
         userId = signInData.user?.id ?? null;
       }
 
-      // Cuba ref_code unik (retry 3 kali jika duplicate)
-      let refCode = generateRefCode(nama);
-      let inserted = false;
-      let lastErr: string | null = null;
-      for (let i = 0; i < 4; i++) {
-        const { error: insErr } = await supabase.from("affiliates").insert({
-          user_id: userId,
-          nama,
-          email,
-          no_telefon: noTelefon,
-          no_akaun_bank: noAkaunBank,
-          nama_bank: namaBank,
-          ref_code: refCode,
-        });
-        if (!insErr) {
-          inserted = true;
-          break;
-        }
-        lastErr = insErr.message;
-        if (/ref_code/.test(insErr.message)) {
-          refCode = generateRefCode(nama);
-          continue;
-        }
+      const refCode = await getNextCikguCode();
+      const { error: insErr } = await supabase.from("affiliates").insert({
+        user_id: userId,
+        nama,
+        email,
+        no_telefon: noTelefon,
+        no_akaun_bank: noAkaunBank,
+        nama_bank: namaBank,
+        ref_code: refCode,
+        custom_ref_code: refCode,
+      });
+      if (insErr) {
         if (/email/.test(insErr.message)) {
           setError("Email ini sudah didaftarkan sebagai affiliate.");
-          setLoading(false);
-          return;
+        } else {
+          setError(insErr.message ?? "Gagal mendaftar affiliate.");
         }
-        break;
-      }
-
-      if (!inserted) {
-        setError(lastErr ?? "Gagal mendaftar affiliate.");
         setLoading(false);
         return;
       }
