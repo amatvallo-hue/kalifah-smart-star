@@ -200,7 +200,7 @@ function NotaRingkasPage() {
                 />
                 <SectionIstilah istilah={selected.istilah ?? []} />
                 <SectionList
-                  title="Formula / Poin Penting"
+                  title={isEnglish ? "Key Points" : "Formula / Poin Penting"}
                   icon="🧮"
                   items={selected.formula ?? []}
                 />
