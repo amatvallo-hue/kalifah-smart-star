@@ -85,17 +85,35 @@ function DaftarAffiliatePage() {
         userId = signInData.user?.id ?? null;
       }
 
-      const refCode = await getNextCikguCode();
-      const { error: insErr } = await supabase.from("affiliates").insert({
-        user_id: userId,
-        nama,
-        email,
-        no_telefon: noTelefon,
-        no_akaun_bank: noAkaunBank,
-        nama_bank: namaBank,
-        ref_code: refCode,
-        custom_ref_code: refCode,
-      });
+      let refCode = await getNextCikguCode();
+      let insErr: any = null;
+      for (let attempt = 0; attempt < 5; attempt++) {
+        const { error } = await supabase.from("affiliates").insert({
+          user_id: userId,
+          nama,
+          email,
+          no_telefon: noTelefon,
+          no_akaun_bank: noAkaunBank,
+          nama_bank: namaBank,
+          ref_code: refCode,
+          custom_ref_code: refCode,
+        });
+        if (!error) {
+          insErr = null;
+          break;
+        }
+        insErr = error;
+        const isDupCustom =
+          error.code === "23505" ||
+          /duplicate key value violates unique constraint.*custom_ref_code/.test(
+            error.message
+          );
+        if (!isDupCustom) break;
+        // Retry with next number
+        const match = refCode.match(/cikgu(\d+)/);
+        const num = match ? parseInt(match[1], 10) : 0;
+        refCode = `cikgu${String(num + 1).padStart(2, "0")}`;
+      }
       if (insErr) {
         if (/email/.test(insErr.message)) {
           setError("Email ini sudah didaftarkan sebagai affiliate.");
