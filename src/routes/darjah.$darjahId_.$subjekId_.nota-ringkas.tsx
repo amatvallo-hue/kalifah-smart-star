@@ -194,7 +194,7 @@ function NotaRingkasPage() {
             {selected && (
               <div className="mt-6 grid gap-5">
                 <SectionList
-                  title="Apa yang kita pelajari"
+                  title={isEnglish ? "What We Learn" : "Apa yang kita pelajari"}
                   icon="📚"
                   items={selected.konsep ?? []}
                 />
