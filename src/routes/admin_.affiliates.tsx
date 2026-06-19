@@ -26,17 +26,11 @@ function AdminAffiliates() {
   const [rows, setRows] = useState<AffRow[]>([]);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      fetch("https://pgpkqbdyxoejwvubluqq.supabase.co/functions/v1/get-affiliates", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${session?.access_token ?? ""}`,
-        },
-      })
-        .then((r) => r.json())
-        .then((json) => setRows(json.data ?? []));
-    });
+    supabase
+      .from("affiliates")
+      .select("*")
+      .order("created_at", { ascending: false })
+      .then(({ data }) => setRows(data ?? []));
   }, []);
 
   const markPaid = async (row: AffRow) => {
