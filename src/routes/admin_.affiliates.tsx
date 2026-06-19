@@ -13,6 +13,7 @@ type AffRow = {
   nama: string;
   email: string;
   ref_code: string;
+  custom_ref_code?: string;
   nama_bank: string;
   no_akaun_bank: string;
   total_klik: number;
