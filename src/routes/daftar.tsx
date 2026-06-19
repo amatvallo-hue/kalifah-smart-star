@@ -1,10 +1,13 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent } from "react";
 import { UserPlus, User, Mail, Lock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { AuthShell, Field } from "./login";
 
 export const Route = createFileRoute("/daftar")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    ref: typeof search.ref === "string" ? search.ref : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "Daftar Akaun — Kalifah.my" },
@@ -15,8 +18,15 @@ export const Route = createFileRoute("/daftar")({
   component: DaftarPage,
 });
 
+function sanitizeRef(value: string | null | undefined): string | null {
+  if (!value) return null;
+  const cleaned = value.trim().toUpperCase().slice(0, 64);
+  return /^[A-Z0-9_-]+$/.test(cleaned) ? cleaned : null;
+}
+
 function DaftarPage() {
   const navigate = useNavigate();
+  const { ref } = Route.useSearch();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -24,16 +34,54 @@ function DaftarPage() {
   const [info, setInfo] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
+  // Persist ?ref= so it survives email-confirmation round trips
+  useEffect(() => {
+    const clean = sanitizeRef(ref);
+    if (clean && typeof window !== "undefined") {
+      window.localStorage.setItem("kalifah_ref", clean);
+    }
+  }, [ref]);
+
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     setError(null);
     setInfo(null);
     setLoading(true);
-    const redirectTo = typeof window !== "undefined" ? `${window.location.origin}/pilih-darjah` : undefined;
+
+    const storedRef =
+      typeof window !== "undefined"
+        ? sanitizeRef(window.localStorage.getItem("kalifah_ref"))
+        : null;
+    const affiliateRef = sanitizeRef(ref) ?? storedRef;
+
+    let affiliateId: string | null = null;
+    let resolvedRefCode: string | null = null;
+    if (affiliateRef) {
+      const { data: aff } = await supabase
+        .from("affiliates")
+        .select("id, ref_code")
+        .eq("ref_code", affiliateRef)
+        .maybeSingle();
+      if (aff) {
+        affiliateId = (aff as { id: string }).id;
+        resolvedRefCode = (aff as { ref_code: string }).ref_code;
+      }
+    }
+
+    const redirectTo =
+      typeof window !== "undefined" ? `${window.location.origin}/pilih-darjah` : undefined;
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
-      options: { data: { name, full_name: name, display_name: name }, emailRedirectTo: redirectTo },
+      options: {
+        data: {
+          name,
+          full_name: name,
+          display_name: name,
+          ...(affiliateId ? { affiliate_id: affiliateId, ref_code: resolvedRefCode } : {}),
+        },
+        emailRedirectTo: redirectTo,
+      },
     });
     if (error) {
       setError(error.message);
