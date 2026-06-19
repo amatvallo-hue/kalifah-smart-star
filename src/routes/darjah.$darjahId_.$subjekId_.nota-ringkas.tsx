@@ -56,7 +56,7 @@ function NotaRingkasPage() {
         .select("*")
         .eq("darjah", darjahNum)
         .eq("subjek", subjekId)
-        .eq("bahasa", "BM")
+        .eq("bahasa", subjekId === "bahasa-inggeris" ? "EN" : "BM")
         .order("topik");
       if (cancelled) return;
       if (error) {
@@ -118,6 +118,7 @@ function NotaRingkasPage() {
   }
 
   const selected = notaList.find((n) => n.topik === selectedTopik) ?? null;
+  const isEnglish = subjekId === "bahasa-inggeris";
 
   return (
     <div className="min-h-screen bg-background">
@@ -152,7 +153,7 @@ function NotaRingkasPage() {
         >
           <Lightbulb className="mx-auto h-8 w-8" style={{ color: KUNING }} />
           <p className="mt-2 text-sm font-medium" style={{ color: HIJAU }}>
-            Pilih topik di bawah untuk membaca nota.
+            {isEnglish ? "Choose a topic below to read the notes." : "Pilih topik di bawah untuk membaca nota."}
           </p>
         </div>
 
@@ -193,17 +194,17 @@ function NotaRingkasPage() {
             {selected && (
               <div className="mt-6 grid gap-5">
                 <SectionList
-                  title="Apa yang kita pelajari"
+                  title={isEnglish ? "What We Learn" : "Apa yang kita pelajari"}
                   icon="📚"
                   items={selected.konsep ?? []}
                 />
-                <SectionIstilah istilah={selected.istilah ?? []} />
+                <SectionIstilah istilah={selected.istilah ?? []} isEnglish={isEnglish} />
                 <SectionList
-                  title="Formula / Poin Penting"
+                  title={isEnglish ? "Key Points" : "Formula / Poin Penting"}
                   icon="🧮"
                   items={selected.formula ?? []}
                 />
-                <SectionList title="Tips & Contoh" icon="💡" items={selected.tips ?? []} />
+                <SectionList title={isEnglish ? "Tips & Examples" : "Tips & Contoh"} icon="💡" items={selected.tips ?? []} />
               </div>
             )}
 
@@ -214,7 +215,7 @@ function NotaRingkasPage() {
                 className="inline-flex items-center justify-center gap-2 rounded-2xl px-8 py-4 font-display text-lg font-extrabold text-white shadow-soft transition hover:-translate-y-0.5"
                 style={{ backgroundColor: HIJAU }}
               >
-                Mula Latih Tubi →
+                {isEnglish ? "Start Practice →" : "Mula Latih Tubi →"}
               </Link>
             </div>
           </>
@@ -261,7 +262,7 @@ function SectionList({ title, icon, items }: { title: string; icon: string; item
   );
 }
 
-function SectionIstilah({ istilah }: { istilah: Istilah[] }) {
+function SectionIstilah({ istilah, isEnglish }: { istilah: Istilah[]; isEnglish?: boolean }) {
   if (!istilah || istilah.length === 0) return null;
   return (
     <div className="rounded-3xl bg-card p-6 shadow-card" style={{ border: "2px solid #E8F5EE" }}>
@@ -273,7 +274,7 @@ function SectionIstilah({ istilah }: { istilah: Istilah[] }) {
           🔤
         </div>
         <h2 className="font-display text-xl font-extrabold" style={{ color: HIJAU }}>
-          Istilah Penting
+          {isEnglish ? "Key Vocabulary" : "Istilah Penting"}
         </h2>
       </div>
       <dl className="mt-4 space-y-3">
