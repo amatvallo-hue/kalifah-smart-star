@@ -262,7 +262,7 @@ function SectionList({ title, icon, items }: { title: string; icon: string; item
   );
 }
 
-function SectionIstilah({ istilah }: { istilah: Istilah[] }) {
+function SectionIstilah({ istilah, isEnglish }: { istilah: Istilah[]; isEnglish?: boolean }) {
   if (!istilah || istilah.length === 0) return null;
   return (
     <div className="rounded-3xl bg-card p-6 shadow-card" style={{ border: "2px solid #E8F5EE" }}>
@@ -274,7 +274,7 @@ function SectionIstilah({ istilah }: { istilah: Istilah[] }) {
           🔤
         </div>
         <h2 className="font-display text-xl font-extrabold" style={{ color: HIJAU }}>
-          Istilah Penting
+          {isEnglish ? "Key Vocabulary" : "Istilah Penting"}
         </h2>
       </div>
       <dl className="mt-4 space-y-3">
