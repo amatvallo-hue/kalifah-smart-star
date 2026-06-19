@@ -24,6 +24,7 @@ interface Affiliate {
   nama: string;
   email: string;
   ref_code: string;
+  custom_ref_code?: string;
   total_klik: number;
   total_jualan: number;
   total_komisyen_sen: number;
@@ -82,7 +83,7 @@ function AffiliateDashboardPage() {
     if (!aff) return "";
     const origin =
       typeof window !== "undefined" ? window.location.origin : "https://kalifah.my";
-    return `${origin}/daftar?ref=${aff.ref_code}`;
+    return `${origin}/daftar?ref=${aff.custom_ref_code ?? aff.ref_code}`;
   }, [aff]);
 
   const baki = aff ? aff.total_komisyen_sen - aff.total_dibayar_sen : 0;
@@ -158,7 +159,7 @@ function AffiliateDashboardPage() {
             </button>
           </div>
           <div className="mt-2 text-xs text-muted-foreground">
-            Kod: <span className="font-bold text-primary">{aff.ref_code}</span>
+            Kod: <span className="font-bold text-primary">{aff.custom_ref_code ?? aff.ref_code}</span>
           </div>
         </div>
 
