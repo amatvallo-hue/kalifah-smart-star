@@ -198,7 +198,7 @@ function NotaRingkasPage() {
                   icon="📚"
                   items={selected.konsep ?? []}
                 />
-                <SectionIstilah istilah={selected.istilah ?? []} />
+                <SectionIstilah istilah={selected.istilah ?? []} isEnglish={isEnglish} />
                 <SectionList
                   title={isEnglish ? "Key Points" : "Formula / Poin Penting"}
                   icon="🧮"
