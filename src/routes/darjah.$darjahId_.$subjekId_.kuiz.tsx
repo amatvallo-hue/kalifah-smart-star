@@ -6,6 +6,7 @@ import { StarReward } from "@/components/StarReward";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { getDarjah, getSubjek } from "@/lib/curriculum";
+import { downloadSijil } from "@/lib/sijil";
 import { getQuiz, getQuizSet2, type QuizQuestion } from "@/lib/quiz-bank";
 import { simpanProgress } from "@/lib/progress";
 import { KuizBMTopik } from "@/components/KuizBMTopik";
