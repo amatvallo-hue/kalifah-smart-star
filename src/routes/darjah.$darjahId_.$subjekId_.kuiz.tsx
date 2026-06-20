@@ -6,6 +6,7 @@ import { StarReward } from "@/components/StarReward";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { getDarjah, getSubjek } from "@/lib/curriculum";
+import { downloadSijil } from "@/lib/sijil";
 import { getQuiz, getQuizSet2, type QuizQuestion } from "@/lib/quiz-bank";
 import { simpanProgress } from "@/lib/progress";
 import { KuizBMTopik } from "@/components/KuizBMTopik";
@@ -208,6 +209,10 @@ function KuizPage() {
   const darjah = getDarjah(darjahId) ?? { id: darjahId, label: `Darjah ${darjahId}`, locked: false };
   const subjek = getSubjek(subjekId) ?? { id: subjekId, title: subjekId.charAt(0).toUpperCase() + subjekId.slice(1) };
   const isEnglish = subjekId === "bahasa-inggeris";
+  const profileName =
+    (user?.user_metadata?.name as string | undefined) ||
+    (user?.user_metadata?.full_name as string | undefined) ||
+    (user?.email ? user.email.split("@")[0].replace(/[._-]+/g, " ") : undefined);
   const t = {
     memuatkan: isEnglish ? "Loading..." : "Memuatkan...",
     tidakDijumpai: isEnglish ? "Not Found" : "Tidak dijumpai",
@@ -578,6 +583,26 @@ function KuizPage() {
               >
                 {t.kembaliKeAktiviti}
               </Link>
+              {skor === soalanList.length && soalanList.length > 0 && (
+                <button
+                  onClick={() =>
+                    downloadSijil(
+                      {
+                        jenis: "kuiz-cemerlang",
+                        namaMurid: profileName ?? "Murid",
+                        tajuk: `${subjek.title} — ${darjah.label}`,
+                        tarikh: new Date().toLocaleDateString("ms-MY"),
+                        purata: 100,
+                        kodSijil: `KUIZ-${darjahId}-${subjekId}-${Date.now()}`,
+                      },
+                      `sijil-kuiz-${subjekId}-${darjahId}.pdf`,
+                    )
+                  }
+                  className="rounded-full bg-gradient-gold px-6 py-3 font-display font-extrabold text-gold-foreground shadow-gold transition hover:-translate-y-0.5"
+                >
+                  🏆 {isEnglish ? "Download Certificate" : "Muat Turun Sijil"}
+                </button>
+              )}
             </div>
           </div>
         )}
