@@ -471,6 +471,29 @@ function LatihanSubjekPage() {
   const isJawiD5 = darjahId === "5" && subjekId === "jawi";
   const isJawiD6 = darjahId === "6" && subjekId === "jawi";
   const isJawiMcq = isJawiD2 || isJawiD4 || isJawiD5 || isJawiD6;
+  const isEnglish = subjekId === "bahasa-inggeris";
+
+  const t = {
+    memuatkan: isEnglish ? "Loading..." : "Memuatkan...",
+    latihanBelumTersedia: isEnglish ? "Exercise not available" : "Latihan belum tersedia",
+    kembali: isEnglish ? "Back" : "Kembali",
+    kembaliKeAktiviti: isEnglish ? "Back to Activities" : "Kembali ke Aktiviti",
+    latihanBertulis: isEnglish ? "Written Exercise" : "Latihan Bertulis",
+    soalan: (n: number, total: number) => (isEnglish ? `Question ${n} / ${total}` : `Soalan ${n} / ${total}`),
+    petunjuk: isEnglish ? "Hint" : "Petunjuk",
+    tulisJawapan: isEnglish ? "Write your answer..." : "Tulis jawapan kamu...",
+    semakJawapan: isEnglish ? "Check Answer" : "Semak Jawapan",
+    betul: isEnglish ? "Correct! 🎉" : "Betul! 🎉",
+    jawapanBetul: isEnglish ? "Correct answer" : "Jawapan betul",
+    lihatKeputusan: isEnglish ? "View Results" : "Lihat Keputusan",
+    soalanSeterusnya: isEnglish ? "Next Question →" : "Soalan Seterusnya →",
+    syabas: isEnglish ? "Well Done! 🎉" : "Syabas! 🎉",
+    kamuJawabBetul: (bintang: number, total: number) =>
+      isEnglish
+        ? `You answered correctly ${bintang} out of ${total} questions.`
+        : `Kamu jawab betul ${bintang} daripada ${total} soalan.`,
+    cubaLagi: isEnglish ? "Try Again" : "Cuba Lagi",
+  };
   const soalanList = useMemo(() => (isJawiMcq ? [] : (BANK[`${darjahId}:${subjekId}`] ?? [])), [darjahId, subjekId, isJawiMcq]);
   const mcqList = isJawiD2 ? JAWI_D2_MCQ : isJawiD4 ? JAWI_D4_MCQ : isJawiD5 ? JAWI_D5_MCQ : isJawiD6 ? JAWI_D6_MCQ : [];
   const totalSoalan = isJawiMcq ? mcqList.length : soalanList.length;
