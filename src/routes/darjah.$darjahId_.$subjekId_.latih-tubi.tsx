@@ -51,6 +51,7 @@ function LatihTubiPage() {
   const isUpper = false;
   const isMatematik = subjekId === "matematik";
   const isSains = subjekId === "sains";
+  const isEnglish = subjekId === 'bahasa-inggeris';
   const showBahasaToggle = isSains || isMatematik;
   const [bahasa, setBahasa] = useState<"bm" | "en" | null>(showBahasaToggle ? null : "bm");
   const subjekCode = subjekId === "sains" ? (bahasa === "en" ? "SC-EN" : "SC") : subjekId;
