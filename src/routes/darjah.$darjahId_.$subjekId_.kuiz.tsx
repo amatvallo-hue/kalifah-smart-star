@@ -583,6 +583,26 @@ function KuizPage() {
               >
                 {t.kembaliKeAktiviti}
               </Link>
+              {skor === soalanList.length && soalanList.length > 0 && (
+                <button
+                  onClick={() =>
+                    downloadSijil(
+                      {
+                        jenis: "kuiz-cemerlang",
+                        namaMurid: profileName ?? "Murid",
+                        tajuk: `${subjek.title} — ${darjah.label}`,
+                        tarikh: new Date().toLocaleDateString("ms-MY"),
+                        purata: 100,
+                        kodSijil: `KUIZ-${darjahId}-${subjekId}-${Date.now()}`,
+                      },
+                      `sijil-kuiz-${subjekId}-${darjahId}.pdf`,
+                    )
+                  }
+                  className="rounded-full bg-gradient-gold px-6 py-3 font-display font-extrabold text-gold-foreground shadow-gold transition hover:-translate-y-0.5"
+                >
+                  🏆 {isEnglish ? "Download Certificate" : "Muat Turun Sijil"}
+                </button>
+              )}
             </div>
           </div>
         )}
