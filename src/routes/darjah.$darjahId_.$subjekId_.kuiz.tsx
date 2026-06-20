@@ -301,7 +301,7 @@ function KuizPage() {
   if (loading || !user) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
-        <p className="text-muted-foreground">Memuatkan...</p>
+        <p className="text-muted-foreground">{t.memuatkan}</p>
       </div>
     );
   }
