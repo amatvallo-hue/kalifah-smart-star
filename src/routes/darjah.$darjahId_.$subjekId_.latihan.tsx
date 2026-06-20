@@ -532,7 +532,7 @@ function LatihanSubjekPage() {
   if (loading || !user) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
-        <p className="text-muted-foreground">Memuatkan...</p>
+        <p className="text-muted-foreground">{t.memuatkan}</p>
       </div>
     );
   }
@@ -542,9 +542,9 @@ function LatihanSubjekPage() {
       <div className="min-h-screen bg-background">
         <SiteHeader onLogout={handleLogout} />
         <main className="container mx-auto px-4 py-16 text-center">
-          <h1 className="font-display text-3xl font-extrabold text-foreground">Latihan belum tersedia</h1>
+          <h1 className="font-display text-3xl font-extrabold text-foreground">{t.latihanBelumTersedia}</h1>
           <Link to="/darjah/$darjahId/$subjekId" params={{ darjahId, subjekId }} className="mt-6 inline-flex items-center gap-2 rounded-full bg-gradient-primary px-6 py-3 font-display font-extrabold text-primary-foreground shadow-soft">
-            <ArrowLeft className="h-4 w-4" /> Kembali
+            <ArrowLeft className="h-4 w-4" /> {t.kembali}
           </Link>
         </main>
       </div>
@@ -597,7 +597,7 @@ function LatihanSubjekPage() {
           params={{ darjahId, subjekId }}
           className="inline-flex items-center gap-2 text-sm font-bold text-muted-foreground hover:text-primary"
         >
-          <ArrowLeft className="h-4 w-4" /> Kembali ke Aktiviti
+          <ArrowLeft className="h-4 w-4" /> {t.kembaliKeAktiviti}
         </Link>
 
         <div className="mt-5 flex items-center gap-3">
@@ -608,7 +608,7 @@ function LatihanSubjekPage() {
             <PenLine className="h-6 w-6" />
           </div>
           <div>
-            <h1 className="font-display text-3xl font-extrabold text-foreground">Latihan Bertulis</h1>
+            <h1 className="font-display text-3xl font-extrabold text-foreground">{t.latihanBertulis}</h1>
             <p className="text-sm text-muted-foreground">{darjah.label} • {subjek.title}</p>
           </div>
         </div>
@@ -616,7 +616,7 @@ function LatihanSubjekPage() {
         {!habis ? (
           <div className="mt-6 rounded-3xl bg-card p-6 shadow-card md:p-8">
             <div className="text-xs font-bold text-muted-foreground">
-              Soalan {idx + 1} / {totalSoalan}
+              {t.soalan(idx + 1, totalSoalan)}
             </div>
 
             {isJawiMcq ? (
@@ -651,14 +651,14 @@ function LatihanSubjekPage() {
               <>
                 <h2 className="mt-2 font-display text-2xl font-extrabold text-foreground">{soalan.soalan}</h2>
                 {soalan.petunjuk && (
-                  <p className="mt-2 text-sm text-muted-foreground italic">Petunjuk: {soalan.petunjuk}</p>
+                  <p className="mt-2 text-sm text-muted-foreground italic">{t.petunjuk}: {soalan.petunjuk}</p>
                 )}
 
                 <input
                   value={jwp}
                   onChange={(e) => setJwp(e.target.value)}
                   disabled={semak !== null}
-                  placeholder="Tulis jawapan kamu..."
+                  placeholder={t.tulisJawapan}
                   className="mt-5 w-full rounded-2xl border-2 border-input bg-background p-4 font-display text-xl font-extrabold text-foreground outline-none transition focus:border-primary disabled:opacity-70"
                 />
 
@@ -668,7 +668,7 @@ function LatihanSubjekPage() {
                     disabled={jwp.trim().length === 0}
                     className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-primary px-6 py-4 font-display text-lg font-extrabold text-primary-foreground shadow-soft transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"
                   >
-                    <Send className="h-5 w-5" /> Semak Jawapan
+                    <Send className="h-5 w-5" /> {t.semakJawapan}
                   </button>
                 )}
               </>
