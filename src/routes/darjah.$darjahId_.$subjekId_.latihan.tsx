@@ -471,6 +471,29 @@ function LatihanSubjekPage() {
   const isJawiD5 = darjahId === "5" && subjekId === "jawi";
   const isJawiD6 = darjahId === "6" && subjekId === "jawi";
   const isJawiMcq = isJawiD2 || isJawiD4 || isJawiD5 || isJawiD6;
+  const isEnglish = subjekId === "bahasa-inggeris";
+
+  const t = {
+    memuatkan: isEnglish ? "Loading..." : "Memuatkan...",
+    latihanBelumTersedia: isEnglish ? "Exercise not available" : "Latihan belum tersedia",
+    kembali: isEnglish ? "Back" : "Kembali",
+    kembaliKeAktiviti: isEnglish ? "Back to Activities" : "Kembali ke Aktiviti",
+    latihanBertulis: isEnglish ? "Written Exercise" : "Latihan Bertulis",
+    soalan: (n: number, total: number) => (isEnglish ? `Question ${n} / ${total}` : `Soalan ${n} / ${total}`),
+    petunjuk: isEnglish ? "Hint" : "Petunjuk",
+    tulisJawapan: isEnglish ? "Write your answer..." : "Tulis jawapan kamu...",
+    semakJawapan: isEnglish ? "Check Answer" : "Semak Jawapan",
+    betul: isEnglish ? "Correct! 🎉" : "Betul! 🎉",
+    jawapanBetul: isEnglish ? "Correct answer" : "Jawapan betul",
+    lihatKeputusan: isEnglish ? "View Results" : "Lihat Keputusan",
+    soalanSeterusnya: isEnglish ? "Next Question →" : "Soalan Seterusnya →",
+    syabas: isEnglish ? "Well Done! 🎉" : "Syabas! 🎉",
+    kamuJawabBetul: (bintang: number, total: number) =>
+      isEnglish
+        ? `You answered correctly ${bintang} out of ${total} questions.`
+        : `Kamu jawab betul ${bintang} daripada ${total} soalan.`,
+    cubaLagi: isEnglish ? "Try Again" : "Cuba Lagi",
+  };
   const soalanList = useMemo(() => (isJawiMcq ? [] : (BANK[`${darjahId}:${subjekId}`] ?? [])), [darjahId, subjekId, isJawiMcq]);
   const mcqList = isJawiD2 ? JAWI_D2_MCQ : isJawiD4 ? JAWI_D4_MCQ : isJawiD5 ? JAWI_D5_MCQ : isJawiD6 ? JAWI_D6_MCQ : [];
   const totalSoalan = isJawiMcq ? mcqList.length : soalanList.length;
@@ -509,7 +532,7 @@ function LatihanSubjekPage() {
   if (loading || !user) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
-        <p className="text-muted-foreground">Memuatkan...</p>
+        <p className="text-muted-foreground">{t.memuatkan}</p>
       </div>
     );
   }
@@ -519,9 +542,9 @@ function LatihanSubjekPage() {
       <div className="min-h-screen bg-background">
         <SiteHeader onLogout={handleLogout} />
         <main className="container mx-auto px-4 py-16 text-center">
-          <h1 className="font-display text-3xl font-extrabold text-foreground">Latihan belum tersedia</h1>
+          <h1 className="font-display text-3xl font-extrabold text-foreground">{t.latihanBelumTersedia}</h1>
           <Link to="/darjah/$darjahId/$subjekId" params={{ darjahId, subjekId }} className="mt-6 inline-flex items-center gap-2 rounded-full bg-gradient-primary px-6 py-3 font-display font-extrabold text-primary-foreground shadow-soft">
-            <ArrowLeft className="h-4 w-4" /> Kembali
+            <ArrowLeft className="h-4 w-4" /> {t.kembali}
           </Link>
         </main>
       </div>
@@ -574,7 +597,7 @@ function LatihanSubjekPage() {
           params={{ darjahId, subjekId }}
           className="inline-flex items-center gap-2 text-sm font-bold text-muted-foreground hover:text-primary"
         >
-          <ArrowLeft className="h-4 w-4" /> Kembali ke Aktiviti
+          <ArrowLeft className="h-4 w-4" /> {t.kembaliKeAktiviti}
         </Link>
 
         <div className="mt-5 flex items-center gap-3">
@@ -585,7 +608,7 @@ function LatihanSubjekPage() {
             <PenLine className="h-6 w-6" />
           </div>
           <div>
-            <h1 className="font-display text-3xl font-extrabold text-foreground">Latihan Bertulis</h1>
+            <h1 className="font-display text-3xl font-extrabold text-foreground">{t.latihanBertulis}</h1>
             <p className="text-sm text-muted-foreground">{darjah.label} • {subjek.title}</p>
           </div>
         </div>
@@ -593,7 +616,7 @@ function LatihanSubjekPage() {
         {!habis ? (
           <div className="mt-6 rounded-3xl bg-card p-6 shadow-card md:p-8">
             <div className="text-xs font-bold text-muted-foreground">
-              Soalan {idx + 1} / {totalSoalan}
+              {t.soalan(idx + 1, totalSoalan)}
             </div>
 
             {isJawiMcq ? (
@@ -628,14 +651,14 @@ function LatihanSubjekPage() {
               <>
                 <h2 className="mt-2 font-display text-2xl font-extrabold text-foreground">{soalan.soalan}</h2>
                 {soalan.petunjuk && (
-                  <p className="mt-2 text-sm text-muted-foreground italic">Petunjuk: {soalan.petunjuk}</p>
+                  <p className="mt-2 text-sm text-muted-foreground italic">{t.petunjuk}: {soalan.petunjuk}</p>
                 )}
 
                 <input
                   value={jwp}
                   onChange={(e) => setJwp(e.target.value)}
                   disabled={semak !== null}
-                  placeholder="Tulis jawapan kamu..."
+                  placeholder={t.tulisJawapan}
                   className="mt-5 w-full rounded-2xl border-2 border-input bg-background p-4 font-display text-xl font-extrabold text-foreground outline-none transition focus:border-primary disabled:opacity-70"
                 />
 
@@ -645,7 +668,7 @@ function LatihanSubjekPage() {
                     disabled={jwp.trim().length === 0}
                     className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-primary px-6 py-4 font-display text-lg font-extrabold text-primary-foreground shadow-soft transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"
                   >
-                    <Send className="h-5 w-5" /> Semak Jawapan
+                    <Send className="h-5 w-5" /> {t.semakJawapan}
                   </button>
                 )}
               </>
@@ -662,17 +685,17 @@ function LatihanSubjekPage() {
                   }
                 >
                   {semak
-                    ? "Betul! 🎉"
+                    ? t.betul
                     : isJawiMcq
-                      ? `Jawapan betul: ${mcq.pilihan[mcq.betul]}`
-                      : `Jawapan betul: ${soalan.jawapan}`}
+                      ? `${t.jawapanBetul}: ${mcq.pilihan[mcq.betul]}`
+                      : `${t.jawapanBetul}: ${soalan.jawapan}`}
                 </div>
                 <button
                   onClick={seterusnya}
                   style={{ background: "#1B8A5A" }}
                   className="inline-flex w-full items-center justify-center gap-2 rounded-2xl px-6 py-4 font-display text-lg font-extrabold text-white shadow-soft"
                 >
-                  {idx + 1 >= totalSoalan ? "Lihat Keputusan" : "Soalan Seterusnya →"}
+                  {idx + 1 >= totalSoalan ? t.lihatKeputusan : t.soalanSeterusnya}
                 </button>
               </div>
             )}
@@ -680,9 +703,9 @@ function LatihanSubjekPage() {
         ) : (
           <div className="mt-6 rounded-3xl bg-gradient-hero p-8 text-center shadow-card">
             <Sparkles className="mx-auto h-12 w-12 text-gold" />
-            <h2 className="mt-3 font-display text-3xl font-extrabold text-foreground">Syabas! 🎉</h2>
+            <h2 className="mt-3 font-display text-3xl font-extrabold text-foreground">{t.syabas}</h2>
             <p className="mt-2 text-muted-foreground">
-              Kamu jawab betul <span className="font-extrabold text-primary">{bintang}</span> daripada {totalSoalan} soalan.
+              {t.kamuJawabBetul(bintang, totalSoalan)}
             </p>
             <div className="mt-4 flex justify-center">
               <StarReward earned={Math.min(3, Math.ceil((bintang / totalSoalan) * 3))} />
@@ -691,7 +714,7 @@ function LatihanSubjekPage() {
               onClick={ulang}
               className="mt-5 rounded-full bg-card px-5 py-2 font-display font-extrabold text-foreground shadow-soft"
             >
-              Cuba Lagi
+              {t.cubaLagi}
             </button>
           </div>
         )}
