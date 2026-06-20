@@ -245,7 +245,7 @@ function LatihTubiPage() {
   if (loading || !user) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
-        <p className="text-muted-foreground">Memuatkan...</p>
+        <p className="text-muted-foreground">{isEnglish ? "Loading..." : "Memuatkan..."}</p>
       </div>
     );
   }
@@ -286,7 +286,7 @@ function LatihTubiPage() {
   };
 
   const needBahasa = showBahasaToggle && !bahasa && !started;
-  const en = bahasa === "en";
+  const en = bahasa === "en" || isEnglish;
   const t = {
     dijawab: en ? "ANSWERED" : "Dijawab",
     betul: en ? "CORRECT" : "Betul",
@@ -294,11 +294,20 @@ function LatihTubiPage() {
     berhenti: en ? "Stop" : "Berhenti",
     seterusnya: en ? "Next" : "Seterusnya",
     tamat: en ? "Finish" : "Tamat",
-    cubaLagi: en ? "Try again" : "Main Lagi",
+    cubaLagi: en ? "Try Again" : "Cuba Lagi",
     syabas: en ? "Well done! 🎉" : "Syabas! 🎉",
     dahJawab: (n: number) => en ? `You answered ${n} questions.` : `Kamu dah jawab ${n} soalan.`,
     pilihSetLain: en ? "Choose Another Set" : "Pilih Set Lain",
     aktivitiLain: en ? "Other Activities" : "Aktiviti Lain",
+    kembali: en ? "Back to Activities" : "Kembali ke Aktiviti",
+    latihTubi: en ? "Practice" : "Latih Tubi",
+    memuatkanSoalan: en ? "Loading questions..." : "Memuatkan soalan...",
+    belumAdaSoalan: en ? "No questions yet" : "Belum ada soalan",
+    sedangDisediakan: (s: string, d: string) =>
+      en
+        ? `Practice questions for ${s} (${d}) are being prepared.`
+        : `Soalan Latih Tubi untuk ${s} (${d}) sedang disediakan.`,
+    ralat: en ? "Error" : "Ralat",
   };
   const showPicker = isUpper && !started && !needBahasa;
 
@@ -313,7 +322,7 @@ function LatihTubiPage() {
           style={{ color: HIJAU }}
         >
           <ArrowLeft className="h-4 w-4" />
-          Kembali ke Aktiviti
+          {t.kembali}
         </Link>
 
         <div className="mt-4 flex flex-wrap items-center gap-2">
@@ -333,7 +342,7 @@ function LatihTubiPage() {
             className="rounded-full px-4 py-1.5 font-display text-xs font-extrabold text-white shadow-soft"
             style={{ backgroundColor: HIJAU }}
           >
-            Latih Tubi
+            {t.latihTubi}
           </span>
           {isUpper && started && topik && setLabel && (
             <>
@@ -465,18 +474,18 @@ function LatihTubiPage() {
           </div>
         ) : fetching ? (
           <div className="mt-10 rounded-3xl bg-card p-10 text-center shadow-card">
-            <p className="text-muted-foreground">Memuatkan soalan...</p>
+            <p className="text-muted-foreground">{t.memuatkanSoalan}</p>
           </div>
         ) : errMsg ? (
           <div className="mt-10 rounded-3xl bg-card p-10 text-center shadow-card">
-            <h2 className="font-display text-xl font-extrabold text-destructive">Ralat</h2>
-            <p className="mt-2 text-sm text-muted-foreground">{errMsg}</p>
+            <h2 className="font-display text-xl font-extrabold text-destructive">{t.ralat}</h2>
+            <p className="mt-2 text-sm text-muted-foreground">{t.ralat}: {errMsg}</p>
           </div>
         ) : bank.length === 0 ? (
           <div className="mt-10 rounded-3xl bg-card p-10 text-center shadow-card">
-            <h2 className="font-display text-xl font-extrabold text-foreground">Belum ada soalan</h2>
+            <h2 className="font-display text-xl font-extrabold text-foreground">{t.belumAdaSoalan}</h2>
             <p className="mt-2 text-sm text-muted-foreground">
-              Soalan Latih Tubi untuk {subjek.title} ({darjah.label}) sedang disediakan.
+              {t.sedangDisediakan(subjek.title, darjah.label)}
             </p>
           </div>
         ) : berhenti ? (
