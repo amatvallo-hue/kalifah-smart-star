@@ -553,31 +553,30 @@ function KuizPage() {
               <Sparkles className="h-10 w-10 text-gold-foreground" />
             </div>
             <h2 className="mt-4 font-display text-3xl font-extrabold text-foreground md:text-4xl">
-              Tahniah! 🎉
+              {t.tahniah}
             </h2>
             <p className="mt-2 text-lg text-muted-foreground">
-              Kamu jawab betul <span className="font-extrabold text-primary">{skor}</span> daripada{" "}
-              <span className="font-extrabold text-primary">{soalanList.length}</span> soalan
+              {isEnglish ? `You answered ${skor} out of ${soalanList.length} questions correctly` : `Kamu jawab betul ${skor} daripada ${soalanList.length} soalan`}
             </p>
             <div className="mt-5 flex justify-center">
               <StarReward earned={bintang} />
             </div>
             <p className="mt-4 font-display font-extrabold text-foreground">
-              {bintang === 3 ? "Cemerlang! Kamu hebat!" : bintang === 2 ? "Bagus sekali!" : bintang === 1 ? "Terus berusaha!" : "Jangan putus asa, cuba lagi!"}
+              {bintang === 3 ? t.cemerlang : bintang === 2 ? t.bagusSekali : bintang === 1 ? t.terusBerusaha : t.janganPutusAsa}
             </p>
             <div className="mt-6 flex flex-wrap justify-center gap-3">
               <button
                 onClick={reset}
                 className="rounded-full bg-gradient-primary px-6 py-3 font-display font-extrabold text-primary-foreground shadow-soft transition hover:-translate-y-0.5"
               >
-                Cuba Lagi
+                {t.cubaLagi}
               </button>
               <Link
                 to="/darjah/$darjahId/$subjekId"
                 params={{ darjahId, subjekId }}
                 className="rounded-full bg-card px-6 py-3 font-display font-extrabold text-foreground shadow-soft transition hover:-translate-y-0.5"
               >
-                Kembali ke Aktiviti
+                {t.kembaliKeAktiviti}
               </Link>
             </div>
           </div>
