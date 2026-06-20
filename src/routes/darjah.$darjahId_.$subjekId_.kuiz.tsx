@@ -209,6 +209,10 @@ function KuizPage() {
   const darjah = getDarjah(darjahId) ?? { id: darjahId, label: `Darjah ${darjahId}`, locked: false };
   const subjek = getSubjek(subjekId) ?? { id: subjekId, title: subjekId.charAt(0).toUpperCase() + subjekId.slice(1) };
   const isEnglish = subjekId === "bahasa-inggeris";
+  const profileName =
+    (user?.user_metadata?.name as string | undefined) ||
+    (user?.user_metadata?.full_name as string | undefined) ||
+    (user?.email ? user.email.split("@")[0].replace(/[._-]+/g, " ") : undefined);
   const t = {
     memuatkan: isEnglish ? "Loading..." : "Memuatkan...",
     tidakDijumpai: isEnglish ? "Not Found" : "Tidak dijumpai",
