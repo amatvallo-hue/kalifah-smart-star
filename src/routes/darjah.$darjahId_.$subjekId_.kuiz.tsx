@@ -362,27 +362,27 @@ function KuizPage() {
             params={{ darjahId, subjekId }}
             className="inline-flex items-center gap-2 text-sm font-bold text-muted-foreground hover:text-primary"
           >
-            <ArrowLeft className="h-4 w-4" /> Kembali
+            <ArrowLeft className="h-4 w-4" /> {t.kembali}
           </Link>
           <div className="mt-6 rounded-3xl bg-gradient-hero p-8 text-center shadow-card md:p-12">
             <h1 className="font-display text-3xl font-extrabold text-foreground md:text-4xl">
-              Pilih Set Kuiz
+              {t.pilihSetKuiz}
             </h1>
             <p className="mt-2 text-muted-foreground">
-              {subjek.title} — {darjah.label}. Pilih satu set untuk mula.
+              {subjek.title} — {darjah.label}. {isEnglish ? "Choose a set to start." : "Pilih satu set untuk mula."}
             </p>
             <div className="mt-8 grid gap-4 sm:grid-cols-2">
               <button
                 onClick={() => setSelectedSet(1)}
                 className="rounded-3xl bg-gradient-primary px-6 py-8 font-display text-2xl font-extrabold text-primary-foreground shadow-soft transition hover:-translate-y-1 hover:shadow-gold"
               >
-                Kuiz 1
+                {t.kuiz1}
               </button>
               <button
                 onClick={() => setSelectedSet(2)}
                 className="rounded-3xl bg-gradient-gold px-6 py-8 font-display text-2xl font-extrabold text-gold-foreground shadow-soft transition hover:-translate-y-1 hover:shadow-gold"
               >
-                Kuiz 2
+                {t.kuiz2}
               </button>
             </div>
           </div>
@@ -401,12 +401,12 @@ function KuizPage() {
             params={{ darjahId, subjekId }}
             className="inline-flex items-center gap-2 text-sm font-bold text-muted-foreground hover:text-primary"
           >
-            <ArrowLeft className="h-4 w-4" /> Kembali
+            <ArrowLeft className="h-4 w-4" /> {t.kembali}
           </Link>
           <div className="mt-8 rounded-3xl bg-gradient-hero p-10 shadow-card">
-            <h1 className="font-display text-3xl font-extrabold text-foreground">Kuiz akan datang</h1>
+            <h1 className="font-display text-3xl font-extrabold text-foreground">{t.kuizAkanDatang}</h1>
             <p className="mt-2 text-muted-foreground">
-              Kuiz untuk {subjek.title} ({darjah.label}) sedang disediakan. Nantikan!
+              {isEnglish ? `Quiz for ${subjek.title} (${darjah.label}) is being prepared. Stay tuned!` : `Kuiz untuk ${subjek.title} (${darjah.label}) sedang disediakan. Nantikan!`}
             </p>
           </div>
         </main>
@@ -450,7 +450,7 @@ function KuizPage() {
           className="inline-flex items-center gap-2 text-sm font-bold text-muted-foreground transition hover:text-primary"
         >
           <ArrowLeft className="h-4 w-4" />
-          Kembali ke Aktiviti
+          {t.kembaliKeAktiviti}
         </Link>
 
         <div className="mt-4 flex flex-wrap items-center gap-2">
@@ -461,7 +461,7 @@ function KuizPage() {
             {subjek.title}
           </span>
           <span className="rounded-full bg-gradient-primary px-4 py-1.5 font-display text-xs font-extrabold text-primary-foreground shadow-soft">
-            Kuiz
+            {t.kuiz}
           </span>
         </div>
 
@@ -469,10 +469,10 @@ function KuizPage() {
           <>
             <div className="mt-5 flex items-center justify-between">
               <span className="font-display text-sm font-extrabold text-muted-foreground">
-                Soalan {i + 1} / {soalanList.length}
+                {isEnglish ? `Question ${i + 1} / ${soalanList.length}` : `Soalan ${i + 1} / ${soalanList.length}`}
               </span>
               <span className="rounded-full bg-gradient-gold px-3 py-1 font-display text-xs font-extrabold text-gold-foreground">
-                Skor: {skor}
+                {isEnglish ? `Score: ${skor}` : `Skor: ${skor}`}
               </span>
             </div>
             <div className="mt-2 h-3 overflow-hidden rounded-full bg-secondary">
@@ -532,7 +532,7 @@ function KuizPage() {
                 >
                   <Sparkles className="mt-0.5 h-5 w-5 shrink-0" />
                   <div className="text-sm font-bold">
-                    {betul ? "Syabas! Jawapan kamu betul! 🎉" : "Hampir betul! Cuba lagi pada soalan seterusnya."}
+                    {betul ? t.syabasBetul : t.hampirBetul}
                     {soalan.nota && <div className="mt-1 font-medium opacity-90">{soalan.nota}</div>}
                   </div>
                 </div>
@@ -543,7 +543,7 @@ function KuizPage() {
                 disabled={pilih === null}
                 className="mt-6 w-full rounded-2xl bg-gradient-primary px-6 py-4 font-display text-lg font-extrabold text-primary-foreground shadow-soft transition hover:-translate-y-0.5 hover:shadow-gold disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
               >
-                {i + 1 >= soalanList.length ? "Selesai" : "Soalan Seterusnya →"}
+                {i + 1 >= soalanList.length ? t.selesai : t.soalanSeterusnya}
               </button>
             </div>
           </>
