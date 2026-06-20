@@ -311,9 +311,9 @@ function KuizPage() {
       <div className="min-h-screen bg-background">
         <SiteHeader onLogout={handleLogout} />
         <main className="container mx-auto px-4 py-16 text-center">
-          <h1 className="font-display text-3xl font-extrabold text-foreground">Tidak dijumpai</h1>
+          <h1 className="font-display text-3xl font-extrabold text-foreground">{t.tidakDijumpai}</h1>
           <Link to="/" className="mt-6 inline-flex items-center gap-2 rounded-full bg-gradient-primary px-6 py-3 font-display font-extrabold text-primary-foreground shadow-soft">
-            <ArrowLeft className="h-4 w-4" /> Kembali
+            <ArrowLeft className="h-4 w-4" /> {t.kembali}
           </Link>
         </main>
       </div>
