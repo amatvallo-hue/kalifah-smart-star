@@ -685,17 +685,17 @@ function LatihanSubjekPage() {
                   }
                 >
                   {semak
-                    ? "Betul! 🎉"
+                    ? t.betul
                     : isJawiMcq
-                      ? `Jawapan betul: ${mcq.pilihan[mcq.betul]}`
-                      : `Jawapan betul: ${soalan.jawapan}`}
+                      ? `${t.jawapanBetul}: ${mcq.pilihan[mcq.betul]}`
+                      : `${t.jawapanBetul}: ${soalan.jawapan}`}
                 </div>
                 <button
                   onClick={seterusnya}
                   style={{ background: "#1B8A5A" }}
                   className="inline-flex w-full items-center justify-center gap-2 rounded-2xl px-6 py-4 font-display text-lg font-extrabold text-white shadow-soft"
                 >
-                  {idx + 1 >= totalSoalan ? "Lihat Keputusan" : "Soalan Seterusnya →"}
+                  {idx + 1 >= totalSoalan ? t.lihatKeputusan : t.soalanSeterusnya}
                 </button>
               </div>
             )}
@@ -703,9 +703,9 @@ function LatihanSubjekPage() {
         ) : (
           <div className="mt-6 rounded-3xl bg-gradient-hero p-8 text-center shadow-card">
             <Sparkles className="mx-auto h-12 w-12 text-gold" />
-            <h2 className="mt-3 font-display text-3xl font-extrabold text-foreground">Syabas! 🎉</h2>
+            <h2 className="mt-3 font-display text-3xl font-extrabold text-foreground">{t.syabas}</h2>
             <p className="mt-2 text-muted-foreground">
-              Kamu jawab betul <span className="font-extrabold text-primary">{bintang}</span> daripada {totalSoalan} soalan.
+              {t.kamuJawabBetul(bintang, totalSoalan)}
             </p>
             <div className="mt-4 flex justify-center">
               <StarReward earned={Math.min(3, Math.ceil((bintang / totalSoalan) * 3))} />
@@ -714,7 +714,7 @@ function LatihanSubjekPage() {
               onClick={ulang}
               className="mt-5 rounded-full bg-card px-5 py-2 font-display font-extrabold text-foreground shadow-soft"
             >
-              Cuba Lagi
+              {t.cubaLagi}
             </button>
           </div>
         )}
