@@ -21,6 +21,12 @@ export async function buildSijilPDF(input: SijilInput): Promise<Blob> {
   const W = 297;
   const H = 210;
 
+  if (input.jenis === "kuiz-cemerlang") {
+    return renderKuizCemerlang(doc, input, W, H);
+  }
+
+
+
   // ── Latar kertas
   doc.setFillColor("#FFFDF7");
   doc.rect(0, 0, W, H, "F");
