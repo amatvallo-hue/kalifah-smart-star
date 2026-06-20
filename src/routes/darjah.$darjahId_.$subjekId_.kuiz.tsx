@@ -207,6 +207,28 @@ function KuizPage() {
   const { user, loading } = useAuth();
   const darjah = getDarjah(darjahId) ?? { id: darjahId, label: `Darjah ${darjahId}`, locked: false };
   const subjek = getSubjek(subjekId) ?? { id: subjekId, title: subjekId.charAt(0).toUpperCase() + subjekId.slice(1) };
+  const isEnglish = subjekId === "bahasa-inggeris";
+  const t = {
+    memuatkan: isEnglish ? "Loading..." : "Memuatkan...",
+    tidakDijumpai: isEnglish ? "Not Found" : "Tidak dijumpai",
+    kembali: isEnglish ? "Back" : "Kembali",
+    pilihSetKuiz: isEnglish ? "Choose Quiz Set" : "Pilih Set Kuiz",
+    kuiz1: isEnglish ? "Quiz 1" : "Kuiz 1",
+    kuiz2: isEnglish ? "Quiz 2" : "Kuiz 2",
+    kuizAkanDatang: isEnglish ? "Quiz Coming Soon" : "Kuiz akan datang",
+    kembaliKeAktiviti: isEnglish ? "Back to Activities" : "Kembali ke Aktiviti",
+    kuiz: isEnglish ? "Quiz" : "Kuiz",
+    syabasBetul: isEnglish ? "Great job! Your answer is correct! 🎉" : "Syabas! Jawapan kamu betul! 🎉",
+    hampirBetul: isEnglish ? "Almost correct! Try again on the next question." : "Hampir betul! Cuba lagi pada soalan seterusnya.",
+    selesai: isEnglish ? "Finish" : "Selesai",
+    soalanSeterusnya: isEnglish ? "Next Question →" : "Soalan Seterusnya →",
+    tahniah: isEnglish ? "Congratulations! 🎉" : "Tahniah! 🎉",
+    cemerlang: isEnglish ? "Excellent! You're amazing!" : "Cemerlang! Kamu hebat!",
+    bagusSekali: isEnglish ? "Very good!" : "Bagus sekali!",
+    terusBerusaha: isEnglish ? "Keep trying!" : "Terus berusaha!",
+    janganPutusAsa: isEnglish ? "Don't give up, try again!" : "Jangan putus asa, cuba lagi!",
+    cubaLagi: isEnglish ? "Try Again" : "Cuba Lagi",
+  };
   const isMatematikD1 = darjahId === "1" && subjekId === "matematik";
   const isBahasaMelayuD1 = darjahId === "1" && subjekId === "bahasa-melayu";
   const isBahasaInggerisD1 = darjahId === "1" && subjekId === "bahasa-inggeris";
