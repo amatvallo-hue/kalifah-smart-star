@@ -6,7 +6,7 @@ const EMAS = "#F5A623";
 const HIJAU_GELAP = "#0F5E3D";
 
 export interface SijilInput {
-  jenis: "subjek" | "darjah";
+  jenis: "subjek" | "darjah" | "kuiz-cemerlang";
   namaMurid: string;
   tajuk: string; // cth "Matematik Darjah 3" atau "Darjah 3"
   tarikh: string; // formatted MS-MY
