@@ -207,6 +207,28 @@ function KuizPage() {
   const { user, loading } = useAuth();
   const darjah = getDarjah(darjahId) ?? { id: darjahId, label: `Darjah ${darjahId}`, locked: false };
   const subjek = getSubjek(subjekId) ?? { id: subjekId, title: subjekId.charAt(0).toUpperCase() + subjekId.slice(1) };
+  const isEnglish = subjekId === "bahasa-inggeris";
+  const t = {
+    memuatkan: isEnglish ? "Loading..." : "Memuatkan...",
+    tidakDijumpai: isEnglish ? "Not Found" : "Tidak dijumpai",
+    kembali: isEnglish ? "Back" : "Kembali",
+    pilihSetKuiz: isEnglish ? "Choose Quiz Set" : "Pilih Set Kuiz",
+    kuiz1: isEnglish ? "Quiz 1" : "Kuiz 1",
+    kuiz2: isEnglish ? "Quiz 2" : "Kuiz 2",
+    kuizAkanDatang: isEnglish ? "Quiz Coming Soon" : "Kuiz akan datang",
+    kembaliKeAktiviti: isEnglish ? "Back to Activities" : "Kembali ke Aktiviti",
+    kuiz: isEnglish ? "Quiz" : "Kuiz",
+    syabasBetul: isEnglish ? "Great job! Your answer is correct! 🎉" : "Syabas! Jawapan kamu betul! 🎉",
+    hampirBetul: isEnglish ? "Almost correct! Try again on the next question." : "Hampir betul! Cuba lagi pada soalan seterusnya.",
+    selesai: isEnglish ? "Finish" : "Selesai",
+    soalanSeterusnya: isEnglish ? "Next Question →" : "Soalan Seterusnya →",
+    tahniah: isEnglish ? "Congratulations! 🎉" : "Tahniah! 🎉",
+    cemerlang: isEnglish ? "Excellent! You're amazing!" : "Cemerlang! Kamu hebat!",
+    bagusSekali: isEnglish ? "Very good!" : "Bagus sekali!",
+    terusBerusaha: isEnglish ? "Keep trying!" : "Terus berusaha!",
+    janganPutusAsa: isEnglish ? "Don't give up, try again!" : "Jangan putus asa, cuba lagi!",
+    cubaLagi: isEnglish ? "Try Again" : "Cuba Lagi",
+  };
   const isMatematikD1 = darjahId === "1" && subjekId === "matematik";
   const isBahasaMelayuD1 = darjahId === "1" && subjekId === "bahasa-melayu";
   const isBahasaInggerisD1 = darjahId === "1" && subjekId === "bahasa-inggeris";
@@ -279,7 +301,7 @@ function KuizPage() {
   if (loading || !user) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
-        <p className="text-muted-foreground">Memuatkan...</p>
+        <p className="text-muted-foreground">{t.memuatkan}</p>
       </div>
     );
   }
@@ -289,9 +311,9 @@ function KuizPage() {
       <div className="min-h-screen bg-background">
         <SiteHeader onLogout={handleLogout} />
         <main className="container mx-auto px-4 py-16 text-center">
-          <h1 className="font-display text-3xl font-extrabold text-foreground">Tidak dijumpai</h1>
+          <h1 className="font-display text-3xl font-extrabold text-foreground">{t.tidakDijumpai}</h1>
           <Link to="/" className="mt-6 inline-flex items-center gap-2 rounded-full bg-gradient-primary px-6 py-3 font-display font-extrabold text-primary-foreground shadow-soft">
-            <ArrowLeft className="h-4 w-4" /> Kembali
+            <ArrowLeft className="h-4 w-4" /> {t.kembali}
           </Link>
         </main>
       </div>
@@ -340,27 +362,27 @@ function KuizPage() {
             params={{ darjahId, subjekId }}
             className="inline-flex items-center gap-2 text-sm font-bold text-muted-foreground hover:text-primary"
           >
-            <ArrowLeft className="h-4 w-4" /> Kembali
+            <ArrowLeft className="h-4 w-4" /> {t.kembali}
           </Link>
           <div className="mt-6 rounded-3xl bg-gradient-hero p-8 text-center shadow-card md:p-12">
             <h1 className="font-display text-3xl font-extrabold text-foreground md:text-4xl">
-              Pilih Set Kuiz
+              {t.pilihSetKuiz}
             </h1>
             <p className="mt-2 text-muted-foreground">
-              {subjek.title} — {darjah.label}. Pilih satu set untuk mula.
+              {subjek.title} — {darjah.label}. {isEnglish ? "Choose a set to start." : "Pilih satu set untuk mula."}
             </p>
             <div className="mt-8 grid gap-4 sm:grid-cols-2">
               <button
                 onClick={() => setSelectedSet(1)}
                 className="rounded-3xl bg-gradient-primary px-6 py-8 font-display text-2xl font-extrabold text-primary-foreground shadow-soft transition hover:-translate-y-1 hover:shadow-gold"
               >
-                Kuiz 1
+                {t.kuiz1}
               </button>
               <button
                 onClick={() => setSelectedSet(2)}
                 className="rounded-3xl bg-gradient-gold px-6 py-8 font-display text-2xl font-extrabold text-gold-foreground shadow-soft transition hover:-translate-y-1 hover:shadow-gold"
               >
-                Kuiz 2
+                {t.kuiz2}
               </button>
             </div>
           </div>
@@ -379,12 +401,12 @@ function KuizPage() {
             params={{ darjahId, subjekId }}
             className="inline-flex items-center gap-2 text-sm font-bold text-muted-foreground hover:text-primary"
           >
-            <ArrowLeft className="h-4 w-4" /> Kembali
+            <ArrowLeft className="h-4 w-4" /> {t.kembali}
           </Link>
           <div className="mt-8 rounded-3xl bg-gradient-hero p-10 shadow-card">
-            <h1 className="font-display text-3xl font-extrabold text-foreground">Kuiz akan datang</h1>
+            <h1 className="font-display text-3xl font-extrabold text-foreground">{t.kuizAkanDatang}</h1>
             <p className="mt-2 text-muted-foreground">
-              Kuiz untuk {subjek.title} ({darjah.label}) sedang disediakan. Nantikan!
+              {isEnglish ? `Quiz for ${subjek.title} (${darjah.label}) is being prepared. Stay tuned!` : `Kuiz untuk ${subjek.title} (${darjah.label}) sedang disediakan. Nantikan!`}
             </p>
           </div>
         </main>
@@ -428,7 +450,7 @@ function KuizPage() {
           className="inline-flex items-center gap-2 text-sm font-bold text-muted-foreground transition hover:text-primary"
         >
           <ArrowLeft className="h-4 w-4" />
-          Kembali ke Aktiviti
+          {t.kembaliKeAktiviti}
         </Link>
 
         <div className="mt-4 flex flex-wrap items-center gap-2">
@@ -439,7 +461,7 @@ function KuizPage() {
             {subjek.title}
           </span>
           <span className="rounded-full bg-gradient-primary px-4 py-1.5 font-display text-xs font-extrabold text-primary-foreground shadow-soft">
-            Kuiz
+            {t.kuiz}
           </span>
         </div>
 
@@ -447,10 +469,10 @@ function KuizPage() {
           <>
             <div className="mt-5 flex items-center justify-between">
               <span className="font-display text-sm font-extrabold text-muted-foreground">
-                Soalan {i + 1} / {soalanList.length}
+                {isEnglish ? `Question ${i + 1} / ${soalanList.length}` : `Soalan ${i + 1} / ${soalanList.length}`}
               </span>
               <span className="rounded-full bg-gradient-gold px-3 py-1 font-display text-xs font-extrabold text-gold-foreground">
-                Skor: {skor}
+                {isEnglish ? `Score: ${skor}` : `Skor: ${skor}`}
               </span>
             </div>
             <div className="mt-2 h-3 overflow-hidden rounded-full bg-secondary">
@@ -510,7 +532,7 @@ function KuizPage() {
                 >
                   <Sparkles className="mt-0.5 h-5 w-5 shrink-0" />
                   <div className="text-sm font-bold">
-                    {betul ? "Syabas! Jawapan kamu betul! 🎉" : "Hampir betul! Cuba lagi pada soalan seterusnya."}
+                    {betul ? t.syabasBetul : t.hampirBetul}
                     {soalan.nota && <div className="mt-1 font-medium opacity-90">{soalan.nota}</div>}
                   </div>
                 </div>
@@ -521,7 +543,7 @@ function KuizPage() {
                 disabled={pilih === null}
                 className="mt-6 w-full rounded-2xl bg-gradient-primary px-6 py-4 font-display text-lg font-extrabold text-primary-foreground shadow-soft transition hover:-translate-y-0.5 hover:shadow-gold disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
               >
-                {i + 1 >= soalanList.length ? "Selesai" : "Soalan Seterusnya →"}
+                {i + 1 >= soalanList.length ? t.selesai : t.soalanSeterusnya}
               </button>
             </div>
           </>
@@ -531,31 +553,30 @@ function KuizPage() {
               <Sparkles className="h-10 w-10 text-gold-foreground" />
             </div>
             <h2 className="mt-4 font-display text-3xl font-extrabold text-foreground md:text-4xl">
-              Tahniah! 🎉
+              {t.tahniah}
             </h2>
             <p className="mt-2 text-lg text-muted-foreground">
-              Kamu jawab betul <span className="font-extrabold text-primary">{skor}</span> daripada{" "}
-              <span className="font-extrabold text-primary">{soalanList.length}</span> soalan
+              {isEnglish ? `You answered ${skor} out of ${soalanList.length} questions correctly` : `Kamu jawab betul ${skor} daripada ${soalanList.length} soalan`}
             </p>
             <div className="mt-5 flex justify-center">
               <StarReward earned={bintang} />
             </div>
             <p className="mt-4 font-display font-extrabold text-foreground">
-              {bintang === 3 ? "Cemerlang! Kamu hebat!" : bintang === 2 ? "Bagus sekali!" : bintang === 1 ? "Terus berusaha!" : "Jangan putus asa, cuba lagi!"}
+              {bintang === 3 ? t.cemerlang : bintang === 2 ? t.bagusSekali : bintang === 1 ? t.terusBerusaha : t.janganPutusAsa}
             </p>
             <div className="mt-6 flex flex-wrap justify-center gap-3">
               <button
                 onClick={reset}
                 className="rounded-full bg-gradient-primary px-6 py-3 font-display font-extrabold text-primary-foreground shadow-soft transition hover:-translate-y-0.5"
               >
-                Cuba Lagi
+                {t.cubaLagi}
               </button>
               <Link
                 to="/darjah/$darjahId/$subjekId"
                 params={{ darjahId, subjekId }}
                 className="rounded-full bg-card px-6 py-3 font-display font-extrabold text-foreground shadow-soft transition hover:-translate-y-0.5"
               >
-                Kembali ke Aktiviti
+                {t.kembaliKeAktiviti}
               </Link>
             </div>
           </div>
