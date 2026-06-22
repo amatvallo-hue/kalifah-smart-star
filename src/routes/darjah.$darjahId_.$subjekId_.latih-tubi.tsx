@@ -21,6 +21,10 @@ interface Soalan {
   pilihan: string[];
   jawapan: number;
   topik?: string | null;
+  feedback_a?: string | null;
+  feedback_b?: string | null;
+  feedback_c?: string | null;
+  feedback_d?: string | null;
 }
 
 const HIJAU = "#1B8A5A";
@@ -145,7 +149,7 @@ function LatihTubiPage() {
             : subjekId;
       const { data, error } = await supabase
         .from("soalan_latih_tubi")
-        .select("id, soalan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan_betul, topik")
+        .select("id, soalan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan_betul, topik, feedback_a, feedback_b, feedback_c, feedback_d")
         .eq("darjah", Number.isFinite(darjahNum) ? darjahNum : darjahId)
         .eq("subjek", subjekQuery);
       if (cancelled) return;
@@ -160,6 +164,10 @@ function LatihTubiPage() {
         pilihan: [r.pilihan_a, r.pilihan_b, r.pilihan_c, r.pilihan_d] as string[],
         jawapan: letterToIdx(r.jawapan_betul),
         topik: (r.topik ?? null) as string | null,
+        feedback_a: (r.feedback_a ?? null) as string | null,
+        feedback_b: (r.feedback_b ?? null) as string | null,
+        feedback_c: (r.feedback_c ?? null) as string | null,
+        feedback_d: (r.feedback_d ?? null) as string | null,
       }));
       const shuffled = shuffle(rows);
       setBank(shuffled);
@@ -269,20 +277,36 @@ function LatihTubiPage() {
         return { ...prev, [tpk]: { betul: cur.betul + (isBetul ? 1 : 0), jumlah: cur.jumlah + 1 } };
       });
     }
-    setTimeout(() => {
-      setPilih(null);
-      setCursor((c) => {
-        const next = c + 1;
-        if (next >= order.length) {
-          // Re-shuffle for replay loop
-          const reshuffled = shuffle(bank);
-          setBank(reshuffled);
-          setOrder(reshuffled.map((_, i) => i));
-          return 0;
-        }
-        return next;
-      });
-    }, 700);
+    if (isBetul) {
+      setTimeout(() => {
+        setPilih(null);
+        setCursor((c) => {
+          const next = c + 1;
+          if (next >= order.length) {
+            // Re-shuffle for replay loop
+            const reshuffled = shuffle(bank);
+            setBank(reshuffled);
+            setOrder(reshuffled.map((_, i) => i));
+            return 0;
+          }
+          return next;
+        });
+      }, 700);
+    }
+  };
+
+  const goToNext = () => {
+    setPilih(null);
+    setCursor((c) => {
+      const next = c + 1;
+      if (next >= order.length) {
+        const reshuffled = shuffle(bank);
+        setBank(reshuffled);
+        setOrder(reshuffled.map((_, i) => i));
+        return 0;
+      }
+      return next;
+    });
   };
 
   const needBahasa = showBahasaToggle && !bahasa && !started;
@@ -621,6 +645,35 @@ function LatihTubiPage() {
                     );
                   })}
                 </div>
+
+                {pilih !== null && pilih !== soalan.jawapan && (
+                  <>
+                    {(() => {
+                      const fbMap: Record<number, string | null | undefined> = {
+                        0: soalan.feedback_a,
+                        1: soalan.feedback_b,
+                        2: soalan.feedback_c,
+                        3: soalan.feedback_d,
+                      };
+                      const fb = fbMap[pilih];
+                      if (!fb) return null;
+                      return (
+                        <div className="mt-4 rounded-2xl border-2 border-amber-300 bg-amber-50 p-4 text-sm font-medium text-amber-900">
+                          {fb}
+                        </div>
+                      );
+                    })()}
+                    <div className="mt-4 flex justify-center">
+                      <button
+                        onClick={goToNext}
+                        className="inline-flex items-center gap-2 rounded-full px-6 py-3 font-display font-extrabold shadow-soft transition hover:opacity-90"
+                        style={{ backgroundColor: EMAS, color: "#1a1a1a" }}
+                      >
+                        {t.seterusnya}
+                      </button>
+                    </div>
+                  </>
+                )}
               </div>
             )}
 
