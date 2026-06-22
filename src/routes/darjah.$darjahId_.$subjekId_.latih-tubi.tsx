@@ -645,6 +645,35 @@ function LatihTubiPage() {
                     );
                   })}
                 </div>
+
+                {pilih !== null && pilih !== soalan.jawapan && (
+                  <>
+                    {(() => {
+                      const fbMap: Record<number, string | null | undefined> = {
+                        0: soalan.feedback_a,
+                        1: soalan.feedback_b,
+                        2: soalan.feedback_c,
+                        3: soalan.feedback_d,
+                      };
+                      const fb = fbMap[pilih];
+                      if (!fb) return null;
+                      return (
+                        <div className="mt-4 rounded-2xl border-2 border-amber-300 bg-amber-50 p-4 text-sm font-medium text-amber-900">
+                          {fb}
+                        </div>
+                      );
+                    })()}
+                    <div className="mt-4 flex justify-center">
+                      <button
+                        onClick={goToNext}
+                        className="inline-flex items-center gap-2 rounded-full px-6 py-3 font-display font-extrabold shadow-soft transition hover:opacity-90"
+                        style={{ backgroundColor: EMAS, color: "#1a1a1a" }}
+                      >
+                        {t.seterusnya}
+                      </button>
+                    </div>
+                  </>
+                )}
               </div>
             )}
 
