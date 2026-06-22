@@ -21,6 +21,10 @@ interface Soalan {
   pilihan: string[];
   jawapan: number;
   topik?: string | null;
+  feedback_a?: string | null;
+  feedback_b?: string | null;
+  feedback_c?: string | null;
+  feedback_d?: string | null;
 }
 
 const HIJAU = "#1B8A5A";
@@ -145,7 +149,7 @@ function LatihTubiPage() {
             : subjekId;
       const { data, error } = await supabase
         .from("soalan_latih_tubi")
-        .select("id, soalan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan_betul, topik")
+        .select("id, soalan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan_betul, topik, feedback_a, feedback_b, feedback_c, feedback_d")
         .eq("darjah", Number.isFinite(darjahNum) ? darjahNum : darjahId)
         .eq("subjek", subjekQuery);
       if (cancelled) return;
@@ -160,6 +164,10 @@ function LatihTubiPage() {
         pilihan: [r.pilihan_a, r.pilihan_b, r.pilihan_c, r.pilihan_d] as string[],
         jawapan: letterToIdx(r.jawapan_betul),
         topik: (r.topik ?? null) as string | null,
+        feedback_a: (r.feedback_a ?? null) as string | null,
+        feedback_b: (r.feedback_b ?? null) as string | null,
+        feedback_c: (r.feedback_c ?? null) as string | null,
+        feedback_d: (r.feedback_d ?? null) as string | null,
       }));
       const shuffled = shuffle(rows);
       setBank(shuffled);
