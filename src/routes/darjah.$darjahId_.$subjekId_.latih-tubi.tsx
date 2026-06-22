@@ -277,20 +277,36 @@ function LatihTubiPage() {
         return { ...prev, [tpk]: { betul: cur.betul + (isBetul ? 1 : 0), jumlah: cur.jumlah + 1 } };
       });
     }
-    setTimeout(() => {
-      setPilih(null);
-      setCursor((c) => {
-        const next = c + 1;
-        if (next >= order.length) {
-          // Re-shuffle for replay loop
-          const reshuffled = shuffle(bank);
-          setBank(reshuffled);
-          setOrder(reshuffled.map((_, i) => i));
-          return 0;
-        }
-        return next;
-      });
-    }, 700);
+    if (isBetul) {
+      setTimeout(() => {
+        setPilih(null);
+        setCursor((c) => {
+          const next = c + 1;
+          if (next >= order.length) {
+            // Re-shuffle for replay loop
+            const reshuffled = shuffle(bank);
+            setBank(reshuffled);
+            setOrder(reshuffled.map((_, i) => i));
+            return 0;
+          }
+          return next;
+        });
+      }, 700);
+    }
+  };
+
+  const goToNext = () => {
+    setPilih(null);
+    setCursor((c) => {
+      const next = c + 1;
+      if (next >= order.length) {
+        const reshuffled = shuffle(bank);
+        setBank(reshuffled);
+        setOrder(reshuffled.map((_, i) => i));
+        return 0;
+      }
+      return next;
+    });
   };
 
   const needBahasa = showBahasaToggle && !bahasa && !started;
