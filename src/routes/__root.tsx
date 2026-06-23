@@ -110,6 +110,7 @@ function RootShell({ children }: { children: ReactNode }) {
     <html lang="en">
       <head>
         <HeadContent />
+        <meta name="facebook-domain-verification" content="gr7bl1xpq04xbdo6qsm8e188il63c9" />
         {/* Meta Pixel Code */}
         <script
           dangerouslySetInnerHTML={{
