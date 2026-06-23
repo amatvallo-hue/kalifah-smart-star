@@ -49,7 +49,11 @@ function BayaranSelesai() {
           });
           const json = await res.json().catch(() => ({}));
           console.log("[bayaran.selesai] confirm-payment", res.status, json);
-          if (!json?.ok) {
+          if (json?.ok) {
+            if (typeof window !== "undefined" && typeof (window as any).fbq === "function") {
+              (window as any).fbq("track", "Purchase", { value: 29.0, currency: "MYR" });
+            }
+          } else {
             const tempRes = await fetch("/api/temporary-unlock", {
               method: "POST",
               headers: {
