@@ -477,7 +477,7 @@ function PenggunaAnak() {
           {parents.map((p) => {
             const kids = childrenByParent[p.id] ?? [];
             return (
-              <FragmentRow key={p.id}>
+              <Fragment key={p.id}>
                 <TableRow className="bg-muted/40">
                   <TableCell className="font-medium">{p.email || "-"}</TableCell>
                   <TableCell>{(p.darjah_akses ?? []).join(", ") || "-"}</TableCell>
@@ -492,7 +492,7 @@ function PenggunaAnak() {
                     <TableCell>-</TableCell>
                   </TableRow>
                 ))}
-              </FragmentRow>
+              </Fragment>
             );
           })}
         </TableBody>
