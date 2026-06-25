@@ -130,6 +130,7 @@ function AdminDashboard() {
           <TabsList>
             <TabsTrigger value="pembayaran">Pembayaran Manual</TabsTrigger>
             <TabsTrigger value="pengguna">Semua Pengguna</TabsTrigger>
+            <TabsTrigger value="pengguna-anak">Pengguna & Anak</TabsTrigger>
             <TabsTrigger value="notifikasi">Tetapan Notifikasi</TabsTrigger>
           </TabsList>
           <TabsContent value="pembayaran" className="mt-6">
@@ -137,6 +138,9 @@ function AdminDashboard() {
           </TabsContent>
           <TabsContent value="pengguna" className="mt-6">
             <AllUsers />
+          </TabsContent>
+          <TabsContent value="pengguna-anak" className="mt-6">
+            <PenggunaAnak />
           </TabsContent>
           <TabsContent value="notifikasi" className="mt-6">
             <NotificationSettings />
