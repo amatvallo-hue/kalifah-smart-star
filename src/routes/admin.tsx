@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import { Loader2, ShieldAlert } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
@@ -130,6 +130,7 @@ function AdminDashboard() {
           <TabsList>
             <TabsTrigger value="pembayaran">Pembayaran Manual</TabsTrigger>
             <TabsTrigger value="pengguna">Semua Pengguna</TabsTrigger>
+            <TabsTrigger value="pengguna-anak">Pengguna & Anak</TabsTrigger>
             <TabsTrigger value="notifikasi">Tetapan Notifikasi</TabsTrigger>
           </TabsList>
           <TabsContent value="pembayaran" className="mt-6">
@@ -137,6 +138,9 @@ function AdminDashboard() {
           </TabsContent>
           <TabsContent value="pengguna" className="mt-6">
             <AllUsers />
+          </TabsContent>
+          <TabsContent value="pengguna-anak" className="mt-6">
+            <PenggunaAnak />
           </TabsContent>
           <TabsContent value="notifikasi" className="mt-6">
             <NotificationSettings />
@@ -411,6 +415,92 @@ function AllUsers() {
     </div>
   );
 }
+
+// ---------------- Tab: Pengguna & Anak ----------------
+interface ChildRow {
+  id: string;
+  parent_id: string;
+  nama: string | null;
+  darjah: number | null;
+  username: string | null;
+}
+
+function PenggunaAnak() {
+  const [parents, setParents] = useState<Profile[]>([]);
+  const [childrenByParent, setChildrenByParent] = useState<Record<string, ChildRow[]>>({});
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    (async () => {
+      setLoading(true);
+      const { data: profs, error: pe } = await supabase
+        .from("profiles")
+        .select("id, email, username, role, darjah_akses, created_at")
+        .order("created_at", { ascending: false });
+      if (pe) {
+        toast.error("Gagal muat pengguna: " + pe.message);
+        setLoading(false);
+        return;
+      }
+      const list = (profs as Profile[] | null) ?? [];
+      setParents(list);
+      const { data: kids, error: ke } = await supabase
+        .from("child_profiles")
+        .select("id, parent_id, nama, darjah, username");
+      if (ke) {
+        toast.error("Gagal muat anak: " + ke.message);
+      }
+      const map: Record<string, ChildRow[]> = {};
+      for (const c of ((kids as ChildRow[] | null) ?? [])) {
+        if (!map[c.parent_id]) map[c.parent_id] = [];
+        map[c.parent_id].push(c);
+      }
+      setChildrenByParent(map);
+      setLoading(false);
+    })();
+  }, []);
+
+  if (loading) return <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />;
+
+  return (
+    <div className="rounded-md border">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Parent / Anak</TableHead>
+            <TableHead>Darjah</TableHead>
+            <TableHead>Username</TableHead>
+            <TableHead>Tarikh Daftar</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {parents.map((p) => {
+            const kids = childrenByParent[p.id] ?? [];
+            return (
+              <Fragment key={p.id}>
+                <TableRow className="bg-muted/40">
+                  <TableCell className="font-medium">{p.email || "-"}</TableCell>
+                  <TableCell>{(p.darjah_akses ?? []).join(", ") || "-"}</TableCell>
+                  <TableCell>-</TableCell>
+                  <TableCell>{new Date(p.created_at).toLocaleDateString("ms-MY")}</TableCell>
+                </TableRow>
+                {kids.map((c) => (
+                  <TableRow key={c.id} className="text-xs text-muted-foreground">
+                    <TableCell className="pl-10">↳ {c.nama || "-"}</TableCell>
+                    <TableCell>{c.darjah ?? "-"}</TableCell>
+                    <TableCell>{c.username || "-"}</TableCell>
+                    <TableCell>-</TableCell>
+                  </TableRow>
+                ))}
+              </Fragment>
+            );
+          })}
+        </TableBody>
+      </Table>
+    </div>
+  );
+}
+
 
 // ---------------- Tab 3: Notification Settings ----------------
 function NotificationSettings() {
