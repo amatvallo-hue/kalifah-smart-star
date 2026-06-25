@@ -477,8 +477,8 @@ function PenggunaAnak() {
           {parents.map((p) => {
             const kids = childrenByParent[p.id] ?? [];
             return (
-              <>
-                <TableRow key={p.id} className="bg-muted/40">
+              <FragmentRow key={p.id}>
+                <TableRow className="bg-muted/40">
                   <TableCell className="font-medium">{p.email || "-"}</TableCell>
                   <TableCell>{(p.darjah_akses ?? []).join(", ") || "-"}</TableCell>
                   <TableCell>-</TableCell>
@@ -492,7 +492,7 @@ function PenggunaAnak() {
                     <TableCell>-</TableCell>
                   </TableRow>
                 ))}
-              </>
+              </FragmentRow>
             );
           })}
         </TableBody>
@@ -500,6 +500,8 @@ function PenggunaAnak() {
     </div>
   );
 }
+
+import { Fragment as FragmentRow } from "react";
 
 // ---------------- Tab 3: Notification Settings ----------------
 function NotificationSettings() {
