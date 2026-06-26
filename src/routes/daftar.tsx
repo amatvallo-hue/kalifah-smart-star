@@ -4,6 +4,56 @@ import { UserPlus, User, Mail, Lock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { AuthShell, Field } from "./login";
 
+const STEPS = [
+  { num: 1, label: "Daftar Akaun" },
+  { num: 2, label: "Pilih Darjah & Bayar" },
+  { num: 3, label: "Cipta Akaun Anak" },
+  { num: 4, label: "Mula Belajar" },
+];
+
+function StepProgress({ active }: { active: number }) {
+  return (
+    <div className="w-full px-2 py-6">
+      <div className="relative flex items-start justify-between">
+        <div className="absolute left-0 top-[1.125rem] h-0.5 w-full bg-gray-200" />
+        <div
+          className="absolute left-0 top-[1.125rem] h-0.5 bg-green-500 transition-all"
+          style={{ width: `${((active - 1) / (STEPS.length - 1)) * 100}%` }}
+        />
+        {STEPS.map((s) => {
+          const isActive = s.num === active;
+          const isPast = s.num < active;
+          return (
+            <div key={s.num} className="relative z-10 flex flex-col items-center gap-2">
+              <div
+                className={`flex h-9 w-9 items-center justify-center rounded-full border-2 text-sm font-extrabold transition ${
+                  isActive
+                    ? "border-green-500 bg-green-500 text-white"
+                    : isPast
+                      ? "border-green-500 bg-white text-green-500"
+                      : "border-gray-300 bg-white text-gray-400"
+                }`}
+              >
+                {s.num}
+              </div>
+              <span
+                className={`text-center text-[11px] font-bold leading-tight ${
+                  isActive ? "text-green-600" : "text-gray-400"
+                }`}
+              >
+                {s.label}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+      <p className="mt-4 text-center text-xs font-medium text-muted-foreground">
+        Selepas daftar, anda akan memilih darjah dan membuat pembayaran.
+      </p>
+    </div>
+  );
+}
+
 export const Route = createFileRoute("/daftar")({
   validateSearch: (search: Record<string, unknown>) => ({
     ref: typeof search.ref === "string" ? search.ref : undefined,
