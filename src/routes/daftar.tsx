@@ -157,6 +157,7 @@ function DaftarPage() {
 
   return (
     <AuthShell title="Daftar Akaun Ibu Bapa" subtitle="Cipta akaun untuk memantau prestasi dan kemajuan anak anda.">
+      <StepProgress active={1} />
       <form onSubmit={onSubmit} className="space-y-4">
         <Field icon={User} label="Nama Penuh Ibu/Bapa" type="text" value={name} onChange={setName} placeholder="Ali bin Abu" autoComplete="name" />
         <Field icon={Mail} label="Email" type="email" value={email} onChange={setEmail} placeholder="contoh@email.com" autoComplete="email" />
