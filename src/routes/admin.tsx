@@ -353,7 +353,8 @@ function AllUsers() {
       .select("id, email, username, role, darjah_akses, created_at")
       .order("created_at", { ascending: false });
     if (error) toast.error("Gagal muat pengguna: " + error.message);
-    setRows((data as Profile[] | null) ?? []);
+    const all = (data as Profile[] | null) ?? [];
+    setRows(all.filter((p) => !p.email?.endsWith("@anak.kalifah.local")));
     setLoading(false);
   }
   useEffect(() => {
@@ -377,18 +378,23 @@ function AllUsers() {
     setRows((prev) => prev.map((r) => (r.id === id ? { ...r, role } : r)));
   }
 
+  const parentRows = useMemo(
+    () => rows.filter((p) => !p.email?.endsWith("@anak.kalifah.local")),
+    [rows],
+  );
+
   const counts = useMemo(() => {
-    const semua = rows.length;
-    const dahBeli = rows.filter((r) => (r.darjah_akses ?? []).length > 0).length;
+    const semua = parentRows.length;
+    const dahBeli = parentRows.filter((r) => (r.darjah_akses ?? []).length > 0).length;
     const belumBeli = semua - dahBeli;
     return { semua, dahBeli, belumBeli };
-  }, [rows]);
+  }, [parentRows]);
 
   const filteredRows = useMemo(() => {
-    if (filter === "dah-beli") return rows.filter((r) => (r.darjah_akses ?? []).length > 0);
-    if (filter === "belum-beli") return rows.filter((r) => (r.darjah_akses ?? []).length === 0);
-    return rows;
-  }, [rows, filter]);
+    if (filter === "dah-beli") return parentRows.filter((r) => (r.darjah_akses ?? []).length > 0);
+    if (filter === "belum-beli") return parentRows.filter((r) => (r.darjah_akses ?? []).length === 0);
+    return parentRows;
+  }, [parentRows, filter]);
 
   if (loading) return <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />;
 
