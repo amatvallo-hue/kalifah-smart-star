@@ -31,7 +31,7 @@ export const Route = createFileRoute("/")({
           "Portal pembelajaran online untuk Darjah 1–6. Pantau prestasi anak dalam Bahasa Melayu, Matematik dan Bahasa Inggeris dengan latihan, kuiz dan sijil automatik.",
       },
       { property: "og:title", content: "Kalifah.my — Pembelajaran Pintar untuk Anak Anda" },
-      { property: "og:description", content: "Lebih 2000 soalan latihan. Pantau progress anak. Sesuai untuk D1–D6." },
+      { property: "og:description", content: "Lebih 6,000+ soalan latihan. Pantau progress anak. Sesuai untuk D1–D6." },
     ],
   }),
   ssr: true,
@@ -84,13 +84,16 @@ function LandingHeader() {
           >
             Log Masuk
           </Link>
-          <Link
-            to="/daftar"
-            className="rounded-full px-5 py-2.5 font-display text-sm font-extrabold text-white shadow-soft"
-            style={{ backgroundColor: HIJAU }}
-          >
-            Daftar
-          </Link>
+          <div className="flex flex-col items-center">
+            <Link
+              to="/daftar"
+              className="rounded-full px-5 py-2.5 font-display text-sm font-extrabold text-white shadow-soft"
+              style={{ backgroundColor: HIJAU }}
+            >
+              Daftar
+            </Link>
+            <p className="hidden text-center text-sm text-muted-foreground sm:block">Daftar percuma — pilih darjah &amp; bayar selepas daftar</p>
+          </div>
         </div>
       </div>
     </header>
@@ -118,16 +121,19 @@ function Hero() {
           <p className="mt-5 max-w-xl text-base text-muted-foreground md:text-lg">
             Portal pembelajaran yang bantu ibu bapa pantau prestasi anak dalam{" "}
             <b>Bahasa Melayu</b>, <b>Matematik</b>, <b>Bahasa Inggeris</b>, <b>Sains</b> dan <b>Pendidikan Islam</b>.
-            Lebih 2000 soalan latihan & sijil automatik.
+            Lebih 6,000+ soalan latihan & sijil automatik.
           </p>
           <div className="mt-7 flex flex-wrap gap-3">
-            <Link
-              to="/daftar"
-              className="inline-flex items-center gap-2 rounded-full px-6 py-3.5 font-display text-base font-extrabold text-white shadow-soft transition hover:-translate-y-0.5"
-              style={{ backgroundColor: HIJAU }}
-            >
-              <Sparkles className="h-5 w-5" /> Cuba Sekarang
-            </Link>
+            <div className="flex flex-col items-center">
+              <Link
+                to="/daftar"
+                className="inline-flex items-center gap-2 rounded-full px-6 py-3.5 font-display text-base font-extrabold text-white shadow-soft transition hover:-translate-y-0.5"
+                style={{ backgroundColor: HIJAU }}
+              >
+                <Sparkles className="h-5 w-5" /> Cuba Sekarang
+              </Link>
+              <p className="mt-1 text-sm text-muted-foreground">Daftar percuma — pilih darjah &amp; bayar selepas daftar</p>
+            </div>
             <a
               href="#harga"
               className="inline-flex items-center gap-2 rounded-full bg-card px-6 py-3.5 font-display text-base font-extrabold shadow-soft"
@@ -313,7 +319,7 @@ function Ciri() {
   const items = [
     { ikon: TrendingUp, t: "Pantau Real-Time", d: "Lihat progress anak secara langsung selepas setiap aktiviti." },
     { ikon: Target, t: "Kenal Subjek Lemah", d: "Sistem auto-kesan subjek yang perlukan perhatian lebih." },
-    { ikon: BookOpen, t: "2000+ Soalan", d: "Bank soalan luas untuk latih tubi, kuiz dan latihan." },
+    { ikon: BookOpen, t: "6,000+ Soalan", d: "Bank soalan luas untuk latih tubi, kuiz dan latihan." },
     { ikon: Award, t: "Sijil Automatik", d: "Anak terima sijil PDF bila tamat subjek atau darjah." },
     { ikon: Users, t: "Dashboard Ibu Bapa", d: "Tambah profil anak & pantau prestasi mingguan/bulanan." },
     { ikon: ShieldCheck, t: "Darjah 1 – 6", d: "Lengkap untuk seluruh peringkat sekolah rendah." },
@@ -459,16 +465,19 @@ function Harga() {
                 <li className="flex gap-2"><Check className="h-4 w-4 shrink-0" style={{ color: HIJAU }} /> Sijil automatik</li>
                 {p.id === "bundle" && <li className="flex gap-2"><Check className="h-4 w-4 shrink-0" style={{ color: HIJAU }} /> Untuk semua anak (D1–D6)</li>}
               </ul>
-              <Link
-                to="/daftar"
-                className="mt-6 block w-full rounded-full px-5 py-3 text-center font-display text-sm font-extrabold shadow-soft transition hover:opacity-90"
-                style={{
-                  backgroundColor: popular ? EMAS : HIJAU,
-                  color: "#fff",
-                }}
-              >
-                Pilih Pakej Ini
-              </Link>
+              <div className="mt-6 flex flex-col items-center">
+                <Link
+                  to="/daftar"
+                  className="block w-full rounded-full px-5 py-3 text-center font-display text-sm font-extrabold shadow-soft transition hover:opacity-90"
+                  style={{
+                    backgroundColor: popular ? EMAS : HIJAU,
+                    color: "#fff",
+                  }}
+                >
+                  Pilih Pakej Ini
+                </Link>
+                <p className="mt-1 text-sm text-muted-foreground">Daftar percuma — pilih darjah &amp; bayar selepas daftar</p>
+              </div>
             </div>
           );
         })}
