@@ -344,6 +344,7 @@ function ManualPayments({ adminEmail }: { adminEmail: string }) {
 function AllUsers() {
   const [rows, setRows] = useState<Profile[]>([]);
   const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState<"semua" | "dah-beli" | "belum-beli">("semua");
 
   async function reload() {
     setLoading(true);
@@ -376,42 +377,80 @@ function AllUsers() {
     setRows((prev) => prev.map((r) => (r.id === id ? { ...r, role } : r)));
   }
 
+  const counts = useMemo(() => {
+    const semua = rows.length;
+    const dahBeli = rows.filter((r) => (r.darjah_akses ?? []).length > 0).length;
+    const belumBeli = semua - dahBeli;
+    return { semua, dahBeli, belumBeli };
+  }, [rows]);
+
+  const filteredRows = useMemo(() => {
+    if (filter === "dah-beli") return rows.filter((r) => (r.darjah_akses ?? []).length > 0);
+    if (filter === "belum-beli") return rows.filter((r) => (r.darjah_akses ?? []).length === 0);
+    return rows;
+  }, [rows, filter]);
+
   if (loading) return <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />;
 
   return (
-    <div className="rounded-md border">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Email</TableHead>
-            <TableHead>Username</TableHead>
-            <TableHead>Role</TableHead>
-            <TableHead>Darjah Akses</TableHead>
-            <TableHead>Tarikh Daftar</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {rows.map((r) => (
-            <TableRow key={r.id}>
-              <TableCell>{r.email || "-"}</TableCell>
-              <TableCell>{r.username || "-"}</TableCell>
-              <TableCell>
-                <Select value={r.role} onValueChange={(v) => changeRole(r.id, v)}>
-                  <SelectTrigger className="w-28">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="user">user</SelectItem>
-                    <SelectItem value="admin">admin</SelectItem>
-                  </SelectContent>
-                </Select>
-              </TableCell>
-              <TableCell>{(r.darjah_akses ?? []).join(", ") || "-"}</TableCell>
-              <TableCell>{new Date(r.created_at).toLocaleDateString("ms-MY")}</TableCell>
+    <div className="space-y-4">
+      <div className="flex flex-wrap gap-2">
+        <Button
+          variant={filter === "semua" ? "default" : "outline"}
+          size="sm"
+          onClick={() => setFilter("semua")}
+        >
+          Semua ({counts.semua})
+        </Button>
+        <Button
+          variant={filter === "dah-beli" ? "default" : "outline"}
+          size="sm"
+          onClick={() => setFilter("dah-beli")}
+        >
+          Dah Beli ({counts.dahBeli})
+        </Button>
+        <Button
+          variant={filter === "belum-beli" ? "default" : "outline"}
+          size="sm"
+          onClick={() => setFilter("belum-beli")}
+        >
+          Belum Beli ({counts.belumBeli})
+        </Button>
+      </div>
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Email</TableHead>
+              <TableHead>Username</TableHead>
+              <TableHead>Role</TableHead>
+              <TableHead>Darjah Akses</TableHead>
+              <TableHead>Tarikh Daftar</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {filteredRows.map((r) => (
+              <TableRow key={r.id}>
+                <TableCell>{r.email || "-"}</TableCell>
+                <TableCell>{r.username || "-"}</TableCell>
+                <TableCell>
+                  <Select value={r.role} onValueChange={(v) => changeRole(r.id, v)}>
+                    <SelectTrigger className="w-28">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="user">user</SelectItem>
+                      <SelectItem value="admin">admin</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </TableCell>
+                <TableCell>{(r.darjah_akses ?? []).join(", ") || "-"}</TableCell>
+                <TableCell>{new Date(r.created_at).toLocaleDateString("ms-MY")}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   );
 }
