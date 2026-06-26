@@ -488,7 +488,9 @@ function PenggunaAnak() {
         return;
       }
       const list = ((profs as Profile[] | null) ?? []).filter(
-        (p) => !p.email?.endsWith("@anak.kalifah.local")
+        (p) =>
+          !p.email?.endsWith("@anak.kalifah.local") &&
+          (p.darjah_akses ?? []).length > 0
       );
       setParents(list);
       const { data: kids, error: ke } = await supabase
