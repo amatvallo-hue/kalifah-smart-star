@@ -84,6 +84,15 @@ function DaftarPage() {
   const [info, setInfo] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
+  // Redirect logged-in users to dashboard
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      if (data.session) {
+        navigate({ to: "/dashboard" });
+      }
+    });
+  }, [navigate]);
+
   // Persist ?ref= so it survives email-confirmation round trips
   useEffect(() => {
     const clean = sanitizeRef(ref);
