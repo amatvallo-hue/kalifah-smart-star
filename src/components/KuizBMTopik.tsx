@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { ArrowLeft, Check, X, Sparkles, BookOpen, Lightbulb } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { simpanProgress } from "@/lib/progress";
+import { downloadSijil } from "@/lib/sijil";
+import { useAuth } from "@/hooks/use-auth";
 
 const HIJAU = "#1B8A5A";
 const EMAS = "#F5A623";
@@ -40,6 +42,11 @@ interface Props {
 
 export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subjekKod = "BM", showBahasaToggle = false }: Props) {
   const darjahNum = Number(darjahId);
+  const { user } = useAuth();
+  const profileName =
+    (user?.user_metadata?.name as string | undefined) ||
+    (user?.user_metadata?.full_name as string | undefined) ||
+    (user?.email ? user.email.split("@")[0].replace(/[._-]+/g, " ") : undefined);
 
   const [topicList, setTopicList] = useState<string[]>([]);
   const [loadingTopics, setLoadingTopics] = useState(true);
@@ -84,6 +91,7 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
     pilihBahasa: en ? "Choose Language" : "Pilih Bahasa",
     pilihBahasaDesc: en ? `Choose a language for the ${subjekTitle} ${darjahLabel} quiz.` : `Pilih bahasa untuk kuiz ${subjekTitle} ${darjahLabel}.`,
     mengikutTopik: en ? "Quiz by Topic" : "Kuiz Mengikut Topik",
+    muatTurunSijil: en ? "Download Certificate" : "Muat Turun Sijil",
   };
 
   // Fetch distinct topics for BM, this darjah
@@ -375,8 +383,30 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
             >
               {tr.kembali}
             </Link>
+            {skor === soalanList.length && soalanList.length > 0 && (
+              <button
+                onClick={() =>
+                  downloadSijil(
+                    {
+                      jenis: "kuiz-cemerlang",
+                      namaMurid: profileName ?? "Murid",
+                      tajuk: `${subjekTitle} — ${topik} — ${darjahLabel}`,
+                      tarikh: new Date().toLocaleDateString(en ? "en-GB" : "ms-MY"),
+                      purata: 100,
+                      kodSijil: `KUIZ-${darjahId}-${subjekId}-${topik.replace(/\s+/g, "-")}-${Date.now()}`,
+                    },
+                    `sijil-kuiz-${subjekId}-${darjahId}-${topik.replace(/\s+/g, "-")}.pdf`,
+                  )
+                }
+                className="rounded-full bg-gradient-gold px-6 py-3 font-display font-extrabold text-gold-foreground shadow-gold transition hover:-translate-y-0.5"
+                style={{ backgroundColor: EMAS, color: "white" }}
+              >
+                🏆 {tr.muatTurunSijil}
+              </button>
+            )}
           </div>
         </div>
+
 
         <div className="mt-6 space-y-4">
           <h3 className="font-display text-xl font-extrabold text-foreground">{tr.semakanJawapan}</h3>
