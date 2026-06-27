@@ -42,6 +42,11 @@ interface Props {
 
 export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subjekKod = "BM", showBahasaToggle = false }: Props) {
   const darjahNum = Number(darjahId);
+  const { user } = useAuth();
+  const profileName =
+    (user?.user_metadata?.name as string | undefined) ||
+    (user?.user_metadata?.full_name as string | undefined) ||
+    (user?.email ? user.email.split("@")[0].replace(/[._-]+/g, " ") : undefined);
 
   const [topicList, setTopicList] = useState<string[]>([]);
   const [loadingTopics, setLoadingTopics] = useState(true);
