@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { ArrowLeft, Check, X, Sparkles, BookOpen, Lightbulb } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { simpanProgress } from "@/lib/progress";
+import { downloadSijil } from "@/lib/sijil";
+import { useAuth } from "@/hooks/use-auth";
 
 const HIJAU = "#1B8A5A";
 const EMAS = "#F5A623";
