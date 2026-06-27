@@ -3,9 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "./use-auth";
 
 function todayKL(): string {
-  const now = new Date();
-  const ms = now.getTime() + (8 * 60 - now.getTimezoneOffset()) * 60 * 1000;
-  return new Date(ms).toISOString().slice(0, 10);
+  return new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Kuala_Lumpur" });
 }
 
 function daysAgoKL(n: number): string {
