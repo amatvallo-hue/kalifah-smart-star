@@ -91,6 +91,7 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
     pilihBahasa: en ? "Choose Language" : "Pilih Bahasa",
     pilihBahasaDesc: en ? `Choose a language for the ${subjekTitle} ${darjahLabel} quiz.` : `Pilih bahasa untuk kuiz ${subjekTitle} ${darjahLabel}.`,
     mengikutTopik: en ? "Quiz by Topic" : "Kuiz Mengikut Topik",
+    muatTurunSijil: en ? "Download Certificate" : "Muat Turun Sijil",
   };
 
   // Fetch distinct topics for BM, this darjah
