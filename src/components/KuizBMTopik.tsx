@@ -383,8 +383,30 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
             >
               {tr.kembali}
             </Link>
+            {skor === soalanList.length && soalanList.length > 0 && (
+              <button
+                onClick={() =>
+                  downloadSijil(
+                    {
+                      jenis: "kuiz-cemerlang",
+                      namaMurid: profileName ?? "Murid",
+                      tajuk: `${subjekTitle} — ${topik} — ${darjahLabel}`,
+                      tarikh: new Date().toLocaleDateString(en ? "en-GB" : "ms-MY"),
+                      purata: 100,
+                      kodSijil: `KUIZ-${darjahId}-${subjekId}-${topik.replace(/\s+/g, "-")}-${Date.now()}`,
+                    },
+                    `sijil-kuiz-${subjekId}-${darjahId}-${topik.replace(/\s+/g, "-")}.pdf`,
+                  )
+                }
+                className="rounded-full bg-gradient-gold px-6 py-3 font-display font-extrabold text-gold-foreground shadow-gold transition hover:-translate-y-0.5"
+                style={{ backgroundColor: EMAS, color: "white" }}
+              >
+                🏆 {tr.muatTurunSijil}
+              </button>
+            )}
           </div>
         </div>
+
 
         <div className="mt-6 space-y-4">
           <h3 className="font-display text-xl font-extrabold text-foreground">{tr.semakanJawapan}</h3>
