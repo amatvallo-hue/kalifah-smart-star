@@ -595,7 +595,7 @@ function AllUsers() {
             {filteredRows.length === 0 && (
               <TableRow>
                 <TableCell
-                  colSpan={isBelumBeli ? 6 : 5}
+                  colSpan={filter === "semua" ? 5 : 6}
                   className="py-6 text-center text-sm text-muted-foreground"
                 >
                   Tiada rekod.
