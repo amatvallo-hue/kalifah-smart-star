@@ -313,6 +313,7 @@ function ParentDashboard() {
       setProgress([]);
       setStats([]);
       setBadges([]);
+      setSijilList([]);
     }
   }
 
@@ -321,6 +322,7 @@ function ParentDashboard() {
       setProgress([]);
       setStats([]);
       setBadges([]);
+      setSijilList([]);
       return;
     }
     let cancelled = false;
