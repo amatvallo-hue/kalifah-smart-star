@@ -23,7 +23,6 @@ function DarjahDashboard() {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
   const { profile, loading: profileLoading } = useProfile();
-  const [, setUpgradeFor] = useState<Darjah | null>(null);
 
   function handleLockedClick(d: Darjah) {
     if (typeof window !== "undefined") {
