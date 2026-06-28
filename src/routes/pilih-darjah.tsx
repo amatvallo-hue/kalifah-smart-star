@@ -23,7 +23,14 @@ function DarjahDashboard() {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
   const { profile, loading: profileLoading } = useProfile();
-  const [upgradeFor, setUpgradeFor] = useState<Darjah | null>(null);
+  const [, setUpgradeFor] = useState<Darjah | null>(null);
+
+  function handleLockedClick(d: Darjah) {
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem("previewDarjah", d.id);
+    }
+    navigate({ to: "/preview/nama" });
+  }
   const mata = usePoints();
 
   useEffect(() => {
