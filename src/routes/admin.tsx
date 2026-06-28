@@ -348,6 +348,7 @@ function AllUsers() {
   const [search, setSearch] = useState("");
   // per-user selected darjah (only meaningful in "belum-beli")
   const [pickedDarjah, setPickedDarjah] = useState<Record<string, number[]>>({});
+  const [pesananMap, setPesananMap] = useState<Record<string, string>>({});
   const [confirmFor, setConfirmFor] = useState<Profile | null>(null);
   const [approving, setApproving] = useState(false);
 
@@ -360,6 +361,20 @@ function AllUsers() {
     if (error) toast.error("Gagal muat pengguna: " + error.message);
     const all = (data as Profile[] | null) ?? [];
     setRows(all.filter((p) => !p.email?.endsWith("@anak.kalifah.local")));
+
+    const { data: paidPesanan } = await supabase
+      .from("pesanan")
+      .select("user_id, paid_at")
+      .eq("status", "paid")
+      .not("paid_at", "is", null);
+    const pmap: Record<string, string> = {};
+    for (const p of (paidPesanan ?? []) as { user_id: string; paid_at: string }[]) {
+      if (!pmap[p.user_id] || new Date(p.paid_at) > new Date(pmap[p.user_id])) {
+        pmap[p.user_id] = p.paid_at;
+      }
+    }
+    setPesananMap(pmap);
+
     setLoading(false);
   }
   useEffect(() => {
@@ -440,12 +455,19 @@ function AllUsers() {
 
   const filteredRows = useMemo(() => {
     let base = parentRows;
-    if (filter === "dah-beli") base = base.filter((r) => (r.darjah_akses ?? []).length > 0);
+    if (filter === "dah-beli") {
+      base = base.filter((r) => (r.darjah_akses ?? []).length > 0);
+      base = [...base].sort((a, b) => {
+        const ta = pesananMap[a.id] ? new Date(pesananMap[a.id]).getTime() : 0;
+        const tb = pesananMap[b.id] ? new Date(pesananMap[b.id]).getTime() : 0;
+        return tb - ta;
+      });
+    }
     if (filter === "belum-beli") base = base.filter((r) => (r.darjah_akses ?? []).length === 0);
     const q = search.trim().toLowerCase();
     if (q) base = base.filter((r) => (r.email ?? "").toLowerCase().includes(q));
     return base;
-  }, [parentRows, filter, search]);
+  }, [parentRows, filter, search, pesananMap]);
 
   if (loading) return <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />;
 
@@ -494,6 +516,7 @@ function AllUsers() {
               <TableHead>Username</TableHead>
               <TableHead>Role</TableHead>
               <TableHead>{isBelumBeli ? "Pilih Darjah Akses" : "Darjah Akses"}</TableHead>
+              {filter === "dah-beli" && <TableHead>Tarikh Beli</TableHead>}
               <TableHead>Tarikh Daftar</TableHead>
               {isBelumBeli && <TableHead className="text-right">Tindakan</TableHead>}
             </TableRow>
@@ -547,6 +570,13 @@ function AllUsers() {
                       (r.darjah_akses ?? []).join(", ") || "-"
                     )}
                   </TableCell>
+                  {filter === "dah-beli" && (
+                    <TableCell>
+                      {pesananMap[r.id]
+                        ? new Date(pesananMap[r.id]).toLocaleDateString("ms-MY")
+                        : "-"}
+                    </TableCell>
+                  )}
                   <TableCell>{new Date(r.created_at).toLocaleDateString("ms-MY")}</TableCell>
                   {isBelumBeli && (
                     <TableCell className="text-right">
@@ -565,7 +595,7 @@ function AllUsers() {
             {filteredRows.length === 0 && (
               <TableRow>
                 <TableCell
-                  colSpan={isBelumBeli ? 6 : 5}
+                  colSpan={filter === "semua" ? 5 : 6}
                   className="py-6 text-center text-sm text-muted-foreground"
                 >
                   Tiada rekod.
