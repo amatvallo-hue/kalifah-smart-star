@@ -31,7 +31,7 @@ export const Route = createFileRoute("/")({
           "Portal pembelajaran online untuk Darjah 1–6. Pantau prestasi anak dalam Bahasa Melayu, Matematik dan Bahasa Inggeris dengan latihan, kuiz dan sijil automatik.",
       },
       { property: "og:title", content: "Kalifah.my — Pembelajaran Pintar untuk Anak Anda" },
-      { property: "og:description", content: "Lebih 6,000+ soalan latihan. Pantau progress anak. Sesuai untuk D1–D6." },
+      { property: "og:description", content: "Lebih 32,000+ soalan latihan. Pantau progress anak. Sesuai untuk D1–D6." },
     ],
   }),
   ssr: true,
@@ -121,7 +121,7 @@ function Hero() {
           <p className="mt-5 max-w-xl text-base text-muted-foreground md:text-lg">
             Portal pembelajaran yang bantu ibu bapa pantau prestasi anak dalam{" "}
             <b>Bahasa Melayu</b>, <b>Matematik</b>, <b>Bahasa Inggeris</b>, <b>Sains</b> dan <b>Pendidikan Islam</b>.
-            Lebih 6,000+ soalan latihan & sijil automatik.
+            Lebih 32,000+ soalan latihan & sijil automatik.
           </p>
           <div className="mt-7 flex flex-wrap gap-3">
             <div className="flex flex-col items-center">
@@ -319,7 +319,7 @@ function Ciri() {
   const items = [
     { ikon: TrendingUp, t: "Pantau Real-Time", d: "Lihat progress anak secara langsung selepas setiap aktiviti." },
     { ikon: Target, t: "Kenal Subjek Lemah", d: "Sistem auto-kesan subjek yang perlukan perhatian lebih." },
-    { ikon: BookOpen, t: "6,000+ Soalan", d: "Bank soalan luas untuk latih tubi, kuiz dan latihan." },
+    { ikon: BookOpen, t: "32,000+ Soalan", d: "Bank soalan luas untuk latih tubi, kuiz dan latihan." },
     { ikon: Award, t: "Sijil Automatik", d: "Anak terima sijil PDF bila tamat subjek atau darjah." },
     { ikon: Users, t: "Dashboard Ibu Bapa", d: "Tambah profil anak & pantau prestasi mingguan/bulanan." },
     { ikon: ShieldCheck, t: "Darjah 1 – 6", d: "Lengkap untuk seluruh peringkat sekolah rendah." },
