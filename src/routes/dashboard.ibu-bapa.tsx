@@ -1030,6 +1030,14 @@ function FormTambahAnak({ onAdded }: { onAdded: () => void }) {
   const [err, setErr] = useState<string | null>(null);
   const [ok, setOk] = useState<string | null>(null);
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const previewNama = window.localStorage.getItem("previewNamaAnak");
+    if (previewNama) setNama(previewNama);
+    const previewDarjah = window.localStorage.getItem("previewDarjah");
+    if (previewDarjah) setDarjah(previewDarjah);
+  }, []);
+
   const unameLive = normalizeUsername(username);
 
   async function submit(e: React.FormEvent) {
