@@ -40,7 +40,7 @@ function LatihanPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <SiteHeader stars={42} />
+      <SiteHeader stars={mata} />
 
       <main className="container mx-auto max-w-3xl px-4 py-8">
         <Link
