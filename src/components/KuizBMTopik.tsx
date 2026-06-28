@@ -4,6 +4,7 @@ import { ArrowLeft, Check, X, Sparkles, BookOpen, Lightbulb } from "lucide-react
 import { supabase } from "@/integrations/supabase/client";
 import { simpanProgress } from "@/lib/progress";
 import { downloadSijil } from "@/lib/sijil";
+import { simpanRekodSijil } from "@/lib/sijil-rekod";
 import { useAuth } from "@/hooks/use-auth";
 
 const HIJAU = "#1B8A5A";
@@ -385,19 +386,32 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
             </Link>
             {skor === soalanList.length && soalanList.length > 0 && (
               <button
-                onClick={() =>
-                  downloadSijil(
+                onClick={async () => {
+                  const nama = profileName ?? "Murid";
+                  // Simpan rekod sijil dulu (idempoten) — guna kod sedia ada kalau ada
+                  const rekod = await simpanRekodSijil({
+                    namaPelajar: nama,
+                    subjek: subjekId,
+                    topik,
+                    darjah: darjahId,
+                    kodSijil: `KUIZ-${darjahId}-${subjekId}-${topik.replace(/\s+/g, "-")}-${Date.now()}`,
+                  });
+                  const kodSijil = rekod?.kod_sijil ?? `KUIZ-${darjahId}-${subjekId}-${Date.now()}`;
+                  const tarikh = rekod?.tarikh
+                    ? new Date(rekod.tarikh + "T00:00:00").toLocaleDateString(en ? "en-GB" : "ms-MY")
+                    : new Date().toLocaleDateString(en ? "en-GB" : "ms-MY");
+                  await downloadSijil(
                     {
                       jenis: "kuiz-cemerlang",
-                      namaMurid: profileName ?? "Murid",
+                      namaMurid: nama,
                       tajuk: `${subjekTitle} — ${topik} — ${darjahLabel}`,
-                      tarikh: new Date().toLocaleDateString(en ? "en-GB" : "ms-MY"),
+                      tarikh,
                       purata: 100,
-                      kodSijil: `KUIZ-${darjahId}-${subjekId}-${topik.replace(/\s+/g, "-")}-${Date.now()}`,
+                      kodSijil,
                     },
                     `sijil-kuiz-${subjekId}-${darjahId}-${topik.replace(/\s+/g, "-")}.pdf`,
-                  )
-                }
+                  );
+                }}
                 className="rounded-full bg-gradient-gold px-6 py-3 font-display font-extrabold text-gold-foreground shadow-gold transition hover:-translate-y-0.5"
                 style={{ backgroundColor: EMAS, color: "white" }}
               >
