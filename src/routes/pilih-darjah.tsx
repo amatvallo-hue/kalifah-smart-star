@@ -122,7 +122,7 @@ function DarjahDashboard() {
                   darjah={d}
                   index={i}
                   hasAccess={hasAccess}
-                  onLockedClick={() => setUpgradeFor(d)}
+                  onLockedClick={() => handleLockedClick(d)}
                 />
               );
             })}
@@ -134,7 +134,6 @@ function DarjahDashboard() {
         </footer>
       </main>
 
-      {upgradeFor && <UpgradeModal darjah={upgradeFor} onClose={() => setUpgradeFor(null)} />}
     </div>
   );
 }
