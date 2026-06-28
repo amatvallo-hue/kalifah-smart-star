@@ -361,6 +361,20 @@ function AllUsers() {
     if (error) toast.error("Gagal muat pengguna: " + error.message);
     const all = (data as Profile[] | null) ?? [];
     setRows(all.filter((p) => !p.email?.endsWith("@anak.kalifah.local")));
+
+    const { data: paidPesanan } = await supabase
+      .from("pesanan")
+      .select("user_id, paid_at")
+      .eq("status", "paid")
+      .not("paid_at", "is", null);
+    const pmap: Record<string, string> = {};
+    for (const p of (paidPesanan ?? []) as { user_id: string; paid_at: string }[]) {
+      if (!pmap[p.user_id] || new Date(p.paid_at) > new Date(pmap[p.user_id])) {
+        pmap[p.user_id] = p.paid_at;
+      }
+    }
+    setPesananMap(pmap);
+
     setLoading(false);
   }
   useEffect(() => {
