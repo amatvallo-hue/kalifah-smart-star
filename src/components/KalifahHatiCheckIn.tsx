@@ -62,20 +62,15 @@ export function KalifahHatiCheckIn({ userId, onDone }: Props) {
         .eq("child_user_id", userId)
         .maybeSingle();
 
-      await fetch(
-        "https://pgpkqbdyxoejwvubluqq.supabase.co/functions/v1/notify-hati-parent",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            child_user_id: userId,
-            emotion,
-            intensity,
-            situation,
-            child_name: cp?.child_name ?? "Anak anda",
-          }),
-        }
-      );
+      await supabase.functions.invoke("notify-hati-parent", {
+        body: {
+          child_user_id: userId,
+          emotion,
+          intensity,
+          situation,
+          child_name: cp?.child_name ?? "Anak anda",
+        },
+      });
     } catch (_) {
       // Silent fail — jangan block UX kalau email gagal
     }
