@@ -455,12 +455,19 @@ function AllUsers() {
 
   const filteredRows = useMemo(() => {
     let base = parentRows;
-    if (filter === "dah-beli") base = base.filter((r) => (r.darjah_akses ?? []).length > 0);
+    if (filter === "dah-beli") {
+      base = base.filter((r) => (r.darjah_akses ?? []).length > 0);
+      base = [...base].sort((a, b) => {
+        const ta = pesananMap[a.id] ? new Date(pesananMap[a.id]).getTime() : 0;
+        const tb = pesananMap[b.id] ? new Date(pesananMap[b.id]).getTime() : 0;
+        return tb - ta;
+      });
+    }
     if (filter === "belum-beli") base = base.filter((r) => (r.darjah_akses ?? []).length === 0);
     const q = search.trim().toLowerCase();
     if (q) base = base.filter((r) => (r.email ?? "").toLowerCase().includes(q));
     return base;
-  }, [parentRows, filter, search]);
+  }, [parentRows, filter, search, pesananMap]);
 
   if (loading) return <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />;
 
