@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
+import { usePoints } from "@/hooks/use-points";
 import { ArrowLeft, PenLine, Send, Sparkles } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { StarReward } from "@/components/StarReward";
@@ -28,6 +29,7 @@ const TUGASAN = [
 ];
 
 function LatihanPage() {
+  const mata = usePoints();
   const [pilih, setPilih] = useState(0);
   const [teks, setTeks] = useState("");
   const [hantar, setHantar] = useState(false);
@@ -38,7 +40,7 @@ function LatihanPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <SiteHeader stars={42} />
+      <SiteHeader stars={mata} />
 
       <main className="container mx-auto max-w-3xl px-4 py-8">
         <Link
