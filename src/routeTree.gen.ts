@@ -18,6 +18,8 @@ import { Route as HargaRouteImport } from './routes/harga'
 import { Route as DaftarRouteImport } from './routes/daftar'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PreviewNamaRouteImport } from './routes/preview.nama'
+import { Route as PreviewDarjahIdRouteImport } from './routes/preview.$darjahId'
 import { Route as DashboardProgressRouteImport } from './routes/dashboard.progress'
 import { Route as DashboardIbuBapaRouteImport } from './routes/dashboard.ibu-bapa'
 import { Route as DarjahDarjahIdRouteImport } from './routes/darjah.$darjahId'
@@ -29,6 +31,7 @@ import { Route as ApiCheckoutRouteImport } from './routes/api.checkout'
 import { Route as AffiliateDashboardRouteImport } from './routes/affiliate.dashboard'
 import { Route as AffiliateDaftarRouteImport } from './routes/affiliate.daftar'
 import { Route as AdminAffiliatesRouteImport } from './routes/admin_.affiliates'
+import { Route as PreviewDarjahIdScoreRouteImport } from './routes/preview.$darjahId_.score'
 import { Route as DarjahDarjahIdSubjekIdRouteImport } from './routes/darjah.$darjahId_.$subjekId'
 import { Route as DarjahDarjahIdSubjekIdNotaRingkasRouteImport } from './routes/darjah.$darjahId_.$subjekId_.nota-ringkas'
 import { Route as DarjahDarjahIdSubjekIdLatihanRouteImport } from './routes/darjah.$darjahId_.$subjekId_.latihan'
@@ -80,6 +83,16 @@ const AdminRoute = AdminRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PreviewNamaRoute = PreviewNamaRouteImport.update({
+  id: '/preview/nama',
+  path: '/preview/nama',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PreviewDarjahIdRoute = PreviewDarjahIdRouteImport.update({
+  id: '/preview/$darjahId',
+  path: '/preview/$darjahId',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardProgressRoute = DashboardProgressRouteImport.update({
@@ -135,6 +148,11 @@ const AffiliateDaftarRoute = AffiliateDaftarRouteImport.update({
 const AdminAffiliatesRoute = AdminAffiliatesRouteImport.update({
   id: '/admin_/affiliates',
   path: '/admin/affiliates',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PreviewDarjahIdScoreRoute = PreviewDarjahIdScoreRouteImport.update({
+  id: '/preview/$darjahId_/score',
+  path: '/preview/$darjahId/score',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DarjahDarjahIdSubjekIdRoute = DarjahDarjahIdSubjekIdRouteImport.update({
@@ -200,7 +218,10 @@ export interface FileRoutesByFullPath {
   '/darjah/$darjahId': typeof DarjahDarjahIdRoute
   '/dashboard/ibu-bapa': typeof DashboardIbuBapaRoute
   '/dashboard/progress': typeof DashboardProgressRoute
+  '/preview/$darjahId': typeof PreviewDarjahIdRoute
+  '/preview/nama': typeof PreviewNamaRoute
   '/darjah/$darjahId/$subjekId': typeof DarjahDarjahIdSubjekIdRoute
+  '/preview/$darjahId/score': typeof PreviewDarjahIdScoreRoute
   '/api/public/toyyibpay/callback': typeof ApiPublicToyyibpayCallbackRoute
   '/darjah/$darjahId/$subjekId/game': typeof DarjahDarjahIdSubjekIdGameRoute
   '/darjah/$darjahId/$subjekId/kuiz': typeof DarjahDarjahIdSubjekIdKuizRoute
@@ -229,7 +250,10 @@ export interface FileRoutesByTo {
   '/darjah/$darjahId': typeof DarjahDarjahIdRoute
   '/dashboard/ibu-bapa': typeof DashboardIbuBapaRoute
   '/dashboard/progress': typeof DashboardProgressRoute
+  '/preview/$darjahId': typeof PreviewDarjahIdRoute
+  '/preview/nama': typeof PreviewNamaRoute
   '/darjah/$darjahId/$subjekId': typeof DarjahDarjahIdSubjekIdRoute
+  '/preview/$darjahId/score': typeof PreviewDarjahIdScoreRoute
   '/api/public/toyyibpay/callback': typeof ApiPublicToyyibpayCallbackRoute
   '/darjah/$darjahId/$subjekId/game': typeof DarjahDarjahIdSubjekIdGameRoute
   '/darjah/$darjahId/$subjekId/kuiz': typeof DarjahDarjahIdSubjekIdKuizRoute
@@ -259,7 +283,10 @@ export interface FileRoutesById {
   '/darjah/$darjahId': typeof DarjahDarjahIdRoute
   '/dashboard/ibu-bapa': typeof DashboardIbuBapaRoute
   '/dashboard/progress': typeof DashboardProgressRoute
+  '/preview/$darjahId': typeof PreviewDarjahIdRoute
+  '/preview/nama': typeof PreviewNamaRoute
   '/darjah/$darjahId_/$subjekId': typeof DarjahDarjahIdSubjekIdRoute
+  '/preview/$darjahId_/score': typeof PreviewDarjahIdScoreRoute
   '/api/public/toyyibpay/callback': typeof ApiPublicToyyibpayCallbackRoute
   '/darjah/$darjahId_/$subjekId_/game': typeof DarjahDarjahIdSubjekIdGameRoute
   '/darjah/$darjahId_/$subjekId_/kuiz': typeof DarjahDarjahIdSubjekIdKuizRoute
@@ -290,7 +317,10 @@ export interface FileRouteTypes {
     | '/darjah/$darjahId'
     | '/dashboard/ibu-bapa'
     | '/dashboard/progress'
+    | '/preview/$darjahId'
+    | '/preview/nama'
     | '/darjah/$darjahId/$subjekId'
+    | '/preview/$darjahId/score'
     | '/api/public/toyyibpay/callback'
     | '/darjah/$darjahId/$subjekId/game'
     | '/darjah/$darjahId/$subjekId/kuiz'
@@ -319,7 +349,10 @@ export interface FileRouteTypes {
     | '/darjah/$darjahId'
     | '/dashboard/ibu-bapa'
     | '/dashboard/progress'
+    | '/preview/$darjahId'
+    | '/preview/nama'
     | '/darjah/$darjahId/$subjekId'
+    | '/preview/$darjahId/score'
     | '/api/public/toyyibpay/callback'
     | '/darjah/$darjahId/$subjekId/game'
     | '/darjah/$darjahId/$subjekId/kuiz'
@@ -348,7 +381,10 @@ export interface FileRouteTypes {
     | '/darjah/$darjahId'
     | '/dashboard/ibu-bapa'
     | '/dashboard/progress'
+    | '/preview/$darjahId'
+    | '/preview/nama'
     | '/darjah/$darjahId_/$subjekId'
+    | '/preview/$darjahId_/score'
     | '/api/public/toyyibpay/callback'
     | '/darjah/$darjahId_/$subjekId_/game'
     | '/darjah/$darjahId_/$subjekId_/kuiz'
@@ -378,7 +414,10 @@ export interface RootRouteChildren {
   DarjahDarjahIdRoute: typeof DarjahDarjahIdRoute
   DashboardIbuBapaRoute: typeof DashboardIbuBapaRoute
   DashboardProgressRoute: typeof DashboardProgressRoute
+  PreviewDarjahIdRoute: typeof PreviewDarjahIdRoute
+  PreviewNamaRoute: typeof PreviewNamaRoute
   DarjahDarjahIdSubjekIdRoute: typeof DarjahDarjahIdSubjekIdRoute
+  PreviewDarjahIdScoreRoute: typeof PreviewDarjahIdScoreRoute
   ApiPublicToyyibpayCallbackRoute: typeof ApiPublicToyyibpayCallbackRoute
   DarjahDarjahIdSubjekIdGameRoute: typeof DarjahDarjahIdSubjekIdGameRoute
   DarjahDarjahIdSubjekIdKuizRoute: typeof DarjahDarjahIdSubjekIdKuizRoute
@@ -450,6 +489,20 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/preview/nama': {
+      id: '/preview/nama'
+      path: '/preview/nama'
+      fullPath: '/preview/nama'
+      preLoaderRoute: typeof PreviewNamaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/preview/$darjahId': {
+      id: '/preview/$darjahId'
+      path: '/preview/$darjahId'
+      fullPath: '/preview/$darjahId'
+      preLoaderRoute: typeof PreviewDarjahIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard/progress': {
@@ -529,6 +582,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAffiliatesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/preview/$darjahId_/score': {
+      id: '/preview/$darjahId_/score'
+      path: '/preview/$darjahId/score'
+      fullPath: '/preview/$darjahId/score'
+      preLoaderRoute: typeof PreviewDarjahIdScoreRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/darjah/$darjahId_/$subjekId': {
       id: '/darjah/$darjahId_/$subjekId'
       path: '/darjah/$darjahId/$subjekId'
@@ -602,7 +662,10 @@ const rootRouteChildren: RootRouteChildren = {
   DarjahDarjahIdRoute: DarjahDarjahIdRoute,
   DashboardIbuBapaRoute: DashboardIbuBapaRoute,
   DashboardProgressRoute: DashboardProgressRoute,
+  PreviewDarjahIdRoute: PreviewDarjahIdRoute,
+  PreviewNamaRoute: PreviewNamaRoute,
   DarjahDarjahIdSubjekIdRoute: DarjahDarjahIdSubjekIdRoute,
+  PreviewDarjahIdScoreRoute: PreviewDarjahIdScoreRoute,
   ApiPublicToyyibpayCallbackRoute: ApiPublicToyyibpayCallbackRoute,
   DarjahDarjahIdSubjekIdGameRoute: DarjahDarjahIdSubjekIdGameRoute,
   DarjahDarjahIdSubjekIdKuizRoute: DarjahDarjahIdSubjekIdKuizRoute,
@@ -614,13 +677,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
