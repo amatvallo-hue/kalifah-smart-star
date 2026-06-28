@@ -345,6 +345,11 @@ function AllUsers() {
   const [rows, setRows] = useState<Profile[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<"semua" | "dah-beli" | "belum-beli">("semua");
+  const [search, setSearch] = useState("");
+  // per-user selected darjah (only meaningful in "belum-beli")
+  const [pickedDarjah, setPickedDarjah] = useState<Record<string, number[]>>({});
+  const [confirmFor, setConfirmFor] = useState<Profile | null>(null);
+  const [approving, setApproving] = useState(false);
 
   async function reload() {
     setLoading(true);
@@ -378,6 +383,49 @@ function AllUsers() {
     setRows((prev) => prev.map((r) => (r.id === id ? { ...r, role } : r)));
   }
 
+  function toggleDarjah(userId: string, d: number) {
+    setPickedDarjah((prev) => {
+      const cur = prev[userId] ?? [];
+      const next = cur.includes(d)
+        ? cur.filter((x) => x !== d)
+        : [...cur, d].sort((a, b) => a - b);
+      return { ...prev, [userId]: next };
+    });
+  }
+  function pilihSemua(userId: string) {
+    setPickedDarjah((prev) => ({ ...prev, [userId]: [1, 2, 3, 4, 5, 6] }));
+  }
+
+  async function approve() {
+    if (!confirmFor) return;
+    const picks = pickedDarjah[confirmFor.id] ?? [];
+    if (picks.length === 0) {
+      toast.error("Sila pilih sekurang-kurangnya satu darjah");
+      return;
+    }
+    setApproving(true);
+    try {
+      const { error } = await supabase.rpc("admin_grant_darjah_akses", {
+        p_user_id: confirmFor.id,
+        p_darjah: picks,
+      });
+      if (error) {
+        toast.error("Gagal approve: " + (error.message || "Ralat tidak diketahui"));
+        return;
+      }
+      toast.success(`Akses diberi: Darjah ${picks.join(", ")}`);
+      setConfirmFor(null);
+      setPickedDarjah((prev) => {
+        const next = { ...prev };
+        delete next[confirmFor.id];
+        return next;
+      });
+      reload();
+    } finally {
+      setApproving(false);
+    }
+  }
+
   const parentRows = useMemo(
     () => rows.filter((p) => !p.email?.endsWith("@anak.kalifah.local")),
     [rows],
@@ -391,12 +439,17 @@ function AllUsers() {
   }, [parentRows]);
 
   const filteredRows = useMemo(() => {
-    if (filter === "dah-beli") return parentRows.filter((r) => (r.darjah_akses ?? []).length > 0);
-    if (filter === "belum-beli") return parentRows.filter((r) => (r.darjah_akses ?? []).length === 0);
-    return parentRows;
-  }, [parentRows, filter]);
+    let base = parentRows;
+    if (filter === "dah-beli") base = base.filter((r) => (r.darjah_akses ?? []).length > 0);
+    if (filter === "belum-beli") base = base.filter((r) => (r.darjah_akses ?? []).length === 0);
+    const q = search.trim().toLowerCase();
+    if (q) base = base.filter((r) => (r.email ?? "").toLowerCase().includes(q));
+    return base;
+  }, [parentRows, filter, search]);
 
   if (loading) return <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />;
+
+  const isBelumBeli = filter === "belum-beli";
 
   return (
     <div className="space-y-4">
@@ -423,6 +476,16 @@ function AllUsers() {
           Belum Beli ({counts.belumBeli})
         </Button>
       </div>
+
+      {isBelumBeli && (
+        <Input
+          placeholder="Cari email…"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="max-w-sm"
+        />
+      )}
+
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -430,36 +493,115 @@ function AllUsers() {
               <TableHead>Email</TableHead>
               <TableHead>Username</TableHead>
               <TableHead>Role</TableHead>
-              <TableHead>Darjah Akses</TableHead>
+              <TableHead>{isBelumBeli ? "Pilih Darjah Akses" : "Darjah Akses"}</TableHead>
               <TableHead>Tarikh Daftar</TableHead>
+              {isBelumBeli && <TableHead className="text-right">Tindakan</TableHead>}
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filteredRows.map((r) => (
-              <TableRow key={r.id}>
-                <TableCell>{r.email || "-"}</TableCell>
-                <TableCell>{r.username || "-"}</TableCell>
-                <TableCell>
-                  <Select value={r.role} onValueChange={(v) => changeRole(r.id, v)}>
-                    <SelectTrigger className="w-28">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="user">user</SelectItem>
-                      <SelectItem value="admin">admin</SelectItem>
-                    </SelectContent>
-                  </Select>
+            {filteredRows.map((r) => {
+              const picks = pickedDarjah[r.id] ?? [];
+              return (
+                <TableRow key={r.id}>
+                  <TableCell>{r.email || "-"}</TableCell>
+                  <TableCell>{r.username || "-"}</TableCell>
+                  <TableCell>
+                    <Select value={r.role} onValueChange={(v) => changeRole(r.id, v)}>
+                      <SelectTrigger className="w-28">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="user">user</SelectItem>
+                        <SelectItem value="admin">admin</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </TableCell>
+                  <TableCell>
+                    {isBelumBeli ? (
+                      <div className="space-y-2">
+                        <div className="flex flex-wrap gap-2">
+                          {[1, 2, 3, 4, 5, 6].map((d) => (
+                            <label
+                              key={d}
+                              className="flex items-center gap-1.5 rounded-md border px-2 py-1 text-xs cursor-pointer"
+                            >
+                              <Checkbox
+                                checked={picks.includes(d)}
+                                onCheckedChange={() => toggleDarjah(r.id, d)}
+                              />
+                              D{d}
+                            </label>
+                          ))}
+                        </div>
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant="outline"
+                          className="h-7 text-xs"
+                          onClick={() => pilihSemua(r.id)}
+                        >
+                          Semua Darjah
+                        </Button>
+                      </div>
+                    ) : (
+                      (r.darjah_akses ?? []).join(", ") || "-"
+                    )}
+                  </TableCell>
+                  <TableCell>{new Date(r.created_at).toLocaleDateString("ms-MY")}</TableCell>
+                  {isBelumBeli && (
+                    <TableCell className="text-right">
+                      <Button
+                        size="sm"
+                        disabled={picks.length === 0}
+                        onClick={() => setConfirmFor(r)}
+                      >
+                        ✅ Approve
+                      </Button>
+                    </TableCell>
+                  )}
+                </TableRow>
+              );
+            })}
+            {filteredRows.length === 0 && (
+              <TableRow>
+                <TableCell
+                  colSpan={isBelumBeli ? 6 : 5}
+                  className="py-6 text-center text-sm text-muted-foreground"
+                >
+                  Tiada rekod.
                 </TableCell>
-                <TableCell>{(r.darjah_akses ?? []).join(", ") || "-"}</TableCell>
-                <TableCell>{new Date(r.created_at).toLocaleDateString("ms-MY")}</TableCell>
               </TableRow>
-            ))}
+            )}
           </TableBody>
         </Table>
       </div>
+
+      <Dialog open={!!confirmFor} onOpenChange={(o) => !o && setConfirmFor(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Sahkan Approve</DialogTitle>
+          </DialogHeader>
+          {confirmFor && (
+            <p className="text-sm">
+              Approve <strong>{confirmFor.email || confirmFor.id.slice(0, 8)}</strong> untuk
+              Darjah{" "}
+              <strong>{(pickedDarjah[confirmFor.id] ?? []).join(", ") || "-"}</strong>?
+            </p>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setConfirmFor(null)} disabled={approving}>
+              Batal
+            </Button>
+            <Button onClick={approve} disabled={approving}>
+              {approving ? "Memproses…" : "Approve"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
+
 
 // ---------------- Tab: Pengguna & Anak ----------------
 interface ChildRow {
