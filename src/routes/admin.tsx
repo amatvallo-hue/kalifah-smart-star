@@ -645,6 +645,7 @@ interface ChildRow {
 function PenggunaAnak() {
   const [parents, setParents] = useState<Profile[]>([]);
   const [childrenByParent, setChildrenByParent] = useState<Record<string, ChildRow[]>>({});
+  const [pesananMap, setPesananMap] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -659,12 +660,32 @@ function PenggunaAnak() {
         setLoading(false);
         return;
       }
-      const list = ((profs as Profile[] | null) ?? []).filter(
+      let list = ((profs as Profile[] | null) ?? []).filter(
         (p) =>
           !p.email?.endsWith("@anak.kalifah.local") &&
           (p.darjah_akses ?? []).length > 0
       );
+
+      const { data: paidPesanan } = await supabase
+        .from("pesanan")
+        .select("user_id, paid_at")
+        .eq("status", "paid")
+        .not("paid_at", "is", null);
+      const pmap: Record<string, string> = {};
+      for (const p of (paidPesanan ?? []) as { user_id: string; paid_at: string }[]) {
+        if (!pmap[p.user_id] || new Date(p.paid_at) > new Date(pmap[p.user_id])) {
+          pmap[p.user_id] = p.paid_at;
+        }
+      }
+      setPesananMap(pmap);
+
+      list = [...list].sort((a, b) => {
+        const ta = pmap[a.id] ? new Date(pmap[a.id]).getTime() : 0;
+        const tb = pmap[b.id] ? new Date(pmap[b.id]).getTime() : 0;
+        return tb - ta;
+      });
       setParents(list);
+
       const { data: kids, error: ke } = await supabase
         .from("child_profiles")
         .select("id, parent_id, nama, darjah, username");
@@ -690,6 +711,7 @@ function PenggunaAnak() {
           <TableRow>
             <TableHead>Parent / Anak</TableHead>
             <TableHead>Darjah</TableHead>
+            <TableHead>Tarikh Beli</TableHead>
             <TableHead>Username</TableHead>
             <TableHead>Tarikh Daftar</TableHead>
           </TableRow>
@@ -702,6 +724,11 @@ function PenggunaAnak() {
                 <TableRow className="bg-muted/40">
                   <TableCell className="font-medium">{p.email || "-"}</TableCell>
                   <TableCell>{(p.darjah_akses ?? []).join(", ") || "-"}</TableCell>
+                  <TableCell>
+                    {pesananMap[p.id]
+                      ? new Date(pesananMap[p.id]).toLocaleDateString("ms-MY")
+                      : "-"}
+                  </TableCell>
                   <TableCell>-</TableCell>
                   <TableCell>{new Date(p.created_at).toLocaleDateString("ms-MY")}</TableCell>
                 </TableRow>
@@ -709,6 +736,7 @@ function PenggunaAnak() {
                   <TableRow key={c.id} className="text-xs text-muted-foreground">
                     <TableCell className="pl-10">↳ {c.nama || "-"}</TableCell>
                     <TableCell>{c.darjah ?? "-"}</TableCell>
+                    <TableCell>-</TableCell>
                     <TableCell>{c.username || "-"}</TableCell>
                     <TableCell>-</TableCell>
                   </TableRow>
