@@ -516,6 +516,7 @@ function AllUsers() {
               <TableHead>Username</TableHead>
               <TableHead>Role</TableHead>
               <TableHead>{isBelumBeli ? "Pilih Darjah Akses" : "Darjah Akses"}</TableHead>
+              {filter === "dah-beli" && <TableHead>Tarikh Beli</TableHead>}
               <TableHead>Tarikh Daftar</TableHead>
               {isBelumBeli && <TableHead className="text-right">Tindakan</TableHead>}
             </TableRow>
