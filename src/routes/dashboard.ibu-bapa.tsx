@@ -62,6 +62,36 @@ interface BadgeRow {
   created_at: string;
 }
 
+interface EmotionRow {
+  id: string;
+  emotion: string;
+  intensity: number;
+  situation: string;
+  created_at: string;
+}
+
+const EMOTION_EMOJI: Record<string, string> = {
+  gembira: "😊", sedih: "😢", marah: "😡", takut: "😨", tenang: "😌",
+};
+
+const EMOTION_LABEL: Record<string, string> = {
+  gembira: "Gembira", sedih: "Sedih", marah: "Marah", takut: "Takut", tenang: "Tenang",
+};
+
+const EMOTION_COLOR: Record<string, string> = {
+  gembira: "#1A7A4A", sedih: "#185FA5", marah: "#A32D2D", takut: "#7A5000", tenang: "#0F6E56",
+};
+
+const EMOTION_BG: Record<string, string> = {
+  gembira: "#E8F5EE", sedih: "#E8F0FB", marah: "#FDECEA", takut: "#FEF6E4", tenang: "#E1F5EE",
+};
+
+const SITUATION_LABEL: Record<string, string> = {
+  kawan: "👫 Kawan", study: "📚 Study", guru: "👩‍🏫 Guru",
+  rumah: "🏠 Rumah", parents: "👨‍👩‍👧 Parents", aktiviti: "🎮 Aktiviti", lain: "💭 Lain-lain",
+};
+
+
 function todayKL(): string {
   return new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Kuala_Lumpur" });
 }
