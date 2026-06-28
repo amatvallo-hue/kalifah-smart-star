@@ -13,6 +13,7 @@ import {
   TrendingUp,
   Users,
   KeyRound,
+  Trophy,
 } from "lucide-react";
 import { toast } from "sonner";
 import { SiteHeader } from "@/components/SiteHeader";
@@ -23,6 +24,8 @@ import { SUBJEK_LIST as ALL_SUBJEK, DARJAH_LIST } from "@/lib/curriculum";
 const SUBJEK_LIST = ALL_SUBJEK.filter((s) => s.id !== "jawi");
 import { padamAnak, senaraikanAnak, type ChildProfile } from "@/lib/parent";
 import { ciptaAkaunAnak, normalizeUsername, CHILD_EMAIL_DOMAIN } from "@/lib/child-auth";
+import { senaraikanSijilAnak, type SijilRow } from "@/lib/sijil-rekod";
+import { downloadSijil } from "@/lib/sijil";
 
 export const Route = createFileRoute("/dashboard/ibu-bapa")({
   head: () => ({ meta: [{ title: "Dashboard Ibu Bapa — Kalifah.my" }] }),
@@ -227,6 +230,7 @@ function ParentDashboard() {
   const [progress, setProgress] = useState<ProgressRow[]>([]);
   const [stats, setStats] = useState<StatsRow[]>([]);
   const [badges, setBadges] = useState<BadgeRow[]>([]);
+  const [sijilList, setSijilList] = useState<SijilRow[]>([]);
   const [fetching, setFetching] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
   const [resetFor, setResetFor] = useState<ChildProfile | null>(null);
@@ -252,7 +256,12 @@ function ParentDashboard() {
 
   async function fetchAnakData(uid: string, showSpinner = true) {
     if (showSpinner) setFetching(true);
-    const [{ data: p, error: pError }, { data: s, error: sError }, { data: b, error: bError }] = await Promise.all([
+    const [
+      { data: p, error: pError },
+      { data: s, error: sError },
+      { data: b, error: bError },
+      sj,
+    ] = await Promise.all([
       supabase
         .from("user_progress")
         .select("id, darjah, subjek, aktiviti, markah, jumlah_soalan, peratus, masa_ambil, created_at, topik")
@@ -269,12 +278,14 @@ function ParentDashboard() {
         .select("id, kod, nama, ikon, created_at")
         .eq("user_id", uid)
         .order("created_at", { ascending: false }),
+      senaraikanSijilAnak(uid),
     ]);
     console.log("[ParentDashboard] fetchAnakData", {
       user_id: uid,
       user_progress_rows: p?.length ?? 0,
       user_stats_rows: s?.length ?? 0,
       user_badges_rows: b?.length ?? 0,
+      sijil_rows: sj.length,
       errors: {
         user_progress: pError,
         user_stats: sError,
@@ -284,6 +295,7 @@ function ParentDashboard() {
     setProgress((p ?? []) as ProgressRow[]);
     setStats((s ?? []) as StatsRow[]);
     setBadges((b ?? []) as BadgeRow[]);
+    setSijilList(sj);
     if (showSpinner) setFetching(false);
   }
 
@@ -301,6 +313,7 @@ function ParentDashboard() {
       setProgress([]);
       setStats([]);
       setBadges([]);
+      setSijilList([]);
     }
   }
 
@@ -309,6 +322,7 @@ function ParentDashboard() {
       setProgress([]);
       setStats([]);
       setBadges([]);
+      setSijilList([]);
       return;
     }
     let cancelled = false;
@@ -692,6 +706,80 @@ function ParentDashboard() {
                         </div>
                       )}
                     </Seksyen>
+
+                    {/* SIJIL CEMERLANG ANAK */}
+                    <Seksyen tajuk="Sijil Cemerlang Anak" ikon={<Trophy className="h-5 w-5" />}>
+                      {sijilList.length === 0 ? (
+                        <div className="rounded-2xl bg-card p-5 text-center shadow-soft">
+                          <p className="text-sm text-muted-foreground">
+                            Belum ada sijil cemerlang. Anak akan dapat sijil bila skor 100% dalam kuiz topik. 🏆
+                          </p>
+                        </div>
+                      ) : (
+                        <div className="overflow-hidden rounded-2xl bg-card shadow-soft">
+                          {sijilList.map((sj, i) => {
+                            const subj = SUBJEK_LIST.find((s) => s.id === sj.subjek);
+                            const subjekTitle = subj?.title ?? sj.subjek;
+                            const darjahLabel = `Darjah ${sj.darjah}`;
+                            const tarikhFmt = new Date(sj.tarikh + "T00:00:00").toLocaleDateString("ms-MY", {
+                              day: "numeric",
+                              month: "long",
+                              year: "numeric",
+                            });
+                            return (
+                              <div
+                                key={sj.id}
+                                className="flex flex-wrap items-center justify-between gap-3 p-4"
+                                style={{ borderTop: i === 0 ? "none" : "1px solid hsl(var(--border))" }}
+                              >
+                                <div className="flex min-w-0 flex-1 items-center gap-3">
+                                  <span
+                                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white"
+                                    style={{ backgroundColor: EMAS }}
+                                  >
+                                    <Trophy className="h-5 w-5" />
+                                  </span>
+                                  <div className="min-w-0 flex-1">
+                                    <p className="truncate font-display text-sm font-extrabold text-foreground">
+                                      {sj.topik}
+                                    </p>
+                                    <p className="text-xs text-muted-foreground">
+                                      {subjekTitle} • {darjahLabel} • {tarikhFmt}
+                                    </p>
+                                  </div>
+                                </div>
+                                <button
+                                  onClick={async () => {
+                                    try {
+                                      await downloadSijil(
+                                        {
+                                          jenis: "kuiz-cemerlang",
+                                          namaMurid: sj.nama_pelajar,
+                                          tajuk: `${subjekTitle} — ${sj.topik} — ${darjahLabel}`,
+                                          tarikh: tarikhFmt,
+                                          purata: 100,
+                                          kodSijil: sj.kod_sijil,
+                                        },
+                                        `sijil-kuiz-${sj.subjek}-${sj.darjah}-${sj.topik.replace(/\s+/g, "-")}.pdf`,
+                                      );
+                                    } catch (e) {
+                                      toast.error("Gagal muat turun sijil");
+                                      console.error(e);
+                                    }
+                                  }}
+                                  className="rounded-full px-4 py-2 font-display text-xs font-extrabold text-white shadow-soft transition hover:-translate-y-0.5"
+                                  style={{ backgroundColor: HIJAU }}
+                                >
+                                  📥 Muat Turun Semula
+                                </button>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </Seksyen>
+
+
 
                     {/* AKTIVITI TERKINI */}
                     <Seksyen tajuk="Aktiviti Terkini" ikon={<BookOpen className="h-5 w-5" />}>
