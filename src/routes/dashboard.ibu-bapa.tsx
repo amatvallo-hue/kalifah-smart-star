@@ -13,6 +13,7 @@ import {
   TrendingUp,
   Users,
   KeyRound,
+  Trophy,
 } from "lucide-react";
 import { toast } from "sonner";
 import { SiteHeader } from "@/components/SiteHeader";
@@ -23,6 +24,8 @@ import { SUBJEK_LIST as ALL_SUBJEK, DARJAH_LIST } from "@/lib/curriculum";
 const SUBJEK_LIST = ALL_SUBJEK.filter((s) => s.id !== "jawi");
 import { padamAnak, senaraikanAnak, type ChildProfile } from "@/lib/parent";
 import { ciptaAkaunAnak, normalizeUsername, CHILD_EMAIL_DOMAIN } from "@/lib/child-auth";
+import { senaraikanSijilAnak, type SijilRow } from "@/lib/sijil-rekod";
+import { downloadSijil } from "@/lib/sijil";
 
 export const Route = createFileRoute("/dashboard/ibu-bapa")({
   head: () => ({ meta: [{ title: "Dashboard Ibu Bapa — Kalifah.my" }] }),
