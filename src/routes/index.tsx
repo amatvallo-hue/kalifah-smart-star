@@ -92,7 +92,7 @@ function LandingHeader() {
             >
               Daftar
             </Link>
-            <p className="hidden text-center text-sm text-muted-foreground sm:block">Cuba dulu, bayar kalau suka</p>
+            <p className="hidden text-center text-sm text-muted-foreground sm:block">Daftar percuma — cuba dulu, bayar kalau suka</p>
           </div>
         </div>
       </div>
@@ -140,7 +140,7 @@ function Hero() {
             </a>
           </div>
           <p className="mt-2 text-sm text-muted-foreground">
-            Cuba dulu, bayar kalau suka
+            Daftar percuma — cuba dulu, bayar kalau suka
           </p>
           <div className="mt-6 flex items-center gap-4 text-xs text-muted-foreground">
             <span className="inline-flex items-center gap-1">
