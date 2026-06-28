@@ -7,6 +7,7 @@ import {
   Calendar,
   Clock,
   Flame,
+  Heart,
   PlusCircle,
   Target,
   Trash2,
@@ -147,6 +148,288 @@ const AKTIVITI_LABEL: Record<string, string> = {
 };
 
 const HARI_PENDEK = ["Ahd", "Isn", "Sel", "Rab", "Kha", "Jum", "Sab"];
+
+function KalifahHatiSeksyen({ emotions }: { emotions: EmotionRow[] }) {
+
+  const HIJAU_HATI = "#1A7A4A";
+
+  const trend7 = useMemo(() => {
+
+    return Array.from({ length: 7 }, (_, i) => {
+
+      const tarikh = daysAgoKL(6 - i);
+
+      const rows = emotions.filter((e) => e.created_at.slice(0, 10) === tarikh);
+
+      const last = rows[rows.length - 1] ?? null;
+
+      const d = new Date(tarikh + "T00:00:00Z");
+
+      return { tarikh, label: HARI_PENDEK[d.getUTCDay()], row: last, isToday: i === 6 };
+
+    });
+
+  }, [emotions]);
+
+  const mingguRows = emotions.filter((e) => {
+
+    const t = e.created_at.slice(0, 10);
+
+    return t >= daysAgoKL(6);
+
+  });
+
+  const emotionCount = mingguRows.reduce<Record<string, number>>((acc, e) => {
+
+    acc[e.emotion] = (acc[e.emotion] ?? 0) + 1;
+
+    return acc;
+
+  }, {});
+
+  const topEmotion = Object.entries(emotionCount).sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
+
+  const situationCount = mingguRows.reduce<Record<string, number>>((acc, e) => {
+
+    acc[e.situation] = (acc[e.situation] ?? 0) + 1;
+
+    return acc;
+
+  }, {});
+
+  const topSituation = Object.entries(situationCount).sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
+
+  const avgIntensity = mingguRows.length > 0
+
+    ? (mingguRows.reduce((a, e) => a + e.intensity, 0) / mingguRows.length).toFixed(1)
+
+    : null;
+
+  const negativeEmotions = ["sedih", "marah", "takut"];
+
+  const recentNegative = emotions
+
+    .filter((e) => negativeEmotions.includes(e.emotion) && e.intensity >= 7)
+
+    .slice(0, 3);
+
+  if (emotions.length === 0) {
+
+    return (
+
+      <div className="rounded-2xl bg-card p-6 text-center shadow-soft">
+
+        <Heart className="mx-auto mb-2 h-8 w-8" style={{ color: HIJAU_HATI }} />
+
+        <p className="font-display text-sm font-extrabold text-foreground">Belum ada check-in</p>
+
+        <p className="mt-1 text-xs text-muted-foreground">
+
+          Anak anda belum mula check-in emosi. Pop-up akan muncul masa login.
+
+        </p>
+
+      </div>
+
+    );
+
+  }
+
+  return (
+
+    <div className="flex flex-col gap-4">
+
+      {recentNegative.length > 0 && (
+
+        <div className="rounded-2xl p-4" style={{ background: "#FDECEA", border: "2px solid #F5C4C4" }}>
+
+          <p className="mb-2 text-xs font-extrabold" style={{ color: "#A32D2D" }}>⚠️ Perlu Perhatian</p>
+
+          {recentNegative.map((e) => (
+
+            <p key={e.id} className="text-xs" style={{ color: "#A32D2D" }}>
+
+              {EMOTION_EMOJI[e.emotion]} {EMOTION_LABEL[e.emotion]} ({e.intensity}/9) — {SITUATION_LABEL[e.situation]} •{" "}
+
+              {new Date(e.created_at).toLocaleDateString("ms-MY", { day: "numeric", month: "short" })}
+
+            </p>
+
+          ))}
+
+          <p className="mt-2 text-xs" style={{ color: "#7A1A1A" }}>
+
+            Luangkan masa berbual dengan anak anda hari ini. 💚
+
+          </p>
+
+        </div>
+
+      )}
+
+      <div className="grid grid-cols-3 gap-3">
+
+        <div className="rounded-2xl bg-card p-3 text-center shadow-soft">
+
+          <p className="text-2xl">{topEmotion ? EMOTION_EMOJI[topEmotion] : "—"}</p>
+
+          <p className="text-[10px] text-muted-foreground mt-1">Paling Kerap</p>
+
+          <p className="text-xs font-extrabold" style={{ color: topEmotion ? EMOTION_COLOR[topEmotion] : "#888" }}>
+
+            {topEmotion ? EMOTION_LABEL[topEmotion] : "—"}
+
+          </p>
+
+        </div>
+
+        <div className="rounded-2xl bg-card p-3 text-center shadow-soft">
+
+          <p className="font-display text-xl font-extrabold" style={{ color: HIJAU_HATI }}>{avgIntensity ?? "—"}</p>
+
+          <p className="text-[10px] text-muted-foreground mt-1">Purata Intensiti</p>
+
+          <p className="text-xs font-extrabold text-muted-foreground">dari 9</p>
+
+        </div>
+
+        <div className="rounded-2xl bg-card p-3 text-center shadow-soft">
+
+          <p className="text-xs font-extrabold" style={{ color: HIJAU_HATI }}>{topSituation ? SITUATION_LABEL[topSituation] : "—"}</p>
+
+          <p className="text-[10px] text-muted-foreground mt-1">Situasi Kerap</p>
+
+          <p className="text-xs font-extrabold" style={{ color: "#888" }}>{mingguRows.length} check-in</p>
+
+        </div>
+
+      </div>
+
+      <div className="rounded-2xl bg-card p-4 shadow-soft">
+
+        <p className="mb-3 text-xs font-extrabold text-muted-foreground">Trend Emosi 7 Hari</p>
+
+        <div className="flex justify-between gap-1">
+
+          {trend7.map((h) => (
+
+            <div key={h.tarikh} className="flex flex-1 flex-col items-center gap-1">
+
+              {h.row ? (
+
+                <span className="text-lg">{EMOTION_EMOJI[h.row.emotion]}</span>
+
+              ) : (
+
+                <span className="text-lg opacity-20">—</span>
+
+              )}
+
+              <div
+
+                className="w-full h-1.5 rounded-full"
+
+                style={{
+
+                  background: h.row ? EMOTION_BG[h.row.emotion] : "hsl(var(--border))",
+
+                  border: h.row ? `1px solid ${EMOTION_COLOR[h.row.emotion]}` : undefined,
+
+                }}
+
+              />
+
+              <span
+
+                className="text-[10px] font-extrabold"
+
+                style={{ color: h.isToday ? HIJAU_HATI : "hsl(var(--muted-foreground))" }}
+
+              >
+
+                {h.label}
+
+              </span>
+
+              {h.row && (
+
+                <span className="text-[9px]" style={{ color: EMOTION_COLOR[h.row.emotion] }}>
+
+                  {h.row.intensity}/9
+
+                </span>
+
+              )}
+
+            </div>
+
+          ))}
+
+        </div>
+
+      </div>
+
+      <div className="overflow-hidden rounded-2xl bg-card shadow-soft">
+
+        <p className="px-4 pt-3 pb-2 text-xs font-extrabold text-muted-foreground">Rekod Terkini</p>
+
+        {emotions.slice(0, 7).map((e, i) => (
+
+          <div
+
+            key={e.id}
+
+            className="flex items-center justify-between gap-3 px-4 py-3"
+
+            style={{ borderTop: i === 0 ? "none" : "1px solid hsl(var(--border))" }}
+
+          >
+
+            <div className="flex items-center gap-3">
+
+              <div
+
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-lg"
+
+                style={{ background: EMOTION_BG[e.emotion] }}
+
+              >
+
+                {EMOTION_EMOJI[e.emotion]}
+
+              </div>
+
+              <div>
+
+                <p className="text-sm font-extrabold" style={{ color: EMOTION_COLOR[e.emotion] }}>
+
+                  {EMOTION_LABEL[e.emotion]} — {e.intensity}/9
+
+                </p>
+
+                <p className="text-xs text-muted-foreground">{SITUATION_LABEL[e.situation]}</p>
+
+              </div>
+
+            </div>
+
+            <p className="text-xs text-muted-foreground shrink-0">
+
+              {new Date(e.created_at).toLocaleDateString("ms-MY", { day: "numeric", month: "short" })}
+
+            </p>
+
+          </div>
+
+        ))}
+
+      </div>
+
+    </div>
+
+  );
+
+}
 
 function TrendChart({ stats }: { stats: StatsRow[] }) {
   const hari = useMemo(() => {
