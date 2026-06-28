@@ -54,6 +54,31 @@ export function KalifahHatiCheckIn({ userId, onDone }: Props) {
       intensity,
       situation,
     });
+    // Notify parent if triggered
+    try {
+      const { data: cp } = await supabase
+        .from("child_profiles")
+        .select("child_name")
+        .eq("child_user_id", userId)
+        .maybeSingle();
+
+      await fetch(
+        "https://pgpkqbdyxoejwvubluqq.supabase.co/functions/v1/notify-hati-parent",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            child_user_id: userId,
+            emotion,
+            intensity,
+            situation,
+            child_name: cp?.child_name ?? "Anak anda",
+          }),
+        }
+      );
+    } catch (_) {
+      // Silent fail — jangan block UX kalau email gagal
+    }
     setSaving(false);
     onDone();
   }
