@@ -11,6 +11,10 @@ import { useEffect, useState, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { useAuth } from "@/hooks/use-auth";
+import { CHILD_EMAIL_DOMAIN } from "@/lib/child-auth";
+import { supabase } from "@/integrations/supabase/client";
+import { KalifahHatiCheckIn } from "@/components/KalifahHatiCheckIn";
 
 function NotFoundComponent() {
   return (
