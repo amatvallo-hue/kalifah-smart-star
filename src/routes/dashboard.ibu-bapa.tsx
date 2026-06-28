@@ -230,6 +230,7 @@ function ParentDashboard() {
   const [progress, setProgress] = useState<ProgressRow[]>([]);
   const [stats, setStats] = useState<StatsRow[]>([]);
   const [badges, setBadges] = useState<BadgeRow[]>([]);
+  const [sijilList, setSijilList] = useState<SijilRow[]>([]);
   const [fetching, setFetching] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
   const [resetFor, setResetFor] = useState<ChildProfile | null>(null);
