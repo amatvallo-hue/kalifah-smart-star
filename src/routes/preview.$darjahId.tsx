@@ -55,11 +55,13 @@ function PreviewKuizPage() {
     }
     setNama(n);
 
+    const subjek = ["1", "5", "6"].includes(darjahId) ? "Bahasa Inggeris" : "BM";
+
     (async () => {
       const { data, error } = await supabase
         .from("kuiz_soalan")
         .select("id, soalan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan, penjelasan")
-        .eq("subjek", "BM")
+        .eq("subjek", subjek)
         .eq("darjah", Number(darjahId))
         .not("penjelasan", "is", null);
       if (error) {
