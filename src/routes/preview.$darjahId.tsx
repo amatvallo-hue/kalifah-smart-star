@@ -131,7 +131,7 @@ function PreviewKuizPage() {
             <ArrowLeft className="h-4 w-4" /> Kembali
           </Link>
           <span className="rounded-full bg-card px-3 py-1 font-display text-xs font-extrabold shadow-soft" style={{ color: HIJAU }}>
-            {darjah?.label ?? `Darjah ${darjahId}`} • Bahasa Melayu
+            {darjah?.label ?? `Darjah ${darjahId}`} • {["1","5","6"].includes(darjahId) ? "Bahasa Inggeris" : "Bahasa Melayu"}
           </span>
         </div>
 
