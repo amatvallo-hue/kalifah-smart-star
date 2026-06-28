@@ -80,7 +80,7 @@ export function KalifahHatiCheckIn({ userId, onDone }: Props) {
           {step === 1 && (
             <>
               <p className="mb-4 text-center text-base font-semibold text-gray-700">
-                Macam mana perasaan kau hari ni?
+                Macam mana perasaan awak hari ni?
               </p>
 
               <div className="mb-4 grid grid-cols-5 gap-2">
