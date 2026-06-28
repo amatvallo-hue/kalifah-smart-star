@@ -334,13 +334,13 @@ function KuizPage() {
     (darjahId === "2" || darjahId === "3" || darjahId === "4" || darjahId === "5" || darjahId === "6");
   const isSainsTopik =
     subjekId === "sains" &&
-    (darjahId === "2" || darjahId === "3" || darjahId === "4" || darjahId === "5" || darjahId === "6");
+    (darjahId === "1" || darjahId === "2" || darjahId === "3" || darjahId === "4" || darjahId === "5" || darjahId === "6");
   const isPITopik =
     subjekId === "pendidikan-islam" &&
     ["1","2","3","4","5","6"].includes(darjahId);
   const isBITopik =
     subjekId === "bahasa-inggeris" &&
-    (darjahId === "1" || darjahId === "2" || darjahId === "4" || darjahId === "5" || darjahId === "6");
+    (darjahId === "1" || darjahId === "2" || darjahId === "3" || darjahId === "4" || darjahId === "5" || darjahId === "6");
   if (isBMTopik || isMatematikTopik || isSainsTopik || isPITopik || isBITopik) {
     return (
       <div className="min-h-screen bg-background">
