@@ -139,6 +139,40 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
+function KalifahHatiGate() {
+  const { user } = useAuth();
+  const [showCheckIn, setShowCheckIn] = useState(false);
+  const isChild = !!user?.email?.includes(CHILD_EMAIL_DOMAIN);
+
+  useEffect(() => {
+    if (!user || !isChild) return;
+    const todayKey = `hati_checkin_${user.id}_${new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Kuala_Lumpur" })}`;
+    if (localStorage.getItem(todayKey)) return;
+    supabase
+      .from("emotion_checkins")
+      .select("id")
+      .eq("user_id", user.id)
+      .gte("created_at", new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Kuala_Lumpur" }) + "T00:00:00+08:00")
+      .maybeSingle()
+      .then(({ data }) => {
+        if (!data) setShowCheckIn(true);
+      });
+  }, [user, isChild]);
+
+  if (!showCheckIn || !user) return null;
+
+  return (
+    <KalifahHatiCheckIn
+      userId={user.id}
+      onDone={() => {
+        const todayKey = `hati_checkin_${user.id}_${new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Kuala_Lumpur" })}`;
+        localStorage.setItem(todayKey, "1");
+        setShowCheckIn(false);
+      }}
+    />
+  );
+}
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
