@@ -203,7 +203,10 @@ export async function simpanProgress(input: SimpanProgressInput): Promise<void> 
       );
     }
 
-    // ── 3) Lencana
+    // ── 3) Catat hari aktif (streak hanya kira bila ada aktiviti)
+    await catatHariAktif();
+
+    // ── 4) Lencana
     await semakDanBeriLencana(userId, input);
   } catch (e) {
     console.warn("simpanProgress gagal:", e);

@@ -6,7 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { useProfile } from "@/hooks/use-profile";
 import { subjekListUntukRole } from "@/lib/curriculum";
-import { catatHariAktif } from "@/lib/progress";
+
 import { sertaiDenganKod } from "@/lib/parent";
 import { CHILD_EMAIL_DOMAIN } from "@/lib/child-auth";
 import { downloadSijil, shareSijil, type SijilInput } from "@/lib/sijil";
@@ -123,8 +123,6 @@ function ProgressDashboard() {
     let cancelled = false;
     (async () => {
       setFetching(true);
-      // Catat hari aktif supaya streak terus jalan walau hanya buka dashboard
-      await catatHariAktif();
       const [{ data: p }, { data: s }, { data: b }] = await Promise.all([
         supabase
           .from("user_progress")
