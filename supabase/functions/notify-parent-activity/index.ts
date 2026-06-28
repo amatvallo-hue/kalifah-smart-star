@@ -83,15 +83,20 @@ Deno.serve(async (req) => {
 
     const peratus =
       typeof r.peratus === "string" ? Number(r.peratus) : r.peratus;
+    const tarikh = new Date().toLocaleString("ms-MY", {
+      timeZone: "Asia/Kuala_Lumpur",
+    });
     const subject = "Anak anda baru selesai aktiviti di Kalifah.my! 🎉";
     const text =
       `${child.nama} baru selesai ${r.aktiviti} dalam ${r.subjek} Darjah ${child.darjah} ` +
-      `dengan skor ${r.markah}/${r.jumlah_soalan} (${Math.round(peratus)}%)`;
+      `dengan skor ${r.markah}/${r.jumlah_soalan} (${Math.round(peratus)}%) pada ${tarikh}`;
     const html = `
       <div style="font-family:system-ui,-apple-system,Segoe UI,sans-serif;line-height:1.6;color:#1f2937">
         <h2 style="color:#16a34a;margin:0 0 12px">Tahniah! 🎉</h2>
-        <p>${text}</p>
-        <p style="margin-top:24px">
+        <p>${child.nama} baru selesai <strong>${r.aktiviti}</strong> dalam <strong>${r.subjek}</strong> Darjah ${child.darjah} ` +
+      `dengan skor <strong>${r.markah}/${r.jumlah_soalan}</strong> (${Math.round(peratus)}%).</p>` +
+      `<p style="color:#6b7280;font-size:14px;margin-top:8px">📅 ${tarikh}</p>` +
+      `<p style="margin-top:24px">
           <a href="https://kalifah.my/dashboard/ibu-bapa"
              style="background:#16a34a;color:#fff;padding:10px 18px;border-radius:8px;text-decoration:none">
              Lihat Dashboard Ibu Bapa
