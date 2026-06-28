@@ -7,10 +7,14 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { useAuth } from "@/hooks/use-auth";
+import { CHILD_EMAIL_DOMAIN } from "@/lib/child-auth";
+import { supabase } from "@/integrations/supabase/client";
+import { KalifahHatiCheckIn } from "@/components/KalifahHatiCheckIn";
 
 function NotFoundComponent() {
   return (
@@ -135,6 +139,40 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
+function KalifahHatiGate() {
+  const { user } = useAuth();
+  const [showCheckIn, setShowCheckIn] = useState(false);
+  const isChild = !!user?.email?.includes(CHILD_EMAIL_DOMAIN);
+
+  useEffect(() => {
+    if (!user || !isChild) return;
+    const todayKey = `hati_checkin_${user.id}_${new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Kuala_Lumpur" })}`;
+    if (localStorage.getItem(todayKey)) return;
+    supabase
+      .from("emotion_checkins")
+      .select("id")
+      .eq("user_id", user.id)
+      .gte("created_at", new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Kuala_Lumpur" }) + "T00:00:00+08:00")
+      .maybeSingle()
+      .then(({ data }) => {
+        if (!data) setShowCheckIn(true);
+      });
+  }, [user, isChild]);
+
+  if (!showCheckIn || !user) return null;
+
+  return (
+    <KalifahHatiCheckIn
+      userId={user.id}
+      onDone={() => {
+        const todayKey = `hati_checkin_${user.id}_${new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Kuala_Lumpur" })}`;
+        localStorage.setItem(todayKey, "1");
+        setShowCheckIn(false);
+      }}
+    />
+  );
+}
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
@@ -165,6 +203,7 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Outlet />
+      <KalifahHatiGate />
     </QueryClientProvider>
   );
 }
