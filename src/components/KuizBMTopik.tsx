@@ -140,6 +140,9 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
         masaAmbil: Math.round((Date.now() - mulaMasa) / 1000),
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selesai]);
+
   // Auto-simpan rekod sijil bila 100% tanpa tunggu butang download
   useEffect(() => {
     if (selesai && skor === soalanList.length && soalanList.length > 0 && topik) {
