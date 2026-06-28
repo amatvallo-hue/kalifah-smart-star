@@ -140,8 +140,21 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
         masaAmbil: Math.round((Date.now() - mulaMasa) / 1000),
       });
     }
+  // Auto-simpan rekod sijil bila 100% tanpa tunggu butang download
+  useEffect(() => {
+    if (selesai && skor === soalanList.length && soalanList.length > 0 && topik) {
+      const nama = profileName ?? "Murid";
+      simpanRekodSijil({
+        namaPelajar: nama,
+        subjek: subjekId,
+        topik,
+        darjah: darjahId,
+        kodSijil: `KUIZ-${darjahId}-${subjekId}-${topik.replace(/\s+/g, "-")}-${Date.now()}`,
+      });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selesai]);
+
 
   async function mulaKuiz(pilihTopik: string) {
     setFetching(true);
