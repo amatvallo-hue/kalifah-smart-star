@@ -544,6 +544,7 @@ function ParentDashboard() {
   const [stats, setStats] = useState<StatsRow[]>([]);
   const [badges, setBadges] = useState<BadgeRow[]>([]);
   const [sijilList, setSijilList] = useState<SijilRow[]>([]);
+  const [emotions, setEmotions] = useState<EmotionRow[]>([]);
   const [fetching, setFetching] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
   const [resetFor, setResetFor] = useState<ChildProfile | null>(null);
@@ -574,6 +575,7 @@ function ParentDashboard() {
       { data: s, error: sError },
       { data: b, error: bError },
       sj,
+      { data: em },
     ] = await Promise.all([
       supabase
         .from("user_progress")
@@ -592,6 +594,12 @@ function ParentDashboard() {
         .eq("user_id", uid)
         .order("created_at", { ascending: false }),
       senaraikanSijilAnak(uid),
+      supabase
+        .from("emotion_checkins")
+        .select("id, emotion, intensity, situation, created_at")
+        .eq("user_id", uid)
+        .order("created_at", { ascending: false })
+        .limit(30),
     ]);
     console.log("[ParentDashboard] fetchAnakData", {
       user_id: uid,
@@ -609,6 +617,7 @@ function ParentDashboard() {
     setStats((s ?? []) as StatsRow[]);
     setBadges((b ?? []) as BadgeRow[]);
     setSijilList(sj);
+    setEmotions((em ?? []) as EmotionRow[]);
     if (showSpinner) setFetching(false);
   }
 
@@ -1018,6 +1027,11 @@ function ParentDashboard() {
                           ))}
                         </div>
                       )}
+                    </Seksyen>
+
+                    {/* KALIFAH HATI */}
+                    <Seksyen tajuk="Kalifah Hati 💚" ikon={<Heart className="h-5 w-5" />}>
+                      <KalifahHatiSeksyen emotions={emotions} />
                     </Seksyen>
 
                     {/* SIJIL CEMERLANG ANAK */}
