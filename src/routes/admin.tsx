@@ -570,6 +570,13 @@ function AllUsers() {
                       (r.darjah_akses ?? []).join(", ") || "-"
                     )}
                   </TableCell>
+                  {filter === "dah-beli" && (
+                    <TableCell>
+                      {pesananMap[r.id]
+                        ? new Date(pesananMap[r.id]).toLocaleDateString("ms-MY")
+                        : "-"}
+                    </TableCell>
+                  )}
                   <TableCell>{new Date(r.created_at).toLocaleDateString("ms-MY")}</TableCell>
                   {isBelumBeli && (
                     <TableCell className="text-right">
