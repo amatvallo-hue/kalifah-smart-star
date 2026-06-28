@@ -123,25 +123,25 @@ function Hero() {
             <b>Bahasa Melayu</b>, <b>Matematik</b>, <b>Bahasa Inggeris</b>, <b>Sains</b> dan <b>Pendidikan Islam</b>.
             Lebih 32,000+ soalan latihan & sijil automatik.
           </p>
-          <div className="mt-7 flex flex-wrap gap-3">
-            <div className="flex flex-col items-center">
-              <Link
-                to="/daftar"
-                className="inline-flex items-center gap-2 rounded-full px-6 py-3.5 font-display text-base font-extrabold text-white shadow-soft transition hover:-translate-y-0.5"
-                style={{ backgroundColor: HIJAU }}
-              >
-                <Sparkles className="h-5 w-5" /> Cuba Sekarang
-              </Link>
-              <p className="mt-1 text-sm text-muted-foreground">Daftar percuma — pilih darjah &amp; bayar selepas daftar</p>
-            </div>
+          <div className="mt-7 flex w-full flex-col gap-3 sm:flex-row">
+            <Link
+              to="/daftar"
+              className="flex w-full items-center justify-center gap-2 rounded-full px-6 py-3.5 font-display text-base font-extrabold text-white shadow-soft transition hover:-translate-y-0.5 sm:flex-1"
+              style={{ backgroundColor: HIJAU }}
+            >
+              <Sparkles className="h-5 w-5" /> Cuba Sekarang
+            </Link>
             <a
               href="#harga"
-              className="inline-flex items-center gap-2 rounded-full bg-card px-6 py-3.5 font-display text-base font-extrabold shadow-soft"
+              className="flex w-full items-center justify-center gap-2 rounded-full bg-card px-6 py-3.5 font-display text-base font-extrabold shadow-soft sm:flex-1"
               style={{ color: HIJAU, border: `2px solid ${HIJAU}33` }}
             >
               <Star className="h-5 w-5" /> Lihat Harga
             </a>
           </div>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Daftar percuma — pilih darjah &amp; bayar selepas daftar
+          </p>
           <div className="mt-6 flex items-center gap-4 text-xs text-muted-foreground">
             <span className="inline-flex items-center gap-1">
               <ShieldCheck className="h-4 w-4" style={{ color: HIJAU }} /> Selamat & sesuai untuk kanak-kanak
