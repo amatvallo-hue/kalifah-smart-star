@@ -348,6 +348,7 @@ function AllUsers() {
   const [search, setSearch] = useState("");
   // per-user selected darjah (only meaningful in "belum-beli")
   const [pickedDarjah, setPickedDarjah] = useState<Record<string, number[]>>({});
+  const [pesananMap, setPesananMap] = useState<Record<string, string>>({});
   const [confirmFor, setConfirmFor] = useState<Profile | null>(null);
   const [approving, setApproving] = useState(false);
 
