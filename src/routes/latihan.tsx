@@ -29,6 +29,7 @@ const TUGASAN = [
 ];
 
 function LatihanPage() {
+  const mata = usePoints();
   const [pilih, setPilih] = useState(0);
   const [teks, setTeks] = useState("");
   const [hantar, setHantar] = useState(false);
