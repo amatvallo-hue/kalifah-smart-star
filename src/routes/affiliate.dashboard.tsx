@@ -179,6 +179,23 @@ function AffiliateDashboardPage() {
               📱 Caption B
             </a>
           </div>
+          <div className="mt-4 flex flex-col items-center gap-2">
+            <div className="text-xs font-bold uppercase text-muted-foreground">
+              QR Code Pautan Anda
+            </div>
+            <img
+              src={`https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(refLink)}`}
+              alt="QR Code Affiliate"
+              className="rounded-lg bg-white p-2"
+            />
+            <a
+              href={`https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(refLink)}`}
+              download="qr-affiliate.png"
+              className="inline-flex items-center justify-center gap-1 rounded-md border border-input bg-background px-3 py-1.5 text-xs font-bold text-foreground hover:bg-muted"
+            >
+              Muat Turun QR
+            </a>
+          </div>
           <div className="mt-2 text-xs text-muted-foreground">
             Kod: <span className="font-bold text-primary">{aff.custom_ref_code ?? aff.ref_code}</span>
           </div>
