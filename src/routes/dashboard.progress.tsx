@@ -335,7 +335,10 @@ function ProgressDashboard() {
           <>
             {/* Lencana */}
             <section className="mt-8">
-              <h2 className="font-display text-xl font-extrabold text-foreground">Lencana Saya</h2>
+              <div className="flex items-center gap-2">
+                <h2 className="font-display text-xl font-extrabold text-foreground">Lencana Saya</h2>
+                <BadgeInfoButton />
+              </div>
               {badges.length === 0 ? (
                 <div className="mt-3 rounded-2xl bg-card p-5 text-center shadow-soft">
                   <p className="text-sm text-muted-foreground">
