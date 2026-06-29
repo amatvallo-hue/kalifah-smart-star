@@ -3,6 +3,7 @@ import { RefreshCw, Sparkles, Undo2 } from "lucide-react";
 import { StarReward } from "@/components/StarReward";
 import { getSusunAyat, type SAItem } from "@/lib/games-bank";
 import { simpanProgress } from "@/lib/progress";
+import { useAward } from "@/hooks/use-award";
 
 const HIJAU = "#1B8A5A";
 const EMAS = "#F5A623";
@@ -19,6 +20,7 @@ function shuffle<T>(a: T[]): T[] {
 interface Word { id: number; teks: string }
 
 export function SusunAyatGame({ subjekId, darjah }: { subjekId: string; darjah?: string }) {
+  const award = useAward();
   const [useSet2, setUseSet2] = useState(() => Math.random() > 0.5);
   const [round, setRound] = useState(0);
   const ayatList = useMemo<SAItem[]>(() => getSusunAyat(subjekId, useSet2).slice(0, 5), [subjekId, useSet2, round]);
@@ -67,7 +69,10 @@ export function SusunAyatGame({ subjekId, darjah }: { subjekId: string; darjah?:
     const ayat = pilih.map((w) => w.teks).join(" ");
     const target = ayatList[idx].ayat;
     const benar = ayat.toLowerCase() === target.toLowerCase();
-    if (benar) setMarkah((m) => m + 1);
+    if (benar) {
+      setMarkah((m) => m + 1);
+      award({ sumber: "game-susun", darjah: darjah || "0", subjek: subjekId });
+    }
     setFlash(benar ? "ok" : "no");
     setTimeout(() => {
       setFlash(null);
