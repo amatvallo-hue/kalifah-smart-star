@@ -16,6 +16,7 @@ import {
   Users,
   KeyRound,
   Trophy,
+  User,
 } from "lucide-react";
 import { toast } from "sonner";
 import { SiteHeader } from "@/components/SiteHeader";
