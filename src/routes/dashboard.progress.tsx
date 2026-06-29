@@ -730,3 +730,70 @@ function KadSijil({
     </div>
   );
 }
+
+function BadgeInfoButton() {
+  const [open, setOpen] = useState(false);
+  const items = [
+    { ikon: "🌟", nama: "Cemerlang", desc: "Dapat skor 100% dalam mana-mana kuiz topik." },
+    { ikon: "⭐", nama: "Streak Bintang", desc: "Belajar 7 hari berturut-turut." },
+    { ikon: "🥇", nama: "Streak Emas", desc: "Belajar 30 hari berturut-turut." },
+    {
+      ikon: "🎖️",
+      nama: "Pakar Subjek",
+      desc: "Untuk setiap subjek: purata kuiz ≥ 70%, latih tubi sekurang-kurangnya 100 soalan dengan purata ≥ 70%, dan semua nota topik dah dibaca (tick).",
+    },
+  ];
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        aria-label="Cara dapat lencana"
+        className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-card text-muted-foreground shadow-soft hover:text-foreground"
+        style={{ border: `1.5px solid ${EMAS}55` }}
+      >
+        <HelpCircle className="h-4 w-4" />
+      </button>
+      {open && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+          onClick={() => setOpen(false)}
+        >
+          <div
+            className="w-full max-w-md rounded-3xl bg-card p-6 shadow-card"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between">
+              <h3 className="font-display text-lg font-extrabold text-foreground">Cara Dapat Lencana</h3>
+              <button
+                onClick={() => setOpen(false)}
+                className="text-2xl leading-none text-muted-foreground hover:text-foreground"
+                aria-label="Tutup"
+              >
+                ×
+              </button>
+            </div>
+            <ul className="mt-4 space-y-3">
+              {items.map((it) => (
+                <li key={it.nama} className="flex gap-3 rounded-2xl p-3" style={{ backgroundColor: `${EMAS}14` }}>
+                  <span className="text-2xl leading-none">{it.ikon}</span>
+                  <div>
+                    <p className="font-display text-sm font-extrabold text-foreground">{it.nama}</p>
+                    <p className="text-xs text-muted-foreground">{it.desc}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+            <button
+              onClick={() => setOpen(false)}
+              className="mt-5 w-full rounded-full px-4 py-2 font-display text-sm font-extrabold text-white shadow-soft"
+              style={{ backgroundColor: HIJAU }}
+            >
+              Faham
+            </button>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
