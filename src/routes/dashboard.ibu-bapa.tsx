@@ -1597,7 +1597,7 @@ function MaklumatSaya() {
         toast.error("Tiada rekod dikemaskini — semak RLS/profil.");
         return;
       }
-      toast.success("Maklumat disimpan");
+      toast.success("Maklumat berjaya disimpan! ✓", { duration: 4000 });
     } catch (e) {
       console.error("[MaklumatSaya] exception", e);
       toast.error(`Ralat: ${e instanceof Error ? e.message : String(e)}`);
