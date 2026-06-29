@@ -88,10 +88,27 @@ function DaftarPage() {
   // Persist ?ref= so it survives email-confirmation round trips
   useEffect(() => {
     const clean = sanitizeRef(ref);
-    if (clean && typeof window !== "undefined") {
-      window.localStorage.setItem("kalifah_ref", clean);
-    }
+    if (!clean || typeof window === "undefined") return;
+    window.localStorage.setItem("kalifah_ref", clean);
+
+    const sessionKey = `klik_tracked_${clean}`;
+    if (sessionStorage.getItem(sessionKey)) return;
+    sessionStorage.setItem(sessionKey, "1");
+
+    (async () => {
+      const { data: aff } = await supabase
+        .from("affiliates")
+        .select("id")
+        .or(`ref_code.ilike.${clean},custom_ref_code.ilike.${clean}`)
+        .maybeSingle();
+      if (aff) {
+        await supabase.rpc("increment_affiliate_klik", {
+          affiliate_id: (aff as { id: string }).id,
+        });
+      }
+    })();
   }, [ref]);
+
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
