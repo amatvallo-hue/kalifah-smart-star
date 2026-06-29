@@ -1549,6 +1549,10 @@ function MaklumatSaya() {
   const [negeri, setNegeri] = useState("");
   const [loaded, setLoaded] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [draftNama, setDraftNama] = useState("");
+  const [draftTelefon, setDraftTelefon] = useState("");
+  const [draftNegeri, setDraftNegeri] = useState("");
 
   useEffect(() => {
     if (!user || loaded) return;
@@ -1570,26 +1574,32 @@ function MaklumatSaya() {
   if (profileLoading || !profile) return null;
   if (!profile.darjah_akses || profile.darjah_akses.length === 0) return null;
 
+  const belumDiisi = !nama.trim() && !telefon.trim() && !negeri.trim();
+
+  function masukEditMode() {
+    setDraftNama(nama);
+    setDraftTelefon(telefon);
+    setDraftNegeri(negeri);
+    setIsEditing(true);
+  }
+
   async function handleSimpan() {
-    console.log("[MaklumatSaya] handleSimpan dipanggil", { user: user?.id });
     if (!user) {
       toast.error("Sila log masuk semula");
       return;
     }
-    if (!nama.trim()) return toast.error("Sila isi nama penuh");
-    const tel = telefon.replace(/\D/g, "");
+    if (!draftNama.trim()) return toast.error("Sila isi nama penuh");
+    const tel = draftTelefon.replace(/\D/g, "");
     if (tel.length < 10 || tel.length > 11) return toast.error("No telefon mesti 10-11 digit");
-    if (!negeri) return toast.error("Sila pilih negeri");
+    if (!draftNegeri) return toast.error("Sila pilih negeri");
     setSaving(true);
     try {
-      const payload = { nama_penuh: nama.trim(), no_telefon: tel, negeri };
-      console.log("[MaklumatSaya] update payload", payload);
-      const { data, error, status } = await supabase
+      const payload = { nama_penuh: draftNama.trim(), no_telefon: tel, negeri: draftNegeri };
+      const { data, error } = await supabase
         .from("profiles")
         .update(payload)
         .eq("id", user.id)
         .select("id, nama_penuh, no_telefon, negeri");
-      console.log("[MaklumatSaya] update response", { data, error, status });
       if (error) {
         toast.error(`Gagal simpan: ${error.message}`);
         return;
@@ -1598,6 +1608,10 @@ function MaklumatSaya() {
         toast.error("Tiada rekod dikemaskini — semak RLS/profil.");
         return;
       }
+      setNama(draftNama.trim());
+      setTelefon(tel);
+      setNegeri(draftNegeri);
+      setIsEditing(false);
       toast.success("Maklumat berjaya disimpan! ✓", { duration: 4000 });
     } catch (e) {
       console.error("[MaklumatSaya] exception", e);
@@ -1607,59 +1621,112 @@ function MaklumatSaya() {
     }
   }
 
+  function handleBatal() {
+    setIsEditing(false);
+  }
 
   return (
     <section className="mt-6 rounded-3xl bg-card p-6 shadow-card">
-      <h2 className="font-display text-xl font-extrabold text-foreground">Maklumat Saya</h2>
-      <p className="mt-1 text-sm text-muted-foreground">
-        Untuk komunikasi & rekod akaun anda.
-      </p>
-      <div className="mt-4 grid gap-4 md:grid-cols-3">
-        <label className="flex flex-col gap-1 text-sm">
-          <span className="font-bold text-foreground">Nama Penuh</span>
-          <input
-            type="text"
-            value={nama}
-            onChange={(e) => setNama(e.target.value)}
-            className="rounded-xl border border-input bg-background px-3 py-2"
-            placeholder="cth: Ahmad bin Ali"
-          />
-        </label>
-        <label className="flex flex-col gap-1 text-sm">
-          <span className="font-bold text-foreground">No Telefon</span>
-          <input
-            type="tel"
-            inputMode="numeric"
-            value={telefon}
-            onChange={(e) => setTelefon(e.target.value.replace(/\D/g, "").slice(0, 11))}
-            className="rounded-xl border border-input bg-background px-3 py-2"
-            placeholder="cth: 0123456789"
-          />
-        </label>
-        <label className="flex flex-col gap-1 text-sm">
-          <span className="font-bold text-foreground">Negeri</span>
-          <select
-            value={negeri}
-            onChange={(e) => setNegeri(e.target.value)}
-            className="rounded-xl border border-input bg-background px-3 py-2"
+      <div className="flex items-center justify-between gap-3">
+        <div>
+          <h2 className="font-display text-xl font-extrabold text-foreground">Maklumat Saya</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Untuk komunikasi & rekod akaun anda.
+          </p>
+        </div>
+        {!isEditing && !belumDiisi && (
+          <button
+            onClick={masukEditMode}
+            className="inline-flex items-center gap-1.5 rounded-full border-2 border-border px-3 py-1.5 text-xs font-extrabold text-muted-foreground hover:bg-muted transition"
           >
-            <option value="">— Pilih negeri —</option>
-            {NEGERI_LIST.map((n) => (
-              <option key={n} value={n}>{n}</option>
-            ))}
-          </select>
-        </label>
+            <Pencil className="h-3.5 w-3.5" />
+            Edit
+          </button>
+        )}
       </div>
-      <div className="mt-4 flex justify-end">
-        <button
-          onClick={handleSimpan}
-          disabled={saving}
-          className="rounded-full px-5 py-2.5 font-display text-sm font-extrabold text-white shadow-soft disabled:opacity-60"
-          style={{ backgroundColor: HIJAU }}
-        >
-          {saving ? "Menyimpan..." : "Simpan"}
-        </button>
-      </div>
+
+      {belumDiisi && !isEditing ? (
+        <div className="mt-4 rounded-2xl border-2 border-dashed border-border p-6 text-center">
+          <p className="text-sm text-muted-foreground">Belum diisi</p>
+          <button
+            onClick={masukEditMode}
+            className="mt-3 inline-flex items-center gap-1.5 rounded-full px-4 py-2 font-display text-xs font-extrabold text-white shadow-soft transition hover:-translate-y-0.5"
+            style={{ backgroundColor: HIJAU }}
+          >
+            Lengkapkan Sekarang
+          </button>
+        </div>
+      ) : isEditing ? (
+        <>
+          <div className="mt-4 grid gap-4 md:grid-cols-3">
+            <label className="flex flex-col gap-1 text-sm">
+              <span className="font-bold text-foreground">Nama Penuh</span>
+              <input
+                type="text"
+                value={draftNama}
+                onChange={(e) => setDraftNama(e.target.value)}
+                className="rounded-xl border border-input bg-background px-3 py-2"
+                placeholder="cth: Ahmad bin Ali"
+              />
+            </label>
+            <label className="flex flex-col gap-1 text-sm">
+              <span className="font-bold text-foreground">No Telefon</span>
+              <input
+                type="tel"
+                inputMode="numeric"
+                value={draftTelefon}
+                onChange={(e) => setDraftTelefon(e.target.value.replace(/\D/g, "").slice(0, 11))}
+                className="rounded-xl border border-input bg-background px-3 py-2"
+                placeholder="cth: 0123456789"
+              />
+            </label>
+            <label className="flex flex-col gap-1 text-sm">
+              <span className="font-bold text-foreground">Negeri</span>
+              <select
+                value={draftNegeri}
+                onChange={(e) => setDraftNegeri(e.target.value)}
+                className="rounded-xl border border-input bg-background px-3 py-2"
+              >
+                <option value="">— Pilih negeri —</option>
+                {NEGERI_LIST.map((n) => (
+                  <option key={n} value={n}>{n}</option>
+                ))}
+              </select>
+            </label>
+          </div>
+          <div className="mt-4 flex justify-end gap-2">
+            <button
+              onClick={handleBatal}
+              className="rounded-full border-2 border-border bg-background px-5 py-2.5 font-display text-sm font-extrabold text-muted-foreground hover:bg-muted transition"
+            >
+              Batal
+            </button>
+            <button
+              onClick={handleSimpan}
+              disabled={saving}
+              className="rounded-full px-5 py-2.5 font-display text-sm font-extrabold text-white shadow-soft disabled:opacity-60 transition hover:-translate-y-0.5"
+              style={{ backgroundColor: HIJAU }}
+            >
+              {saving ? "Menyimpan..." : "Simpan"}
+            </button>
+          </div>
+        </>
+      ) : (
+        <div className="mt-4 grid gap-4 md:grid-cols-3">
+          <div className="rounded-2xl bg-muted/40 p-4">
+            <p className="text-xs font-extrabold text-muted-foreground">Nama Penuh</p>
+            <p className="mt-1 text-sm font-bold text-foreground">{nama.trim() || "—"}</p>
+          </div>
+          <div className="rounded-2xl bg-muted/40 p-4">
+            <p className="text-xs font-extrabold text-muted-foreground">No Telefon</p>
+            <p className="mt-1 text-sm font-bold text-foreground">{telefon || "—"}</p>
+          </div>
+          <div className="rounded-2xl bg-muted/40 p-4">
+            <p className="text-xs font-extrabold text-muted-foreground">Negeri</p>
+            <p className="mt-1 text-sm font-bold text-foreground">{negeri || "—"}</p>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
