@@ -197,7 +197,7 @@ function AffiliateDashboardPage() {
           />
           <StatCard
             icon={<TrendingUp className="h-5 w-5" />}
-            label="Kadar Tukar"
+            label="Conversion"
             value={aff.total_klik > 0 ? ((aff.total_jualan / aff.total_klik) * 100).toFixed(1) + '%' : '0%'}
           />
         </div>
