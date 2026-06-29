@@ -829,10 +829,14 @@ function ParentDashboard() {
           />
         )}
 
-        <MaklumatSaya />
-
-
-
+        <Dialog open={showMaklumat} onOpenChange={setShowMaklumat}>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle className="font-display text-xl font-extrabold">Maklumat Saya</DialogTitle>
+            </DialogHeader>
+            <MaklumatSaya />
+          </DialogContent>
+        </Dialog>
 
         {/* Pemilih anak */}
         {anakList.length === 0 ? (
