@@ -127,12 +127,12 @@ function DaftarPage() {
     if (affiliateRef) {
       const { data: aff } = await supabase
         .from("affiliates")
-        .select("id, ref_code")
-        .eq("ref_code", affiliateRef)
+        .select("id, ref_code, custom_ref_code")
+        .or(`ref_code.ilike.${affiliateRef},custom_ref_code.ilike.${affiliateRef}`)
         .maybeSingle();
       if (aff) {
         affiliateId = (aff as { id: string }).id;
-        resolvedRefCode = (aff as { ref_code: string }).ref_code;
+        resolvedRefCode = (aff as { ref_code: string; custom_ref_code: string | null }).custom_ref_code ?? (aff as { ref_code: string }).ref_code;
       }
     }
 

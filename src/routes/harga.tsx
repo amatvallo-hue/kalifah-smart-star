@@ -34,10 +34,12 @@ function HargaPage() {
       const token = sess.session?.access_token;
       console.log("[harga] sesi checkout", { adaSesi: !!sess.session, adaToken: !!token });
 
+      const { data: userData } = await supabase.auth.getUser();
+      const refFromMeta = userData?.user?.user_metadata?.ref_code as string | undefined;
       const refCode =
         typeof window !== "undefined"
-          ? window.localStorage.getItem("kalifah_ref") ?? undefined
-          : undefined;
+          ? (window.localStorage.getItem("kalifah_ref") ?? refFromMeta ?? undefined)
+          : refFromMeta;
       console.log("[harga] hantar request /api/checkout", { pakej, darjah, refCode });
       const res = await fetch("/api/checkout", {
         method: "POST",
