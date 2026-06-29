@@ -14,6 +14,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { getDarjah, getSubjek } from "@/lib/curriculum";
 import { simpanProgress } from "@/lib/progress";
 import { getQuiz, getQuizSet2 } from "@/lib/quiz-bank";
+import { useAward } from "@/hooks/use-award";
 
 export const Route = createFileRoute("/darjah/$darjahId_/$subjekId_/game")({
   head: () => ({ meta: [{ title: "Quiz Race — Kalifah.my" }] }),
