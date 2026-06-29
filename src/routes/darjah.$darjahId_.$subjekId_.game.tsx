@@ -531,6 +531,7 @@ function GameSubjekPage() {
   const navigate = useNavigate();
   const { darjahId, subjekId } = useParams({ from: "/darjah/$darjahId_/$subjekId_/game" });
   const { user, loading } = useAuth();
+  const award = useAward();
   const darjah = getDarjah(darjahId);
   const subjek = getSubjek(subjekId);
 
@@ -660,7 +661,10 @@ function GameSubjekPage() {
     if (habis) return;
     const jawapan = jawapanOverride ?? jwp;
     const betul = normalize(jawapan) === normalize(soalanList[idx].jawapan);
-    if (betul) setMarkah((m) => m + 1);
+    if (betul) {
+      setMarkah((m) => m + 1);
+      award({ sumber: "game-race", darjah: darjahId, subjek: subjekId });
+    }
     setFlash(betul ? "ok" : "no");
     setTimeout(() => setFlash(null), 250);
     const next = idx + 1;
