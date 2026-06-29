@@ -96,16 +96,7 @@ function DaftarPage() {
     sessionStorage.setItem(sessionKey, "1");
 
     (async () => {
-      const { data: aff } = await supabase
-        .from("affiliates")
-        .select("id")
-        .or(`ref_code.ilike.${clean},custom_ref_code.ilike.${clean}`)
-        .maybeSingle();
-      if (aff) {
-        await supabase.rpc("increment_affiliate_klik", {
-          affiliate_id: (aff as { id: string }).id,
-        });
-      }
+      await supabase.rpc("increment_affiliate_klik_by_ref", { p_ref: clean });
     })();
   }, [ref]);
 
