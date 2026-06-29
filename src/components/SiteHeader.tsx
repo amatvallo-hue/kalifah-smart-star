@@ -1,6 +1,6 @@
 import { Link, useLocation } from "@tanstack/react-router";
 import { LogOut, Star, User, Menu, LayoutDashboard } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 import {
   DropdownMenu,
@@ -12,6 +12,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { useAuth } from "@/hooks/use-auth";
 import { useProfile } from "@/hooks/use-profile";
 import { CHILD_EMAIL_DOMAIN } from "@/lib/child-auth";
+import { supabase } from "@/integrations/supabase/client";
 
 export function SiteHeader({
   stars = 0,
@@ -29,6 +30,17 @@ export function SiteHeader({
   const isChild = !!user?.email?.includes(CHILD_EMAIL_DOMAIN);
   const isParentDashboard = location.pathname.startsWith("/dashboard/ibu-bapa");
   const hideStars = !isChild;
+  const [isAffiliate, setIsAffiliate] = useState(false);
+
+  useEffect(() => {
+    if (!user?.id) return;
+    supabase
+      .from("affiliates")
+      .select("id")
+      .eq("user_id", user.id)
+      .maybeSingle()
+      .then(({ data }) => setIsAffiliate(!!data));
+  }, [user?.id]);
 
   const navLinks = (
     <>
@@ -59,6 +71,16 @@ export function SiteHeader({
           onClick={() => setOpen(false)}
         >
           Ibu Bapa
+        </Link>
+      )}
+      {isAffiliate && (
+        <Link
+          to="/affiliate/dashboard"
+          className="rounded-full px-4 py-2 font-display text-sm font-bold text-muted-foreground transition hover:bg-secondary hover:text-foreground"
+          activeProps={{ className: "bg-secondary text-primary" }}
+          onClick={() => setOpen(false)}
+        >
+          Dashboard Affiliate
         </Link>
       )}
     </>
