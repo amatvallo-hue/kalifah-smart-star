@@ -20,6 +20,7 @@ import { toast } from "sonner";
 import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
+import { useProfile } from "@/hooks/use-profile";
 import { SUBJEK_LIST as ALL_SUBJEK, DARJAH_LIST } from "@/lib/curriculum";
 // Ibu bapa tidak boleh nampak Jawi
 const SUBJEK_LIST = ALL_SUBJEK.filter((s) => s.id !== "jawi");
