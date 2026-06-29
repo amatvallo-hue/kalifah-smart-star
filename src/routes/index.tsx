@@ -442,6 +442,9 @@ function Harga() {
                 </div>
               )}
               <h3 className="font-display text-xl font-extrabold text-foreground">{p.nama}</h3>
+              <span className="mt-2 inline-block rounded-full bg-amber-100 px-2 py-0.5 text-xs font-bold text-amber-700">
+                Harga Perkenalan
+              </span>
               <div className="mt-3">
                 <p className="text-sm text-muted-foreground line-through">
                   RM{p.id === "bundle" ? HARGA_ASAL * 6 : HARGA_ASAL}{p.id === "perDarjah" ? "/darjah" : ""}
