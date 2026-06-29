@@ -1,5 +1,7 @@
 import { useMemo, useState } from "react";
+import { useParams } from "@tanstack/react-router";
 import { Sparkles, Search } from "lucide-react";
+import { useAward } from "@/hooks/use-award";
 
 export type Word = {
   word: string;
@@ -104,6 +106,8 @@ export function CariPerkataan({
   title = "Cari Perkataan",
   pickBank,
 }: CariPerkataanProps = {}) {
+  const award = useAward();
+  const params = useParams({ strict: false }) as { darjahId?: string; subjekId?: string };
   const [round, setRound] = useState(0);
   const [useSet2, setUseSet2] = useState(() => Math.random() > 0.5);
   // Re-roll which Set is used on every new round (Main Lagi).
