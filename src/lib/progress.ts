@@ -19,12 +19,7 @@ export interface BadgeRow {
   created_at: string;
 }
 
-const AKTIVITI_TERAS = ["kuiz", "latihan", "latih-tubi", "nota", "game"] as const;
-function slotTeras(a: string): string | null {
-  if (a === "kuiz" || a === "latihan" || a === "latih-tubi" || a === "nota") return a;
-  if (a.startsWith("game")) return "game";
-  return null;
-}
+const AKTIVITI_TERAS = ["kuiz", "latih-tubi", "nota"] as const;
 
 function todayKL(): string {
   return new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Kuala_Lumpur" });
