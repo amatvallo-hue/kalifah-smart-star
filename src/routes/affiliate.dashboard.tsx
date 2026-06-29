@@ -27,20 +27,20 @@ interface Affiliate {
   custom_ref_code?: string;
   total_klik: number;
   total_jualan: number;
-  total_komisyen_sen: number;
-  total_dibayar_sen: number;
+  total_komisyen: number;
+  total_dibayar: number;
 }
 
 interface Jualan {
   id: string;
-  jumlah_bayar_sen: number;
-  komisyen_sen: number;
+  jumlah_bayar: number;
+  komisyen: number;
   status_bayar: string;
   created_at: string;
 }
 
-function rm(sen: number) {
-  return `RM ${(sen / 100).toFixed(2)}`;
+function rm(ringgit: number) {
+  return `RM ${(ringgit ?? 0).toFixed(2)}`;
 }
 
 function AffiliateDashboardPage() {
