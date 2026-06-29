@@ -157,14 +157,26 @@ function AffiliateDashboardPage() {
               <Copy className="h-4 w-4" />
               {copied ? "Disalin" : "Salin Pautan"}
             </button>
+          </div>
+          <div className="mt-3 text-xs text-muted-foreground">Pilih caption WhatsApp:</div>
+          <div className="mt-1 flex flex-col gap-2 sm:flex-row">
             <a
-              href={`https://wa.me/?text=${encodeURIComponent(`Assalamualaikum! 👋 Anak-anak boleh belajar dengan seronok di Kalifah.my 🎓 Lebih 32,000 soalan interaktif untuk Darjah 1-6 (BM, BI, Matematik, Sains, PI). Daftar percuma dan cuba sekarang: ${refLink}`)}`}
+              href={`https://wa.me/?text=${encodeURIComponent(`Assalamualaikum! 👋 Risau anak tak belajar bila kita tak tengok? Di Kalifah.my, anak buat latih tubi sendiri & ibu bapa boleh pantau progress bila-bila masa 📊 Tenang hati, anak pun seronok belajar! Darjah 1-6 | 32,000+ soalan. Cuba percuma: ${refLink}`)}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-1 rounded-md bg-[#25D366] px-4 py-2 text-sm font-bold text-white hover:opacity-90"
+              className="inline-flex flex-1 items-center justify-center gap-1 rounded-md bg-[#25D366] px-4 py-2 text-sm font-bold text-white hover:opacity-90"
             >
               <Share2 className="h-4 w-4" />
-              Share WhatsApp
+              📱 Caption A
+            </a>
+            <a
+              href={`https://wa.me/?text=${encodeURIComponent(`Assalamualaikum! 👋 "Anak dah belajar ke belum?" — soalan yang ibu bapa selalu tertanya-tanya. Kini dengan Kalifah.my, anak buat latih tubi sendiri & ibu bapa boleh pantau terus dari phone! 📱 Darjah 1-6 | 32,000+ soalan. Cuba percuma: ${refLink}`)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex flex-1 items-center justify-center gap-1 rounded-md bg-[#25D366] px-4 py-2 text-sm font-bold text-white hover:opacity-90"
+            >
+              <Share2 className="h-4 w-4" />
+              📱 Caption B
             </a>
           </div>
           <div className="mt-2 text-xs text-muted-foreground">
