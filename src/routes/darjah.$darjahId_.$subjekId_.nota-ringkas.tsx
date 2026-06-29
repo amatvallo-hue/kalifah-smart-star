@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { getDarjah, getSubjek } from "@/lib/curriculum";
 import { simpanProgress } from "@/lib/progress";
+import { useAward } from "@/hooks/use-award";
 
 export const Route = createFileRoute("/darjah/$darjahId_/$subjekId_/nota-ringkas")({
   head: () => ({ meta: [{ title: "Nota Ringkas — Kalifah.my" }] }),
@@ -36,6 +37,8 @@ function NotaRingkasPage() {
   const darjah = getDarjah(darjahId);
   const subjek = getSubjek(subjekId);
   const [mulaMasa] = useState(() => Date.now());
+  const award = useAward();
+  const [awardedTopics, setAwardedTopics] = useState<Set<string>>(new Set());
 
   const [notaList, setNotaList] = useState<NotaRow[]>([]);
   const [fetching, setFetching] = useState(true);
@@ -89,6 +92,19 @@ function NotaRingkasPage() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, notaList.length]);
+
+  // Award 1 mata per unique nota (topic) dibaca dalam sesi ini.
+  useEffect(() => {
+    if (!user || !selectedTopik) return;
+    if (awardedTopics.has(selectedTopik)) return;
+    award({ sumber: "nota", darjah: darjahId, subjek: subjekId });
+    setAwardedTopics((prev) => {
+      const next = new Set(prev);
+      next.add(selectedTopik);
+      return next;
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedTopik, user]);
 
   async function handleLogout() {
     await supabase.auth.signOut();
