@@ -1533,3 +1533,110 @@ function KadSubjekTrend({
     </div>
   );
 }
+
+const NEGERI_LIST = [
+  "Johor", "Kedah", "Kelantan", "Melaka", "Negeri Sembilan", "Pahang",
+  "Perak", "Perlis", "Pulau Pinang", "Sabah", "Sarawak", "Selangor",
+  "Terengganu", "WP Kuala Lumpur", "WP Labuan", "WP Putrajaya",
+];
+
+function MaklumatSaya() {
+  const { user } = useAuth();
+  const { profile, loading: profileLoading } = useProfile();
+  const [nama, setNama] = useState("");
+  const [telefon, setTelefon] = useState("");
+  const [negeri, setNegeri] = useState("");
+  const [loaded, setLoaded] = useState(false);
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    if (!user || loaded) return;
+    (async () => {
+      const { data } = await supabase
+        .from("profiles")
+        .select("nama_penuh, no_telefon, negeri")
+        .eq("id", user.id)
+        .maybeSingle();
+      if (data) {
+        setNama((data as { nama_penuh: string | null }).nama_penuh ?? "");
+        setTelefon((data as { no_telefon: string | null }).no_telefon ?? "");
+        setNegeri((data as { negeri: string | null }).negeri ?? "");
+      }
+      setLoaded(true);
+    })();
+  }, [user, loaded]);
+
+  if (profileLoading || !profile) return null;
+  if (!profile.darjah_akses || profile.darjah_akses.length === 0) return null;
+
+  async function handleSimpan() {
+    if (!user) return;
+    if (!nama.trim()) return toast.error("Sila isi nama penuh");
+    const tel = telefon.replace(/\D/g, "");
+    if (tel.length < 10 || tel.length > 11) return toast.error("No telefon mesti 10-11 digit");
+    if (!negeri) return toast.error("Sila pilih negeri");
+    setSaving(true);
+    const { error } = await supabase
+      .from("profiles")
+      .update({ nama_penuh: nama.trim(), no_telefon: tel, negeri })
+      .eq("id", user.id);
+    setSaving(false);
+    if (error) return toast.error(error.message);
+    toast.success("Maklumat disimpan");
+  }
+
+  return (
+    <section className="mt-6 rounded-3xl bg-card p-6 shadow-card">
+      <h2 className="font-display text-xl font-extrabold text-foreground">Maklumat Saya</h2>
+      <p className="mt-1 text-sm text-muted-foreground">
+        Untuk komunikasi & rekod akaun anda.
+      </p>
+      <div className="mt-4 grid gap-4 md:grid-cols-3">
+        <label className="flex flex-col gap-1 text-sm">
+          <span className="font-bold text-foreground">Nama Penuh</span>
+          <input
+            type="text"
+            value={nama}
+            onChange={(e) => setNama(e.target.value)}
+            className="rounded-xl border border-input bg-background px-3 py-2"
+            placeholder="cth: Ahmad bin Ali"
+          />
+        </label>
+        <label className="flex flex-col gap-1 text-sm">
+          <span className="font-bold text-foreground">No Telefon</span>
+          <input
+            type="tel"
+            inputMode="numeric"
+            value={telefon}
+            onChange={(e) => setTelefon(e.target.value.replace(/\D/g, "").slice(0, 11))}
+            className="rounded-xl border border-input bg-background px-3 py-2"
+            placeholder="cth: 0123456789"
+          />
+        </label>
+        <label className="flex flex-col gap-1 text-sm">
+          <span className="font-bold text-foreground">Negeri</span>
+          <select
+            value={negeri}
+            onChange={(e) => setNegeri(e.target.value)}
+            className="rounded-xl border border-input bg-background px-3 py-2"
+          >
+            <option value="">— Pilih negeri —</option>
+            {NEGERI_LIST.map((n) => (
+              <option key={n} value={n}>{n}</option>
+            ))}
+          </select>
+        </label>
+      </div>
+      <div className="mt-4 flex justify-end">
+        <button
+          onClick={handleSimpan}
+          disabled={saving}
+          className="rounded-full px-5 py-2.5 font-display text-sm font-extrabold text-white shadow-soft disabled:opacity-60"
+          style={{ backgroundColor: HIJAU }}
+        >
+          {saving ? "Menyimpan..." : "Simpan"}
+        </button>
+      </div>
+    </section>
+  );
+}
