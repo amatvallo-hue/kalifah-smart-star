@@ -1570,20 +1570,42 @@ function MaklumatSaya() {
   if (!profile.darjah_akses || profile.darjah_akses.length === 0) return null;
 
   async function handleSimpan() {
-    if (!user) return;
+    console.log("[MaklumatSaya] handleSimpan dipanggil", { user: user?.id });
+    if (!user) {
+      toast.error("Sila log masuk semula");
+      return;
+    }
     if (!nama.trim()) return toast.error("Sila isi nama penuh");
     const tel = telefon.replace(/\D/g, "");
     if (tel.length < 10 || tel.length > 11) return toast.error("No telefon mesti 10-11 digit");
     if (!negeri) return toast.error("Sila pilih negeri");
     setSaving(true);
-    const { error } = await supabase
-      .from("profiles")
-      .update({ nama_penuh: nama.trim(), no_telefon: tel, negeri })
-      .eq("id", user.id);
-    setSaving(false);
-    if (error) return toast.error(error.message);
-    toast.success("Maklumat disimpan");
+    try {
+      const payload = { nama_penuh: nama.trim(), no_telefon: tel, negeri };
+      console.log("[MaklumatSaya] update payload", payload);
+      const { data, error, status } = await supabase
+        .from("profiles")
+        .update(payload)
+        .eq("id", user.id)
+        .select("id, nama_penuh, no_telefon, negeri");
+      console.log("[MaklumatSaya] update response", { data, error, status });
+      if (error) {
+        toast.error(`Gagal simpan: ${error.message}`);
+        return;
+      }
+      if (!data || data.length === 0) {
+        toast.error("Tiada rekod dikemaskini — semak RLS/profil.");
+        return;
+      }
+      toast.success("Maklumat disimpan");
+    } catch (e) {
+      console.error("[MaklumatSaya] exception", e);
+      toast.error(`Ralat: ${e instanceof Error ? e.message : String(e)}`);
+    } finally {
+      setSaving(false);
+    }
   }
+
 
   return (
     <section className="mt-6 rounded-3xl bg-card p-6 shadow-card">
