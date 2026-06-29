@@ -16,8 +16,15 @@ import {
   Users,
   KeyRound,
   Trophy,
+  User,
 } from "lucide-react";
 import { toast } from "sonner";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
@@ -549,6 +556,7 @@ function ParentDashboard() {
   const [emotions, setEmotions] = useState<EmotionRow[]>([]);
   const [fetching, setFetching] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
+  const [showMaklumat, setShowMaklumat] = useState(false);
   const [resetFor, setResetFor] = useState<ChildProfile | null>(null);
 
   const isChild = !!user?.email?.includes(CHILD_EMAIL_DOMAIN);
@@ -792,6 +800,13 @@ function ParentDashboard() {
               Muat Semula
             </button>
             <button
+              onClick={() => setShowMaklumat(true)}
+              className="inline-flex items-center gap-2 rounded-full bg-card px-4 py-2.5 font-display text-sm font-extrabold text-muted-foreground shadow-soft hover:text-foreground"
+            >
+              <User className="h-4 w-4" />
+              Maklumat Saya
+            </button>
+            <button
               onClick={() => setShowAdd((v) => !v)}
               className="inline-flex items-center gap-2 rounded-full px-5 py-2.5 font-display text-sm font-extrabold text-white shadow-soft"
               style={{ backgroundColor: HIJAU }}
@@ -814,10 +829,14 @@ function ParentDashboard() {
           />
         )}
 
-        <MaklumatSaya />
-
-
-
+        <Dialog open={showMaklumat} onOpenChange={setShowMaklumat}>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle className="font-display text-xl font-extrabold">Maklumat Saya</DialogTitle>
+            </DialogHeader>
+            <MaklumatSaya />
+          </DialogContent>
+        </Dialog>
 
         {/* Pemilih anak */}
         {anakList.length === 0 ? (
