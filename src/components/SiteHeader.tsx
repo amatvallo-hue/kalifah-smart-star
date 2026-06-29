@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useLocation } from "@tanstack/react-router";
 import { LogOut, Star, User, Menu, LayoutDashboard } from "lucide-react";
 import { useState } from "react";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
@@ -25,7 +25,10 @@ export function SiteHeader({
   const [open, setOpen] = useState(false);
   const { user } = useAuth();
   const { profile } = useProfile();
+  const location = useLocation();
   const isChild = !!user?.email?.includes(CHILD_EMAIL_DOMAIN);
+  const isParentDashboard = location.pathname.startsWith("/dashboard/ibu-bapa");
+  const hideStars = profile?.role === "parent" || isParentDashboard;
 
   const navLinks = (
     <>
@@ -100,39 +103,41 @@ export function SiteHeader({
               </DropdownMenuContent>
             </DropdownMenu>
           )}
-          <Popover>
-            <PopoverTrigger asChild>
-              <button
-                type="button"
-                aria-label="Lihat info mata"
-                className="flex items-center gap-2 rounded-full bg-gradient-gold px-4 py-2 shadow-gold transition hover:-translate-y-0.5"
-              >
-                <Star className="h-4 w-4 fill-gold-foreground text-gold-foreground" />
-                <span className="font-display text-sm font-extrabold text-gold-foreground">{stars}</span>
-              </button>
-            </PopoverTrigger>
-            <PopoverContent align="end" className="w-72 p-4">
-              <div className="flex items-center gap-2">
-                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-gold shadow-gold">
+          {!hideStars && (
+            <Popover>
+              <PopoverTrigger asChild>
+                <button
+                  type="button"
+                  aria-label="Lihat info mata"
+                  className="flex items-center gap-2 rounded-full bg-gradient-gold px-4 py-2 shadow-gold transition hover:-translate-y-0.5"
+                >
                   <Star className="h-4 w-4 fill-gold-foreground text-gold-foreground" />
-                </span>
-                <div>
-                  <p className="font-display text-base font-extrabold text-foreground">
-                    Mata Kamu: {stars}
-                  </p>
-                  <p className="text-xs text-muted-foreground">Cara kumpul mata ⭐</p>
+                  <span className="font-display text-sm font-extrabold text-gold-foreground">{stars}</span>
+                </button>
+              </PopoverTrigger>
+              <PopoverContent align="end" className="w-72 p-4">
+                <div className="flex items-center gap-2">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-gold shadow-gold">
+                    <Star className="h-4 w-4 fill-gold-foreground text-gold-foreground" />
+                  </span>
+                  <div>
+                    <p className="font-display text-base font-extrabold text-foreground">
+                      Mata Kamu: {stars}
+                    </p>
+                    <p className="text-xs text-muted-foreground">Cara kumpul mata ⭐</p>
+                  </div>
                 </div>
-              </div>
-              <ul className="mt-3 space-y-1.5 text-sm font-medium text-foreground">
-                <li className="flex justify-between gap-2"><span>Kuiz</span><span className="font-bold">1 ⭐ / soalan betul</span></li>
-                <li className="flex justify-between gap-2"><span>Latih Tubi</span><span className="font-bold">1 ⭐ / soalan betul</span></li>
-                <li className="flex justify-between gap-2"><span>Game</span><span className="font-bold">1 ⭐ / jawapan betul</span></li>
-              </ul>
-              <p className="mt-3 rounded-xl bg-secondary px-3 py-2 text-xs font-bold text-primary">
-                Kumpul mata untuk reward istimewa! 🎁
-              </p>
-            </PopoverContent>
-          </Popover>
+                <ul className="mt-3 space-y-1.5 text-sm font-medium text-foreground">
+                  <li className="flex justify-between gap-2"><span>Kuiz</span><span className="font-bold">1 ⭐ / soalan betul</span></li>
+                  <li className="flex justify-between gap-2"><span>Latih Tubi</span><span className="font-bold">1 ⭐ / soalan betul</span></li>
+                  <li className="flex justify-between gap-2"><span>Game</span><span className="font-bold">1 ⭐ / jawapan betul</span></li>
+                </ul>
+                <p className="mt-3 rounded-xl bg-secondary px-3 py-2 text-xs font-bold text-primary">
+                  Kumpul mata untuk reward istimewa! 🎁
+                </p>
+              </PopoverContent>
+            </Popover>
+          )}
           {onLogout && (
             <button
               onClick={onLogout}
