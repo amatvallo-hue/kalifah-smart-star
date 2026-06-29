@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Apple, Sparkles, Trophy } from "lucide-react";
 import { simpanProgress } from "@/lib/progress";
+import { useAward } from "@/hooks/use-award";
 
 type Soalan = { soalan: string; jawapan: number; pilihan: number[] };
 
@@ -71,6 +72,7 @@ function Confetti() {
 }
 
 export function MatikDragGame({ darjah, subjekId }: { darjah: string; subjekId: string }) {
+  const award = useAward();
   const soalan = useMemo(() => BANK[darjah] ?? [], [darjah]);
   const [idx, setIdx] = useState(0);
   const [markah, setMarkah] = useState(0);
@@ -105,6 +107,7 @@ export function MatikDragGame({ darjah, subjekId }: { darjah: string; subjekId: 
       setFeedback("ok");
       setConfetti(true);
       setTimeout(() => setConfetti(false), 1000);
+      award({ sumber: "game-matik-drag", darjah, subjek: subjekId });
     } else {
       setFeedback("no");
     }

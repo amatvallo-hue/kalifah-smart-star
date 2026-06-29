@@ -10,6 +10,7 @@ import { downloadSijil } from "@/lib/sijil";
 import { getQuiz, getQuizSet2, type QuizQuestion } from "@/lib/quiz-bank";
 import { simpanProgress } from "@/lib/progress";
 import { KuizBMTopik } from "@/components/KuizBMTopik";
+import { useAward } from "@/hooks/use-award";
 
 export const Route = createFileRoute("/darjah/$darjahId_/$subjekId_/kuiz")({
   head: () => ({ meta: [{ title: "Kuiz — Kalifah.my" }] }),
@@ -206,6 +207,7 @@ function KuizPage() {
   const navigate = useNavigate();
   const { darjahId, subjekId } = useParams({ from: "/darjah/$darjahId_/$subjekId_/kuiz" });
   const { user, loading } = useAuth();
+  const award = useAward();
   const darjah = getDarjah(darjahId) ?? { id: darjahId, label: `Darjah ${darjahId}`, locked: false };
   const subjek = getSubjek(subjekId) ?? { id: subjekId, title: subjekId.charAt(0).toUpperCase() + subjekId.slice(1) };
   const isEnglish = subjekId === "bahasa-inggeris";
@@ -434,7 +436,10 @@ function KuizPage() {
   const handlePilih = (idx: number) => {
     if (pilih !== null) return;
     setPilih(idx);
-    if (idx === soalan.jawapan) setSkor((s) => s + 1);
+    if (idx === soalan.jawapan) {
+      setSkor((s) => s + 1);
+      award({ sumber: "kuiz", darjah: darjahId, subjek: subjekId });
+    }
   };
 
   const reset = () => {

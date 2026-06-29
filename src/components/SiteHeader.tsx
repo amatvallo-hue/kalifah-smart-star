@@ -8,6 +8,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useAuth } from "@/hooks/use-auth";
 import { useProfile } from "@/hooks/use-profile";
 import { CHILD_EMAIL_DOMAIN } from "@/lib/child-auth";
@@ -99,10 +100,41 @@ export function SiteHeader({
               </DropdownMenuContent>
             </DropdownMenu>
           )}
-          <div className="flex items-center gap-2 rounded-full bg-gradient-gold px-4 py-2 shadow-gold">
-            <Star className="h-4 w-4 fill-gold-foreground text-gold-foreground" />
-            <span className="font-display text-sm font-extrabold text-gold-foreground">{stars}</span>
-          </div>
+          <Popover>
+            <PopoverTrigger asChild>
+              <button
+                type="button"
+                aria-label="Lihat info mata"
+                className="flex items-center gap-2 rounded-full bg-gradient-gold px-4 py-2 shadow-gold transition hover:-translate-y-0.5"
+              >
+                <Star className="h-4 w-4 fill-gold-foreground text-gold-foreground" />
+                <span className="font-display text-sm font-extrabold text-gold-foreground">{stars}</span>
+              </button>
+            </PopoverTrigger>
+            <PopoverContent align="end" className="w-72 p-4">
+              <div className="flex items-center gap-2">
+                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-gold shadow-gold">
+                  <Star className="h-4 w-4 fill-gold-foreground text-gold-foreground" />
+                </span>
+                <div>
+                  <p className="font-display text-base font-extrabold text-foreground">
+                    Mata Kamu: {stars}
+                  </p>
+                  <p className="text-xs text-muted-foreground">Cara kumpul mata ⭐</p>
+                </div>
+              </div>
+              <ul className="mt-3 space-y-1.5 text-sm font-medium text-foreground">
+                <li className="flex justify-between gap-2"><span>Kuiz</span><span className="font-bold">1 ⭐ / soalan betul</span></li>
+                <li className="flex justify-between gap-2"><span>Latih Tubi</span><span className="font-bold">1 ⭐ / soalan betul</span></li>
+                <li className="flex justify-between gap-2"><span>Game</span><span className="font-bold">1 ⭐ / jawapan betul</span></li>
+                <li className="flex justify-between gap-2"><span>Latihan Bertulis</span><span className="font-bold">1 ⭐ / soalan betul</span></li>
+                <li className="flex justify-between gap-2"><span>Nota</span><span className="font-bold">1 ⭐ / nota dibaca</span></li>
+              </ul>
+              <p className="mt-3 rounded-xl bg-secondary px-3 py-2 text-xs font-bold text-primary">
+                Kumpul mata untuk reward istimewa! 🎁
+              </p>
+            </PopoverContent>
+          </Popover>
           {onLogout && (
             <button
               onClick={onLogout}

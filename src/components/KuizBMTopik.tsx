@@ -6,6 +6,7 @@ import { simpanProgress } from "@/lib/progress";
 import { downloadSijil } from "@/lib/sijil";
 import { simpanRekodSijil } from "@/lib/sijil-rekod";
 import { useAuth } from "@/hooks/use-auth";
+import { useAward } from "@/hooks/use-award";
 
 const HIJAU = "#1B8A5A";
 const EMAS = "#F5A623";
@@ -44,6 +45,7 @@ interface Props {
 export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subjekKod = "BM", showBahasaToggle = false }: Props) {
   const darjahNum = Number(darjahId);
   const { user } = useAuth();
+  const award = useAward();
   const profileName =
     (user?.user_metadata?.name as string | undefined) ||
     (user?.user_metadata?.full_name as string | undefined) ||
@@ -218,7 +220,10 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
       next[i] = idx;
       return next;
     });
-    if (idx === soalanList[i].jawapan) setSkor((s) => s + 1);
+    if (idx === soalanList[i].jawapan) {
+      setSkor((s) => s + 1);
+      award({ sumber: "kuiz", darjah: darjahId, subjek: subjekId });
+    }
   }
 
   function seterusnya() {

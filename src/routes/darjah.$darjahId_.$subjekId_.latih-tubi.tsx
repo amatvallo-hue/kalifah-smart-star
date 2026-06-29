@@ -266,7 +266,7 @@ function LatihTubiPage() {
     const isBetul = idx === soalan.jawapan;
     if (isBetul) setBetul((b) => b + 1);
     if (isBetul && user) {
-      tambahMata({ userId: user.id, mata: 10, sumber: "latih-tubi", darjah: darjahId, subjek: subjekId });
+      tambahMata({ userId: user.id, mata: 1, sumber: "latih-tubi", darjah: darjahId, subjek: subjekId });
     }
     else setSalah((s) => s + 1);
     setJawab((j) => j + 1);

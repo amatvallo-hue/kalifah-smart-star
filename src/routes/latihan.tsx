@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { usePoints } from "@/hooks/use-points";
+import { useAward } from "@/hooks/use-award";
 import { ArrowLeft, PenLine, Send, Sparkles } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { StarReward } from "@/components/StarReward";
@@ -30,6 +31,7 @@ const TUGASAN = [
 
 function LatihanPage() {
   const mata = usePoints();
+  const award = useAward();
   const [pilih, setPilih] = useState(0);
   const [teks, setTeks] = useState("");
   const [hantar, setHantar] = useState(false);
@@ -108,7 +110,10 @@ function LatihanPage() {
 
           {!hantar ? (
             <button
-              onClick={() => setHantar(true)}
+              onClick={() => {
+                setHantar(true);
+                award({ sumber: "latihan-bertulis", darjah: "0", subjek: "latihan" });
+              }}
               disabled={wordCount < 5}
               className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-primary px-6 py-4 font-display text-lg font-extrabold text-primary-foreground shadow-soft transition hover:-translate-y-0.5 hover:shadow-gold disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
             >

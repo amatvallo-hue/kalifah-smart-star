@@ -3,6 +3,7 @@ import { Check, X, RefreshCw, Sparkles } from "lucide-react";
 import { StarReward } from "@/components/StarReward";
 import { getBetulSalah, type BSItem } from "@/lib/games-bank";
 import { simpanProgress } from "@/lib/progress";
+import { useAward } from "@/hooks/use-award";
 
 const HIJAU = "#1B8A5A";
 const EMAS = "#F5A623";
@@ -17,6 +18,7 @@ function shuffle<T>(a: T[]): T[] {
 }
 
 export function BetulSalahGame({ subjekId, darjah }: { subjekId: string; darjah?: string }) {
+  const award = useAward();
   const [useSet2, setUseSet2] = useState(() => Math.random() > 0.5);
   const [round, setRound] = useState(0);
   const items = useMemo<BSItem[]>(() => shuffle(getBetulSalah(subjekId, useSet2)).slice(0, 10), [subjekId, useSet2, round]);
@@ -45,7 +47,10 @@ export function BetulSalahGame({ subjekId, darjah }: { subjekId: string; darjah?
     if (flash) return;
     const it = items[idx];
     const benar = pilih === it.betul;
-    if (benar) setMarkah((m) => m + 1);
+    if (benar) {
+      setMarkah((m) => m + 1);
+      award({ sumber: "game-betul", darjah: darjah || "0", subjek: subjekId });
+    }
     setFlash(benar ? "ok" : "no");
     setNota(benar ? null : it.nota ?? null);
     setTimeout(() => {
