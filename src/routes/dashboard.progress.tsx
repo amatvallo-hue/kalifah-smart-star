@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { ArrowLeft, Award, BookOpen, Clock, Download, Flame, RefreshCw, Share2, TrendingUp, Trophy } from "lucide-react";
+import { ArrowLeft, Award, BookOpen, Clock, Download, Flame, HelpCircle, RefreshCw, Share2, TrendingUp, Trophy } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
