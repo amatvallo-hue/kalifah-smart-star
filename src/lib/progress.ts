@@ -19,12 +19,7 @@ export interface BadgeRow {
   created_at: string;
 }
 
-const AKTIVITI_TERAS = ["kuiz", "latihan", "latih-tubi", "nota", "game"] as const;
-function slotTeras(a: string): string | null {
-  if (a === "kuiz" || a === "latihan" || a === "latih-tubi" || a === "nota") return a;
-  if (a.startsWith("game")) return "game";
-  return null;
-}
+
 
 function todayKL(): string {
   return new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Kuala_Lumpur" });
@@ -61,19 +56,43 @@ async function semakDanBeriLencana(userId: string, input: SimpanProgressInput) {
       await awardBadge(userId, "cemerlang", "Cemerlang", "🏆");
     }
 
-    // Lencana subjek — siap semua aktiviti teras dalam subjek
+    // Lencana Pakar Subjek — syarat ketat:
+    //   • Kuiz: purata skor semua kuiz subjek ≥ 70%
+    //   • Latih Tubi: jumlah soalan ≥ 100 DAN purata ≥ 70%
+    //   • Nota: semua topik nota (untuk darjah + subjek) sudah ditick
     const { data: progSubjek } = await supabase
       .from("user_progress")
-      .select("aktiviti")
+      .select("aktiviti, peratus, markah, jumlah_soalan, topik, darjah")
       .eq("user_id", userId)
       .eq("subjek", input.subjek);
-    const setSlot = new Set<string>();
-    (progSubjek ?? []).forEach((r) => {
-      const s = slotTeras(r.aktiviti);
-      if (s) setSlot.add(s);
-    });
-    const semuaSiap = AKTIVITI_TERAS.every((a) => setSlot.has(a));
-    if (semuaSiap) {
+
+    const rows = progSubjek ?? [];
+    const kuizRows = rows.filter((r) => r.aktiviti === "kuiz");
+    const ltRows = rows.filter((r) => r.aktiviti === "latih-tubi");
+    const notaRows = rows.filter((r) => r.aktiviti === "nota" && r.darjah === String(input.darjah));
+
+    const kuizPurata = kuizRows.length
+      ? kuizRows.reduce((a, r) => a + Number(r.peratus ?? 0), 0) / kuizRows.length
+      : 0;
+    const kuizOk = kuizRows.length > 0 && kuizPurata >= 70;
+
+    const ltJumlahSoalan = ltRows.reduce((a, r) => a + Number(r.jumlah_soalan ?? 0), 0);
+    const ltMarkah = ltRows.reduce((a, r) => a + Number(r.markah ?? 0), 0);
+    const ltPurata = ltJumlahSoalan > 0 ? (ltMarkah / ltJumlahSoalan) * 100 : 0;
+    const ltOk = ltJumlahSoalan >= 100 && ltPurata >= 70;
+
+    // Nota: ambil semua topik dari nota_topik untuk darjah+subjek, semak setiap satu ada di user_progress
+    const { data: notaTopikList } = await supabase
+      .from("nota_topik")
+      .select("topik")
+      .eq("darjah", Number(input.darjah))
+      .eq("subjek", input.subjek);
+    const semuaTopikNota = (notaTopikList ?? []).map((r: any) => r.topik);
+    const notaTickSet = new Set(notaRows.map((r) => r.topik).filter(Boolean) as string[]);
+    const notaOk =
+      semuaTopikNota.length > 0 && semuaTopikNota.every((t) => notaTickSet.has(t));
+
+    if (kuizOk && ltOk && notaOk) {
       const sj = SUBJEK_LIST.find((s) => s.id === input.subjek);
       if (sj) await awardBadge(userId, `subjek-${sj.id}`, `Pakar ${sj.title}`, "🎖️");
     }
