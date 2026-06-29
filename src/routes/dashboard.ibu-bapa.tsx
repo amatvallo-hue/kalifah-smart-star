@@ -556,6 +556,7 @@ function ParentDashboard() {
   const [emotions, setEmotions] = useState<EmotionRow[]>([]);
   const [fetching, setFetching] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
+  const [showMaklumat, setShowMaklumat] = useState(false);
   const [resetFor, setResetFor] = useState<ChildProfile | null>(null);
 
   const isChild = !!user?.email?.includes(CHILD_EMAIL_DOMAIN);
