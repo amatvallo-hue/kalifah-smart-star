@@ -8,6 +8,7 @@ import {
   Clock,
   Flame,
   Heart,
+  Pencil,
   PlusCircle,
   Target,
   Trash2,
