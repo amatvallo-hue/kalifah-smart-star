@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { Copy, Loader2, MousePointerClick, ShoppingBag, Wallet, Coins } from "lucide-react";
+import { Copy, Loader2, MousePointerClick, ShoppingBag, Wallet, Coins, Share2, TrendingUp } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
@@ -164,7 +164,7 @@ function AffiliateDashboardPage() {
         </div>
 
         {/* Stat cards */}
-        <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
+        <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-5">
           <StatCard
             icon={<MousePointerClick className="h-5 w-5" />}
             label="Total Klik"
@@ -185,6 +185,11 @@ function AffiliateDashboardPage() {
             label="Baki Belum Dibayar"
             value={rm(baki)}
             highlight
+          />
+          <StatCard
+            icon={<TrendingUp className="h-5 w-5" />}
+            label="Kadar Tukar"
+            value={aff.total_klik > 0 ? ((aff.total_jualan / aff.total_klik) * 100).toFixed(1) + '%' : '0%'}
           />
         </div>
 
