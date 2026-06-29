@@ -70,7 +70,7 @@ function AffiliateDashboardPage() {
       setAff(a as Affiliate);
       const { data: j } = await supabase
         .from("affiliate_jualan")
-        .select("id, jumlah_bayar_sen, komisyen_sen, status_bayar, created_at")
+        .select("id, jumlah_bayar, komisyen, status_bayar, created_at")
         .eq("affiliate_id", (a as Affiliate).id)
         .order("created_at", { ascending: false })
         .limit(50);
@@ -86,7 +86,7 @@ function AffiliateDashboardPage() {
     return `${origin}/daftar?ref=${aff.custom_ref_code ?? aff.ref_code}`;
   }, [aff]);
 
-  const baki = aff ? aff.total_komisyen_sen - aff.total_dibayar_sen : 0;
+  const baki = aff ? (aff.total_komisyen ?? 0) - (aff.total_dibayar ?? 0) : 0;
 
   async function copyLink() {
     try {
@@ -178,7 +178,7 @@ function AffiliateDashboardPage() {
           <StatCard
             icon={<Coins className="h-5 w-5" />}
             label="Komisyen"
-            value={rm(aff.total_komisyen_sen)}
+            value={rm(aff.total_komisyen)}
           />
           <StatCard
             icon={<Wallet className="h-5 w-5" />}
@@ -189,7 +189,7 @@ function AffiliateDashboardPage() {
         </div>
 
         <div className="mt-3 text-sm text-muted-foreground">
-          Sudah dibayar: <strong>{rm(aff.total_dibayar_sen)}</strong>
+          Sudah dibayar: <strong>{rm(aff.total_dibayar)}</strong>
         </div>
 
         {/* Jualan terkini */}
@@ -218,9 +218,9 @@ function AffiliateDashboardPage() {
                       <TableCell>
                         {new Date(j.created_at).toLocaleDateString("ms-MY")}
                       </TableCell>
-                      <TableCell>{rm(j.jumlah_bayar_sen)}</TableCell>
+                      <TableCell>{rm(j.jumlah_bayar)}</TableCell>
                       <TableCell className="font-bold text-primary">
-                        {rm(j.komisyen_sen)}
+                        {rm(j.komisyen)}
                       </TableCell>
                       <TableCell>
                         <span
