@@ -19,7 +19,7 @@ export interface BadgeRow {
   created_at: string;
 }
 
-const AKTIVITI_TERAS = ["kuiz", "latih-tubi", "nota"] as const;
+
 
 function todayKL(): string {
   return new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Kuala_Lumpur" });
