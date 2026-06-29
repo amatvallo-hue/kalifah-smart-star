@@ -159,6 +159,7 @@ export function CariPerkataan({
     if (match) {
       setFound((f) => ({ ...f, [match.word]: path }));
       setFlash("ok");
+      award({ sumber: "game-cari", darjah: params.darjahId || "0", subjek: params.subjekId || "umum" });
     } else {
       setFlash("no");
     }
