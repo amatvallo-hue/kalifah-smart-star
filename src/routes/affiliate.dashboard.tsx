@@ -157,6 +157,15 @@ function AffiliateDashboardPage() {
               <Copy className="h-4 w-4" />
               {copied ? "Disalin" : "Salin Pautan"}
             </button>
+            <a
+              href={`https://wa.me/?text=${encodeURIComponent(`Assalamualaikum! 👋 Anak-anak boleh belajar dengan seronok di Kalifah.my 🎓 Lebih 32,000 soalan interaktif untuk Darjah 1-6 (BM, BI, Matematik, Sains, PI). Daftar percuma dan cuba sekarang: ${refLink}`)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-1 rounded-md bg-[#25D366] px-4 py-2 text-sm font-bold text-white hover:opacity-90"
+            >
+              <Share2 className="h-4 w-4" />
+              Share WhatsApp
+            </a>
           </div>
           <div className="mt-2 text-xs text-muted-foreground">
             Kod: <span className="font-bold text-primary">{aff.custom_ref_code ?? aff.ref_code}</span>
