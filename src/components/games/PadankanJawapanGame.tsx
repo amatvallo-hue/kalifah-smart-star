@@ -3,6 +3,7 @@ import { RefreshCw, Sparkles } from "lucide-react";
 import { StarReward } from "@/components/StarReward";
 import { getPadankan, type PJPair } from "@/lib/games-bank";
 import { simpanProgress } from "@/lib/progress";
+import { useAward } from "@/hooks/use-award";
 
 const HIJAU = "#1B8A5A";
 const EMAS = "#F5A623";
@@ -17,6 +18,7 @@ function shuffle<T>(a: T[]): T[] {
 }
 
 export function PadankanJawapanGame({ subjekId, darjah }: { subjekId: string; darjah?: string }) {
+  const award = useAward();
   const [useSet2, setUseSet2] = useState(() => Math.random() > 0.5);
   const [round, setRound] = useState(0);
   const pairs = useMemo<PJPair[]>(() => getPadankan(subjekId, useSet2).slice(0, 8), [subjekId, useSet2, round]);
@@ -47,6 +49,7 @@ export function PadankanJawapanGame({ subjekId, darjah }: { subjekId: string; da
       const next = new Set(betulSet);
       next.add(kIdx);
       setBetulSet(next);
+      award({ sumber: "game-padan", darjah: darjah || "0", subjek: subjekId });
     } else {
       setSalahSet(new Set([kIdx, knId]));
     }
