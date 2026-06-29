@@ -800,6 +800,13 @@ function ParentDashboard() {
               Muat Semula
             </button>
             <button
+              onClick={() => setShowMaklumat(true)}
+              className="inline-flex items-center gap-2 rounded-full bg-card px-4 py-2.5 font-display text-sm font-extrabold text-muted-foreground shadow-soft hover:text-foreground"
+            >
+              <User className="h-4 w-4" />
+              Maklumat Saya
+            </button>
+            <button
               onClick={() => setShowAdd((v) => !v)}
               className="inline-flex items-center gap-2 rounded-full px-5 py-2.5 font-display text-sm font-extrabold text-white shadow-soft"
               style={{ backgroundColor: HIJAU }}
