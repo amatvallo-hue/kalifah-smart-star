@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Sparkles, Trophy, Zap } from "lucide-react";
 import { simpanProgress } from "@/lib/progress";
+import { useAward } from "@/hooks/use-award";
 
 type Jawapan = number | string;
 type Soalan = { soalan: string; jawapan: Jawapan; pilihan: Jawapan[] };
@@ -225,6 +226,7 @@ function Confetti() {
 const TIME_PER_Q = 20;
 
 export function MatikNeonGame({ darjah, subjekId }: { darjah: string; subjekId: string }) {
+  const award = useAward();
   const topics = useMemo(() => TOPICS[darjah] ?? {}, [darjah]);
   const topicNames = useMemo(() => Object.keys(topics), [topics]);
   const [topic, setTopic] = useState<string | null>(null);
@@ -281,6 +283,7 @@ export function MatikNeonGame({ darjah, subjekId }: { darjah: string; subjekId: 
       setFeedback("ok");
       setConfetti(true);
       setTimeout(() => setConfetti(false), 1000);
+      award({ sumber: "game-matik-neon", darjah, subjek: subjekId });
     } else {
       setFeedback("no");
     }
