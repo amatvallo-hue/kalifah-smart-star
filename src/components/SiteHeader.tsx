@@ -28,7 +28,7 @@ export function SiteHeader({
   const location = useLocation();
   const isChild = !!user?.email?.includes(CHILD_EMAIL_DOMAIN);
   const isParentDashboard = location.pathname.startsWith("/dashboard/ibu-bapa");
-  const hideStars = profile?.role === "parent" || isParentDashboard;
+  const hideStars = !isChild;
 
   const navLinks = (
     <>
