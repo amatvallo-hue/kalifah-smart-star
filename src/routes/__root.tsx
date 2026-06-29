@@ -15,6 +15,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { CHILD_EMAIL_DOMAIN } from "@/lib/child-auth";
 import { supabase } from "@/integrations/supabase/client";
 import { KalifahHatiCheckIn } from "@/components/KalifahHatiCheckIn";
+import { Toaster } from "@/components/ui/sonner";
 
 function NotFoundComponent() {
   return (
@@ -204,6 +205,7 @@ function RootComponent() {
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Outlet />
       <KalifahHatiGate />
+      <Toaster richColors position="top-center" />
     </QueryClientProvider>
   );
 }
