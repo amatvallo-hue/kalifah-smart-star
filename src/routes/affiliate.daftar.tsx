@@ -98,6 +98,8 @@ function DaftarAffiliatePage() {
           no_telefon: noTelefon,
           no_akaun_bank: noAkaunBank,
           nama_bank: namaBank,
+          nama_pemilik_bank: namaPemilikBank,
+          platform_promosi: platformPromosi,
           ref_code: refCode,
           custom_ref_code: refCode,
         });
