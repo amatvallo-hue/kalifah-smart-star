@@ -40,6 +40,9 @@ function DaftarAffiliatePage() {
   const [noTelefon, setNoTelefon] = useState("");
   const [noAkaunBank, setNoAkaunBank] = useState("");
   const [namaBank, setNamaBank] = useState("");
+  const [namaPemilikBank, setNamaPemilikBank] = useState("");
+  const [platformPromosi, setPlatformPromosi] = useState<string[]>([]);
+  const [setuju, setSetuju] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<{ refCode: string } | null>(null);
