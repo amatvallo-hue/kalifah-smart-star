@@ -269,6 +269,57 @@ function AffiliateDashboardPage() {
           Sudah dibayar: <strong>{rm(aff.total_dibayar)}</strong>
         </div>
 
+        {/* Challenge bulan ini */}
+        {challenge ? (
+          <div className="mt-6 rounded-2xl border-2 border-amber-300 bg-gradient-to-br from-amber-50 to-yellow-50 p-5 shadow-soft">
+            <div className="flex items-center gap-2 text-amber-700">
+              <Trophy className="h-5 w-5" />
+              <h2 className="font-display text-xl font-extrabold">
+                🏆 Challenge Bulan Ini
+              </h2>
+            </div>
+            <p className="mt-1 text-sm text-amber-900">
+              Jual {challenge.target_jualan} pakej bulan ini, dapat bonus RM
+              {Number(challenge.bonus_rm).toFixed(2)}!
+            </p>
+            <div className="mt-3">
+              <div className="flex items-center justify-between text-xs font-bold text-amber-900">
+                <span>
+                  {jualanBulanIni} / {challenge.target_jualan} jualan
+                </span>
+                <span>
+                  {Math.min(
+                    100,
+                    Math.round(
+                      (jualanBulanIni / challenge.target_jualan) * 100,
+                    ),
+                  )}
+                  %
+                </span>
+              </div>
+              <div className="mt-1 h-3 w-full overflow-hidden rounded-full bg-amber-100">
+                <div
+                  className="h-full bg-gradient-to-r from-green-500 to-emerald-600 transition-all"
+                  style={{
+                    width: `${Math.min(100, (jualanBulanIni / challenge.target_jualan) * 100)}%`,
+                  }}
+                />
+              </div>
+            </div>
+            {jualanBulanIni >= challenge.target_jualan ? (
+              <div className="mt-3 inline-flex items-center gap-1 rounded-full bg-green-500/10 px-3 py-1 text-sm font-extrabold text-green-700">
+                ✅ Tahniah! Anda layak dapat bonus RM
+                {Number(challenge.bonus_rm).toFixed(2)}
+              </div>
+            ) : (
+              <div className="mt-3 text-sm font-bold text-amber-700">
+                Lagi {challenge.target_jualan - jualanBulanIni} jualan untuk
+                capai bonus!
+              </div>
+            )}
+          </div>
+        ) : null}
+
         {/* Jualan terkini */}
         <div className="mt-8">
           <h2 className="font-display text-xl font-extrabold">Jualan Terkini</h2>
