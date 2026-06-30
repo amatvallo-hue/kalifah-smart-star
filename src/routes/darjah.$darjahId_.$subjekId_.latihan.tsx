@@ -555,7 +555,13 @@ function LatihanSubjekPage() {
   const mcq = mcqList[idx];
 
   function semakJawapan() {
-    const betul = normalize(jwp) === normalize(soalan.jawapan);
+    const nJwp = normalize(jwp);
+    const nCorrect = normalize(soalan.jawapan);
+    const betul =
+      nJwp.length > 0 &&
+      (nJwp === nCorrect ||
+        nCorrect.startsWith(nJwp) ||
+        nJwp.includes(nCorrect));
     setSemak(betul);
     if (betul) setBintang((b) => b + 1);
   }
