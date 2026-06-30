@@ -31,8 +31,8 @@ import { Route as ApiCheckoutRouteImport } from './routes/api.checkout'
 import { Route as AffiliateSyaratRouteImport } from './routes/affiliate.syarat'
 import { Route as AffiliateDashboardRouteImport } from './routes/affiliate.dashboard'
 import { Route as AffiliateDaftarRouteImport } from './routes/affiliate.daftar'
+import { Route as AdminChallengeRouteImport } from './routes/admin_.challenge'
 import { Route as AdminAffiliatesRouteImport } from './routes/admin_.affiliates'
-import { Route as AdminChallengeRouteImport } from './routes/admin.challenge'
 import { Route as PreviewDarjahIdScoreRouteImport } from './routes/preview.$darjahId_.score'
 import { Route as DarjahDarjahIdSubjekIdRouteImport } from './routes/darjah.$darjahId_.$subjekId'
 import { Route as DarjahDarjahIdSubjekIdNotaRingkasRouteImport } from './routes/darjah.$darjahId_.$subjekId_.nota-ringkas'
@@ -152,15 +152,15 @@ const AffiliateDaftarRoute = AffiliateDaftarRouteImport.update({
   path: '/affiliate/daftar',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminChallengeRoute = AdminChallengeRouteImport.update({
+  id: '/admin_/challenge',
+  path: '/admin/challenge',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminAffiliatesRoute = AdminAffiliatesRouteImport.update({
   id: '/admin_/affiliates',
   path: '/admin/affiliates',
   getParentRoute: () => rootRouteImport,
-} as any)
-const AdminChallengeRoute = AdminChallengeRouteImport.update({
-  id: '/challenge',
-  path: '/challenge',
-  getParentRoute: () => AdminRoute,
 } as any)
 const PreviewDarjahIdScoreRoute = PreviewDarjahIdScoreRouteImport.update({
   id: '/preview/$darjahId_/score',
@@ -211,7 +211,7 @@ const ApiPublicToyyibpayCallbackRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRouteWithChildren
+  '/admin': typeof AdminRoute
   '/daftar': typeof DaftarRoute
   '/harga': typeof HargaRoute
   '/latihan': typeof LatihanRoute
@@ -219,8 +219,8 @@ export interface FileRoutesByFullPath {
   '/lupa-password': typeof LupaPasswordRoute
   '/pilih-darjah': typeof PilihDarjahRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/admin/challenge': typeof AdminChallengeRoute
   '/admin/affiliates': typeof AdminAffiliatesRoute
+  '/admin/challenge': typeof AdminChallengeRoute
   '/affiliate/daftar': typeof AffiliateDaftarRoute
   '/affiliate/dashboard': typeof AffiliateDashboardRoute
   '/affiliate/syarat': typeof AffiliateSyaratRoute
@@ -245,7 +245,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRouteWithChildren
+  '/admin': typeof AdminRoute
   '/daftar': typeof DaftarRoute
   '/harga': typeof HargaRoute
   '/latihan': typeof LatihanRoute
@@ -253,8 +253,8 @@ export interface FileRoutesByTo {
   '/lupa-password': typeof LupaPasswordRoute
   '/pilih-darjah': typeof PilihDarjahRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/admin/challenge': typeof AdminChallengeRoute
   '/admin/affiliates': typeof AdminAffiliatesRoute
+  '/admin/challenge': typeof AdminChallengeRoute
   '/affiliate/daftar': typeof AffiliateDaftarRoute
   '/affiliate/dashboard': typeof AffiliateDashboardRoute
   '/affiliate/syarat': typeof AffiliateSyaratRoute
@@ -280,7 +280,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/admin': typeof AdminRouteWithChildren
+  '/admin': typeof AdminRoute
   '/daftar': typeof DaftarRoute
   '/harga': typeof HargaRoute
   '/latihan': typeof LatihanRoute
@@ -288,8 +288,8 @@ export interface FileRoutesById {
   '/lupa-password': typeof LupaPasswordRoute
   '/pilih-darjah': typeof PilihDarjahRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/admin/challenge': typeof AdminChallengeRoute
   '/admin_/affiliates': typeof AdminAffiliatesRoute
+  '/admin_/challenge': typeof AdminChallengeRoute
   '/affiliate/daftar': typeof AffiliateDaftarRoute
   '/affiliate/dashboard': typeof AffiliateDashboardRoute
   '/affiliate/syarat': typeof AffiliateSyaratRoute
@@ -324,8 +324,8 @@ export interface FileRouteTypes {
     | '/lupa-password'
     | '/pilih-darjah'
     | '/reset-password'
-    | '/admin/challenge'
     | '/admin/affiliates'
+    | '/admin/challenge'
     | '/affiliate/daftar'
     | '/affiliate/dashboard'
     | '/affiliate/syarat'
@@ -358,8 +358,8 @@ export interface FileRouteTypes {
     | '/lupa-password'
     | '/pilih-darjah'
     | '/reset-password'
-    | '/admin/challenge'
     | '/admin/affiliates'
+    | '/admin/challenge'
     | '/affiliate/daftar'
     | '/affiliate/dashboard'
     | '/affiliate/syarat'
@@ -392,8 +392,8 @@ export interface FileRouteTypes {
     | '/lupa-password'
     | '/pilih-darjah'
     | '/reset-password'
-    | '/admin/challenge'
     | '/admin_/affiliates'
+    | '/admin_/challenge'
     | '/affiliate/daftar'
     | '/affiliate/dashboard'
     | '/affiliate/syarat'
@@ -419,7 +419,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AdminRoute: typeof AdminRouteWithChildren
+  AdminRoute: typeof AdminRoute
   DaftarRoute: typeof DaftarRoute
   HargaRoute: typeof HargaRoute
   LatihanRoute: typeof LatihanRoute
@@ -428,6 +428,7 @@ export interface RootRouteChildren {
   PilihDarjahRoute: typeof PilihDarjahRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   AdminAffiliatesRoute: typeof AdminAffiliatesRoute
+  AdminChallengeRoute: typeof AdminChallengeRoute
   AffiliateDaftarRoute: typeof AffiliateDaftarRoute
   AffiliateDashboardRoute: typeof AffiliateDashboardRoute
   AffiliateSyaratRoute: typeof AffiliateSyaratRoute
@@ -607,19 +608,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AffiliateDaftarRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin_/challenge': {
+      id: '/admin_/challenge'
+      path: '/admin/challenge'
+      fullPath: '/admin/challenge'
+      preLoaderRoute: typeof AdminChallengeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin_/affiliates': {
       id: '/admin_/affiliates'
       path: '/admin/affiliates'
       fullPath: '/admin/affiliates'
       preLoaderRoute: typeof AdminAffiliatesRouteImport
       parentRoute: typeof rootRouteImport
-    }
-    '/admin/challenge': {
-      id: '/admin/challenge'
-      path: '/challenge'
-      fullPath: '/admin/challenge'
-      preLoaderRoute: typeof AdminChallengeRouteImport
-      parentRoute: typeof AdminRoute
     }
     '/preview/$darjahId_/score': {
       id: '/preview/$darjahId_/score'
@@ -680,19 +681,9 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface AdminRouteChildren {
-  AdminChallengeRoute: typeof AdminChallengeRoute
-}
-
-const AdminRouteChildren: AdminRouteChildren = {
-  AdminChallengeRoute: AdminChallengeRoute,
-}
-
-const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AdminRoute: AdminRouteWithChildren,
+  AdminRoute: AdminRoute,
   DaftarRoute: DaftarRoute,
   HargaRoute: HargaRoute,
   LatihanRoute: LatihanRoute,
@@ -701,6 +692,7 @@ const rootRouteChildren: RootRouteChildren = {
   PilihDarjahRoute: PilihDarjahRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   AdminAffiliatesRoute: AdminAffiliatesRoute,
+  AdminChallengeRoute: AdminChallengeRoute,
   AffiliateDaftarRoute: AffiliateDaftarRoute,
   AffiliateDashboardRoute: AffiliateDashboardRoute,
   AffiliateSyaratRoute: AffiliateSyaratRoute,
@@ -727,13 +719,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
