@@ -171,7 +171,7 @@ function KalifahHatiSeksyen({ emotions }: { emotions: EmotionRow[] }) {
 
       const tarikh = daysAgoKL(6 - i);
 
-      const rows = emotions.filter((e) => e.created_at.slice(0, 10) === tarikh);
+      const rows = emotions.filter((e) => toKLDate(e.created_at) === tarikh);
 
       const last = rows[rows.length - 1] ?? null;
 
