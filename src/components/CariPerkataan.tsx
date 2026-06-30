@@ -314,7 +314,7 @@ const BM_DARJAH1_WORDS_S1: Word[] = [
   { word: "MEJA", row: 8, col: 0, dir: "H" },
   { word: "API", row: 0, col: 5, dir: "V" },
   { word: "AIR", row: 0, col: 7, dir: "V" },
-  { word: "EPAL", row: 1, col: 3, dir: "V" },
+  { word: "EPAL", row: 1, col: 4, dir: "V" },
   { word: "IKAN", row: 2, col: 6, dir: "V" },
   { word: "BULAN", row: 4, col: 9, dir: "V" },
 ];
@@ -516,8 +516,8 @@ const SAINS_DARJAH1_WORDS_S1: Word[] = [
   { word: "HUJAN", row: 6, col: 0, dir: "H" },
   { word: "AWAN", row: 8, col: 0, dir: "H" },
   { word: "TELINGA", row: 0, col: 7, dir: "V" },
-  { word: "AKAR", row: 0, col: 5, dir: "V" },
-  { word: "DAUN", row: 1, col: 3, dir: "V" },
+  { word: "AKAR", row: 0, col: 6, dir: "V" },
+  { word: "DAUN", row: 5, col: 3, dir: "V" },
   { word: "BUNGA", row: 2, col: 8, dir: "V" },
   { word: "HAIWAN", row: 3, col: 9, dir: "V" },
 ];
