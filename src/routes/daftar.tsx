@@ -159,6 +159,13 @@ function DaftarPage() {
     <AuthShell title="Daftar Akaun Ibu Bapa" subtitle="Cipta akaun untuk memantau prestasi dan kemajuan anak anda.">
       <StepProgress active={1} />
       <form onSubmit={onSubmit} className="space-y-4">
+        <div className="flex w-full flex-wrap items-center justify-center gap-x-3 gap-y-1 rounded-full bg-green-50 px-4 py-2.5 text-xs font-bold text-green-700">
+          <span className="inline-flex items-center gap-1">✓ Cuba percuma</span>
+          <span className="text-green-400">·</span>
+          <span className="inline-flex items-center gap-1">✓ RM49/tahun sahaja</span>
+          <span className="text-green-400">·</span>
+          <span className="inline-flex items-center gap-1">✓ Bayar selepas daftar</span>
+        </div>
         <Field icon={User} label="Nama Penuh Ibu/Bapa" type="text" value={name} onChange={setName} placeholder="Ali bin Abu" autoComplete="name" />
         <Field icon={Mail} label="Email" type="email" value={email} onChange={setEmail} placeholder="contoh@email.com" autoComplete="email" />
         <Field icon={Lock} label="Kata Laluan" type="password" value={password} onChange={setPassword} placeholder="Minimum 6 aksara" autoComplete="new-password" />
