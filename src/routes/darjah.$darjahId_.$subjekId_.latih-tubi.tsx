@@ -151,7 +151,9 @@ function LatihTubiPage() {
         .from("soalan_latih_tubi")
         .select("id, soalan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan_betul, topik, feedback_a, feedback_b, feedback_c, feedback_d")
         .eq("darjah", Number.isFinite(darjahNum) ? darjahNum : darjahId)
-        .eq("subjek", subjekQuery);
+        .eq("subjek", subjekQuery)
+        .not("feedback_a", "is", null)
+        .neq("feedback_a", "");
       if (cancelled) return;
       if (error) {
         setErrMsg(error.message);
