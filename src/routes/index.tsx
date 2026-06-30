@@ -123,6 +123,33 @@ function Hero() {
             <b>Bahasa Melayu</b>, <b>Matematik</b>, <b>Bahasa Inggeris</b>, <b>Sains</b> dan <b>Pendidikan Islam</b>.
             Lebih 32,000+ soalan latihan & sijil automatik.
           </p>
+
+          <div className="mt-7 grid w-full max-w-xl gap-4 sm:grid-cols-2">
+            <div className="rounded-2xl border border-border/60 bg-muted/30 p-5">
+              <h3 className="font-display text-sm font-extrabold text-muted-foreground">Tuisyen biasa</h3>
+              <p className="mt-1 font-display text-2xl font-extrabold text-foreground">RM100–200<span className="text-base font-bold text-muted-foreground">/bulan</span></p>
+              <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
+                <li className="flex items-center gap-2"><span className="text-rose-500">✗</span> Tiada tracking kemajuan</li>
+                <li className="flex items-center gap-2"><span className="text-rose-500">✗</span> Ibu bapa tak nampak progress</li>
+                <li className="flex items-center gap-2"><span className="text-rose-500">✗</span> Bergantung pada jadual cikgu</li>
+              </ul>
+            </div>
+            <div className="rounded-2xl border p-5" style={{ borderColor: `${HIJAU}44`, backgroundColor: `${HIJAU}08` }}>
+              <h3 className="font-display text-sm font-extrabold" style={{ color: HIJAU }}>Kalifah.my</h3>
+              <p className="mt-1 font-display text-2xl font-extrabold" style={{ color: HIJAU }}>RM49<span className="text-base font-bold text-muted-foreground">/tahun sahaja</span></p>
+              <ul className="mt-3 space-y-2 text-sm text-foreground">
+                <li className="flex items-center gap-2"><span style={{ color: HIJAU }}>✓</span> Dashboard pantau ibu bapa</li>
+                <li className="flex items-center gap-2"><span style={{ color: HIJAU }}>✓</span> 32,000+ soalan latihan</li>
+                <li className="flex items-center gap-2"><span style={{ color: HIJAU }}>✓</span> Belajar bila-bila masa</li>
+              </ul>
+            </div>
+          </div>
+
+          <blockquote className="mt-5 max-w-xl border-l-4 pl-4 italic text-foreground" style={{ borderColor: HIJAU }}>
+            "Anak saya naik dari 60% ke 82% dalam masa 2 bulan. Dashboard tu memang membantu saya pantau dia setiap hari."
+            <footer className="mt-1 text-xs not-italic text-muted-foreground">— Cikgu Eema Rahman, ibu kepada pelajar Darjah 4</footer>
+          </blockquote>
+
           <div className="mt-7 flex w-full flex-col gap-3 sm:flex-row">
             <Link
               to="/daftar"
