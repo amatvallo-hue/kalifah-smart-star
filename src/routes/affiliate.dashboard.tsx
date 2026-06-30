@@ -39,6 +39,15 @@ interface Jualan {
   created_at: string;
 }
 
+interface Challenge {
+  id: string;
+  bulan: number;
+  tahun: number;
+  target_jualan: number;
+  bonus_rm: number;
+  aktif: boolean;
+}
+
 function rm(ringgit: number) {
   return `RM ${(ringgit ?? 0).toFixed(2)}`;
 }
@@ -50,6 +59,8 @@ function AffiliateDashboardPage() {
   const [jualan, setJualan] = useState<Jualan[]>([]);
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
+  const [challenge, setChallenge] = useState<Challenge | null>(null);
+  const [jualanBulanIni, setJualanBulanIni] = useState<number>(0);
 
   useEffect(() => {
     if (authLoading) return;
