@@ -110,6 +110,9 @@ function daysAgoKL(n: number): string {
   t.setUTCDate(t.getUTCDate() - n);
   return t.toISOString().slice(0, 10);
 }
+function toKLDate(isoStr: string): string {
+  return new Date(isoStr).toLocaleDateString("en-CA", { timeZone: "Asia/Kuala_Lumpur" });
+}
 function kiraStreak(rows: StatsRow[]): number {
   const set = new Set(rows.map((r) => r.tarikh));
   let mula = set.has(todayKL()) ? 0 : set.has(daysAgoKL(1)) ? 1 : -1;
@@ -168,7 +171,7 @@ function KalifahHatiSeksyen({ emotions }: { emotions: EmotionRow[] }) {
 
       const tarikh = daysAgoKL(6 - i);
 
-      const rows = emotions.filter((e) => e.created_at.slice(0, 10) === tarikh);
+      const rows = emotions.filter((e) => toKLDate(e.created_at) === tarikh);
 
       const last = rows[rows.length - 1] ?? null;
 
@@ -182,7 +185,7 @@ function KalifahHatiSeksyen({ emotions }: { emotions: EmotionRow[] }) {
 
   const mingguRows = emotions.filter((e) => {
 
-    const t = e.created_at.slice(0, 10);
+    const t = toKLDate(e.created_at);
 
     return t >= daysAgoKL(6);
 
@@ -703,7 +706,7 @@ function ParentDashboard() {
   }, []);
 
   const minggu = useMemo(() => {
-    const p = progress.filter((r) => tarikhMingguIni.has(r.created_at.slice(0, 10)));
+    const p = progress.filter((r) => tarikhMingguIni.has(toKLDate(r.created_at)));
     const s = stats.filter((r) => tarikhMingguIni.has(r.tarikh));
     const soalanStats = s.reduce((a, r) => a + (r.soalan_dijawab ?? 0), 0);
     const masaStats = s.reduce((a, r) => a + (r.masa_belajar ?? 0), 0);
@@ -717,7 +720,7 @@ function ParentDashboard() {
   }, [progress, stats, tarikhMingguIni]);
 
   const bulan = useMemo(() => {
-    const p = progress.filter((r) => tarikhBulanIni.has(r.created_at.slice(0, 10)));
+    const p = progress.filter((r) => tarikhBulanIni.has(toKLDate(r.created_at)));
     const s = stats.filter((r) => tarikhBulanIni.has(r.tarikh));
     const soalanStats = s.reduce((a, r) => a + (r.soalan_dijawab ?? 0), 0);
     const masaStats = s.reduce((a, r) => a + (r.masa_belajar ?? 0), 0);
