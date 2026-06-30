@@ -608,17 +608,40 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
           </div>
         )}
 
-        {pilih !== null && soalan.penjelasan && soalan.penjelasan.trim().length > 0 && (
-          <div className="mt-3 flex items-start gap-3 rounded-lg border border-amber-300 bg-amber-50 p-4">
-            <Lightbulb className="mt-0.5 h-5 w-5 shrink-0 text-amber-600" />
-            <div className="text-sm text-amber-900">
-              <p className="font-display font-extrabold">
-                {en ? "Explanation" : "Penjelasan"}
-              </p>
-              <p className="mt-1 leading-relaxed">{soalan.penjelasan}</p>
-            </div>
-          </div>
-        )}
+        {pilih !== null && (() => {
+          const fbMap: Record<number, string | null | undefined> = {
+            0: soalan.feedback_a,
+            1: soalan.feedback_b,
+            2: soalan.feedback_c,
+            3: soalan.feedback_d,
+          };
+          const fb = fbMap[pilih];
+          const isBetulPilih = pilih === soalan.jawapan;
+          return (
+            <>
+              {fb && fb.trim().length > 0 && (
+                <div
+                  className="mt-3 flex items-start gap-3 rounded-lg p-4"
+                  style={isBetulPilih
+                    ? { border: "1px solid #1B8A5A", backgroundColor: "#1B8A5A15" }
+                    : { border: "1px solid #f59e0b", backgroundColor: "#fffbeb" }}
+                >
+                  <Lightbulb className="mt-0.5 h-5 w-5 shrink-0" style={{ color: isBetulPilih ? "#1B8A5A" : "#d97706" }} />
+                  <p className="text-sm" style={{ color: isBetulPilih ? "#0f5a39" : "#92400e" }}>{fb}</p>
+                </div>
+              )}
+              {soalan.penjelasan && soalan.penjelasan.trim().length > 0 && (
+                <div className="mt-3 flex items-start gap-3 rounded-lg border border-amber-300 bg-amber-50 p-4">
+                  <Lightbulb className="mt-0.5 h-5 w-5 shrink-0 text-amber-600" />
+                  <div className="text-sm text-amber-900">
+                    <p className="font-display font-extrabold">{en ? "Explanation" : "Penjelasan"}</p>
+                    <p className="mt-1 leading-relaxed">{soalan.penjelasan}</p>
+                  </div>
+                </div>
+              )}
+            </>
+          );
+        })()}
 
         <button
           onClick={seterusnya}
