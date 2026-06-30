@@ -17,6 +17,10 @@ interface Soalan {
   pilihan: string[];
   jawapan: number; // 0..3
   penjelasan?: string | null;
+  feedback_a?: string | null;
+  feedback_b?: string | null;
+  feedback_c?: string | null;
+  feedback_d?: string | null;
   topik: string;
 }
 
