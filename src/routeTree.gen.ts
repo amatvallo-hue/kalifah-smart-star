@@ -28,6 +28,7 @@ import { Route as ApiTemporaryUnlockRouteImport } from './routes/api.temporary-u
 import { Route as ApiDebugEnvRouteImport } from './routes/api.debug-env'
 import { Route as ApiConfirmPaymentRouteImport } from './routes/api.confirm-payment'
 import { Route as ApiCheckoutRouteImport } from './routes/api.checkout'
+import { Route as AffiliateSyaratRouteImport } from './routes/affiliate.syarat'
 import { Route as AffiliateDashboardRouteImport } from './routes/affiliate.dashboard'
 import { Route as AffiliateDaftarRouteImport } from './routes/affiliate.daftar'
 import { Route as AdminAffiliatesRouteImport } from './routes/admin_.affiliates'
@@ -135,6 +136,11 @@ const ApiCheckoutRoute = ApiCheckoutRouteImport.update({
   path: '/api/checkout',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AffiliateSyaratRoute = AffiliateSyaratRouteImport.update({
+  id: '/affiliate/syarat',
+  path: '/affiliate/syarat',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AffiliateDashboardRoute = AffiliateDashboardRouteImport.update({
   id: '/affiliate/dashboard',
   path: '/affiliate/dashboard',
@@ -210,6 +216,7 @@ export interface FileRoutesByFullPath {
   '/admin/affiliates': typeof AdminAffiliatesRoute
   '/affiliate/daftar': typeof AffiliateDaftarRoute
   '/affiliate/dashboard': typeof AffiliateDashboardRoute
+  '/affiliate/syarat': typeof AffiliateSyaratRoute
   '/api/checkout': typeof ApiCheckoutRoute
   '/api/confirm-payment': typeof ApiConfirmPaymentRoute
   '/api/debug-env': typeof ApiDebugEnvRoute
@@ -242,6 +249,7 @@ export interface FileRoutesByTo {
   '/admin/affiliates': typeof AdminAffiliatesRoute
   '/affiliate/daftar': typeof AffiliateDaftarRoute
   '/affiliate/dashboard': typeof AffiliateDashboardRoute
+  '/affiliate/syarat': typeof AffiliateSyaratRoute
   '/api/checkout': typeof ApiCheckoutRoute
   '/api/confirm-payment': typeof ApiConfirmPaymentRoute
   '/api/debug-env': typeof ApiDebugEnvRoute
@@ -275,6 +283,7 @@ export interface FileRoutesById {
   '/admin_/affiliates': typeof AdminAffiliatesRoute
   '/affiliate/daftar': typeof AffiliateDaftarRoute
   '/affiliate/dashboard': typeof AffiliateDashboardRoute
+  '/affiliate/syarat': typeof AffiliateSyaratRoute
   '/api/checkout': typeof ApiCheckoutRoute
   '/api/confirm-payment': typeof ApiConfirmPaymentRoute
   '/api/debug-env': typeof ApiDebugEnvRoute
@@ -309,6 +318,7 @@ export interface FileRouteTypes {
     | '/admin/affiliates'
     | '/affiliate/daftar'
     | '/affiliate/dashboard'
+    | '/affiliate/syarat'
     | '/api/checkout'
     | '/api/confirm-payment'
     | '/api/debug-env'
@@ -341,6 +351,7 @@ export interface FileRouteTypes {
     | '/admin/affiliates'
     | '/affiliate/daftar'
     | '/affiliate/dashboard'
+    | '/affiliate/syarat'
     | '/api/checkout'
     | '/api/confirm-payment'
     | '/api/debug-env'
@@ -373,6 +384,7 @@ export interface FileRouteTypes {
     | '/admin_/affiliates'
     | '/affiliate/daftar'
     | '/affiliate/dashboard'
+    | '/affiliate/syarat'
     | '/api/checkout'
     | '/api/confirm-payment'
     | '/api/debug-env'
@@ -406,6 +418,7 @@ export interface RootRouteChildren {
   AdminAffiliatesRoute: typeof AdminAffiliatesRoute
   AffiliateDaftarRoute: typeof AffiliateDaftarRoute
   AffiliateDashboardRoute: typeof AffiliateDashboardRoute
+  AffiliateSyaratRoute: typeof AffiliateSyaratRoute
   ApiCheckoutRoute: typeof ApiCheckoutRoute
   ApiConfirmPaymentRoute: typeof ApiConfirmPaymentRoute
   ApiDebugEnvRoute: typeof ApiDebugEnvRoute
@@ -561,6 +574,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiCheckoutRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/affiliate/syarat': {
+      id: '/affiliate/syarat'
+      path: '/affiliate/syarat'
+      fullPath: '/affiliate/syarat'
+      preLoaderRoute: typeof AffiliateSyaratRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/affiliate/dashboard': {
       id: '/affiliate/dashboard'
       path: '/affiliate/dashboard'
@@ -654,6 +674,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminAffiliatesRoute: AdminAffiliatesRoute,
   AffiliateDaftarRoute: AffiliateDaftarRoute,
   AffiliateDashboardRoute: AffiliateDashboardRoute,
+  AffiliateSyaratRoute: AffiliateSyaratRoute,
   ApiCheckoutRoute: ApiCheckoutRoute,
   ApiConfirmPaymentRoute: ApiConfirmPaymentRoute,
   ApiDebugEnvRoute: ApiDebugEnvRoute,
@@ -677,13 +698,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

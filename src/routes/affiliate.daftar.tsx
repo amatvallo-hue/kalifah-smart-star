@@ -40,6 +40,9 @@ function DaftarAffiliatePage() {
   const [noTelefon, setNoTelefon] = useState("");
   const [noAkaunBank, setNoAkaunBank] = useState("");
   const [namaBank, setNamaBank] = useState("");
+  const [namaPemilikBank, setNamaPemilikBank] = useState("");
+  const [platformPromosi, setPlatformPromosi] = useState<string[]>([]);
+  const [setuju, setSetuju] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<{ refCode: string } | null>(null);
@@ -95,6 +98,8 @@ function DaftarAffiliatePage() {
           no_telefon: noTelefon,
           no_akaun_bank: noAkaunBank,
           nama_bank: namaBank,
+          nama_pemilik_bank: namaPemilikBank,
+          platform_promosi: platformPromosi,
           ref_code: refCode,
           custom_ref_code: refCode,
         });
@@ -221,7 +226,7 @@ function DaftarAffiliatePage() {
             Daftar sebagai Affiliate
           </h1>
           <p className="mt-2 text-muted-foreground">
-            Dapatkan komisyen <strong>10%</strong> untuk setiap jualan melalui
+            Dapatkan komisyen <strong>30%</strong> untuk setiap jualan melalui
             pautan unik anda.
           </p>
         </div>
@@ -261,11 +266,55 @@ function DaftarAffiliatePage() {
             placeholder="cth: Maybank"
           />
           <Field
+            label="Nama Pemilik Akaun Bank"
+            value={namaPemilikBank}
+            onChange={setNamaPemilikBank}
+            required
+            placeholder="Nama penuh seperti dalam akaun bank"
+          />
+          <Field
             label="No. Akaun Bank"
             value={noAkaunBank}
             onChange={setNoAkaunBank}
             required
           />
+
+          <div>
+            <span className="mb-2 block text-sm font-bold text-foreground">
+              Platform Promosi (boleh pilih lebih dari satu)
+            </span>
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+              {[
+                "WhatsApp/Telegram",
+                "TikTok",
+                "Instagram/Facebook",
+                "YouTube",
+                "Threads",
+                "Lain-lain",
+              ].map((opt) => {
+                const checked = platformPromosi.includes(opt);
+                return (
+                  <label
+                    key={opt}
+                    className="flex items-center gap-2 rounded-md border border-input bg-background px-3 py-2 text-sm"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={checked}
+                      onChange={(e) => {
+                        setPlatformPromosi((prev) =>
+                          e.target.checked
+                            ? [...prev, opt]
+                            : prev.filter((p) => p !== opt),
+                        );
+                      }}
+                    />
+                    <span>{opt}</span>
+                  </label>
+                );
+              })}
+            </div>
+          </div>
 
           {error && (
             <div className="rounded-2xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm font-bold text-destructive">
@@ -273,9 +322,29 @@ function DaftarAffiliatePage() {
             </div>
           )}
 
+          <label className="flex items-start gap-2 text-sm text-foreground">
+            <input
+              type="checkbox"
+              checked={setuju}
+              onChange={(e) => setSetuju(e.target.checked)}
+              className="mt-1"
+            />
+            <span>
+              Saya telah membaca dan bersetuju dengan{" "}
+              <Link
+                to="/affiliate/syarat"
+                target="_blank"
+                className="font-bold text-primary hover:underline"
+              >
+                Terma &amp; Syarat
+              </Link>{" "}
+              Program Affiliate Kalifah.my
+            </span>
+          </label>
+
           <button
             type="submit"
-            disabled={loading}
+            disabled={loading || !setuju}
             className="w-full rounded-full bg-gradient-primary px-6 py-3 font-display text-base font-extrabold text-primary-foreground shadow-soft transition hover:-translate-y-0.5 disabled:opacity-60"
           >
             {loading ? "Sedang mendaftar..." : "Daftar Sekarang"}
