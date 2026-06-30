@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/table";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/admin/challenge")({
+export const Route = createFileRoute("/admin_/challenge")({
   head: () => ({ meta: [{ title: "Challenge Bulanan — Admin Kalifah.my" }] }),
   ssr: false,
   component: AdminChallengePage,
