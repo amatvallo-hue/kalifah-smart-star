@@ -75,6 +75,29 @@ function AffiliateDashboardPage() {
         .order("created_at", { ascending: false })
         .limit(50);
       setJualan((j as Jualan[]) ?? []);
+
+      // Challenge bulan ini
+      const now = new Date();
+      const bulan = now.getMonth() + 1;
+      const tahun = now.getFullYear();
+      const { data: ch } = await supabase
+        .from("challenge_bulanan")
+        .select("*")
+        .eq("aktif", true)
+        .eq("bulan", bulan)
+        .eq("tahun", tahun)
+        .maybeSingle();
+      if (ch) {
+        setChallenge(ch as Challenge);
+        const firstDay = new Date(tahun, bulan - 1, 1).toISOString();
+        const { count } = await supabase
+          .from("affiliate_jualan")
+          .select("id", { count: "exact", head: true })
+          .eq("affiliate_id", (a as Affiliate).id)
+          .gte("created_at", firstDay);
+        setJualanBulanIni(count ?? 0);
+      }
+
       setLoading(false);
     })();
   }, [user, authLoading, navigate]);
