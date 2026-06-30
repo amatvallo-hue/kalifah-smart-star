@@ -39,6 +39,32 @@ function rm(ringgit: number) {
 }
 
 function AdminAffiliates() {
+  const { user, loading: authLoading } = useAuth();
+  const navigate = useNavigate();
+  const [checking, setChecking] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    if (authLoading) return;
+    if (!user) {
+      navigate({ to: "/login" });
+      return;
+    }
+    (async () => {
+      const { data } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", user.id)
+        .maybeSingle();
+      if ((data as { role?: string } | null)?.role === "admin") {
+        setIsAdmin(true);
+      } else {
+        navigate({ to: "/" });
+      }
+      setChecking(false);
+    })();
+  }, [user, authLoading, navigate]);
+
   const [rows, setRows] = useState<AffRow[]>([]);
   const [jualanCounts, setJualanCounts] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(true);
