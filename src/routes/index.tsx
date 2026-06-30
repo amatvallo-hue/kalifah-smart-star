@@ -492,9 +492,9 @@ function Harga() {
 function Testimoni() {
   const items = [
     {
-      n: "Puan Nadia",
-      r: "Ibu kepada 2 anak D2 & D4",
-      t: "Senang nak pantau anak. Sejak guna Kalifah.my, Matematik anak saya meningkat dari 60% ke 85%!",
+      n: "Cikgu Eema Rahman",
+      r: "Tanjung Malim",
+      t: "Baru 3 minggu guna, anak dah ada pertambahan masa belajar di rumah. Saya suka sebab boleh tengok apa latihan yang anak buat. Anak pula suka kuiz dan game!",
     },
     {
       n: "Encik Rizal",
