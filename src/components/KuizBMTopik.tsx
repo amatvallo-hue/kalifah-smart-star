@@ -600,7 +600,7 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
           </div>
         )}
 
-        {pilih !== null && !betul && soalan.penjelasan && soalan.penjelasan.trim().length > 0 && (
+        {pilih !== null && soalan.penjelasan && soalan.penjelasan.trim().length > 0 && (
           <div className="mt-3 flex items-start gap-3 rounded-lg border border-amber-300 bg-amber-50 p-4">
             <Lightbulb className="mt-0.5 h-5 w-5 shrink-0 text-amber-600" />
             <div className="text-sm text-amber-900">
