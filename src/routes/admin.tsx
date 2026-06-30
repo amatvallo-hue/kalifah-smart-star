@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Fragment, useEffect, useMemo, useState } from "react";
 import { Loader2, ShieldAlert } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
