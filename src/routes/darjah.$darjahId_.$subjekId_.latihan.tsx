@@ -456,7 +456,7 @@ const BANK: Record<string, Soalan[]> = {
 };
 
 function normalize(s: string) {
-  return s.trim().toLowerCase().replace(/\s+/g, " ");
+  return s.trim().toLowerCase().replace(/[.?]+$/g, "").replace(/\s+/g, " ");
 }
 
 function LatihanSubjekPage() {
