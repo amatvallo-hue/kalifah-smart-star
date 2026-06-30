@@ -333,7 +333,7 @@ function KuizPage() {
     (darjahId === "1" || darjahId === "2" || darjahId === "3" || darjahId === "4" || darjahId === "5");
   const isMatematikTopik =
     subjekId === "matematik" &&
-    (darjahId === "2" || darjahId === "3" || darjahId === "4" || darjahId === "5" || darjahId === "6");
+    (darjahId === "1" || darjahId === "2" || darjahId === "3" || darjahId === "4" || darjahId === "5" || darjahId === "6");
   const isSainsTopik =
     subjekId === "sains" &&
     (darjahId === "1" || darjahId === "2" || darjahId === "3" || darjahId === "4" || darjahId === "5" || darjahId === "6");
