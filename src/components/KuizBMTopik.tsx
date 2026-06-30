@@ -17,6 +17,10 @@ interface Soalan {
   pilihan: string[];
   jawapan: number; // 0..3
   penjelasan?: string | null;
+  feedback_a?: string | null;
+  feedback_b?: string | null;
+  feedback_c?: string | null;
+  feedback_d?: string | null;
   topik: string;
 }
 
@@ -168,7 +172,7 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
     setErrMsg(null);
     const { data, error } = await supabase
       .from("kuiz_soalan")
-      .select("id, soalan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan, penjelasan, topik")
+      .select("id, soalan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan, penjelasan, feedback_a, feedback_b, feedback_c, feedback_d, topik")
       .eq("darjah", darjahNum)
       .eq("subjek", effectiveSubjekKod)
       .eq("topik", pilihTopik)
@@ -185,6 +189,10 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
       pilihan: [r.pilihan_a, r.pilihan_b, r.pilihan_c, r.pilihan_d] as string[],
       jawapan: letterToIdx(r.jawapan),
       penjelasan: (r.penjelasan ?? null) as string | null,
+      feedback_a: (r.feedback_a ?? null) as string | null,
+      feedback_b: (r.feedback_b ?? null) as string | null,
+      feedback_c: (r.feedback_c ?? null) as string | null,
+      feedback_d: (r.feedback_d ?? null) as string | null,
       topik: r.topik as string,
     }));
     const shuffled = shuffle(rows).slice(0, 10);
@@ -600,17 +608,40 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
           </div>
         )}
 
-        {pilih !== null && soalan.penjelasan && soalan.penjelasan.trim().length > 0 && (
-          <div className="mt-3 flex items-start gap-3 rounded-lg border border-amber-300 bg-amber-50 p-4">
-            <Lightbulb className="mt-0.5 h-5 w-5 shrink-0 text-amber-600" />
-            <div className="text-sm text-amber-900">
-              <p className="font-display font-extrabold">
-                {en ? "Explanation" : "Penjelasan"}
-              </p>
-              <p className="mt-1 leading-relaxed">{soalan.penjelasan}</p>
-            </div>
-          </div>
-        )}
+        {pilih !== null && (() => {
+          const fbMap: Record<number, string | null | undefined> = {
+            0: soalan.feedback_a,
+            1: soalan.feedback_b,
+            2: soalan.feedback_c,
+            3: soalan.feedback_d,
+          };
+          const fb = fbMap[pilih];
+          const isBetulPilih = pilih === soalan.jawapan;
+          return (
+            <>
+              {fb && fb.trim().length > 0 && (
+                <div
+                  className="mt-3 flex items-start gap-3 rounded-lg p-4"
+                  style={isBetulPilih
+                    ? { border: "1px solid #1B8A5A", backgroundColor: "#1B8A5A15" }
+                    : { border: "1px solid #f59e0b", backgroundColor: "#fffbeb" }}
+                >
+                  <Lightbulb className="mt-0.5 h-5 w-5 shrink-0" style={{ color: isBetulPilih ? "#1B8A5A" : "#d97706" }} />
+                  <p className="text-sm" style={{ color: isBetulPilih ? "#0f5a39" : "#92400e" }}>{fb}</p>
+                </div>
+              )}
+              {soalan.penjelasan && soalan.penjelasan.trim().length > 0 && (
+                <div className="mt-3 flex items-start gap-3 rounded-lg border border-amber-300 bg-amber-50 p-4">
+                  <Lightbulb className="mt-0.5 h-5 w-5 shrink-0 text-amber-600" />
+                  <div className="text-sm text-amber-900">
+                    <p className="font-display font-extrabold">{en ? "Explanation" : "Penjelasan"}</p>
+                    <p className="mt-1 leading-relaxed">{soalan.penjelasan}</p>
+                  </div>
+                </div>
+              )}
+            </>
+          );
+        })()}
 
         <button
           onClick={seterusnya}
