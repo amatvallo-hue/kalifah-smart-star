@@ -83,6 +83,16 @@ export function SiteHeader({
           Dashboard Affiliate
         </Link>
       )}
+      {profile?.role === "admin" && (
+        <Link
+          to="/admin"
+          className="rounded-full px-4 py-2 font-display text-sm font-bold text-muted-foreground transition hover:bg-secondary hover:text-foreground"
+          activeProps={{ className: "bg-secondary text-primary" }}
+          onClick={() => setOpen(false)}
+        >
+          Admin Dashboard
+        </Link>
+      )}
     </>
   );
 
