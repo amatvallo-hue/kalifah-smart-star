@@ -168,7 +168,7 @@ function ProgressDashboard() {
 
   // Fallback: if user_stats kosong/outdated, kira dari user_progress hari ini
   const progressHariIni = useMemo(
-    () => progress.filter((r) => (r.created_at ?? "").slice(0, 10) === hariIni),
+    () => progress.filter((r) => toKLDate(r.created_at ?? new Date().toISOString()) === hariIni),
     [progress, hariIni],
   );
   const soalanHariIni = Math.max(
