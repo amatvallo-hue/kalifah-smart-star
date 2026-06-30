@@ -107,7 +107,9 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
         .from("kuiz_soalan")
         .select("topik")
         .eq("darjah", darjahNum)
-        .eq("subjek", effectiveSubjekKod);
+        .eq("subjek", effectiveSubjekKod)
+        .not("penjelasan", "is", null)
+        .neq("penjelasan", "");
       if (cancelled) return;
       if (error) {
         setErrMsg(error.message);
@@ -169,7 +171,9 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
       .select("id, soalan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan, penjelasan, topik")
       .eq("darjah", darjahNum)
       .eq("subjek", effectiveSubjekKod)
-      .eq("topik", pilihTopik);
+      .eq("topik", pilihTopik)
+      .not("penjelasan", "is", null)
+      .neq("penjelasan", "");
     if (error) {
       setErrMsg(error.message);
       setFetching(false);
