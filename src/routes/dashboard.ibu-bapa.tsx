@@ -185,7 +185,7 @@ function KalifahHatiSeksyen({ emotions }: { emotions: EmotionRow[] }) {
 
   const mingguRows = emotions.filter((e) => {
 
-    const t = e.created_at.slice(0, 10);
+    const t = toKLDate(e.created_at);
 
     return t >= daysAgoKL(6);
 
