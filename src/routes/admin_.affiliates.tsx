@@ -131,6 +131,28 @@ function AdminAffiliates() {
     );
   };
 
+  if (authLoading || checking) {
+    return (
+      <div className="min-h-screen bg-background">
+        <SiteHeader />
+        <div className="flex items-center justify-center py-32 text-muted-foreground">
+          <Loader2 className="h-6 w-6 animate-spin" />
+        </div>
+      </div>
+    );
+  }
+  if (!isAdmin) {
+    return (
+      <div className="min-h-screen bg-background">
+        <SiteHeader />
+        <div className="flex flex-col items-center justify-center py-32 text-center">
+          <ShieldAlert className="h-10 w-10 text-destructive" />
+          <p className="mt-3 text-muted-foreground">Akses ditolak.</p>
+        </div>
+      </div>
+    );
+  }
+
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
