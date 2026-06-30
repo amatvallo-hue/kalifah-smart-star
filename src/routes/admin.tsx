@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Fragment, useEffect, useMemo, useState } from "react";
 import { Loader2, ShieldAlert } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
@@ -125,7 +125,21 @@ function AdminDashboard() {
     <div className="min-h-screen bg-background">
       <SiteHeader />
       <main className="container mx-auto max-w-6xl px-4 py-8">
-        <h1 className="mb-6 font-display text-3xl font-bold">Admin Dashboard</h1>
+        <h1 className="mb-4 font-display text-3xl font-bold">Admin Dashboard</h1>
+        <div className="mb-6 flex flex-wrap gap-2">
+          <Link
+            to="/admin/affiliates"
+            className="inline-flex items-center gap-1 rounded-full bg-primary px-4 py-2 text-sm font-bold text-primary-foreground hover:opacity-90"
+          >
+            👥 Affiliates
+          </Link>
+          <Link
+            to="/admin/challenge"
+            className="inline-flex items-center gap-1 rounded-full border border-border bg-card px-4 py-2 text-sm font-bold text-foreground hover:bg-muted"
+          >
+            🏆 Challenge Bulanan
+          </Link>
+        </div>
         <Tabs defaultValue="pembayaran">
           <TabsList>
             <TabsTrigger value="pembayaran">Pembayaran Manual</TabsTrigger>

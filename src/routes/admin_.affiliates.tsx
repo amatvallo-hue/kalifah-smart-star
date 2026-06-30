@@ -1,6 +1,9 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
+import { Loader2, ShieldAlert } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/use-auth";
+import { SiteHeader } from "@/components/SiteHeader";
 import {
   Table,
   TableBody,
@@ -36,6 +39,32 @@ function rm(ringgit: number) {
 }
 
 function AdminAffiliates() {
+  const { user, loading: authLoading } = useAuth();
+  const navigate = useNavigate();
+  const [checking, setChecking] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    if (authLoading) return;
+    if (!user) {
+      navigate({ to: "/login" });
+      return;
+    }
+    (async () => {
+      const { data } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", user.id)
+        .maybeSingle();
+      if ((data as { role?: string } | null)?.role === "admin") {
+        setIsAdmin(true);
+      } else {
+        navigate({ to: "/" });
+      }
+      setChecking(false);
+    })();
+  }, [user, authLoading, navigate]);
+
   const [rows, setRows] = useState<AffRow[]>([]);
   const [jualanCounts, setJualanCounts] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(true);
@@ -101,6 +130,28 @@ function AdminAffiliates() {
       ),
     );
   };
+
+  if (authLoading || checking) {
+    return (
+      <div className="min-h-screen bg-background">
+        <SiteHeader />
+        <div className="flex items-center justify-center py-32 text-muted-foreground">
+          <Loader2 className="h-6 w-6 animate-spin" />
+        </div>
+      </div>
+    );
+  }
+  if (!isAdmin) {
+    return (
+      <div className="min-h-screen bg-background">
+        <SiteHeader />
+        <div className="flex flex-col items-center justify-center py-32 text-center">
+          <ShieldAlert className="h-10 w-10 text-destructive" />
+          <p className="mt-3 text-muted-foreground">Akses ditolak.</p>
+        </div>
+      </div>
+    );
+  }
 
   if (loading) {
     return (
