@@ -114,6 +114,13 @@ function RootShell({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <head>
+        {/* Google tag (gtag.js) */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-7DKCBNPQ70" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-7DKCBNPQ70');`,
+          }}
+        />
         <HeadContent />
         <meta name="facebook-domain-verification" content="gr7bl1xpq04xbdo6qsm8e188il63c9" />
         {/* Meta Pixel Code */}
