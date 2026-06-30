@@ -293,7 +293,7 @@ function LatihTubiPage() {
           }
           return next;
         });
-      }, 700);
+      }, 1500);
     }
   };
 
@@ -648,7 +648,7 @@ function LatihTubiPage() {
                   })}
                 </div>
 
-                {pilih !== null && pilih !== soalan.jawapan && (
+                {pilih !== null && (
                   <>
                     {(() => {
                       const fbMap: Record<number, string | null | undefined> = {
@@ -657,23 +657,31 @@ function LatihTubiPage() {
                         2: soalan.feedback_c,
                         3: soalan.feedback_d,
                       };
+                      const isBetulPilih = pilih === soalan.jawapan;
                       const fb = fbMap[pilih];
                       if (!fb) return null;
                       return (
-                        <div className="mt-4 rounded-2xl border-2 border-amber-300 bg-amber-50 p-4 text-sm font-medium text-amber-900">
+                        <div
+                          className="mt-4 rounded-2xl border-2 p-4 text-sm font-medium"
+                          style={isBetulPilih
+                            ? { borderColor: "#1B8A5A", backgroundColor: "#1B8A5A15", color: "#0f5a39" }
+                            : { borderColor: "#f59e0b", backgroundColor: "#fffbeb", color: "#92400e" }}
+                        >
                           {fb}
                         </div>
                       );
                     })()}
-                    <div className="mt-4 flex justify-center">
-                      <button
-                        onClick={goToNext}
-                        className="inline-flex items-center gap-2 rounded-full px-6 py-3 font-display font-extrabold shadow-soft transition hover:opacity-90"
-                        style={{ backgroundColor: EMAS, color: "#1a1a1a" }}
-                      >
-                        {t.seterusnya}
-                      </button>
-                    </div>
+                    {pilih !== soalan.jawapan && (
+                      <div className="mt-4 flex justify-center">
+                        <button
+                          onClick={goToNext}
+                          className="inline-flex items-center gap-2 rounded-full px-6 py-3 font-display font-extrabold shadow-soft transition hover:opacity-90"
+                          style={{ backgroundColor: EMAS, color: "#1a1a1a" }}
+                        >
+                          {t.seterusnya}
+                        </button>
+                      </div>
+                    )}
                   </>
                 )}
               </div>
