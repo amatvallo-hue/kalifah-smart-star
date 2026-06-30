@@ -172,7 +172,7 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
     setErrMsg(null);
     const { data, error } = await supabase
       .from("kuiz_soalan")
-      .select("id, soalan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan, penjelasan, topik")
+      .select("id, soalan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan, penjelasan, feedback_a, feedback_b, feedback_c, feedback_d, topik")
       .eq("darjah", darjahNum)
       .eq("subjek", effectiveSubjekKod)
       .eq("topik", pilihTopik)
