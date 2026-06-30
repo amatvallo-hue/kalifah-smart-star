@@ -70,6 +70,11 @@ function daysAgoKL(n: number): string {
   return t.toISOString().slice(0, 10);
 }
 
+function toKLDate(isoStr: string): string {
+  return new Date(isoStr).toLocaleDateString("en-CA", { timeZone: "Asia/Kuala_Lumpur" });
+}
+
+
 function kiraStreak(rows: StatsRow[]): number {
   if (rows.length === 0) return 0;
   const set = new Set(rows.map((r) => r.tarikh));
