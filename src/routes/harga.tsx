@@ -121,6 +121,9 @@ function HargaPage() {
           >
             <Star className="h-3.5 w-3.5" /> Harga 1 Tahun Penuh
           </span>
+          <span className="mt-2 inline-flex items-center gap-1 rounded-full bg-amber-100 px-3 py-1 text-xs font-extrabold text-amber-700">
+            🚀 Harga Beta
+          </span>
           <h1 className="mt-3 font-display text-4xl font-extrabold text-foreground md:text-5xl">
             Pilih Pakej Anda
           </h1>
@@ -223,7 +226,7 @@ function DarjahPicker({
   const [selected, setSelected] = useState<number[]>([]);
   const min = pakej === "satu" ? 1 : 2;
   const max = pakej === "satu" ? 1 : 5;
-  const perDarjah = pakej === "satu" ? 29 : 25;
+  const perDarjah = pakej === "satu" ? 49 : 39;
   const total = perDarjah * selected.length;
 
   function toggle(n: number) {
@@ -249,7 +252,7 @@ function DarjahPicker({
           Pilih Darjah ({min === max ? min : `${min}–${max}`})
         </h3>
         <p className="mt-1 text-sm text-muted-foreground">
-          {pakej === "satu" ? "Pilih 1 darjah untuk dilanggan." : "Pilih antara 2 hingga 5 darjah, RM25/darjah."}
+          {pakej === "satu" ? "Pilih 1 darjah untuk dilanggan." : "Pilih antara 2 hingga 5 darjah, RM39/darjah."}
         </p>
 
         <div className="mt-5 grid grid-cols-3 gap-2">
