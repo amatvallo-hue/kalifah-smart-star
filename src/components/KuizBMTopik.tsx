@@ -189,6 +189,10 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
       pilihan: [r.pilihan_a, r.pilihan_b, r.pilihan_c, r.pilihan_d] as string[],
       jawapan: letterToIdx(r.jawapan),
       penjelasan: (r.penjelasan ?? null) as string | null,
+      feedback_a: (r.feedback_a ?? null) as string | null,
+      feedback_b: (r.feedback_b ?? null) as string | null,
+      feedback_c: (r.feedback_c ?? null) as string | null,
+      feedback_d: (r.feedback_d ?? null) as string | null,
       topik: r.topik as string,
     }));
     const shuffled = shuffle(rows).slice(0, 10);
