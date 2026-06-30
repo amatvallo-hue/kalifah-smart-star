@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { Copy, Loader2, MousePointerClick, ShoppingBag, Wallet, Coins, Share2, TrendingUp } from "lucide-react";
+import { Copy, Loader2, MousePointerClick, ShoppingBag, Wallet, Coins, Share2, TrendingUp, Trophy } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
@@ -39,6 +39,15 @@ interface Jualan {
   created_at: string;
 }
 
+interface Challenge {
+  id: string;
+  bulan: number;
+  tahun: number;
+  target_jualan: number;
+  bonus_rm: number;
+  aktif: boolean;
+}
+
 function rm(ringgit: number) {
   return `RM ${(ringgit ?? 0).toFixed(2)}`;
 }
@@ -50,6 +59,8 @@ function AffiliateDashboardPage() {
   const [jualan, setJualan] = useState<Jualan[]>([]);
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
+  const [challenge, setChallenge] = useState<Challenge | null>(null);
+  const [jualanBulanIni, setJualanBulanIni] = useState<number>(0);
 
   useEffect(() => {
     if (authLoading) return;
@@ -75,6 +86,29 @@ function AffiliateDashboardPage() {
         .order("created_at", { ascending: false })
         .limit(50);
       setJualan((j as Jualan[]) ?? []);
+
+      // Challenge bulan ini
+      const now = new Date();
+      const bulan = now.getMonth() + 1;
+      const tahun = now.getFullYear();
+      const { data: ch } = await supabase
+        .from("challenge_bulanan")
+        .select("*")
+        .eq("aktif", true)
+        .eq("bulan", bulan)
+        .eq("tahun", tahun)
+        .maybeSingle();
+      if (ch) {
+        setChallenge(ch as Challenge);
+        const firstDay = new Date(tahun, bulan - 1, 1).toISOString();
+        const { count } = await supabase
+          .from("affiliate_jualan")
+          .select("id", { count: "exact", head: true })
+          .eq("affiliate_id", (a as Affiliate).id)
+          .gte("created_at", firstDay);
+        setJualanBulanIni(count ?? 0);
+      }
+
       setLoading(false);
     })();
   }, [user, authLoading, navigate]);
@@ -234,6 +268,57 @@ function AffiliateDashboardPage() {
         <div className="mt-3 text-sm text-muted-foreground">
           Sudah dibayar: <strong>{rm(aff.total_dibayar)}</strong>
         </div>
+
+        {/* Challenge bulan ini */}
+        {challenge ? (
+          <div className="mt-6 rounded-2xl border-2 border-amber-300 bg-gradient-to-br from-amber-50 to-yellow-50 p-5 shadow-soft">
+            <div className="flex items-center gap-2 text-amber-700">
+              <Trophy className="h-5 w-5" />
+              <h2 className="font-display text-xl font-extrabold">
+                🏆 Challenge Bulan Ini
+              </h2>
+            </div>
+            <p className="mt-1 text-sm text-amber-900">
+              Jual {challenge.target_jualan} pakej bulan ini, dapat bonus RM
+              {Number(challenge.bonus_rm).toFixed(2)}!
+            </p>
+            <div className="mt-3">
+              <div className="flex items-center justify-between text-xs font-bold text-amber-900">
+                <span>
+                  {jualanBulanIni} / {challenge.target_jualan} jualan
+                </span>
+                <span>
+                  {Math.min(
+                    100,
+                    Math.round(
+                      (jualanBulanIni / challenge.target_jualan) * 100,
+                    ),
+                  )}
+                  %
+                </span>
+              </div>
+              <div className="mt-1 h-3 w-full overflow-hidden rounded-full bg-amber-100">
+                <div
+                  className="h-full bg-gradient-to-r from-green-500 to-emerald-600 transition-all"
+                  style={{
+                    width: `${Math.min(100, (jualanBulanIni / challenge.target_jualan) * 100)}%`,
+                  }}
+                />
+              </div>
+            </div>
+            {jualanBulanIni >= challenge.target_jualan ? (
+              <div className="mt-3 inline-flex items-center gap-1 rounded-full bg-green-500/10 px-3 py-1 text-sm font-extrabold text-green-700">
+                ✅ Tahniah! Anda layak dapat bonus RM
+                {Number(challenge.bonus_rm).toFixed(2)}
+              </div>
+            ) : (
+              <div className="mt-3 text-sm font-bold text-amber-700">
+                Lagi {challenge.target_jualan - jualanBulanIni} jualan untuk
+                capai bonus!
+              </div>
+            )}
+          </div>
+        ) : null}
 
         {/* Jualan terkini */}
         <div className="mt-8">
