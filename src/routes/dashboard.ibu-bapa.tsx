@@ -706,7 +706,7 @@ function ParentDashboard() {
   }, []);
 
   const minggu = useMemo(() => {
-    const p = progress.filter((r) => tarikhMingguIni.has(r.created_at.slice(0, 10)));
+    const p = progress.filter((r) => tarikhMingguIni.has(toKLDate(r.created_at)));
     const s = stats.filter((r) => tarikhMingguIni.has(r.tarikh));
     const soalanStats = s.reduce((a, r) => a + (r.soalan_dijawab ?? 0), 0);
     const masaStats = s.reduce((a, r) => a + (r.masa_belajar ?? 0), 0);
