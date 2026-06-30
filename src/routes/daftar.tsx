@@ -190,6 +190,9 @@ function DaftarPage() {
           {loading ? "Sedang mendaftar..." : "Daftar Akaun"}
         </button>
 
+        <p className="text-center text-xs text-muted-foreground">
+          Tiada caj tersembunyi. Batalkan bila-bila masa.
+        </p>
         <p className="text-center text-sm text-muted-foreground">
           Sudah ada akaun?{" "}
           <Link to="/login" className="font-extrabold text-primary hover:underline">
