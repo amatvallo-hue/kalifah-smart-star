@@ -13,7 +13,7 @@ import {
   Users,
   ShieldCheck,
   ChevronDown,
-  FlaskConical,
+  Globe,
   Calendar,
   Clock,
   Flame,
@@ -48,6 +48,7 @@ function LandingPage() {
       <LandingHeader />
       <Hero />
       <Ciri />
+      <UntukSiapa />
       <Subjek />
       <Harga />
       <Testimoni />
@@ -378,63 +379,81 @@ function Ciri() {
   );
 }
 
-function Subjek() {
-  const items = [
-    {
-      ikon: PenLine,
-      t: "Bahasa Melayu",
-      d: "Tatabahasa, imbuhan, sinonim, peribahasa & karangan ringkas.",
-      contoh: ["Padankan jawapan", "Susun ayat", "Betul/Salah"],
-    },
-    {
-      ikon: Calculator,
-      t: "Matematik",
-      d: "Nombor, operasi, pecahan, wang, masa dan ukuran.",
-      contoh: ["Latih tubi pantas", "Kuiz timed", "Game perlumbaan"],
-    },
-    {
-      ikon: Languages,
-      t: "Bahasa Inggeris",
-      d: "Vocabulary, grammar, reading & simple sentence building.",
-      contoh: ["Match the word", "Fill in the blanks", "Quiz"],
-    },
-    {
-      ikon: FlaskConical,
-      t: "Sains",
-      d: "Alam semula jadi, sains hayat, fizik asas & eksperimen mudah.",
-      contoh: ["Soal jawab", "Kuiz gambar", "Latih tubi"],
-    },
-    {
-      ikon: BookOpen,
-      t: "Pendidikan Islam",
-      d: "Aqidah, ibadah, sirah, akhlak & al-Quran.",
-      contoh: ["Soal jawab", "Betul/Salah", "Latih tubi"],
-    },
-  ];
+function UntukSiapa() {
+  const darjahs = ["1", "2", "3", "4", "5", "6"];
   return (
-    <section id="subjek" className="bg-muted/30 py-16">
+    <section className="bg-muted/30 py-16">
       <div className="container mx-auto px-4">
         <div className="text-center">
-          <p className="font-display text-xs font-bold uppercase tracking-widest" style={{ color: EMAS }}>Subjek Utama</p>
+          <p className="font-display text-xs font-bold uppercase tracking-widest" style={{ color: EMAS }}>
+            Untuk Siapa
+          </p>
+          <h2 className="mt-2 font-display text-3xl font-extrabold text-foreground md:text-4xl">
+            Kalifah.my untuk siapa?
+          </h2>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Sesuai untuk pelajar sekolah rendah, Darjah 1 hingga 6
+          </p>
+        </div>
+        <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+          {darjahs.map((d) => (
+            <div
+              key={d}
+              className="flex flex-col items-center justify-center gap-2 rounded-3xl border bg-card p-6 shadow-soft transition hover:-translate-y-1"
+              style={{ border: `2px solid ${HIJAU}22` }}
+            >
+              <span
+                className="font-display text-4xl font-extrabold"
+                style={{ color: HIJAU }}
+              >
+                {d}
+              </span>
+              <span className="font-display text-sm font-extrabold text-foreground">
+                Darjah {d}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Subjek() {
+  const items = [
+    { ikon: PenLine, t: "Bahasa Melayu" },
+    { ikon: Calculator, t: "Matematik" },
+    { ikon: Languages, t: "Bahasa Inggeris" },
+    { ikon: Globe, t: "Sains" },
+    { ikon: BookOpen, t: "Pendidikan Islam" },
+  ];
+  return (
+    <section id="subjek" className="py-16">
+      <div className="container mx-auto px-4">
+        <div className="text-center">
+          <p className="font-display text-xs font-bold uppercase tracking-widest" style={{ color: EMAS }}>
+            Subjek Utama
+          </p>
           <h2 className="mt-2 font-display text-3xl font-extrabold text-foreground md:text-4xl">
             Fokus pada 5 subjek utama
           </h2>
         </div>
-        <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {items.map(({ ikon: Ikon, t, d, contoh }) => (
-            <div key={t} className="rounded-3xl bg-card p-7 shadow-card">
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl text-white" style={{ backgroundColor: EMAS }}>
+        <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+          {items.map(({ ikon: Ikon, t }) => (
+            <div
+              key={t}
+              className="flex flex-col items-center justify-center gap-4 rounded-3xl border bg-card p-6 shadow-soft transition hover:-translate-y-1"
+              style={{ border: `2px solid ${EMAS}22` }}
+            >
+              <div
+                className="flex h-14 w-14 items-center justify-center rounded-2xl text-white"
+                style={{ backgroundColor: EMAS }}
+              >
                 <Ikon className="h-7 w-7" />
               </div>
-              <h3 className="mt-4 font-display text-xl font-extrabold text-foreground">{t}</h3>
-              <p className="mt-1 text-sm text-muted-foreground">{d}</p>
-              <ul className="mt-4 space-y-2">
-                {contoh.map((c) => (
-                  <li key={c} className="flex items-center gap-2 text-sm text-foreground">
-                    <Check className="h-4 w-4" style={{ color: HIJAU }} /> {c}
-                  </li>
-                ))}
-              </ul>
+              <h3 className="text-center font-display text-base font-extrabold text-foreground">
+                {t}
+              </h3>
             </div>
           ))}
         </div>
