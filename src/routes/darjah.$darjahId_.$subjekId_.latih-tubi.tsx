@@ -150,7 +150,7 @@ function LatihTubiPage() {
             : subjekId;
       const { data, error } = await supabase
         .from("soalan_latih_tubi")
-        .select("id, soalan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan_betul, topik, feedback_a, feedback_b, feedback_c, feedback_d")
+        .select("id, soalan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan_betul, topik, feedback_a, feedback_b, feedback_c, feedback_d, gambar")
         .eq("darjah", Number.isFinite(darjahNum) ? darjahNum : darjahId)
         .eq("subjek", subjekQuery)
         .not("feedback_a", "is", null)
