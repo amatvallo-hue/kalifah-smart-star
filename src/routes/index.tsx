@@ -48,6 +48,7 @@ function LandingPage() {
       <LandingHeader />
       <Hero />
       <Ciri />
+      <UntukSiapa />
       <Subjek />
       <Harga />
       <Testimoni />
