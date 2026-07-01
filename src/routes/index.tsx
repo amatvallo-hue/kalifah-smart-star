@@ -17,6 +17,7 @@ import {
   Calendar,
   Clock,
   Flame,
+  Zap,
 } from "lucide-react";
 import { useState } from "react";
 import { HARGA_ASAL, PAKEJ_LIST } from "@/lib/curriculum";
