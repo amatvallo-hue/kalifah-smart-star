@@ -170,7 +170,11 @@ function Hero() {
           <p className="mt-2 text-sm text-muted-foreground">
             Daftar percuma — cuba dulu, bayar kalau suka
           </p>
-          <div className="mt-6 flex items-center gap-4 text-xs text-muted-foreground">
+          <p className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700">
+            <Check className="h-3.5 w-3.5" />
+            Terus tahu anak lemah subjek apa & topik apa
+          </p>
+          <div className="mt-4 flex items-center gap-4 text-xs text-muted-foreground">
             <span className="inline-flex items-center gap-1">
               <ShieldCheck className="h-4 w-4" style={{ color: HIJAU }} /> Selamat & sesuai untuk kanak-kanak
             </span>
