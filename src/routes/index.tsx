@@ -13,7 +13,7 @@ import {
   Users,
   ShieldCheck,
   ChevronDown,
-  FlaskConical,
+  Globe,
   Calendar,
   Clock,
   Flame,
