@@ -75,6 +75,7 @@ function LatihTubiPage() {
 
   const [topikStats, setTopikStats] = useState<Record<string, { betul: number; jumlah: number }>>({});
   const [mulaMasa, setMulaMasa] = useState(() => Date.now());
+  const [rajahMap, setRajahMap] = useState<Record<string, string>>({});
 
   // Upper-darjah selection state
   const [topicList, setTopicList] = useState<string[]>([]);
