@@ -624,6 +624,12 @@ function LatihTubiPage() {
 
             {soalan && (
               <div className="mt-6 rounded-3xl bg-card p-6 shadow-card md:p-8">
+                {soalan.gambar && rajahMap[soalan.gambar] && (
+                  <div
+                    className="mx-auto mb-4 flex max-w-xs justify-center overflow-hidden rounded-2xl border border-border bg-white p-3"
+                    dangerouslySetInnerHTML={{ __html: rajahMap[soalan.gambar] }}
+                  />
+                )}
                 <h1 className="font-display text-2xl font-extrabold leading-snug text-foreground md:text-3xl">
                   {soalan.soalan}
                 </h1>
