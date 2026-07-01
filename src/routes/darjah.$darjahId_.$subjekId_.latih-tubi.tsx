@@ -25,6 +25,7 @@ interface Soalan {
   feedback_b?: string | null;
   feedback_c?: string | null;
   feedback_d?: string | null;
+  gambar?: string | null;
 }
 
 const HIJAU = "#1B8A5A";
@@ -74,6 +75,7 @@ function LatihTubiPage() {
 
   const [topikStats, setTopikStats] = useState<Record<string, { betul: number; jumlah: number }>>({});
   const [mulaMasa, setMulaMasa] = useState(() => Date.now());
+  const [rajahMap, setRajahMap] = useState<Record<string, string>>({});
 
   // Upper-darjah selection state
   const [topicList, setTopicList] = useState<string[]>([]);
@@ -149,7 +151,7 @@ function LatihTubiPage() {
             : subjekId;
       const { data, error } = await supabase
         .from("soalan_latih_tubi")
-        .select("id, soalan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan_betul, topik, feedback_a, feedback_b, feedback_c, feedback_d")
+        .select("id, soalan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan_betul, topik, feedback_a, feedback_b, feedback_c, feedback_d, gambar")
         .eq("darjah", Number.isFinite(darjahNum) ? darjahNum : darjahId)
         .eq("subjek", subjekQuery)
         .not("feedback_a", "is", null)
@@ -170,6 +172,7 @@ function LatihTubiPage() {
         feedback_b: (r.feedback_b ?? null) as string | null,
         feedback_c: (r.feedback_c ?? null) as string | null,
         feedback_d: (r.feedback_d ?? null) as string | null,
+        gambar: (r.gambar ?? null) as string | null,
       }));
       const shuffled = shuffle(rows);
       setBank(shuffled);
@@ -180,6 +183,23 @@ function LatihTubiPage() {
       cancelled = true;
     };
   }, [darjahId, subjekId, isUpper, darjahNum, isMatematik, bahasa]);
+
+  useEffect(() => {
+    const keys = Array.from(new Set(bank.map(s => s.gambar).filter((g): g is string => !!g)));
+    if (keys.length === 0) return;
+    let cancelled = false;
+    (async () => {
+      const { data } = await supabase
+        .from("rajah")
+        .select("nama, konten_svg")
+        .in("nama", keys);
+      if (cancelled || !data) return;
+      const map: Record<string, string> = {};
+      data.forEach((r: any) => { map[r.nama] = r.konten_svg; });
+      setRajahMap(map);
+    })();
+    return () => { cancelled = true; };
+  }, [bank]);
 
 
   // Upper darjah (4-6): fetch distinct topik list
@@ -604,6 +624,12 @@ function LatihTubiPage() {
 
             {soalan && (
               <div className="mt-6 rounded-3xl bg-card p-6 shadow-card md:p-8">
+                {soalan.gambar && rajahMap[soalan.gambar] && (
+                  <div
+                    className="mx-auto mb-4 flex max-w-xs justify-center overflow-hidden rounded-2xl border border-border bg-white p-3"
+                    dangerouslySetInnerHTML={{ __html: rajahMap[soalan.gambar] }}
+                  />
+                )}
                 <h1 className="font-display text-2xl font-extrabold leading-snug text-foreground md:text-3xl">
                   {soalan.soalan}
                 </h1>
