@@ -171,6 +171,7 @@ function LatihTubiPage() {
         feedback_b: (r.feedback_b ?? null) as string | null,
         feedback_c: (r.feedback_c ?? null) as string | null,
         feedback_d: (r.feedback_d ?? null) as string | null,
+        gambar: (r.gambar ?? null) as string | null,
       }));
       const shuffled = shuffle(rows);
       setBank(shuffled);
