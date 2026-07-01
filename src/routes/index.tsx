@@ -428,11 +428,11 @@ function UntukSiapa() {
 
 function Subjek() {
   const items = [
-    { ikon: PenLine, t: "Bahasa Melayu" },
-    { ikon: Calculator, t: "Matematik" },
-    { ikon: Languages, t: "Bahasa Inggeris" },
-    { ikon: Globe, t: "Sains" },
-    { ikon: BookOpen, t: "Pendidikan Islam" },
+    { ikon: PenLine, t: "Bahasa Melayu", warna: "#EF4444" },
+    { ikon: Calculator, t: "Matematik", warna: "#3B82F6" },
+    { ikon: Languages, t: "Bahasa Inggeris", warna: "#8B5CF6" },
+    { ikon: Globe, t: "Sains", warna: "#22C55E" },
+    { ikon: BookOpen, t: "Pendidikan Islam", warna: "#D97706" },
   ];
   return (
     <section id="subjek" className="py-16">
@@ -446,7 +446,7 @@ function Subjek() {
           </h2>
         </div>
         <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
-          {items.map(({ ikon: Ikon, t }) => (
+          {items.map(({ ikon: Ikon, t, warna }) => (
             <div
               key={t}
               className="flex flex-col items-center justify-center gap-4 rounded-3xl border bg-card p-6 shadow-soft transition hover:-translate-y-1"
@@ -454,7 +454,7 @@ function Subjek() {
             >
               <div
                 className="flex h-14 w-14 items-center justify-center rounded-2xl text-white"
-                style={{ backgroundColor: EMAS }}
+                style={{ backgroundColor: warna }}
               >
                 <Ikon className="h-7 w-7" />
               </div>
