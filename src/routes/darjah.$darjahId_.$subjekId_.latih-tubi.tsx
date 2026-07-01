@@ -25,6 +25,7 @@ interface Soalan {
   feedback_b?: string | null;
   feedback_c?: string | null;
   feedback_d?: string | null;
+  gambar?: string | null;
 }
 
 const HIJAU = "#1B8A5A";
