@@ -345,12 +345,11 @@ function MockStat({
 
 function Ciri() {
   const items = [
-    { ikon: TrendingUp, t: "Pantau Real-Time", d: "Lihat progress anak secara langsung selepas setiap aktiviti." },
-    { ikon: Target, t: "Kenal Subjek Lemah", d: "Sistem auto-kesan subjek yang perlukan perhatian lebih." },
-    { ikon: BookOpen, t: "32,000+ Soalan", d: "Bank soalan luas untuk latih tubi, kuiz dan latihan." },
-    { ikon: Award, t: "Sijil Automatik", d: "Anak terima sijil PDF bila tamat subjek atau darjah." },
-    { ikon: Users, t: "Dashboard Ibu Bapa", d: "Tambah profil anak & pantau prestasi mingguan/bulanan." },
-    { ikon: ShieldCheck, t: "Darjah 1 – 6", d: "Lengkap untuk seluruh peringkat sekolah rendah." },
+    { ikon: Target, t: "Kenal Subjek & Topik Lemah", d: "Sistem auto-kesan subjek DAN topik spesifik yang anak perlukan perhatian lebih — bukan setakat subjek, sampai ke topik/subtopik." },
+    { ikon: Zap, t: "Latih Tubi", d: "Merangkumi semua subtopik bagi setiap subjek, lebih 10,000+ soalan latih tubi." },
+    { ikon: Award, t: "Kuiz", d: "Topik kuiz disusun mengikut standard kurikulum KSSR. Anak dapat sijil cemerlang bila skor penuh!" },
+    { ikon: BookOpen, t: "Nota Ringkas", d: "Nota disusun mengikut topik, termasuk formula matematik yang disediakan untuk rujukan pantas." },
+    { ikon: Star, t: "Ganjaran & Mata", d: "Anak kumpul mata setiap kali jawab soalan betul — sistem reward untuk galakan berterusan." },
   ];
   return (
     <section id="ciri" className="container mx-auto px-4 py-16">
