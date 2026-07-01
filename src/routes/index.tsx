@@ -380,7 +380,14 @@ function Ciri() {
 }
 
 function UntukSiapa() {
-  const darjahs = ["1", "2", "3", "4", "5", "6"];
+  const darjahs = [
+    { d: "1", warna: "#F4C542", hoverBg: "hover:bg-[#F4C542]/10" },
+    { d: "2", warna: "#F28C28", hoverBg: "hover:bg-[#F28C28]/10" },
+    { d: "3", warna: "#2E9F5B", hoverBg: "hover:bg-[#2E9F5B]/10" },
+    { d: "4", warna: "#3B82F6", hoverBg: "hover:bg-[#3B82F6]/10" },
+    { d: "5", warna: "#8B5CF6", hoverBg: "hover:bg-[#8B5CF6]/10" },
+    { d: "6", warna: "#EF4444", hoverBg: "hover:bg-[#EF4444]/10" },
+  ];
   return (
     <section className="bg-muted/30 py-16">
       <div className="container mx-auto px-4">
@@ -396,15 +403,15 @@ function UntukSiapa() {
           </p>
         </div>
         <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
-          {darjahs.map((d) => (
+          {darjahs.map(({ d, warna, hoverBg }) => (
             <div
               key={d}
-              className="flex flex-col items-center justify-center gap-2 rounded-3xl border bg-card p-6 shadow-soft transition hover:-translate-y-1"
-              style={{ border: `2px solid ${HIJAU}22` }}
+              className={`flex flex-col items-center justify-center gap-2 rounded-3xl border-2 bg-card p-6 shadow-soft transition hover:-translate-y-1 ${hoverBg}`}
+              style={{ borderColor: warna }}
             >
               <span
                 className="font-display text-4xl font-extrabold"
-                style={{ color: HIJAU }}
+                style={{ color: warna }}
               >
                 {d}
               </span>
