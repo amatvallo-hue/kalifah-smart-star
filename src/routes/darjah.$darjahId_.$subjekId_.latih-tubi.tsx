@@ -13,6 +13,10 @@ import { Bentuk2D } from "@/components/svg/Bentuk2D";
 import { Bentuk3D } from "@/components/svg/Bentuk3D";
 import { LabeledDiagram } from "@/components/svg/LabeledDiagram";
 import { MagnetDiagram } from "@/components/svg/MagnetDiagram";
+import { DacingScale } from "@/components/svg/DacingScale";
+import { PecahanDiagram } from "@/components/svg/PecahanDiagram";
+import { BarisanPanjang } from "@/components/svg/BarisanPanjang";
+import { BekasAir } from "@/components/svg/BekasAir";
 
 function renderSoalanSvg(svg_type?: string | null, svg_params?: any) {
   if (!svg_type) return null;
@@ -22,6 +26,10 @@ function renderSoalanSvg(svg_type?: string | null, svg_params?: any) {
   if (svg_type === "bentuk3d") return <Bentuk3D {...p} />;
   if (svg_type === "label_diagram") return <LabeledDiagram {...p} />;
   if (svg_type === "magnet") return <MagnetDiagram {...p} />;
+  if (svg_type === "dacing") return <DacingScale {...p} />;
+  if (svg_type === "pecahan") return <PecahanDiagram {...p} />;
+  if (svg_type === "panjang") return <BarisanPanjang {...p} />;
+  if (svg_type === "air") return <BekasAir {...p} />;
   return null;
 }
 
