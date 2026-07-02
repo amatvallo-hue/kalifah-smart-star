@@ -646,6 +646,11 @@ function LatihTubiPage() {
                     dangerouslySetInnerHTML={{ __html: rajahMap[soalan.gambar] }}
                   />
                 )}
+                {soalan.svg_type && (
+                  <div className="mx-auto mb-4 flex justify-center">
+                    {renderSoalanSvg(soalan.svg_type, soalan.svg_params)}
+                  </div>
+                )}
                 <h1 className="font-display text-2xl font-extrabold leading-snug text-foreground md:text-3xl">
                   {soalan.soalan}
                 </h1>
