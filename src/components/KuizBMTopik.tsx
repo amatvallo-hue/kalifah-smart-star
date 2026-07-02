@@ -12,6 +12,10 @@ import { Bentuk2D } from "@/components/svg/Bentuk2D";
 import { Bentuk3D } from "@/components/svg/Bentuk3D";
 import { LabeledDiagram } from "@/components/svg/LabeledDiagram";
 import { MagnetDiagram } from "@/components/svg/MagnetDiagram";
+import { DacingScale } from "@/components/svg/DacingScale";
+import { PecahanDiagram } from "@/components/svg/PecahanDiagram";
+import { BarisanPanjang } from "@/components/svg/BarisanPanjang";
+import { BekasAir } from "@/components/svg/BekasAir";
 
 function renderSoalanSvg(svg_type: string | null | undefined, svg_params: any) {
   if (!svg_type) return null;
@@ -23,6 +27,10 @@ function renderSoalanSvg(svg_type: string | null | undefined, svg_params: any) {
     else if (svg_type === "bentuk3d") el = <Bentuk3D {...p} />;
     else if (svg_type === "label_diagram") el = <LabeledDiagram {...p} />;
     else if (svg_type === "magnet") el = <MagnetDiagram {...p} />;
+    else if (svg_type === "dacing") el = <DacingScale {...p} />;
+    else if (svg_type === "pecahan") el = <PecahanDiagram {...p} />;
+    else if (svg_type === "panjang") el = <BarisanPanjang {...p} />;
+    else if (svg_type === "air") el = <BekasAir {...p} />;
   } catch {
     return null;
   }
