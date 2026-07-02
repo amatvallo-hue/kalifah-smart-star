@@ -11,6 +11,8 @@ import { usePoints } from "@/hooks/use-points";
 import { JamAnalog } from "@/components/svg/JamAnalog";
 import { Bentuk2D } from "@/components/svg/Bentuk2D";
 import { Bentuk3D } from "@/components/svg/Bentuk3D";
+import { LabeledDiagram } from "@/components/svg/LabeledDiagram";
+import { MagnetDiagram } from "@/components/svg/MagnetDiagram";
 
 function renderSoalanSvg(svg_type?: string | null, svg_params?: any) {
   if (!svg_type) return null;
@@ -18,6 +20,8 @@ function renderSoalanSvg(svg_type?: string | null, svg_params?: any) {
   if (svg_type === "jam") return <JamAnalog {...p} />;
   if (svg_type === "bentuk2d") return <Bentuk2D {...p} />;
   if (svg_type === "bentuk3d") return <Bentuk3D {...p} />;
+  if (svg_type === "label_diagram") return <LabeledDiagram {...p} />;
+  if (svg_type === "magnet") return <MagnetDiagram {...p} />;
   return null;
 }
 
