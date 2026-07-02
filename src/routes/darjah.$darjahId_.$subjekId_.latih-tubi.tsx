@@ -8,6 +8,18 @@ import { getDarjah, getSubjek } from "@/lib/curriculum";
 import { simpanProgress } from "@/lib/progress";
 import { tambahMata } from "@/lib/tambah-mata";
 import { usePoints } from "@/hooks/use-points";
+import { JamAnalog } from "@/components/svg/JamAnalog";
+import { Bentuk2D } from "@/components/svg/Bentuk2D";
+import { Bentuk3D } from "@/components/svg/Bentuk3D";
+
+function renderSoalanSvg(svg_type?: string | null, svg_params?: any) {
+  if (!svg_type) return null;
+  const p = svg_params ?? {};
+  if (svg_type === "jam") return <JamAnalog {...p} />;
+  if (svg_type === "bentuk2d") return <Bentuk2D {...p} />;
+  if (svg_type === "bentuk3d") return <Bentuk3D {...p} />;
+  return null;
+}
 
 export const Route = createFileRoute("/darjah/$darjahId_/$subjekId_/latih-tubi")({
   head: () => ({ meta: [{ title: "Latih Tubi — Kalifah.my" }] }),
@@ -26,6 +38,8 @@ interface Soalan {
   feedback_c?: string | null;
   feedback_d?: string | null;
   gambar?: string | null;
+  svg_type?: string | null;
+  svg_params?: any;
 }
 
 const HIJAU = "#1B8A5A";
@@ -151,7 +165,7 @@ function LatihTubiPage() {
             : subjekId;
       const { data, error } = await supabase
         .from("soalan_latih_tubi")
-        .select("id, soalan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan_betul, topik, feedback_a, feedback_b, feedback_c, feedback_d, gambar")
+        .select("id, soalan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan_betul, topik, feedback_a, feedback_b, feedback_c, feedback_d, gambar, svg_type, svg_params")
         .eq("darjah", Number.isFinite(darjahNum) ? darjahNum : darjahId)
         .eq("subjek", subjekQuery)
         .not("feedback_a", "is", null)
@@ -173,6 +187,8 @@ function LatihTubiPage() {
         feedback_c: (r.feedback_c ?? null) as string | null,
         feedback_d: (r.feedback_d ?? null) as string | null,
         gambar: (r.gambar ?? null) as string | null,
+        svg_type: (r.svg_type ?? null) as string | null,
+        svg_params: r.svg_params ?? null,
       }));
       const shuffled = shuffle(rows);
       setBank(shuffled);
@@ -629,6 +645,11 @@ function LatihTubiPage() {
                     className="mx-auto mb-4 flex max-w-xs justify-center overflow-hidden rounded-2xl border border-border bg-white p-3"
                     dangerouslySetInnerHTML={{ __html: rajahMap[soalan.gambar] }}
                   />
+                )}
+                {soalan.svg_type && (
+                  <div className="mx-auto mb-4 flex justify-center">
+                    {renderSoalanSvg(soalan.svg_type, soalan.svg_params)}
+                  </div>
                 )}
                 <h1 className="font-display text-2xl font-extrabold leading-snug text-foreground md:text-3xl">
                   {soalan.soalan}
