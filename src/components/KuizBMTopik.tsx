@@ -192,7 +192,7 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
     setErrMsg(null);
     const { data, error } = await supabase
       .from("kuiz_soalan")
-      .select("id, soalan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan, penjelasan, feedback_a, feedback_b, feedback_c, feedback_d, topik")
+      .select("id, soalan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan, penjelasan, feedback_a, feedback_b, feedback_c, feedback_d, topik, svg_type, svg_params")
       .eq("darjah", darjahNum)
       .eq("subjek", effectiveSubjekKod)
       .eq("topik", pilihTopik)
@@ -214,6 +214,8 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
       feedback_c: (r.feedback_c ?? null) as string | null,
       feedback_d: (r.feedback_d ?? null) as string | null,
       topik: r.topik as string,
+      svg_type: (r.svg_type ?? null) as string | null,
+      svg_params: r.svg_params ?? null,
     }));
     const shuffled = shuffle(rows).slice(0, 10);
     if (shuffled.length === 0) {
