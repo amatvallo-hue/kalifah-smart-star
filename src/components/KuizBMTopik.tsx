@@ -7,6 +7,24 @@ import { downloadSijil } from "@/lib/sijil";
 import { simpanRekodSijil } from "@/lib/sijil-rekod";
 import { useAuth } from "@/hooks/use-auth";
 import { useAward } from "@/hooks/use-award";
+import { JamAnalog } from "@/components/svg/JamAnalog";
+import { Bentuk2D } from "@/components/svg/Bentuk2D";
+import { Bentuk3D } from "@/components/svg/Bentuk3D";
+
+function renderSoalanSvg(svg_type: string | null | undefined, svg_params: any) {
+  if (!svg_type) return null;
+  const p = svg_params ?? {};
+  let el: React.ReactNode = null;
+  try {
+    if (svg_type === "jam") el = <JamAnalog {...p} />;
+    else if (svg_type === "bentuk2d") el = <Bentuk2D {...p} />;
+    else if (svg_type === "bentuk3d") el = <Bentuk3D {...p} />;
+  } catch {
+    return null;
+  }
+  if (!el) return null;
+  return <div className="mt-4 flex justify-center">{el}</div>;
+}
 
 const HIJAU = "#1B8A5A";
 const EMAS = "#F5A623";
@@ -22,6 +40,8 @@ interface Soalan {
   feedback_c?: string | null;
   feedback_d?: string | null;
   topik: string;
+  svg_type?: string | null;
+  svg_params?: any;
 }
 
 function shuffle<T>(arr: T[]): T[] {
@@ -172,7 +192,7 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
     setErrMsg(null);
     const { data, error } = await supabase
       .from("kuiz_soalan")
-      .select("id, soalan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan, penjelasan, feedback_a, feedback_b, feedback_c, feedback_d, topik")
+      .select("id, soalan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan, penjelasan, feedback_a, feedback_b, feedback_c, feedback_d, topik, svg_type, svg_params")
       .eq("darjah", darjahNum)
       .eq("subjek", effectiveSubjekKod)
       .eq("topik", pilihTopik)
@@ -194,6 +214,8 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
       feedback_c: (r.feedback_c ?? null) as string | null,
       feedback_d: (r.feedback_d ?? null) as string | null,
       topik: r.topik as string,
+      svg_type: (r.svg_type ?? null) as string | null,
+      svg_params: r.svg_params ?? null,
     }));
     const shuffled = shuffle(rows).slice(0, 10);
     if (shuffled.length === 0) {
@@ -471,6 +493,7 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
                   </span>
                   <div className="flex-1">
                     <p className="font-display font-extrabold text-foreground">{s.soalan}</p>
+                    {renderSoalanSvg(s.svg_type, s.svg_params)}
                     <div className="mt-3 grid gap-2">
                       {s.pilihan.map((p, pi) => {
                         const isJawapan = pi === s.jawapan;
@@ -557,6 +580,8 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
         <h1 className="font-display text-2xl font-extrabold leading-snug text-foreground md:text-3xl">
           {soalan.soalan}
         </h1>
+
+        {renderSoalanSvg(soalan.svg_type, soalan.svg_params)}
 
         <div className="mt-6 grid gap-3 sm:grid-cols-2">
           {soalan.pilihan.map((p, idx) => {
