@@ -581,6 +581,8 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
           {soalan.soalan}
         </h1>
 
+        {renderSoalanSvg(soalan.svg_type, soalan.svg_params)}
+
         <div className="mt-6 grid gap-3 sm:grid-cols-2">
           {soalan.pilihan.map((p, idx) => {
             const isPilih = pilih === idx;
