@@ -40,6 +40,8 @@ interface Soalan {
   feedback_c?: string | null;
   feedback_d?: string | null;
   topik: string;
+  svg_type?: string | null;
+  svg_params?: any;
 }
 
 function shuffle<T>(arr: T[]): T[] {
