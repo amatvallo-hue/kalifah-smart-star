@@ -7,6 +7,24 @@ import { downloadSijil } from "@/lib/sijil";
 import { simpanRekodSijil } from "@/lib/sijil-rekod";
 import { useAuth } from "@/hooks/use-auth";
 import { useAward } from "@/hooks/use-award";
+import { JamAnalog } from "@/components/svg/JamAnalog";
+import { Bentuk2D } from "@/components/svg/Bentuk2D";
+import { Bentuk3D } from "@/components/svg/Bentuk3D";
+
+function renderSoalanSvg(svg_type: string | null | undefined, svg_params: any) {
+  if (!svg_type) return null;
+  const p = svg_params ?? {};
+  let el: React.ReactNode = null;
+  try {
+    if (svg_type === "jam") el = <JamAnalog {...p} />;
+    else if (svg_type === "bentuk2d") el = <Bentuk2D {...p} />;
+    else if (svg_type === "bentuk3d") el = <Bentuk3D {...p} />;
+  } catch {
+    return null;
+  }
+  if (!el) return null;
+  return <div className="mt-4 flex justify-center">{el}</div>;
+}
 
 const HIJAU = "#1B8A5A";
 const EMAS = "#F5A623";
