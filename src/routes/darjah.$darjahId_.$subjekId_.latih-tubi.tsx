@@ -165,7 +165,7 @@ function LatihTubiPage() {
             : subjekId;
       const { data, error } = await supabase
         .from("soalan_latih_tubi")
-        .select("id, soalan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan_betul, topik, feedback_a, feedback_b, feedback_c, feedback_d, gambar")
+        .select("id, soalan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan_betul, topik, feedback_a, feedback_b, feedback_c, feedback_d, gambar, svg_type, svg_params")
         .eq("darjah", Number.isFinite(darjahNum) ? darjahNum : darjahId)
         .eq("subjek", subjekQuery)
         .not("feedback_a", "is", null)
@@ -187,6 +187,8 @@ function LatihTubiPage() {
         feedback_c: (r.feedback_c ?? null) as string | null,
         feedback_d: (r.feedback_d ?? null) as string | null,
         gambar: (r.gambar ?? null) as string | null,
+        svg_type: (r.svg_type ?? null) as string | null,
+        svg_params: r.svg_params ?? null,
       }));
       const shuffled = shuffle(rows);
       setBank(shuffled);
