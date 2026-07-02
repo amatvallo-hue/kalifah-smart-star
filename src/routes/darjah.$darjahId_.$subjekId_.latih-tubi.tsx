@@ -38,6 +38,8 @@ interface Soalan {
   feedback_c?: string | null;
   feedback_d?: string | null;
   gambar?: string | null;
+  svg_type?: string | null;
+  svg_params?: any;
 }
 
 const HIJAU = "#1B8A5A";
