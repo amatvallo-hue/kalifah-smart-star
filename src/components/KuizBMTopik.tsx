@@ -493,6 +493,7 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
                   </span>
                   <div className="flex-1">
                     <p className="font-display font-extrabold text-foreground">{s.soalan}</p>
+                    {renderSoalanSvg(s.svg_type, s.svg_params)}
                     <div className="mt-3 grid gap-2">
                       {s.pilihan.map((p, pi) => {
                         const isJawapan = pi === s.jawapan;
