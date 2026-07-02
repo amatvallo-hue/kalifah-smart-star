@@ -8,6 +8,18 @@ import { getDarjah, getSubjek } from "@/lib/curriculum";
 import { simpanProgress } from "@/lib/progress";
 import { tambahMata } from "@/lib/tambah-mata";
 import { usePoints } from "@/hooks/use-points";
+import { JamAnalog } from "@/components/svg/JamAnalog";
+import { Bentuk2D } from "@/components/svg/Bentuk2D";
+import { Bentuk3D } from "@/components/svg/Bentuk3D";
+
+function renderSoalanSvg(svg_type?: string | null, svg_params?: any) {
+  if (!svg_type) return null;
+  const p = svg_params ?? {};
+  if (svg_type === "jam") return <JamAnalog {...p} />;
+  if (svg_type === "bentuk2d") return <Bentuk2D {...p} />;
+  if (svg_type === "bentuk3d") return <Bentuk3D {...p} />;
+  return null;
+}
 
 export const Route = createFileRoute("/darjah/$darjahId_/$subjekId_/latih-tubi")({
   head: () => ({ meta: [{ title: "Latih Tubi — Kalifah.my" }] }),
