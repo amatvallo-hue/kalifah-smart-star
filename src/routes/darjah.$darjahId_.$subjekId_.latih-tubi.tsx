@@ -32,6 +32,7 @@ import { RajahKestabilan } from "@/components/svg/RajahKestabilan";
 import { RantaiMakanan } from "@/components/svg/RantaiMakanan";
 import { UjianLitmus } from "@/components/svg/UjianLitmus";
 import { MesinRingkas } from "@/components/svg/MesinRingkas";
+import { WangMalaysia } from "@/components/svg/WangMalaysia";
 
 function renderSoalanSvg(svg_type?: string | null, svg_params?: any) {
   if (!svg_type) return null;
