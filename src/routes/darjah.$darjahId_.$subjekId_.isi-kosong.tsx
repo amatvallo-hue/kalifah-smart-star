@@ -65,6 +65,19 @@ function IsiKosongPage() {
   const mata = usePoints();
   const darjahNum = Number(darjahId);
   const isKecil = darjahNum <= 3;
+  const showBahasaToggle = subjekId === "sains" || subjekId === "matematik";
+
+  const [bahasa, setBahasa] = useState<"bm" | "en" | null>(showBahasaToggle ? null : "bm");
+  const subjekQuery =
+    subjekId === "sains"
+      ? bahasa === "en"
+        ? "sains-en"
+        : "sains"
+      : subjekId === "matematik"
+        ? bahasa === "en"
+          ? "matematik-en"
+          : "matematik"
+        : subjekId;
 
   const [bank, setBank] = useState<Soalan[]>([]);
   const [topikList, setTopikList] = useState<{ kod: string; nama: string; bilangan: number }[]>([]);
@@ -88,6 +101,10 @@ function IsiKosongPage() {
 
   // Fetch senarai topik yang ada soalan
   useEffect(() => {
+    if (showBahasaToggle && !bahasa) {
+      setTopikList([]);
+      return;
+    }
     let cancelled = false;
     (async () => {
       setFetching(true);
@@ -96,7 +113,7 @@ function IsiKosongPage() {
         .from("soalan_isi_kosong")
         .select("topik_kod, topik_nama")
         .eq("darjah", Number.isFinite(darjahNum) ? darjahNum : darjahId)
-        .eq("subjek", subjekId);
+        .eq("subjek", subjekQuery);
       if (cancelled) return;
       if (error) {
         setErrMsg(error.message);
@@ -117,7 +134,7 @@ function IsiKosongPage() {
     return () => {
       cancelled = true;
     };
-  }, [darjahId, subjekId, darjahNum]);
+  }, [darjahId, subjekId, subjekQuery, darjahNum, showBahasaToggle, bahasa]);
 
   async function mulaSesi(kod: string) {
     setFetching(true);
@@ -126,7 +143,7 @@ function IsiKosongPage() {
       .from("soalan_isi_kosong")
       .select("id, topik_kod, topik_nama, no_soalan, soalan, jawapan_utama, jawapan_alternatif, keyword_haram, feedback_betul, feedback_salah, petunjuk")
       .eq("darjah", Number.isFinite(darjahNum) ? darjahNum : darjahId)
-      .eq("subjek", subjekId)
+      .eq("subjek", subjekQuery)
       .eq("topik_kod", kod);
     if (error) {
       setErrMsg(error.message);
@@ -273,8 +290,34 @@ function IsiKosongPage() {
           </div>
         )}
 
+        {/* PILIH BAHASA */}
+        {!started && showBahasaToggle && !bahasa && (
+          <section className="mt-6 rounded-3xl bg-card p-6 text-center shadow-card md:p-8">
+            <h2 className="font-display text-2xl font-extrabold text-foreground">Pilih Bahasa</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Pilih bahasa untuk Isi Tempat Kosong {subjek.title} {darjah.label}.
+            </p>
+            <div className="mt-6 grid gap-4 sm:grid-cols-2">
+              <button
+                onClick={() => setBahasa("bm")}
+                className="rounded-3xl border-2 px-6 py-8 font-display text-xl font-extrabold shadow-soft transition hover:-translate-y-1"
+                style={{ borderColor: `${HIJAU}44`, color: HIJAU, backgroundColor: `${HIJAU}10` }}
+              >
+                🇲🇾 Bahasa Melayu
+              </button>
+              <button
+                onClick={() => setBahasa("en")}
+                className="rounded-3xl border-2 px-6 py-8 font-display text-xl font-extrabold shadow-soft transition hover:-translate-y-1"
+                style={{ borderColor: `${EMAS}44`, color: EMAS, backgroundColor: `${EMAS}10` }}
+              >
+                🇬🇧 English
+              </button>
+            </div>
+          </section>
+        )}
+
         {/* PICKER TOPIK */}
-        {!started && (
+        {!started && (!showBahasaToggle || bahasa) && (
           <section className="mt-6">
             {fetching ? (
               <p className="text-center text-muted-foreground">Memuatkan senarai topik...</p>
@@ -288,6 +331,23 @@ function IsiKosongPage() {
               </div>
             ) : (
               <>
+
+                {showBahasaToggle && bahasa && (
+                  <div className="mb-3 flex items-center gap-2">
+                    <span
+                      className="rounded-full px-3 py-1 font-display text-xs font-extrabold text-white"
+                      style={{ backgroundColor: bahasa === "en" ? EMAS : HIJAU }}
+                    >
+                      {bahasa === "en" ? "🇬🇧 English" : "🇲🇾 Bahasa Melayu"}
+                    </span>
+                    <button
+                      onClick={() => setBahasa(null)}
+                      className="text-xs font-bold text-muted-foreground underline hover:text-primary"
+                    >
+                      Tukar bahasa
+                    </button>
+                  </div>
+                )}
                 <h2 className="font-display text-xl font-extrabold text-foreground">Pilih Topik</h2>
                 <div className="mt-3 grid gap-3 sm:grid-cols-2">
                   {topikList.map((t) => (
