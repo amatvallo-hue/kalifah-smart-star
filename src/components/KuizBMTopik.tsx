@@ -16,6 +16,8 @@ import { DacingScale } from "@/components/svg/DacingScale";
 import { PecahanDiagram } from "@/components/svg/PecahanDiagram";
 import { BarisanPanjang } from "@/components/svg/BarisanPanjang";
 import { BekasAir } from "@/components/svg/BekasAir";
+import { CahayaBayang } from "@/components/svg/CahayaBayang";
+import { LitarElektrik } from "@/components/svg/LitarElektrik";
 
 function renderSoalanSvg(svg_type: string | null | undefined, svg_params: any) {
   if (!svg_type) return null;
@@ -31,6 +33,8 @@ function renderSoalanSvg(svg_type: string | null | undefined, svg_params: any) {
     else if (svg_type === "pecahan") el = <PecahanDiagram {...p} />;
     else if (svg_type === "panjang") el = <BarisanPanjang {...p} />;
     else if (svg_type === "air") el = <BekasAir {...p} />;
+    else if (svg_type === "cahaya") el = <CahayaBayang {...p} />;
+    else if (svg_type === "litar") el = <LitarElektrik {...p} />;
   } catch {
     return null;
   }
