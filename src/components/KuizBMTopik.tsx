@@ -25,6 +25,7 @@ import { SudutGaris } from "@/components/svg/SudutGaris";
 import { IsiPaduPepejal } from "@/components/svg/IsiPaduPepejal";
 import { FasaBulan } from "@/components/svg/FasaBulan";
 import { KeadaanJirim } from "@/components/svg/KeadaanJirim";
+import { GerhanaDiagram } from "@/components/svg/GerhanaDiagram";
 
 function renderSoalanSvg(svg_type: string | null | undefined, svg_params: any) {
   if (!svg_type) return null;
@@ -49,6 +50,7 @@ function renderSoalanSvg(svg_type: string | null | undefined, svg_params: any) {
     else if (svg_type === "isi_padu_pepejal") el = <IsiPaduPepejal {...p} />;
     else if (svg_type === "fasa_bulan") el = <FasaBulan {...p} />;
     else if (svg_type === "keadaan_jirim") el = <KeadaanJirim {...p} />;
+    else if (svg_type === "gerhana") el = <GerhanaDiagram {...p} />;
   } catch {
     return null;
   }
