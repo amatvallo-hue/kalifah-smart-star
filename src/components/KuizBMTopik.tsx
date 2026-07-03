@@ -28,6 +28,7 @@ import { KeadaanJirim } from "@/components/svg/KeadaanJirim";
 import { GerhanaDiagram } from "@/components/svg/GerhanaDiagram";
 import { RajahDaya } from "@/components/svg/RajahDaya";
 import { RajahKestabilan } from "@/components/svg/RajahKestabilan";
+import { RantaiMakanan } from "@/components/svg/RantaiMakanan";
 
 function renderSoalanSvg(svg_type: string | null | undefined, svg_params: any) {
   if (!svg_type) return null;
