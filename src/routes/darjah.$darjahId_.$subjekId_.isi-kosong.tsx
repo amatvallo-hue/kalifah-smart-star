@@ -65,6 +65,19 @@ function IsiKosongPage() {
   const mata = usePoints();
   const darjahNum = Number(darjahId);
   const isKecil = darjahNum <= 3;
+  const showBahasaToggle = subjekId === "sains" || subjekId === "matematik";
+
+  const [bahasa, setBahasa] = useState<"bm" | "en" | null>(showBahasaToggle ? null : "bm");
+  const subjekQuery =
+    subjekId === "sains"
+      ? bahasa === "en"
+        ? "sains-en"
+        : "sains"
+      : subjekId === "matematik"
+        ? bahasa === "en"
+          ? "matematik-en"
+          : "matematik"
+        : subjekId;
 
   const [bank, setBank] = useState<Soalan[]>([]);
   const [topikList, setTopikList] = useState<{ kod: string; nama: string; bilangan: number }[]>([]);
