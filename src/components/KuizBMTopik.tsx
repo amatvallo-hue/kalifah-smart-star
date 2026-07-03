@@ -62,6 +62,7 @@ function renderSoalanSvg(svg_type: string | null | undefined, svg_params: any) {
     else if (svg_type === "rantai_makanan") el = <RantaiMakanan {...p} />;
     else if (svg_type === "litmus") el = <UjianLitmus {...p} />;
     else if (svg_type === "mesin") el = <MesinRingkas {...p} />;
+    else if (svg_type === "wang") el = <WangMalaysia {...p} />;
   } catch {
     return null;
   }
