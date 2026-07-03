@@ -21,6 +21,8 @@ import { CahayaBayang } from "@/components/svg/CahayaBayang";
 import { LitarElektrik } from "@/components/svg/LitarElektrik";
 import { KetumpatanDiagram } from "@/components/svg/KetumpatanDiagram";
 import { SistemSuria } from "@/components/svg/SistemSuria";
+import { PerimeterLuas } from "@/components/svg/PerimeterLuas";
+import { SudutGaris } from "@/components/svg/SudutGaris";
 
 function renderSoalanSvg(svg_type?: string | null, svg_params?: any) {
   if (!svg_type) return null;
