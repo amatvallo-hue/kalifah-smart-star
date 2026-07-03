@@ -331,6 +331,23 @@ function IsiKosongPage() {
               </div>
             ) : (
               <>
+              <>
+                {showBahasaToggle && bahasa && (
+                  <div className="mb-3 flex items-center gap-2">
+                    <span
+                      className="rounded-full px-3 py-1 font-display text-xs font-extrabold text-white"
+                      style={{ backgroundColor: bahasa === "en" ? EMAS : HIJAU }}
+                    >
+                      {bahasa === "en" ? "🇬🇧 English" : "🇲🇾 Bahasa Melayu"}
+                    </span>
+                    <button
+                      onClick={() => setBahasa(null)}
+                      className="text-xs font-bold text-muted-foreground underline hover:text-primary"
+                    >
+                      Tukar bahasa
+                    </button>
+                  </div>
+                )}
                 <h2 className="font-display text-xl font-extrabold text-foreground">Pilih Topik</h2>
                 <div className="mt-3 grid gap-3 sm:grid-cols-2">
                   {topikList.map((t) => (
