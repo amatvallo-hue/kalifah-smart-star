@@ -5,7 +5,7 @@ interface Label {
 }
 
 interface Props {
-  diagramType: "human_body" | "plant_parts" | string;
+  diagramType: "human_body" | "plant_parts" | "teeth" | string;
   labels?: Label[];
 }
 
