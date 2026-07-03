@@ -28,6 +28,7 @@ import { FasaBulan } from "@/components/svg/FasaBulan";
 import { KeadaanJirim } from "@/components/svg/KeadaanJirim";
 import { GerhanaDiagram } from "@/components/svg/GerhanaDiagram";
 import { RajahDaya } from "@/components/svg/RajahDaya";
+import { RajahKestabilan } from "@/components/svg/RajahKestabilan";
 
 function renderSoalanSvg(svg_type?: string | null, svg_params?: any) {
   if (!svg_type) return null;
@@ -52,6 +53,7 @@ function renderSoalanSvg(svg_type?: string | null, svg_params?: any) {
   if (svg_type === "keadaan_jirim") return <KeadaanJirim {...p} />;
   if (svg_type === "gerhana") return <GerhanaDiagram {...p} />;
   if (svg_type === "daya") return <RajahDaya {...p} />;
+  if (svg_type === "kestabilan") return <RajahKestabilan {...p} />;
   return null;
 }
 
