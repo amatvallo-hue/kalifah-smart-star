@@ -35,10 +35,23 @@ const PLANT_ANCHORS: Record<string, { x: number; y: number }> = {
   tanah: { x: 140, y: 145 },
 };
 
+const TEETH_ANCHORS: Record<string, { x: number; y: number }> = {
+  "gigi kacip": { x: 220, y: 105 },
+  kacip: { x: 220, y: 105 },
+  insisor: { x: 220, y: 105 },
+  "gigi taring": { x: 178, y: 100 },
+  taring: { x: 178, y: 100 },
+  kanin: { x: 178, y: 100 },
+  "gigi geraham": { x: 100, y: 100 },
+  geraham: { x: 100, y: 100 },
+  molar: { x: 100, y: 100 },
+};
+
 function anchorFor(diagramType: string, text: string): { x: number; y: number } | null {
   const key = text.trim().toLowerCase();
   if (diagramType === "human_body") return HUMAN_ANCHORS[key] ?? null;
   if (diagramType === "plant_parts") return PLANT_ANCHORS[key] ?? null;
+  if (diagramType === "teeth") return TEETH_ANCHORS[key] ?? null;
   return null;
 }
 
