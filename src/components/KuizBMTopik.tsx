@@ -33,6 +33,8 @@ function renderSoalanSvg(svg_type: string | null | undefined, svg_params: any) {
     else if (svg_type === "pecahan") el = <PecahanDiagram {...p} />;
     else if (svg_type === "panjang") el = <BarisanPanjang {...p} />;
     else if (svg_type === "air") el = <BekasAir {...p} />;
+    else if (svg_type === "cahaya") el = <CahayaBayang {...p} />;
+    else if (svg_type === "litar") el = <LitarElektrik {...p} />;
   } catch {
     return null;
   }

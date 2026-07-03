@@ -32,6 +32,8 @@ function renderSoalanSvg(svg_type?: string | null, svg_params?: any) {
   if (svg_type === "pecahan") return <PecahanDiagram {...p} />;
   if (svg_type === "panjang") return <BarisanPanjang {...p} />;
   if (svg_type === "air") return <BekasAir {...p} />;
+  if (svg_type === "cahaya") return <CahayaBayang {...p} />;
+  if (svg_type === "litar") return <LitarElektrik {...p} />;
   return null;
 }
 
