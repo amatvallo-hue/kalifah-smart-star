@@ -19,6 +19,8 @@ import { BarisanPanjang } from "@/components/svg/BarisanPanjang";
 import { BekasAir } from "@/components/svg/BekasAir";
 import { CahayaBayang } from "@/components/svg/CahayaBayang";
 import { LitarElektrik } from "@/components/svg/LitarElektrik";
+import { KetumpatanDiagram } from "@/components/svg/KetumpatanDiagram";
+import { SistemSuria } from "@/components/svg/SistemSuria";
 
 function renderSoalanSvg(svg_type?: string | null, svg_params?: any) {
   if (!svg_type) return null;
@@ -34,6 +36,8 @@ function renderSoalanSvg(svg_type?: string | null, svg_params?: any) {
   if (svg_type === "air") return <BekasAir {...p} />;
   if (svg_type === "cahaya") return <CahayaBayang {...p} />;
   if (svg_type === "litar") return <LitarElektrik {...p} />;
+  if (svg_type === "ketumpatan") return <KetumpatanDiagram {...p} />;
+  if (svg_type === "sistem_suria") return <SistemSuria />;
   return null;
 }
 
