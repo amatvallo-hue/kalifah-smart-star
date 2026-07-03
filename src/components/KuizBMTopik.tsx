@@ -23,6 +23,8 @@ import { SistemSuria } from "@/components/svg/SistemSuria";
 import { PerimeterLuas } from "@/components/svg/PerimeterLuas";
 import { SudutGaris } from "@/components/svg/SudutGaris";
 import { IsiPaduPepejal } from "@/components/svg/IsiPaduPepejal";
+import { FasaBulan } from "@/components/svg/FasaBulan";
+import { KeadaanJirim } from "@/components/svg/KeadaanJirim";
 
 function renderSoalanSvg(svg_type: string | null | undefined, svg_params: any) {
   if (!svg_type) return null;
@@ -45,6 +47,8 @@ function renderSoalanSvg(svg_type: string | null | undefined, svg_params: any) {
     else if (svg_type === "perimeter_luas") el = <PerimeterLuas {...p} />;
     else if (svg_type === "sudut_garis") el = <SudutGaris {...p} />;
     else if (svg_type === "isi_padu_pepejal") el = <IsiPaduPepejal {...p} />;
+    else if (svg_type === "fasa_bulan") el = <FasaBulan {...p} />;
+    else if (svg_type === "keadaan_jirim") el = <KeadaanJirim {...p} />;
   } catch {
     return null;
   }
