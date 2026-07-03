@@ -123,6 +123,39 @@ function PlantParts() {
   );
 }
 
+const TOOTH = "#F9FAFB";
+const GUM = "#F472B6";
+
+function Teeth() {
+  return (
+    <g>
+      {/* Jaw outline (side view of open mouth) */}
+      <path
+        d="M 40 130 Q 80 90 160 82 Q 220 82 250 100 L 250 118 Q 220 108 160 108 Q 90 112 45 148 Z"
+        fill={GUM}
+        stroke={STROKE}
+        strokeWidth={2}
+        strokeLinejoin="round"
+      />
+      {/* Molars (back / left) - broad, flat */}
+      <rect x={70} y={88} width={18} height={16} rx={3} fill={TOOTH} stroke={STROKE} strokeWidth={1.8} />
+      <rect x={92} y={87} width={18} height={16} rx={3} fill={TOOTH} stroke={STROKE} strokeWidth={1.8} />
+      <rect x={114} y={86} width={16} height={15} rx={3} fill={TOOTH} stroke={STROKE} strokeWidth={1.8} />
+      {/* Canine (middle) - pointed */}
+      <path
+        d="M 170 86 L 178 70 L 186 86 L 184 100 L 172 100 Z"
+        fill={TOOTH}
+        stroke={STROKE}
+        strokeWidth={1.8}
+        strokeLinejoin="round"
+      />
+      {/* Incisors (front / right) - flat rectangular */}
+      <rect x={200} y={84} width={12} height={20} rx={2} fill={TOOTH} stroke={STROKE} strokeWidth={1.8} />
+      <rect x={214} y={83} width={12} height={20} rx={2} fill={TOOTH} stroke={STROKE} strokeWidth={1.8} />
+    </g>
+  );
+}
+
 export function LabeledDiagram({ diagramType, labels = [] }: Props) {
   return (
     <svg
@@ -134,6 +167,7 @@ export function LabeledDiagram({ diagramType, labels = [] }: Props) {
     >
       {diagramType === "human_body" && <HumanBody />}
       {diagramType === "plant_parts" && <PlantParts />}
+      {diagramType === "teeth" && <Teeth />}
 
       {labels.map((l, i) => {
         const anchor = anchorFor(diagramType, l.text);
