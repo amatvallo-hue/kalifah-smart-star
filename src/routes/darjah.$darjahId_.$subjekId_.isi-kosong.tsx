@@ -101,6 +101,10 @@ function IsiKosongPage() {
 
   // Fetch senarai topik yang ada soalan
   useEffect(() => {
+    if (showBahasaToggle && !bahasa) {
+      setTopikList([]);
+      return;
+    }
     let cancelled = false;
     (async () => {
       setFetching(true);
@@ -109,7 +113,7 @@ function IsiKosongPage() {
         .from("soalan_isi_kosong")
         .select("topik_kod, topik_nama")
         .eq("darjah", Number.isFinite(darjahNum) ? darjahNum : darjahId)
-        .eq("subjek", subjekId);
+        .eq("subjek", subjekQuery);
       if (cancelled) return;
       if (error) {
         setErrMsg(error.message);
@@ -130,7 +134,7 @@ function IsiKosongPage() {
     return () => {
       cancelled = true;
     };
-  }, [darjahId, subjekId, darjahNum]);
+  }, [darjahId, subjekId, subjekQuery, darjahNum, showBahasaToggle, bahasa]);
 
   async function mulaSesi(kod: string) {
     setFetching(true);
@@ -139,7 +143,7 @@ function IsiKosongPage() {
       .from("soalan_isi_kosong")
       .select("id, topik_kod, topik_nama, no_soalan, soalan, jawapan_utama, jawapan_alternatif, keyword_haram, feedback_betul, feedback_salah, petunjuk")
       .eq("darjah", Number.isFinite(darjahNum) ? darjahNum : darjahId)
-      .eq("subjek", subjekId)
+      .eq("subjek", subjekQuery)
       .eq("topik_kod", kod);
     if (error) {
       setErrMsg(error.message);
