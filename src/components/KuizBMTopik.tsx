@@ -20,6 +20,8 @@ import { CahayaBayang } from "@/components/svg/CahayaBayang";
 import { LitarElektrik } from "@/components/svg/LitarElektrik";
 import { KetumpatanDiagram } from "@/components/svg/KetumpatanDiagram";
 import { SistemSuria } from "@/components/svg/SistemSuria";
+import { PerimeterLuas } from "@/components/svg/PerimeterLuas";
+import { SudutGaris } from "@/components/svg/SudutGaris";
 
 function renderSoalanSvg(svg_type: string | null | undefined, svg_params: any) {
   if (!svg_type) return null;
@@ -39,6 +41,8 @@ function renderSoalanSvg(svg_type: string | null | undefined, svg_params: any) {
     else if (svg_type === "litar") el = <LitarElektrik {...p} />;
     else if (svg_type === "ketumpatan") el = <KetumpatanDiagram {...p} />;
     else if (svg_type === "sistem_suria") el = <SistemSuria />;
+    else if (svg_type === "perimeter_luas") el = <PerimeterLuas {...p} />;
+    else if (svg_type === "sudut_garis") el = <SudutGaris {...p} />;
   } catch {
     return null;
   }
