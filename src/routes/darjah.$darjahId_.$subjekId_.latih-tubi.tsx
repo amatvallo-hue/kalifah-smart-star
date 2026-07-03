@@ -61,6 +61,7 @@ function renderSoalanSvg(svg_type?: string | null, svg_params?: any) {
   if (svg_type === "rantai_makanan") return <RantaiMakanan {...p} />;
   if (svg_type === "litmus") return <UjianLitmus {...p} />;
   if (svg_type === "mesin") return <MesinRingkas {...p} />;
+  if (svg_type === "wang") return <WangMalaysia {...p} />;
   return null;
 }
 
