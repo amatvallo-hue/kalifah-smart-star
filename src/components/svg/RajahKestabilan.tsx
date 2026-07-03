@@ -29,7 +29,7 @@ export function RajahKestabilan({ shape, baseWidth, stable }: Props) {
   let cgY: number;
   let pivotX: number;
   let pivotY: number;
-  let body: React.ReactNode = null;
+  let body: any = null;
 
   if (shape === "kotak") {
     baseW = bw ? 84 : 42;
