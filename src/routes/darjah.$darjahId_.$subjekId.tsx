@@ -176,6 +176,24 @@ function AktivitiPage() {
           </span>
         </Link>
 
+        {/* Isi Tempat Kosong */}
+        <Link
+          to="/darjah/$darjahId/$subjekId/isi-kosong"
+          params={{ darjahId, subjekId }}
+          className="group mt-4 flex items-center gap-5 rounded-2xl border-2 border-emerald-200 bg-emerald-50 p-5 shadow-card transition hover:-translate-y-1 hover:shadow-soft dark:border-emerald-800/40 dark:bg-emerald-950/20"
+        >
+          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-emerald-400 text-white shadow-soft transition group-hover:scale-110 text-2xl">
+            ✍️
+          </div>
+          <div className="flex-1">
+            <h3 className="font-display text-xl font-extrabold text-foreground">Isi Tempat Kosong</h3>
+            <p className="mt-0.5 text-sm text-muted-foreground">Taip jawapan sendiri — asah ingatan tanpa pilihan A/B/C/D!</p>
+          </div>
+          <span className="shrink-0 inline-flex items-center gap-1 rounded-full bg-emerald-500 px-4 py-2 font-display text-sm font-extrabold text-white shadow-soft transition group-hover:translate-x-1">
+            Mula →
+          </span>
+        </Link>
+
         {/* 4 aktiviti lain */}
         <section className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {ACTIVITIES.filter((a) => a.id !== "latih-tubi").map((a) => {
