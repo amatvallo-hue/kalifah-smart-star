@@ -18,6 +18,8 @@ import { BarisanPanjang } from "@/components/svg/BarisanPanjang";
 import { BekasAir } from "@/components/svg/BekasAir";
 import { CahayaBayang } from "@/components/svg/CahayaBayang";
 import { LitarElektrik } from "@/components/svg/LitarElektrik";
+import { KetumpatanDiagram } from "@/components/svg/KetumpatanDiagram";
+import { SistemSuria } from "@/components/svg/SistemSuria";
 
 function renderSoalanSvg(svg_type: string | null | undefined, svg_params: any) {
   if (!svg_type) return null;
