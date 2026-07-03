@@ -38,6 +38,8 @@ function renderSoalanSvg(svg_type?: string | null, svg_params?: any) {
   if (svg_type === "litar") return <LitarElektrik {...p} />;
   if (svg_type === "ketumpatan") return <KetumpatanDiagram {...p} />;
   if (svg_type === "sistem_suria") return <SistemSuria />;
+  if (svg_type === "perimeter_luas") return <PerimeterLuas {...p} />;
+  if (svg_type === "sudut_garis") return <SudutGaris {...p} />;
   return null;
 }
 
