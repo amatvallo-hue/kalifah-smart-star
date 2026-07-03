@@ -290,8 +290,34 @@ function IsiKosongPage() {
           </div>
         )}
 
+        {/* PILIH BAHASA */}
+        {!started && showBahasaToggle && !bahasa && (
+          <section className="mt-6 rounded-3xl bg-card p-6 text-center shadow-card md:p-8">
+            <h2 className="font-display text-2xl font-extrabold text-foreground">Pilih Bahasa</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Pilih bahasa untuk Isi Tempat Kosong {subjek.title} {darjah.label}.
+            </p>
+            <div className="mt-6 grid gap-4 sm:grid-cols-2">
+              <button
+                onClick={() => setBahasa("bm")}
+                className="rounded-3xl border-2 px-6 py-8 font-display text-xl font-extrabold shadow-soft transition hover:-translate-y-1"
+                style={{ borderColor: `${HIJAU}44`, color: HIJAU, backgroundColor: `${HIJAU}10` }}
+              >
+                🇲🇾 Bahasa Melayu
+              </button>
+              <button
+                onClick={() => setBahasa("en")}
+                className="rounded-3xl border-2 px-6 py-8 font-display text-xl font-extrabold shadow-soft transition hover:-translate-y-1"
+                style={{ borderColor: `${EMAS}44`, color: EMAS, backgroundColor: `${EMAS}10` }}
+              >
+                🇬🇧 English
+              </button>
+            </div>
+          </section>
+        )}
+
         {/* PICKER TOPIK */}
-        {!started && (
+        {!started && (!showBahasaToggle || bahasa) && (
           <section className="mt-6">
             {fetching ? (
               <p className="text-center text-muted-foreground">Memuatkan senarai topik...</p>
