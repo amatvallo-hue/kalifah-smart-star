@@ -55,6 +55,7 @@ function renderSoalanSvg(svg_type?: string | null, svg_params?: any) {
   if (svg_type === "gerhana") return <GerhanaDiagram {...p} />;
   if (svg_type === "daya") return <RajahDaya {...p} />;
   if (svg_type === "kestabilan") return <RajahKestabilan {...p} />;
+  if (svg_type === "rantai_makanan") return <RantaiMakanan {...p} />;
   return null;
 }
 
