@@ -31,6 +31,7 @@ import { RajahKestabilan } from "@/components/svg/RajahKestabilan";
 import { RantaiMakanan } from "@/components/svg/RantaiMakanan";
 import { UjianLitmus } from "@/components/svg/UjianLitmus";
 import { MesinRingkas } from "@/components/svg/MesinRingkas";
+import { WangMalaysia } from "@/components/svg/WangMalaysia";
 
 function renderSoalanSvg(svg_type: string | null | undefined, svg_params: any) {
   if (!svg_type) return null;
@@ -61,6 +62,7 @@ function renderSoalanSvg(svg_type: string | null | undefined, svg_params: any) {
     else if (svg_type === "rantai_makanan") el = <RantaiMakanan {...p} />;
     else if (svg_type === "litmus") el = <UjianLitmus {...p} />;
     else if (svg_type === "mesin") el = <MesinRingkas {...p} />;
+    else if (svg_type === "wang") el = <WangMalaysia {...p} />;
   } catch {
     return null;
   }
