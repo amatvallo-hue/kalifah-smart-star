@@ -27,6 +27,7 @@ import { FasaBulan } from "@/components/svg/FasaBulan";
 import { KeadaanJirim } from "@/components/svg/KeadaanJirim";
 import { GerhanaDiagram } from "@/components/svg/GerhanaDiagram";
 import { RajahDaya } from "@/components/svg/RajahDaya";
+import { RajahKestabilan } from "@/components/svg/RajahKestabilan";
 
 function renderSoalanSvg(svg_type: string | null | undefined, svg_params: any) {
   if (!svg_type) return null;
