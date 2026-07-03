@@ -16,6 +16,8 @@ import { DacingScale } from "@/components/svg/DacingScale";
 import { PecahanDiagram } from "@/components/svg/PecahanDiagram";
 import { BarisanPanjang } from "@/components/svg/BarisanPanjang";
 import { BekasAir } from "@/components/svg/BekasAir";
+import { CahayaBayang } from "@/components/svg/CahayaBayang";
+import { LitarElektrik } from "@/components/svg/LitarElektrik";
 
 function renderSoalanSvg(svg_type: string | null | undefined, svg_params: any) {
   if (!svg_type) return null;
