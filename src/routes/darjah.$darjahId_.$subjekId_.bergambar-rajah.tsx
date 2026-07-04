@@ -37,6 +37,8 @@ interface Rangsangan {
   rangsangan_jenis: string;
   rangsangan_teks: string | null;
   rangsangan_gambar_id: string | null;
+  rangsangan_svg_type: string | null;
+  rangsangan_svg_params: any;
   topik_kod: string | null;
   topik_nama: string | null;
   soalan: Soalan[];
