@@ -24,6 +24,9 @@ import { UjianLitmus } from "@/components/svg/UjianLitmus";
 import { MesinRingkas } from "@/components/svg/MesinRingkas";
 import { WangMalaysia } from "@/components/svg/WangMalaysia";
 import { KiraObjek } from "@/components/svg/KiraObjek";
+import { CartaGambarMudah } from "@/components/svg/CartaGambarMudah";
+import { SenaraiHarga } from "@/components/svg/SenaraiHarga";
+import { KoleksiBentuk2D } from "@/components/svg/KoleksiBentuk2D";
 
 export function renderSoalanSvg(
   svg_type: string | null | undefined,
@@ -58,6 +61,9 @@ export function renderSoalanSvg(
     if (svg_type === "mesin") return <MesinRingkas {...p} />;
     if (svg_type === "wang") return <WangMalaysia {...p} />;
     if (svg_type === "kira") return <KiraObjek {...p} />;
+    if (svg_type === "carta_gambar") return <CartaGambarMudah {...p} />;
+    if (svg_type === "senarai_harga") return <SenaraiHarga {...p} />;
+    if (svg_type === "bentuk2d_koleksi") return <KoleksiBentuk2D {...p} />;
   } catch {
     return null;
   }
