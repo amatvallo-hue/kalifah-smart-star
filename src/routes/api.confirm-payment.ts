@@ -42,12 +42,12 @@ export const Route = createFileRoute("/api/confirm-payment")({
           const lookup = body.order_id
             ? userClient
                 .from("pesanan")
-                .select("id, user_id, billcode, status")
+                .select("id, user_id, billcode, status, amount_sen")
                 .eq("id", body.order_id)
                 .maybeSingle()
             : userClient
                 .from("pesanan")
-                .select("id, user_id, billcode, status")
+                .select("id, user_id, billcode, status, amount_sen")
                 .eq("billcode", body.billcode ?? "")
                 .maybeSingle();
           const { data: ord, error: ordErr } = await lookup;
