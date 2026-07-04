@@ -95,6 +95,37 @@ function BergambarRajahPage() {
 
   const showBahasaToggle = subjekId === "sains" || subjekId === "matematik";
 
+  const en = bahasa === "en";
+  const tr = {
+    kembali: en ? "Back to Activities" : "Kembali ke Aktiviti",
+    pilihBahasa: en ? "Choose Language" : "Pilih Bahasa",
+    pilihBahasaDesc: en
+      ? `Choose a language for ${subjek.title} ${darjah.label} picture questions.`
+      : `Pilih bahasa untuk soalan bergambar rajah ${subjek.title} ${darjah.label}.`,
+    pilihSet: en ? "Choose Question Set" : "Pilih Set Soalan",
+    pilihSetDesc: en
+      ? "Each set has one picture/passage and several related questions."
+      : "Setiap set ada satu gambar/petikan dan beberapa soalan berkaitan.",
+    soalanCount: (n: number) => (en ? `${n} questions` : `${n} soalan`),
+    memuatSoalan: en ? "Loading questions..." : "Memuatkan soalan...",
+    ralat: en ? "Error" : "Ralat",
+    tiadaSoalan: en ? "No picture questions yet" : "Belum ada soalan bergambar",
+    tiadaSoalanDesc: en
+      ? `Picture questions for ${subjek.title} (${darjah.label}) are being prepared.`
+      : `Soalan bergambar untuk ${subjek.title} (${darjah.label}) sedang disediakan.`,
+    labelSoalan: en ? "Question" : "Soalan",
+    labelBetul: en ? "Correct" : "Betul",
+    labelSalah: en ? "Wrong" : "Salah",
+    syabas: en ? "Well Done! 🎉" : "Syabas! 🎉",
+    syabasDesc: (n: number) =>
+      en ? `You've answered ${n} questions from this set.` : `Kamu dah jawab ${n} soalan dari set ini.`,
+    pilihSetLain: en ? "Choose Another Set" : "Pilih Set Lain",
+    aktivitiLain: en ? "Other Activities" : "Aktiviti Lain",
+    seterusnya: en ? "Next" : "Seterusnya",
+    selesai: en ? "Finish" : "Selesai",
+    berhenti: en ? "Stop" : "Berhenti",
+  };
+
   const subjekKod = (() => {
     if (subjekId === "sains") {
       return bahasa === "en" ? "SC-EN" : bahasa === "bm" ? "SC" : null;
