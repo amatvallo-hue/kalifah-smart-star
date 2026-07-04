@@ -589,7 +589,7 @@ function BergambarRajahPage() {
                         className="inline-flex items-center gap-2 rounded-full px-6 py-3 font-display font-extrabold shadow-soft transition hover:opacity-90"
                         style={{ backgroundColor: EMAS, color: "#1a1a1a" }}
                       >
-                        {cursor + 1 >= selected.soalan.length ? "Selesai" : "Seterusnya"}
+                        {cursor + 1 >= selected.soalan.length ? tr.selesai : tr.seterusnya}
                       </button>
                     </div>
                   </>
