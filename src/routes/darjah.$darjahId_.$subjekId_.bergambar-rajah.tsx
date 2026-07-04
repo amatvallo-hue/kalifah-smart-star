@@ -307,7 +307,7 @@ function BergambarRajahPage() {
           style={{ color: HIJAU }}
         >
           <ArrowLeft className="h-4 w-4" />
-          Kembali ke Aktiviti
+          {tr.kembali}
         </Link>
 
         <div className="mt-4 flex flex-wrap items-center gap-2">
