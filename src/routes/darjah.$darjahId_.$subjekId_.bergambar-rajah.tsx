@@ -130,7 +130,7 @@ function BergambarRajahPage() {
           "id, rangsangan_id, rangsangan_jenis, rangsangan_teks, rangsangan_gambar_id, topik_kod, topik_nama, no_soalan, soalan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan_betul, feedback_a, feedback_b, feedback_c, feedback_d",
         )
         .eq("darjah", Number.isFinite(darjahNum) ? darjahNum : darjahId)
-        .eq("subjek", subjekId)
+        .eq("subjek", subjekKod)
         .order("rangsangan_id", { ascending: true })
         .order("no_soalan", { ascending: true });
       if (cancelled) return;
