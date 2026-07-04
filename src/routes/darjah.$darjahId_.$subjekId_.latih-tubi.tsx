@@ -135,7 +135,7 @@ function LatihTubiPage() {
 
   const [topikStats, setTopikStats] = useState<Record<string, { betul: number; jumlah: number }>>({});
   const [mulaMasa, setMulaMasa] = useState(() => Date.now());
-  const [rajahMap, setRajahMap] = useState<Record<string, string>>({});
+  
 
   // Upper-darjah selection state
   const [topicList, setTopicList] = useState<string[]>([]);
@@ -246,22 +246,6 @@ function LatihTubiPage() {
     };
   }, [darjahId, subjekId, isUpper, darjahNum, isMatematik, bahasa]);
 
-  useEffect(() => {
-    const keys = Array.from(new Set(bank.map(s => s.gambar).filter((g): g is string => !!g)));
-    if (keys.length === 0) return;
-    let cancelled = false;
-    (async () => {
-      const { data } = await supabase
-        .from("rajah")
-        .select("nama, konten_svg")
-        .in("nama", keys);
-      if (cancelled || !data) return;
-      const map: Record<string, string> = {};
-      data.forEach((r: any) => { map[r.nama] = r.konten_svg; });
-      setRajahMap(map);
-    })();
-    return () => { cancelled = true; };
-  }, [bank]);
 
 
   // Upper darjah (4-6): fetch distinct topik list
@@ -686,12 +670,6 @@ function LatihTubiPage() {
 
             {soalan && (
               <div className="mt-6 rounded-3xl bg-card p-6 shadow-card md:p-8">
-                {soalan.gambar && rajahMap[soalan.gambar] && (
-                  <div
-                    className="mx-auto mb-4 flex max-w-xs justify-center overflow-hidden rounded-2xl border border-border bg-white p-3"
-                    dangerouslySetInnerHTML={{ __html: rajahMap[soalan.gambar] }}
-                  />
-                )}
                 {soalan.svg_type && (
                   <div className="mx-auto mb-4 flex justify-center">
                     {renderSoalanSvg(soalan.svg_type, soalan.svg_params)}

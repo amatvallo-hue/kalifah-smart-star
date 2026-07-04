@@ -35,7 +35,6 @@ import { Route as AdminChallengeRouteImport } from './routes/admin_.challenge'
 import { Route as AdminAffiliatesRouteImport } from './routes/admin_.affiliates'
 import { Route as PreviewDarjahIdScoreRouteImport } from './routes/preview.$darjahId_.score'
 import { Route as DarjahDarjahIdSubjekIdRouteImport } from './routes/darjah.$darjahId_.$subjekId'
-import { Route as DarjahDarjahIdSubjekIdSoalanRajahRouteImport } from './routes/darjah.$darjahId_.$subjekId_.soalan-rajah'
 import { Route as DarjahDarjahIdSubjekIdNotaRingkasRouteImport } from './routes/darjah.$darjahId_.$subjekId_.nota-ringkas'
 import { Route as DarjahDarjahIdSubjekIdLatihanRouteImport } from './routes/darjah.$darjahId_.$subjekId_.latihan'
 import { Route as DarjahDarjahIdSubjekIdLatihTubiRouteImport } from './routes/darjah.$darjahId_.$subjekId_.latih-tubi'
@@ -175,12 +174,6 @@ const DarjahDarjahIdSubjekIdRoute = DarjahDarjahIdSubjekIdRouteImport.update({
   path: '/darjah/$darjahId/$subjekId',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DarjahDarjahIdSubjekIdSoalanRajahRoute =
-  DarjahDarjahIdSubjekIdSoalanRajahRouteImport.update({
-    id: '/darjah/$darjahId_/$subjekId_/soalan-rajah',
-    path: '/darjah/$darjahId/$subjekId/soalan-rajah',
-    getParentRoute: () => rootRouteImport,
-  } as any)
 const DarjahDarjahIdSubjekIdNotaRingkasRoute =
   DarjahDarjahIdSubjekIdNotaRingkasRouteImport.update({
     id: '/darjah/$darjahId_/$subjekId_/nota-ringkas',
@@ -265,7 +258,6 @@ export interface FileRoutesByFullPath {
   '/darjah/$darjahId/$subjekId/latih-tubi': typeof DarjahDarjahIdSubjekIdLatihTubiRoute
   '/darjah/$darjahId/$subjekId/latihan': typeof DarjahDarjahIdSubjekIdLatihanRoute
   '/darjah/$darjahId/$subjekId/nota-ringkas': typeof DarjahDarjahIdSubjekIdNotaRingkasRoute
-  '/darjah/$darjahId/$subjekId/soalan-rajah': typeof DarjahDarjahIdSubjekIdSoalanRajahRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -302,7 +294,6 @@ export interface FileRoutesByTo {
   '/darjah/$darjahId/$subjekId/latih-tubi': typeof DarjahDarjahIdSubjekIdLatihTubiRoute
   '/darjah/$darjahId/$subjekId/latihan': typeof DarjahDarjahIdSubjekIdLatihanRoute
   '/darjah/$darjahId/$subjekId/nota-ringkas': typeof DarjahDarjahIdSubjekIdNotaRingkasRoute
-  '/darjah/$darjahId/$subjekId/soalan-rajah': typeof DarjahDarjahIdSubjekIdSoalanRajahRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -340,7 +331,6 @@ export interface FileRoutesById {
   '/darjah/$darjahId_/$subjekId_/latih-tubi': typeof DarjahDarjahIdSubjekIdLatihTubiRoute
   '/darjah/$darjahId_/$subjekId_/latihan': typeof DarjahDarjahIdSubjekIdLatihanRoute
   '/darjah/$darjahId_/$subjekId_/nota-ringkas': typeof DarjahDarjahIdSubjekIdNotaRingkasRoute
-  '/darjah/$darjahId_/$subjekId_/soalan-rajah': typeof DarjahDarjahIdSubjekIdSoalanRajahRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -379,7 +369,6 @@ export interface FileRouteTypes {
     | '/darjah/$darjahId/$subjekId/latih-tubi'
     | '/darjah/$darjahId/$subjekId/latihan'
     | '/darjah/$darjahId/$subjekId/nota-ringkas'
-    | '/darjah/$darjahId/$subjekId/soalan-rajah'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -416,7 +405,6 @@ export interface FileRouteTypes {
     | '/darjah/$darjahId/$subjekId/latih-tubi'
     | '/darjah/$darjahId/$subjekId/latihan'
     | '/darjah/$darjahId/$subjekId/nota-ringkas'
-    | '/darjah/$darjahId/$subjekId/soalan-rajah'
   id:
     | '__root__'
     | '/'
@@ -453,7 +441,6 @@ export interface FileRouteTypes {
     | '/darjah/$darjahId_/$subjekId_/latih-tubi'
     | '/darjah/$darjahId_/$subjekId_/latihan'
     | '/darjah/$darjahId_/$subjekId_/nota-ringkas'
-    | '/darjah/$darjahId_/$subjekId_/soalan-rajah'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -491,7 +478,6 @@ export interface RootRouteChildren {
   DarjahDarjahIdSubjekIdLatihTubiRoute: typeof DarjahDarjahIdSubjekIdLatihTubiRoute
   DarjahDarjahIdSubjekIdLatihanRoute: typeof DarjahDarjahIdSubjekIdLatihanRoute
   DarjahDarjahIdSubjekIdNotaRingkasRoute: typeof DarjahDarjahIdSubjekIdNotaRingkasRoute
-  DarjahDarjahIdSubjekIdSoalanRajahRoute: typeof DarjahDarjahIdSubjekIdSoalanRajahRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -678,13 +664,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DarjahDarjahIdSubjekIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/darjah/$darjahId_/$subjekId_/soalan-rajah': {
-      id: '/darjah/$darjahId_/$subjekId_/soalan-rajah'
-      path: '/darjah/$darjahId/$subjekId/soalan-rajah'
-      fullPath: '/darjah/$darjahId/$subjekId/soalan-rajah'
-      preLoaderRoute: typeof DarjahDarjahIdSubjekIdSoalanRajahRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/darjah/$darjahId_/$subjekId_/nota-ringkas': {
       id: '/darjah/$darjahId_/$subjekId_/nota-ringkas'
       path: '/darjah/$darjahId/$subjekId/nota-ringkas'
@@ -781,8 +760,6 @@ const rootRouteChildren: RootRouteChildren = {
   DarjahDarjahIdSubjekIdLatihanRoute: DarjahDarjahIdSubjekIdLatihanRoute,
   DarjahDarjahIdSubjekIdNotaRingkasRoute:
     DarjahDarjahIdSubjekIdNotaRingkasRoute,
-  DarjahDarjahIdSubjekIdSoalanRajahRoute:
-    DarjahDarjahIdSubjekIdSoalanRajahRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

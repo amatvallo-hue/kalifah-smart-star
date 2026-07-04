@@ -8,6 +8,7 @@ import { usePoints } from "@/hooks/use-points";
 import { getDarjah, getSubjek } from "@/lib/curriculum";
 import { simpanProgress } from "@/lib/progress";
 import { tambahMata } from "@/lib/tambah-mata";
+import { renderSoalanSvg } from "@/lib/render-soalan-svg";
 
 export const Route = createFileRoute("/darjah/$darjahId_/$subjekId_/bergambar-rajah")({
   head: () => ({ meta: [{ title: "Soalan Bergambar Rajah — Kalifah.my" }] }),
@@ -36,6 +37,8 @@ interface Rangsangan {
   rangsangan_jenis: string;
   rangsangan_teks: string | null;
   rangsangan_gambar_id: string | null;
+  rangsangan_svg_type: string | null;
+  rangsangan_svg_params: any;
   topik_kod: string | null;
   topik_nama: string | null;
   soalan: Soalan[];
@@ -127,7 +130,7 @@ function BergambarRajahPage() {
       const { data, error } = await (supabase as any)
         .from("soalan_bergambar_rajah")
         .select(
-          "id, rangsangan_id, rangsangan_jenis, rangsangan_teks, rangsangan_gambar_id, topik_kod, topik_nama, no_soalan, soalan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan_betul, feedback_a, feedback_b, feedback_c, feedback_d",
+          "id, rangsangan_id, rangsangan_jenis, rangsangan_teks, rangsangan_gambar_id, rangsangan_svg_type, rangsangan_svg_params, topik_kod, topik_nama, no_soalan, soalan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan_betul, feedback_a, feedback_b, feedback_c, feedback_d",
         )
         .eq("darjah", Number.isFinite(darjahNum) ? darjahNum : darjahId)
         .eq("subjek", subjekKod)
@@ -149,13 +152,15 @@ function BergambarRajahPage() {
             rangsangan_jenis: r.rangsangan_jenis ?? "gambar",
             rangsangan_teks: r.rangsangan_teks ?? null,
             rangsangan_gambar_id: r.rangsangan_gambar_id ?? null,
+            rangsangan_svg_type: r.rangsangan_svg_type ?? null,
+            rangsangan_svg_params: r.rangsangan_svg_params ?? null,
             topik_kod: r.topik_kod ?? null,
             topik_nama: r.topik_nama ?? null,
             soalan: [],
           };
           groups.set(key, g);
         }
-        g.soalan.push({
+        g!.soalan.push({
           id: r.id as string,
           no_soalan: Number(r.no_soalan ?? 0),
           soalan: r.soalan as string,
@@ -356,8 +361,10 @@ function BergambarRajahPage() {
                     className="group flex flex-col overflow-hidden rounded-2xl border-2 bg-card p-3 text-left shadow-card transition hover:-translate-y-1"
                     style={{ borderColor: `${HIJAU}33` }}
                   >
-                    <div className="flex h-[160px] items-center justify-center overflow-hidden rounded-xl bg-white p-2">
-                      {r.rangsangan_gambar_id ? (
+                    <div className="flex h-[160px] items-center justify-center overflow-hidden rounded-xl bg-white p-2 [&_svg]:h-full [&_svg]:w-full [&_svg]:max-h-full [&_svg]:max-w-full">
+                      {r.rangsangan_svg_type ? (
+                        renderSoalanSvg(r.rangsangan_svg_type, r.rangsangan_svg_params)
+                      ) : r.rangsangan_gambar_id ? (
                         <Gambar id={r.rangsangan_gambar_id} alt={r.topik_nama ?? r.rangsangan_id} />
                       ) : (
                         <ImageIcon className="h-10 w-10 text-slate-300" />
@@ -418,15 +425,19 @@ function BergambarRajahPage() {
           <>
             {/* Persistent rangsangan */}
             <div
-              className="mt-6 overflow-hidden rounded-2xl border-2 bg-white p-4"
+              className="mt-6 overflow-hidden rounded-2xl border-2 bg-white p-4 [&_svg]:mx-auto [&_svg]:h-auto [&_svg]:w-full [&_svg]:max-w-md"
               style={{ borderColor: `${HIJAU}44` }}
             >
-              {selected.rangsangan_gambar_id && (
+              {selected.rangsangan_svg_type ? (
+                <div className="flex justify-center">
+                  {renderSoalanSvg(selected.rangsangan_svg_type, selected.rangsangan_svg_params)}
+                </div>
+              ) : selected.rangsangan_gambar_id ? (
                 <Gambar
                   id={selected.rangsangan_gambar_id}
                   alt={selected.topik_nama ?? selected.rangsangan_id}
                 />
-              )}
+              ) : null}
               {selected.rangsangan_teks && (
                 <p className="mt-3 whitespace-pre-line text-sm leading-relaxed text-slate-700">
                   {selected.rangsangan_teks}
