@@ -152,13 +152,15 @@ function BergambarRajahPage() {
             rangsangan_jenis: r.rangsangan_jenis ?? "gambar",
             rangsangan_teks: r.rangsangan_teks ?? null,
             rangsangan_gambar_id: r.rangsangan_gambar_id ?? null,
+            rangsangan_svg_type: r.rangsangan_svg_type ?? null,
+            rangsangan_svg_params: r.rangsangan_svg_params ?? null,
             topik_kod: r.topik_kod ?? null,
             topik_nama: r.topik_nama ?? null,
             soalan: [],
           };
           groups.set(key, g);
         }
-        g.soalan.push({
+        g!.soalan.push({
           id: r.id as string,
           no_soalan: Number(r.no_soalan ?? 0),
           soalan: r.soalan as string,
