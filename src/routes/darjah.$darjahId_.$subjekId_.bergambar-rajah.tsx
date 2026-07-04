@@ -174,7 +174,7 @@ function BergambarRajahPage() {
     return () => {
       cancelled = true;
     };
-  }, [darjahId, subjekId, darjahNum]);
+  }, [darjahId, subjekId, darjahNum, subjekKod, showBahasaToggle]);
 
   useEffect(() => {
     if (!selected) return;
