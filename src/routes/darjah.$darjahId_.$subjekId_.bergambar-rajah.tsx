@@ -88,6 +88,17 @@ function BergambarRajahPage() {
   const [loadingList, setLoadingList] = useState(true);
   const [errMsg, setErrMsg] = useState<string | null>(null);
   const [selected, setSelected] = useState<Rangsangan | null>(null);
+  const [bahasa, setBahasa] = useState<"bm" | "en" | null>(null);
+
+  const showBahasaToggle = subjekId === "sains";
+  const subjekKod =
+    subjekId === "sains"
+      ? bahasa === "en"
+        ? "SC-EN"
+        : bahasa === "bm"
+          ? "SC"
+          : null
+      : subjekId;
 
   const [cursor, setCursor] = useState(0);
   const [pilih, setPilih] = useState<number | null>(null);
