@@ -42,12 +42,12 @@ export const Route = createFileRoute("/api/confirm-payment")({
           const lookup = body.order_id
             ? userClient
                 .from("pesanan")
-                .select("id, user_id, billcode, status")
+                .select("id, user_id, billcode, status, amount_sen")
                 .eq("id", body.order_id)
                 .maybeSingle()
             : userClient
                 .from("pesanan")
-                .select("id, user_id, billcode, status")
+                .select("id, user_id, billcode, status, amount_sen")
                 .eq("billcode", body.billcode ?? "")
                 .maybeSingle();
           const { data: ord, error: ordErr } = await lookup;
@@ -92,7 +92,7 @@ export const Route = createFileRoute("/api/confirm-payment")({
             );
           }
           console.log(`[confirm:${id}] payment inserted — trigger akan unlock`);
-          return Response.json({ ok: true, reason: "unlock-triggered" });
+          return Response.json({ ok: true, reason: "unlock-triggered", amount_sen: ord.amount_sen ?? null });
         } catch (e) {
           console.error(`[confirm:${id}] exception`, e);
           return Response.json(
