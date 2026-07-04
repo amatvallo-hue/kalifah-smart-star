@@ -670,12 +670,6 @@ function LatihTubiPage() {
 
             {soalan && (
               <div className="mt-6 rounded-3xl bg-card p-6 shadow-card md:p-8">
-                {soalan.gambar && rajahMap[soalan.gambar] && (
-                  <div
-                    className="mx-auto mb-4 flex max-w-xs justify-center overflow-hidden rounded-2xl border border-border bg-white p-3"
-                    dangerouslySetInnerHTML={{ __html: rajahMap[soalan.gambar] }}
-                  />
-                )}
                 {soalan.svg_type && (
                   <div className="mx-auto mb-4 flex justify-center">
                     {renderSoalanSvg(soalan.svg_type, soalan.svg_params)}
