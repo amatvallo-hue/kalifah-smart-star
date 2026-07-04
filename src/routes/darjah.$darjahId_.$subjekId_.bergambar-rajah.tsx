@@ -340,11 +340,12 @@ function BergambarRajahPage() {
           showBahasaToggle && !bahasa ? (
             <div className="mt-6 rounded-3xl bg-gradient-hero p-8 text-center shadow-card md:p-10">
               <h1 className="font-display text-3xl font-extrabold text-foreground md:text-4xl">
-                Pilih <span style={{ color: HIJAU }}>Bahasa</span>
+                {tr.pilihBahasa.split(" ")[0]}{" "}
+                <span style={{ color: HIJAU }}>
+                  {tr.pilihBahasa.split(" ").slice(1).join(" ") || "Bahasa"}
+                </span>
               </h1>
-              <p className="mt-2 text-muted-foreground">
-                Pilih bahasa untuk soalan bergambar rajah {subjek.title} {darjah.label}.
-              </p>
+              <p className="mt-2 text-muted-foreground">{tr.pilihBahasaDesc}</p>
               <div className="mt-8 grid gap-4 sm:grid-cols-2">
                 <button
                   onClick={() => setBahasa("bm")}
