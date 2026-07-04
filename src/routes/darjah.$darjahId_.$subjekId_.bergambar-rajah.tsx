@@ -604,7 +604,7 @@ function BergambarRajahPage() {
                 style={{ backgroundColor: HIJAU }}
               >
                 <Square className="h-4 w-4 fill-current" />
-                Berhenti
+                {tr.berhenti}
               </button>
             </div>
           </>
