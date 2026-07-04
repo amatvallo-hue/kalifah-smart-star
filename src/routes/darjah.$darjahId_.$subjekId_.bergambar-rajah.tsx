@@ -425,15 +425,19 @@ function BergambarRajahPage() {
           <>
             {/* Persistent rangsangan */}
             <div
-              className="mt-6 overflow-hidden rounded-2xl border-2 bg-white p-4"
+              className="mt-6 overflow-hidden rounded-2xl border-2 bg-white p-4 [&_svg]:mx-auto [&_svg]:h-auto [&_svg]:w-full [&_svg]:max-w-md"
               style={{ borderColor: `${HIJAU}44` }}
             >
-              {selected.rangsangan_gambar_id && (
+              {selected.rangsangan_svg_type ? (
+                <div className="flex justify-center">
+                  {renderSoalanSvg(selected.rangsangan_svg_type, selected.rangsangan_svg_params)}
+                </div>
+              ) : selected.rangsangan_gambar_id ? (
                 <Gambar
                   id={selected.rangsangan_gambar_id}
                   alt={selected.topik_nama ?? selected.rangsangan_id}
                 />
-              )}
+              ) : null}
               {selected.rangsangan_teks && (
                 <p className="mt-3 whitespace-pre-line text-sm leading-relaxed text-slate-700">
                   {selected.rangsangan_teks}
