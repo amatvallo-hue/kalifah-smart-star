@@ -246,22 +246,6 @@ function LatihTubiPage() {
     };
   }, [darjahId, subjekId, isUpper, darjahNum, isMatematik, bahasa]);
 
-  useEffect(() => {
-    const keys = Array.from(new Set(bank.map(s => s.gambar).filter((g): g is string => !!g)));
-    if (keys.length === 0) return;
-    let cancelled = false;
-    (async () => {
-      const { data } = await supabase
-        .from("rajah")
-        .select("nama, konten_svg")
-        .in("nama", keys);
-      if (cancelled || !data) return;
-      const map: Record<string, string> = {};
-      data.forEach((r: any) => { map[r.nama] = r.konten_svg; });
-      setRajahMap(map);
-    })();
-    return () => { cancelled = true; };
-  }, [bank]);
 
 
   // Upper darjah (4-6): fetch distinct topik list
