@@ -148,6 +148,9 @@ function DaftarPage() {
       return;
     }
     if (data.session) {
+      if (typeof window !== "undefined" && typeof (window as any).gtag === "function") {
+        (window as any).gtag("event", "sign_up", { method: "email" });
+      }
       navigate({ to: "/pilih-darjah" });
     } else {
       setInfo("Akaun dicipta. Sila semak emel anda untuk pengesahan, kemudian log masuk.");

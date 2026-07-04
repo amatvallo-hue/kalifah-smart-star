@@ -53,6 +53,13 @@ function BayaranSelesai() {
             if (typeof window !== "undefined" && typeof (window as any).fbq === "function") {
               (window as any).fbq("track", "Purchase", { value: 29.0, currency: "MYR" });
             }
+            if (typeof window !== "undefined" && typeof (window as any).gtag === "function") {
+              (window as any).gtag("event", "purchase", {
+                transaction_id: search.order ?? search.billcode ?? undefined,
+                value: 29.0,
+                currency: "MYR",
+              });
+            }
           } else {
             const tempRes = await fetch("/api/temporary-unlock", {
               method: "POST",
