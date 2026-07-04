@@ -113,8 +113,15 @@ function BergambarRajahPage() {
   }, [loading, user, navigate]);
 
   useEffect(() => {
+    if (showBahasaToggle && !subjekKod) {
+      setRangsanganList([]);
+      setLoadingList(false);
+      return;
+    }
     let cancelled = false;
     (async () => {
+      setLoadingList(true);
+      setErrMsg(null);
       setLoadingList(true);
       setErrMsg(null);
       const { data, error } = await (supabase as any)
