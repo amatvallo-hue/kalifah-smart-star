@@ -8,6 +8,7 @@ import { usePoints } from "@/hooks/use-points";
 import { getDarjah, getSubjek } from "@/lib/curriculum";
 import { simpanProgress } from "@/lib/progress";
 import { tambahMata } from "@/lib/tambah-mata";
+import { renderSoalanSvg } from "@/lib/render-soalan-svg";
 
 export const Route = createFileRoute("/darjah/$darjahId_/$subjekId_/bergambar-rajah")({
   head: () => ({ meta: [{ title: "Soalan Bergambar Rajah — Kalifah.my" }] }),
