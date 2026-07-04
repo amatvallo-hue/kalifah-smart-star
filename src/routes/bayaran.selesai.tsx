@@ -50,13 +50,15 @@ function BayaranSelesai() {
           const json = await res.json().catch(() => ({}));
           console.log("[bayaran.selesai] confirm-payment", res.status, json);
           if (json?.ok) {
+            const amountSen = typeof json.amount_sen === "number" ? json.amount_sen : null;
+            const value = amountSen && amountSen > 0 ? amountSen / 100 : 49;
             if (typeof window !== "undefined" && typeof (window as any).fbq === "function") {
-              (window as any).fbq("track", "Purchase", { value: 29.0, currency: "MYR" });
+              (window as any).fbq("track", "Purchase", { value, currency: "MYR" });
             }
             if (typeof window !== "undefined" && typeof (window as any).gtag === "function") {
               (window as any).gtag("event", "purchase", {
                 transaction_id: search.order ?? search.billcode ?? undefined,
-                value: 29.0,
+                value,
                 currency: "MYR",
               });
             }
