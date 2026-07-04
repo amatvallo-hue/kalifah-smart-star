@@ -130,7 +130,7 @@ function BergambarRajahPage() {
       const { data, error } = await (supabase as any)
         .from("soalan_bergambar_rajah")
         .select(
-          "id, rangsangan_id, rangsangan_jenis, rangsangan_teks, rangsangan_gambar_id, topik_kod, topik_nama, no_soalan, soalan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan_betul, feedback_a, feedback_b, feedback_c, feedback_d",
+          "id, rangsangan_id, rangsangan_jenis, rangsangan_teks, rangsangan_gambar_id, rangsangan_svg_type, rangsangan_svg_params, topik_kod, topik_nama, no_soalan, soalan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan_betul, feedback_a, feedback_b, feedback_c, feedback_d",
         )
         .eq("darjah", Number.isFinite(darjahNum) ? darjahNum : darjahId)
         .eq("subjek", subjekKod)
