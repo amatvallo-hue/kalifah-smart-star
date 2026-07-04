@@ -1,10 +1,11 @@
 import { createFileRoute, Link, useNavigate, useParams } from "@tanstack/react-router";
 import { ArrowLeft, BookOpen, Gamepad2, PenLine, Target, Zap } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { usePoints } from "@/hooks/use-points";
+import { useProfile } from "@/hooks/use-profile";
 import { getDarjah, getSubjek } from "@/lib/curriculum";
 
 export const Route = createFileRoute("/darjah/$darjahId_/$subjekId")({
