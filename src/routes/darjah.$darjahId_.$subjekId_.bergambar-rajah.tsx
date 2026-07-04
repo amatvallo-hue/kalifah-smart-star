@@ -93,15 +93,17 @@ function BergambarRajahPage() {
   const [selected, setSelected] = useState<Rangsangan | null>(null);
   const [bahasa, setBahasa] = useState<"bm" | "en" | null>(null);
 
-  const showBahasaToggle = subjekId === "sains";
-  const subjekKod =
-    subjekId === "sains"
-      ? bahasa === "en"
-        ? "SC-EN"
-        : bahasa === "bm"
-          ? "SC"
-          : null
-      : subjekId;
+  const showBahasaToggle = subjekId === "sains" || subjekId === "matematik";
+
+  const subjekKod = (() => {
+    if (subjekId === "sains") {
+      return bahasa === "en" ? "SC-EN" : bahasa === "bm" ? "SC" : null;
+    }
+    if (subjekId === "matematik") {
+      return bahasa === "en" ? "MT-EN" : bahasa === "bm" ? "MT" : null;
+    }
+    return subjekId;
+  })();
 
   const [cursor, setCursor] = useState(0);
   const [pilih, setPilih] = useState<number | null>(null);
