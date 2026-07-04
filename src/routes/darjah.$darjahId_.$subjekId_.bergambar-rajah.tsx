@@ -95,6 +95,37 @@ function BergambarRajahPage() {
 
   const showBahasaToggle = subjekId === "sains" || subjekId === "matematik";
 
+  const en = bahasa === "en";
+  const tr = {
+    kembali: en ? "Back to Activities" : "Kembali ke Aktiviti",
+    pilihBahasa: en ? "Choose Language" : "Pilih Bahasa",
+    pilihBahasaDesc: en
+      ? `Choose a language for ${subjek.title} ${darjah.label} picture questions.`
+      : `Pilih bahasa untuk soalan bergambar rajah ${subjek.title} ${darjah.label}.`,
+    pilihSet: en ? "Choose Question Set" : "Pilih Set Soalan",
+    pilihSetDesc: en
+      ? "Each set has one picture/passage and several related questions."
+      : "Setiap set ada satu gambar/petikan dan beberapa soalan berkaitan.",
+    soalanCount: (n: number) => (en ? `${n} questions` : `${n} soalan`),
+    memuatSoalan: en ? "Loading questions..." : "Memuatkan soalan...",
+    ralat: en ? "Error" : "Ralat",
+    tiadaSoalan: en ? "No picture questions yet" : "Belum ada soalan bergambar",
+    tiadaSoalanDesc: en
+      ? `Picture questions for ${subjek.title} (${darjah.label}) are being prepared.`
+      : `Soalan bergambar untuk ${subjek.title} (${darjah.label}) sedang disediakan.`,
+    labelSoalan: en ? "Question" : "Soalan",
+    labelBetul: en ? "Correct" : "Betul",
+    labelSalah: en ? "Wrong" : "Salah",
+    syabas: en ? "Well Done! 🎉" : "Syabas! 🎉",
+    syabasDesc: (n: number) =>
+      en ? `You've answered ${n} questions from this set.` : `Kamu dah jawab ${n} soalan dari set ini.`,
+    pilihSetLain: en ? "Choose Another Set" : "Pilih Set Lain",
+    aktivitiLain: en ? "Other Activities" : "Aktiviti Lain",
+    seterusnya: en ? "Next" : "Seterusnya",
+    selesai: en ? "Finish" : "Selesai",
+    berhenti: en ? "Stop" : "Berhenti",
+  };
+
   const subjekKod = (() => {
     if (subjekId === "sains") {
       return bahasa === "en" ? "SC-EN" : bahasa === "bm" ? "SC" : null;
@@ -276,7 +307,7 @@ function BergambarRajahPage() {
           style={{ color: HIJAU }}
         >
           <ArrowLeft className="h-4 w-4" />
-          Kembali ke Aktiviti
+          {tr.kembali}
         </Link>
 
         <div className="mt-4 flex flex-wrap items-center gap-2">
@@ -309,11 +340,12 @@ function BergambarRajahPage() {
           showBahasaToggle && !bahasa ? (
             <div className="mt-6 rounded-3xl bg-gradient-hero p-8 text-center shadow-card md:p-10">
               <h1 className="font-display text-3xl font-extrabold text-foreground md:text-4xl">
-                Pilih <span style={{ color: HIJAU }}>Bahasa</span>
+                {tr.pilihBahasa.split(" ")[0]}{" "}
+                <span style={{ color: HIJAU }}>
+                  {tr.pilihBahasa.split(" ").slice(1).join(" ") || "Bahasa"}
+                </span>
               </h1>
-              <p className="mt-2 text-muted-foreground">
-                Pilih bahasa untuk soalan bergambar rajah {subjek.title} {darjah.label}.
-              </p>
+              <p className="mt-2 text-muted-foreground">{tr.pilihBahasaDesc}</p>
               <div className="mt-8 grid gap-4 sm:grid-cols-2">
                 <button
                   onClick={() => setBahasa("bm")}
@@ -333,28 +365,24 @@ function BergambarRajahPage() {
             </div>
           ) : loadingList ? (
             <div className="mt-10 rounded-3xl bg-card p-10 text-center shadow-card">
-              <p className="text-muted-foreground">Memuatkan soalan...</p>
+              <p className="text-muted-foreground">{tr.memuatSoalan}</p>
             </div>
           ) : errMsg ? (
             <div className="mt-10 rounded-3xl bg-card p-10 text-center shadow-card">
-              <h2 className="font-display text-xl font-extrabold text-destructive">Ralat</h2>
+              <h2 className="font-display text-xl font-extrabold text-destructive">{tr.ralat}</h2>
               <p className="mt-2 text-sm text-muted-foreground">{errMsg}</p>
             </div>
           ) : rangsanganList.length === 0 ? (
             <div className="mt-10 rounded-3xl bg-card p-10 text-center shadow-card">
               <h2 className="font-display text-xl font-extrabold text-foreground">
-                Belum ada soalan bergambar
+                {tr.tiadaSoalan}
               </h2>
-              <p className="mt-2 text-sm text-muted-foreground">
-                Soalan bergambar untuk {subjek.title} ({darjah.label}) sedang disediakan.
-              </p>
+              <p className="mt-2 text-sm text-muted-foreground">{tr.tiadaSoalanDesc}</p>
             </div>
           ) : (
             <div className="mt-8">
-              <h2 className="font-display text-2xl font-extrabold text-foreground">Pilih Set Soalan</h2>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Setiap set ada satu gambar/petikan dan beberapa soalan berkaitan.
-              </p>
+              <h2 className="font-display text-2xl font-extrabold text-foreground">{tr.pilihSet}</h2>
+              <p className="mt-1 text-sm text-muted-foreground">{tr.pilihSetDesc}</p>
               <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {rangsanganList.map((r) => (
                   <button
@@ -376,7 +404,7 @@ function BergambarRajahPage() {
                       {r.topik_nama ?? r.rangsangan_id}
                     </p>
                     <p className="mt-1 px-1 text-xs text-muted-foreground">
-                      {r.soalan.length} soalan
+                      {tr.soalanCount(r.soalan.length)}
                     </p>
                   </button>
                 ))}
@@ -386,22 +414,20 @@ function BergambarRajahPage() {
         ) : selesai || berhenti ? (
           <div className="mt-10 rounded-3xl bg-card p-10 text-center shadow-card">
             <h2 className="font-display text-3xl font-extrabold" style={{ color: HIJAU }}>
-              Syabas! 🎉
+              {tr.syabas}
             </h2>
-            <p className="mt-2 text-muted-foreground">
-              Kamu dah jawab {betul + salah} soalan dari set ini.
-            </p>
+            <p className="mt-2 text-muted-foreground">{tr.syabasDesc(betul + salah)}</p>
             <div className="mt-6 grid grid-cols-2 gap-4">
               <div className="rounded-2xl p-5" style={{ backgroundColor: `${HIJAU}15` }}>
                 <p className="text-xs font-bold uppercase tracking-wide" style={{ color: HIJAU }}>
-                  Betul
+                  {tr.labelBetul}
                 </p>
                 <p className="font-display text-3xl font-extrabold" style={{ color: HIJAU }}>
                   {betul}
                 </p>
               </div>
               <div className="rounded-2xl bg-destructive/10 p-5">
-                <p className="text-xs font-bold uppercase tracking-wide text-destructive">Salah</p>
+                <p className="text-xs font-bold uppercase tracking-wide text-destructive">{tr.labelSalah}</p>
                 <p className="font-display text-3xl font-extrabold text-destructive">{salah}</p>
               </div>
             </div>
@@ -411,7 +437,7 @@ function BergambarRajahPage() {
                 className="rounded-full px-6 py-3 font-display font-extrabold text-white shadow-soft transition hover:opacity-90"
                 style={{ backgroundColor: HIJAU }}
               >
-                Pilih Set Lain
+                {tr.pilihSetLain}
               </button>
               <Link
                 to="/darjah/$darjahId/$subjekId"
@@ -419,7 +445,7 @@ function BergambarRajahPage() {
                 className="rounded-full px-6 py-3 font-display font-extrabold shadow-soft transition hover:opacity-90"
                 style={{ backgroundColor: EMAS, color: "#1a1a1a" }}
               >
-                Aktiviti Lain
+                {tr.aktivitiLain}
               </Link>
             </div>
           </div>
@@ -453,7 +479,7 @@ function BergambarRajahPage() {
                 style={{ backgroundColor: `${HIJAU}15`, border: `2px solid ${HIJAU}` }}
               >
                 <p className="text-[10px] font-bold uppercase tracking-wide" style={{ color: HIJAU }}>
-                  Soalan
+                  {tr.labelSoalan}
                 </p>
                 <p className="font-display text-2xl font-extrabold" style={{ color: HIJAU }}>
                   {cursor + 1}/{selected.soalan.length}
@@ -464,14 +490,14 @@ function BergambarRajahPage() {
                 style={{ backgroundColor: `${EMAS}25`, border: `2px solid ${EMAS}` }}
               >
                 <p className="text-[10px] font-bold uppercase tracking-wide" style={{ color: "#7a5300" }}>
-                  Betul
+                  {tr.labelBetul}
                 </p>
                 <p className="font-display text-2xl font-extrabold" style={{ color: "#7a5300" }}>
                   {betul}
                 </p>
               </div>
               <div className="rounded-2xl border-2 border-destructive/40 bg-destructive/10 p-4 text-center">
-                <p className="text-[10px] font-bold uppercase tracking-wide text-destructive">Salah</p>
+                <p className="text-[10px] font-bold uppercase tracking-wide text-destructive">{tr.labelSalah}</p>
                 <p className="font-display text-2xl font-extrabold text-destructive">{salah}</p>
               </div>
             </div>
@@ -563,7 +589,7 @@ function BergambarRajahPage() {
                         className="inline-flex items-center gap-2 rounded-full px-6 py-3 font-display font-extrabold shadow-soft transition hover:opacity-90"
                         style={{ backgroundColor: EMAS, color: "#1a1a1a" }}
                       >
-                        {cursor + 1 >= selected.soalan.length ? "Selesai" : "Seterusnya"}
+                        {cursor + 1 >= selected.soalan.length ? tr.selesai : tr.seterusnya}
                       </button>
                     </div>
                   </>
@@ -578,7 +604,7 @@ function BergambarRajahPage() {
                 style={{ backgroundColor: HIJAU }}
               >
                 <Square className="h-4 w-4 fill-current" />
-                Berhenti
+                {tr.berhenti}
               </button>
             </div>
           </>
