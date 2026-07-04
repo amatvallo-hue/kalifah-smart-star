@@ -299,7 +299,32 @@ function BergambarRajahPage() {
         </div>
 
         {!selected ? (
-          loadingList ? (
+          showBahasaToggle && !bahasa ? (
+            <div className="mt-6 rounded-3xl bg-gradient-hero p-8 text-center shadow-card md:p-10">
+              <h1 className="font-display text-3xl font-extrabold text-foreground md:text-4xl">
+                Pilih <span style={{ color: HIJAU }}>Bahasa</span>
+              </h1>
+              <p className="mt-2 text-muted-foreground">
+                Pilih bahasa untuk soalan bergambar rajah {subjek.title} {darjah.label}.
+              </p>
+              <div className="mt-8 grid gap-4 sm:grid-cols-2">
+                <button
+                  onClick={() => setBahasa("bm")}
+                  className="rounded-3xl border-2 px-6 py-8 font-display text-xl font-extrabold shadow-soft transition hover:-translate-y-1"
+                  style={{ borderColor: `${HIJAU}44`, color: HIJAU, backgroundColor: `${HIJAU}10` }}
+                >
+                  🇲🇾 Bahasa Melayu
+                </button>
+                <button
+                  onClick={() => setBahasa("en")}
+                  className="rounded-3xl border-2 px-6 py-8 font-display text-xl font-extrabold shadow-soft transition hover:-translate-y-1"
+                  style={{ borderColor: `${EMAS}44`, color: EMAS, backgroundColor: `${EMAS}10` }}
+                >
+                  🇬🇧 English
+                </button>
+              </div>
+            </div>
+          ) : loadingList ? (
             <div className="mt-10 rounded-3xl bg-card p-10 text-center shadow-card">
               <p className="text-muted-foreground">Memuatkan soalan...</p>
             </div>
