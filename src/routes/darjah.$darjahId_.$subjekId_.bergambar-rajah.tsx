@@ -106,6 +106,7 @@ function BergambarRajahPage() {
     pilihSetDesc: en
       ? "Each set has one picture/passage and several related questions."
       : "Setiap set ada satu gambar/petikan dan beberapa soalan berkaitan.",
+    badgeTitle: en ? "📖🖼️ Picture Diagram Questions" : "📖🖼️ Soalan Bergambar Rajah",
     soalanCount: (n: number) => (en ? `${n} questions` : `${n} soalan`),
     memuatSoalan: en ? "Loading questions..." : "Memuatkan soalan...",
     ralat: en ? "Error" : "Ralat",
@@ -327,7 +328,7 @@ function BergambarRajahPage() {
             className="rounded-full px-4 py-1.5 font-display text-xs font-extrabold text-white shadow-soft"
             style={{ backgroundColor: "#7C3AED" }}
           >
-            📖🖼️ Soalan Bergambar Rajah
+            {tr.badgeTitle}
           </span>
           {selected?.topik_nama && (
             <span className="rounded-full bg-secondary px-4 py-1.5 font-display text-xs font-extrabold text-foreground shadow-soft">
