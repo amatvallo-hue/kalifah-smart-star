@@ -158,23 +158,6 @@ function AktivitiPage() {
           );
         })()}
 
-        {/* Soalan Rajah */}
-        <Link
-          to="/darjah/$darjahId/$subjekId/soalan-rajah"
-          params={{ darjahId, subjekId }}
-          className="group mt-4 flex items-center gap-5 rounded-2xl border-2 border-amber-200 bg-amber-50 p-5 shadow-card transition hover:-translate-y-1 hover:shadow-soft dark:border-amber-800/40 dark:bg-amber-950/20"
-        >
-          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-400 to-orange-400 text-white shadow-soft transition group-hover:scale-110 text-2xl">
-            🖼️
-          </div>
-          <div className="flex-1">
-            <h3 className="font-display text-xl font-extrabold text-foreground">Soalan Rajah</h3>
-            <p className="mt-0.5 text-sm text-muted-foreground">Latih soalan bergambar — pilih rajah dan mula buat!</p>
-          </div>
-          <span className="shrink-0 inline-flex items-center gap-1 rounded-full bg-amber-400 px-4 py-2 font-display text-sm font-extrabold text-amber-900 shadow-soft transition group-hover:translate-x-1">
-            Pilih Rajah →
-          </span>
-        </Link>
 
         {/* Isi Tempat Kosong */}
         <Link
