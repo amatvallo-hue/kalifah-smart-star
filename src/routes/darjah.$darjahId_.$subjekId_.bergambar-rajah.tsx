@@ -365,28 +365,24 @@ function BergambarRajahPage() {
             </div>
           ) : loadingList ? (
             <div className="mt-10 rounded-3xl bg-card p-10 text-center shadow-card">
-              <p className="text-muted-foreground">Memuatkan soalan...</p>
+              <p className="text-muted-foreground">{tr.memuatSoalan}</p>
             </div>
           ) : errMsg ? (
             <div className="mt-10 rounded-3xl bg-card p-10 text-center shadow-card">
-              <h2 className="font-display text-xl font-extrabold text-destructive">Ralat</h2>
+              <h2 className="font-display text-xl font-extrabold text-destructive">{tr.ralat}</h2>
               <p className="mt-2 text-sm text-muted-foreground">{errMsg}</p>
             </div>
           ) : rangsanganList.length === 0 ? (
             <div className="mt-10 rounded-3xl bg-card p-10 text-center shadow-card">
               <h2 className="font-display text-xl font-extrabold text-foreground">
-                Belum ada soalan bergambar
+                {tr.tiadaSoalan}
               </h2>
-              <p className="mt-2 text-sm text-muted-foreground">
-                Soalan bergambar untuk {subjek.title} ({darjah.label}) sedang disediakan.
-              </p>
+              <p className="mt-2 text-sm text-muted-foreground">{tr.tiadaSoalanDesc}</p>
             </div>
           ) : (
             <div className="mt-8">
-              <h2 className="font-display text-2xl font-extrabold text-foreground">Pilih Set Soalan</h2>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Setiap set ada satu gambar/petikan dan beberapa soalan berkaitan.
-              </p>
+              <h2 className="font-display text-2xl font-extrabold text-foreground">{tr.pilihSet}</h2>
+              <p className="mt-1 text-sm text-muted-foreground">{tr.pilihSetDesc}</p>
               <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {rangsanganList.map((r) => (
                   <button
@@ -408,7 +404,7 @@ function BergambarRajahPage() {
                       {r.topik_nama ?? r.rangsangan_id}
                     </p>
                     <p className="mt-1 px-1 text-xs text-muted-foreground">
-                      {r.soalan.length} soalan
+                      {tr.soalanCount(r.soalan.length)}
                     </p>
                   </button>
                 ))}
