@@ -361,8 +361,10 @@ function BergambarRajahPage() {
                     className="group flex flex-col overflow-hidden rounded-2xl border-2 bg-card p-3 text-left shadow-card transition hover:-translate-y-1"
                     style={{ borderColor: `${HIJAU}33` }}
                   >
-                    <div className="flex h-[160px] items-center justify-center overflow-hidden rounded-xl bg-white p-2">
-                      {r.rangsangan_gambar_id ? (
+                    <div className="flex h-[160px] items-center justify-center overflow-hidden rounded-xl bg-white p-2 [&_svg]:h-full [&_svg]:w-full [&_svg]:max-h-full [&_svg]:max-w-full">
+                      {r.rangsangan_svg_type ? (
+                        renderSoalanSvg(r.rangsangan_svg_type, r.rangsangan_svg_params)
+                      ) : r.rangsangan_gambar_id ? (
                         <Gambar id={r.rangsangan_gambar_id} alt={r.topik_nama ?? r.rangsangan_id} />
                       ) : (
                         <ImageIcon className="h-10 w-10 text-slate-300" />
