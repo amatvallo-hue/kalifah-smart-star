@@ -88,6 +88,17 @@ function BergambarRajahPage() {
   const [loadingList, setLoadingList] = useState(true);
   const [errMsg, setErrMsg] = useState<string | null>(null);
   const [selected, setSelected] = useState<Rangsangan | null>(null);
+  const [bahasa, setBahasa] = useState<"bm" | "en" | null>(null);
+
+  const showBahasaToggle = subjekId === "sains";
+  const subjekKod =
+    subjekId === "sains"
+      ? bahasa === "en"
+        ? "SC-EN"
+        : bahasa === "bm"
+          ? "SC"
+          : null
+      : subjekId;
 
   const [cursor, setCursor] = useState(0);
   const [pilih, setPilih] = useState<number | null>(null);
@@ -102,8 +113,15 @@ function BergambarRajahPage() {
   }, [loading, user, navigate]);
 
   useEffect(() => {
+    if (showBahasaToggle && !subjekKod) {
+      setRangsanganList([]);
+      setLoadingList(false);
+      return;
+    }
     let cancelled = false;
     (async () => {
+      setLoadingList(true);
+      setErrMsg(null);
       setLoadingList(true);
       setErrMsg(null);
       const { data, error } = await (supabase as any)
@@ -112,7 +130,7 @@ function BergambarRajahPage() {
           "id, rangsangan_id, rangsangan_jenis, rangsangan_teks, rangsangan_gambar_id, topik_kod, topik_nama, no_soalan, soalan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan_betul, feedback_a, feedback_b, feedback_c, feedback_d",
         )
         .eq("darjah", Number.isFinite(darjahNum) ? darjahNum : darjahId)
-        .eq("subjek", subjekId)
+        .eq("subjek", subjekKod)
         .order("rangsangan_id", { ascending: true })
         .order("no_soalan", { ascending: true });
       if (cancelled) return;
@@ -156,7 +174,7 @@ function BergambarRajahPage() {
     return () => {
       cancelled = true;
     };
-  }, [darjahId, subjekId, darjahNum]);
+  }, [darjahId, subjekId, darjahNum, subjekKod, showBahasaToggle]);
 
   useEffect(() => {
     if (!selected) return;
@@ -281,7 +299,32 @@ function BergambarRajahPage() {
         </div>
 
         {!selected ? (
-          loadingList ? (
+          showBahasaToggle && !bahasa ? (
+            <div className="mt-6 rounded-3xl bg-gradient-hero p-8 text-center shadow-card md:p-10">
+              <h1 className="font-display text-3xl font-extrabold text-foreground md:text-4xl">
+                Pilih <span style={{ color: HIJAU }}>Bahasa</span>
+              </h1>
+              <p className="mt-2 text-muted-foreground">
+                Pilih bahasa untuk soalan bergambar rajah {subjek.title} {darjah.label}.
+              </p>
+              <div className="mt-8 grid gap-4 sm:grid-cols-2">
+                <button
+                  onClick={() => setBahasa("bm")}
+                  className="rounded-3xl border-2 px-6 py-8 font-display text-xl font-extrabold shadow-soft transition hover:-translate-y-1"
+                  style={{ borderColor: `${HIJAU}44`, color: HIJAU, backgroundColor: `${HIJAU}10` }}
+                >
+                  🇲🇾 Bahasa Melayu
+                </button>
+                <button
+                  onClick={() => setBahasa("en")}
+                  className="rounded-3xl border-2 px-6 py-8 font-display text-xl font-extrabold shadow-soft transition hover:-translate-y-1"
+                  style={{ borderColor: `${EMAS}44`, color: EMAS, backgroundColor: `${EMAS}10` }}
+                >
+                  🇬🇧 English
+                </button>
+              </div>
+            </div>
+          ) : loadingList ? (
             <div className="mt-10 rounded-3xl bg-card p-10 text-center shadow-card">
               <p className="text-muted-foreground">Memuatkan soalan...</p>
             </div>
