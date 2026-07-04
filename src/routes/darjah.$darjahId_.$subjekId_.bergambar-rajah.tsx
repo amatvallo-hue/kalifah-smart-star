@@ -414,22 +414,20 @@ function BergambarRajahPage() {
         ) : selesai || berhenti ? (
           <div className="mt-10 rounded-3xl bg-card p-10 text-center shadow-card">
             <h2 className="font-display text-3xl font-extrabold" style={{ color: HIJAU }}>
-              Syabas! 🎉
+              {tr.syabas}
             </h2>
-            <p className="mt-2 text-muted-foreground">
-              Kamu dah jawab {betul + salah} soalan dari set ini.
-            </p>
+            <p className="mt-2 text-muted-foreground">{tr.syabasDesc(betul + salah)}</p>
             <div className="mt-6 grid grid-cols-2 gap-4">
               <div className="rounded-2xl p-5" style={{ backgroundColor: `${HIJAU}15` }}>
                 <p className="text-xs font-bold uppercase tracking-wide" style={{ color: HIJAU }}>
-                  Betul
+                  {tr.labelBetul}
                 </p>
                 <p className="font-display text-3xl font-extrabold" style={{ color: HIJAU }}>
                   {betul}
                 </p>
               </div>
               <div className="rounded-2xl bg-destructive/10 p-5">
-                <p className="text-xs font-bold uppercase tracking-wide text-destructive">Salah</p>
+                <p className="text-xs font-bold uppercase tracking-wide text-destructive">{tr.labelSalah}</p>
                 <p className="font-display text-3xl font-extrabold text-destructive">{salah}</p>
               </div>
             </div>
@@ -439,7 +437,7 @@ function BergambarRajahPage() {
                 className="rounded-full px-6 py-3 font-display font-extrabold text-white shadow-soft transition hover:opacity-90"
                 style={{ backgroundColor: HIJAU }}
               >
-                Pilih Set Lain
+                {tr.pilihSetLain}
               </button>
               <Link
                 to="/darjah/$darjahId/$subjekId"
@@ -447,7 +445,7 @@ function BergambarRajahPage() {
                 className="rounded-full px-6 py-3 font-display font-extrabold shadow-soft transition hover:opacity-90"
                 style={{ backgroundColor: EMAS, color: "#1a1a1a" }}
               >
-                Aktiviti Lain
+                {tr.aktivitiLain}
               </Link>
             </div>
           </div>
