@@ -63,13 +63,52 @@ function AktivitiPage() {
   const navigate = useNavigate();
   const { darjahId, subjekId } = useParams({ from: "/darjah/$darjahId_/$subjekId" });
   const { user, loading } = useAuth();
+  const { profile } = useProfile();
+  const isAdmin = profile?.role === "admin";
   const darjah = getDarjah(darjahId);
   const subjek = getSubjek(subjekId);
   const mata = usePoints();
 
+  const [isiKosongCount, setIsiKosongCount] = useState<number | null>(null);
+  const [bergambarCount, setBergambarCount] = useState<number | null>(null);
+
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
   }, [loading, user, navigate]);
+
+  useEffect(() => {
+    let cancelled = false;
+    const darjahNum = Number(darjahId);
+    if (!Number.isFinite(darjahNum)) return;
+
+    (async () => {
+      const { count } = await supabase
+        .from("soalan_isi_kosong")
+        .select("id", { count: "exact", head: true })
+        .eq("darjah", darjahNum)
+        .in("subjek", [subjekId, `${subjekId}-en`]);
+      if (!cancelled) setIsiKosongCount(count ?? 0);
+    })();
+
+    const bergambarCodes =
+      subjekId === "sains" ? ["SC", "SC-EN"] : subjekId === "matematik" ? ["MT", "MT-EN"] : null;
+    if (bergambarCodes) {
+      (async () => {
+        const { count } = await supabase
+          .from("soalan_bergambar_rajah")
+          .select("id", { count: "exact", head: true })
+          .eq("darjah", darjahNum)
+          .in("subjek", bergambarCodes);
+        if (!cancelled) setBergambarCount(count ?? 0);
+      })();
+    } else {
+      setBergambarCount(0);
+    }
+
+    return () => {
+      cancelled = true;
+    };
+  }, [darjahId, subjekId]);
 
   async function handleLogout() {
     await supabase.auth.signOut();
