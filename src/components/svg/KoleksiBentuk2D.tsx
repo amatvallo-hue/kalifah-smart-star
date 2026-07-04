@@ -1,0 +1,119 @@
+import { Bentuk2D } from "./Bentuk2D";
+
+type Shape2D = "segitiga" | "bulatan" | "segiempat_sama" | "segiempat_tepat";
+
+interface Item {
+  shape: Shape2D;
+  bilangan: number;
+}
+
+interface Props {
+  items: Item[];
+}
+
+const LABELS: Record<Shape2D, string> = {
+  segitiga: "Segitiga",
+  bulatan: "Bulatan",
+  segiempat_sama: "Segiempat Sama",
+  segiempat_tepat: "Segiempat Tepat",
+};
+
+export function KoleksiBentuk2D({ items }: Props) {
+  const list = Array.isArray(items) ? items : [];
+
+  return (
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(120px, 1fr))",
+        gap: 12,
+        padding: 12,
+        background: "#F8FAFC",
+        borderRadius: 12,
+        maxWidth: 360,
+      }}
+    >
+      {list.map((it, i) => (
+        <div
+          key={i}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 4,
+            padding: 6,
+            background: "#FFFFFF",
+            borderRadius: 8,
+            border: "1px solid #E5E7EB",
+            position: "relative",
+          }}
+        >
+          <div
+            style={{
+              width: 96,
+              height: 72,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              overflow: "hidden",
+            }}
+          >
+            <div
+              style={{
+                transform: "scale(0.42)",
+                transformOrigin: "center",
+                width: 280,
+                height: 200,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Bentuk2D shape={it.shape} />
+            </div>
+          </div>
+          <div
+            style={{
+              fontSize: 12,
+              fontWeight: 700,
+              color: "#1F2937",
+              fontFamily: "sans-serif",
+              textAlign: "center",
+            }}
+          >
+            {LABELS[it.shape]}
+          </div>
+          <div
+            style={{
+              position: "absolute",
+              top: 4,
+              right: 4,
+              background: "#111827",
+              color: "#FFFFFF",
+              fontSize: 11,
+              fontWeight: 700,
+              borderRadius: 9999,
+              padding: "2px 8px",
+              fontFamily: "sans-serif",
+            }}
+          >
+            ×{Math.max(0, it.bilangan || 0)}
+          </div>
+        </div>
+      ))}
+      {list.length === 0 && (
+        <div
+          style={{
+            fontSize: 13,
+            color: "#1F2937",
+            fontFamily: "sans-serif",
+            textAlign: "center",
+            padding: 12,
+          }}
+        >
+          Tiada bentuk
+        </div>
+      )}
+    </div>
+  );
+}
