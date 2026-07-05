@@ -986,7 +986,16 @@ function ParentDashboard() {
                         </div>
                         <div className="grid grid-cols-1 gap-3">
                           <KadSubjekTrend label="Subjek Terkuat 💪" sj={bulan.terkuat} warna={HIJAU} />
-                          <KadSubjekTrend label="Perlukan Perhatian ⚠️" sj={bulan.lemah && bulan.terkuat?.subjek !== bulan.lemah.subjek ? bulan.lemah : null} warna="#dc2626" />
+                          <KadSubjekTrend
+                            label="Perlukan Perhatian ⚠️"
+                            sj={bulan.lemah && bulan.terkuat?.subjek !== bulan.lemah.subjek ? bulan.lemah : null}
+                            warna="#dc2626"
+                            topikLemah={
+                              bulan.lemah && bulan.terkuat?.subjek !== bulan.lemah.subjek
+                                ? (bulanTopikLemah.get(bulan.lemah.subjek) ?? []).slice(0, 3)
+                                : []
+                            }
+                          />
                         </div>
                       </div>
                     </Seksyen>
