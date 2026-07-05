@@ -6,6 +6,7 @@ import {
   BookOpen,
   Calendar,
   Clock,
+  Copy,
   Flame,
   Heart,
   Pencil,
@@ -995,6 +996,7 @@ function ParentDashboard() {
                                 ? (bulanTopikLemah.get(bulan.lemah.subjek) ?? []).slice(0, 3)
                                 : []
                             }
+                            namaAnak={anakAktif.nama}
                           />
                         </div>
                       </div>
@@ -1592,13 +1594,28 @@ function KadSubjekTrend({
   sj,
   warna,
   topikLemah,
+  namaAnak,
 }: {
   label: string;
   sj: { subjek: string; purata: number; bil: number } | null;
   warna: string;
   topikLemah?: { topik: string; purata: number; darjah: string }[];
+  namaAnak?: string;
 }) {
+  const [copiedKey, setCopiedKey] = useState<string | null>(null);
   const meta = sj ? SUBJEK_LIST.find((s) => s.id === sj.subjek) : null;
+
+  async function salinArahan(topik: string, key: string) {
+    const teks = `📋 Minta ${namaAnak ?? "anak"} log masuk sendiri → ${meta?.title ?? sj?.subjek ?? ""} → Latih Tubi → topik "${topik}"`;
+    try {
+      await navigator.clipboard.writeText(teks);
+      setCopiedKey(key);
+      setTimeout(() => setCopiedKey((k) => (k === key ? null : k)), 2000);
+    } catch {
+      // noop
+    }
+  }
+
   return (
     <div className="rounded-2xl bg-card p-4 shadow-soft" style={{ border: `2px solid ${warna}33` }}>
       <p className="text-xs font-extrabold text-muted-foreground">{label}</p>
@@ -1613,29 +1630,37 @@ function KadSubjekTrend({
               <p className="text-[11px] font-extrabold uppercase tracking-wide text-muted-foreground">
                 Topik Lemah
               </p>
-              {topikLemah.map((t) => (
-                <div
-                  key={`${sj.subjek}-${t.topik}`}
-                  className="flex flex-wrap items-center justify-between gap-2 rounded-xl px-3 py-2"
-                  style={{ backgroundColor: `${warna}14` }}
-                >
-                  <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-bold text-foreground">{t.topik}</p>
-                    <p className="text-xs font-extrabold" style={{ color: warna }}>
-                      {t.purata}%
-                    </p>
-                  </div>
-                  <Link
-                    to="/darjah/$darjahId_/$subjekId_/latih-tubi"
-                    params={{ darjahId: t.darjah, subjekId: sj.subjek }}
-                    search={{ topik: t.topik }}
-                    className="rounded-full px-3 py-1 text-xs font-extrabold text-white shadow-soft transition hover:opacity-90"
-                    style={{ backgroundColor: warna }}
+              {topikLemah.map((t) => {
+                const key = `${sj.subjek}-${t.topik}`;
+                return (
+                  <div
+                    key={key}
+                    className="flex flex-wrap items-center justify-between gap-2 rounded-xl px-3 py-2"
+                    style={{ backgroundColor: `${warna}14` }}
                   >
-                    Latih Tubi Topik Ini
-                  </Link>
-                </div>
-              ))}
+                    <div className="min-w-0 flex-1">
+                      <p className="truncate text-sm font-bold text-foreground">{t.topik}</p>
+                      <p className="text-xs font-extrabold" style={{ color: warna }}>
+                        {t.purata}%
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <p className="text-[11px] text-muted-foreground">
+                        📋 Minta {namaAnak ?? "anak"} log masuk sendiri → {meta.title} → Latih Tubi → topik "{t.topik}"
+                      </p>
+                      <button
+                        onClick={() => salinArahan(t.topik, key)}
+                        className="inline-flex items-center gap-1 rounded-full px-2 py-1 text-[10px] font-extrabold text-white shadow-soft transition hover:opacity-90"
+                        style={{ backgroundColor: warna }}
+                        title="Salin arahan ke papan keratan"
+                      >
+                        <Copy className="h-3 w-3" />
+                        {copiedKey === key ? "Disalin!" : "Salin"}
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           )}
         </>
