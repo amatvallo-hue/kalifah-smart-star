@@ -404,6 +404,13 @@ function BergambarRajahPage() {
                         renderSoalanSvg(r.rangsangan_svg_type, r.rangsangan_svg_params, bahasa ?? "bm")
                       ) : r.rangsangan_gambar_id ? (
                         <Gambar id={r.rangsangan_gambar_id} alt={r.topik_nama ?? r.rangsangan_id} />
+                      ) : r.rangsangan_teks ? (
+                        <div className="flex h-full w-full flex-col justify-center gap-2 rounded-xl bg-gradient-to-br from-sky-50 to-sky-100 p-3 dark:from-sky-950/30 dark:to-sky-900/20">
+                          <span className="text-2xl">📖</span>
+                          <p className="line-clamp-3 text-left text-[11px] leading-snug text-slate-600 dark:text-slate-300">
+                            {r.rangsangan_teks}
+                          </p>
+                        </div>
                       ) : (
                         <ImageIcon className="h-10 w-10 text-slate-300" />
                       )}
