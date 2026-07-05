@@ -118,7 +118,7 @@ export function SenaraiHarga({ unit, items, bahasa = "bm" }: Props) {
           fill={LABEL}
           fontFamily="sans-serif"
         >
-          Tiada item
+          {bahasa === "en" ? "No items" : "Tiada item"}
         </text>
       )}
     </svg>
