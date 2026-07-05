@@ -6,6 +6,7 @@ interface Item {
 interface Props {
   unit: "sen" | "RM";
   items: Item[];
+  bahasa?: "bm" | "en";
 }
 
 const BG = "#F8FAFC";
