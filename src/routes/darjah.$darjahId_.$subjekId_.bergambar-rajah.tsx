@@ -459,7 +459,7 @@ function BergambarRajahPage() {
             >
               {selected.rangsangan_svg_type ? (
                 <div className="flex justify-center">
-                  {renderSoalanSvg(selected.rangsangan_svg_type, selected.rangsangan_svg_params)}
+                  {renderSoalanSvg(selected.rangsangan_svg_type, selected.rangsangan_svg_params, bahasa ?? "bm")}
                 </div>
               ) : selected.rangsangan_gambar_id ? (
                 <Gambar
