@@ -134,6 +134,9 @@ function BergambarRajahPage() {
     if (subjekId === "matematik") {
       return bahasa === "en" ? "MT-EN" : bahasa === "bm" ? "MT" : null;
     }
+    if (subjekId === "bahasa-melayu") {
+      return "BM";
+    }
     return subjekId;
   })();
 
