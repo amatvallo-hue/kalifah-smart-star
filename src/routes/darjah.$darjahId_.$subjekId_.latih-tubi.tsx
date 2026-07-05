@@ -250,7 +250,7 @@ function LatihTubiPage() {
     return () => {
       cancelled = true;
     };
-  }, [darjahId, subjekId, isUpper, darjahNum, isMatematik, bahasa]);
+  }, [darjahId, subjekId, isUpper, darjahNum, isMatematik, bahasa, topikSearchParam]);
 
 
 
