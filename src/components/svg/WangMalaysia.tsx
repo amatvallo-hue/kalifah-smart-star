@@ -294,7 +294,7 @@ export function WangMalaysia({ items, susun = "baris", bahasa = "bm" }: Props) {
           fill={LABEL}
           fontFamily="sans-serif"
         >
-          Tiada wang
+          {bahasa === "en" ? "No money" : "Tiada wang"}
         </text>
       )}
     </svg>
