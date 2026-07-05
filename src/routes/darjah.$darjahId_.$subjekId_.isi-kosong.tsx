@@ -269,12 +269,22 @@ function IsiKosongPage() {
           style={{ background: `linear-gradient(135deg, ${HIJAU}15, ${EMAS}20)` }}
         >
           <div className="flex flex-wrap items-center gap-2">
-            <span className="rounded-full bg-card px-4 py-1.5 font-display text-xs font-bold shadow-soft" style={{ color: HIJAU }}>
+            <Link
+              to="/darjah/$darjahId"
+              params={{ darjahId }}
+              className="rounded-full bg-card px-4 py-1.5 font-display text-xs font-bold shadow-soft transition hover:opacity-80"
+              style={{ color: HIJAU }}
+            >
               {darjah.label}
-            </span>
-            <span className="rounded-full bg-card px-4 py-1.5 font-display text-xs font-bold shadow-soft" style={{ color: EMAS }}>
+            </Link>
+            <Link
+              to="/darjah/$darjahId/$subjekId"
+              params={{ darjahId, subjekId }}
+              className="rounded-full bg-card px-4 py-1.5 font-display text-xs font-bold shadow-soft transition hover:opacity-80"
+              style={{ color: EMAS }}
+            >
               {subjek.title}
-            </span>
+            </Link>
           </div>
           <h1 className="mt-3 font-display text-3xl font-extrabold text-foreground md:text-4xl">
             Isi Tempat <span style={{ color: HIJAU }}>Kosong</span>
