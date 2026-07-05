@@ -70,6 +70,9 @@ function renderSoalanSvg(svg_type?: string | null, svg_params?: any) {
 export const Route = createFileRoute("/darjah/$darjahId_/$subjekId_/latih-tubi")({
   head: () => ({ meta: [{ title: "Latih Tubi — Kalifah.my" }] }),
   ssr: false,
+  validateSearch: (search: Record<string, unknown>) => ({
+    topik: typeof search.topik === "string" && search.topik ? search.topik : undefined,
+  }),
   component: LatihTubiPage,
 });
 
