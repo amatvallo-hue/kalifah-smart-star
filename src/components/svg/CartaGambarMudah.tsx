@@ -17,7 +17,7 @@ const LABEL = "#1F2937";
 const MAX_PER_ROW = 5;
 const MAX_ICONS = 10;
 
-export function CartaGambarMudah({ setiap_gambar = 1, items }: Props) {
+export function CartaGambarMudah({ setiap_gambar = 1, items, bahasa = "bm" }: Props) {
   const list = Array.isArray(items) ? items : [];
   const unit = Math.max(1, setiap_gambar || 1);
 
