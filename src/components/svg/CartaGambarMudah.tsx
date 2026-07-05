@@ -118,7 +118,7 @@ export function CartaGambarMudah({ setiap_gambar = 1, items, bahasa = "bm" }: Pr
           fill={LABEL}
           fontFamily="sans-serif"
         >
-          Tiada data
+          {bahasa === "en" ? "No data" : "Tiada data"}
         </text>
       )}
     </svg>
