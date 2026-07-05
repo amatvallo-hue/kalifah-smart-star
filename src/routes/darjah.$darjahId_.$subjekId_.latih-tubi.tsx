@@ -111,6 +111,7 @@ function letterToIdx(l: string): number {
 function LatihTubiPage() {
   const navigate = useNavigate();
   const { darjahId, subjekId } = useParams({ from: "/darjah/$darjahId_/$subjekId_/latih-tubi" });
+  const { topik: topikSearchParam } = useSearch({ from: "/darjah/$darjahId_/$subjekId_/latih-tubi" });
   const { user, loading } = useAuth();
   const darjah = getDarjah(darjahId) ?? { id: darjahId, label: `Darjah ${darjahId}`, locked: false };
   const subjek = getSubjek(subjekId) ?? { id: subjekId, title: subjekId };
