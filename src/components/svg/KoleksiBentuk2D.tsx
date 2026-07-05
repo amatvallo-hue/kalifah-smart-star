@@ -120,7 +120,7 @@ export function KoleksiBentuk2D({ items, bahasa = "bm" }: Props) {
             padding: 12,
           }}
         >
-          Tiada bentuk
+          {bahasa === "en" ? "No shapes" : "Tiada bentuk"}
         </div>
       )}
     </div>
