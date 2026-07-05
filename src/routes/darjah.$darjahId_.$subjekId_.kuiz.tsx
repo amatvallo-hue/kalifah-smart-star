@@ -464,12 +464,20 @@ function KuizPage() {
         </Link>
 
         <div className="mt-4 flex flex-wrap items-center gap-2">
-          <span className="rounded-full bg-card px-4 py-1.5 font-display text-xs font-bold text-primary shadow-soft">
+          <Link
+            to="/darjah/$darjahId"
+            params={{ darjahId }}
+            className="rounded-full bg-card px-4 py-1.5 font-display text-xs font-bold text-primary shadow-soft transition hover:opacity-80"
+          >
             {darjah.label}
-          </span>
-          <span className="rounded-full bg-card px-4 py-1.5 font-display text-xs font-bold text-gold-foreground shadow-soft">
+          </Link>
+          <Link
+            to="/darjah/$darjahId/$subjekId"
+            params={{ darjahId, subjekId }}
+            className="rounded-full bg-card px-4 py-1.5 font-display text-xs font-bold text-gold-foreground shadow-soft transition hover:opacity-80"
+          >
             {subjek.title}
-          </span>
+          </Link>
           <span className="rounded-full bg-gradient-primary px-4 py-1.5 font-display text-xs font-extrabold text-primary-foreground shadow-soft">
             {t.kuiz}
           </span>
