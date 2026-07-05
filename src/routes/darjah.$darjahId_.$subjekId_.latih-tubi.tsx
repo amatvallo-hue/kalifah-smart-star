@@ -446,6 +446,22 @@ function LatihTubiPage() {
           >
             {t.latihTubi}
           </span>
+          {topikSearchParam && (
+            <>
+              <span className="rounded-full bg-secondary px-4 py-1.5 font-display text-xs font-extrabold text-foreground shadow-soft">
+                {topikSearchParam}
+              </span>
+              <Link
+                to="/darjah/$darjahId_/$subjekId_/latih-tubi"
+                params={{ darjahId, subjekId }}
+                search={{ topik: undefined }}
+                className="font-display text-xs font-bold underline transition hover:opacity-80"
+                style={{ color: HIJAU }}
+              >
+                {en ? "All Topics" : "Semua Topik"}
+              </Link>
+            </>
+          )}
           {isUpper && started && topik && setLabel && (
             <>
               <span className="rounded-full bg-secondary px-4 py-1.5 font-display text-xs font-extrabold text-foreground shadow-soft">
