@@ -1591,10 +1591,12 @@ function KadSubjekTrend({
   label,
   sj,
   warna,
+  topikLemah,
 }: {
   label: string;
   sj: { subjek: string; purata: number; bil: number } | null;
   warna: string;
+  topikLemah?: { topik: string; purata: number; darjah: string }[];
 }) {
   const meta = sj ? SUBJEK_LIST.find((s) => s.id === sj.subjek) : null;
   return (
@@ -1606,6 +1608,36 @@ function KadSubjekTrend({
           <p className="text-xs text-muted-foreground">
             Purata {sj.purata}% • {sj.bil} aktiviti
           </p>
+          {topikLemah && topikLemah.length > 0 && (
+            <div className="mt-3 space-y-2">
+              <p className="text-[11px] font-extrabold uppercase tracking-wide text-muted-foreground">
+                Topik Lemah
+              </p>
+              {topikLemah.map((t) => (
+                <div
+                  key={`${sj.subjek}-${t.topik}`}
+                  className="flex flex-wrap items-center justify-between gap-2 rounded-xl px-3 py-2"
+                  style={{ backgroundColor: `${warna}14` }}
+                >
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-bold text-foreground">{t.topik}</p>
+                    <p className="text-xs font-extrabold" style={{ color: warna }}>
+                      {t.purata}%
+                    </p>
+                  </div>
+                  <Link
+                    to="/darjah/$darjahId_/$subjekId_/latih-tubi"
+                    params={{ darjahId: t.darjah, subjekId: sj.subjek }}
+                    search={{ topik: t.topik }}
+                    className="rounded-full px-3 py-1 text-xs font-extrabold text-white shadow-soft transition hover:opacity-90"
+                    style={{ backgroundColor: warna }}
+                  >
+                    Latih Tubi Topik Ini
+                  </Link>
+                </div>
+              ))}
+            </div>
+          )}
         </>
       ) : (
         <p className="mt-1 text-sm text-muted-foreground">Belum cukup data</p>
