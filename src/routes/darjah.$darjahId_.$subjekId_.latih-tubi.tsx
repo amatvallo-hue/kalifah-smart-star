@@ -418,18 +418,22 @@ function LatihTubiPage() {
         </Link>
 
         <div className="mt-4 flex flex-wrap items-center gap-2">
-          <span
-            className="rounded-full px-4 py-1.5 font-display text-xs font-extrabold text-white shadow-soft"
+          <Link
+            to="/darjah/$darjahId"
+            params={{ darjahId }}
+            className="rounded-full px-4 py-1.5 font-display text-xs font-extrabold text-white shadow-soft transition hover:opacity-80"
             style={{ backgroundColor: HIJAU }}
           >
             {darjah.label}
-          </span>
-          <span
-            className="rounded-full px-4 py-1.5 font-display text-xs font-extrabold shadow-soft"
+          </Link>
+          <Link
+            to="/darjah/$darjahId/$subjekId"
+            params={{ darjahId, subjekId }}
+            className="rounded-full px-4 py-1.5 font-display text-xs font-extrabold shadow-soft transition hover:opacity-80"
             style={{ backgroundColor: EMAS, color: "#1a1a1a" }}
           >
             {subjek.title}
-          </span>
+          </Link>
           <span
             className="rounded-full px-4 py-1.5 font-display text-xs font-extrabold text-white shadow-soft"
             style={{ backgroundColor: HIJAU }}
