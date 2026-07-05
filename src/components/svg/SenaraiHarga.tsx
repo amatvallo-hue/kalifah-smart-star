@@ -20,7 +20,7 @@ function formatPrice(harga: number, unit: "sen" | "RM") {
   return `RM ${harga.toFixed(2)}`;
 }
 
-export function SenaraiHarga({ unit, items }: Props) {
+export function SenaraiHarga({ unit, items, bahasa = "bm" }: Props) {
   const list = Array.isArray(items) ? items : [];
 
   const PAD = 14;
