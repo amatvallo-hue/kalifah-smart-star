@@ -996,6 +996,7 @@ function ParentDashboard() {
                                 ? (bulanTopikLemah.get(bulan.lemah.subjek) ?? []).slice(0, 3)
                                 : []
                             }
+                            namaAnak={anakAktif.nama}
                           />
                         </div>
                       </div>
