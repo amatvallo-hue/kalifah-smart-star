@@ -744,6 +744,54 @@ function ParentDashboard() {
     return { soalan, masa, terkuat, lemah };
   }, [progress, stats, tarikhBulanIni]);
 
+  // Topik-topik lemah (purata < 60%) untuk bulan ini, dikumpul per subjek.
+  // Kekalkan darjah terkini bagi setiap (subjek, topik) supaya butang "Latih Tubi Topik Ini"
+  // pergi ke darjah yang tepat.
+  const bulanTopikLemah = useMemo(() => {
+    const p = progress.filter(
+      (r) =>
+        tarikhBulanIni.has(toKLDate(r.created_at)) &&
+        r.aktiviti !== "nota" &&
+        !!r.topik &&
+        String(r.topik).trim() !== "",
+    );
+    const byKey = new Map<
+      string,
+      { subjek: string; topik: string; jumlah: number; bil: number; darjah: string; latest: string }
+    >();
+    p.forEach((r) => {
+      const key = `${r.subjek}||${r.topik}`;
+      const cur = byKey.get(key);
+      if (cur) {
+        cur.jumlah += Number(r.peratus);
+        cur.bil += 1;
+        if (r.created_at > cur.latest) {
+          cur.latest = r.created_at;
+          cur.darjah = r.darjah;
+        }
+      } else {
+        byKey.set(key, {
+          subjek: r.subjek,
+          topik: r.topik as string,
+          jumlah: Number(r.peratus),
+          bil: 1,
+          darjah: r.darjah,
+          latest: r.created_at,
+        });
+      }
+    });
+    const bySubjek = new Map<string, { topik: string; purata: number; darjah: string }[]>();
+    byKey.forEach((v) => {
+      const purata = v.bil > 0 ? Math.round(v.jumlah / v.bil) : 0;
+      if (purata >= 60) return;
+      const arr = bySubjek.get(v.subjek) ?? [];
+      arr.push({ topik: v.topik, purata, darjah: v.darjah });
+      bySubjek.set(v.subjek, arr);
+    });
+    bySubjek.forEach((arr) => arr.sort((a, b) => a.purata - b.purata));
+    return bySubjek;
+  }, [progress, tarikhBulanIni]);
+
   const kemajuanSubjek = useMemo(() => {
     return SUBJEK_LIST.map((sj) => {
       const rows = progress.filter((p) => p.subjek === sj.id);
@@ -938,7 +986,16 @@ function ParentDashboard() {
                         </div>
                         <div className="grid grid-cols-1 gap-3">
                           <KadSubjekTrend label="Subjek Terkuat 💪" sj={bulan.terkuat} warna={HIJAU} />
-                          <KadSubjekTrend label="Perlukan Perhatian ⚠️" sj={bulan.lemah && bulan.terkuat?.subjek !== bulan.lemah.subjek ? bulan.lemah : null} warna="#dc2626" />
+                          <KadSubjekTrend
+                            label="Perlukan Perhatian ⚠️"
+                            sj={bulan.lemah && bulan.terkuat?.subjek !== bulan.lemah.subjek ? bulan.lemah : null}
+                            warna="#dc2626"
+                            topikLemah={
+                              bulan.lemah && bulan.terkuat?.subjek !== bulan.lemah.subjek
+                                ? (bulanTopikLemah.get(bulan.lemah.subjek) ?? []).slice(0, 3)
+                                : []
+                            }
+                          />
                         </div>
                       </div>
                     </Seksyen>
@@ -1534,10 +1591,12 @@ function KadSubjekTrend({
   label,
   sj,
   warna,
+  topikLemah,
 }: {
   label: string;
   sj: { subjek: string; purata: number; bil: number } | null;
   warna: string;
+  topikLemah?: { topik: string; purata: number; darjah: string }[];
 }) {
   const meta = sj ? SUBJEK_LIST.find((s) => s.id === sj.subjek) : null;
   return (
@@ -1549,6 +1608,36 @@ function KadSubjekTrend({
           <p className="text-xs text-muted-foreground">
             Purata {sj.purata}% • {sj.bil} aktiviti
           </p>
+          {topikLemah && topikLemah.length > 0 && (
+            <div className="mt-3 space-y-2">
+              <p className="text-[11px] font-extrabold uppercase tracking-wide text-muted-foreground">
+                Topik Lemah
+              </p>
+              {topikLemah.map((t) => (
+                <div
+                  key={`${sj.subjek}-${t.topik}`}
+                  className="flex flex-wrap items-center justify-between gap-2 rounded-xl px-3 py-2"
+                  style={{ backgroundColor: `${warna}14` }}
+                >
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-bold text-foreground">{t.topik}</p>
+                    <p className="text-xs font-extrabold" style={{ color: warna }}>
+                      {t.purata}%
+                    </p>
+                  </div>
+                  <Link
+                    to="/darjah/$darjahId_/$subjekId_/latih-tubi"
+                    params={{ darjahId: t.darjah, subjekId: sj.subjek }}
+                    search={{ topik: t.topik }}
+                    className="rounded-full px-3 py-1 text-xs font-extrabold text-white shadow-soft transition hover:opacity-90"
+                    style={{ backgroundColor: warna }}
+                  >
+                    Latih Tubi Topik Ini
+                  </Link>
+                </div>
+              ))}
+            </div>
+          )}
         </>
       ) : (
         <p className="mt-1 text-sm text-muted-foreground">Belum cukup data</p>
