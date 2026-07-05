@@ -615,7 +615,11 @@ function LatihanSubjekPage() {
           </div>
           <div>
             <h1 className="font-display text-3xl font-extrabold text-foreground">{t.latihanBertulis}</h1>
-            <p className="text-sm text-muted-foreground">{darjah.label} • {subjek.title}</p>
+            <p className="text-sm text-muted-foreground">
+              <Link to="/darjah/$darjahId" params={{ darjahId }} className="hover:underline hover:text-primary transition">{darjah.label}</Link>
+              {" • "}
+              <Link to="/darjah/$darjahId/$subjekId" params={{ darjahId, subjekId }} className="hover:underline hover:text-primary transition">{subjek.title}</Link>
+            </p>
           </div>
         </div>
 

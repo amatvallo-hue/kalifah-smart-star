@@ -152,9 +152,13 @@ function AktivitiPage() {
 
         <section className="mt-4 rounded-[2rem] bg-gradient-hero p-6 shadow-card md:p-10">
           <div className="flex flex-wrap items-center gap-2">
-            <span className="rounded-full bg-card px-4 py-1.5 font-display text-xs font-bold text-primary shadow-soft">
+            <Link
+              to="/darjah/$darjahId"
+              params={{ darjahId }}
+              className="rounded-full bg-card px-4 py-1.5 font-display text-xs font-bold text-primary shadow-soft transition hover:opacity-80"
+            >
               {darjah.label}
-            </span>
+            </Link>
             <span className="rounded-full bg-card px-4 py-1.5 font-display text-xs font-bold text-gold-foreground shadow-soft">
               {subjek.title}
             </span>
