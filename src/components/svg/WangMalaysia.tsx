@@ -244,7 +244,7 @@ function Note({
   );
 }
 
-export function WangMalaysia({ items, susun = "baris" }: Props) {
+export function WangMalaysia({ items, susun = "baris", bahasa = "bm" }: Props) {
   const safeItems = Array.isArray(items) ? items : [];
   const CELL_W = 180;
   const CELL_H = 120;
