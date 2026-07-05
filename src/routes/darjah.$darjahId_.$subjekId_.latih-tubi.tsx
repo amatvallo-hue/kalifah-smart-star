@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate, useParams } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate, useParams, useSearch } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { ArrowLeft, Check, X, Square, Play } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
@@ -70,6 +70,9 @@ function renderSoalanSvg(svg_type?: string | null, svg_params?: any) {
 export const Route = createFileRoute("/darjah/$darjahId_/$subjekId_/latih-tubi")({
   head: () => ({ meta: [{ title: "Latih Tubi — Kalifah.my" }] }),
   ssr: false,
+  validateSearch: (search: Record<string, unknown>) => ({
+    topik: typeof search.topik === "string" && search.topik ? search.topik : undefined,
+  }),
   component: LatihTubiPage,
 });
 
@@ -108,6 +111,7 @@ function letterToIdx(l: string): number {
 function LatihTubiPage() {
   const navigate = useNavigate();
   const { darjahId, subjekId } = useParams({ from: "/darjah/$darjahId_/$subjekId_/latih-tubi" });
+  const { topik: topikSearchParam } = useSearch({ from: "/darjah/$darjahId_/$subjekId_/latih-tubi" });
   const { user, loading } = useAuth();
   const darjah = getDarjah(darjahId) ?? { id: darjahId, label: `Darjah ${darjahId}`, locked: false };
   const subjek = getSubjek(subjekId) ?? { id: subjekId, title: subjekId };
@@ -209,13 +213,15 @@ function LatihTubiPage() {
           : subjekId === "sains" && bahasa === "en"
             ? "sains-en"
             : subjekId;
-      const { data, error } = await supabase
+      let query = supabase
         .from("soalan_latih_tubi")
         .select("id, soalan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan_betul, topik, feedback_a, feedback_b, feedback_c, feedback_d, gambar, svg_type, svg_params")
         .eq("darjah", Number.isFinite(darjahNum) ? darjahNum : darjahId)
         .eq("subjek", subjekQuery)
         .not("feedback_a", "is", null)
         .neq("feedback_a", "");
+      if (topikSearchParam) query = query.eq("topik", topikSearchParam);
+      const { data, error } = await query;
       if (cancelled) return;
       if (error) {
         setErrMsg(error.message);
@@ -244,7 +250,7 @@ function LatihTubiPage() {
     return () => {
       cancelled = true;
     };
-  }, [darjahId, subjekId, isUpper, darjahNum, isMatematik, bahasa]);
+  }, [darjahId, subjekId, isUpper, darjahNum, isMatematik, bahasa, topikSearchParam]);
 
 
 
@@ -440,6 +446,22 @@ function LatihTubiPage() {
           >
             {t.latihTubi}
           </span>
+          {topikSearchParam && (
+            <>
+              <span className="rounded-full bg-secondary px-4 py-1.5 font-display text-xs font-extrabold text-foreground shadow-soft">
+                {topikSearchParam}
+              </span>
+              <Link
+                to="/darjah/$darjahId_/$subjekId_/latih-tubi"
+                params={{ darjahId, subjekId }}
+                search={{ topik: undefined }}
+                className="font-display text-xs font-bold underline transition hover:opacity-80"
+                style={{ color: HIJAU }}
+              >
+                {en ? "All Topics" : "Semua Topik"}
+              </Link>
+            </>
+          )}
           {isUpper && started && topik && setLabel && (
             <>
               <span className="rounded-full bg-secondary px-4 py-1.5 font-display text-xs font-extrabold text-foreground shadow-soft">
