@@ -744,6 +744,54 @@ function ParentDashboard() {
     return { soalan, masa, terkuat, lemah };
   }, [progress, stats, tarikhBulanIni]);
 
+  // Topik-topik lemah (purata < 60%) untuk bulan ini, dikumpul per subjek.
+  // Kekalkan darjah terkini bagi setiap (subjek, topik) supaya butang "Latih Tubi Topik Ini"
+  // pergi ke darjah yang tepat.
+  const bulanTopikLemah = useMemo(() => {
+    const p = progress.filter(
+      (r) =>
+        tarikhBulanIni.has(toKLDate(r.created_at)) &&
+        r.aktiviti !== "nota" &&
+        !!r.topik &&
+        String(r.topik).trim() !== "",
+    );
+    const byKey = new Map<
+      string,
+      { subjek: string; topik: string; jumlah: number; bil: number; darjah: string; latest: string }
+    >();
+    p.forEach((r) => {
+      const key = `${r.subjek}||${r.topik}`;
+      const cur = byKey.get(key);
+      if (cur) {
+        cur.jumlah += Number(r.peratus);
+        cur.bil += 1;
+        if (r.created_at > cur.latest) {
+          cur.latest = r.created_at;
+          cur.darjah = r.darjah;
+        }
+      } else {
+        byKey.set(key, {
+          subjek: r.subjek,
+          topik: r.topik as string,
+          jumlah: Number(r.peratus),
+          bil: 1,
+          darjah: r.darjah,
+          latest: r.created_at,
+        });
+      }
+    });
+    const bySubjek = new Map<string, { topik: string; purata: number; darjah: string }[]>();
+    byKey.forEach((v) => {
+      const purata = v.bil > 0 ? Math.round(v.jumlah / v.bil) : 0;
+      if (purata >= 60) return;
+      const arr = bySubjek.get(v.subjek) ?? [];
+      arr.push({ topik: v.topik, purata, darjah: v.darjah });
+      bySubjek.set(v.subjek, arr);
+    });
+    bySubjek.forEach((arr) => arr.sort((a, b) => a.purata - b.purata));
+    return bySubjek;
+  }, [progress, tarikhBulanIni]);
+
   const kemajuanSubjek = useMemo(() => {
     return SUBJEK_LIST.map((sj) => {
       const rows = progress.filter((p) => p.subjek === sj.id);
