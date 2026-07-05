@@ -7,6 +7,7 @@ interface MoneyItem {
 interface Props {
   items: MoneyItem[];
   susun?: "baris" | "grid";
+  bahasa?: "bm" | "en";
 }
 
 const BG = "#F8FAFC";
