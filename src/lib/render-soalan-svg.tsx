@@ -31,6 +31,7 @@ import { KoleksiBentuk2D } from "@/components/svg/KoleksiBentuk2D";
 export function renderSoalanSvg(
   svg_type: string | null | undefined,
   svg_params: any,
+  bahasa?: "bm" | "en",
 ): React.ReactNode {
   if (!svg_type) return null;
   const p = svg_params ?? {};
@@ -59,11 +60,11 @@ export function renderSoalanSvg(
     if (svg_type === "rantai_makanan") return <RantaiMakanan {...p} />;
     if (svg_type === "litmus") return <UjianLitmus {...p} />;
     if (svg_type === "mesin") return <MesinRingkas {...p} />;
-    if (svg_type === "wang") return <WangMalaysia {...p} />;
+    if (svg_type === "wang") return <WangMalaysia {...p} bahasa={bahasa} />;
     if (svg_type === "kira") return <KiraObjek {...p} />;
-    if (svg_type === "carta_gambar") return <CartaGambarMudah {...p} />;
-    if (svg_type === "senarai_harga") return <SenaraiHarga {...p} />;
-    if (svg_type === "bentuk2d_koleksi") return <KoleksiBentuk2D {...p} />;
+    if (svg_type === "carta_gambar") return <CartaGambarMudah {...p} bahasa={bahasa} />;
+    if (svg_type === "senarai_harga") return <SenaraiHarga {...p} bahasa={bahasa} />;
+    if (svg_type === "bentuk2d_koleksi") return <KoleksiBentuk2D {...p} bahasa={bahasa} />;
   } catch {
     return null;
   }

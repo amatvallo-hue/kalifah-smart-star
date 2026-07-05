@@ -394,7 +394,7 @@ function BergambarRajahPage() {
                   >
                     <div className="flex h-[160px] items-center justify-center overflow-hidden rounded-xl bg-white p-2 [&_svg]:h-full [&_svg]:w-full [&_svg]:max-h-full [&_svg]:max-w-full">
                       {r.rangsangan_svg_type ? (
-                        renderSoalanSvg(r.rangsangan_svg_type, r.rangsangan_svg_params)
+                        renderSoalanSvg(r.rangsangan_svg_type, r.rangsangan_svg_params, bahasa ?? "bm")
                       ) : r.rangsangan_gambar_id ? (
                         <Gambar id={r.rangsangan_gambar_id} alt={r.topik_nama ?? r.rangsangan_id} />
                       ) : (
@@ -459,7 +459,7 @@ function BergambarRajahPage() {
             >
               {selected.rangsangan_svg_type ? (
                 <div className="flex justify-center">
-                  {renderSoalanSvg(selected.rangsangan_svg_type, selected.rangsangan_svg_params)}
+                  {renderSoalanSvg(selected.rangsangan_svg_type, selected.rangsangan_svg_params, bahasa ?? "bm")}
                 </div>
               ) : selected.rangsangan_gambar_id ? (
                 <Gambar

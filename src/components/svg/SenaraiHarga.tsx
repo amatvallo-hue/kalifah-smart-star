@@ -6,6 +6,7 @@ interface Item {
 interface Props {
   unit: "sen" | "RM";
   items: Item[];
+  bahasa?: "bm" | "en";
 }
 
 const BG = "#F8FAFC";
@@ -19,7 +20,7 @@ function formatPrice(harga: number, unit: "sen" | "RM") {
   return `RM ${harga.toFixed(2)}`;
 }
 
-export function SenaraiHarga({ unit, items }: Props) {
+export function SenaraiHarga({ unit, items, bahasa = "bm" }: Props) {
   const list = Array.isArray(items) ? items : [];
 
   const PAD = 14;
@@ -57,7 +58,7 @@ export function SenaraiHarga({ unit, items }: Props) {
         fill={LABEL}
         fontFamily="sans-serif"
       >
-        Senarai Harga
+        {bahasa === "en" ? "Price List" : "Senarai Harga"}
       </text>
       <line
         x1={PAD}
@@ -117,7 +118,7 @@ export function SenaraiHarga({ unit, items }: Props) {
           fill={LABEL}
           fontFamily="sans-serif"
         >
-          Tiada item
+          {bahasa === "en" ? "No items" : "Tiada item"}
         </text>
       )}
     </svg>

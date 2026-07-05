@@ -7,6 +7,7 @@ interface MoneyItem {
 interface Props {
   items: MoneyItem[];
   susun?: "baris" | "grid";
+  bahasa?: "bm" | "en";
 }
 
 const BG = "#F8FAFC";
@@ -243,7 +244,7 @@ function Note({
   );
 }
 
-export function WangMalaysia({ items, susun = "baris" }: Props) {
+export function WangMalaysia({ items, susun = "baris", bahasa = "bm" }: Props) {
   const safeItems = Array.isArray(items) ? items : [];
   const CELL_W = 180;
   const CELL_H = 120;
@@ -293,7 +294,7 @@ export function WangMalaysia({ items, susun = "baris" }: Props) {
           fill={LABEL}
           fontFamily="sans-serif"
         >
-          Tiada wang
+          {bahasa === "en" ? "No money" : "Tiada wang"}
         </text>
       )}
     </svg>

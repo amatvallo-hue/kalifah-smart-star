@@ -9,17 +9,26 @@ interface Item {
 
 interface Props {
   items: Item[];
+  bahasa?: "bm" | "en";
 }
 
-const LABELS: Record<Shape2D, string> = {
+const LABELS_BM: Record<Shape2D, string> = {
   segitiga: "Segitiga",
   bulatan: "Bulatan",
   segiempat_sama: "Segiempat Sama",
   segiempat_tepat: "Segiempat Tepat",
 };
 
-export function KoleksiBentuk2D({ items }: Props) {
+const LABELS_EN: Record<Shape2D, string> = {
+  segitiga: "Triangle",
+  bulatan: "Circle",
+  segiempat_sama: "Square",
+  segiempat_tepat: "Rectangle",
+};
+
+export function KoleksiBentuk2D({ items, bahasa = "bm" }: Props) {
   const list = Array.isArray(items) ? items : [];
+  const LABELS = bahasa === "en" ? LABELS_EN : LABELS_BM;
 
   return (
     <div
@@ -111,7 +120,7 @@ export function KoleksiBentuk2D({ items }: Props) {
             padding: 12,
           }}
         >
-          Tiada bentuk
+          {bahasa === "en" ? "No shapes" : "Tiada bentuk"}
         </div>
       )}
     </div>
