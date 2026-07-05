@@ -58,7 +58,7 @@ export function SenaraiHarga({ unit, items, bahasa = "bm" }: Props) {
         fill={LABEL}
         fontFamily="sans-serif"
       >
-        Senarai Harga
+        {bahasa === "en" ? "Price List" : "Senarai Harga"}
       </text>
       <line
         x1={PAD}
