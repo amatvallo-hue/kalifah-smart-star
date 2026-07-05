@@ -6,6 +6,7 @@ interface Item {
 interface Props {
   setiap_gambar?: number;
   items: Item[];
+  bahasa?: "bm" | "en";
 }
 
 const BG = "#F8FAFC";
