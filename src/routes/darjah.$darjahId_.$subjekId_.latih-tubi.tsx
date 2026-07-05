@@ -1,4 +1,4 @@
-import { createFileRoute, Link, useNavigate, useParams } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate, useParams, useSearch } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { ArrowLeft, Check, X, Square, Play } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
