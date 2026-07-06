@@ -32,10 +32,33 @@ type AffRow = {
   total_komisyen: number;
   total_dibayar: number;
   platform_promosi?: string[] | null;
+  last_klik_at?: string | null;
 };
 
 function rm(ringgit: number) {
   return `RM ${(ringgit ?? 0).toFixed(2)}`;
+}
+
+function fmtDateTimeMY(ts: string | null | undefined): string {
+  if (!ts) return "Tiada";
+  const d = new Date(ts);
+  const months = ["Jan","Feb","Mac","Apr","Mei","Jun","Jul","Ogo","Sep","Okt","Nov","Dis"];
+  const day = d.getDate();
+  const month = months[d.getMonth()];
+  const year = d.getFullYear();
+  let hours = d.getHours();
+  const minutes = String(d.getMinutes()).padStart(2, "0");
+  const ampm = hours >= 12 ? "PM" : "AM";
+  hours = hours % 12 || 12;
+  return `${day} ${month} ${year}, ${hours}:${minutes} ${ampm}`;
+}
+
+function isInactive(ts: string | null | undefined): boolean {
+  if (!ts) return true;
+  const d = new Date(ts);
+  const now = new Date();
+  const diffDays = (now.getTime() - d.getTime()) / (1000 * 60 * 60 * 24);
+  return diffDays > 14;
 }
 
 function AdminAffiliates() {
@@ -197,6 +220,8 @@ function AdminAffiliates() {
               <TableHead>Nama</TableHead>
               <TableHead>Email</TableHead>
               <TableHead>Kod</TableHead>
+              <TableHead className="text-right">Klik</TableHead>
+              <TableHead>Klik Terakhir</TableHead>
               <TableHead>Bank</TableHead>
               <TableHead>Platform Promosi</TableHead>
               <TableHead className="text-right">Jualan Bulan Ini</TableHead>
@@ -208,7 +233,7 @@ function AdminAffiliates() {
           <TableBody>
             {rows.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={9} className="py-6 text-center text-muted-foreground">
+                <TableCell colSpan={11} className="py-6 text-center text-muted-foreground">
                   Tiada affiliate berdaftar lagi.
                 </TableCell>
               </TableRow>
@@ -218,6 +243,12 @@ function AdminAffiliates() {
                   <TableCell className="font-bold">{r.nama}</TableCell>
                   <TableCell>{r.email}</TableCell>
                   <TableCell className="font-mono">{r.custom_ref_code ?? r.ref_code}</TableCell>
+                  <TableCell className="text-right">{r.total_klik ?? 0}</TableCell>
+                  <TableCell>
+                    <span className={isInactive(r.last_klik_at) ? "text-amber-600" : "text-emerald-600"}>
+                      {fmtDateTimeMY(r.last_klik_at)}
+                    </span>
+                  </TableCell>
                   <TableCell>
                     {r.nama_bank} {r.no_akaun_bank}
                   </TableCell>
