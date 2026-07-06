@@ -149,11 +149,22 @@ function CikguAffiliateLanding() {
             </p>
           </div>
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            <PromoCard
-              icon={LayoutDashboard}
-              title="Dashboard Pantauan Ibu Bapa"
-              body="Ibu bapa nampak progress anak secara masa nyata — termasuk topik yang lemah — dan terima laporan mingguan automatik melalui email."
-            />
+            <div className="flex items-start gap-4 rounded-2xl border-2 border-primary/30 bg-gradient-to-br from-primary/10 to-primary/5 p-5 shadow-sm lg:col-span-2">
+              <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground">
+                <LayoutDashboard className="h-6 w-6" strokeWidth={2.5} />
+              </div>
+              <div>
+                <span className="inline-flex items-center rounded-full bg-primary px-2.5 py-0.5 text-[10px] font-extrabold uppercase tracking-wider text-primary-foreground">
+                  USP Utama Kalifah.my
+                </span>
+                <h3 className="mt-1.5 font-display text-lg font-extrabold text-foreground">
+                  Dashboard Pemantauan Ibu Bapa
+                </h3>
+                <p className="mt-1.5 text-sm text-muted-foreground">
+                  Ini yang paling membezakan Kalifah.my — ibu bapa bukan sekadar beli akses, mereka boleh nampak progress anak secara masa nyata (termasuk topik yang lemah) dan terima laporan mingguan automatik melalui email. Bila anda promote Kalifah.my, inilah sebab utama parent lain akan tertarik — bukan sekadar &quot;platform soalan lagi satu&quot;, tapi platform yang bagi ibu bapa gambaran jelas perkembangan anak mereka.
+                </p>
+              </div>
+            </div>
             <PromoCard
               icon={BookOpen}
               title="32,000+ Soalan KSSR"
