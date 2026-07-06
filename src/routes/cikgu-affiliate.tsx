@@ -19,6 +19,7 @@ import {
   Monitor,
   ChevronDown,
   Quote,
+  LayoutDashboard,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { SiteHeader } from "@/components/SiteHeader";
