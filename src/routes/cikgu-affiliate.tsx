@@ -11,6 +11,14 @@ import {
   Gift,
   Users,
   CheckCircle2,
+  BookOpen,
+  Gamepad2,
+  FileQuestion,
+  NotebookPen,
+  GraduationCap,
+  Monitor,
+  ChevronDown,
+  Quote,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { SiteHeader } from "@/components/SiteHeader";
@@ -42,6 +50,7 @@ export const Route = createFileRoute("/cikgu-affiliate")({
 
 function CikguAffiliateLanding() {
   const [count, setCount] = useState<number | null>(null);
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   useEffect(() => {
     supabase
@@ -52,6 +61,10 @@ function CikguAffiliateLanding() {
 
   const baki = count === null ? null : Math.max(0, SLOT_PERCUMA - count);
   const penuh = baki !== null && baki <= 0;
+
+  const toggleFaq = (idx: number) => {
+    setOpenFaq((prev) => (prev === idx ? null : idx));
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -66,15 +79,13 @@ function CikguAffiliateLanding() {
               Program Affiliate Kalifah.my
             </div>
             <h1 className="mt-4 font-display text-4xl font-extrabold leading-tight text-foreground sm:text-5xl md:text-6xl">
-              Kongsi Kalifah.my,{" "}
-              <span className="bg-gradient-primary bg-clip-text text-transparent">
-                Dapat Komisyen 30%
-              </span>
+              Buat Pendapatan Sampingan Dengan Kongsi Kalifah.my
             </h1>
-            <p className="mt-4 text-lg text-muted-foreground sm:text-xl">
-              Cikgu &amp; ibu bapa — dapat pendapatan sampingan dengan
-              berkongsi platform pembelajaran yang anda memang percaya. Percuma
-              untuk disertai, tiada modal, tiada stok.
+            <p className="mt-4 text-xl font-extrabold text-primary sm:text-2xl">
+              Dapat Komisyen Sehingga RM2,985 Sebulan
+            </p>
+            <p className="mt-2 text-base text-muted-foreground sm:text-lg">
+              Tiada modal • Tiada stok • Tiada urus pelanggan
             </p>
 
             <div className="mt-8 flex flex-col items-center gap-3">
@@ -96,16 +107,77 @@ function CikguAffiliateLanding() {
                 <span>Sedang muat maklumat slot...</span>
               ) : penuh ? (
                 <span>
-                  Slot percuma penuh — masih boleh sertai dengan pembelian
-                  minimum 1 darjah.
+                  Promosi Percuma Tamat — Kuota 20 Orang Dipenuhi. Masih boleh
+                  sertai dengan pembelian minimum 1 darjah.
                 </span>
               ) : (
                 <span>
-                  Baki <span className="text-amber-700 dark:text-amber-100">{baki}</span> tempat
-                  percuma sahaja!
+                  Baki {baki}/20 Slot Affiliate Percuma Masih Dibuka
                 </span>
               )}
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* SIAPA SESUAI SERTAI */}
+      <section className="container mx-auto max-w-5xl px-4 py-14">
+        <div className="mx-auto max-w-2xl text-center">
+          <h2 className="font-display text-3xl font-extrabold sm:text-4xl">
+            Program Ini Sesuai Untuk
+          </h2>
+        </div>
+        <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-5">
+          <AudienceCard emoji="👩‍🏫" label="Guru Sekolah" />
+          <AudienceCard emoji="👨‍👩‍👧‍👦" label="Ibu Bapa" />
+          <AudienceCard emoji="📱" label="Content Creator Pendidikan" />
+          <AudienceCard emoji="🕌" label="Guru KAFA" />
+          <AudienceCard emoji="🎓" label="Tutor & Pusat Tuisyen" />
+        </div>
+      </section>
+
+      {/* APA YANG ANDA AKAN PROMOTE */}
+      <section className="bg-muted/30 py-14">
+        <div className="container mx-auto max-w-5xl px-4">
+          <div className="mx-auto max-w-2xl text-center">
+            <h2 className="font-display text-3xl font-extrabold sm:text-4xl">
+              Apa Yang Anda Akan Promote?
+            </h2>
+            <p className="mt-3 text-muted-foreground">
+              Kongsi platform pembelajaran yang ibu bapa Malaysia memang perlukan.
+            </p>
+          </div>
+          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <PromoCard
+              icon={BookOpen}
+              title="32,000+ Soalan KSSR"
+              body="Bank soalan lengkap mengikut sukatan Darjah 1–6."
+            />
+            <PromoCard
+              icon={Gamepad2}
+              title="Game Pembelajaran"
+              body="Anak belajar sambil bermain — matematik, sains & bahasa."
+            />
+            <PromoCard
+              icon={FileQuestion}
+              title="Latih Tubi Interaktif"
+              body="Latihan auto-marked dengan penjelasan jawapan."
+            />
+            <PromoCard
+              icon={NotebookPen}
+              title="Nota Ringkas"
+              body="Nota visual & ringkas untuk setiap topik utama."
+            />
+            <PromoCard
+              icon={GraduationCap}
+              title="Darjah 1–6"
+              body="Satu platform untuk semua peringkat sekolah rendah."
+            />
+            <PromoCard
+              icon={Monitor}
+              title="Akses Online 24 Jam"
+              body="Belajar bila-bila masa, di mana-mana peranti."
+            />
           </div>
         </div>
       </section>
@@ -135,27 +207,34 @@ function CikguAffiliateLanding() {
               maksimum — makin banyak share, makin banyak dapat.
             </p>
 
-            <div className="mt-5 rounded-2xl bg-primary/5 p-4">
+            <div className="mt-5 rounded-2xl bg-primary/5 p-5">
               <p className="text-sm font-bold uppercase tracking-wide text-primary">
-                Contoh Pengiraan
+                Contoh Pakej Bundle (RM199)
               </p>
-              <ul className="mt-2 space-y-2 text-sm text-foreground">
-                <li className="flex justify-between gap-2">
-                  <span>1 jualan pakej 1 darjah (RM49)</span>
-                  <span className="font-bold text-primary">= RM14.70</span>
+              <ul className="mt-3 space-y-3 text-foreground">
+                <li className="flex items-center justify-between gap-2 rounded-xl bg-card p-3 shadow-sm">
+                  <span className="text-sm">💰 10 jualan Bundle</span>
+                  <span className="font-display text-lg font-extrabold text-primary">
+                    = RM597
+                  </span>
                 </li>
-                <li className="flex justify-between gap-2">
-                  <span>10 jualan sebulan</span>
-                  <span className="font-bold text-primary">= RM147</span>
+                <li className="flex items-center justify-between gap-2 rounded-xl bg-card p-3 shadow-sm">
+                  <span className="text-sm">💰 20 jualan Bundle</span>
+                  <span className="font-display text-lg font-extrabold text-primary">
+                    = RM1,194
+                  </span>
                 </li>
-                <li className="flex justify-between gap-2">
-                  <span>10 jualan pakej bundle (RM199)</span>
-                  <span className="font-bold text-primary">= RM597</span>
+                <li className="flex items-center justify-between gap-2 rounded-xl bg-card p-3 shadow-sm">
+                  <span className="text-sm">💰 50 jualan Bundle</span>
+                  <span className="font-display text-lg font-extrabold text-primary">
+                    = RM2,985
+                  </span>
                 </li>
               </ul>
               <p className="mt-3 text-xs text-muted-foreground">
-                Tiada had — makin ramai parent yang beli melalui link anda,
-                makin besar komisyen bulanan.
+                1 jualan pakej 1 darjah (RM49) = RM14.70 komisyen. Tiada had —
+                makin ramai parent yang beli melalui link anda, makin besar
+                komisyen bulanan.
               </p>
             </div>
           </div>
@@ -238,6 +317,43 @@ function CikguAffiliateLanding() {
         </div>
       </section>
 
+      {/* TESTIMONI */}
+      <section className="container mx-auto max-w-5xl px-4 py-14">
+        <div className="mx-auto max-w-2xl">
+          <div className="relative rounded-3xl border border-border bg-card p-8 shadow-soft sm:p-10">
+            <Quote className="absolute left-6 top-6 h-8 w-8 text-primary/20" />
+            <blockquote className="relative pt-6 text-center text-lg font-medium text-foreground sm:text-xl">
+              “Saya hanya kongsi dalam WhatsApp group sekolah anak. Dapat
+              komisyen pertama dalam minggu pertama.”
+            </blockquote>
+            <p className="mt-5 text-center text-sm font-bold text-muted-foreground">
+              — Affiliate Kalifah.my
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* DIPERCAYAI IBU BAPA MALAYSIA */}
+      <section className="bg-muted/30 py-14">
+        <div className="container mx-auto max-w-5xl px-4">
+          <div className="mx-auto max-w-2xl text-center">
+            <h2 className="font-display text-3xl font-extrabold sm:text-4xl">
+              Dipercayai Ibu Bapa Malaysia
+            </h2>
+          </div>
+          <div className="mx-auto mt-8 max-w-2xl">
+            <ul className="space-y-3">
+              <CheckItem text="32,000+ Soalan Latihan" />
+              <CheckItem text="Darjah 1–6" />
+              <CheckItem text="Nota Ringkas" />
+              <CheckItem text="Kuiz Interaktif" />
+              <CheckItem text="Game Pembelajaran" />
+              <CheckItem text="Latihan Bertulis" />
+            </ul>
+          </div>
+        </div>
+      </section>
+
       {/* TRUST / LOGISTICS */}
       <section className="container mx-auto max-w-5xl px-4 py-14">
         <div className="mx-auto max-w-2xl text-center">
@@ -269,6 +385,49 @@ function CikguAffiliateLanding() {
         </div>
       </section>
 
+      {/* FAQ */}
+      <section className="bg-muted/30 py-14">
+        <div className="container mx-auto max-w-3xl px-4">
+          <div className="text-center">
+            <h2 className="font-display text-3xl font-extrabold sm:text-4xl">
+              Soalan Lazim
+            </h2>
+          </div>
+          <div className="mt-10 space-y-4">
+            <FaqItem
+              q="Perlu bayar untuk sertai?"
+              a="Tidak. Percuma untuk 20 orang pertama."
+              open={openFaq === 0}
+              onToggle={() => toggleFaq(0)}
+            />
+            <FaqItem
+              q="Bila komisyen dibayar?"
+              a="1–7 haribulan setiap bulan."
+              open={openFaq === 1}
+              onToggle={() => toggleFaq(1)}
+            />
+            <FaqItem
+              q="Perlu simpan stok?"
+              a="Tidak."
+              open={openFaq === 2}
+              onToggle={() => toggleFaq(2)}
+            />
+            <FaqItem
+              q="Ada minimum payout?"
+              a="Ya, RM50."
+              open={openFaq === 3}
+              onToggle={() => toggleFaq(3)}
+            />
+            <FaqItem
+              q="Saya bukan cikgu, boleh sertai?"
+              a="Boleh — program ini terbuka untuk sesiapa sahaja."
+              open={openFaq === 4}
+              onToggle={() => toggleFaq(4)}
+            />
+          </div>
+        </div>
+      </section>
+
       {/* FINAL CTA */}
       <section className="bg-gradient-to-b from-background to-primary/10 py-16">
         <div className="container mx-auto max-w-3xl px-4 text-center">
@@ -277,10 +436,10 @@ function CikguAffiliateLanding() {
             Sertai komuniti affiliate Kalifah.my
           </div>
           <h2 className="mt-4 font-display text-3xl font-extrabold sm:text-4xl md:text-5xl">
-            Bersedia untuk mula?
+            Mula Jana Komisyen Hari Ini
           </h2>
           <p className="mt-4 text-lg text-muted-foreground">
-            Daftar percuma dalam 2 minit dan mula kongsi link anda hari ini.
+            Daftar dalam masa 2 minit dan terus dapat link affiliate anda.
             {baki !== null && !penuh && (
               <>
                 {" "}
@@ -290,6 +449,21 @@ function CikguAffiliateLanding() {
               </>
             )}
           </p>
+
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-4 text-sm font-bold text-success">
+            <span className="inline-flex items-center gap-1.5">
+              <CheckCircle2 className="h-4 w-4" />
+              Percuma
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <CheckCircle2 className="h-4 w-4" />
+              Tiada Risiko
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <CheckCircle2 className="h-4 w-4" />
+              Tiada Modal
+            </span>
+          </div>
 
           <div className="mt-8 flex flex-col items-center gap-3">
             <Link
@@ -307,6 +481,81 @@ function CikguAffiliateLanding() {
           </div>
         </div>
       </section>
+    </div>
+  );
+}
+
+/* ---------- helpers ---------- */
+
+function AudienceCard({ emoji, label }: { emoji: string; label: string }) {
+  return (
+    <div className="flex flex-col items-center rounded-2xl border border-border bg-card p-5 text-center shadow-soft transition hover:-translate-y-0.5">
+      <span className="text-4xl">{emoji}</span>
+      <span className="mt-3 text-sm font-bold leading-snug text-foreground">
+        {label}
+      </span>
+    </div>
+  );
+}
+
+function PromoCard({
+  icon: Icon,
+  title,
+  body,
+}: {
+  icon: React.ComponentType<{ className?: string; strokeWidth?: number }>;
+  title: string;
+  body: string;
+}) {
+  return (
+    <div className="flex items-start gap-4 rounded-2xl border border-border bg-card p-5 shadow-sm">
+      <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
+        <Icon className="h-5 w-5" strokeWidth={2.5} />
+      </div>
+      <div>
+        <h3 className="font-display text-base font-extrabold text-foreground">
+          {title}
+        </h3>
+        <p className="mt-1 text-sm text-muted-foreground">{body}</p>
+      </div>
+    </div>
+  );
+}
+
+function CheckItem({ text }: { text: string }) {
+  return (
+    <li className="flex items-center gap-3 rounded-xl border border-border bg-card px-4 py-3 shadow-sm">
+      <CheckCircle2 className="h-5 w-5 flex-shrink-0 text-success" />
+      <span className="text-sm font-semibold text-foreground">{text}</span>
+    </li>
+  );
+}
+
+function FaqItem({
+  q,
+  a,
+  open,
+  onToggle,
+}: {
+  q: string;
+  a: string;
+  open: boolean;
+  onToggle: () => void;
+}) {
+  return (
+    <div className="rounded-2xl border border-border bg-card shadow-sm">
+      <button
+        onClick={onToggle}
+        className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left font-display font-extrabold text-foreground"
+      >
+        {q}
+        <ChevronDown
+          className={`h-5 w-5 flex-shrink-0 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`}
+        />
+      </button>
+      {open && (
+        <div className="px-5 pb-4 text-sm text-muted-foreground">{a}</div>
+      )}
     </div>
   );
 }
@@ -359,4 +608,3 @@ function InfoCard({
     </div>
   );
 }
-
