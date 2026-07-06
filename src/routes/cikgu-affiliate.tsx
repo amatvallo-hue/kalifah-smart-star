@@ -19,6 +19,7 @@ import {
   Monitor,
   ChevronDown,
   Quote,
+  LayoutDashboard,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { SiteHeader } from "@/components/SiteHeader";
@@ -148,6 +149,11 @@ function CikguAffiliateLanding() {
             </p>
           </div>
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <PromoCard
+              icon={LayoutDashboard}
+              title="Dashboard Pantauan Ibu Bapa"
+              body="Ibu bapa nampak progress anak secara masa nyata — termasuk topik yang lemah — dan terima laporan mingguan automatik melalui email."
+            />
             <PromoCard
               icon={BookOpen}
               title="32,000+ Soalan KSSR"
