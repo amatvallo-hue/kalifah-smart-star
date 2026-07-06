@@ -150,6 +150,11 @@ function CikguAffiliateLanding() {
           </div>
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             <PromoCard
+              icon={LayoutDashboard}
+              title="Dashboard Pantauan Ibu Bapa"
+              body="Ibu bapa nampak progress anak secara masa nyata — termasuk topik yang lemah — dan terima laporan mingguan automatik melalui email."
+            />
+            <PromoCard
               icon={BookOpen}
               title="32,000+ Soalan KSSR"
               body="Bank soalan lengkap mengikut sukatan Darjah 1–6."
