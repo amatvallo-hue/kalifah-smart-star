@@ -5,7 +5,6 @@ import {
   Wallet,
   Share2,
   UserPlus,
-  ClipboardCheck,
   ShieldCheck,
   Clock,
   BarChart3,
