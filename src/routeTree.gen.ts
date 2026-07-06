@@ -16,6 +16,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as LatihanRouteImport } from './routes/latihan'
 import { Route as HargaRouteImport } from './routes/harga'
 import { Route as DaftarRouteImport } from './routes/daftar'
+import { Route as CikguAffiliateRouteImport } from './routes/cikgu-affiliate'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PreviewNamaRouteImport } from './routes/preview.nama'
@@ -77,6 +78,11 @@ const HargaRoute = HargaRouteImport.update({
 const DaftarRoute = DaftarRouteImport.update({
   id: '/daftar',
   path: '/daftar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CikguAffiliateRoute = CikguAffiliateRouteImport.update({
+  id: '/cikgu-affiliate',
+  path: '/cikgu-affiliate',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRoute = AdminRouteImport.update({
@@ -226,6 +232,7 @@ const ApiPublicToyyibpayCallbackRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/cikgu-affiliate': typeof CikguAffiliateRoute
   '/daftar': typeof DaftarRoute
   '/harga': typeof HargaRoute
   '/latihan': typeof LatihanRoute
@@ -262,6 +269,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/cikgu-affiliate': typeof CikguAffiliateRoute
   '/daftar': typeof DaftarRoute
   '/harga': typeof HargaRoute
   '/latihan': typeof LatihanRoute
@@ -299,6 +307,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/cikgu-affiliate': typeof CikguAffiliateRoute
   '/daftar': typeof DaftarRoute
   '/harga': typeof HargaRoute
   '/latihan': typeof LatihanRoute
@@ -337,6 +346,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/admin'
+    | '/cikgu-affiliate'
     | '/daftar'
     | '/harga'
     | '/latihan'
@@ -373,6 +383,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/admin'
+    | '/cikgu-affiliate'
     | '/daftar'
     | '/harga'
     | '/latihan'
@@ -409,6 +420,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/admin'
+    | '/cikgu-affiliate'
     | '/daftar'
     | '/harga'
     | '/latihan'
@@ -446,6 +458,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
+  CikguAffiliateRoute: typeof CikguAffiliateRoute
   DaftarRoute: typeof DaftarRoute
   HargaRoute: typeof HargaRoute
   LatihanRoute: typeof LatihanRoute
@@ -529,6 +542,13 @@ declare module '@tanstack/react-router' {
       path: '/daftar'
       fullPath: '/daftar'
       preLoaderRoute: typeof DaftarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cikgu-affiliate': {
+      id: '/cikgu-affiliate'
+      path: '/cikgu-affiliate'
+      fullPath: '/cikgu-affiliate'
+      preLoaderRoute: typeof CikguAffiliateRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -726,6 +746,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
+  CikguAffiliateRoute: CikguAffiliateRoute,
   DaftarRoute: DaftarRoute,
   HargaRoute: HargaRoute,
   LatihanRoute: LatihanRoute,
