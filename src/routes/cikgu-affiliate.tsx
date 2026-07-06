@@ -360,5 +360,3 @@ function InfoCard({
   );
 }
 
-// unused import shim to keep ClipboardCheck available if referenced later
-void ClipboardCheck;
