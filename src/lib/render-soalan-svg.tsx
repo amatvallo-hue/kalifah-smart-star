@@ -73,6 +73,12 @@ export function renderSoalanSvg(
     if (svg_type === "carta_gambar") return <CartaGambarMudah {...p} bahasa={bahasa} />;
     if (svg_type === "senarai_harga") return <SenaraiHarga {...p} bahasa={bahasa} />;
     if (svg_type === "bentuk2d_koleksi") return <KoleksiBentuk2D {...p} bahasa={bahasa} />;
+    if (svg_type === "bentuk3d_koleksi") return <KoleksiBentuk3D {...p} bahasa={bahasa} />;
+    if (svg_type === "kalendar") return <Kalendar {...p} bahasa={bahasa} />;
+    if (svg_type === "grid_kedudukan") return <GridKedudukan {...p} />;
+    if (svg_type === "grafpai") return <GrafPai {...p} />;
+    if (svg_type === "piktograf") return <Piktograf {...p} />;
+    if (svg_type === "grafbar") return <GrafBar {...p} />;
   } catch {
     return null;
   }
