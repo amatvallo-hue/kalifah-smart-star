@@ -8,7 +8,7 @@ const FILL = "#BFDBFE";
 const STROKE = "#374151";
 
 export function PecahanDiagram({ shape, total, shaded }: Props) {
-  const t = Math.max(2, Math.min(4, Math.floor(total)));
+  const t = Math.max(2, Math.min(10, Math.floor(total)));
   const s = Math.max(0, Math.min(t, Math.floor(shaded)));
 
   const cx = 140;
@@ -38,21 +38,26 @@ export function PecahanDiagram({ shape, total, shaded }: Props) {
     );
   }
 
-  // segiempat: vertical strips
-  const w = 200;
+  // segiempat: strips; use 2 rows when >4 to keep cells wide enough
+  const w = 220;
   const h = 120;
   const x0 = cx - w / 2;
   const y0 = cy - h / 2;
-  const stripW = w / t;
+  const rows = t > 4 ? 2 : 1;
+  const cols = Math.ceil(t / rows);
+  const cellW = w / cols;
+  const cellH = h / rows;
   const strips = [];
   for (let i = 0; i < t; i++) {
+    const rr = Math.floor(i / cols);
+    const cc = i % cols;
     strips.push(
       <rect
         key={i}
-        x={x0 + i * stripW}
-        y={y0}
-        width={stripW}
-        height={h}
+        x={x0 + cc * cellW}
+        y={y0 + rr * cellH}
+        width={cellW}
+        height={cellH}
         fill={i < s ? FILL : "#FFFFFF"}
         stroke={STROKE}
         strokeWidth={2}

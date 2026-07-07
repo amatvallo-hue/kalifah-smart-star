@@ -1,9 +1,9 @@
-import { Bentuk2D } from "./Bentuk2D";
+import { Bentuk3D } from "./Bentuk3D";
 
-type Shape2D = "segitiga" | "bulatan" | "segiempat_sama" | "segiempat_tepat" | "pentagon" | "heksagon";
+type Shape3D = "sfera" | "kubus" | "kuboid" | "silinder" | "kon" | "piramid";
 
 interface Item {
-  shape: Shape2D;
+  shape: Shape3D;
   bilangan: number;
 }
 
@@ -12,25 +12,25 @@ interface Props {
   bahasa?: "bm" | "en";
 }
 
-const LABELS_BM: Record<Shape2D, string> = {
-  segitiga: "Segitiga",
-  bulatan: "Bulatan",
-  segiempat_sama: "Segiempat Sama",
-  segiempat_tepat: "Segiempat Tepat",
-  pentagon: "Pentagon",
-  heksagon: "Heksagon",
+const LABELS_BM: Record<Shape3D, string> = {
+  sfera: "Sfera",
+  kubus: "Kubus",
+  kuboid: "Kuboid",
+  silinder: "Silinder",
+  kon: "Kon",
+  piramid: "Piramid",
 };
 
-const LABELS_EN: Record<Shape2D, string> = {
-  segitiga: "Triangle",
-  bulatan: "Circle",
-  segiempat_sama: "Square",
-  segiempat_tepat: "Rectangle",
-  pentagon: "Pentagon",
-  heksagon: "Hexagon",
+const LABELS_EN: Record<Shape3D, string> = {
+  sfera: "Sphere",
+  kubus: "Cube",
+  kuboid: "Cuboid",
+  silinder: "Cylinder",
+  kon: "Cone",
+  piramid: "Pyramid",
 };
 
-export function KoleksiBentuk2D({ items, bahasa = "bm" }: Props) {
+export function KoleksiBentuk3D({ items, bahasa = "bm" }: Props) {
   const list = Array.isArray(items) ? items : [];
   const LABELS = bahasa === "en" ? LABELS_EN : LABELS_BM;
 
@@ -82,7 +82,7 @@ export function KoleksiBentuk2D({ items, bahasa = "bm" }: Props) {
                 justifyContent: "center",
               }}
             >
-              <Bentuk2D shape={it.shape} />
+              <Bentuk3D shape={it.shape} />
             </div>
           </div>
           <div
