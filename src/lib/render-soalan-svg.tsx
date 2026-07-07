@@ -38,6 +38,8 @@ import { RajahJarak } from "@/components/svg/RajahJarak";
 import { RajahGaris } from "@/components/svg/RajahGaris";
 import { RajahSudut } from "@/components/svg/RajahSudut";
 import { GridKoordinat } from "@/components/svg/GridKoordinat";
+import { Protraktor } from "@/components/svg/Protraktor";
+import { JadualWaktu } from "@/components/svg/JadualWaktu";
 
 
 
