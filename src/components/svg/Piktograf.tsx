@@ -26,6 +26,7 @@ export function Piktograf({ items, setiapSimbol, ikon = "📦" }: Props) {
         background: "#F8FAFC",
         borderRadius: 12,
         maxWidth: 420,
+        minWidth: 0,
         fontFamily: "sans-serif",
         color: "#1F2937",
       }}
@@ -63,9 +64,9 @@ export function Piktograf({ items, setiapSimbol, ikon = "📦" }: Props) {
           );
         }
         return (
-          <div key={i} style={{ display: "grid", gridTemplateColumns: "90px 1fr 40px", alignItems: "center", gap: 8 }}>
+          <div key={i} style={{ display: "grid", gridTemplateColumns: "90px 1fr 40px", alignItems: "center", gap: 8, minWidth: 0 }}>
             <div style={{ fontWeight: 700, fontSize: 13 }}>{it.nama}</div>
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 4, maxWidth: maxPerRow * 26 }}>{icons}</div>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 4, maxWidth: maxPerRow * 26, minWidth: 0 }}>{icons}</div>
             <div style={{ fontWeight: 700, fontSize: 13, textAlign: "right" }}>{nilai}</div>
           </div>
         );

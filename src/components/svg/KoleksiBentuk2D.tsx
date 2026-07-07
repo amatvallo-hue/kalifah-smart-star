@@ -45,6 +45,7 @@ export function KoleksiBentuk2D({ items, bahasa = "bm" }: Props) {
         background: "#F8FAFC",
         borderRadius: 12,
         maxWidth: 360,
+        minWidth: 0,
       }}
     >
       {list.map((it, i) => (
@@ -60,6 +61,7 @@ export function KoleksiBentuk2D({ items, bahasa = "bm" }: Props) {
             borderRadius: 8,
             border: "1px solid #E5E7EB",
             position: "relative",
+            minWidth: 0,
           }}
         >
           <div
