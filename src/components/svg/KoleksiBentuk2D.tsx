@@ -1,6 +1,6 @@
 import { Bentuk2D } from "./Bentuk2D";
 
-type Shape2D = "segitiga" | "bulatan" | "segiempat_sama" | "segiempat_tepat";
+type Shape2D = "segitiga" | "bulatan" | "segiempat_sama" | "segiempat_tepat" | "pentagon" | "heksagon";
 
 interface Item {
   shape: Shape2D;
@@ -17,6 +17,8 @@ const LABELS_BM: Record<Shape2D, string> = {
   bulatan: "Bulatan",
   segiempat_sama: "Segiempat Sama",
   segiempat_tepat: "Segiempat Tepat",
+  pentagon: "Pentagon",
+  heksagon: "Heksagon",
 };
 
 const LABELS_EN: Record<Shape2D, string> = {
@@ -24,6 +26,8 @@ const LABELS_EN: Record<Shape2D, string> = {
   bulatan: "Circle",
   segiempat_sama: "Square",
   segiempat_tepat: "Rectangle",
+  pentagon: "Pentagon",
+  heksagon: "Hexagon",
 };
 
 export function KoleksiBentuk2D({ items, bahasa = "bm" }: Props) {

@@ -27,6 +27,14 @@ import { KiraObjek } from "@/components/svg/KiraObjek";
 import { CartaGambarMudah } from "@/components/svg/CartaGambarMudah";
 import { SenaraiHarga } from "@/components/svg/SenaraiHarga";
 import { KoleksiBentuk2D } from "@/components/svg/KoleksiBentuk2D";
+import { KoleksiBentuk3D } from "@/components/svg/KoleksiBentuk3D";
+import { Kalendar } from "@/components/svg/Kalendar";
+import { GridKedudukan } from "@/components/svg/GridKedudukan";
+import { GrafPai } from "@/components/svg/GrafPai";
+import { Piktograf } from "@/components/svg/Piktograf";
+import { GrafBar } from "@/components/svg/GrafBar";
+
+
 
 export function renderSoalanSvg(
   svg_type: string | null | undefined,
