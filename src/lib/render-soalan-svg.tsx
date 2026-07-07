@@ -38,6 +38,8 @@ import { RajahJarak } from "@/components/svg/RajahJarak";
 import { RajahGaris } from "@/components/svg/RajahGaris";
 import { RajahSudut } from "@/components/svg/RajahSudut";
 import { GridKoordinat } from "@/components/svg/GridKoordinat";
+import { Protraktor } from "@/components/svg/Protraktor";
+import { JadualWaktu } from "@/components/svg/JadualWaktu";
 
 
 
@@ -89,6 +91,9 @@ export function renderSoalanSvg(
     if (svg_type === "rajah_garis") return <RajahGaris {...p} />;
     if (svg_type === "rajah_sudut") return <RajahSudut {...p} />;
     if (svg_type === "koordinat") return <GridKoordinat {...p} />;
+    if (svg_type === "protraktor") return <Protraktor {...p} />;
+    if (svg_type === "jadual_waktu") return <JadualWaktu {...p} bahasa={bahasa} />;
+    if (svg_type === "sudut_garis_lurus") return <SudutGaris mode="garis_lurus" {...p} />;
   } catch {
     return null;
   }
