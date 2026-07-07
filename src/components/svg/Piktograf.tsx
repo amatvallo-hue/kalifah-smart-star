@@ -26,6 +26,7 @@ export function Piktograf({ items, setiapSimbol, ikon = "📦" }: Props) {
         background: "#F8FAFC",
         borderRadius: 12,
         maxWidth: 420,
+        minWidth: 0,
         fontFamily: "sans-serif",
         color: "#1F2937",
       }}
