@@ -33,6 +33,11 @@ import { GridKedudukan } from "@/components/svg/GridKedudukan";
 import { GrafPai } from "@/components/svg/GrafPai";
 import { Piktograf } from "@/components/svg/Piktograf";
 import { GrafBar } from "@/components/svg/GrafBar";
+import { JamMulaTamat } from "@/components/svg/JamMulaTamat";
+import { RajahJarak } from "@/components/svg/RajahJarak";
+import { RajahGaris } from "@/components/svg/RajahGaris";
+import { RajahSudut } from "@/components/svg/RajahSudut";
+import { GridKoordinat } from "@/components/svg/GridKoordinat";
 
 
 
