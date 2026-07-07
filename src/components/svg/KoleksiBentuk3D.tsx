@@ -44,6 +44,7 @@ export function KoleksiBentuk3D({ items, bahasa = "bm" }: Props) {
         background: "#F8FAFC",
         borderRadius: 12,
         maxWidth: 360,
+        minWidth: 0,
       }}
     >
       {list.map((it, i) => (
