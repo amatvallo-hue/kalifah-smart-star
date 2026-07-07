@@ -11,7 +11,7 @@ interface Props {
 }
 
 const AXIS = "#374151";
-const GRID = "#E5E7EB";
+const GRID = "#94A3B8";
 const DOT = "#3B82F6";
 
 export function GridKoordinat({ saizX, saizY, items }: Props) {
@@ -33,6 +33,9 @@ export function GridKoordinat({ saizX, saizY, items }: Props) {
   const originY = marginT + plotH;
 
   const gridLines: React.ReactNode[] = [];
+  gridLines.push(
+    <rect key="bg" x={originX} y={marginT} width={plotW} height={plotH} fill="#F0F9FF" stroke="#BFDBFE" strokeWidth={1} />
+  );
   for (let i = 0; i <= nX; i++) {
     const x = originX + i * cellW;
     gridLines.push(
@@ -57,14 +60,14 @@ export function GridKoordinat({ saizX, saizY, items }: Props) {
     const cy = originY - it.y * cellH;
     return (
       <g key={i}>
-        <circle cx={cx} cy={cy} r={5} fill={DOT} stroke={AXIS} strokeWidth={1.5} />
+        <circle cx={cx} cy={cy} r={7} fill={DOT} stroke={AXIS} strokeWidth={2} />
         <text x={cx + 8} y={cy - 8} fontSize={12} fontWeight={700} fill={AXIS} fontFamily="sans-serif">{it.label}</text>
       </g>
     );
   });
 
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} width={Math.min(W, 380)} xmlns="http://www.w3.org/2000/svg" style={{ background: "transparent", maxWidth: "100%" }}>
+    <svg viewBox={`0 0 ${W} ${H}`} width={Math.min(W, 380)} height={Math.min(H, 380)} xmlns="http://www.w3.org/2000/svg" style={{ background: "transparent", maxWidth: "100%" }}>
       {gridLines}
       {/* axes */}
       <line x1={originX} y1={marginT} x2={originX} y2={originY} stroke={AXIS} strokeWidth={2} />
