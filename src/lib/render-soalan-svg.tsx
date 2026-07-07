@@ -40,6 +40,9 @@ import { RajahSudut } from "@/components/svg/RajahSudut";
 import { GridKoordinat } from "@/components/svg/GridKoordinat";
 import { Protraktor } from "@/components/svg/Protraktor";
 import { JadualWaktu } from "@/components/svg/JadualWaktu";
+import { KadMaklumat } from "@/components/svg/KadMaklumat";
+import { JamZonMasa } from "@/components/svg/JamZonMasa";
+import { Bulatan } from "@/components/svg/Bulatan";
 
 
 
@@ -94,6 +97,9 @@ export function renderSoalanSvg(
     if (svg_type === "protraktor") return <Protraktor {...p} />;
     if (svg_type === "jadual_waktu") return <JadualWaktu {...p} bahasa={bahasa} />;
     if (svg_type === "sudut_garis_lurus") return <SudutGaris mode="garis_lurus" {...p} />;
+    if (svg_type === "kad_maklumat") return <KadMaklumat {...p} />;
+    if (svg_type === "jam_zon_masa") return <JamZonMasa {...p} />;
+    if (svg_type === "bulatan") return <Bulatan {...p} />;
   } catch {
     return null;
   }
