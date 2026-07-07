@@ -1,7 +1,9 @@
 interface Props {
-  mode: "sudut" | "garis";
+  mode: "sudut" | "garis" | "garis_lurus";
   darjah?: number;
   jenisGaris?: "selari" | "serenjang";
+  a?: number;
+  jumlah?: number;
 }
 
 const STROKE = "#374151";
