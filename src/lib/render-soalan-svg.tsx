@@ -91,6 +91,9 @@ export function renderSoalanSvg(
     if (svg_type === "rajah_garis") return <RajahGaris {...p} />;
     if (svg_type === "rajah_sudut") return <RajahSudut {...p} />;
     if (svg_type === "koordinat") return <GridKoordinat {...p} />;
+    if (svg_type === "protraktor") return <Protraktor {...p} />;
+    if (svg_type === "jadual_waktu") return <JadualWaktu {...p} bahasa={bahasa} />;
+    if (svg_type === "sudut_garis_lurus") return <SudutGaris mode="garis_lurus" {...p} />;
   } catch {
     return null;
   }
