@@ -111,7 +111,9 @@ export function KoleksiBentuk2D({ items, bahasa = "bm" }: Props) {
               fontFamily: "sans-serif",
             }}
           >
-            ×{Math.max(0, it.bilangan || 0)}
+            {it.paksiSimetri !== undefined && (it.bilangan === undefined || it.bilangan === 0)
+              ? `${it.paksiSimetri} ${bahasa === "en" ? "axes" : "paksi"}`
+              : `×${Math.max(0, it.bilangan || 0)}`}
           </div>
         </div>
       ))}
