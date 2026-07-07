@@ -84,6 +84,11 @@ export function renderSoalanSvg(
     if (svg_type === "grafpai") return <GrafPai {...p} />;
     if (svg_type === "piktograf") return <Piktograf {...p} />;
     if (svg_type === "grafbar") return <GrafBar {...p} />;
+    if (svg_type === "jam_mula_tamat") return <JamMulaTamat {...p} bahasa={bahasa} />;
+    if (svg_type === "rajah_jarak") return <RajahJarak {...p} />;
+    if (svg_type === "rajah_garis") return <RajahGaris {...p} />;
+    if (svg_type === "rajah_sudut") return <RajahSudut {...p} />;
+    if (svg_type === "koordinat") return <GridKoordinat {...p} />;
   } catch {
     return null;
   }
