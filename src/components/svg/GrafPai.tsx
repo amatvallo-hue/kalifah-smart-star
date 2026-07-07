@@ -44,11 +44,13 @@ export function GrafPai({ items, mod, jumlah }: Props) {
   }
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 10, maxWidth: 360 }}>
-      <svg viewBox="0 0 220 220" width="220" height="220" xmlns="http://www.w3.org/2000/svg" style={{ background: "transparent" }}>
-        {slices}
-      </svg>
-      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "4px 12px", fontFamily: "sans-serif", fontSize: 13, color: "#1F2937" }}>
+    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 10, maxWidth: 360, minWidth: 0 }}>
+      <div style={{ width: 220, height: 220, flexShrink: 0 }}>
+        <svg viewBox="0 0 220 220" width="220" height="220" xmlns="http://www.w3.org/2000/svg" style={{ background: "transparent" }}>
+          {slices}
+        </svg>
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "4px 12px", fontFamily: "sans-serif", fontSize: 13, color: "#1F2937", minWidth: 0 }}>
         {list.map((it, i) => {
           const label =
             mod === "peratus"
