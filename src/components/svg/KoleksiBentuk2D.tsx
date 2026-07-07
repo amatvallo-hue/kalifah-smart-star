@@ -4,7 +4,8 @@ type Shape2D = "segitiga" | "bulatan" | "segiempat_sama" | "segiempat_tepat" | "
 
 interface Item {
   shape: Shape2D;
-  bilangan: number;
+  bilangan?: number;
+  paksiSimetri?: number;
 }
 
 interface Props {
@@ -82,7 +83,7 @@ export function KoleksiBentuk2D({ items, bahasa = "bm" }: Props) {
                 justifyContent: "center",
               }}
             >
-              <Bentuk2D shape={it.shape} />
+              <Bentuk2D shape={it.shape} paksiSimetri={it.paksiSimetri} />
             </div>
           </div>
           <div
