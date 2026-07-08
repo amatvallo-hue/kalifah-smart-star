@@ -184,7 +184,8 @@ export function CariPerkataan({
   }, [round, useSet2, pickBank, wordsProp, cluesProp]);
   const words = bank.words;
   const clues = bank.clues;
-  const grid = useMemo(() => buildGrid(words, gridSize), [words, gridSize]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const grid = useMemo(() => buildGrid(words, gridSize), [words, gridSize, round]);
   const [first, setFirst] = useState<Cell | null>(null);
   const [found, setFound] = useState<Record<string, Cell[]>>({});
   const [flash, setFlash] = useState<null | "ok" | "no">(null);
