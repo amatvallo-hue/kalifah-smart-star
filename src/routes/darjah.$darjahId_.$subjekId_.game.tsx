@@ -919,25 +919,25 @@ function GameSubjekPage() {
           ) : isMate4 ? (
             <CariPerkataan words={MATE_DARJAH4_WORDS} clues={MATE_DARJAH4_CLUES} gridSize={10} title="Cari Perkataan Matematik" />
           ) : isBI4 ? (
-            <CariPerkataan words={BI_DARJAH4_WORDS} clues={BI_DARJAH4_CLUES} gridSize={10} title="Word Search" />
+            <CariPerkataan words={BI_DARJAH4_WORDS} clues={BI_DARJAH4_CLUES} gridSize={12} title="Word Search" />
           ) : isJawi4 ? (
             <CariPerkataan words={JAWI_DARJAH4_WORDS} clues={JAWI_DARJAH4_CLUES} gridSize={10} title="Cari Perkataan Jawi" />
           ) : isPI4 ? (
             <CariPerkataan words={PI_DARJAH4_WORDS} clues={PI_DARJAH4_CLUES} gridSize={10} title="Cari Perkataan Pendidikan Islam" />
           ) : isSains4 ? (
-            <CariPerkataan words={SAINS_DARJAH4_WORDS} clues={SAINS_DARJAH4_CLUES} gridSize={10} title="Cari Perkataan Sains" />
+            <CariPerkataan words={SAINS_DARJAH4_WORDS} clues={SAINS_DARJAH4_CLUES} gridSize={12} title="Cari Perkataan Sains" />
           ) : isBM5 ? (
             <CariPerkataan words={BM_DARJAH5_WORDS} clues={BM_DARJAH5_CLUES} gridSize={10} title="Cari Perkataan Bahasa Melayu" />
           ) : isMate5 ? (
-            <CariPerkataan words={MATE_DARJAH5_WORDS} clues={MATE_DARJAH5_CLUES} gridSize={10} title="Cari Perkataan Matematik" />
+            <CariPerkataan words={MATE_DARJAH5_WORDS} clues={MATE_DARJAH5_CLUES} gridSize={13} title="Cari Perkataan Matematik" />
           ) : isBI5 ? (
-            <CariPerkataan words={BI_DARJAH5_WORDS} clues={BI_DARJAH5_CLUES} gridSize={10} title="Word Search" />
+            <CariPerkataan words={BI_DARJAH5_WORDS} clues={BI_DARJAH5_CLUES} gridSize={14} title="Word Search" />
           ) : isJawi5 ? (
             <CariPerkataan words={JAWI_DARJAH5_WORDS} clues={JAWI_DARJAH5_CLUES} gridSize={10} title="Cari Perkataan Jawi" />
           ) : isPI5 ? (
             <CariPerkataan words={PI_DARJAH5_WORDS} clues={PI_DARJAH5_CLUES} gridSize={10} title="Cari Perkataan Pendidikan Islam" />
           ) : isSains5 ? (
-            <CariPerkataan words={SAINS_DARJAH5_WORDS} clues={SAINS_DARJAH5_CLUES} gridSize={10} title="Cari Perkataan Sains" />
+            <CariPerkataan words={SAINS_DARJAH5_WORDS} clues={SAINS_DARJAH5_CLUES} gridSize={14} title="Cari Perkataan Sains" />
           ) : isBM6 ? (
             <CariPerkataan words={BM_DARJAH6_WORDS} clues={BM_DARJAH6_CLUES} gridSize={15} title="Cari Perkataan Bahasa Melayu" />
           ) : isMate6 ? (
