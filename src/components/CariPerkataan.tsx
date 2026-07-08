@@ -69,12 +69,10 @@ function buildGrid(words: Word[], size: number): string[][] {
     }
   }
   const filler = "BCDFHJKNPQRSWYZ";
-  let seed = 7;
   for (let r = 0; r < size; r++) {
     for (let c = 0; c < size; c++) {
       if (!grid[r][c]) {
-        seed = (seed * 9301 + 49297) % 233280;
-        grid[r][c] = filler[seed % filler.length];
+        grid[r][c] = filler[Math.floor(Math.random() * filler.length)];
       }
     }
   }
