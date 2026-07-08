@@ -464,8 +464,8 @@ const PI_DARJAH1_WORDS_S1: Word[] = [
   { word: "ASAR", row: 8, col: 0, dir: "H" },
   { word: "MAGHRIB", row: 0, col: 6, dir: "V" },
   { word: "ISYAK", row: 0, col: 8, dir: "V" },
-  { word: "IMAN", row: 1, col: 3, dir: "V" },
-  { word: "DOA", row: 2, col: 5, dir: "V" },
+  { word: "IMAN", row: 1, col: 5, dir: "V" },
+  { word: "DOA", row: 2, col: 7, dir: "V" },
   { word: "QURAN", row: 3, col: 9, dir: "V" },
 ];
 const PI_DARJAH1_CLUES_S1: Record<string, string> = {
@@ -618,8 +618,8 @@ export const BM_DARJAH2_WORDS: Word[] = [
   // Mendatar
   { word: "RAJIN", row: 0, col: 0, dir: "H" },
   { word: "MALAS", row: 2, col: 0, dir: "H" },
-  { word: "CANTIK", row: 4, col: 0, dir: "H" },
-  { word: "GEMBIRA", row: 6, col: 0, dir: "H" },
+  { word: "CANTIK", row: 6, col: 0, dir: "H" },
+  { word: "GEMBIRA", row: 7, col: 0, dir: "H" },
   { word: "BERLARI", row: 8, col: 0, dir: "H" },
 ];
 
@@ -645,9 +645,9 @@ export const MATE_DARJAH2_WORDS: Word[] = [
   { word: "BAHAGI", row: 6, col: 0, dir: "H" },
   { word: "NOMBOR", row: 8, col: 0, dir: "H" },
   // Menegak
-  { word: "NILAI", row: 0, col: 5, dir: "V" },
+  { word: "NILAI", row: 0, col: 6, dir: "V" },
   { word: "SIFIR", row: 0, col: 7, dir: "V" },
-  { word: "DIGIT", row: 1, col: 3, dir: "V" },
+  { word: "DIGIT", row: 1, col: 5, dir: "V" },
   { word: "PULUH", row: 2, col: 8, dir: "V" },
   { word: "RATUS", row: 3, col: 9, dir: "V" },
 ];
@@ -988,7 +988,7 @@ export const BI_DARJAH4_WORDS: Word[] = [
   { word: "FURIOUS", row: 0, col: 8, dir: "V" },
   { word: "BUZZING", row: 0, col: 7, dir: "V" },
   { word: "SINGING", row: 3, col: 6, dir: "V" },
-  { word: "COMPOUND", row: 1, col: 9, dir: "V" },
+  { word: "COMPOUND", row: 1, col: 10, dir: "V" },
 ];
 export const BI_DARJAH4_CLUES: Record<string, string> = {
   PRONOUN: "Replaces a noun",
@@ -1040,7 +1040,7 @@ export const PI_DARJAH4_WORDS: Word[] = [
   { word: "UKHUWAH", row: 0, col: 8, dir: "V" },
   { word: "TAWADUK", row: 0, col: 7, dir: "V" },
   { word: "SIRAH", row: 0, col: 6, dir: "V" },
-  { word: "SOLAT", row: 5, col: 5, dir: "V" },
+  { word: "SOLAT", row: 5, col: 6, dir: "V" },
 ];
 export const PI_DARJAH4_CLUES: Record<string, string> = {
   AKHLAK: "Budi pekerti",
@@ -1065,7 +1065,7 @@ export const SAINS_DARJAH4_WORDS: Word[] = [
   { word: "PENCEMARAN", row: 0, col: 9, dir: "V" },
   { word: "EKOSISTEM", row: 0, col: 8, dir: "V" },
   { word: "KINETIK", row: 0, col: 7, dir: "V" },
-  { word: "SEMULA", row: 0, col: 6, dir: "V" },
+  { word: "SEMULA", row: 0, col: 10, dir: "V" },
   { word: "KITAR", row: 5, col: 5, dir: "V" },
 ];
 export const SAINS_DARJAH4_CLUES: Record<string, string> = {
@@ -1090,9 +1090,9 @@ export const BM_DARJAH5_WORDS: Word[] = [
   { word: "WATAK", row: 8, col: 0, dir: "H" },
   { word: "LATAR", row: 0, col: 9, dir: "V" },
   { word: "SUDUT", row: 0, col: 7, dir: "V" },
-  { word: "IMBUHAN", row: 0, col: 5, dir: "V" },
-  { word: "BAHASA", row: 0, col: 3, dir: "V" },
-  { word: "PROSA", row: 5, col: 1, dir: "V" },
+  { word: "IMBUHAN", row: 0, col: 6, dir: "V" },
+  { word: "BAHASA", row: 0, col: 8, dir: "V" },
+  { word: "PROSA", row: 5, col: 5, dir: "V" },
 ];
 export const BM_DARJAH5_CLUES: Record<string, string> = {
   NOVEL: "Karya prosa panjang berbentuk naratif",
@@ -1116,9 +1116,9 @@ export const MATE_DARJAH5_WORDS: Word[] = [
   { word: "JEJARI", row: 8, col: 0, dir: "H" },
   { word: "PECAHAN", row: 0, col: 9, dir: "V" },
   { word: "PERPULUHAN", row: 0, col: 7, dir: "V" },
-  { word: "DIAMETER", row: 0, col: 5, dir: "V" },
-  { word: "PERIMETER", row: 0, col: 3, dir: "V" },
-  { word: "LUAS", row: 5, col: 1, dir: "V" },
+  { word: "DIAMETER", row: 0, col: 8, dir: "V" },
+  { word: "PERIMETER", row: 0, col: 10, dir: "V" },
+  { word: "LUAS", row: 9, col: 1, dir: "V" },
 ];
 export const MATE_DARJAH5_CLUES: Record<string, string> = {
   PERDANA: "Nombor yang hanya boleh dibahagi 1 dan dirinya",
@@ -1142,9 +1142,9 @@ export const BI_DARJAH5_WORDS: Word[] = [
   { word: "PERFECT", row: 8, col: 0, dir: "H" },
   { word: "CONDITIONAL", row: 0, col: 9, dir: "V" },
   { word: "CLAUSE", row: 0, col: 7, dir: "V" },
-  { word: "SPEECH", row: 0, col: 5, dir: "V" },
-  { word: "SUBJECT", row: 0, col: 3, dir: "V" },
-  { word: "AGREEMENT", row: 5, col: 1, dir: "V" },
+  { word: "SPEECH", row: 0, col: 8, dir: "V" },
+  { word: "SUBJECT", row: 0, col: 10, dir: "V" },
+  { word: "AGREEMENT", row: 5, col: 11, dir: "V" },
 ];
 export const BI_DARJAH5_CLUES: Record<string, string> = {
   PASSIVE: "Subject receives the action",
@@ -1169,8 +1169,8 @@ export const JAWI_DARJAH5_WORDS: Word[] = [
   { word: "TULISAN", row: 0, col: 9, dir: "V" },
   { word: "KHAT", row: 0, col: 7, dir: "V" },
   { word: "ARAB", row: 0, col: 5, dir: "V" },
-  { word: "BUDAYA", row: 0, col: 3, dir: "V" },
-  { word: "WARISAN", row: 5, col: 1, dir: "V" },
+  { word: "BUDAYA", row: 0, col: 6, dir: "V" },
+  { word: "WARISAN", row: 3, col: 8, dir: "V" },
 ];
 export const JAWI_DARJAH5_CLUES: Record<string, string> = {
   JAWI: "Tulisan kita",
@@ -1194,9 +1194,9 @@ export const PI_DARJAH5_WORDS: Word[] = [
   { word: "HIJRAH", row: 8, col: 0, dir: "H" },
   { word: "MUAMALAT", row: 0, col: 9, dir: "V" },
   { word: "FARDU", row: 0, col: 7, dir: "V" },
-  { word: "IBADAT", row: 0, col: 5, dir: "V" },
-  { word: "SIRAH", row: 0, col: 3, dir: "V" },
-  { word: "DAKWAH", row: 5, col: 1, dir: "V" },
+  { word: "IBADAT", row: 0, col: 8, dir: "V" },
+  { word: "SIRAH", row: 1, col: 4, dir: "V" },
+  { word: "DAKWAH", row: 4, col: 6, dir: "V" },
 ];
 export const PI_DARJAH5_CLUES: Record<string, string> = {
   AQIDAH: "Kepercayaan dan keyakinan dalam Islam",
@@ -1220,9 +1220,9 @@ export const SAINS_DARJAH5_WORDS: Word[] = [
   { word: "BIODIVERSITI", row: 8, col: 0, dir: "H" },
   { word: "DNA", row: 0, col: 9, dir: "V" },
   { word: "KROMOSOM", row: 0, col: 7, dir: "V" },
-  { word: "EKOSISTEM", row: 0, col: 5, dir: "V" },
-  { word: "GEOTERMA", row: 0, col: 3, dir: "V" },
-  { word: "SPESIES", row: 5, col: 1, dir: "V" },
+  { word: "EKOSISTEM", row: 3, col: 8, dir: "V" },
+  { word: "GEOTERMA", row: 0, col: 10, dir: "V" },
+  { word: "SPESIES", row: 4, col: 9, dir: "V" },
 ];
 export const SAINS_DARJAH5_CLUES: Record<string, string> = {
   EKOLOGI: "Kajian hubungan organisma dengan persekitaran",
@@ -1275,7 +1275,7 @@ export const MATE_DARJAH6_WORDS: Word[] = [
   { word: "KEBOLEHAN", row: 0, col: 8, dir: "V" },
   { word: "PECAHAN", row: 1, col: 6, dir: "V" },
   { word: "ISIPADU", row: 1, col: 7, dir: "V" },
-  { word: "MIN", row: 1, col: 5, dir: "V" },
+  { word: "MIN", row: 5, col: 5, dir: "V" },
 ];
 export const MATE_DARJAH6_CLUES: Record<string, string> = {
   NISBAH: "Bahagikan mengikut nisbah",
@@ -1298,10 +1298,10 @@ export const BI_DARJAH6_WORDS: Word[] = [
   { word: "ACTIVE", row: 6, col: 0, dir: "H" },
   { word: "PASSIVE", row: 8, col: 0, dir: "H" },
   { word: "EXPOSITORY", row: 0, col: 9, dir: "V" },
-  { word: "CITATION", row: 0, col: 8, dir: "V" },
-  { word: "RHETORICAL", row: 0, col: 7, dir: "V" },
-  { word: "TRANSITION", row: 0, col: 6, dir: "V" },
-  { word: "CLAUSE", row: 0, col: 5, dir: "V" },
+  { word: "CITATION", row: 1, col: 8, dir: "V" },
+  { word: "RHETORICAL", row: 1, col: 7, dir: "V" },
+  { word: "TRANSITION", row: 0, col: 10, dir: "V" },
+  { word: "CLAUSE", row: 1, col: 6, dir: "V" },
 ];
 export const BI_DARJAH6_CLUES: Record<string, string> = {
   NARRATIVE: "Telling a story",
@@ -1326,8 +1326,8 @@ export const JAWI_DARJAH6_WORDS: Word[] = [
   { word: "TULISAN", row: 0, col: 9, dir: "V" },
   { word: "KHAT", row: 0, col: 8, dir: "V" },
   { word: "ARAB", row: 0, col: 7, dir: "V" },
-  { word: "BAHASA", row: 0, col: 6, dir: "V" },
-  { word: "SEJARAH", row: 0, col: 5, dir: "V" },
+  { word: "BAHASA", row: 0, col: 10, dir: "V" },
+  { word: "SEJARAH", row: 0, col: 11, dir: "V" },
 ];
 export const JAWI_DARJAH6_CLUES: Record<string, string> = {
   JAWI: "Tulisan kita",
@@ -1353,7 +1353,7 @@ export const PI_DARJAH6_WORDS: Word[] = [
   { word: "AQIDAH", row: 0, col: 8, dir: "V" },
   { word: "IKHLAS", row: 0, col: 7, dir: "V" },
   { word: "AMANAH", row: 0, col: 6, dir: "V" },
-  { word: "TAWADUK", row: 0, col: 5, dir: "V" },
+  { word: "TAWADUK", row: 0, col: 10, dir: "V" },
 ];
 export const PI_DARJAH6_CLUES: Record<string, string> = {
   TAUHID: "Mengesakan Allah",
@@ -1378,8 +1378,8 @@ export const SAINS_DARJAH6_WORDS: Word[] = [
   { word: "SELEKSI", row: 0, col: 9, dir: "V" },
   { word: "SPESIES", row: 0, col: 8, dir: "V" },
   { word: "KARBON", row: 0, col: 7, dir: "V" },
-  { word: "EKOSISTEM", row: 0, col: 6, dir: "V" },
-  { word: "BIODIVERSITI", row: 0, col: 5, dir: "V" },
+  { word: "EKOSISTEM", row: 2, col: 6, dir: "V" },
+  { word: "BIODIVERSITI", row: 0, col: 10, dir: "V" },
 ];
 export const SAINS_DARJAH6_CLUES: Record<string, string> = {
   EVOLUSI: "Perubahan perlahan spesies dari generasi ke generasi",
