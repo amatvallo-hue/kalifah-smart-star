@@ -95,7 +95,7 @@ function BergambarRajahPage() {
 
   const showBahasaToggle = subjekId === "sains" || subjekId === "matematik";
 
-  const en = bahasa === "en";
+  const en = bahasa === "en" || subjekId === "bahasa-inggeris";
   const tr = {
     kembali: en ? "Back to Activities" : "Kembali ke Aktiviti",
     pilihBahasa: en ? "Choose Language" : "Pilih Bahasa",
