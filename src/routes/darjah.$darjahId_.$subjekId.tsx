@@ -91,7 +91,7 @@ function AktivitiPage() {
     })();
 
     const bergambarCodes =
-      subjekId === "sains" ? ["SC", "SC-EN"] : subjekId === "matematik" ? ["MT", "MT-EN"] : subjekId === "bahasa-melayu" ? ["BM"] : null;
+      subjekId === "sains" ? ["SC", "SC-EN"] : subjekId === "matematik" ? ["MT", "MT-EN"] : subjekId === "bahasa-melayu" ? ["BM"] : subjekId === "bahasa-inggeris" ? ["bahasa-inggeris"] : null;
     if (bergambarCodes) {
       (async () => {
         const { count } = await supabase
