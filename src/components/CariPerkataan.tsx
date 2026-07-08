@@ -54,20 +54,85 @@ type CariPerkataanProps = {
   };
 };
 
-// Build the grid with words placed; fill the rest with deterministic letters
+// Build the grid with words auto-placed at randomized positions/directions.
+// Ignores each word's stored row/col/dir — only uses word.word. Longest-first
+// packing; per-word randomized attempts, then exhaustive fallback so placement
+// never silently fails. Crossing (matching-letter overlap) is allowed;
+// conflicting overlaps are not.
+type Dir = { dr: -1 | 0 | 1; dc: -1 | 0 | 1 };
+const DIRS: Dir[] = [
+  { dr: 0, dc: 1 }, // horizontal
+  { dr: 1, dc: 0 }, // vertical
+  { dr: 1, dc: 1 }, // diagonal down-right
+  { dr: 1, dc: -1 }, // diagonal down-left
+];
+
+function canPlace(
+  grid: string[][],
+  size: number,
+  word: string,
+  r: number,
+  c: number,
+  d: Dir,
+): boolean {
+  for (let i = 0; i < word.length; i++) {
+    const rr = r + d.dr * i;
+    const cc = c + d.dc * i;
+    if (rr < 0 || rr >= size || cc < 0 || cc >= size) return false;
+    const cur = grid[rr][cc];
+    if (cur && cur !== word[i]) return false;
+  }
+  return true;
+}
+
+function placeWord(grid: string[][], word: string, r: number, c: number, d: Dir) {
+  for (let i = 0; i < word.length; i++) {
+    grid[r + d.dr * i][c + d.dc * i] = word[i];
+  }
+}
+
 function buildGrid(words: Word[], size: number): string[][] {
   const grid: string[][] = Array.from({ length: size }, () =>
     Array.from({ length: size }, () => "")
   );
-  for (const w of words) {
-    for (let i = 0; i < w.word.length; i++) {
-      const r = w.dir === "H" ? w.row : w.row + i;
-      const c = w.dir === "H" ? w.col + i : w.col;
-      if (r >= 0 && r < size && c >= 0 && c < size) {
-        grid[r][c] = w.word[i];
+
+  const sorted = [...words].sort((a, b) => b.word.length - a.word.length);
+
+  for (const w of sorted) {
+    const word = w.word;
+    let placed = false;
+
+    for (let attempt = 0; attempt < 300 && !placed; attempt++) {
+      const d = DIRS[Math.floor(Math.random() * DIRS.length)];
+      const r = Math.floor(Math.random() * size);
+      const c = Math.floor(Math.random() * size);
+      if (canPlace(grid, size, word, r, c, d)) {
+        placeWord(grid, word, r, c, d);
+        placed = true;
+      }
+    }
+
+    if (!placed) {
+      const combos: Array<{ r: number; c: number; d: Dir }> = [];
+      for (const d of DIRS) {
+        for (let r = 0; r < size; r++) {
+          for (let c = 0; c < size; c++) combos.push({ r, c, d });
+        }
+      }
+      for (let i = combos.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [combos[i], combos[j]] = [combos[j], combos[i]];
+      }
+      for (const { r, c, d } of combos) {
+        if (canPlace(grid, size, word, r, c, d)) {
+          placeWord(grid, word, r, c, d);
+          placed = true;
+          break;
+        }
       }
     }
   }
+
   const filler = "BCDFHJKNPQRSWYZ";
   for (let r = 0; r < size; r++) {
     for (let c = 0; c < size; c++) {
