@@ -570,18 +570,6 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
                         {tr.tiadaJawapan}
                       </p>
                     )}
-                    {s.penjelasan && s.penjelasan.trim().length > 0 && (
-                      <div
-                        className="mt-3 flex items-start gap-2 rounded-2xl p-3 text-sm"
-                        style={{ backgroundColor: `${EMAS}15`, color: "#7a4a00" }}
-                      >
-                        <Lightbulb className="mt-0.5 h-4 w-4 shrink-0" style={{ color: EMAS }} />
-                        <div>
-                          <span className="font-extrabold">💡 {tr.penjelasan}</span>
-                          {s.penjelasan}
-                        </div>
-                      </div>
-                    )}
                   </div>
                 </div>
               </div>
@@ -699,15 +687,6 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
                 >
                   <Lightbulb className="mt-0.5 h-5 w-5 shrink-0" style={{ color: isBetulPilih ? "#1B8A5A" : "#d97706" }} />
                   <p className="text-sm" style={{ color: isBetulPilih ? "#0f5a39" : "#92400e" }}>{fb}</p>
-                </div>
-              )}
-              {soalan.penjelasan && soalan.penjelasan.trim().length > 0 && (
-                <div className="mt-3 flex items-start gap-3 rounded-lg border border-amber-300 bg-amber-50 p-4">
-                  <Lightbulb className="mt-0.5 h-5 w-5 shrink-0 text-amber-600" />
-                  <div className="text-sm text-amber-900">
-                    <p className="font-display font-extrabold">{en ? "Explanation" : "Penjelasan"}</p>
-                    <p className="mt-1 leading-relaxed">{soalan.penjelasan}</p>
-                  </div>
                 </div>
               )}
             </>
