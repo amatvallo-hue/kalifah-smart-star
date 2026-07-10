@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as UjianPercumaRouteImport } from './routes/ujian-percuma'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as PilihDarjahRouteImport } from './routes/pilih-darjah'
 import { Route as LupaPasswordRouteImport } from './routes/lupa-password'
@@ -45,6 +46,11 @@ import { Route as DarjahDarjahIdSubjekIdGameRouteImport } from './routes/darjah.
 import { Route as DarjahDarjahIdSubjekIdBergambarRajahRouteImport } from './routes/darjah.$darjahId_.$subjekId_.bergambar-rajah'
 import { Route as ApiPublicToyyibpayCallbackRouteImport } from './routes/api.public.toyyibpay.callback'
 
+const UjianPercumaRoute = UjianPercumaRouteImport.update({
+  id: '/ujian-percuma',
+  path: '/ujian-percuma',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
@@ -240,6 +246,7 @@ export interface FileRoutesByFullPath {
   '/lupa-password': typeof LupaPasswordRoute
   '/pilih-darjah': typeof PilihDarjahRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/ujian-percuma': typeof UjianPercumaRoute
   '/admin/affiliates': typeof AdminAffiliatesRoute
   '/admin/challenge': typeof AdminChallengeRoute
   '/affiliate/daftar': typeof AffiliateDaftarRoute
@@ -277,6 +284,7 @@ export interface FileRoutesByTo {
   '/lupa-password': typeof LupaPasswordRoute
   '/pilih-darjah': typeof PilihDarjahRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/ujian-percuma': typeof UjianPercumaRoute
   '/admin/affiliates': typeof AdminAffiliatesRoute
   '/admin/challenge': typeof AdminChallengeRoute
   '/affiliate/daftar': typeof AffiliateDaftarRoute
@@ -315,6 +323,7 @@ export interface FileRoutesById {
   '/lupa-password': typeof LupaPasswordRoute
   '/pilih-darjah': typeof PilihDarjahRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/ujian-percuma': typeof UjianPercumaRoute
   '/admin_/affiliates': typeof AdminAffiliatesRoute
   '/admin_/challenge': typeof AdminChallengeRoute
   '/affiliate/daftar': typeof AffiliateDaftarRoute
@@ -354,6 +363,7 @@ export interface FileRouteTypes {
     | '/lupa-password'
     | '/pilih-darjah'
     | '/reset-password'
+    | '/ujian-percuma'
     | '/admin/affiliates'
     | '/admin/challenge'
     | '/affiliate/daftar'
@@ -391,6 +401,7 @@ export interface FileRouteTypes {
     | '/lupa-password'
     | '/pilih-darjah'
     | '/reset-password'
+    | '/ujian-percuma'
     | '/admin/affiliates'
     | '/admin/challenge'
     | '/affiliate/daftar'
@@ -428,6 +439,7 @@ export interface FileRouteTypes {
     | '/lupa-password'
     | '/pilih-darjah'
     | '/reset-password'
+    | '/ujian-percuma'
     | '/admin_/affiliates'
     | '/admin_/challenge'
     | '/affiliate/daftar'
@@ -466,6 +478,7 @@ export interface RootRouteChildren {
   LupaPasswordRoute: typeof LupaPasswordRoute
   PilihDarjahRoute: typeof PilihDarjahRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  UjianPercumaRoute: typeof UjianPercumaRoute
   AdminAffiliatesRoute: typeof AdminAffiliatesRoute
   AdminChallengeRoute: typeof AdminChallengeRoute
   AffiliateDaftarRoute: typeof AffiliateDaftarRoute
@@ -495,6 +508,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/ujian-percuma': {
+      id: '/ujian-percuma'
+      path: '/ujian-percuma'
+      fullPath: '/ujian-percuma'
+      preLoaderRoute: typeof UjianPercumaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/reset-password': {
       id: '/reset-password'
       path: '/reset-password'
@@ -754,6 +774,7 @@ const rootRouteChildren: RootRouteChildren = {
   LupaPasswordRoute: LupaPasswordRoute,
   PilihDarjahRoute: PilihDarjahRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  UjianPercumaRoute: UjianPercumaRoute,
   AdminAffiliatesRoute: AdminAffiliatesRoute,
   AdminChallengeRoute: AdminChallengeRoute,
   AffiliateDaftarRoute: AffiliateDaftarRoute,
@@ -785,13 +806,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
