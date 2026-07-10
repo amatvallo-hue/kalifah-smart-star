@@ -324,7 +324,11 @@ function SoalanPage() {
             <Card>
               {soalan.jenis_stimulus && soalan.stimulus_data && (
                 <div className="mb-4 flex justify-center rounded-2xl bg-muted/40 p-4">
-                  {renderSoalanSvg(soalan.jenis_stimulus, soalan.stimulus_data, "bm")}
+                  {renderSoalanSvg(
+                    soalan.jenis_stimulus,
+                    soalan.stimulus_data,
+                    ["Mathematics", "Science", "Bahasa Inggeris"].includes(soalan.subjek) ? "en" : "bm",
+                  )}
                 </div>
               )}
               <h2 className="font-display text-lg font-extrabold leading-snug text-foreground md:text-xl">
