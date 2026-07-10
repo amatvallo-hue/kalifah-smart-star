@@ -35,8 +35,8 @@ import { Route as AffiliateDashboardRouteImport } from './routes/affiliate.dashb
 import { Route as AffiliateDaftarRouteImport } from './routes/affiliate.daftar'
 import { Route as AdminChallengeRouteImport } from './routes/admin_.challenge'
 import { Route as AdminAffiliatesRouteImport } from './routes/admin_.affiliates'
-import { Route as UjianPercumaSoalanSessionIdRouteImport } from './routes/ujian-percuma.soalan.$sessionId'
-import { Route as UjianPercumaKeputusanReportTokenRouteImport } from './routes/ujian-percuma.keputusan.$reportToken'
+import { Route as UjianPercumaSoalanSessionIdRouteImport } from './routes/ujian-percuma_.soalan.$sessionId'
+import { Route as UjianPercumaKeputusanReportTokenRouteImport } from './routes/ujian-percuma_.keputusan.$reportToken'
 import { Route as PreviewDarjahIdScoreRouteImport } from './routes/preview.$darjahId_.score'
 import { Route as DarjahDarjahIdSubjekIdRouteImport } from './routes/darjah.$darjahId_.$subjekId'
 import { Route as DarjahDarjahIdSubjekIdNotaRingkasRouteImport } from './routes/darjah.$darjahId_.$subjekId_.nota-ringkas'
@@ -180,15 +180,15 @@ const AdminAffiliatesRoute = AdminAffiliatesRouteImport.update({
 } as any)
 const UjianPercumaSoalanSessionIdRoute =
   UjianPercumaSoalanSessionIdRouteImport.update({
-    id: '/soalan/$sessionId',
-    path: '/soalan/$sessionId',
-    getParentRoute: () => UjianPercumaRoute,
+    id: '/ujian-percuma_/soalan/$sessionId',
+    path: '/ujian-percuma/soalan/$sessionId',
+    getParentRoute: () => rootRouteImport,
   } as any)
 const UjianPercumaKeputusanReportTokenRoute =
   UjianPercumaKeputusanReportTokenRouteImport.update({
-    id: '/keputusan/$reportToken',
-    path: '/keputusan/$reportToken',
-    getParentRoute: () => UjianPercumaRoute,
+    id: '/ujian-percuma_/keputusan/$reportToken',
+    path: '/ujian-percuma/keputusan/$reportToken',
+    getParentRoute: () => rootRouteImport,
   } as any)
 const PreviewDarjahIdScoreRoute = PreviewDarjahIdScoreRouteImport.update({
   id: '/preview/$darjahId_/score',
@@ -260,7 +260,7 @@ export interface FileRoutesByFullPath {
   '/lupa-password': typeof LupaPasswordRoute
   '/pilih-darjah': typeof PilihDarjahRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/ujian-percuma': typeof UjianPercumaRouteWithChildren
+  '/ujian-percuma': typeof UjianPercumaRoute
   '/admin/affiliates': typeof AdminAffiliatesRoute
   '/admin/challenge': typeof AdminChallengeRoute
   '/affiliate/daftar': typeof AffiliateDaftarRoute
@@ -300,7 +300,7 @@ export interface FileRoutesByTo {
   '/lupa-password': typeof LupaPasswordRoute
   '/pilih-darjah': typeof PilihDarjahRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/ujian-percuma': typeof UjianPercumaRouteWithChildren
+  '/ujian-percuma': typeof UjianPercumaRoute
   '/admin/affiliates': typeof AdminAffiliatesRoute
   '/admin/challenge': typeof AdminChallengeRoute
   '/affiliate/daftar': typeof AffiliateDaftarRoute
@@ -341,7 +341,7 @@ export interface FileRoutesById {
   '/lupa-password': typeof LupaPasswordRoute
   '/pilih-darjah': typeof PilihDarjahRoute
   '/reset-password': typeof ResetPasswordRoute
-  '/ujian-percuma': typeof UjianPercumaRouteWithChildren
+  '/ujian-percuma': typeof UjianPercumaRoute
   '/admin_/affiliates': typeof AdminAffiliatesRoute
   '/admin_/challenge': typeof AdminChallengeRoute
   '/affiliate/daftar': typeof AffiliateDaftarRoute
@@ -359,8 +359,8 @@ export interface FileRoutesById {
   '/preview/nama': typeof PreviewNamaRoute
   '/darjah/$darjahId_/$subjekId': typeof DarjahDarjahIdSubjekIdRoute
   '/preview/$darjahId_/score': typeof PreviewDarjahIdScoreRoute
-  '/ujian-percuma/keputusan/$reportToken': typeof UjianPercumaKeputusanReportTokenRoute
-  '/ujian-percuma/soalan/$sessionId': typeof UjianPercumaSoalanSessionIdRoute
+  '/ujian-percuma_/keputusan/$reportToken': typeof UjianPercumaKeputusanReportTokenRoute
+  '/ujian-percuma_/soalan/$sessionId': typeof UjianPercumaSoalanSessionIdRoute
   '/api/public/toyyibpay/callback': typeof ApiPublicToyyibpayCallbackRoute
   '/darjah/$darjahId_/$subjekId_/bergambar-rajah': typeof DarjahDarjahIdSubjekIdBergambarRajahRoute
   '/darjah/$darjahId_/$subjekId_/game': typeof DarjahDarjahIdSubjekIdGameRoute
@@ -481,8 +481,8 @@ export interface FileRouteTypes {
     | '/preview/nama'
     | '/darjah/$darjahId_/$subjekId'
     | '/preview/$darjahId_/score'
-    | '/ujian-percuma/keputusan/$reportToken'
-    | '/ujian-percuma/soalan/$sessionId'
+    | '/ujian-percuma_/keputusan/$reportToken'
+    | '/ujian-percuma_/soalan/$sessionId'
     | '/api/public/toyyibpay/callback'
     | '/darjah/$darjahId_/$subjekId_/bergambar-rajah'
     | '/darjah/$darjahId_/$subjekId_/game'
@@ -504,7 +504,7 @@ export interface RootRouteChildren {
   LupaPasswordRoute: typeof LupaPasswordRoute
   PilihDarjahRoute: typeof PilihDarjahRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
-  UjianPercumaRoute: typeof UjianPercumaRouteWithChildren
+  UjianPercumaRoute: typeof UjianPercumaRoute
   AdminAffiliatesRoute: typeof AdminAffiliatesRoute
   AdminChallengeRoute: typeof AdminChallengeRoute
   AffiliateDaftarRoute: typeof AffiliateDaftarRoute
@@ -522,6 +522,8 @@ export interface RootRouteChildren {
   PreviewNamaRoute: typeof PreviewNamaRoute
   DarjahDarjahIdSubjekIdRoute: typeof DarjahDarjahIdSubjekIdRoute
   PreviewDarjahIdScoreRoute: typeof PreviewDarjahIdScoreRoute
+  UjianPercumaKeputusanReportTokenRoute: typeof UjianPercumaKeputusanReportTokenRoute
+  UjianPercumaSoalanSessionIdRoute: typeof UjianPercumaSoalanSessionIdRoute
   ApiPublicToyyibpayCallbackRoute: typeof ApiPublicToyyibpayCallbackRoute
   DarjahDarjahIdSubjekIdBergambarRajahRoute: typeof DarjahDarjahIdSubjekIdBergambarRajahRoute
   DarjahDarjahIdSubjekIdGameRoute: typeof DarjahDarjahIdSubjekIdGameRoute
@@ -716,19 +718,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAffiliatesRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/ujian-percuma/soalan/$sessionId': {
-      id: '/ujian-percuma/soalan/$sessionId'
-      path: '/soalan/$sessionId'
+    '/ujian-percuma_/soalan/$sessionId': {
+      id: '/ujian-percuma_/soalan/$sessionId'
+      path: '/ujian-percuma/soalan/$sessionId'
       fullPath: '/ujian-percuma/soalan/$sessionId'
       preLoaderRoute: typeof UjianPercumaSoalanSessionIdRouteImport
-      parentRoute: typeof UjianPercumaRoute
+      parentRoute: typeof rootRouteImport
     }
-    '/ujian-percuma/keputusan/$reportToken': {
-      id: '/ujian-percuma/keputusan/$reportToken'
-      path: '/keputusan/$reportToken'
+    '/ujian-percuma_/keputusan/$reportToken': {
+      id: '/ujian-percuma_/keputusan/$reportToken'
+      path: '/ujian-percuma/keputusan/$reportToken'
       fullPath: '/ujian-percuma/keputusan/$reportToken'
       preLoaderRoute: typeof UjianPercumaKeputusanReportTokenRouteImport
-      parentRoute: typeof UjianPercumaRoute
+      parentRoute: typeof rootRouteImport
     }
     '/preview/$darjahId_/score': {
       id: '/preview/$darjahId_/score'
@@ -803,20 +805,6 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface UjianPercumaRouteChildren {
-  UjianPercumaKeputusanReportTokenRoute: typeof UjianPercumaKeputusanReportTokenRoute
-  UjianPercumaSoalanSessionIdRoute: typeof UjianPercumaSoalanSessionIdRoute
-}
-
-const UjianPercumaRouteChildren: UjianPercumaRouteChildren = {
-  UjianPercumaKeputusanReportTokenRoute: UjianPercumaKeputusanReportTokenRoute,
-  UjianPercumaSoalanSessionIdRoute: UjianPercumaSoalanSessionIdRoute,
-}
-
-const UjianPercumaRouteWithChildren = UjianPercumaRoute._addFileChildren(
-  UjianPercumaRouteChildren,
-)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
@@ -828,7 +816,7 @@ const rootRouteChildren: RootRouteChildren = {
   LupaPasswordRoute: LupaPasswordRoute,
   PilihDarjahRoute: PilihDarjahRoute,
   ResetPasswordRoute: ResetPasswordRoute,
-  UjianPercumaRoute: UjianPercumaRouteWithChildren,
+  UjianPercumaRoute: UjianPercumaRoute,
   AdminAffiliatesRoute: AdminAffiliatesRoute,
   AdminChallengeRoute: AdminChallengeRoute,
   AffiliateDaftarRoute: AffiliateDaftarRoute,
@@ -846,6 +834,8 @@ const rootRouteChildren: RootRouteChildren = {
   PreviewNamaRoute: PreviewNamaRoute,
   DarjahDarjahIdSubjekIdRoute: DarjahDarjahIdSubjekIdRoute,
   PreviewDarjahIdScoreRoute: PreviewDarjahIdScoreRoute,
+  UjianPercumaKeputusanReportTokenRoute: UjianPercumaKeputusanReportTokenRoute,
+  UjianPercumaSoalanSessionIdRoute: UjianPercumaSoalanSessionIdRoute,
   ApiPublicToyyibpayCallbackRoute: ApiPublicToyyibpayCallbackRoute,
   DarjahDarjahIdSubjekIdBergambarRajahRoute:
     DarjahDarjahIdSubjekIdBergambarRajahRoute,
