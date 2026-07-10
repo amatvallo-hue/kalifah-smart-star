@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Loader2, Trophy, Sparkles, ArrowRight, CheckCircle2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
-export const Route = createFileRoute("/ujian-percuma/keputusan/$reportToken")({
+export const Route = createFileRoute("/ujian-percuma_/keputusan/$reportToken")({
   head: () => ({
     meta: [
       { title: "Keputusan Ujian Percuma — Kalifah.my" },

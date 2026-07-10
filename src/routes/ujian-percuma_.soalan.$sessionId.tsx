@@ -4,7 +4,7 @@ import { ArrowRight, CheckCircle2, XCircle, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { renderSoalanSvg } from "@/lib/render-soalan-svg";
 
-export const Route = createFileRoute("/ujian-percuma/soalan/$sessionId")({
+export const Route = createFileRoute("/ujian-percuma_/soalan/$sessionId")({
   head: () => ({
     meta: [
       { title: "Ujian Akademik Percuma — Kalifah.my" },
