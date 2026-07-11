@@ -149,8 +149,7 @@ function SoalanPage() {
         setLoading(false);
         return;
       }
-      const capped = capPerSubjek(qRows as Soalan[]);
-      const ordered = groupBySubjekShuffled(capped);
+      const ordered = groupBySubjekShuffled(qRows as Soalan[]);
       setSoalanList(ordered);
 
       if (row.o_status === "pending") {
