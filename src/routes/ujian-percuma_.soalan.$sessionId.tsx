@@ -139,7 +139,6 @@ function SoalanPage() {
           .from("kuiz_percuma_soalan")
           .select("*")
           .eq("darjah", row.o_darjah)
-          .eq("subjek", "Matematik")
           .gte("no_soalan", 6),
       ]);
       if (cancelled) return;
