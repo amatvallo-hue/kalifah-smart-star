@@ -100,6 +100,12 @@ export function renderSoalanSvg(
     if (svg_type === "kad_maklumat") return <KadMaklumat {...p} />;
     if (svg_type === "jam_zon_masa") return <JamZonMasa {...p} />;
     if (svg_type === "bulatan") return <Bulatan {...p} />;
+    if (svg_type === "svg_raw" && p.svg) {
+      return <div className="w-full max-w-xl mx-auto [&_svg]:w-full [&_svg]:h-auto" dangerouslySetInnerHTML={{ __html: p.svg }} />;
+    }
+    if (svg_type === "image_url" && p.url) {
+      return <img src={p.url} className="w-full max-w-xl mx-auto h-auto rounded-lg block" alt="Rajah soalan" loading="lazy" />;
+    }
   } catch {
     return null;
   }
