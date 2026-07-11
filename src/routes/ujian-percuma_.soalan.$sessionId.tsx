@@ -60,6 +60,27 @@ function shuffle<T>(arr: T[]): T[] {
   return a;
 }
 
+const MAX_PER_SUBJEK = 5;
+
+function capPerSubjek(rows: Soalan[], max = MAX_PER_SUBJEK): Soalan[] {
+  const groups = new Map<string, Soalan[]>();
+  for (const r of rows) {
+    const key = r.subjek ?? "lain";
+    const g = groups.get(key) ?? [];
+    g.push(r);
+    groups.set(key, g);
+  }
+  const out: Soalan[] = [];
+  for (const [, g] of groups) {
+    if (g.length > max) {
+      out.push(...shuffle(g).slice(0, max));
+    } else {
+      out.push(...g);
+    }
+  }
+  return out;
+}
+
 function groupBySubjekShuffled(rows: Soalan[]): Soalan[] {
   const groups = new Map<string, Soalan[]>();
   for (const r of rows) {
@@ -128,7 +149,8 @@ function SoalanPage() {
         setLoading(false);
         return;
       }
-      const ordered = groupBySubjekShuffled(qRows as Soalan[]);
+      const capped = capPerSubjek(qRows as Soalan[]);
+      const ordered = groupBySubjekShuffled(capped);
       setSoalanList(ordered);
 
       if (row.o_status === "pending") {
