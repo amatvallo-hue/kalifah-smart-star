@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { ArrowRight, CheckCircle2, XCircle, Loader2 } from "lucide-react";
+import { ArrowRight, CheckCircle2, XCircle, Loader2, ArrowLeft, Sparkles, BookOpen } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { renderSoalanSvg } from "@/lib/render-soalan-svg";
 
@@ -29,6 +29,7 @@ type Soalan = {
   id: string | number;
   darjah: number;
   subjek: string;
+  no_soalan?: number | null;
   soalan: string;
   pilihan_a: string;
   pilihan_b: string;
@@ -50,6 +51,9 @@ type Jawapan = {
 };
 
 const PILIHAN_KEYS: Array<"a" | "b" | "c" | "d"> = ["a", "b", "c", "d"];
+const SUBJEK_ASAL = ["Bahasa Melayu", "Matematik", "Bahasa Inggeris", "Sains", "Pendidikan Islam"];
+
+type Mode = "picker" | "asal" | "rajah" | "rajahDone";
 
 function shuffle<T>(arr: T[]): T[] {
   const a = [...arr];
@@ -59,7 +63,6 @@ function shuffle<T>(arr: T[]): T[] {
   }
   return a;
 }
-
 
 function groupBySubjekShuffled(rows: Soalan[]): Soalan[] {
   const groups = new Map<string, Soalan[]>();
@@ -82,15 +85,21 @@ function SoalanPage() {
   const { sessionId } = Route.useParams();
   const [sesi, setSesi] = useState<Sesi | null>(null);
   const [soalanList, setSoalanList] = useState<Soalan[] | null>(null);
+  const [bergambarList, setBergambarList] = useState<Soalan[] | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const [mode, setMode] = useState<Mode>("picker");
   const [askResume, setAskResume] = useState(false);
   const [currentIdx, setCurrentIdx] = useState<number | null>(null);
 
   const [pickedForCurrent, setPickedForCurrent] = useState<"a" | "b" | "c" | "d" | null>(null);
   const [jawapan, setJawapan] = useState<Jawapan[]>([]);
   const [submitting, setSubmitting] = useState(false);
+
+  // Bergambar rajah (preview) state — kept separate so kuiz asal progress is untouched
+  const [bgIdx, setBgIdx] = useState(0);
+  const [bgPicked, setBgPicked] = useState<"a" | "b" | "c" | "d" | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -119,18 +128,29 @@ function SoalanPage() {
         return;
       }
 
-      const { data: qRows, error: qErr } = await supabase
-        .from("kuiz_percuma_soalan")
-        .select("*")
-        .eq("darjah", row.o_darjah);
+      const [asalRes, rajahRes] = await Promise.all([
+        supabase
+          .from("kuiz_percuma_soalan")
+          .select("*")
+          .eq("darjah", row.o_darjah)
+          .in("subjek", SUBJEK_ASAL)
+          .lte("no_soalan", 5),
+        supabase
+          .from("kuiz_percuma_soalan")
+          .select("*")
+          .eq("darjah", row.o_darjah)
+          .eq("subjek", "Matematik")
+          .gte("no_soalan", 6),
+      ]);
       if (cancelled) return;
-      if (qErr || !qRows || qRows.length === 0) {
+      if (asalRes.error || !asalRes.data || asalRes.data.length === 0) {
         setLoadError("Soalan untuk darjah ini belum tersedia.");
         setLoading(false);
         return;
       }
-      const ordered = groupBySubjekShuffled(qRows as Soalan[]);
+      const ordered = groupBySubjekShuffled(asalRes.data as Soalan[]);
       setSoalanList(ordered);
+      setBergambarList((rajahRes.data ?? []) as Soalan[]);
 
       if (row.o_status === "pending") {
         supabase
@@ -142,11 +162,6 @@ function SoalanPage() {
           .then(() => {});
       }
 
-      if ((row.o_current_question ?? 0) > 0 && (row.o_current_question ?? 0) < ordered.length) {
-        setAskResume(true);
-      } else {
-        setCurrentIdx(0);
-      }
       setLoading(false);
     })();
     return () => {
@@ -154,8 +169,9 @@ function SoalanPage() {
     };
   }, [sessionId]);
 
+  // ─── Kuiz Asal helpers ───
   const total = soalanList?.length ?? 0;
-  const soalan = currentIdx != null && soalanList ? soalanList[currentIdx] : null;
+  const soalan = mode === "asal" && currentIdx != null && soalanList ? soalanList[currentIdx] : null;
   const progressPct = total > 0 && currentIdx != null ? ((currentIdx + (pickedForCurrent ? 1 : 0)) / total) * 100 : 0;
 
   const subjekLabel = useMemo(() => {
@@ -218,6 +234,72 @@ function SoalanPage() {
     }
   }
 
+  // ─── Folder actions ───
+  function mulaKuizAsal() {
+    if (!sesi || !soalanList) return;
+    const cq = sesi.o_current_question ?? 0;
+    if (cq > 0 && cq < soalanList.length) {
+      setAskResume(true);
+      setCurrentIdx(null);
+    } else {
+      setAskResume(false);
+      setCurrentIdx(0);
+    }
+    setPickedForCurrent(null);
+    setMode("asal");
+  }
+
+  function mulaBergambar() {
+    setBgIdx(0);
+    setBgPicked(null);
+    setMode("rajah");
+  }
+
+  function kembaliPicker() {
+    setMode("picker");
+    setAskResume(false);
+    setPickedForCurrent(null);
+    setBgPicked(null);
+  }
+
+  // ─── Bergambar (preview) ───
+  const bgTotal = bergambarList?.length ?? 0;
+  const bgSoalan = mode === "rajah" && bergambarList && bgIdx < bgTotal ? bergambarList[bgIdx] : null;
+  const bgProgressPct = bgTotal > 0 ? ((bgIdx + (bgPicked ? 1 : 0)) / bgTotal) * 100 : 0;
+
+  function bgPilih(key: "a" | "b" | "c" | "d") {
+    if (bgPicked || !bgSoalan) return;
+    setBgPicked(key);
+  }
+
+  function bgSeterusnya() {
+    if (!bgSoalan || !bgPicked || !bergambarList) return;
+    const nextIdx = bgIdx + 1;
+    if (nextIdx >= bergambarList.length) {
+      setMode("rajahDone");
+      return;
+    }
+    setBgIdx(nextIdx);
+    setBgPicked(null);
+  }
+
+  const activeSoalan = mode === "asal" ? soalan : bgSoalan;
+  const activePicked = mode === "asal" ? pickedForCurrent : bgPicked;
+  const activeOnPick = mode === "asal" ? pilihJawapan : bgPilih;
+  const activeOnNext = mode === "asal" ? seterusnya : bgSeterusnya;
+  const activeTotal = mode === "asal" ? total : bgTotal;
+  const activeIdx = mode === "asal" ? (currentIdx ?? 0) : bgIdx;
+  const activeProgressPct = mode === "asal" ? progressPct : bgProgressPct;
+  const activeLabel = mode === "asal" ? subjekLabel : "Soalan Bergambar Rajah • Pratonton";
+
+  const showQuestion =
+    !loading &&
+    !loadError &&
+    sesi &&
+    sesi.o_status !== "completed" &&
+    activeSoalan &&
+    ((mode === "asal" && !askResume && currentIdx != null) || mode === "rajah");
+
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-hero">
       <div className="absolute -right-20 -top-20 h-72 w-72 rounded-full bg-gold/20 blur-3xl" />
@@ -272,8 +354,77 @@ function SoalanPage() {
           </Card>
         )}
 
-        {!loading && !loadError && sesi && sesi.o_status !== "completed" && askResume && (
+        {/* ── Folder picker ── */}
+        {!loading && !loadError && sesi && sesi.o_status !== "completed" && mode === "picker" && (
           <Card>
+            <h1 className="font-display text-2xl font-extrabold text-foreground">
+              Pilih Folder Kuiz
+            </h1>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Hai {sesi.o_nama_anak}! Pilih folder untuk mula.
+            </p>
+            <div className="mt-5 grid gap-3">
+              <button
+                type="button"
+                onClick={mulaKuizAsal}
+                className="group flex items-start gap-4 rounded-2xl border-2 border-border bg-background p-5 text-left transition hover:-translate-y-0.5 hover:border-primary hover:shadow-soft"
+              >
+                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-primary text-primary-foreground shadow-soft">
+                  <BookOpen className="h-6 w-6" />
+                </span>
+                <span className="flex-1">
+                  <span className="block font-display text-lg font-extrabold text-foreground">
+                    Kuiz Asal
+                  </span>
+                  <span className="mt-1 block text-sm text-muted-foreground">
+                    {soalanList?.length ?? 25} soalan merentasi 5 subjek — dikira dalam laporan rasmi.
+                  </span>
+                  {(sesi.o_current_question ?? 0) > 0 && (
+                    <span className="mt-2 inline-block rounded-full bg-primary/10 px-3 py-0.5 text-xs font-extrabold text-primary">
+                      Sambung dari soalan {(sesi.o_current_question ?? 0) + 1}
+                    </span>
+                  )}
+                </span>
+                <ArrowRight className="h-5 w-5 shrink-0 text-muted-foreground transition group-hover:translate-x-1 group-hover:text-primary" />
+              </button>
+
+              {bergambarList && bergambarList.length > 0 && (
+                <button
+                  type="button"
+                  onClick={mulaBergambar}
+                  className="group flex items-start gap-4 rounded-2xl border-2 border-border bg-background p-5 text-left transition hover:-translate-y-0.5 hover:border-gold hover:shadow-soft"
+                >
+                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gold/20 text-gold shadow-soft">
+                    <Sparkles className="h-6 w-6" />
+                  </span>
+                  <span className="flex-1">
+                    <span className="block font-display text-lg font-extrabold text-foreground">
+                      Soalan Bergambar Rajah
+                    </span>
+                    <span className="mt-1 block text-xs font-bold uppercase tracking-wide text-muted-foreground">
+                      Pratonton • {bergambarList.length} soalan • tak wajib
+                    </span>
+                    <span className="mt-1 block text-sm text-muted-foreground">
+                      Cuba soalan gaya baru dengan gambar rajah interaktif. Tidak dikira dalam skor.
+                    </span>
+                  </span>
+                  <ArrowRight className="h-5 w-5 shrink-0 text-muted-foreground transition group-hover:translate-x-1 group-hover:text-gold" />
+                </button>
+              )}
+            </div>
+          </Card>
+        )}
+
+        {/* ── Resume prompt (kuiz asal) ── */}
+        {!loading && !loadError && sesi && sesi.o_status !== "completed" && mode === "asal" && askResume && (
+          <Card>
+            <button
+              type="button"
+              onClick={kembaliPicker}
+              className="mb-3 inline-flex items-center gap-1 text-xs font-extrabold text-muted-foreground hover:text-foreground"
+            >
+              <ArrowLeft className="h-3.5 w-3.5" /> Pilihan Folder
+            </button>
             <h1 className="font-display text-xl font-extrabold text-foreground">
               Sambung dari soalan {(sesi.o_current_question ?? 0) + 1}?
             </h1>
@@ -305,43 +456,84 @@ function SoalanPage() {
           </Card>
         )}
 
-        {!loading && !loadError && sesi && soalan && currentIdx != null && (
+        {/* ── Bergambar selesai ── */}
+        {!loading && !loadError && sesi && sesi.o_status !== "completed" && mode === "rajahDone" && (
+          <Card>
+            <div className="text-center">
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-gold/20 text-gold">
+                <Sparkles className="h-8 w-8" />
+              </div>
+              <h1 className="mt-4 font-display text-2xl font-extrabold text-foreground">
+                Pratonton Selesai!
+              </h1>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Bagus! Sekarang mari mula Kuiz Asal untuk dapatkan laporan rasmi.
+              </p>
+              <div className="mt-5 grid gap-2 sm:grid-cols-2">
+                <button
+                  type="button"
+                  onClick={mulaKuizAsal}
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-primary px-5 py-3 font-display text-sm font-extrabold text-primary-foreground shadow-soft"
+                >
+                  Mula Kuiz Asal <ArrowRight className="h-4 w-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={kembaliPicker}
+                  className="rounded-full border-2 border-border bg-card px-5 py-3 font-display text-sm font-extrabold text-foreground hover:border-primary"
+                >
+                  Kembali ke Pilihan Folder
+                </button>
+              </div>
+            </div>
+          </Card>
+        )}
+
+        {/* ── Soalan (kuiz asal OR bergambar) ── */}
+        {showQuestion && activeSoalan && (
           <>
             <div className="mb-3">
+              <button
+                type="button"
+                onClick={kembaliPicker}
+                className="mb-2 inline-flex items-center gap-1 text-xs font-extrabold text-muted-foreground hover:text-foreground"
+              >
+                <ArrowLeft className="h-3.5 w-3.5" /> Pilihan Folder
+              </button>
               <div className="mb-1 flex items-center justify-between text-xs font-bold text-muted-foreground">
-                <span>{subjekLabel}</span>
+                <span>{activeLabel}</span>
                 <span>
-                  {currentIdx + 1} / {total}
+                  {activeIdx + 1} / {activeTotal}
                 </span>
               </div>
               <div className="h-2.5 w-full overflow-hidden rounded-full bg-muted">
                 <div
-                  className="h-full bg-gradient-primary transition-all"
-                  style={{ width: `${progressPct}%` }}
+                  className={`h-full transition-all ${mode === "rajah" ? "bg-gold" : "bg-gradient-primary"}`}
+                  style={{ width: `${activeProgressPct}%` }}
                 />
               </div>
             </div>
 
             <Card>
-              {soalan.jenis_stimulus && soalan.stimulus_data && (
+              {activeSoalan.jenis_stimulus && activeSoalan.stimulus_data && (
                 <div className="mb-4 flex justify-center rounded-2xl bg-muted/40 p-4">
                   {renderSoalanSvg(
-                    soalan.jenis_stimulus,
-                    soalan.stimulus_data,
-                    ["Mathematics", "Science", "Bahasa Inggeris"].includes(soalan.subjek) ? "en" : "bm",
+                    activeSoalan.jenis_stimulus,
+                    activeSoalan.stimulus_data,
+                    ["Mathematics", "Science", "Bahasa Inggeris"].includes(activeSoalan.subjek) ? "en" : "bm",
                   )}
                 </div>
               )}
               <h2 className="font-display text-lg font-extrabold leading-snug text-foreground md:text-xl">
-                {soalan.soalan}
+                {activeSoalan.soalan}
               </h2>
 
               <div className="mt-5 flex flex-col gap-2">
                 {PILIHAN_KEYS.map((k) => {
-                  const text = soalan[`pilihan_${k}` as const] as string;
-                  const isPicked = pickedForCurrent === k;
-                  const isCorrect = k === soalan.jawapan_betul;
-                  const answered = pickedForCurrent != null;
+                  const text = activeSoalan[`pilihan_${k}` as const] as string;
+                  const isPicked = activePicked === k;
+                  const isCorrect = k === activeSoalan.jawapan_betul;
+                  const answered = activePicked != null;
                   let classes =
                     "flex items-start gap-3 rounded-2xl border-2 px-4 py-3 text-left font-display font-bold transition ";
                   if (!answered) {
@@ -360,7 +552,7 @@ function SoalanPage() {
                       key={k}
                       type="button"
                       disabled={answered}
-                      onClick={() => pilihJawapan(k)}
+                      onClick={() => activeOnPick(k)}
                       className={classes}
                     >
                       <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-extrabold text-primary">
@@ -374,24 +566,24 @@ function SoalanPage() {
                 })}
               </div>
 
-              {pickedForCurrent && (
+              {activePicked && (
                 <div
                   className={`mt-4 rounded-2xl border px-4 py-3 text-sm font-bold ${
-                    pickedForCurrent === soalan.jawapan_betul
+                    activePicked === activeSoalan.jawapan_betul
                       ? "border-success/30 bg-success/10 text-foreground"
                       : "border-destructive/30 bg-destructive/10 text-foreground"
                   }`}
                 >
-                  {soalan[`feedback_${pickedForCurrent}` as const] ??
-                    (pickedForCurrent === soalan.jawapan_betul ? "Betul!" : "Kurang tepat.")}
+                  {activeSoalan[`feedback_${activePicked}` as const] ??
+                    (activePicked === activeSoalan.jawapan_betul ? "Betul!" : "Kurang tepat.")}
                 </div>
               )}
 
-              {pickedForCurrent && (
+              {activePicked && (
                 <button
                   type="button"
                   disabled={submitting}
-                  onClick={seterusnya}
+                  onClick={activeOnNext}
                   className="mt-5 flex w-full items-center justify-center gap-2 rounded-full bg-gradient-primary px-6 py-3 font-display text-base font-extrabold text-primary-foreground shadow-soft transition hover:-translate-y-0.5 hover:shadow-gold disabled:opacity-60"
                 >
                   {submitting ? (
@@ -401,7 +593,13 @@ function SoalanPage() {
                     </>
                   ) : (
                     <>
-                      {currentIdx + 1 >= total ? "Hantar Keputusan" : "Soalan Seterusnya"}
+                      {mode === "asal"
+                        ? activeIdx + 1 >= activeTotal
+                          ? "Hantar Keputusan"
+                          : "Soalan Seterusnya"
+                        : activeIdx + 1 >= activeTotal
+                          ? "Tamat Pratonton"
+                          : "Soalan Seterusnya"}
                       <ArrowRight className="h-5 w-5" />
                     </>
                   )}
