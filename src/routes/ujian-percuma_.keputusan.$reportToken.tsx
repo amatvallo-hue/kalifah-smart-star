@@ -1,7 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Loader2, Trophy, Sparkles, ArrowRight, CheckCircle2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+
+declare global {
+  interface Window {
+    fbq?: (...args: unknown[]) => void;
+    gtag?: (...args: unknown[]) => void;
+    dataLayer?: unknown[];
+  }
+}
 
 export const Route = createFileRoute("/ujian-percuma_/keputusan/$reportToken")({
   head: () => ({
@@ -95,6 +103,32 @@ function KeputusanPage() {
   const band = useMemo(() => bandLabel(score), [score]);
   const weakest = subjekStats.slice(0, Math.min(2, subjekStats.length)).filter((s) => s.betul / s.jumlah < 0.8);
   const namaAnak = sesi?.o_nama_anak ?? "anak anda";
+  const firedRef = useRef(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !sesi || firedRef.current) return;
+
+    firedRef.current = true;
+
+    if (typeof window.fbq === "function") {
+      window.fbq("track", "CompleteRegistration", {
+        content_name: "ujian_percuma",
+        value: sesi.o_darjah,
+      });
+      window.fbq("trackCustom", "UjianPercumaSiap", {
+        darjah: sesi.o_darjah,
+        score: sesi.o_score,
+      });
+    }
+
+    if (typeof window.gtag === "function") {
+      window.gtag("event", "generate_lead", {
+        event_category: "ujian_percuma",
+        darjah: sesi.o_darjah,
+        score: sesi.o_score,
+      });
+    }
+  }, [sesi]);
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-hero">
