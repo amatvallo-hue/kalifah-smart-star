@@ -373,7 +373,7 @@ function SoalanPage() {
                 </span>
                 <span className="flex-1">
                   <span className="block font-display text-lg font-extrabold text-foreground">
-                    Kuiz Asal
+                    Kuiz Diagnostik
                   </span>
                   <span className="mt-1 block text-sm text-muted-foreground">
                     {soalanList?.length ?? 25} soalan merentasi 5 subjek — dikira dalam laporan rasmi.
