@@ -209,7 +209,7 @@ export const Route = createFileRoute("/api/checkout")({
             return jsonError(id, 500, "TOYYIBPAY_SECRET_KEY tidak ditetapkan");
           }
 
-          const origin = requestOrigin(request);
+          const origin = PUBLIC_APP_URL;
           const pakejLabel =
             body.pakej === "bundle"
               ? "Bundle 6 Darjah"
