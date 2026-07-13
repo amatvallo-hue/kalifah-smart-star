@@ -64,17 +64,12 @@ function jsonError(
   );
 }
 
-function requestOrigin(request: Request) {
-  const origin = request.headers.get("origin");
-  if (origin && origin !== "null") return origin;
-
-  const proto = request.headers.get("x-forwarded-proto") ?? "https";
-  const host =
-    request.headers.get("x-forwarded-host") ??
-    request.headers.get("host") ??
-    "kalifah.my";
-  return `${proto}://${host}`;
-}
+// Canonical public origin for ToyyibPay callback/return URLs. Never derive
+// from the incoming request — a checkout started on a preview or non-primary
+// host would otherwise bake a dead callback URL into the bill and silently
+// break payment confirmation.
+const PUBLIC_APP_URL =
+  process.env.PUBLIC_APP_URL?.replace(/\/+$/, "") ?? "https://kalifah.my";
 
 export const Route = createFileRoute("/api/checkout")({
   server: {
