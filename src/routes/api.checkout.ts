@@ -64,17 +64,12 @@ function jsonError(
   );
 }
 
-function requestOrigin(request: Request) {
-  const origin = request.headers.get("origin");
-  if (origin && origin !== "null") return origin;
-
-  const proto = request.headers.get("x-forwarded-proto") ?? "https";
-  const host =
-    request.headers.get("x-forwarded-host") ??
-    request.headers.get("host") ??
-    "kalifah.my";
-  return `${proto}://${host}`;
-}
+// Canonical public origin for ToyyibPay callback/return URLs. Never derive
+// from the incoming request — a checkout started on a preview or non-primary
+// host would otherwise bake a dead callback URL into the bill and silently
+// break payment confirmation.
+const PUBLIC_APP_URL =
+  process.env.PUBLIC_APP_URL?.replace(/\/+$/, "") ?? "https://kalifah.my";
 
 export const Route = createFileRoute("/api/checkout")({
   server: {
@@ -214,7 +209,7 @@ export const Route = createFileRoute("/api/checkout")({
             return jsonError(id, 500, "TOYYIBPAY_SECRET_KEY tidak ditetapkan");
           }
 
-          const origin = requestOrigin(request);
+          const origin = PUBLIC_APP_URL;
           const pakejLabel =
             body.pakej === "bundle"
               ? "Bundle 6 Darjah"

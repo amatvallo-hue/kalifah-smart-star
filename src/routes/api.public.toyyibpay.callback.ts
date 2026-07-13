@@ -97,6 +97,9 @@ export const Route = createFileRoute("/api/public/toyyibpay/callback")({
         const orderId =
           body.order_id ?? body.orderid ?? body.billExternalReferenceNo ?? body.refno ?? null;
         const txnId = body.transaction_id ?? body.refno ?? null;
+        console.log(
+          `[callback:${id}] parsed billcode=${billcode ?? "-"} order_id=${orderId ?? "-"} status=${status || "-"} txn=${txnId ?? "-"}`,
+        );
 
         // Kalau status bukan '1', sahkan dgn ToyyibPay sebelum tanda paid
         if (status !== "1" && billcode) {
