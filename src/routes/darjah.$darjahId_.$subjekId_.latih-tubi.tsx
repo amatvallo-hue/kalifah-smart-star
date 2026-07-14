@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate, useParams, useSearch } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { ArrowLeft, Check, X, Square, Play } from "lucide-react";
+import { ArrowLeft, Check, X, Square } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
@@ -93,7 +93,6 @@ interface Soalan {
 
 const HIJAU = "#1B8A5A";
 const EMAS = "#F5A623";
-const SETS = ["25A", "25B", "25C", "25D"] as const;
 
 function shuffle<T>(arr: T[]): T[] {
   const a = [...arr];
@@ -117,13 +116,11 @@ function LatihTubiPage() {
   const subjek = getSubjek(subjekId) ?? { id: subjekId, title: subjekId };
   const mata = usePoints();
 
-  const isUpper = false;
   const isMatematik = subjekId === "matematik";
   const isSains = subjekId === "sains";
   const isEnglish = subjekId === 'bahasa-inggeris';
   const showBahasaToggle = isSains || isMatematik;
   const [bahasa, setBahasa] = useState<"bm" | "en" | null>(showBahasaToggle ? null : "bm");
-  const subjekCode = subjekId === "sains" ? (bahasa === "en" ? "SC-EN" : "SC") : subjekId;
   const darjahNum = Number(darjahId);
 
   const [bank, setBank] = useState<Soalan[]>([]);
@@ -139,14 +136,6 @@ function LatihTubiPage() {
 
   const [topikStats, setTopikStats] = useState<Record<string, { betul: number; jumlah: number }>>({});
   const [mulaMasa, setMulaMasa] = useState(() => Date.now());
-  
-
-  // Upper-darjah selection state
-  const [topicList, setTopicList] = useState<string[]>([]);
-  const [topik, setTopik] = useState<string>("");
-  const [setLabel, setSetLabel] = useState<string>("");
-  const [started, setStarted] = useState(false);
-  const [loadingTopics, setLoadingTopics] = useState(isUpper);
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
@@ -155,8 +144,21 @@ function LatihTubiPage() {
   useEffect(() => {
     if (berhenti && jawab > 0) {
       const masaSec = Math.round((Date.now() - mulaMasa) / 1000);
-      if (isUpper && topik) {
-        // Upper darjah: satu topik untuk seluruh sesi
+      const entries = Object.entries(topikStats);
+      if (entries.length > 0) {
+        const masaPerSoalan = jawab > 0 ? masaSec / jawab : 0;
+        entries.forEach(([t, s]) => {
+          simpanProgress({
+            darjah: darjahId,
+            subjek: subjekId,
+            aktiviti: "latih-tubi",
+            markah: s.betul,
+            jumlahSoalan: s.jumlah,
+            masaAmbil: Math.round(masaPerSoalan * s.jumlah),
+            topik: t,
+          });
+        });
+      } else {
         simpanProgress({
           darjah: darjahId,
           subjek: subjekId,
@@ -164,35 +166,7 @@ function LatihTubiPage() {
           markah: betul,
           jumlahSoalan: jawab,
           masaAmbil: masaSec,
-          topik,
         });
-      } else {
-        const entries = Object.entries(topikStats);
-        if (entries.length > 0) {
-          // Lower darjah: satu row per topik (cumulative accumulate)
-          const masaPerSoalan = jawab > 0 ? masaSec / jawab : 0;
-          entries.forEach(([t, s]) => {
-            simpanProgress({
-              darjah: darjahId,
-              subjek: subjekId,
-              aktiviti: "latih-tubi",
-              markah: s.betul,
-              jumlahSoalan: s.jumlah,
-              masaAmbil: Math.round(masaPerSoalan * s.jumlah),
-              topik: t,
-            });
-          });
-        } else {
-          // Fallback: tiada topik pada soalan
-          simpanProgress({
-            darjah: darjahId,
-            subjek: subjekId,
-            aktiviti: "latih-tubi",
-            markah: betul,
-            jumlahSoalan: jawab,
-            masaAmbil: masaSec,
-          });
-        }
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
