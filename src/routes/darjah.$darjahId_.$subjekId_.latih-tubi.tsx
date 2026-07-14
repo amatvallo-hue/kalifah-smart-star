@@ -1,6 +1,7 @@
 import { createFileRoute, Link, useNavigate, useParams, useSearch } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { ArrowLeft, Check, X, Square } from "lucide-react";
+import { ArrowLeft, Check, X, Square, LayoutList } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
@@ -136,6 +137,10 @@ function LatihTubiPage() {
 
   const [topikStats, setTopikStats] = useState<Record<string, { betul: number; jumlah: number }>>({});
   const [mulaMasa, setMulaMasa] = useState(() => Date.now());
+
+  const [topikDialogOpen, setTopikDialogOpen] = useState(false);
+  const [topikList, setTopikList] = useState<string[] | null>(null);
+  const [topikListLoading, setTopikListLoading] = useState(false);
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
@@ -310,7 +315,43 @@ function LatihTubiPage() {
         ? `Practice questions for ${s} (${d}) are being prepared.`
         : `Soalan Latih Tubi untuk ${s} (${d}) sedang disediakan.`,
     ralat: en ? "Error" : "Ralat",
+    topik: en ? "Topics" : "Topik",
+    pilihTopik: en ? "Choose a Topic" : "Pilih Topik",
+    semuaTopik: en ? "All Topics" : "Semua Topik",
+    memuatkanTopik: en ? "Loading topics..." : "Memuatkan topik...",
+    tiadaTopik: en ? "No topics available" : "Tiada topik tersedia",
   };
+
+  async function openTopikDialog() {
+    setTopikDialogOpen(true);
+    if (topikList !== null || topikListLoading) return;
+    setTopikListLoading(true);
+    const bahasaFetch = bahasa ?? "bm";
+    const subjekQuery =
+      isMatematik
+        ? bahasaFetch === "en"
+          ? "matematik-en"
+          : "matematik"
+        : subjekId === "sains" && bahasaFetch === "en"
+          ? "sains-en"
+          : subjekId;
+    const { data } = await supabase
+      .from("soalan_latih_tubi")
+      .select("topik")
+      .eq("darjah", Number.isFinite(darjahNum) ? darjahNum : darjahId)
+      .eq("subjek", subjekQuery)
+      .not("feedback_a", "is", null)
+      .neq("feedback_a", "")
+      .not("topik", "is", null)
+      .neq("topik", "");
+    const uniq = Array.from(
+      new Set(((data ?? []) as { topik: string | null }[]).map((r) => r.topik ?? "").filter(Boolean)),
+    ).sort((a, b) => a.localeCompare(b));
+    setTopikList(uniq);
+    setTopikListLoading(false);
+  }
+
+
   
 
   return (
@@ -350,23 +391,77 @@ function LatihTubiPage() {
           >
             {t.latihTubi}
           </span>
+          <button
+            type="button"
+            onClick={openTopikDialog}
+            className="inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 font-display text-xs font-extrabold shadow-soft transition hover:opacity-80"
+            style={{ backgroundColor: EMAS, color: "#1a1a1a" }}
+          >
+            <LayoutList className="h-3.5 w-3.5" strokeWidth={2.5} />
+            {t.topik}
+          </button>
           {topikSearchParam && (
-            <>
-              <span className="rounded-full bg-secondary px-4 py-1.5 font-display text-xs font-extrabold text-foreground shadow-soft">
-                {topikSearchParam}
-              </span>
+            <span className="rounded-full bg-secondary px-4 py-1.5 font-display text-xs font-extrabold text-foreground shadow-soft">
+              {topikSearchParam}
+            </span>
+          )}
+        </div>
+
+        <Dialog open={topikDialogOpen} onOpenChange={setTopikDialogOpen}>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle className="font-display text-xl font-extrabold" style={{ color: HIJAU }}>
+                {t.pilihTopik}
+              </DialogTitle>
+            </DialogHeader>
+            <div className="mt-2 max-h-[60vh] overflow-y-auto pr-1">
               <Link
                 to="/darjah/$darjahId_/$subjekId_/latih-tubi"
                 params={{ darjahId, subjekId }}
                 search={{ topik: undefined }}
-                className="font-display text-xs font-bold underline transition hover:opacity-80"
-                style={{ color: HIJAU }}
+                onClick={() => setTopikDialogOpen(false)}
+                className="flex items-center justify-between rounded-2xl px-4 py-3 font-display text-sm font-extrabold shadow-soft transition hover:opacity-80"
+                style={{
+                  backgroundColor: !topikSearchParam ? HIJAU : `${HIJAU}15`,
+                  color: !topikSearchParam ? "white" : HIJAU,
+                }}
               >
-                {en ? "All Topics" : "Semua Topik"}
+                <span>{t.semuaTopik}</span>
+                {!topikSearchParam && <Check className="h-4 w-4" strokeWidth={3} />}
               </Link>
-            </>
-          )}
-        </div>
+              <div className="mt-2 space-y-1.5">
+                {topikListLoading ? (
+                  <p className="py-6 text-center text-sm text-muted-foreground">{t.memuatkanTopik}</p>
+                ) : topikList && topikList.length === 0 ? (
+                  <p className="py-6 text-center text-sm text-muted-foreground">{t.tiadaTopik}</p>
+                ) : (
+                  (topikList ?? []).map((tp) => {
+                    const active = topikSearchParam === tp;
+                    return (
+                      <Link
+                        key={tp}
+                        to="/darjah/$darjahId_/$subjekId_/latih-tubi"
+                        params={{ darjahId, subjekId }}
+                        search={{ topik: tp }}
+                        onClick={() => setTopikDialogOpen(false)}
+                        className="flex items-center justify-between rounded-xl border px-4 py-3 text-sm font-bold transition hover:opacity-80"
+                        style={{
+                          backgroundColor: active ? `${EMAS}20` : "transparent",
+                          borderColor: active ? EMAS : "hsl(var(--border))",
+                          color: active ? "#1a1a1a" : "inherit",
+                        }}
+                      >
+                        <span>{tp}</span>
+                        {active && <Check className="h-4 w-4" strokeWidth={3} style={{ color: EMAS }} />}
+                      </Link>
+                    );
+                  })
+                )}
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+
 
         {needBahasa ? (
           <div className="mt-8 rounded-3xl bg-card p-6 text-center shadow-card md:p-8">
