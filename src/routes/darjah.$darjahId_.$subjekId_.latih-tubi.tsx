@@ -334,39 +334,47 @@ function LatihTubiPage() {
     tiadaTopik: en ? "No topics available" : "Tiada topik tersedia",
   };
 
-  async function openTopikDialog() {
-    setTopikDialogOpen(true);
-    if (topikList !== null || topikListLoading) return;
+  const subjekQueryResolved =
+    isMatematik
+      ? bahasa === "en"
+        ? "matematik-en"
+        : "matematik"
+      : subjekId === "sains" && bahasa === "en"
+        ? "sains-en"
+        : subjekId;
+
+  useEffect(() => {
+    if (showBahasaToggle && !bahasa) return;
+    if (!Number.isFinite(darjahNum)) return;
+    let cancelled = false;
+    setTopikList(null);
     setTopikListLoading(true);
-    const bahasaFetch = bahasa ?? "bm";
-    const subjekQuery =
-      isMatematik
-        ? bahasaFetch === "en"
-          ? "matematik-en"
-          : "matematik"
-        : subjekId === "sains" && bahasaFetch === "en"
-          ? "sains-en"
-          : subjekId;
-    if (!Number.isFinite(darjahNum)) {
-      setTopikList([]);
+    (async () => {
+      const { data } = await supabase
+        .from("soalan_latih_tubi")
+        .select("topik")
+        .eq("darjah", darjahNum)
+        .eq("subjek", subjekQueryResolved)
+        .not("feedback_a", "is", null)
+        .neq("feedback_a", "")
+        .not("topik", "is", null)
+        .neq("topik", "");
+      if (cancelled) return;
+      const uniq = Array.from(
+        new Set(((data ?? []) as { topik: string | null }[]).map((r) => r.topik ?? "").filter(Boolean)),
+      ).sort((a, b) => a.localeCompare(b));
+      setTopikList(uniq);
       setTopikListLoading(false);
-      return;
-    }
-    const { data } = await supabase
-      .from("soalan_latih_tubi")
-      .select("topik")
-      .eq("darjah", darjahNum)
-      .eq("subjek", subjekQuery)
-      .not("feedback_a", "is", null)
-      .neq("feedback_a", "")
-      .not("topik", "is", null)
-      .neq("topik", "");
-    const uniq = Array.from(
-      new Set(((data ?? []) as { topik: string | null }[]).map((r) => r.topik ?? "").filter(Boolean)),
-    ).sort((a, b) => a.localeCompare(b));
-    setTopikList(uniq);
-    setTopikListLoading(false);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [darjahNum, subjekQueryResolved, bahasa, showBahasaToggle]);
+
+  function openTopikDialog() {
+    setTopikDialogOpen(true);
   }
+
 
 
   
