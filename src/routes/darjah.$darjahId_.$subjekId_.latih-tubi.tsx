@@ -366,16 +366,6 @@ function LatihTubiPage() {
               </Link>
             </>
           )}
-          {isUpper && started && topik && setLabel && (
-            <>
-              <span className="rounded-full bg-secondary px-4 py-1.5 font-display text-xs font-extrabold text-foreground shadow-soft">
-                {topik}
-              </span>
-              <span className="rounded-full bg-secondary px-4 py-1.5 font-display text-xs font-extrabold text-foreground shadow-soft">
-                Set {setLabel}
-              </span>
-            </>
-          )}
         </div>
 
         {needBahasa ? (
