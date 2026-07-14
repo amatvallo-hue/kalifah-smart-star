@@ -179,6 +179,17 @@ function LatihTubiPage() {
 
   useEffect(() => {
     if (showBahasaToggle && !bahasa) return;
+    // Defensive guard: refuse to query if params are missing/invalid.
+    if (!darjahId || darjahId === "undefined" || !subjekId || subjekId === "undefined" || !Number.isFinite(darjahNum)) {
+      setErrMsg("Darjah atau subjek tidak sah. Sila kembali ke halaman utama.");
+      setFetching(false);
+      return;
+    }
+    if (!getDarjah(darjahId) || !getSubjek(subjekId)) {
+      setErrMsg("Darjah atau subjek tidak dijumpai.");
+      setFetching(false);
+      return;
+    }
     let cancelled = false;
     (async () => {
       setFetching(true);
@@ -193,11 +204,12 @@ function LatihTubiPage() {
       let query = supabase
         .from("soalan_latih_tubi")
         .select("id, soalan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan_betul, topik, feedback_a, feedback_b, feedback_c, feedback_d, gambar, svg_type, svg_params")
-        .eq("darjah", Number.isFinite(darjahNum) ? darjahNum : darjahId)
+        .eq("darjah", darjahNum)
         .eq("subjek", subjekQuery)
         .not("feedback_a", "is", null)
         .neq("feedback_a", "");
       if (topikSearchParam) query = query.eq("topik", topikSearchParam);
+
       const { data, error } = await query;
       if (cancelled) return;
       if (error) {
