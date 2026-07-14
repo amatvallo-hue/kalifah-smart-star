@@ -172,9 +172,7 @@ function LatihTubiPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [berhenti]);
 
-  // Lower darjah (1-3): existing behaviour from soalan_latih_tubi
   useEffect(() => {
-    if (isUpper) return;
     if (showBahasaToggle && !bahasa) return;
     let cancelled = false;
     (async () => {
@@ -224,74 +222,7 @@ function LatihTubiPage() {
     return () => {
       cancelled = true;
     };
-  }, [darjahId, subjekId, isUpper, darjahNum, isMatematik, bahasa, topikSearchParam]);
-
-
-
-  // Upper darjah (4-6): fetch distinct topik list
-  useEffect(() => {
-    if (!isUpper) return;
-    let cancelled = false;
-    (async () => {
-      setLoadingTopics(true);
-      const { data, error } = await supabase
-        .from("latih_tubi_soalan")
-        .select("topik")
-        .eq("darjah", Number.isFinite(darjahNum) ? darjahNum : darjahId)
-        .eq("subjek", subjekCode);
-      if (cancelled) return;
-      if (error) {
-        setErrMsg(error.message);
-        setLoadingTopics(false);
-        return;
-      }
-      const uniq = Array.from(
-        new Set((data ?? []).map((r: any) => r.topik).filter((t: any): t is string => !!t)),
-      ).sort();
-      setTopicList(uniq);
-      setLoadingTopics(false);
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [isUpper, darjahId, subjekId, darjahNum, subjekCode]);
-
-  async function mulaLatihan() {
-    if (!topik || !setLabel) return;
-    setFetching(true);
-    setErrMsg(null);
-    const { data, error } = await supabase
-      .from("latih_tubi_soalan")
-      .select("id, soalan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan, topik, set_label")
-      .eq("darjah", Number.isFinite(darjahNum) ? darjahNum : darjahId)
-      .eq("subjek", subjekCode)
-      .eq("topik", topik)
-      .eq("set_label", setLabel);
-    if (error) {
-      setErrMsg(error.message);
-      setFetching(false);
-      return;
-    }
-    const rows = (data ?? []).map((r: any) => ({
-      id: r.id as string,
-      soalan: r.soalan as string,
-      pilihan: [r.pilihan_a, r.pilihan_b, r.pilihan_c, r.pilihan_d] as string[],
-      jawapan: letterToIdx(r.jawapan),
-    }));
-    const shuffled = shuffle(rows);
-    setBank(shuffled);
-    setOrder(shuffled.map((_, i) => i));
-    setCursor(0);
-    setPilih(null);
-    setBetul(0);
-    setSalah(0);
-    setJawab(0);
-    setTopikStats({});
-    setBerhenti(false);
-    setMulaMasa(Date.now());
-    setStarted(true);
-    setFetching(false);
-  }
+  }, [darjahId, subjekId, darjahNum, isMatematik, bahasa, topikSearchParam]);
 
   async function handleLogout() {
     await supabase.auth.signOut();
