@@ -315,7 +315,43 @@ function LatihTubiPage() {
         ? `Practice questions for ${s} (${d}) are being prepared.`
         : `Soalan Latih Tubi untuk ${s} (${d}) sedang disediakan.`,
     ralat: en ? "Error" : "Ralat",
+    topik: en ? "Topics" : "Topik",
+    pilihTopik: en ? "Choose a Topic" : "Pilih Topik",
+    semuaTopik: en ? "All Topics" : "Semua Topik",
+    memuatkanTopik: en ? "Loading topics..." : "Memuatkan topik...",
+    tiadaTopik: en ? "No topics available" : "Tiada topik tersedia",
   };
+
+  async function openTopikDialog() {
+    setTopikDialogOpen(true);
+    if (topikList !== null || topikListLoading) return;
+    setTopikListLoading(true);
+    const bahasaFetch = bahasa ?? "bm";
+    const subjekQuery =
+      isMatematik
+        ? bahasaFetch === "en"
+          ? "matematik-en"
+          : "matematik"
+        : subjekId === "sains" && bahasaFetch === "en"
+          ? "sains-en"
+          : subjekId;
+    const { data } = await supabase
+      .from("soalan_latih_tubi")
+      .select("topik")
+      .eq("darjah", Number.isFinite(darjahNum) ? darjahNum : darjahId)
+      .eq("subjek", subjekQuery)
+      .not("feedback_a", "is", null)
+      .neq("feedback_a", "")
+      .not("topik", "is", null)
+      .neq("topik", "");
+    const uniq = Array.from(
+      new Set(((data ?? []) as { topik: string | null }[]).map((r) => r.topik ?? "").filter(Boolean)),
+    ).sort((a, b) => a.localeCompare(b));
+    setTopikList(uniq);
+    setTopikListLoading(false);
+  }
+
+
   
 
   return (
