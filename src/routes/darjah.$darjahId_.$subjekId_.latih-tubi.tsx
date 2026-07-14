@@ -288,7 +288,7 @@ function LatihTubiPage() {
     });
   };
 
-  const needBahasa = showBahasaToggle && !bahasa && !started;
+  const needBahasa = showBahasaToggle && !bahasa;
   const en = bahasa === "en" || isEnglish;
   const t = {
     dijawab: en ? "ANSWERED" : "Dijawab",
@@ -300,7 +300,6 @@ function LatihTubiPage() {
     cubaLagi: en ? "Try Again" : "Cuba Lagi",
     syabas: en ? "Well done! 🎉" : "Syabas! 🎉",
     dahJawab: (n: number) => en ? `You answered ${n} questions.` : `Kamu dah jawab ${n} soalan.`,
-    pilihSetLain: en ? "Choose Another Set" : "Pilih Set Lain",
     aktivitiLain: en ? "Other Activities" : "Aktiviti Lain",
     kembali: en ? "Back to Activities" : "Kembali ke Aktiviti",
     latihTubi: en ? "Practice" : "Latih Tubi",
@@ -312,7 +311,7 @@ function LatihTubiPage() {
         : `Soalan Latih Tubi untuk ${s} (${d}) sedang disediakan.`,
     ralat: en ? "Error" : "Ralat",
   };
-  const showPicker = isUpper && !started && !needBahasa;
+  
 
   return (
     <div className="min-h-screen bg-background">
