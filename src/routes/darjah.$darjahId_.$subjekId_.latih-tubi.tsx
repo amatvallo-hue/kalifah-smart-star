@@ -431,7 +431,7 @@ function LatihTubiPage() {
                 type="button"
                 onClick={() => {
                   setTopikDialogOpen(false);
-                  navigate({ search: (prev: Record<string, unknown>) => ({ ...prev, topik: undefined }), replace: true });
+                  navigate({ to: ".", search: (prev: any) => ({ ...prev, topik: undefined }), replace: true } as any);
                 }}
                 className="flex w-full items-center justify-between rounded-2xl px-4 py-3 font-display text-sm font-extrabold shadow-soft transition hover:opacity-80"
                 style={{
@@ -456,7 +456,7 @@ function LatihTubiPage() {
                         type="button"
                         onClick={() => {
                           setTopikDialogOpen(false);
-                          navigate({ search: (prev: Record<string, unknown>) => ({ ...prev, topik: tp }), replace: true });
+                          navigate({ to: ".", search: (prev: any) => ({ ...prev, topik: tp }), replace: true } as any);
                         }}
                         className="flex w-full items-center justify-between rounded-xl border px-4 py-3 text-sm font-bold transition hover:opacity-80"
                         style={{
