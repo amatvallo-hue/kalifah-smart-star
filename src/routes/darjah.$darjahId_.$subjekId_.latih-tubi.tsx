@@ -375,6 +375,21 @@ function LatihTubiPage() {
     setTopikDialogOpen(true);
   }
 
+  // Auto-clear stale topik param that doesn't exist in the current language's topic list.
+  // Topic taxonomies differ between BM and EN (e.g. "Haiwan" vs "Animals"), so a bookmarked
+  // ?topik=X from one language returns zero rows if the user picks the other language.
+  useEffect(() => {
+    if (!topikSearchParam) return;
+    if (topikListLoading || topikList === null) return;
+    if (topikList.includes(topikSearchParam)) return;
+    navigate({
+      to: "/darjah/$darjahId/$subjekId/latih-tubi",
+      params: { darjahId, subjekId },
+      search: { topik: undefined },
+      replace: true,
+    });
+  }, [topikSearchParam, topikList, topikListLoading, darjahId, subjekId, navigate]);
+
 
 
   
