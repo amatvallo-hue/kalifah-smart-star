@@ -347,10 +347,15 @@ function LatihTubiPage() {
         : subjekId === "sains" && bahasaFetch === "en"
           ? "sains-en"
           : subjekId;
+    if (!Number.isFinite(darjahNum)) {
+      setTopikList([]);
+      setTopikListLoading(false);
+      return;
+    }
     const { data } = await supabase
       .from("soalan_latih_tubi")
       .select("topik")
-      .eq("darjah", Number.isFinite(darjahNum) ? darjahNum : darjahId)
+      .eq("darjah", darjahNum)
       .eq("subjek", subjekQuery)
       .not("feedback_a", "is", null)
       .neq("feedback_a", "")
