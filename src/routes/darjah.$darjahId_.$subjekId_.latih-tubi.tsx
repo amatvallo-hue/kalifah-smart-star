@@ -347,10 +347,15 @@ function LatihTubiPage() {
         : subjekId === "sains" && bahasaFetch === "en"
           ? "sains-en"
           : subjekId;
+    if (!Number.isFinite(darjahNum)) {
+      setTopikList([]);
+      setTopikListLoading(false);
+      return;
+    }
     const { data } = await supabase
       .from("soalan_latih_tubi")
       .select("topik")
-      .eq("darjah", Number.isFinite(darjahNum) ? darjahNum : darjahId)
+      .eq("darjah", darjahNum)
       .eq("subjek", subjekQuery)
       .not("feedback_a", "is", null)
       .neq("feedback_a", "")
@@ -431,7 +436,12 @@ function LatihTubiPage() {
                 type="button"
                 onClick={() => {
                   setTopikDialogOpen(false);
-                  navigate({ to: ".", search: (prev: any) => ({ ...prev, topik: undefined }), replace: true } as any);
+                  navigate({
+                    to: "/darjah/$darjahId/$subjekId/latih-tubi",
+                    params: { darjahId, subjekId },
+                    search: { topik: undefined },
+                    replace: true,
+                  });
                 }}
                 className="flex w-full items-center justify-between rounded-2xl px-4 py-3 font-display text-sm font-extrabold shadow-soft transition hover:opacity-80"
                 style={{
@@ -456,7 +466,12 @@ function LatihTubiPage() {
                         type="button"
                         onClick={() => {
                           setTopikDialogOpen(false);
-                          navigate({ to: ".", search: (prev: any) => ({ ...prev, topik: tp }), replace: true } as any);
+                          navigate({
+                            to: "/darjah/$darjahId/$subjekId/latih-tubi",
+                            params: { darjahId, subjekId },
+                            search: { topik: tp },
+                            replace: true,
+                          });
                         }}
                         className="flex w-full items-center justify-between rounded-xl border px-4 py-3 text-sm font-bold transition hover:opacity-80"
                         style={{
