@@ -427,12 +427,13 @@ function LatihTubiPage() {
               </DialogTitle>
             </DialogHeader>
             <div className="mt-2 max-h-[60vh] overflow-y-auto pr-1">
-              <Link
-                to="/darjah/$darjahId_/$subjekId_/latih-tubi"
-                params={{ darjahId, subjekId }}
-                search={{ topik: undefined }}
-                onClick={() => setTopikDialogOpen(false)}
-                className="flex items-center justify-between rounded-2xl px-4 py-3 font-display text-sm font-extrabold shadow-soft transition hover:opacity-80"
+              <button
+                type="button"
+                onClick={() => {
+                  setTopikDialogOpen(false);
+                  navigate({ search: (prev: Record<string, unknown>) => ({ ...prev, topik: undefined }), replace: true });
+                }}
+                className="flex w-full items-center justify-between rounded-2xl px-4 py-3 font-display text-sm font-extrabold shadow-soft transition hover:opacity-80"
                 style={{
                   backgroundColor: !topikSearchParam ? HIJAU : `${HIJAU}15`,
                   color: !topikSearchParam ? "white" : HIJAU,
@@ -440,7 +441,7 @@ function LatihTubiPage() {
               >
                 <span>{t.semuaTopik}</span>
                 {!topikSearchParam && <Check className="h-4 w-4" strokeWidth={3} />}
-              </Link>
+              </button>
               <div className="mt-2 space-y-1.5">
                 {topikListLoading ? (
                   <p className="py-6 text-center text-sm text-muted-foreground">{t.memuatkanTopik}</p>
@@ -450,13 +451,14 @@ function LatihTubiPage() {
                   (topikList ?? []).map((tp) => {
                     const active = topikSearchParam === tp;
                     return (
-                      <Link
+                      <button
                         key={tp}
-                        to="/darjah/$darjahId_/$subjekId_/latih-tubi"
-                        params={{ darjahId, subjekId }}
-                        search={{ topik: tp }}
-                        onClick={() => setTopikDialogOpen(false)}
-                        className="flex items-center justify-between rounded-xl border px-4 py-3 text-sm font-bold transition hover:opacity-80"
+                        type="button"
+                        onClick={() => {
+                          setTopikDialogOpen(false);
+                          navigate({ search: (prev: Record<string, unknown>) => ({ ...prev, topik: tp }), replace: true });
+                        }}
+                        className="flex w-full items-center justify-between rounded-xl border px-4 py-3 text-sm font-bold transition hover:opacity-80"
                         style={{
                           backgroundColor: active ? `${EMAS}20` : "transparent",
                           borderColor: active ? EMAS : "hsl(var(--border))",
@@ -465,12 +467,13 @@ function LatihTubiPage() {
                       >
                         <span>{tp}</span>
                         {active && <Check className="h-4 w-4" strokeWidth={3} style={{ color: EMAS }} />}
-                      </Link>
+                      </button>
                     );
                   })
                 )}
               </div>
             </div>
+
           </DialogContent>
         </Dialog>
 
