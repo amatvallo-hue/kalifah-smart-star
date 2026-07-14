@@ -179,6 +179,17 @@ function LatihTubiPage() {
 
   useEffect(() => {
     if (showBahasaToggle && !bahasa) return;
+    // Defensive guard: refuse to query if params are missing/invalid.
+    if (!darjahId || darjahId === "undefined" || !subjekId || subjekId === "undefined" || !Number.isFinite(darjahNum)) {
+      setErrMsg("Darjah atau subjek tidak sah. Sila kembali ke halaman utama.");
+      setFetching(false);
+      return;
+    }
+    if (!getDarjah(darjahId) || !getSubjek(subjekId)) {
+      setErrMsg("Darjah atau subjek tidak dijumpai.");
+      setFetching(false);
+      return;
+    }
     let cancelled = false;
     (async () => {
       setFetching(true);
@@ -193,11 +204,12 @@ function LatihTubiPage() {
       let query = supabase
         .from("soalan_latih_tubi")
         .select("id, soalan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan_betul, topik, feedback_a, feedback_b, feedback_c, feedback_d, gambar, svg_type, svg_params")
-        .eq("darjah", Number.isFinite(darjahNum) ? darjahNum : darjahId)
+        .eq("darjah", darjahNum)
         .eq("subjek", subjekQuery)
         .not("feedback_a", "is", null)
         .neq("feedback_a", "");
       if (topikSearchParam) query = query.eq("topik", topikSearchParam);
+
       const { data, error } = await query;
       if (cancelled) return;
       if (error) {
@@ -415,12 +427,13 @@ function LatihTubiPage() {
               </DialogTitle>
             </DialogHeader>
             <div className="mt-2 max-h-[60vh] overflow-y-auto pr-1">
-              <Link
-                to="/darjah/$darjahId_/$subjekId_/latih-tubi"
-                params={{ darjahId, subjekId }}
-                search={{ topik: undefined }}
-                onClick={() => setTopikDialogOpen(false)}
-                className="flex items-center justify-between rounded-2xl px-4 py-3 font-display text-sm font-extrabold shadow-soft transition hover:opacity-80"
+              <button
+                type="button"
+                onClick={() => {
+                  setTopikDialogOpen(false);
+                  navigate({ to: ".", search: (prev: any) => ({ ...prev, topik: undefined }), replace: true } as any);
+                }}
+                className="flex w-full items-center justify-between rounded-2xl px-4 py-3 font-display text-sm font-extrabold shadow-soft transition hover:opacity-80"
                 style={{
                   backgroundColor: !topikSearchParam ? HIJAU : `${HIJAU}15`,
                   color: !topikSearchParam ? "white" : HIJAU,
@@ -428,7 +441,7 @@ function LatihTubiPage() {
               >
                 <span>{t.semuaTopik}</span>
                 {!topikSearchParam && <Check className="h-4 w-4" strokeWidth={3} />}
-              </Link>
+              </button>
               <div className="mt-2 space-y-1.5">
                 {topikListLoading ? (
                   <p className="py-6 text-center text-sm text-muted-foreground">{t.memuatkanTopik}</p>
@@ -438,13 +451,14 @@ function LatihTubiPage() {
                   (topikList ?? []).map((tp) => {
                     const active = topikSearchParam === tp;
                     return (
-                      <Link
+                      <button
                         key={tp}
-                        to="/darjah/$darjahId_/$subjekId_/latih-tubi"
-                        params={{ darjahId, subjekId }}
-                        search={{ topik: tp }}
-                        onClick={() => setTopikDialogOpen(false)}
-                        className="flex items-center justify-between rounded-xl border px-4 py-3 text-sm font-bold transition hover:opacity-80"
+                        type="button"
+                        onClick={() => {
+                          setTopikDialogOpen(false);
+                          navigate({ to: ".", search: (prev: any) => ({ ...prev, topik: tp }), replace: true } as any);
+                        }}
+                        className="flex w-full items-center justify-between rounded-xl border px-4 py-3 text-sm font-bold transition hover:opacity-80"
                         style={{
                           backgroundColor: active ? `${EMAS}20` : "transparent",
                           borderColor: active ? EMAS : "hsl(var(--border))",
@@ -453,12 +467,13 @@ function LatihTubiPage() {
                       >
                         <span>{tp}</span>
                         {active && <Check className="h-4 w-4" strokeWidth={3} style={{ color: EMAS }} />}
-                      </Link>
+                      </button>
                     );
                   })
                 )}
               </div>
             </div>
+
           </DialogContent>
         </Dialog>
 
