@@ -426,33 +426,20 @@ function LatihTubiPage() {
             <div className="mt-6 flex flex-wrap justify-center gap-3">
               <button
                 onClick={() => {
-                  if (isUpper) {
-                    setStarted(false);
-                    setBank([]);
-                    setOrder([]);
-                    setBetul(0);
-                    setSalah(0);
-                    setJawab(0);
-                    setTopikStats({});
-                    setCursor(0);
-                    setPilih(null);
-                    setBerhenti(false);
-                  } else {
-                    setBetul(0);
-                    setSalah(0);
-                    setJawab(0);
-                    setTopikStats({});
-                    setCursor(0);
-                    setPilih(null);
-                    setMulaMasa(Date.now());
-                    setOrder(shuffle(bank.map((_, i) => i)));
-                    setBerhenti(false);
-                  }
+                  setBetul(0);
+                  setSalah(0);
+                  setJawab(0);
+                  setTopikStats({});
+                  setCursor(0);
+                  setPilih(null);
+                  setMulaMasa(Date.now());
+                  setOrder(shuffle(bank.map((_, i) => i)));
+                  setBerhenti(false);
                 }}
                 className="rounded-full px-6 py-3 font-display font-extrabold text-white shadow-soft transition hover:opacity-90"
                 style={{ backgroundColor: HIJAU }}
               >
-                {isUpper ? t.pilihSetLain : t.cubaLagi}
+                {t.cubaLagi}
               </button>
               <Link
                 to="/darjah/$darjahId/$subjekId"
