@@ -138,6 +138,10 @@ function LatihTubiPage() {
   const [topikStats, setTopikStats] = useState<Record<string, { betul: number; jumlah: number }>>({});
   const [mulaMasa, setMulaMasa] = useState(() => Date.now());
 
+  const [topikDialogOpen, setTopikDialogOpen] = useState(false);
+  const [topikList, setTopikList] = useState<string[] | null>(null);
+  const [topikListLoading, setTopikListLoading] = useState(false);
+
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
   }, [loading, user, navigate]);
