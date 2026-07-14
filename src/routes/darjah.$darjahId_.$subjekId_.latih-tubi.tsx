@@ -466,7 +466,12 @@ function LatihTubiPage() {
                         type="button"
                         onClick={() => {
                           setTopikDialogOpen(false);
-                          navigate({ to: ".", search: (prev: any) => ({ ...prev, topik: tp }), replace: true } as any);
+                          navigate({
+                            to: "/darjah/$darjahId/$subjekId/latih-tubi",
+                            params: { darjahId, subjekId },
+                            search: { topik: tp },
+                            replace: true,
+                          });
                         }}
                         className="flex w-full items-center justify-between rounded-xl border px-4 py-3 text-sm font-bold transition hover:opacity-80"
                         style={{
