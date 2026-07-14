@@ -391,23 +391,77 @@ function LatihTubiPage() {
           >
             {t.latihTubi}
           </span>
+          <button
+            type="button"
+            onClick={openTopikDialog}
+            className="inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 font-display text-xs font-extrabold shadow-soft transition hover:opacity-80"
+            style={{ backgroundColor: EMAS, color: "#1a1a1a" }}
+          >
+            <LayoutList className="h-3.5 w-3.5" strokeWidth={2.5} />
+            {t.topik}
+          </button>
           {topikSearchParam && (
-            <>
-              <span className="rounded-full bg-secondary px-4 py-1.5 font-display text-xs font-extrabold text-foreground shadow-soft">
-                {topikSearchParam}
-              </span>
+            <span className="rounded-full bg-secondary px-4 py-1.5 font-display text-xs font-extrabold text-foreground shadow-soft">
+              {topikSearchParam}
+            </span>
+          )}
+        </div>
+
+        <Dialog open={topikDialogOpen} onOpenChange={setTopikDialogOpen}>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle className="font-display text-xl font-extrabold" style={{ color: HIJAU }}>
+                {t.pilihTopik}
+              </DialogTitle>
+            </DialogHeader>
+            <div className="mt-2 max-h-[60vh] overflow-y-auto pr-1">
               <Link
                 to="/darjah/$darjahId_/$subjekId_/latih-tubi"
                 params={{ darjahId, subjekId }}
                 search={{ topik: undefined }}
-                className="font-display text-xs font-bold underline transition hover:opacity-80"
-                style={{ color: HIJAU }}
+                onClick={() => setTopikDialogOpen(false)}
+                className="flex items-center justify-between rounded-2xl px-4 py-3 font-display text-sm font-extrabold shadow-soft transition hover:opacity-80"
+                style={{
+                  backgroundColor: !topikSearchParam ? HIJAU : `${HIJAU}15`,
+                  color: !topikSearchParam ? "white" : HIJAU,
+                }}
               >
-                {en ? "All Topics" : "Semua Topik"}
+                <span>{t.semuaTopik}</span>
+                {!topikSearchParam && <Check className="h-4 w-4" strokeWidth={3} />}
               </Link>
-            </>
-          )}
-        </div>
+              <div className="mt-2 space-y-1.5">
+                {topikListLoading ? (
+                  <p className="py-6 text-center text-sm text-muted-foreground">{t.memuatkanTopik}</p>
+                ) : topikList && topikList.length === 0 ? (
+                  <p className="py-6 text-center text-sm text-muted-foreground">{t.tiadaTopik}</p>
+                ) : (
+                  (topikList ?? []).map((tp) => {
+                    const active = topikSearchParam === tp;
+                    return (
+                      <Link
+                        key={tp}
+                        to="/darjah/$darjahId_/$subjekId_/latih-tubi"
+                        params={{ darjahId, subjekId }}
+                        search={{ topik: tp }}
+                        onClick={() => setTopikDialogOpen(false)}
+                        className="flex items-center justify-between rounded-xl border px-4 py-3 text-sm font-bold transition hover:opacity-80"
+                        style={{
+                          backgroundColor: active ? `${EMAS}20` : "transparent",
+                          borderColor: active ? EMAS : "hsl(var(--border))",
+                          color: active ? "#1a1a1a" : "inherit",
+                        }}
+                      >
+                        <span>{tp}</span>
+                        {active && <Check className="h-4 w-4" strokeWidth={3} style={{ color: EMAS }} />}
+                      </Link>
+                    );
+                  })
+                )}
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+
 
         {needBahasa ? (
           <div className="mt-8 rounded-3xl bg-card p-6 text-center shadow-card md:p-8">
