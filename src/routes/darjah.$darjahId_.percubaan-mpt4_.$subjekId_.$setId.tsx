@@ -8,7 +8,7 @@ import { usePoints } from "@/hooks/use-points";
 import { useProfile } from "@/hooks/use-profile";
 import { getDarjah, getSubjek, TONE_GRADIENT } from "@/lib/curriculum";
 
-export const Route = createFileRoute("/darjah/$darjahId_/percubaan-mpt4/$subjekId_/$setId")({
+export const Route = createFileRoute("/darjah/$darjahId_/percubaan-mpt4_/$subjekId_/$setId")({
   head: () => ({
     meta: [{ title: "Percubaan MPT4 — Jawab Soalan — Kalifah.my" }],
   }),
@@ -85,7 +85,7 @@ function countWords(str: string): number {
 function PercubaanMpt4JawabPage() {
   const navigate = useNavigate();
   const { darjahId, subjekId, setId } = useParams({
-    from: "/darjah/$darjahId_/percubaan-mpt4/$subjekId_/$setId",
+    from: "/darjah/$darjahId_/percubaan-mpt4_/$subjekId_/$setId",
   });
   const { user, loading } = useAuth();
   const { profile, loading: profileLoading } = useProfile();
