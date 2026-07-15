@@ -103,7 +103,7 @@ function KeputusanPage() {
   const [setInfo, setSetInfo] = useState<Mpt4Set | null>(null);
   const [soalanList, setSoalanList] = useState<Mpt4Soalan[] | null>(null);
   const [keputusan, setKeputusan] = useState<Mpt4Keputusan | null>(null);
-  const [phase, setPhase] = useState<"loading" | "grading" | "done" | "error">("loading");
+  const [phase, setPhase] = useState<"loading" | "grading" | "done" | "error" | "empty">("loading");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [openBahagian, setOpenBahagian] = useState<Record<string, boolean>>({});
 
@@ -142,6 +142,7 @@ function KeputusanPage() {
           )
           .eq("user_id", user.id)
           .eq("set_id", setId)
+          .in("status", ["completed", "submitted"])
           .order("created_at", { ascending: false })
           .limit(1)
           .maybeSingle(),
@@ -163,8 +164,7 @@ function KeputusanPage() {
       setOpenBahagian(opens);
 
       if (!kep) {
-        setErrorMsg("Tiada rekod jawapan ditemui.");
-        setPhase("error");
+        setPhase("empty");
         return;
       }
       if (kep.status === "completed") {
@@ -342,6 +342,25 @@ function KeputusanPage() {
         {phase === "error" && (
           <div className="mt-6 rounded-2xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700">
             Ralat: {errorMsg}
+          </div>
+        )}
+
+        {phase === "empty" && (
+          <div className="mt-10 flex flex-col items-center justify-center gap-4 rounded-3xl border border-border/60 bg-card p-10 text-center shadow-card">
+            <div className="text-5xl">📭</div>
+            <h2 className="font-display text-2xl font-extrabold text-foreground">
+              Belum ada jawapan dihantar untuk set ini
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              Sila jawab dan hantar set ini dahulu untuk melihat keputusan.
+            </p>
+            <Link
+              to="/darjah/$darjahId/percubaan-mpt4/$subjekId"
+              params={{ darjahId, subjekId }}
+              className="mt-2 inline-flex items-center gap-2 rounded-full bg-gradient-primary px-6 py-3 font-display text-sm font-extrabold text-primary-foreground shadow-soft"
+            >
+              <ArrowLeft className="h-4 w-4" /> Kembali ke Senarai Set
+            </Link>
           </div>
         )}
 
