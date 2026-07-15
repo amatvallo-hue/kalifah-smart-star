@@ -50,6 +50,7 @@ import { Route as DarjahDarjahIdSubjekIdGameRouteImport } from './routes/darjah.
 import { Route as DarjahDarjahIdSubjekIdBergambarRajahRouteImport } from './routes/darjah.$darjahId_.$subjekId_.bergambar-rajah'
 import { Route as ApiPublicToyyibpayCallbackRouteImport } from './routes/api.public.toyyibpay.callback'
 import { Route as DarjahDarjahIdPercubaanMpt4SubjekIdSetIdRouteImport } from './routes/darjah.$darjahId_.percubaan-mpt4.$subjekId_.$setId'
+import { Route as DarjahDarjahIdPercubaanMpt4SubjekIdSetIdKeputusanRouteImport } from './routes/darjah.$darjahId_.percubaan-mpt4.$subjekId_.$setId_.keputusan'
 
 const UjianPercumaRoute = UjianPercumaRouteImport.update({
   id: '/ujian-percuma',
@@ -269,6 +270,12 @@ const DarjahDarjahIdPercubaanMpt4SubjekIdSetIdRoute =
     path: '/$subjekId/$setId',
     getParentRoute: () => DarjahDarjahIdPercubaanMpt4Route,
   } as any)
+const DarjahDarjahIdPercubaanMpt4SubjekIdSetIdKeputusanRoute =
+  DarjahDarjahIdPercubaanMpt4SubjekIdSetIdKeputusanRouteImport.update({
+    id: '/$subjekId_/$setId_/keputusan',
+    path: '/$subjekId/$setId/keputusan',
+    getParentRoute: () => DarjahDarjahIdPercubaanMpt4Route,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -312,6 +319,7 @@ export interface FileRoutesByFullPath {
   '/darjah/$darjahId/$subjekId/nota-ringkas': typeof DarjahDarjahIdSubjekIdNotaRingkasRoute
   '/darjah/$darjahId/percubaan-mpt4/$subjekId': typeof DarjahDarjahIdPercubaanMpt4SubjekIdRoute
   '/darjah/$darjahId/percubaan-mpt4/$subjekId/$setId': typeof DarjahDarjahIdPercubaanMpt4SubjekIdSetIdRoute
+  '/darjah/$darjahId/percubaan-mpt4/$subjekId/$setId/keputusan': typeof DarjahDarjahIdPercubaanMpt4SubjekIdSetIdKeputusanRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -355,6 +363,7 @@ export interface FileRoutesByTo {
   '/darjah/$darjahId/$subjekId/nota-ringkas': typeof DarjahDarjahIdSubjekIdNotaRingkasRoute
   '/darjah/$darjahId/percubaan-mpt4/$subjekId': typeof DarjahDarjahIdPercubaanMpt4SubjekIdRoute
   '/darjah/$darjahId/percubaan-mpt4/$subjekId/$setId': typeof DarjahDarjahIdPercubaanMpt4SubjekIdSetIdRoute
+  '/darjah/$darjahId/percubaan-mpt4/$subjekId/$setId/keputusan': typeof DarjahDarjahIdPercubaanMpt4SubjekIdSetIdKeputusanRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -399,6 +408,7 @@ export interface FileRoutesById {
   '/darjah/$darjahId_/$subjekId_/nota-ringkas': typeof DarjahDarjahIdSubjekIdNotaRingkasRoute
   '/darjah/$darjahId_/percubaan-mpt4/$subjekId': typeof DarjahDarjahIdPercubaanMpt4SubjekIdRoute
   '/darjah/$darjahId_/percubaan-mpt4/$subjekId_/$setId': typeof DarjahDarjahIdPercubaanMpt4SubjekIdSetIdRoute
+  '/darjah/$darjahId_/percubaan-mpt4/$subjekId_/$setId_/keputusan': typeof DarjahDarjahIdPercubaanMpt4SubjekIdSetIdKeputusanRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -444,6 +454,7 @@ export interface FileRouteTypes {
     | '/darjah/$darjahId/$subjekId/nota-ringkas'
     | '/darjah/$darjahId/percubaan-mpt4/$subjekId'
     | '/darjah/$darjahId/percubaan-mpt4/$subjekId/$setId'
+    | '/darjah/$darjahId/percubaan-mpt4/$subjekId/$setId/keputusan'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -487,6 +498,7 @@ export interface FileRouteTypes {
     | '/darjah/$darjahId/$subjekId/nota-ringkas'
     | '/darjah/$darjahId/percubaan-mpt4/$subjekId'
     | '/darjah/$darjahId/percubaan-mpt4/$subjekId/$setId'
+    | '/darjah/$darjahId/percubaan-mpt4/$subjekId/$setId/keputusan'
   id:
     | '__root__'
     | '/'
@@ -530,6 +542,7 @@ export interface FileRouteTypes {
     | '/darjah/$darjahId_/$subjekId_/nota-ringkas'
     | '/darjah/$darjahId_/percubaan-mpt4/$subjekId'
     | '/darjah/$darjahId_/percubaan-mpt4/$subjekId_/$setId'
+    | '/darjah/$darjahId_/percubaan-mpt4/$subjekId_/$setId_/keputusan'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -863,12 +876,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DarjahDarjahIdPercubaanMpt4SubjekIdSetIdRouteImport
       parentRoute: typeof DarjahDarjahIdPercubaanMpt4Route
     }
+    '/darjah/$darjahId_/percubaan-mpt4/$subjekId_/$setId_/keputusan': {
+      id: '/darjah/$darjahId_/percubaan-mpt4/$subjekId_/$setId_/keputusan'
+      path: '/$subjekId/$setId/keputusan'
+      fullPath: '/darjah/$darjahId/percubaan-mpt4/$subjekId/$setId/keputusan'
+      preLoaderRoute: typeof DarjahDarjahIdPercubaanMpt4SubjekIdSetIdKeputusanRouteImport
+      parentRoute: typeof DarjahDarjahIdPercubaanMpt4Route
+    }
   }
 }
 
 interface DarjahDarjahIdPercubaanMpt4RouteChildren {
   DarjahDarjahIdPercubaanMpt4SubjekIdRoute: typeof DarjahDarjahIdPercubaanMpt4SubjekIdRoute
   DarjahDarjahIdPercubaanMpt4SubjekIdSetIdRoute: typeof DarjahDarjahIdPercubaanMpt4SubjekIdSetIdRoute
+  DarjahDarjahIdPercubaanMpt4SubjekIdSetIdKeputusanRoute: typeof DarjahDarjahIdPercubaanMpt4SubjekIdSetIdKeputusanRoute
 }
 
 const DarjahDarjahIdPercubaanMpt4RouteChildren: DarjahDarjahIdPercubaanMpt4RouteChildren =
@@ -877,6 +898,8 @@ const DarjahDarjahIdPercubaanMpt4RouteChildren: DarjahDarjahIdPercubaanMpt4Route
       DarjahDarjahIdPercubaanMpt4SubjekIdRoute,
     DarjahDarjahIdPercubaanMpt4SubjekIdSetIdRoute:
       DarjahDarjahIdPercubaanMpt4SubjekIdSetIdRoute,
+    DarjahDarjahIdPercubaanMpt4SubjekIdSetIdKeputusanRoute:
+      DarjahDarjahIdPercubaanMpt4SubjekIdSetIdKeputusanRoute,
   }
 
 const DarjahDarjahIdPercubaanMpt4RouteWithChildren =
