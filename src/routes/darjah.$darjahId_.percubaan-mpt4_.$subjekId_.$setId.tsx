@@ -210,7 +210,7 @@ function PercubaanMpt4JawabPage() {
     return () => {
       cancelled = true;
     };
-  }, [user, setId]);
+  }, [user, setId, darjahId, subjekId, navigate]);
 
   // Elapsed timer
   useEffect(() => {
