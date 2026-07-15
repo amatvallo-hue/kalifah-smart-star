@@ -345,6 +345,25 @@ function KeputusanPage() {
           </div>
         )}
 
+        {phase === "empty" && (
+          <div className="mt-10 flex flex-col items-center justify-center gap-4 rounded-3xl border border-border/60 bg-card p-10 text-center shadow-card">
+            <div className="text-5xl">📭</div>
+            <h2 className="font-display text-2xl font-extrabold text-foreground">
+              Belum ada jawapan dihantar untuk set ini
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              Sila jawab dan hantar set ini dahulu untuk melihat keputusan.
+            </p>
+            <Link
+              to="/darjah/$darjahId/percubaan-mpt4/$subjekId"
+              params={{ darjahId, subjekId }}
+              className="mt-2 inline-flex items-center gap-2 rounded-full bg-gradient-primary px-6 py-3 font-display text-sm font-extrabold text-primary-foreground shadow-soft"
+            >
+              <ArrowLeft className="h-4 w-4" /> Kembali ke Senarai Set
+            </Link>
+          </div>
+        )}
+
         {phase === "grading" && (
           <div className="mt-10 flex flex-col items-center justify-center gap-4 rounded-3xl border border-border/60 bg-card p-10 text-center shadow-card">
             <Loader2 className="h-10 w-10 animate-spin text-primary" />
