@@ -7,7 +7,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { usePoints } from "@/hooks/use-points";
 
 export const Route = createFileRoute(
-  "/darjah/$darjahId_/percubaan-mpt4/$subjekId_/$setId_/keputusan",
+  "/darjah/$darjahId_/percubaan-mpt4_/$subjekId_/$setId_/keputusan",
 )({
   head: () => ({
     meta: [{ title: "Percubaan MPT4 — Keputusan (Dalam Pembinaan) — Kalifah.my" }],
@@ -19,7 +19,7 @@ export const Route = createFileRoute(
 function KeputusanStubPage() {
   const navigate = useNavigate();
   const { darjahId, subjekId } = useParams({
-    from: "/darjah/$darjahId_/percubaan-mpt4/$subjekId_/$setId_/keputusan",
+    from: "/darjah/$darjahId_/percubaan-mpt4_/$subjekId_/$setId_/keputusan",
   });
   const { user, loading } = useAuth();
   const mata = usePoints();

@@ -8,7 +8,7 @@ import { usePoints } from "@/hooks/use-points";
 import { useProfile } from "@/hooks/use-profile";
 import { getDarjah, getSubjek, TONE_GRADIENT } from "@/lib/curriculum";
 
-export const Route = createFileRoute("/darjah/$darjahId_/percubaan-mpt4/$subjekId")({
+export const Route = createFileRoute("/darjah/$darjahId_/percubaan-mpt4_/$subjekId")({
   head: () => ({
     meta: [{ title: "Percubaan MPT4 — Pilih Set — Kalifah.my" }],
   }),
@@ -45,7 +45,7 @@ function formatTempoh(minit: number | null): string {
 
 function PercubaanMpt4SetPage() {
   const navigate = useNavigate();
-  const { darjahId, subjekId } = useParams({ from: "/darjah/$darjahId_/percubaan-mpt4/$subjekId" });
+  const { darjahId, subjekId } = useParams({ from: "/darjah/$darjahId_/percubaan-mpt4_/$subjekId" });
   const { user, loading } = useAuth();
   const { profile, loading: profileLoading } = useProfile();
   const darjah = getDarjah(darjahId);
