@@ -150,12 +150,38 @@ function PercubaanMpt4JawabPage() {
     if (!user || !setId) return;
     let cancelled = false;
     (async () => {
+      // 1. Check if there's already a submitted/completed attempt → redirect to keputusan
+      const { data: doneRow, error: doneErr } = await supabase
+        .from("mpt4_keputusan")
+        .select("id, status")
+        .eq("user_id", user.id)
+        .eq("set_id", setId)
+        .in("status", ["submitted", "completed"])
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      if (cancelled) return;
+      if (doneErr) {
+        setFetchError(doneErr.message);
+        return;
+      }
+      if (doneRow) {
+        navigate({
+          to: "/darjah/$darjahId/percubaan-mpt4/$subjekId/$setId/keputusan",
+          params: { darjahId, subjekId, setId },
+          replace: true,
+        });
+        return;
+      }
+
+      // 2. Otherwise resume in_progress or create fresh
       const { data: existing, error: qErr } = await supabase
         .from("mpt4_keputusan")
         .select("id, jawapan, started_at, status")
         .eq("user_id", user.id)
         .eq("set_id", setId)
         .eq("status", "in_progress")
+        .order("created_at", { ascending: false })
         .limit(1)
         .maybeSingle();
       if (cancelled) return;
