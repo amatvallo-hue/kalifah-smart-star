@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate, useParams } from "@tanstack/react-r
 import { ArrowLeft, Check, ChevronDown, ChevronUp, Loader2, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
+import { renderSoalanSvg } from "@/lib/render-soalan-svg";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { usePoints } from "@/hooks/use-points";
@@ -40,6 +41,8 @@ interface Mpt4Soalan {
   pilihan_d: string | null;
   jawapan_betul: string | null;
   markah: number;
+  stimulus_keterangan: string | null;
+  stimulus_svg: { svg_type: string; params: any; bahasa?: "bm" | "en" } | null;
 }
 
 interface EseiPenilaianItem {
@@ -130,7 +133,7 @@ function KeputusanPage() {
         supabase
           .from("mpt4_soalan")
           .select(
-            "id, bahagian, no_soalan, sub_bahagian, teks_soalan, jenis_item, kaedah_penskoran, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan_betul, markah",
+            "id, bahagian, no_soalan, sub_bahagian, teks_soalan, jenis_item, kaedah_penskoran, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan_betul, markah, stimulus_keterangan, stimulus_svg",
           )
           .eq("set_id", setId)
           .order("bahagian", { ascending: true })
@@ -576,6 +579,21 @@ function ReviewCard({
         <p className="text-sm leading-relaxed text-foreground whitespace-pre-wrap">{bm}</p>
         {en && <p className="mt-1 text-xs italic leading-relaxed text-muted-foreground whitespace-pre-wrap">{en}</p>}
       </div>
+
+      {soalan.stimulus_svg ? (
+        <div className="mt-3 flex justify-center rounded-2xl border border-border/60 bg-card p-3">
+          {renderSoalanSvg(soalan.stimulus_svg.svg_type, soalan.stimulus_svg.params, soalan.stimulus_svg.bahasa)}
+        </div>
+      ) : soalan.stimulus_keterangan ? (
+        <div className="mt-3 rounded-2xl border-2 border-dashed border-border/70 bg-muted/30 p-3">
+          <div className="mb-1 text-[10px] font-bold text-muted-foreground">
+            📊 Rajah/Jadual (belum siap dilukis)
+          </div>
+          <p className="text-xs italic text-muted-foreground whitespace-pre-wrap">
+            {soalan.stimulus_keterangan}
+          </p>
+        </div>
+      ) : null}
 
       <div className="mt-3 space-y-2 text-sm">
         <div className="rounded-xl bg-secondary/60 px-3 py-2">

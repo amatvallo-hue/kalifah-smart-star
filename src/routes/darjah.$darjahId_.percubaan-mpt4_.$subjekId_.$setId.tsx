@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate, useParams } from "@tanstack/react-r
 import { ArrowLeft, Check, Loader2 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
+import { renderSoalanSvg } from "@/lib/render-soalan-svg";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { usePoints } from "@/hooks/use-points";
@@ -37,6 +38,7 @@ interface Mpt4Soalan {
   teks_soalan: string;
   konteks: string | null;
   stimulus_keterangan: string | null;
+  stimulus_svg: { svg_type: string; params: any; bahasa?: "bm" | "en" } | null;
   jenis_item: JenisItem;
   kaedah_penskoran: KaedahPenskoran;
   pilihan_a: string | null;
@@ -122,7 +124,7 @@ function PercubaanMpt4JawabPage() {
         supabase
           .from("mpt4_soalan")
           .select(
-            "id, set_id, bahagian, no_soalan, sub_bahagian, teks_soalan, konteks, stimulus_keterangan, jenis_item, kaedah_penskoran, pilihan_a, pilihan_b, pilihan_c, pilihan_d, markah",
+            "id, set_id, bahagian, no_soalan, sub_bahagian, teks_soalan, konteks, stimulus_keterangan, stimulus_svg, jenis_item, kaedah_penskoran, pilihan_a, pilihan_b, pilihan_c, pilihan_d, markah",
           )
           .eq("set_id", setId)
           .order("bahagian", { ascending: true })
@@ -497,7 +499,11 @@ function SoalanCard({
         </div>
       )}
 
-      {soalan.stimulus_keterangan && (
+      {soalan.stimulus_svg ? (
+        <div className="mt-4 flex justify-center rounded-2xl border border-border/60 bg-card p-4">
+          {renderSoalanSvg(soalan.stimulus_svg.svg_type, soalan.stimulus_svg.params, soalan.stimulus_svg.bahasa)}
+        </div>
+      ) : soalan.stimulus_keterangan ? (
         <div className="mt-4 rounded-2xl border-2 border-dashed border-border/70 bg-muted/30 p-4">
           <div className="mb-1 text-[11px] font-bold text-muted-foreground">
             📊 Rajah/Jadual (belum siap dilukis)
@@ -506,7 +512,7 @@ function SoalanCard({
             {soalan.stimulus_keterangan}
           </p>
         </div>
-      )}
+      ) : null}
 
       <div className="mt-4">
         <p className="text-base leading-relaxed text-foreground whitespace-pre-wrap">{bm}</p>
