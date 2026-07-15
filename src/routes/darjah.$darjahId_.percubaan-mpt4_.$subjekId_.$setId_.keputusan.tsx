@@ -580,6 +580,21 @@ function ReviewCard({
         {en && <p className="mt-1 text-xs italic leading-relaxed text-muted-foreground whitespace-pre-wrap">{en}</p>}
       </div>
 
+      {soalan.stimulus_svg ? (
+        <div className="mt-3 flex justify-center rounded-2xl border border-border/60 bg-card p-3">
+          {renderSoalanSvg(soalan.stimulus_svg.svg_type, soalan.stimulus_svg.params, soalan.stimulus_svg.bahasa)}
+        </div>
+      ) : soalan.stimulus_keterangan ? (
+        <div className="mt-3 rounded-2xl border-2 border-dashed border-border/70 bg-muted/30 p-3">
+          <div className="mb-1 text-[10px] font-bold text-muted-foreground">
+            📊 Rajah/Jadual (belum siap dilukis)
+          </div>
+          <p className="text-xs italic text-muted-foreground whitespace-pre-wrap">
+            {soalan.stimulus_keterangan}
+          </p>
+        </div>
+      ) : null}
+
       <div className="mt-3 space-y-2 text-sm">
         <div className="rounded-xl bg-secondary/60 px-3 py-2">
           <div className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">Jawapan anda</div>
