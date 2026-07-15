@@ -164,8 +164,7 @@ function KeputusanPage() {
       setOpenBahagian(opens);
 
       if (!kep) {
-        setErrorMsg("Tiada rekod jawapan ditemui.");
-        setPhase("error");
+        setPhase("empty");
         return;
       }
       if (kep.status === "completed") {
