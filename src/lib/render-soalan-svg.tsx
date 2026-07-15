@@ -43,6 +43,9 @@ import { JadualWaktu } from "@/components/svg/JadualWaktu";
 import { KadMaklumat } from "@/components/svg/KadMaklumat";
 import { JamZonMasa } from "@/components/svg/JamZonMasa";
 import { Bulatan } from "@/components/svg/Bulatan";
+import { JadualData } from "@/components/svg/JadualData";
+import { FasaBulanKoleksi } from "@/components/svg/FasaBulanKoleksi";
+import { BayangMasa } from "@/components/svg/BayangMasa";
 
 
 
