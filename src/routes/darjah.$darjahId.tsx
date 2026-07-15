@@ -97,6 +97,32 @@ function SubjekPage() {
           )}
         </section>
 
+        {darjahId === "4" && (
+          <Link
+            to="/darjah/$darjahId/percubaan-mpt4"
+            params={{ darjahId }}
+            className="group mt-8 flex flex-col gap-4 rounded-3xl border-2 border-primary/30 bg-gradient-to-br from-emerald-50 to-amber-50 p-8 shadow-card transition hover:-translate-y-1 hover:shadow-soft dark:from-emerald-950/30 dark:to-amber-950/20"
+          >
+            <div className="flex items-center gap-3">
+              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-amber-400 text-white shadow-soft transition group-hover:scale-110 text-3xl">
+                🎯
+              </div>
+              <span className="rounded-full bg-primary px-4 py-1.5 font-display text-xs font-extrabold text-primary-foreground">
+                BAHARU
+              </span>
+            </div>
+            <div>
+              <h3 className="font-display text-3xl font-extrabold text-foreground">Percubaan MPT4</h3>
+              <p className="mt-1 text-base text-muted-foreground">
+                Peperiksaan percubaan ikut format sebenar MPT4 — 4 subjek: BM, BI, Matematik, Sains.
+              </p>
+            </div>
+            <span className="mt-2 inline-flex w-fit items-center gap-2 rounded-full bg-gradient-primary px-6 py-3 font-display text-base font-extrabold text-primary-foreground shadow-soft transition group-hover:translate-x-1">
+              Mula Percubaan →
+            </span>
+          </Link>
+        )}
+
         <section className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {subjekListUntukRole(profile?.role).map((s) => (
             <Link
