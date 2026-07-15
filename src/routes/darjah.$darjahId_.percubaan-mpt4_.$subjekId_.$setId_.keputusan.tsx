@@ -424,6 +424,8 @@ function ResultView({
   bahagianGroups,
   openBahagian,
   setOpenBahagian,
+  onCubaLagi,
+  retrying,
 }: {
   keputusan: Mpt4Keputusan;
   soalanList: Mpt4Soalan[];
@@ -432,6 +434,8 @@ function ResultView({
   bahagianGroups: { bahagian: string; items: Mpt4Soalan[] }[];
   openBahagian: Record<string, boolean>;
   setOpenBahagian: (v: Record<string, boolean>) => void;
+  onCubaLagi: () => void;
+  retrying: boolean;
 }) {
   const markahKeseluruhan = keputusan.markah_keseluruhan ?? 0;
   const markahPenuh = keputusan.markah_penuh ?? setInfo.jumlah_markah ?? 0;
