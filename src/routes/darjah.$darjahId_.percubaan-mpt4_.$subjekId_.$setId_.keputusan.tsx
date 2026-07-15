@@ -407,6 +407,8 @@ function KeputusanPage() {
             bahagianGroups={bahagianGroups}
             openBahagian={openBahagian}
             setOpenBahagian={setOpenBahagian}
+            onCubaLagi={handleCubaLagi}
+            retrying={retrying}
           />
         )}
       </main>
