@@ -103,6 +103,9 @@ export function renderSoalanSvg(
     if (svg_type === "kad_maklumat") return <KadMaklumat {...p} />;
     if (svg_type === "jam_zon_masa") return <JamZonMasa {...p} />;
     if (svg_type === "bulatan") return <Bulatan {...p} />;
+    if (svg_type === "jadual_data") return <JadualData {...p} />;
+    if (svg_type === "fasa_bulan_koleksi") return <FasaBulanKoleksi {...p} />;
+    if (svg_type === "bayang_masa") return <BayangMasa {...p} />;
     if (svg_type === "svg_raw" && p.svg) {
       return <div className="w-full max-w-xl mx-auto [&_svg]:w-full [&_svg]:h-auto" dangerouslySetInnerHTML={{ __html: p.svg }} />;
     }
