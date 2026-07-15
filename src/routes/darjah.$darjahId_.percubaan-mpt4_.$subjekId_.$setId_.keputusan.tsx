@@ -490,6 +490,17 @@ function ResultView({
         </div>
       </div>
 
+      <div className="flex flex-wrap gap-3">
+        <button
+          type="button"
+          onClick={onCubaLagi}
+          disabled={retrying}
+          className="inline-flex items-center gap-2 rounded-full bg-gradient-primary px-6 py-3 font-display text-sm font-extrabold text-primary-foreground shadow-soft transition hover:translate-y-[-1px] disabled:opacity-60"
+        >
+          {retrying ? "Memulakan..." : "🔄 Cuba Lagi"}
+        </button>
+      </div>
+
       {/* Pecahan bahagian */}
       <div className="rounded-3xl border border-border/60 bg-card p-5 shadow-card md:p-6">
         <h3 className="font-display text-lg font-extrabold text-foreground">Pecahan Bahagian</h3>
