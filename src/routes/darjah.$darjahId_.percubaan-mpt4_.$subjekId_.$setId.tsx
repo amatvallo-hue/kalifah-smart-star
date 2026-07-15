@@ -152,7 +152,28 @@ function PercubaanMpt4JawabPage() {
     if (!user || !setId) return;
     let cancelled = false;
     (async () => {
-      // 1. Check if there's already a submitted/completed attempt → redirect to keputusan
+      // 1. Resume in_progress attempt first (so a fresh "Cuba Lagi" row wins over the old completed one)
+      const { data: existing, error: qErr } = await supabase
+        .from("mpt4_keputusan")
+        .select("id, jawapan, started_at, status")
+        .eq("user_id", user.id)
+        .eq("set_id", setId)
+        .eq("status", "in_progress")
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      if (cancelled) return;
+      if (qErr) {
+        setFetchError(qErr.message);
+        return;
+      }
+      if (existing) {
+        setKeputusan(existing as Mpt4Keputusan);
+        setJawapan(((existing as Mpt4Keputusan).jawapan ?? {}) as Jawapan);
+        return;
+      }
+
+      // 2. Otherwise, if there is a submitted/completed attempt → redirect to keputusan
       const { data: doneRow, error: doneErr } = await supabase
         .from("mpt4_keputusan")
         .select("id, status")
@@ -176,26 +197,7 @@ function PercubaanMpt4JawabPage() {
         return;
       }
 
-      // 2. Otherwise resume in_progress or create fresh
-      const { data: existing, error: qErr } = await supabase
-        .from("mpt4_keputusan")
-        .select("id, jawapan, started_at, status")
-        .eq("user_id", user.id)
-        .eq("set_id", setId)
-        .eq("status", "in_progress")
-        .order("created_at", { ascending: false })
-        .limit(1)
-        .maybeSingle();
-      if (cancelled) return;
-      if (qErr) {
-        setFetchError(qErr.message);
-        return;
-      }
-      if (existing) {
-        setKeputusan(existing as Mpt4Keputusan);
-        setJawapan(((existing as Mpt4Keputusan).jawapan ?? {}) as Jawapan);
-        return;
-      }
+      // 3. Otherwise create fresh
       const { data: inserted, error: iErr } = await supabase
         .from("mpt4_keputusan")
         .insert({ user_id: user.id, set_id: setId, jawapan: {}, status: "in_progress" })

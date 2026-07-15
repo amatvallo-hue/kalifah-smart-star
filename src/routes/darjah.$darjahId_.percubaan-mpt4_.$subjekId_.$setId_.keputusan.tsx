@@ -109,6 +109,25 @@ function KeputusanPage() {
   const [phase, setPhase] = useState<"loading" | "grading" | "done" | "error" | "empty">("loading");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [openBahagian, setOpenBahagian] = useState<Record<string, boolean>>({});
+  const [retrying, setRetrying] = useState(false);
+
+  async function handleCubaLagi() {
+    if (!user || !setId) return;
+    setRetrying(true);
+    const { error } = await supabase
+      .from("mpt4_keputusan")
+      .insert({ user_id: user.id, set_id: setId, jawapan: {}, status: "in_progress" });
+    setRetrying(false);
+    if (error) {
+      setErrorMsg(error.message);
+      setPhase("error");
+      return;
+    }
+    navigate({
+      to: "/darjah/$darjahId/percubaan-mpt4/$subjekId/$setId",
+      params: { darjahId, subjekId, setId },
+    });
+  }
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
@@ -388,6 +407,8 @@ function KeputusanPage() {
             bahagianGroups={bahagianGroups}
             openBahagian={openBahagian}
             setOpenBahagian={setOpenBahagian}
+            onCubaLagi={handleCubaLagi}
+            retrying={retrying}
           />
         )}
       </main>
@@ -403,6 +424,8 @@ function ResultView({
   bahagianGroups,
   openBahagian,
   setOpenBahagian,
+  onCubaLagi,
+  retrying,
 }: {
   keputusan: Mpt4Keputusan;
   soalanList: Mpt4Soalan[];
@@ -411,6 +434,8 @@ function ResultView({
   bahagianGroups: { bahagian: string; items: Mpt4Soalan[] }[];
   openBahagian: Record<string, boolean>;
   setOpenBahagian: (v: Record<string, boolean>) => void;
+  onCubaLagi: () => void;
+  retrying: boolean;
 }) {
   const markahKeseluruhan = keputusan.markah_keseluruhan ?? 0;
   const markahPenuh = keputusan.markah_penuh ?? setInfo.jumlah_markah ?? 0;
@@ -463,6 +488,17 @@ function ResultView({
             </div>
           )}
         </div>
+      </div>
+
+      <div className="flex flex-wrap gap-3">
+        <button
+          type="button"
+          onClick={onCubaLagi}
+          disabled={retrying}
+          className="inline-flex items-center gap-2 rounded-full bg-gradient-primary px-6 py-3 font-display text-sm font-extrabold text-primary-foreground shadow-soft transition hover:translate-y-[-1px] disabled:opacity-60"
+        >
+          {retrying ? "Memulakan..." : "🔄 Cuba Lagi"}
+        </button>
       </div>
 
       {/* Pecahan bahagian */}
