@@ -499,11 +499,6 @@ function ResultView({
         );
       })}
 
-      <Link
-        to="/darjah/$darjahId/percubaan-mpt4/$subjekId"
-        params={{ darjahId: String(setInfo).length ? "" : "", subjekId: "" }}
-        className="hidden"
-      />
     </div>
   );
 }
