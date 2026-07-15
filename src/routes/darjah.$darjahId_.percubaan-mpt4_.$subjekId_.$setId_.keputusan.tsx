@@ -226,7 +226,7 @@ function KeputusanPage() {
           .eq("id", keputusan.id)
           .maybeSingle();
         if (refErr) throw refErr;
-        const eseiPenilaian = ((refetched?.esei_penilaian ?? {}) as Record<string, EseiPenilaianItem>) ?? {};
+        const eseiPenilaian = (refetched?.esei_penilaian ?? {}) as Record<string, EseiPenilaianItem>;
 
         // 4. Totals
         const markPerSoalan: Record<string, number> = { ...dikotomusMarks };
