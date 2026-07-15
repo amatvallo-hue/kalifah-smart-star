@@ -142,6 +142,7 @@ function KeputusanPage() {
           )
           .eq("user_id", user.id)
           .eq("set_id", setId)
+          .in("status", ["completed", "submitted"])
           .order("created_at", { ascending: false })
           .limit(1)
           .maybeSingle(),
