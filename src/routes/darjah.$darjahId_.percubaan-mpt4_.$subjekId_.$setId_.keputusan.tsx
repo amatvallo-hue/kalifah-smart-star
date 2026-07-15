@@ -2,6 +2,7 @@ import { createFileRoute, Link, useNavigate, useParams } from "@tanstack/react-r
 import { ArrowLeft, Check, ChevronDown, ChevronUp, Loader2, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
+import { renderSoalanSvg } from "@/lib/render-soalan-svg";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { usePoints } from "@/hooks/use-points";
@@ -40,6 +41,8 @@ interface Mpt4Soalan {
   pilihan_d: string | null;
   jawapan_betul: string | null;
   markah: number;
+  stimulus_keterangan: string | null;
+  stimulus_svg: { svg_type: string; params: any; bahasa?: "bm" | "en" } | null;
 }
 
 interface EseiPenilaianItem {
@@ -130,7 +133,7 @@ function KeputusanPage() {
         supabase
           .from("mpt4_soalan")
           .select(
-            "id, bahagian, no_soalan, sub_bahagian, teks_soalan, jenis_item, kaedah_penskoran, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan_betul, markah",
+            "id, bahagian, no_soalan, sub_bahagian, teks_soalan, jenis_item, kaedah_penskoran, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan_betul, markah, stimulus_keterangan, stimulus_svg",
           )
           .eq("set_id", setId)
           .order("bahagian", { ascending: true })
