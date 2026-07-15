@@ -109,6 +109,25 @@ function KeputusanPage() {
   const [phase, setPhase] = useState<"loading" | "grading" | "done" | "error" | "empty">("loading");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [openBahagian, setOpenBahagian] = useState<Record<string, boolean>>({});
+  const [retrying, setRetrying] = useState(false);
+
+  async function handleCubaLagi() {
+    if (!user || !setId) return;
+    setRetrying(true);
+    const { error } = await supabase
+      .from("mpt4_keputusan")
+      .insert({ user_id: user.id, set_id: setId, jawapan: {}, status: "in_progress" });
+    setRetrying(false);
+    if (error) {
+      setErrorMsg(error.message);
+      setPhase("error");
+      return;
+    }
+    navigate({
+      to: "/darjah/$darjahId/percubaan-mpt4/$subjekId/$setId",
+      params: { darjahId, subjekId, setId },
+    });
+  }
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
