@@ -101,24 +101,55 @@ function SubjekPage() {
           <Link
             to="/darjah/$darjahId/percubaan-mpt4"
             params={{ darjahId }}
-            className="group mt-8 flex flex-col gap-4 rounded-3xl border-2 border-primary/30 bg-gradient-to-br from-emerald-50 to-amber-50 p-8 shadow-card transition hover:-translate-y-1 hover:shadow-soft dark:from-emerald-950/30 dark:to-amber-950/20"
+            className="group relative mt-8 flex flex-col gap-4 overflow-hidden rounded-3xl border-2 p-8 shadow-card transition hover:-translate-y-1 hover:shadow-soft"
+            style={{ background: "#FFF8E1", borderColor: "#FBC02D" }}
           >
-            <div className="flex items-center gap-3">
-              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-amber-400 text-white shadow-soft transition group-hover:scale-110 text-3xl">
-                🎯
+            <div className="flex flex-wrap items-center gap-3">
+              <div
+                className="flex h-16 w-16 items-center justify-center rounded-2xl text-white shadow-soft transition group-hover:scale-110 text-3xl"
+                style={{ background: "#F9A825" }}
+              >
+                🏆
               </div>
-              <span className="rounded-full bg-primary px-4 py-1.5 font-display text-xs font-extrabold text-primary-foreground">
-                BAHARU
+              <span
+                className="inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 font-display text-xs font-extrabold text-white"
+                style={{ background: "#F9A825" }}
+              >
+                ⭐ PEPERIKSAAN PERCUBAAN
               </span>
             </div>
+
             <div>
               <h3 className="font-display text-3xl font-extrabold text-foreground">Percubaan MPT4</h3>
               <p className="mt-1 text-base text-muted-foreground">
-                Peperiksaan percubaan ikut format sebenar MPT4 — 4 subjek: BM, BI, Matematik, Sains.
+                Sedia hadapi peperiksaan sebenar dengan format yang sama.
               </p>
             </div>
+
+            <div className="flex flex-wrap gap-4">
+              {[
+                { emoji: "📖", label: "Bahasa Melayu" },
+                { emoji: "🔤", label: "Bahasa Inggeris" },
+                { emoji: "🔢", label: "Matematik" },
+                { emoji: "🧪", label: "Sains" },
+              ].map((s) => (
+                <div key={s.label} className="flex flex-col items-center gap-1">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-white text-lg shadow-soft">
+                    {s.emoji}
+                  </div>
+                  <span className="text-center text-[11px] font-bold text-foreground/80">{s.label}</span>
+                </div>
+              ))}
+            </div>
+
+            <div className="flex flex-wrap gap-x-5 gap-y-1.5 text-sm font-semibold text-foreground/80">
+              <span>✅ Format Sebenar</span>
+              <span>✅ Markah + Cadangan AI</span>
+              <span>✅ Keputusan Serta-Merta</span>
+            </div>
+
             <span className="mt-2 inline-flex w-fit items-center gap-2 rounded-full bg-gradient-primary px-6 py-3 font-display text-base font-extrabold text-primary-foreground shadow-soft transition group-hover:translate-x-1">
-              Mula Percubaan →
+              Sedia Hadapi Peperiksaan? →
             </span>
           </Link>
         )}
