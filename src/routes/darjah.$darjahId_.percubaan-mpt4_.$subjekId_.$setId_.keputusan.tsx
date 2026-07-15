@@ -103,7 +103,7 @@ function KeputusanPage() {
   const [setInfo, setSetInfo] = useState<Mpt4Set | null>(null);
   const [soalanList, setSoalanList] = useState<Mpt4Soalan[] | null>(null);
   const [keputusan, setKeputusan] = useState<Mpt4Keputusan | null>(null);
-  const [phase, setPhase] = useState<"loading" | "grading" | "done" | "error">("loading");
+  const [phase, setPhase] = useState<"loading" | "grading" | "done" | "error" | "empty">("loading");
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [openBahagian, setOpenBahagian] = useState<Record<string, boolean>>({});
 
