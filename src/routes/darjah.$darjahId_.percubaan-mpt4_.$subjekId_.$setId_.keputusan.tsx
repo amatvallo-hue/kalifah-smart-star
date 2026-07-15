@@ -291,14 +291,6 @@ function KeputusanPage() {
           .eq("id", keputusan.id);
         if (upErr) throw upErr;
 
-        try {
-          await supabase.functions.invoke("mpt4-notify-parent", {
-            body: { keputusan_id: keputusan.id },
-          });
-        } catch (e) {
-          console.error("mpt4-notify-parent failed", e);
-        }
-
         if (cancelled) return;
         setKeputusan({
           ...keputusan,
