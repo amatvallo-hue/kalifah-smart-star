@@ -44,6 +44,7 @@ import { KadMaklumat } from "@/components/svg/KadMaklumat";
 import { JamZonMasa } from "@/components/svg/JamZonMasa";
 import { Bulatan } from "@/components/svg/Bulatan";
 import { JadualData } from "@/components/svg/JadualData";
+import { JadualDataN } from "@/components/svg/JadualDataN";
 import { FasaBulanKoleksi } from "@/components/svg/FasaBulanKoleksi";
 import { BayangMasa } from "@/components/svg/BayangMasa";
 
@@ -104,6 +105,7 @@ export function renderSoalanSvg(
     if (svg_type === "jam_zon_masa") return <JamZonMasa {...p} />;
     if (svg_type === "bulatan") return <Bulatan {...p} />;
     if (svg_type === "jadual_data") return <JadualData {...p} />;
+    if (svg_type === "jadual_data_n") return <JadualDataN {...p} />;
     if (svg_type === "fasa_bulan_koleksi") return <FasaBulanKoleksi {...p} />;
     if (svg_type === "bayang_masa") return <BayangMasa {...p} />;
     if (svg_type === "svg_raw" && p.svg) {
