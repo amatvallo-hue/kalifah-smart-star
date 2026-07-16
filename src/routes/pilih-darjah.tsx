@@ -333,7 +333,7 @@ function DarjahCard({
         >
           <span className="font-display text-4xl font-extrabold">{darjah.id}</span>
         </div>
-        {isCurrent && isMpt4 && (
+        {hasAccess && isMpt4 && (
           <span
             className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 font-display text-[10px] font-extrabold text-white shadow-soft"
             style={{ background: "linear-gradient(135deg, #F5B82E, #E48A0A)" }}
@@ -347,14 +347,14 @@ function DarjahCard({
       <div>
         <h3 className="font-display text-2xl font-extrabold text-foreground">
           {darjah.label}
-          {!hasAccess && !isCurrent && <span className="ml-1">🔒</span>}
+          {!hasAccess && <span className="ml-1">🔒</span>}
         </h3>
         <p className="mt-1 text-sm text-muted-foreground">{darjah.tagline}</p>
       </div>
 
-      {isCurrent && (
+      {hasAccess && (
         <div className="space-y-3">
-          {/* Statistik ringkas — live */}
+          {/* Statistik ringkas — live per darjah */}
           <div className="grid grid-cols-2 gap-2">
             <StatChip
               icon={<BookOpen className="h-3.5 w-3.5" />}
@@ -391,20 +391,15 @@ function DarjahCard({
       )}
 
       <div className="flex items-center justify-between">
-        {isCurrent ? (
+        {hasAccess ? (
           <span className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-primary px-5 py-2.5 font-display text-sm font-extrabold text-primary-foreground shadow-soft transition group-hover:translate-x-0.5">
             Masuk {darjah.label}
             <ArrowRight className="h-4 w-4" />
           </span>
-        ) : !hasAccess ? (
+        ) : (
           <span className="inline-flex items-center gap-1 text-xs font-bold text-muted-foreground">
             <Lock className="h-3.5 w-3.5" />
             Belum dilanggan
-          </span>
-        ) : (
-          <span className="inline-flex items-center gap-1 rounded-full bg-gold/20 px-3 py-1 font-display text-xs font-extrabold text-gold-foreground">
-            <Star className="h-3.5 w-3.5 fill-gold-foreground" />
-            Aktif
           </span>
         )}
       </div>
