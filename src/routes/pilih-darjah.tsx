@@ -168,8 +168,6 @@ function DarjahDashboard() {
     );
   }
 
-  const darjahAkses = profile?.darjah_akses ?? [];
-
   const metaName =
     (user.user_metadata?.name as string | undefined) ||
     (user.user_metadata?.full_name as string | undefined) ||
@@ -180,9 +178,6 @@ function DarjahDashboard() {
     : "";
   const displayName = (metaName && metaName.trim()) || prettyEmail || "Pelajar";
   const firstName = displayName.split(" ")[0];
-
-  const darjahMuridHasAccess =
-    darjahMurid !== null && darjahAkses.includes(Number(darjahMurid));
 
   return (
     <div className="min-h-screen bg-background">
