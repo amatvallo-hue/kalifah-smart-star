@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { Lock, Sparkles, Star, LogOut, ArrowRight, Trophy, BookOpen, FileText } from "lucide-react";
+import { Lock, Sparkles, Star, LogOut, ArrowRight, Trophy, BookOpen, FileText, Target, TrendingUp, CalendarDays } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
@@ -26,6 +26,24 @@ interface DarjahStats {
   bilAktiviti: number;
 }
 
+interface MingguStats {
+  soalan: number;
+  peratus: number;
+  bilAktiviti: number;
+}
+
+function todayKL(): string {
+  return new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Kuala_Lumpur" });
+}
+function daysAgoKL(n: number): string {
+  const t = new Date(todayKL() + "T00:00:00Z");
+  t.setUTCDate(t.getUTCDate() - n);
+  return t.toISOString().slice(0, 10);
+}
+function toKLDate(isoStr: string): string {
+  return new Date(isoStr).toLocaleDateString("en-CA", { timeZone: "Asia/Kuala_Lumpur" });
+}
+
 
 function DarjahDashboard() {
   const navigate = useNavigate();
@@ -35,6 +53,7 @@ function DarjahDashboard() {
 
   const [darjahMurid, setDarjahMurid] = useState<string | null>(null);
   const [statsMap, setStatsMap] = useState<Record<number, DarjahStats>>({});
+  const [minggu, setMinggu] = useState<MingguStats | null>(null);
 
   const subjekList = useMemo(() => subjekListUntukRole(profile?.role), [profile?.role]);
   const darjahAkses = useMemo(() => profile?.darjah_akses ?? [], [profile?.darjah_akses]);
@@ -127,6 +146,37 @@ function DarjahDashboard() {
     };
   }, [user, darjahAksesKey, subjekList.length, darjahAkses]);
 
+  // Progress minggu ini — reuse logic tarikh 7 hari dari dashboard.ibu-bapa.tsx,
+  // tapi untuk murid sendiri (bukan anak). Cutoff via .gte() supaya elak row-limit.
+  useEffect(() => {
+    if (!user) {
+      setMinggu(null);
+      return;
+    }
+    let cancelled = false;
+    (async () => {
+      const cutoffKL = daysAgoKL(6);
+      const cutoffISO = `${cutoffKL}T00:00:00+08:00`;
+      const { data, error } = await supabase
+        .from("user_progress")
+        .select("jumlah_soalan, peratus, created_at")
+        .eq("user_id", user.id)
+        .gte("created_at", cutoffISO);
+      if (cancelled || error) return;
+      const tarikhSet = new Set<string>();
+      for (let i = 0; i < 7; i++) tarikhSet.add(daysAgoKL(i));
+      const rows = (data ?? []).filter((r) => tarikhSet.has(toKLDate(r.created_at as string)));
+      const soalan = rows.reduce((a, r) => a + Number(r.jumlah_soalan ?? 0), 0);
+      const peratus = rows.length === 0
+        ? 0
+        : Math.round(rows.reduce((a, r) => a + Number(r.peratus ?? 0), 0) / rows.length);
+      setMinggu({ soalan, peratus, bilAktiviti: rows.length });
+    })();
+    return () => { cancelled = true; };
+  }, [user]);
+
+
+
 
   function handleLockedClick(d: Darjah) {
     if (typeof window !== "undefined") {
@@ -209,7 +259,71 @@ function DarjahDashboard() {
           </div>
         </section>
 
+        {/* Progress Minggu Ini */}
+        <section className="mt-6">
+          <div
+            className="relative overflow-hidden rounded-3xl border-2 p-5 shadow-card md:p-6"
+            style={{
+              borderColor: "#FBC02D",
+              background:
+                "linear-gradient(135deg, #FFF8E1 0%, #FFFDF5 55%, #FFF3D1 100%)",
+            }}
+          >
+            <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-[#F9A825]/15 blur-3xl" />
+            <div className="relative flex flex-wrap items-center justify-between gap-4">
+              <div className="flex items-center gap-4">
+                <div
+                  className="flex h-14 w-14 items-center justify-center rounded-2xl text-white shadow-soft"
+                  style={{ background: "linear-gradient(135deg, #F5B82E, #E48A0A)" }}
+                >
+                  <CalendarDays className="h-7 w-7" />
+                </div>
+                <div>
+                  <div className="inline-flex items-center gap-1.5 rounded-full bg-white/80 px-2.5 py-0.5 font-display text-[10px] font-extrabold uppercase tracking-wide text-[#8A5A00] shadow-soft">
+                    <TrendingUp className="h-3 w-3" />
+                    7 Hari Terakhir
+                  </div>
+                  <h2 className="mt-1 font-display text-xl font-extrabold text-foreground md:text-2xl">
+                    Progress Minggu Ini
+                  </h2>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-3">
+                <MingguStat
+                  icon={<BookOpen className="h-4 w-4" />}
+                  label="Soalan Dijawab"
+                  value={minggu ? minggu.soalan.toLocaleString("ms-MY") : "—"}
+                />
+                <MingguStat
+                  icon={<Target className="h-4 w-4" />}
+                  label="Skor Purata"
+                  value={
+                    minggu && minggu.bilAktiviti > 0
+                      ? `${minggu.peratus}%`
+                      : "—"
+                  }
+                />
+                <Link
+                  to="/dashboard/progress"
+                  className="inline-flex items-center gap-2 rounded-full px-4 py-2.5 font-display text-sm font-extrabold text-white shadow-soft transition hover:opacity-90"
+                  style={{ background: "linear-gradient(135deg, #F5B82E, #E48A0A)" }}
+                >
+                  Lihat Penuh
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
+            </div>
+            {minggu && minggu.bilAktiviti === 0 && (
+              <p className="relative mt-3 text-xs font-bold text-[#8A5A00]/80">
+                Belum ada aktiviti minggu ini — jom mula belajar!
+              </p>
+            )}
+          </div>
+        </section>
+
         <section className="mt-8">
+
           <div>
             <h2 className="font-display text-2xl font-extrabold text-foreground md:text-3xl">
               Pilih Darjah Anda
@@ -419,6 +533,18 @@ function DarjahCard({
     <Link to="/darjah/$darjahId" params={{ darjahId: darjah.id }} className="group">
       {inner}
     </Link>
+  );
+}
+
+function MingguStat({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
+  return (
+    <div className="rounded-2xl border border-[#F5B82E]/40 bg-white/85 px-3.5 py-2 shadow-soft">
+      <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide text-[#8A5A00]">
+        {icon}
+        {label}
+      </div>
+      <div className="mt-0.5 font-display text-lg font-extrabold text-foreground">{value}</div>
+    </div>
   );
 }
 
