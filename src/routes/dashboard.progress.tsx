@@ -701,12 +701,15 @@ function KadSijil({
 
   return (
     <div
-      className="flex flex-col gap-3 rounded-2xl bg-card p-4 shadow-soft sm:flex-row sm:items-center"
-      style={{ border: `2px solid ${warna}55` }}
+      className="flex flex-col gap-3 rounded-2xl p-4 shadow-card sm:flex-row sm:items-center"
+      style={{
+        background: `linear-gradient(135deg, ${warna === EMAS ? "#FFF8E1" : `${warna}12`} 0%, #FFFDF5 100%)`,
+        border: `2.5px solid ${warna}80`,
+      }}
     >
       <div
-        className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl text-3xl"
-        style={{ backgroundColor: `${warna}1f` }}
+        className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl text-3xl text-white shadow-gold"
+        style={{ background: `linear-gradient(135deg, ${warna}, ${warna}cc)` }}
       >
         {ikon}
       </div>
