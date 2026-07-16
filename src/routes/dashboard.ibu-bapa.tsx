@@ -609,6 +609,7 @@ function ParentDashboard() {
       { data: b, error: bError },
       sj,
       { data: em },
+      { data: mpt4 },
     ] = await Promise.all([
       supabase
         .from("user_progress")
@@ -633,6 +634,12 @@ function ParentDashboard() {
         .eq("user_id", uid)
         .order("created_at", { ascending: false })
         .limit(30),
+      supabase
+        .from("mpt4_keputusan")
+        .select("id, markah_keseluruhan, markah_penuh, completed_at, mpt4_set(subjek, nombor_set, tajuk, jumlah_markah)")
+        .eq("user_id", uid)
+        .eq("status", "completed")
+        .order("completed_at", { ascending: false }),
     ]);
     console.log("[ParentDashboard] fetchAnakData", {
       user_id: uid,
