@@ -515,7 +515,6 @@ function StatKad({
   nilai,
   icon,
   warna,
-  light,
 }: {
   label: string;
   nilai: string | number;
@@ -525,17 +524,22 @@ function StatKad({
 }) {
   return (
     <div
-      className="rounded-2xl p-4 shadow-soft"
+      className="relative overflow-hidden rounded-2xl border-2 p-4 shadow-card"
       style={{
-        backgroundColor: light ? `${warna}1f` : warna,
-        color: light ? "#1a1a1a" : "#fff",
+        background: `linear-gradient(135deg, ${warna}2e 0%, #ffffff 90%)`,
+        borderColor: `${warna}66`,
       }}
     >
-      <div className="flex items-center gap-2 text-xs font-extrabold opacity-90">
-        {icon}
-        {label}
+      <div className="flex items-center gap-2.5">
+        <div
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-white shadow-soft"
+          style={{ background: `linear-gradient(135deg, ${warna}, ${warna}cc)` }}
+        >
+          {icon}
+        </div>
+        <span className="text-xs font-extrabold text-foreground/80">{label}</span>
       </div>
-      <p className="mt-2 font-display text-3xl font-extrabold">{nilai}</p>
+      <p className="mt-2 font-display text-3xl font-extrabold" style={{ color: warna }}>{nilai}</p>
     </div>
   );
 }
