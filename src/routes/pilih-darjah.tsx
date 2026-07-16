@@ -22,9 +22,10 @@ export const Route = createFileRoute("/pilih-darjah")({
 interface DarjahStats {
   bilSubjek: number;
   bilSoalan: number;
-  topikSelesai: number;
-  jumlahTopik: number;
+  skorPurata: number;
+  bilAktiviti: number;
 }
+
 
 function DarjahDashboard() {
   const navigate = useNavigate();
@@ -93,8 +94,8 @@ function DarjahDashboard() {
       const rows = data as Array<{
         darjah: number;
         bil_soalan: number | string;
-        jumlah_topik: number | string;
-        topik_selesai: number | string;
+        purata_skor: number | string | null;
+        bil_aktiviti: number | string | null;
       }>;
 
       const nextMap: Record<number, DarjahStats> = {};
@@ -102,8 +103,8 @@ function DarjahDashboard() {
         nextMap[n] = {
           bilSubjek: subjekList.length,
           bilSoalan: 0,
-          jumlahTopik: 0,
-          topikSelesai: 0,
+          skorPurata: 0,
+          bilAktiviti: 0,
         };
       }
       for (const r of rows) {
@@ -112,10 +113,11 @@ function DarjahDashboard() {
         nextMap[dNum] = {
           bilSubjek: subjekList.length,
           bilSoalan: Number(r.bil_soalan) || 0,
-          jumlahTopik: Number(r.jumlah_topik) || 0,
-          topikSelesai: Number(r.topik_selesai) || 0,
+          skorPurata: Number(r.purata_skor) || 0,
+          bilAktiviti: Number(r.bil_aktiviti) || 0,
         };
       }
+
 
       setStatsMap(nextMap);
     })();
@@ -346,25 +348,32 @@ function DarjahCard({
             />
           </div>
 
-          {/* Progress bar topik */}
-          <div>
-            <div className="flex items-center justify-between text-xs font-bold text-foreground/80">
-              <span>Topik selesai</span>
-              <span>
-                {stats ? `${stats.topikSelesai}/${stats.jumlahTopik}` : "—/—"}
-              </span>
+          {/* Skor purata */}
+          {stats && stats.bilAktiviti > 0 ? (
+            <div>
+              <div className="flex items-center justify-between text-xs font-bold text-foreground/80">
+                <span>Skor Purata</span>
+                <span>{stats.skorPurata.toFixed(1)}%</span>
+              </div>
+              <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-muted">
+                <div
+                  className={`h-full rounded-full transition-all ${
+                    stats.skorPurata >= 60 ? "bg-gradient-primary" : "bg-orange-500"
+                  }`}
+                  style={{ width: `${Math.min(100, Math.max(0, stats.skorPurata))}%` }}
+                />
+              </div>
             </div>
-            <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-muted">
-              <div
-                className="h-full rounded-full bg-gradient-primary transition-all"
-                style={{
-                  width: stats && stats.jumlahTopik > 0
-                    ? `${Math.min(100, Math.round((stats.topikSelesai / stats.jumlahTopik) * 100))}%`
-                    : "0%",
-                }}
-              />
+          ) : (
+            <div>
+              <div className="flex items-center justify-between text-xs font-bold text-muted-foreground">
+                <span>Skor Purata</span>
+                <span>Belum mula aktiviti</span>
+              </div>
+              <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-muted" />
             </div>
-          </div>
+          )}
+
         </div>
       )}
 
