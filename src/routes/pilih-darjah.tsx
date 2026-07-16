@@ -309,7 +309,7 @@ function DarjahCard({
         isCurrent
           ? "border-[3px] ring-2 ring-primary/20"
           : "border border-border/60"
-      } ${!hasAccess && !isCurrent ? "opacity-80" : ""}`}
+      } ${!hasAccess ? "opacity-80" : ""}`}
       style={currentCardStyle}
     >
       {isCurrent && (
@@ -318,7 +318,7 @@ function DarjahCard({
           Darjah Anda
         </div>
       )}
-      {!hasAccess && !isCurrent && (
+      {!hasAccess && (
         <div className="absolute right-4 top-4 flex items-center gap-1.5 rounded-full bg-gold/90 px-3 py-1 font-display text-[10px] font-extrabold uppercase tracking-wide text-gold-foreground shadow-soft">
           <Lock className="h-3 w-3" />
           Naik Taraf
@@ -328,7 +328,7 @@ function DarjahCard({
       <div className="flex items-start justify-between gap-3">
         <div
           className={`flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br ${tone} shadow-soft transition group-hover:scale-110 ${
-            !hasAccess && !isCurrent ? "grayscale" : ""
+            !hasAccess ? "grayscale" : ""
           }`}
         >
           <span className="font-display text-4xl font-extrabold">{darjah.id}</span>
