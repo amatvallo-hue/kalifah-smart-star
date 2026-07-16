@@ -1017,20 +1017,26 @@ function ParentDashboard() {
                         {kemajuanSubjek.map((k) => (
                           <div
                             key={k.subjek.id}
-                            className="rounded-2xl bg-card p-4 shadow-soft"
-                            style={{ border: `2px solid ${HIJAU}1f` }}
+                            className="rounded-2xl p-4 shadow-card"
+                            style={{
+                              background: `linear-gradient(135deg, ${HIJAU}14 0%, #FFFDF5 60%, ${EMAS}12 100%)`,
+                              border: `2px solid ${HIJAU}40`,
+                            }}
                           >
                             <div className="flex items-center justify-between gap-2">
                               <h3 className="font-display text-base font-extrabold text-foreground">{k.subjek.title}</h3>
                               <span
-                                className="rounded-full px-2 py-0.5 text-xs font-extrabold"
-                                style={{ backgroundColor: `${EMAS}33`, color: "#7a5300" }}
+                                className="rounded-full px-3 py-1 text-xs font-extrabold text-white shadow-gold"
+                                style={{ background: `linear-gradient(135deg, ${EMAS}, #E48A0A)` }}
                               >
                                 Skor: {k.purata}%
                               </span>
                             </div>
                             <div className="mt-2 h-3 overflow-hidden rounded-full" style={{ backgroundColor: `${HIJAU}1a` }}>
-                              <div className="h-full transition-all" style={{ width: `${k.peratusSiap}%`, backgroundColor: HIJAU }} />
+                              <div
+                                className="h-full transition-all"
+                                style={{ width: `${k.peratusSiap}%`, background: `linear-gradient(90deg, ${HIJAU}, #2AAE72)` }}
+                              />
                             </div>
                             <p className="mt-2 text-xs text-muted-foreground">
                               Kemajuan: {k.peratusSiap}% siap • {k.jumlah} aktiviti
