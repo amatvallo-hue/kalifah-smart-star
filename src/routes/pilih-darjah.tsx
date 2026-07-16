@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { Lock, Sparkles, Star, LogOut, ArrowRight, Trophy, BookOpen, FileText, Target, TrendingUp, CalendarDays } from "lucide-react";
+import { Lock, Sparkles, Star, LogOut, ArrowRight, Trophy, BookOpen, FileText, Target, TrendingUp, CalendarDays, Baby } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
@@ -342,6 +342,7 @@ function DarjahDashboard() {
           </div>
 
           <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <PraKalifahCard />
             {DARJAH_LIST.map((d, i) => {
               const hasAccess = darjahAkses.includes(Number(d.id));
               const isCurrent = isChild && darjahMurid === d.id;
@@ -547,6 +548,33 @@ function DarjahCard({
   return (
     <Link to="/darjah/$darjahId" params={{ darjahId: darjah.id }} className="group">
       {inner}
+    </Link>
+  );
+}
+
+function PraKalifahCard() {
+  return (
+    <Link to="/pra-kalifah" className="group">
+      <div className="relative flex h-full flex-col justify-between gap-5 rounded-3xl border border-border/60 bg-card p-6 shadow-card transition group-hover:-translate-y-1 group-hover:shadow-soft">
+        <div className="absolute right-4 top-4 flex items-center gap-1.5 rounded-full bg-rose-400/90 px-3 py-1 font-display text-[10px] font-extrabold uppercase tracking-wide text-white shadow-soft">
+          Akan Datang
+        </div>
+        <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-rose-400 to-rose-300 text-rose-900 shadow-soft transition group-hover:scale-110">
+          <Baby className="h-10 w-10" strokeWidth={2.5} />
+        </div>
+        <div>
+          <h3 className="font-display text-2xl font-extrabold text-foreground">
+            Pra Kalifah
+          </h3>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Mod pembelajaran untuk kanak-kanak 4–6 tahun.
+          </p>
+        </div>
+        <span className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-primary px-5 py-2.5 font-display text-sm font-extrabold text-primary-foreground shadow-soft transition group-hover:translate-x-0.5">
+          Lihat Info
+          <ArrowRight className="h-4 w-4" />
+        </span>
+      </div>
     </Link>
   );
 }
