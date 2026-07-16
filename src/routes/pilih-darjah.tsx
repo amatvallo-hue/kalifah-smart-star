@@ -250,7 +250,7 @@ function DarjahDashboard() {
                   index={i}
                   hasAccess={hasAccess}
                   isCurrent={isCurrent}
-                  stats={isCurrent ? stats : null}
+                  stats={hasAccess ? statsMap[Number(d.id)] ?? null : null}
                   onLockedClick={() => handleLockedClick(d)}
                 />
               );
