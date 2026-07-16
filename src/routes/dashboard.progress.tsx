@@ -362,12 +362,12 @@ function ProgressDashboard() {
                   {badges.map((bg) => (
                     <div
                       key={bg.id}
-                      className="flex items-center gap-2 rounded-full bg-card px-4 py-2 shadow-soft"
-                      style={{ border: `2px solid ${EMAS}55` }}
+                      className="flex items-center gap-2 rounded-full px-4 py-2 text-white shadow-gold"
+                      style={{ background: `linear-gradient(135deg, ${EMAS}, #E48A0A)` }}
                       title={new Date(bg.created_at).toLocaleDateString("ms-MY")}
                     >
                       <span className="text-2xl leading-none">{bg.ikon}</span>
-                      <span className="font-display text-sm font-extrabold text-foreground">{bg.nama}</span>
+                      <span className="font-display text-sm font-extrabold">{bg.nama}</span>
                     </div>
                   ))}
                 </div>
