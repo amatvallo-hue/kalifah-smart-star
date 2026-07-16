@@ -22,9 +22,10 @@ export const Route = createFileRoute("/pilih-darjah")({
 interface DarjahStats {
   bilSubjek: number;
   bilSoalan: number;
-  topikSelesai: number;
-  jumlahTopik: number;
+  skorPurata: number;
+  bilAktiviti: number;
 }
+
 
 function DarjahDashboard() {
   const navigate = useNavigate();
