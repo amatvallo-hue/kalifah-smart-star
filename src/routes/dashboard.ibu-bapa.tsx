@@ -78,6 +78,19 @@ interface BadgeRow {
   created_at: string;
 }
 
+interface Mpt4KeputusanRow {
+  id: string;
+  markah_keseluruhan: number | null;
+  markah_penuh: number | null;
+  completed_at: string | null;
+  mpt4_set: {
+    subjek: string;
+    nombor_set: number;
+    tajuk: string | null;
+    jumlah_markah: number | null;
+  } | null;
+}
+
 interface EmotionRow {
   id: string;
   emotion: string;
@@ -563,6 +576,7 @@ function ParentDashboard() {
   const [badges, setBadges] = useState<BadgeRow[]>([]);
   const [sijilList, setSijilList] = useState<SijilRow[]>([]);
   const [emotions, setEmotions] = useState<EmotionRow[]>([]);
+  const [mpt4Keputusan, setMpt4Keputusan] = useState<Mpt4KeputusanRow[]>([]);
   const [fetching, setFetching] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
   const [showMaklumat, setShowMaklumat] = useState(false);
@@ -595,6 +609,7 @@ function ParentDashboard() {
       { data: b, error: bError },
       sj,
       { data: em },
+      { data: mpt4 },
     ] = await Promise.all([
       supabase
         .from("user_progress")
@@ -619,6 +634,12 @@ function ParentDashboard() {
         .eq("user_id", uid)
         .order("created_at", { ascending: false })
         .limit(30),
+      supabase
+        .from("mpt4_keputusan")
+        .select("id, markah_keseluruhan, markah_penuh, completed_at, mpt4_set(subjek, nombor_set, tajuk, jumlah_markah)")
+        .eq("user_id", uid)
+        .eq("status", "completed")
+        .order("completed_at", { ascending: false }),
     ]);
     console.log("[ParentDashboard] fetchAnakData", {
       user_id: uid,
@@ -637,6 +658,7 @@ function ParentDashboard() {
     setBadges((b ?? []) as BadgeRow[]);
     setSijilList(sj);
     setEmotions((em ?? []) as EmotionRow[]);
+    setMpt4Keputusan((mpt4 ?? []) as unknown as Mpt4KeputusanRow[]);
     if (showSpinner) setFetching(false);
   }
 
@@ -987,6 +1009,17 @@ function ParentDashboard() {
                         />
                       </div>
                     </Seksyen>
+
+                    {/* PERCUBAAN MPT4 — Darjah 4 sahaja */}
+                    {anakAktif.darjah === "4" && (
+                      <Seksyen tajuk="Percubaan MPT4 (Darjah 4)" ikon={<Target className="h-5 w-5" />}>
+                        <p className="-mt-2 mb-3 text-sm text-muted-foreground">
+                          Mock exam ikut format peperiksaan sebenar.
+                        </p>
+                        <SeksyenMpt4 keputusan={mpt4Keputusan} />
+                      </Seksyen>
+                    )}
+
 
                     {/* MINGGU INI */}
                     <Seksyen tajuk="Minggu Ini" ikon={<Calendar className="h-5 w-5" />}>
@@ -1597,6 +1630,81 @@ function FormTambahAnak({ onAdded }: { onAdded: () => void }) {
       {err && <p className="mt-2 text-xs text-destructive">{err}</p>}
       {ok && <p className="mt-2 rounded-xl bg-primary/10 p-2 text-xs font-bold text-primary">{ok}</p>}
     </form>
+  );
+}
+
+function SeksyenMpt4({ keputusan }: { keputusan: Mpt4KeputusanRow[] }) {
+  if (keputusan.length === 0) {
+    return (
+      <div
+        className="rounded-3xl p-6 text-center shadow-card"
+        style={{
+          background: `linear-gradient(135deg, ${HIJAU}10 0%, #FFFDF5 60%, ${EMAS}12 100%)`,
+          border: `2px solid ${HIJAU}33`,
+        }}
+      >
+        <Trophy className="mx-auto mb-2 h-8 w-8" style={{ color: EMAS }} />
+        <p className="font-display text-sm font-extrabold text-foreground">
+          Belum ada keputusan Percubaan MPT4 lagi
+        </p>
+        <p className="mt-1 text-xs text-muted-foreground">
+          Keputusan akan muncul di sini selepas anak menyiapkan set percubaan.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div
+      className="rounded-3xl p-4 shadow-card"
+      style={{
+        background: `linear-gradient(135deg, ${HIJAU}10 0%, #FFFDF5 60%, ${EMAS}14 100%)`,
+        border: `2px solid ${HIJAU}40`,
+      }}
+    >
+      <div className="grid gap-3 sm:grid-cols-2">
+        {keputusan.map((k) => {
+          const markah = k.markah_keseluruhan ?? 0;
+          const penuh = k.markah_penuh ?? k.mpt4_set?.jumlah_markah ?? 0;
+          const peratus = penuh > 0 ? Math.round((markah / penuh) * 100) : 0;
+          const warna = peratus >= 70 ? STAT_HIJAU : peratus >= 50 ? STAT_EMAS : STAT_OREN;
+          const tarikh = k.completed_at ? formatTarikh(k.completed_at) : "—";
+          const subjek = k.mpt4_set?.subjek ?? "—";
+          const tajuk = k.mpt4_set?.tajuk ?? (k.mpt4_set ? `Set ${k.mpt4_set.nombor_set}` : "");
+          return (
+            <div
+              key={k.id}
+              className="rounded-2xl bg-card p-4 shadow-soft"
+              style={{ border: `1.5px solid ${warna}55` }}
+            >
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0">
+                  <p className="font-display text-base font-extrabold text-foreground truncate">
+                    {subjek}
+                  </p>
+                  {tajuk && (
+                    <p className="mt-0.5 text-xs text-muted-foreground truncate">{tajuk}</p>
+                  )}
+                </div>
+                <span
+                  className="shrink-0 rounded-full px-3 py-1 text-xs font-extrabold text-white shadow-soft"
+                  style={{ background: `linear-gradient(135deg, ${warna}, ${warna}cc)` }}
+                >
+                  {peratus}%
+                </span>
+              </div>
+              <div className="mt-3 flex items-end justify-between gap-2">
+                <p className="font-display text-2xl font-extrabold" style={{ color: warna }}>
+                  {markah}
+                  <span className="text-sm font-bold text-muted-foreground">/{penuh || "—"}</span>
+                </p>
+                <p className="text-xs text-muted-foreground">{tarikh}</p>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
   );
 }
 
