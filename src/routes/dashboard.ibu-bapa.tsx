@@ -1682,11 +1682,25 @@ function KadSubjekTrend({
   }
 
   return (
-    <div className="rounded-2xl bg-card p-4 shadow-soft" style={{ border: `2px solid ${warna}33` }}>
-      <p className="text-xs font-extrabold text-muted-foreground">{label}</p>
+    <div
+      className="relative overflow-hidden rounded-2xl p-5 shadow-card"
+      style={{
+        background: `linear-gradient(135deg, ${warna}1f 0%, #ffffff 90%)`,
+        border: `3px solid ${warna}80`,
+      }}
+    >
+      <div className="flex items-center gap-3">
+        <div
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-white shadow-soft text-lg"
+          style={{ background: `linear-gradient(135deg, ${warna}, ${warna}cc)` }}
+        >
+          {label.includes("Terkuat") ? "💪" : "⚠️"}
+        </div>
+        <p className="text-[11px] font-extrabold uppercase tracking-wide" style={{ color: warna }}>{label}</p>
+      </div>
       {meta && sj ? (
         <>
-          <p className="mt-1 font-display text-xl font-extrabold text-foreground">{meta.title}</p>
+          <p className="mt-2 font-display text-2xl font-extrabold text-foreground">{meta.title}</p>
           <p className="text-xs text-muted-foreground">
             Purata {sj.purata}% • {sj.bil} aktiviti
           </p>
