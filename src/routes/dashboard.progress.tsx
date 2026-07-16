@@ -340,13 +340,13 @@ function ProgressDashboard() {
         </section>
 
         {fetching ? (
-          <div className="mt-8 rounded-3xl bg-card p-10 text-center shadow-card">
+          <div className="mt-6 rounded-3xl bg-card p-10 text-center shadow-card">
             <p className="text-muted-foreground">Memuatkan data progress...</p>
           </div>
         ) : (
           <>
             {/* Lencana */}
-            <section className="mt-8">
+            <section className="mt-6">
               <div className="flex items-center gap-2">
                 <h2 className="font-display text-xl font-extrabold text-foreground">Lencana Saya</h2>
                 <BadgeInfoButton />
@@ -362,12 +362,12 @@ function ProgressDashboard() {
                   {badges.map((bg) => (
                     <div
                       key={bg.id}
-                      className="flex items-center gap-2 rounded-full bg-card px-4 py-2 shadow-soft"
-                      style={{ border: `2px solid ${EMAS}55` }}
+                      className="flex items-center gap-2 rounded-full px-4 py-2 text-white shadow-gold"
+                      style={{ background: `linear-gradient(135deg, ${EMAS}, #E48A0A)` }}
                       title={new Date(bg.created_at).toLocaleDateString("ms-MY")}
                     >
                       <span className="text-2xl leading-none">{bg.ikon}</span>
-                      <span className="font-display text-sm font-extrabold text-foreground">{bg.nama}</span>
+                      <span className="font-display text-sm font-extrabold">{bg.nama}</span>
                     </div>
                   ))}
                 </div>
@@ -384,7 +384,7 @@ function ProgressDashboard() {
 
 
             {/* Kad Subjek */}
-            <section className="mt-8">
+            <section className="mt-6">
               <h2 className="font-display text-xl font-extrabold text-foreground">Ringkasan Subjek</h2>
               <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {ringkasanSubjek.map((r) => (
@@ -392,14 +392,17 @@ function ProgressDashboard() {
                     key={r.subjek.id}
                     to="/darjah/$darjahId/$subjekId"
                     params={{ darjahId: r.darjahTerkini, subjekId: r.subjek.id }}
-                    className="block rounded-3xl bg-card p-5 shadow-card transition hover:-translate-y-0.5"
-                    style={{ border: `2px solid ${HIJAU}22` }}
+                    className="block rounded-3xl p-5 shadow-card transition hover:-translate-y-0.5"
+                    style={{
+                      background: `linear-gradient(135deg, ${HIJAU}14 0%, #FFFDF5 60%, ${EMAS}12 100%)`,
+                      border: `2px solid ${HIJAU}40`,
+                    }}
                   >
                     <div className="flex items-center justify-between gap-2">
                       <h3 className="font-display text-lg font-extrabold text-foreground">{r.subjek.title}</h3>
                       <span
-                        className="rounded-full px-2 py-0.5 text-xs font-extrabold"
-                        style={{ backgroundColor: `${EMAS}33`, color: "#7a5300" }}
+                        className="rounded-full px-3 py-1 text-xs font-extrabold text-white shadow-gold"
+                        style={{ background: `linear-gradient(135deg, ${EMAS}, #E48A0A)` }}
                       >
                         Skor: {r.purata}%
                       </span>
@@ -410,7 +413,7 @@ function ProgressDashboard() {
                     <div className="mt-3 h-3 overflow-hidden rounded-full" style={{ backgroundColor: `${HIJAU}1a` }}>
                       <div
                         className="h-full rounded-full transition-all"
-                        style={{ width: `${r.peratusSiap}%`, backgroundColor: HIJAU }}
+                        style={{ width: `${r.peratusSiap}%`, background: `linear-gradient(90deg, ${HIJAU}, #2AAE72)` }}
                       />
                     </div>
                     <p className="mt-2 text-xs font-bold" style={{ color: HIJAU }}>
@@ -422,7 +425,7 @@ function ProgressDashboard() {
             </section>
 
             {/* Bab Lemah */}
-            <section className="mt-8">
+            <section className="mt-6">
               <h2 className="font-display text-xl font-extrabold text-foreground">Bab Lemah</h2>
               {babLemah.length === 0 ? (
                 <div className="mt-3 rounded-2xl bg-card p-5 text-center shadow-soft">
@@ -459,7 +462,7 @@ function ProgressDashboard() {
             </section>
 
             {/* Aktiviti Terkini */}
-            <section className="mt-8 mb-12">
+            <section className="mt-6 mb-12">
               <h2 className="font-display text-xl font-extrabold text-foreground">Aktiviti Terkini</h2>
               {progress.length === 0 ? (
                 <div className="mt-3 rounded-2xl bg-card p-5 text-center shadow-soft">
@@ -515,7 +518,6 @@ function StatKad({
   nilai,
   icon,
   warna,
-  light,
 }: {
   label: string;
   nilai: string | number;
@@ -525,17 +527,22 @@ function StatKad({
 }) {
   return (
     <div
-      className="rounded-2xl p-4 shadow-soft"
+      className="relative overflow-hidden rounded-2xl border-2 p-4 shadow-card"
       style={{
-        backgroundColor: light ? `${warna}1f` : warna,
-        color: light ? "#1a1a1a" : "#fff",
+        background: `linear-gradient(135deg, ${warna}2e 0%, #ffffff 90%)`,
+        borderColor: `${warna}66`,
       }}
     >
-      <div className="flex items-center gap-2 text-xs font-extrabold opacity-90">
-        {icon}
-        {label}
+      <div className="flex items-center gap-2.5">
+        <div
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-white shadow-soft"
+          style={{ background: `linear-gradient(135deg, ${warna}, ${warna}cc)` }}
+        >
+          {icon}
+        </div>
+        <span className="text-xs font-extrabold text-foreground/80">{label}</span>
       </div>
-      <p className="mt-2 font-display text-3xl font-extrabold">{nilai}</p>
+      <p className="mt-2 font-display text-3xl font-extrabold" style={{ color: warna }}>{nilai}</p>
     </div>
   );
 }
@@ -620,7 +627,7 @@ function SeksyenSijil({
   const semua = [...sijilDarjah.map((s) => ({ ...s, _kind: "darjah" as const })), ...sijilSubjek.map((s) => ({ ...s, _kind: "subjek" as const }))];
 
   return (
-    <section className="mt-8">
+    <section className="mt-6">
       <div className="mb-3 flex items-center gap-2">
         <Trophy className="h-5 w-5" style={{ color: EMAS }} />
         <h2 className="font-display text-xl font-extrabold text-foreground">Sijil Saya</h2>
@@ -694,12 +701,15 @@ function KadSijil({
 
   return (
     <div
-      className="flex flex-col gap-3 rounded-2xl bg-card p-4 shadow-soft sm:flex-row sm:items-center"
-      style={{ border: `2px solid ${warna}55` }}
+      className="flex flex-col gap-3 rounded-2xl p-4 shadow-card sm:flex-row sm:items-center"
+      style={{
+        background: `linear-gradient(135deg, ${warna === EMAS ? "#FFF8E1" : `${warna}12`} 0%, #FFFDF5 100%)`,
+        border: `2.5px solid ${warna}80`,
+      }}
     >
       <div
-        className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl text-3xl"
-        style={{ backgroundColor: `${warna}1f` }}
+        className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl text-3xl text-white shadow-gold"
+        style={{ background: `linear-gradient(135deg, ${warna}, ${warna}cc)` }}
       >
         {ikon}
       </div>

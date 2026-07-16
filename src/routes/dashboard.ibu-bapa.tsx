@@ -1017,20 +1017,26 @@ function ParentDashboard() {
                         {kemajuanSubjek.map((k) => (
                           <div
                             key={k.subjek.id}
-                            className="rounded-2xl bg-card p-4 shadow-soft"
-                            style={{ border: `2px solid ${HIJAU}1f` }}
+                            className="rounded-2xl p-4 shadow-card"
+                            style={{
+                              background: `linear-gradient(135deg, ${HIJAU}14 0%, #FFFDF5 60%, ${EMAS}12 100%)`,
+                              border: `2px solid ${HIJAU}40`,
+                            }}
                           >
                             <div className="flex items-center justify-between gap-2">
                               <h3 className="font-display text-base font-extrabold text-foreground">{k.subjek.title}</h3>
                               <span
-                                className="rounded-full px-2 py-0.5 text-xs font-extrabold"
-                                style={{ backgroundColor: `${EMAS}33`, color: "#7a5300" }}
+                                className="rounded-full px-3 py-1 text-xs font-extrabold text-white shadow-gold"
+                                style={{ background: `linear-gradient(135deg, ${EMAS}, #E48A0A)` }}
                               >
                                 Skor: {k.purata}%
                               </span>
                             </div>
                             <div className="mt-2 h-3 overflow-hidden rounded-full" style={{ backgroundColor: `${HIJAU}1a` }}>
-                              <div className="h-full transition-all" style={{ width: `${k.peratusSiap}%`, backgroundColor: HIJAU }} />
+                              <div
+                                className="h-full transition-all"
+                                style={{ width: `${k.peratusSiap}%`, background: `linear-gradient(90deg, ${HIJAU}, #2AAE72)` }}
+                              />
                             </div>
                             <p className="mt-2 text-xs text-muted-foreground">
                               Kemajuan: {k.peratusSiap}% siap • {k.jumlah} aktiviti
@@ -1114,11 +1120,11 @@ function ParentDashboard() {
                           {badges.map((b) => (
                             <div
                               key={b.id}
-                              className="flex items-center gap-2 rounded-full bg-card px-3 py-1.5 shadow-soft"
-                              style={{ border: `2px solid ${EMAS}55` }}
+                              className="flex items-center gap-2 rounded-full px-3.5 py-1.5 text-white shadow-gold"
+                              style={{ background: `linear-gradient(135deg, ${EMAS}, #E48A0A)` }}
                             >
                               <span className="text-xl leading-none">{b.ikon}</span>
-                              <span className="font-display text-xs font-extrabold text-foreground">{b.nama}</span>
+                              <span className="font-display text-xs font-extrabold">{b.nama}</span>
                             </div>
                           ))}
                         </div>
@@ -1139,7 +1145,13 @@ function ParentDashboard() {
                           </p>
                         </div>
                       ) : (
-                        <div className="overflow-hidden rounded-2xl bg-card shadow-soft">
+                        <div
+                          className="overflow-hidden rounded-2xl shadow-card"
+                          style={{
+                            background: `linear-gradient(135deg, #FFF8E1 0%, #FFFDF5 100%)`,
+                            border: `2px solid ${EMAS}80`,
+                          }}
+                        >
                           {sijilList.map((sj, i) => {
                             const subj = SUBJEK_LIST.find((s) => s.id === sj.subjek);
                             const subjekTitle = subj?.title ?? sj.subjek;
@@ -1153,12 +1165,12 @@ function ParentDashboard() {
                               <div
                                 key={sj.id}
                                 className="flex flex-wrap items-center justify-between gap-3 p-4"
-                                style={{ borderTop: i === 0 ? "none" : "1px solid hsl(var(--border))" }}
+                                style={{ borderTop: i === 0 ? "none" : `1px solid ${EMAS}33` }}
                               >
                                 <div className="flex min-w-0 flex-1 items-center gap-3">
                                   <span
-                                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white"
-                                    style={{ backgroundColor: EMAS }}
+                                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-white shadow-gold"
+                                    style={{ background: `linear-gradient(135deg, ${EMAS}, #E48A0A)` }}
                                   >
                                     <Trophy className="h-5 w-5" />
                                   </span>
@@ -1593,9 +1605,12 @@ function FormTambahAnak({ onAdded }: { onAdded: () => void }) {
 
 function Seksyen({ tajuk, ikon, children }: { tajuk: string; ikon: React.ReactNode; children: React.ReactNode }) {
   return (
-    <section className="mt-6">
+    <section className="mt-5">
       <div className="mb-3 flex items-center gap-2">
-        <span className="flex h-8 w-8 items-center justify-center rounded-lg text-white" style={{ backgroundColor: HIJAU }}>
+        <span
+          className="flex h-8 w-8 items-center justify-center rounded-lg text-white shadow-soft"
+          style={{ background: `linear-gradient(135deg, ${HIJAU}, #2AAE72)` }}
+        >
           {ikon}
         </span>
         <h2 className="font-display text-xl font-extrabold text-foreground">{tajuk}</h2>
@@ -1610,7 +1625,6 @@ function Stat({
   nilai,
   icon,
   warna,
-  light,
 }: {
   label: string;
   nilai: string | number;
@@ -1620,14 +1634,22 @@ function Stat({
 }) {
   return (
     <div
-      className="rounded-2xl p-4 shadow-soft"
-      style={{ backgroundColor: light ? `${warna}1f` : warna, color: light ? "#1a1a1a" : "#fff" }}
+      className="relative overflow-hidden rounded-2xl border-2 p-4 shadow-card"
+      style={{
+        background: `linear-gradient(135deg, ${warna}2e 0%, #ffffff 90%)`,
+        borderColor: `${warna}66`,
+      }}
     >
-      <div className="flex items-center gap-2 text-xs font-extrabold opacity-90">
-        {icon}
-        {label}
+      <div className="flex items-center gap-2.5">
+        <div
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-white shadow-soft"
+          style={{ background: `linear-gradient(135deg, ${warna}, ${warna}cc)` }}
+        >
+          {icon}
+        </div>
+        <span className="text-xs font-extrabold text-foreground/80">{label}</span>
       </div>
-      <p className="mt-2 font-display text-2xl font-extrabold">{nilai}</p>
+      <p className="mt-2 font-display text-2xl font-extrabold" style={{ color: warna }}>{nilai}</p>
     </div>
   );
 }
@@ -1660,11 +1682,25 @@ function KadSubjekTrend({
   }
 
   return (
-    <div className="rounded-2xl bg-card p-4 shadow-soft" style={{ border: `2px solid ${warna}33` }}>
-      <p className="text-xs font-extrabold text-muted-foreground">{label}</p>
+    <div
+      className="relative overflow-hidden rounded-2xl p-5 shadow-card"
+      style={{
+        background: `linear-gradient(135deg, ${warna}1f 0%, #ffffff 90%)`,
+        border: `3px solid ${warna}80`,
+      }}
+    >
+      <div className="flex items-center gap-3">
+        <div
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-white shadow-soft text-lg"
+          style={{ background: `linear-gradient(135deg, ${warna}, ${warna}cc)` }}
+        >
+          {label.includes("Terkuat") ? "💪" : "⚠️"}
+        </div>
+        <p className="text-[11px] font-extrabold uppercase tracking-wide" style={{ color: warna }}>{label}</p>
+      </div>
       {meta && sj ? (
         <>
-          <p className="mt-1 font-display text-xl font-extrabold text-foreground">{meta.title}</p>
+          <p className="mt-2 font-display text-2xl font-extrabold text-foreground">{meta.title}</p>
           <p className="text-xs text-muted-foreground">
             Purata {sj.purata}% • {sj.bil} aktiviti
           </p>
