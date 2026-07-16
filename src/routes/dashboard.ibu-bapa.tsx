@@ -575,7 +575,10 @@ function ParentDashboard() {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
   const [anakList, setAnakList] = useState<ChildProfile[]>([]);
-  const [aktifId, setAktifId] = useState<string | null>(null);
+  const [aktifId, setAktifId] = useState<string | null>(() => {
+    if (typeof window === "undefined") return null;
+    return localStorage.getItem(AKTIF_ANAK_KEY);
+  });
   const [progress, setProgress] = useState<ProgressRow[]>([]);
   const [stats, setStats] = useState<StatsRow[]>([]);
   const [badges, setBadges] = useState<BadgeRow[]>([]);
@@ -586,6 +589,13 @@ function ParentDashboard() {
   const [showAdd, setShowAdd] = useState(false);
   const [showMaklumat, setShowMaklumat] = useState(false);
   const [resetFor, setResetFor] = useState<ChildProfile | null>(null);
+
+  const pilihAnak = useCallback((id: string | null) => {
+    setAktifId(id);
+    if (typeof window === "undefined") return;
+    if (id) localStorage.setItem(AKTIF_ANAK_KEY, id);
+    else localStorage.removeItem(AKTIF_ANAK_KEY);
+  }, []);
 
   const isChild = !!user?.email?.includes(CHILD_EMAIL_DOMAIN);
 
