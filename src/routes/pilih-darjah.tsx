@@ -335,7 +335,9 @@ function DarjahDashboard() {
               Pilih Darjah Anda
             </h2>
             <p className="text-sm text-muted-foreground">
-              Darjah anda ditonjolkan di bawah. Darjah lain memerlukan langganan.
+              {isChild
+                ? "Darjah anda ditonjolkan di bawah. Darjah lain memerlukan langganan."
+                : "Pilih darjah untuk lihat pakej atau navigasi. Darjah lain memerlukan langganan."}
             </p>
           </div>
 
