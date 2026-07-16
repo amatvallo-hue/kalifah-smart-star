@@ -811,6 +811,12 @@ function ParentDashboard() {
 
   const streak = kiraStreak(stats);
 
+  const hariSejakAktif = useMemo(() => {
+    if (progress.length === 0) return Number.POSITIVE_INFINITY;
+    const last = parseIsoUTC(progress[0].created_at);
+    return Math.floor((Date.now() - last.getTime()) / 86400000);
+  }, [progress]);
+
   async function handleLogout() {
     await supabase.auth.signOut();
     navigate({ to: "/login" });
