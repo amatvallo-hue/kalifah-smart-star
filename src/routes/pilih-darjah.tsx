@@ -26,6 +26,24 @@ interface DarjahStats {
   bilAktiviti: number;
 }
 
+interface MingguStats {
+  soalan: number;
+  peratus: number;
+  bilAktiviti: number;
+}
+
+function todayKL(): string {
+  return new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Kuala_Lumpur" });
+}
+function daysAgoKL(n: number): string {
+  const t = new Date(todayKL() + "T00:00:00Z");
+  t.setUTCDate(t.getUTCDate() - n);
+  return t.toISOString().slice(0, 10);
+}
+function toKLDate(isoStr: string): string {
+  return new Date(isoStr).toLocaleDateString("en-CA", { timeZone: "Asia/Kuala_Lumpur" });
+}
+
 
 function DarjahDashboard() {
   const navigate = useNavigate();
