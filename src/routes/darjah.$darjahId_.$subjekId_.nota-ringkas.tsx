@@ -84,6 +84,7 @@ function NotaRingkasPage() {
         darjah: darjahId,
         subjek: subjekId,
         aktiviti: "nota",
+        topik: selectedTopik ?? undefined,
         markah: 1,
         jumlahSoalan: 1,
         masaAmbil: Math.round((Date.now() - mulaMasa) / 1000),

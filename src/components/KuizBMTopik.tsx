@@ -209,6 +209,7 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
         darjah: darjahId,
         subjek: subjekId,
         aktiviti: "kuiz",
+        topik,
         markah: skor,
         jumlahSoalan: soalanList.length,
         masaAmbil: Math.round((Date.now() - mulaMasa) / 1000),
