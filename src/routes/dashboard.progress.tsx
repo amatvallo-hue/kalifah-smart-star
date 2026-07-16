@@ -315,7 +315,11 @@ function ProgressDashboard() {
           adaAktiviti={progressHariIni.length > 0}
         />
 
+        {/* Kesediaan Peperiksaan */}
+        <KesediaanPeperiksaan ringkasanSubjek={ringkasanSubjek} />
+
         {/* Statistik harian */}
+
         <section className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-4">
           <StatKad
             label="Soalan Hari Ini"
