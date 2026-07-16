@@ -344,7 +344,7 @@ function DarjahDashboard() {
           <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {DARJAH_LIST.map((d, i) => {
               const hasAccess = darjahAkses.includes(Number(d.id));
-              const isCurrent = darjahMurid === d.id;
+              const isCurrent = isChild && darjahMurid === d.id;
               return (
                 <DarjahCard
                   key={d.id}
