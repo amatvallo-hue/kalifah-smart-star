@@ -934,38 +934,6 @@ function ParentDashboard() {
               })}
             </section>
 
-            {/* Reset Password Anak */}
-            <Seksyen tajuk="Reset Password Anak" ikon={<KeyRound className="h-5 w-5" />}>
-              <div className="grid gap-3 sm:grid-cols-2">
-                {anakList.map((a) => (
-                  <div
-                    key={a.id}
-                    className="flex items-center justify-between gap-3 rounded-2xl bg-card p-4 shadow-soft"
-                    style={{ border: `2px solid ${HIJAU}1f` }}
-                  >
-                    <div className="min-w-0">
-                      <p className="truncate font-display text-base font-extrabold text-foreground">{a.nama}</p>
-                      <p className="truncate text-xs text-muted-foreground">
-                        @{a.username ?? "—"} • Darjah {a.darjah}
-                      </p>
-                    </div>
-                    <button
-                      onClick={() => setResetFor(a)}
-                      disabled={!a.child_user_id}
-                      className="inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-2 font-display text-xs font-extrabold text-white shadow-soft disabled:opacity-50"
-                      style={{ backgroundColor: HIJAU }}
-                      title={!a.child_user_id ? "Anak belum dipautkan" : "Reset password anak"}
-                    >
-                      <KeyRound className="h-3.5 w-3.5" /> Reset Password
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </Seksyen>
-
-
-
-
             {anakAktif && anakAktif.child_user_id && (
               <>
                 {fetching ? (
@@ -974,13 +942,59 @@ function ParentDashboard() {
                   </div>
                 ) : (
                   <>
+                    {/* ALERT: Anak tidak aktif */}
+                    {hariSejakAktif > 3 && (
+                      <div
+                        className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl p-4 shadow-soft"
+                        style={{ background: "#FFF4E5", border: "2px solid #FDBA74" }}
+                      >
+                        <div className="flex items-start gap-3">
+                          <span className="text-2xl">⚠️</span>
+                          <div>
+                            <p className="font-display text-sm font-extrabold" style={{ color: "#9A3412" }}>
+                              {anakAktif.nama} belum log masuk{" "}
+                              {Number.isFinite(hariSejakAktif) ? `sejak ${hariSejakAktif} hari lalu` : "buat masa ini"}
+                            </p>
+                            <p className="mt-0.5 text-xs" style={{ color: "#9A3412" }}>
+                              Beri sedikit galakan supaya anak teruskan pembelajaran.
+                            </p>
+                          </div>
+                        </div>
+                        <button
+                          onClick={() => toast.success("Peringatan dihantar kepada anak.")}
+                          className="inline-flex items-center gap-1.5 rounded-full px-4 py-2 font-display text-xs font-extrabold text-white shadow-soft"
+                          style={{ background: STAT_OREN }}
+                        >
+                          Hantar Peringatan
+                        </button>
+                      </div>
+                    )}
+
+                    {/* HERO SUMMARY: Subjek Terkuat & Perlukan Perhatian */}
+                    <Seksyen tajuk="Ringkasan Prestasi" ikon={<Trophy className="h-5 w-5" />}>
+                      <div className="grid gap-3 md:grid-cols-2">
+                        <KadSubjekTrend label="Subjek Terkuat 💪" sj={bulan.terkuat} warna={STAT_HIJAU} />
+                        <KadSubjekTrend
+                          label="Perlukan Perhatian ⚠️"
+                          sj={bulan.lemah && bulan.terkuat?.subjek !== bulan.lemah.subjek ? bulan.lemah : null}
+                          warna={STAT_OREN}
+                          topikLemah={
+                            bulan.lemah && bulan.terkuat?.subjek !== bulan.lemah.subjek
+                              ? (bulanTopikLemah.get(bulan.lemah.subjek) ?? []).slice(0, 3)
+                              : []
+                          }
+                          namaAnak={anakAktif.nama}
+                        />
+                      </div>
+                    </Seksyen>
+
                     {/* MINGGU INI */}
                     <Seksyen tajuk="Minggu Ini" ikon={<Calendar className="h-5 w-5" />}>
                       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-                        <Stat label="Soalan Dijawab" nilai={minggu.soalan} icon={<BookOpen className="h-5 w-5" />} warna={HIJAU} />
-                        <Stat label="Ketepatan" nilai={`${minggu.peratus}%`} icon={<Target className="h-5 w-5" />} warna={EMAS} light />
-                        <Stat label="Masa Belajar" nilai={formatMasa(minggu.masa)} icon={<Clock className="h-5 w-5" />} warna={HIJAU} light />
-                        <Stat label="Bab Selesai" nilai={minggu.bab} icon={<TrendingUp className="h-5 w-5" />} warna={EMAS} />
+                        <Stat label="Soalan Dijawab" nilai={minggu.soalan} icon={<BookOpen className="h-5 w-5" />} warna={STAT_HIJAU} light />
+                        <Stat label="Ketepatan" nilai={`${minggu.peratus}%`} icon={<Target className="h-5 w-5" />} warna={STAT_HIJAU} light />
+                        <Stat label="Masa Belajar" nilai={formatMasa(minggu.masa)} icon={<Clock className="h-5 w-5" />} warna={STAT_BIRU} light />
+                        <Stat label="Bab Selesai" nilai={minggu.bab} icon={<TrendingUp className="h-5 w-5" />} warna={STAT_OREN} light />
                       </div>
                     </Seksyen>
 
@@ -991,25 +1005,9 @@ function ParentDashboard() {
 
                     {/* BULAN INI */}
                     <Seksyen tajuk="Bulan Ini" ikon={<TrendingUp className="h-5 w-5" />}>
-                      <div className="grid gap-3 md:grid-cols-2">
-                        <div className="grid grid-cols-2 gap-3">
-                          <Stat label="Jumlah Soalan" nilai={bulan.soalan} icon={<BookOpen className="h-5 w-5" />} warna={HIJAU} />
-                          <Stat label="Jumlah Masa" nilai={formatMasa(bulan.masa)} icon={<Clock className="h-5 w-5" />} warna={EMAS} light />
-                        </div>
-                        <div className="grid grid-cols-1 gap-3">
-                          <KadSubjekTrend label="Subjek Terkuat 💪" sj={bulan.terkuat} warna={HIJAU} />
-                          <KadSubjekTrend
-                            label="Perlukan Perhatian ⚠️"
-                            sj={bulan.lemah && bulan.terkuat?.subjek !== bulan.lemah.subjek ? bulan.lemah : null}
-                            warna="#dc2626"
-                            topikLemah={
-                              bulan.lemah && bulan.terkuat?.subjek !== bulan.lemah.subjek
-                                ? (bulanTopikLemah.get(bulan.lemah.subjek) ?? []).slice(0, 3)
-                                : []
-                            }
-                            namaAnak={anakAktif.nama}
-                          />
-                        </div>
+                      <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+                        <Stat label="Jumlah Soalan" nilai={bulan.soalan} icon={<BookOpen className="h-5 w-5" />} warna={STAT_HIJAU} light />
+                        <Stat label="Jumlah Masa" nilai={formatMasa(bulan.masa)} icon={<Clock className="h-5 w-5" />} warna={STAT_BIRU} light />
                       </div>
                     </Seksyen>
 
@@ -1028,14 +1026,14 @@ function ParentDashboard() {
                                 className="rounded-full px-2 py-0.5 text-xs font-extrabold"
                                 style={{ backgroundColor: `${EMAS}33`, color: "#7a5300" }}
                               >
-                                ⭐ {k.purata}%
+                                Skor: {k.purata}%
                               </span>
                             </div>
                             <div className="mt-2 h-3 overflow-hidden rounded-full" style={{ backgroundColor: `${HIJAU}1a` }}>
                               <div className="h-full transition-all" style={{ width: `${k.peratusSiap}%`, backgroundColor: HIJAU }} />
                             </div>
                             <p className="mt-2 text-xs text-muted-foreground">
-                              {k.peratusSiap}% siap • {k.jumlah} aktiviti
+                              Kemajuan: {k.peratusSiap}% siap • {k.jumlah} aktiviti
                               {k.terkini && (
                                 <>
                                   {" "}
@@ -1107,9 +1105,9 @@ function ParentDashboard() {
                     {/* STREAK & LENCANA */}
                     <Seksyen tajuk="Streak & Lencana" ikon={<Flame className="h-5 w-5" />}>
                       <div className="grid gap-3 md:grid-cols-3">
-                        <Stat label="Streak Semasa" nilai={`${streak} hari 🔥`} icon={<Flame className="h-5 w-5" />} warna="#dc2626" />
-                        <Stat label="Jumlah Lencana" nilai={badges.length} icon={<Award className="h-5 w-5" />} warna={EMAS} light />
-                        <Stat label="Bab Disiapkan" nilai={stats.reduce((a, r) => a + r.bab_selesai, 0)} icon={<TrendingUp className="h-5 w-5" />} warna={HIJAU} />
+                        <Stat label="Streak Semasa" nilai={`${streak} hari 🔥`} icon={<Flame className="h-5 w-5" />} warna={STAT_OREN} light />
+                        <Stat label="Jumlah Lencana" nilai={badges.length} icon={<Award className="h-5 w-5" />} warna={STAT_EMAS} light />
+                        <Stat label="Bab Disiapkan" nilai={stats.reduce((a, r) => a + r.bab_selesai, 0)} icon={<TrendingUp className="h-5 w-5" />} warna={STAT_HIJAU} light />
                       </div>
                       {badges.length > 0 && (
                         <div className="mt-4 flex flex-wrap gap-2">
@@ -1204,8 +1202,6 @@ function ParentDashboard() {
                       )}
                     </Seksyen>
 
-
-
                     {/* AKTIVITI TERKINI */}
                     <Seksyen tajuk="Aktiviti Terkini" ikon={<BookOpen className="h-5 w-5" />}>
                       {progress.length === 0 ? (
@@ -1248,6 +1244,42 @@ function ParentDashboard() {
                           })}
                         </div>
                       )}
+                    </Seksyen>
+
+                    {/* TETAPAN AKAUN (collapsible) */}
+                    <Seksyen tajuk="Tetapan Akaun" ikon={<KeyRound className="h-5 w-5" />}>
+                      <details className="rounded-2xl bg-card shadow-soft" style={{ border: `2px solid ${HIJAU}1f` }}>
+                        <summary className="cursor-pointer list-none px-4 py-3 font-display text-sm font-extrabold text-foreground">
+                          🔐 Reset Password Anak
+                        </summary>
+                        <div className="border-t px-4 pb-4 pt-3" style={{ borderColor: `${HIJAU}1f` }}>
+                          <div className="grid gap-3 sm:grid-cols-2">
+                            {anakList.map((a) => (
+                              <div
+                                key={a.id}
+                                className="flex items-center justify-between gap-3 rounded-2xl bg-background p-4 shadow-soft"
+                                style={{ border: `2px solid ${HIJAU}1f` }}
+                              >
+                                <div className="min-w-0">
+                                  <p className="truncate font-display text-base font-extrabold text-foreground">{a.nama}</p>
+                                  <p className="truncate text-xs text-muted-foreground">
+                                    @{a.username ?? "—"} • Darjah {a.darjah}
+                                  </p>
+                                </div>
+                                <button
+                                  onClick={() => setResetFor(a)}
+                                  disabled={!a.child_user_id}
+                                  className="inline-flex shrink-0 items-center gap-1.5 rounded-full px-3 py-2 font-display text-xs font-extrabold text-white shadow-soft disabled:opacity-50"
+                                  style={{ backgroundColor: HIJAU }}
+                                  title={!a.child_user_id ? "Anak belum dipautkan" : "Reset password anak"}
+                                >
+                                  <KeyRound className="h-3.5 w-3.5" /> Reset Password
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </details>
                     </Seksyen>
 
                     <div className="mt-6 mb-12 text-right">
