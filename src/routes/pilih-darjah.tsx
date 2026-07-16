@@ -1,12 +1,12 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { Lock, Sparkles, Star, LogOut, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Lock, Sparkles, Star, LogOut, ArrowRight, Trophy, BookOpen, FileText } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { usePoints } from "@/hooks/use-points";
 import { useProfile } from "@/hooks/use-profile";
-import { DARJAH_LIST, PAKEJ_LIST, HARGA_ASAL, type Darjah } from "@/lib/curriculum";
+import { DARJAH_LIST, subjekListUntukRole, type Darjah } from "@/lib/curriculum";
 
 export const Route = createFileRoute("/pilih-darjah")({
   head: () => ({
@@ -19,10 +19,113 @@ export const Route = createFileRoute("/pilih-darjah")({
   component: DarjahDashboard,
 });
 
+interface DarjahStats {
+  bilSubjek: number;
+  bilSoalan: number;
+  topikSelesai: number;
+  jumlahTopik: number;
+}
+
 function DarjahDashboard() {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
   const { profile, loading: profileLoading } = useProfile();
+  const mata = usePoints();
+
+  const [darjahMurid, setDarjahMurid] = useState<string | null>(null);
+  const [stats, setStats] = useState<DarjahStats | null>(null);
+
+  const subjekList = useMemo(() => subjekListUntukRole(profile?.role), [profile?.role]);
+
+  useEffect(() => {
+    if (!loading && !user) navigate({ to: "/login" });
+  }, [loading, user, navigate]);
+
+  // Kesan darjah murid: child_profiles.darjah untuk akaun anak,
+  // atau elemen pertama darjah_akses untuk akaun induk.
+  useEffect(() => {
+    if (!user) return;
+    let cancelled = false;
+    (async () => {
+      const { data } = await supabase
+        .from("child_profiles" as never)
+        .select("darjah")
+        .eq("child_user_id", user.id)
+        .maybeSingle();
+      if (cancelled) return;
+      const childDarjah = (data as { darjah?: string } | null)?.darjah;
+      if (childDarjah) {
+        setDarjahMurid(String(childDarjah));
+        return;
+      }
+      const akses = profile?.darjah_akses ?? [];
+      if (akses.length > 0) {
+        setDarjahMurid(String(akses[0]));
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [user, profile?.darjah_akses]);
+
+  // Ambil statistik live untuk darjah murid.
+  useEffect(() => {
+    if (!user || !darjahMurid) {
+      setStats(null);
+      return;
+    }
+    const darjahNum = Number(darjahMurid);
+    if (!Number.isFinite(darjahNum)) return;
+    let cancelled = false;
+
+    (async () => {
+      const [ltCount, kzCount, ikCount, brCount, ltTopik, kzTopik, ikTopik, brTopik, upTopik] = await Promise.all([
+        supabase.from("soalan_latih_tubi").select("id", { count: "exact", head: true }).eq("darjah", darjahNum),
+        supabase.from("kuiz_soalan").select("id", { count: "exact", head: true }).eq("darjah", darjahNum),
+        supabase.from("soalan_isi_kosong").select("id", { count: "exact", head: true }).eq("darjah", darjahNum),
+        supabase.from("soalan_bergambar_rajah").select("id", { count: "exact", head: true }).eq("darjah", darjahNum),
+        supabase.from("soalan_latih_tubi").select("topik").eq("darjah", darjahNum),
+        supabase.from("kuiz_soalan").select("topik").eq("darjah", darjahNum),
+        supabase.from("soalan_isi_kosong").select("topik").eq("darjah", darjahNum),
+        supabase.from("soalan_bergambar_rajah").select("topik").eq("darjah", darjahNum),
+        supabase
+          .from("user_progress")
+          .select("topik")
+          .eq("user_id", user.id)
+          .eq("darjah", String(darjahMurid)),
+      ]);
+
+      if (cancelled) return;
+
+      const bilSoalan =
+        (ltCount.count ?? 0) + (kzCount.count ?? 0) + (ikCount.count ?? 0) + (brCount.count ?? 0);
+
+      const semuaTopik = new Set<string>();
+      for (const q of [ltTopik.data, kzTopik.data, ikTopik.data, brTopik.data]) {
+        for (const r of (q ?? []) as { topik: string | null }[]) {
+          const t = (r.topik ?? "").trim();
+          if (t) semuaTopik.add(t);
+        }
+      }
+
+      const topikSelesaiSet = new Set<string>();
+      for (const r of (upTopik.data ?? []) as { topik: string | null }[]) {
+        const t = (r.topik ?? "").trim();
+        if (t && semuaTopik.has(t)) topikSelesaiSet.add(t);
+      }
+
+      setStats({
+        bilSubjek: subjekList.length,
+        bilSoalan,
+        jumlahTopik: semuaTopik.size,
+        topikSelesai: topikSelesaiSet.size,
+      });
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [user, darjahMurid, subjekList.length]);
 
   function handleLockedClick(d: Darjah) {
     if (typeof window !== "undefined") {
@@ -30,11 +133,6 @@ function DarjahDashboard() {
     }
     navigate({ to: "/preview/nama" });
   }
-  const mata = usePoints();
-
-  useEffect(() => {
-    if (!loading && !user) navigate({ to: "/login" });
-  }, [loading, user, navigate]);
 
   async function handleLogout() {
     await supabase.auth.signOut();
@@ -62,65 +160,81 @@ function DarjahDashboard() {
   const displayName = (metaName && metaName.trim()) || prettyEmail || "Pelajar";
   const firstName = displayName.split(" ")[0];
 
+  const darjahMuridHasAccess =
+    darjahMurid !== null && darjahAkses.includes(Number(darjahMurid));
+
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader stars={mata} userName={firstName} onLogout={handleLogout} />
 
-      <main className="container mx-auto px-4 py-8">
-        <section className="relative overflow-hidden rounded-[2rem] bg-gradient-hero p-6 shadow-card md:p-10">
-          <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-gold/20 blur-3xl" />
-          <div className="absolute -bottom-10 -left-10 h-40 w-40 rounded-full bg-primary/20 blur-3xl" />
-          <div className="relative">
-            <span className="inline-flex items-center gap-2 rounded-full bg-card px-4 py-1.5 font-display text-xs font-bold text-primary shadow-soft">
-              <Sparkles className="h-3.5 w-3.5" />
-              Assalamualaikum!
-            </span>
-            <h1 className="mt-4 font-display text-4xl font-extrabold leading-tight text-foreground md:text-5xl">
-              Selamat datang,
-              <br />
-              <span className="text-primary">{firstName}!</span> 🌟
-            </h1>
-            <p className="mt-3 max-w-lg text-base text-muted-foreground">
-              Pilih darjah anda di bawah untuk mula belajar. Darjah berkunci memerlukan langganan.
-            </p>
-            <div className="mt-5 flex flex-wrap gap-2">
+      <main className="container mx-auto px-4 py-6">
+        {/* Hero — padat */}
+        <section className="relative overflow-hidden rounded-2xl bg-gradient-hero px-5 py-4 shadow-card md:px-7 md:py-5">
+          <div className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-primary/15 blur-3xl" />
+          <div className="relative flex flex-wrap items-center justify-between gap-3">
+            <div className="min-w-0">
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-card px-3 py-1 font-display text-[11px] font-bold text-primary shadow-soft">
+                <Sparkles className="h-3 w-3" />
+                Assalamualaikum
+              </span>
+              <h1 className="mt-1.5 font-display text-2xl font-extrabold leading-tight text-foreground md:text-3xl">
+                Selamat datang, <span className="text-primary">{firstName}</span>! 🌟
+              </h1>
+              <p className="mt-0.5 text-sm text-muted-foreground">
+                Sedia sambung belajar hari ni?
+              </p>
+            </div>
+            <div className="flex flex-wrap items-center gap-2">
+              {darjahMurid && (
+                <Link
+                  to="/darjah/$darjahId"
+                  params={{ darjahId: darjahMurid }}
+                  className="inline-flex items-center gap-2 rounded-full bg-gradient-primary px-5 py-2.5 font-display text-sm font-extrabold text-primary-foreground shadow-soft transition hover:opacity-90"
+                >
+                  Sambung Belajar
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              )}
               <Link
                 to="/harga"
-                className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-gold to-gold/80 px-5 py-2.5 font-display text-sm font-extrabold text-gold-foreground shadow-soft"
+                className="inline-flex items-center gap-1.5 rounded-full bg-card/80 px-3 py-1.5 font-display text-xs font-bold text-foreground/80 shadow-soft transition hover:text-primary"
               >
-                <Star className="h-4 w-4 fill-gold-foreground" />
-                Lihat Pakej Langganan
+                <Star className="h-3.5 w-3.5" />
+                Pakej
               </Link>
               <button
                 onClick={handleLogout}
-                className="inline-flex items-center gap-2 rounded-full bg-card/70 px-5 py-2.5 font-display text-sm font-extrabold text-muted-foreground shadow-soft transition hover:text-destructive"
+                className="inline-flex items-center gap-1.5 rounded-full bg-card/80 px-3 py-1.5 font-display text-xs font-bold text-muted-foreground shadow-soft transition hover:text-destructive"
               >
-                <LogOut className="h-4 w-4" />
+                <LogOut className="h-3.5 w-3.5" />
                 Log Keluar
               </button>
             </div>
           </div>
         </section>
 
-        <section className="mt-10">
-          <div className="flex items-end justify-between">
-            <div>
-              <h2 className="font-display text-2xl font-extrabold text-foreground md:text-3xl">
-                Pilih Darjah Anda
-              </h2>
-              <p className="text-sm text-muted-foreground">Darjah yang berkunci memerlukan langganan.</p>
-            </div>
+        <section className="mt-8">
+          <div>
+            <h2 className="font-display text-2xl font-extrabold text-foreground md:text-3xl">
+              Pilih Darjah Anda
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              Darjah anda ditonjolkan di bawah. Darjah lain memerlukan langganan.
+            </p>
           </div>
 
-          <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {DARJAH_LIST.map((d, i) => {
               const hasAccess = darjahAkses.includes(Number(d.id));
+              const isCurrent = darjahMurid === d.id;
               return (
                 <DarjahCard
                   key={d.id}
                   darjah={d}
                   index={i}
                   hasAccess={hasAccess}
+                  isCurrent={isCurrent}
+                  stats={isCurrent ? stats : null}
                   onLockedClick={() => handleLockedClick(d)}
                 />
               );
@@ -132,7 +246,6 @@ function DarjahDashboard() {
           © {new Date().getFullYear()} Kalifah.my — Belajar dengan ceria & berkat.
         </footer>
       </main>
-
     </div>
   );
 }
@@ -141,11 +254,15 @@ function DarjahCard({
   darjah,
   index,
   hasAccess,
+  isCurrent,
+  stats,
   onLockedClick,
 }: {
   darjah: Darjah;
   index: number;
   hasAccess: boolean;
+  isCurrent: boolean;
+  stats: DarjahStats | null;
   onLockedClick: () => void;
 }) {
   const palettes = [
@@ -156,35 +273,114 @@ function DarjahCard({
     "from-violet-400 to-violet-300 text-violet-900",
     "from-teal-400 to-teal-300 text-teal-900",
   ];
-  const tone = palettes[index % palettes.length];
+  const tone = isCurrent
+    ? "from-primary to-primary-glow text-primary-foreground"
+    : palettes[index % palettes.length];
+
+  const isMpt4 = darjah.id === "4";
+
+  const currentCardStyle = isCurrent
+    ? {
+        borderColor: "hsl(var(--primary))",
+        background:
+          "linear-gradient(135deg, hsl(var(--primary) / 0.10) 0%, hsl(var(--card)) 55%)",
+      }
+    : undefined;
 
   const inner = (
     <div
-      className={`relative flex h-full flex-col justify-between gap-6 rounded-3xl border border-border/60 bg-card p-6 shadow-card transition group-hover:-translate-y-1 group-hover:shadow-soft ${
-        !hasAccess ? "opacity-80" : ""
-      }`}
+      className={`relative flex h-full flex-col justify-between gap-5 rounded-3xl bg-card p-6 shadow-card transition group-hover:-translate-y-1 group-hover:shadow-soft ${
+        isCurrent
+          ? "border-[3px] ring-2 ring-primary/20"
+          : "border border-border/60"
+      } ${!hasAccess && !isCurrent ? "opacity-80" : ""}`}
+      style={currentCardStyle}
     >
-      {!hasAccess && (
+      {isCurrent && (
+        <div className="absolute -top-3 left-5 inline-flex items-center gap-1.5 rounded-full bg-gradient-primary px-3 py-1 font-display text-[10px] font-extrabold uppercase tracking-wide text-primary-foreground shadow-soft">
+          <Sparkles className="h-3 w-3" />
+          Darjah Anda
+        </div>
+      )}
+      {!hasAccess && !isCurrent && (
         <div className="absolute right-4 top-4 flex items-center gap-1.5 rounded-full bg-gold/90 px-3 py-1 font-display text-[10px] font-extrabold uppercase tracking-wide text-gold-foreground shadow-soft">
           <Lock className="h-3 w-3" />
           Naik Taraf
         </div>
       )}
-      <div
-        className={`flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br ${tone} shadow-soft transition group-hover:scale-110 ${
-          !hasAccess ? "grayscale" : ""
-        }`}
-      >
-        <span className="font-display text-4xl font-extrabold">{darjah.id}</span>
+
+      <div className="flex items-start justify-between gap-3">
+        <div
+          className={`flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br ${tone} shadow-soft transition group-hover:scale-110 ${
+            !hasAccess && !isCurrent ? "grayscale" : ""
+          }`}
+        >
+          <span className="font-display text-4xl font-extrabold">{darjah.id}</span>
+        </div>
+        {isCurrent && isMpt4 && (
+          <span
+            className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 font-display text-[10px] font-extrabold text-white shadow-soft"
+            style={{ background: "linear-gradient(135deg, #F5B82E, #E48A0A)" }}
+          >
+            <Trophy className="h-3 w-3" />
+            Percubaan MPT4
+          </span>
+        )}
       </div>
+
       <div>
         <h3 className="font-display text-2xl font-extrabold text-foreground">
-          {darjah.label} {!hasAccess && <span className="ml-1">🔒</span>}
+          {darjah.label}
+          {!hasAccess && !isCurrent && <span className="ml-1">🔒</span>}
         </h3>
         <p className="mt-1 text-sm text-muted-foreground">{darjah.tagline}</p>
       </div>
+
+      {isCurrent && (
+        <div className="space-y-3">
+          {/* Statistik ringkas — live */}
+          <div className="grid grid-cols-2 gap-2">
+            <StatChip
+              icon={<BookOpen className="h-3.5 w-3.5" />}
+              label="Subjek"
+              value={stats ? String(stats.bilSubjek) : "—"}
+            />
+            <StatChip
+              icon={<FileText className="h-3.5 w-3.5" />}
+              label="Soalan"
+              value={stats ? stats.bilSoalan.toLocaleString("ms-MY") : "—"}
+            />
+          </div>
+
+          {/* Progress bar topik */}
+          <div>
+            <div className="flex items-center justify-between text-xs font-bold text-foreground/80">
+              <span>Topik selesai</span>
+              <span>
+                {stats ? `${stats.topikSelesai}/${stats.jumlahTopik}` : "—/—"}
+              </span>
+            </div>
+            <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-muted">
+              <div
+                className="h-full rounded-full bg-gradient-primary transition-all"
+                style={{
+                  width: stats && stats.jumlahTopik > 0
+                    ? `${Math.min(100, Math.round((stats.topikSelesai / stats.jumlahTopik) * 100))}%`
+                    : "0%",
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="flex items-center justify-between">
-        {!hasAccess ? (
+        {isCurrent ? (
+          <span className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-primary px-5 py-2.5 font-display text-sm font-extrabold text-primary-foreground shadow-soft transition group-hover:translate-x-0.5">
+            Masuk {darjah.label}
+            <ArrowRight className="h-4 w-4" />
+          </span>
+        ) : !hasAccess ? (
           <span className="inline-flex items-center gap-1 text-xs font-bold text-muted-foreground">
             <Lock className="h-3.5 w-3.5" />
             Belum dilanggan
@@ -199,6 +395,21 @@ function DarjahCard({
     </div>
   );
 
+  if (isCurrent && hasAccess) {
+    return (
+      <Link to="/darjah/$darjahId" params={{ darjahId: darjah.id }} className="group">
+        {inner}
+      </Link>
+    );
+  }
+  if (isCurrent && !hasAccess) {
+    // Darjah murid tetapi belum dibayar — bawa ke pakej.
+    return (
+      <Link to="/harga" className="group">
+        {inner}
+      </Link>
+    );
+  }
   if (!hasAccess) {
     return (
       <button type="button" onClick={onLockedClick} className="group cursor-pointer text-left">
@@ -213,62 +424,14 @@ function DarjahCard({
   );
 }
 
-function UpgradeModal({ darjah, onClose }: { darjah: Darjah; onClose: () => void }) {
-  const satu = PAKEJ_LIST.find((p) => p.id === "satu")!;
-  const bundle = PAKEJ_LIST.find((p) => p.id === "bundle")!;
+function StatChip({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
-      onClick={onClose}
-    >
-      <div className="relative w-full max-w-md rounded-3xl bg-card p-8 shadow-card" onClick={(e) => e.stopPropagation()}>
-        <button onClick={onClose} aria-label="Tutup" className="absolute right-4 top-4 rounded-full p-2 text-muted-foreground transition hover:bg-muted">
-          <X className="h-5 w-5" />
-        </button>
-        <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-primary to-primary-glow shadow-soft">
-          <Lock className="h-10 w-10 text-primary-foreground" />
-        </div>
-        <h3 className="mt-5 text-center font-display text-2xl font-extrabold text-foreground">
-          {darjah.label} memerlukan langganan
-        </h3>
-        <p className="mt-2 text-center text-sm text-muted-foreground">
-          Naik taraf untuk akses penuh nota, latih tubi, game, kuiz dan latihan.
-        </p>
-
-        <div className="mt-5 space-y-3">
-          <div className="rounded-2xl bg-muted/40 p-4">
-            <div className="flex items-center justify-between">
-              <span className="font-display text-sm font-extrabold text-foreground">{satu.nama}</span>
-              <span className="text-xs text-muted-foreground line-through">RM{HARGA_ASAL}</span>
-            </div>
-            <p className="mt-1 font-display text-3xl font-extrabold text-primary">RM{satu.jumlahBayar}<span className="text-sm font-bold text-muted-foreground">/tahun</span></p>
-          </div>
-          <div className="rounded-2xl border-2 border-gold bg-gold/10 p-4">
-            <div className="flex items-center justify-between">
-              <span className="font-display text-sm font-extrabold text-foreground">{bundle.nama} ⭐ Popular</span>
-              <span className="text-xs text-muted-foreground line-through">RM{HARGA_ASAL * 6}</span>
-            </div>
-            <p className="mt-1 font-display text-3xl font-extrabold" style={{ color: "#7a5300" }}>
-              RM{bundle.jumlahBayar}<span className="text-sm font-bold text-muted-foreground">/tahun</span>
-            </p>
-            <p className="text-xs font-bold text-gold-foreground/80">Jimat RM{bundle.jimat}!</p>
-          </div>
-        </div>
-
-        <Link
-          to="/harga"
-          className="mt-6 block w-full rounded-full bg-gradient-to-r from-gold to-gold/80 px-6 py-3.5 text-center font-display text-base font-extrabold text-gold-foreground shadow-soft transition hover:opacity-90"
-        >
-          Lihat Semua Pakej
-        </Link>
-        <button
-          type="button"
-          onClick={onClose}
-          className="mt-3 w-full rounded-full px-6 py-2.5 font-display text-sm font-bold text-muted-foreground transition hover:text-foreground"
-        >
-          Batal
-        </button>
+    <div className="rounded-xl border border-border/60 bg-background/60 px-3 py-2">
+      <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
+        {icon}
+        {label}
       </div>
+      <div className="mt-0.5 font-display text-base font-extrabold text-foreground">{value}</div>
     </div>
   );
 }
