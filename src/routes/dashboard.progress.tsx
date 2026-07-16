@@ -20,6 +20,11 @@ export const Route = createFileRoute("/dashboard/progress")({
 
 const HIJAU = "#1B8A5A";
 const EMAS = "#F5A623";
+// Sistem warna kad statistik (semantik, gaya pale/soft konsisten)
+const STAT_HIJAU = "#16A34A";
+const STAT_BIRU = "#3B82F6";
+const STAT_OREN = "#FB923C";
+const STAT_EMAS = "#F5B82E";
 
 interface ProgressRow {
   id: string;
@@ -308,26 +313,28 @@ function ProgressDashboard() {
             label="Soalan Hari Ini"
             nilai={soalanHariIni}
             icon={<BookOpen className="h-5 w-5" />}
-            warna={HIJAU}
+            warna={STAT_HIJAU}
+            light
           />
           <StatKad
             label="Masa Belajar"
             nilai={`${masaHariIni} min`}
             icon={<Clock className="h-5 w-5" />}
-            warna={EMAS}
+            warna={STAT_BIRU}
             light
           />
           <StatKad
             label="Streak"
             nilai={`${streak} 🔥`}
             icon={<Flame className="h-5 w-5" />}
-            warna="#dc2626"
+            warna={STAT_OREN}
+            light
           />
           <StatKad
             label="Lencana"
             nilai={lencana}
             icon={<Award className="h-5 w-5" />}
-            warna={EMAS}
+            warna={STAT_EMAS}
             light
           />
         </section>
@@ -394,7 +401,7 @@ function ProgressDashboard() {
                         className="rounded-full px-2 py-0.5 text-xs font-extrabold"
                         style={{ backgroundColor: `${EMAS}33`, color: "#7a5300" }}
                       >
-                        ⭐ {r.purata}%
+                        Skor: {r.purata}%
                       </span>
                     </div>
                     <p className="mt-1 text-xs text-muted-foreground">
@@ -407,7 +414,7 @@ function ProgressDashboard() {
                       />
                     </div>
                     <p className="mt-2 text-xs font-bold" style={{ color: HIJAU }}>
-                      {r.peratusSiap}% siap
+                      Kemajuan: {r.peratusSiap}% siap
                     </p>
                   </Link>
                 ))}
