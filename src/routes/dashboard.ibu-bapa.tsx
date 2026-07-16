@@ -1145,7 +1145,13 @@ function ParentDashboard() {
                           </p>
                         </div>
                       ) : (
-                        <div className="overflow-hidden rounded-2xl bg-card shadow-soft">
+                        <div
+                          className="overflow-hidden rounded-2xl shadow-card"
+                          style={{
+                            background: `linear-gradient(135deg, #FFF8E1 0%, #FFFDF5 100%)`,
+                            border: `2px solid ${EMAS}80`,
+                          }}
+                        >
                           {sijilList.map((sj, i) => {
                             const subj = SUBJEK_LIST.find((s) => s.id === sj.subjek);
                             const subjekTitle = subj?.title ?? sj.subjek;
@@ -1159,12 +1165,12 @@ function ParentDashboard() {
                               <div
                                 key={sj.id}
                                 className="flex flex-wrap items-center justify-between gap-3 p-4"
-                                style={{ borderTop: i === 0 ? "none" : "1px solid hsl(var(--border))" }}
+                                style={{ borderTop: i === 0 ? "none" : `1px solid ${EMAS}33` }}
                               >
                                 <div className="flex min-w-0 flex-1 items-center gap-3">
                                   <span
-                                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white"
-                                    style={{ backgroundColor: EMAS }}
+                                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-white shadow-gold"
+                                    style={{ background: `linear-gradient(135deg, ${EMAS}, #E48A0A)` }}
                                   >
                                     <Trophy className="h-5 w-5" />
                                   </span>
