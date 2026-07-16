@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   ArrowLeft,
   Award,
@@ -51,6 +51,7 @@ const STAT_HIJAU = "#16A34A";
 const STAT_BIRU = "#3B82F6";
 const STAT_OREN = "#FB923C";
 const STAT_EMAS = "#F5B82E";
+const AKTIF_ANAK_KEY = "kalifah_ibubapa_aktif_anak";
 
 interface ProgressRow {
   id: string;
@@ -171,11 +172,15 @@ const AKTIVITI_LABEL: Record<string, string> = {
   latihan: "Latihan Bertulis",
   "latih-tubi": "Latih Tubi",
   nota: "Nota Ringkas",
+  "bergambar-rajah": "Soalan Bergambar Rajah",
+  "isi-kosong": "Isi Tempat Kosong",
   "game-race": "Quiz Race",
   "game-cari": "Cari Perkataan",
   "game-betul": "Betul atau Salah",
   "game-padan": "Padankan",
   "game-susun": "Susun Ayat",
+  "game-neon": "Game Neon",
+  "game-drag": "Game Drag & Drop",
 };
 
 const HARI_PENDEK = ["Ahd", "Isn", "Sel", "Rab", "Kha", "Jum", "Sab"];
@@ -570,7 +575,10 @@ function ParentDashboard() {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
   const [anakList, setAnakList] = useState<ChildProfile[]>([]);
-  const [aktifId, setAktifId] = useState<string | null>(null);
+  const [aktifId, setAktifId] = useState<string | null>(() => {
+    if (typeof window === "undefined") return null;
+    return localStorage.getItem(AKTIF_ANAK_KEY);
+  });
   const [progress, setProgress] = useState<ProgressRow[]>([]);
   const [stats, setStats] = useState<StatsRow[]>([]);
   const [badges, setBadges] = useState<BadgeRow[]>([]);
@@ -581,6 +589,13 @@ function ParentDashboard() {
   const [showAdd, setShowAdd] = useState(false);
   const [showMaklumat, setShowMaklumat] = useState(false);
   const [resetFor, setResetFor] = useState<ChildProfile | null>(null);
+
+  const pilihAnak = useCallback((id: string | null) => {
+    setAktifId(id);
+    if (typeof window === "undefined") return;
+    if (id) localStorage.setItem(AKTIF_ANAK_KEY, id);
+    else localStorage.removeItem(AKTIF_ANAK_KEY);
+  }, []);
 
   const isChild = !!user?.email?.includes(CHILD_EMAIL_DOMAIN);
 
@@ -593,7 +608,16 @@ function ParentDashboard() {
     if (!user) return;
     senaraikanAnak().then((list) => {
       setAnakList(list);
-      if (!aktifId && list.length > 0) setAktifId(list[0].id);
+      const saved = typeof window === "undefined" ? null : localStorage.getItem(AKTIF_ANAK_KEY);
+      const savedValid = saved && list.some((a) => a.id === saved);
+      if (savedValid) {
+        if (saved !== aktifId) pilihAnak(saved);
+      } else if (list.length > 0) {
+        if (!aktifId) pilihAnak(list[0].id);
+      }
+      if (saved && !savedValid) {
+        localStorage.removeItem(AKTIF_ANAK_KEY);
+      }
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
@@ -665,8 +689,10 @@ function ParentDashboard() {
   async function refreshAnak() {
     const list = await senaraikanAnak();
     setAnakList(list);
-    const nextAktifId = aktifId ?? list[0]?.id ?? null;
-    if (!aktifId && list.length > 0) setAktifId(list[0].id);
+    const saved = typeof window === "undefined" ? null : localStorage.getItem(AKTIF_ANAK_KEY);
+    const savedValid = saved && list.some((a) => a.id === saved);
+    const nextAktifId = savedValid ? saved : list[0]?.id ?? null;
+    if (nextAktifId !== aktifId) pilihAnak(nextAktifId);
     const uid =
       list.find((a) => a.id === nextAktifId)?.child_user_id ?? anakUserId ?? null;
     if (uid) {
@@ -909,7 +935,7 @@ function ParentDashboard() {
               setAnakList(list);
               setShowAdd(false);
               // Fokus pada anak yang baru ditambah (terakhir mengikut created_at asc)
-              if (list.length > 0) setAktifId(list[list.length - 1].id);
+              if (list.length > 0) pilihAnak(list[list.length - 1].id);
             }}
           />
         )}
@@ -939,7 +965,7 @@ function ParentDashboard() {
                 return (
                   <button
                     key={a.id}
-                    onClick={() => setAktifId(a.id)}
+                    onClick={() => pilihAnak(a.id)}
                     className="rounded-full px-4 py-2 font-display text-sm font-extrabold transition"
                     style={{
                       backgroundColor: aktif ? HIJAU : `${HIJAU}14`,
@@ -1335,7 +1361,7 @@ function ParentDashboard() {
                           if (ok) {
                             const list = await senaraikanAnak();
                             setAnakList(list);
-                            setAktifId(list[0]?.id ?? null);
+                            pilihAnak(list[0]?.id ?? null);
                           }
                         }}
                         className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-extrabold text-destructive hover:bg-destructive/10"
