@@ -350,6 +350,7 @@ function DarjahDashboard() {
                   index={i}
                   hasAccess={hasAccess}
                   isCurrent={isCurrent}
+                  isChild={isChild}
                   stats={hasAccess ? statsMap[Number(d.id)] ?? null : null}
                   onLockedClick={() => handleLockedClick(d)}
                 />
@@ -371,6 +372,7 @@ function DarjahCard({
   index,
   hasAccess,
   isCurrent,
+  isChild,
   stats,
   onLockedClick,
 }: {
@@ -378,6 +380,7 @@ function DarjahCard({
   index: number;
   hasAccess: boolean;
   isCurrent: boolean;
+  isChild: boolean;
   stats: DarjahStats | null;
   onLockedClick: () => void;
 }) {
@@ -468,30 +471,34 @@ function DarjahCard({
             />
           </div>
 
-          {/* Skor purata */}
-          {stats && stats.bilAktiviti > 0 ? (
-            <div>
-              <div className="flex items-center justify-between text-xs font-bold text-foreground/80">
-                <span>Skor Purata</span>
-                <span>{stats.skorPurata.toFixed(1)}%</span>
-              </div>
-              <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-muted">
-                <div
-                  className={`h-full rounded-full transition-all ${
-                    stats.skorPurata >= 60 ? "bg-gradient-primary" : "bg-orange-500"
-                  }`}
-                  style={{ width: `${Math.min(100, Math.max(0, stats.skorPurata))}%` }}
-                />
-              </div>
-            </div>
-          ) : (
-            <div>
-              <div className="flex items-center justify-between text-xs font-bold text-muted-foreground">
-                <span>Skor Purata</span>
-                <span>Belum mula aktiviti</span>
-              </div>
-              <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-muted" />
-            </div>
+          {/* Skor purata — hanya untuk akaun anak */}
+          {isChild && (
+            <>
+              {stats && stats.bilAktiviti > 0 ? (
+                <div>
+                  <div className="flex items-center justify-between text-xs font-bold text-foreground/80">
+                    <span>Skor Purata</span>
+                    <span>{stats.skorPurata.toFixed(1)}%</span>
+                  </div>
+                  <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-muted">
+                    <div
+                      className={`h-full rounded-full transition-all ${
+                        stats.skorPurata >= 60 ? "bg-gradient-primary" : "bg-orange-500"
+                      }`}
+                      style={{ width: `${Math.min(100, Math.max(0, stats.skorPurata))}%` }}
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <div className="flex items-center justify-between text-xs font-bold text-muted-foreground">
+                    <span>Skor Purata</span>
+                    <span>Belum mula aktiviti</span>
+                  </div>
+                  <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-muted" />
+                </div>
+              )}
+            </>
           )}
 
         </div>
