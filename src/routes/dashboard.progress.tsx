@@ -307,6 +307,14 @@ function ProgressDashboard() {
 
         </div>
 
+        {/* Misi Hari Ini */}
+        <MisiHariIni
+          soalan={soalanHariIni}
+          masa={masaHariIni}
+          skorTertinggi={progressHariIni.reduce((m, r) => Math.max(m, Number(r.peratus) || 0), 0)}
+          adaAktiviti={progressHariIni.length > 0}
+        />
+
         {/* Statistik harian */}
         <section className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-4">
           <StatKad
