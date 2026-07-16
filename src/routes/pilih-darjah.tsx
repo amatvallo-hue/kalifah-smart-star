@@ -209,6 +209,7 @@ function DarjahDashboard() {
     : "";
   const displayName = (metaName && metaName.trim()) || prettyEmail || "Pelajar";
   const firstName = displayName.split(" ")[0];
+  const isChild = !!user.email?.includes(CHILD_EMAIL_DOMAIN);
 
   return (
     <div className="min-h-screen bg-background">
