@@ -94,8 +94,8 @@ function DarjahDashboard() {
       const rows = data as Array<{
         darjah: number;
         bil_soalan: number | string;
-        jumlah_topik: number | string;
-        topik_selesai: number | string;
+        purata_skor: number | string | null;
+        bil_aktiviti: number | string | null;
       }>;
 
       const nextMap: Record<number, DarjahStats> = {};
@@ -103,8 +103,8 @@ function DarjahDashboard() {
         nextMap[n] = {
           bilSubjek: subjekList.length,
           bilSoalan: 0,
-          jumlahTopik: 0,
-          topikSelesai: 0,
+          skorPurata: 0,
+          bilAktiviti: 0,
         };
       }
       for (const r of rows) {
@@ -113,10 +113,11 @@ function DarjahDashboard() {
         nextMap[dNum] = {
           bilSubjek: subjekList.length,
           bilSoalan: Number(r.bil_soalan) || 0,
-          jumlahTopik: Number(r.jumlah_topik) || 0,
-          topikSelesai: Number(r.topik_selesai) || 0,
+          skorPurata: Number(r.purata_skor) || 0,
+          bilAktiviti: Number(r.bil_aktiviti) || 0,
         };
       }
+
 
       setStatsMap(nextMap);
     })();
