@@ -1593,9 +1593,12 @@ function FormTambahAnak({ onAdded }: { onAdded: () => void }) {
 
 function Seksyen({ tajuk, ikon, children }: { tajuk: string; ikon: React.ReactNode; children: React.ReactNode }) {
   return (
-    <section className="mt-6">
+    <section className="mt-5">
       <div className="mb-3 flex items-center gap-2">
-        <span className="flex h-8 w-8 items-center justify-center rounded-lg text-white" style={{ backgroundColor: HIJAU }}>
+        <span
+          className="flex h-8 w-8 items-center justify-center rounded-lg text-white shadow-soft"
+          style={{ background: `linear-gradient(135deg, ${HIJAU}, #2AAE72)` }}
+        >
           {ikon}
         </span>
         <h2 className="font-display text-xl font-extrabold text-foreground">{tajuk}</h2>
@@ -1610,7 +1613,6 @@ function Stat({
   nilai,
   icon,
   warna,
-  light,
 }: {
   label: string;
   nilai: string | number;
@@ -1620,14 +1622,22 @@ function Stat({
 }) {
   return (
     <div
-      className="rounded-2xl p-4 shadow-soft"
-      style={{ backgroundColor: light ? `${warna}1f` : warna, color: light ? "#1a1a1a" : "#fff" }}
+      className="relative overflow-hidden rounded-2xl border-2 p-4 shadow-card"
+      style={{
+        background: `linear-gradient(135deg, ${warna}2e 0%, #ffffff 90%)`,
+        borderColor: `${warna}66`,
+      }}
     >
-      <div className="flex items-center gap-2 text-xs font-extrabold opacity-90">
-        {icon}
-        {label}
+      <div className="flex items-center gap-2.5">
+        <div
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-white shadow-soft"
+          style={{ background: `linear-gradient(135deg, ${warna}, ${warna}cc)` }}
+        >
+          {icon}
+        </div>
+        <span className="text-xs font-extrabold text-foreground/80">{label}</span>
       </div>
-      <p className="mt-2 font-display text-2xl font-extrabold">{nilai}</p>
+      <p className="mt-2 font-display text-2xl font-extrabold" style={{ color: warna }}>{nilai}</p>
     </div>
   );
 }
