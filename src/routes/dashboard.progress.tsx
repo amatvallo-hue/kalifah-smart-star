@@ -313,26 +313,28 @@ function ProgressDashboard() {
             label="Soalan Hari Ini"
             nilai={soalanHariIni}
             icon={<BookOpen className="h-5 w-5" />}
-            warna={HIJAU}
+            warna={STAT_HIJAU}
+            light
           />
           <StatKad
             label="Masa Belajar"
             nilai={`${masaHariIni} min`}
             icon={<Clock className="h-5 w-5" />}
-            warna={EMAS}
+            warna={STAT_BIRU}
             light
           />
           <StatKad
             label="Streak"
             nilai={`${streak} 🔥`}
             icon={<Flame className="h-5 w-5" />}
-            warna="#dc2626"
+            warna={STAT_OREN}
+            light
           />
           <StatKad
             label="Lencana"
             nilai={lencana}
             icon={<Award className="h-5 w-5" />}
-            warna={EMAS}
+            warna={STAT_EMAS}
             light
           />
         </section>
