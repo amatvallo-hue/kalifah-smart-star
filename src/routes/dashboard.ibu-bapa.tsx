@@ -172,11 +172,15 @@ const AKTIVITI_LABEL: Record<string, string> = {
   latihan: "Latihan Bertulis",
   "latih-tubi": "Latih Tubi",
   nota: "Nota Ringkas",
+  "bergambar-rajah": "Soalan Bergambar Rajah",
+  "isi-kosong": "Isi Tempat Kosong",
   "game-race": "Quiz Race",
   "game-cari": "Cari Perkataan",
   "game-betul": "Betul atau Salah",
   "game-padan": "Padankan",
   "game-susun": "Susun Ayat",
+  "game-neon": "Game Neon",
+  "game-drag": "Game Drag & Drop",
 };
 
 const HARI_PENDEK = ["Ahd", "Isn", "Sel", "Rab", "Kha", "Jum", "Sab"];
