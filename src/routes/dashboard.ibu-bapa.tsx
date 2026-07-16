@@ -576,6 +576,7 @@ function ParentDashboard() {
   const [badges, setBadges] = useState<BadgeRow[]>([]);
   const [sijilList, setSijilList] = useState<SijilRow[]>([]);
   const [emotions, setEmotions] = useState<EmotionRow[]>([]);
+  const [mpt4Keputusan, setMpt4Keputusan] = useState<Mpt4KeputusanRow[]>([]);
   const [fetching, setFetching] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
   const [showMaklumat, setShowMaklumat] = useState(false);
