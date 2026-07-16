@@ -69,7 +69,7 @@ function DarjahDashboard() {
     };
   }, [user, darjahAkses]);
 
-  // Ambil statistik live untuk SETIAP darjah yang murid ada akses.
+  // Ambil statistik live untuk SETIAP darjah yang murid ada akses — via RPC.
   useEffect(() => {
     if (!user) {
       setStatsMap({});
@@ -80,63 +80,40 @@ function DarjahDashboard() {
       setStatsMap({});
       return;
     }
-    const darjahStrs = darjahNums.map(String);
     let cancelled = false;
 
     (async () => {
-      const [lt, kz, ik, br, up] = await Promise.all([
-        supabase.from("soalan_latih_tubi").select("darjah, topik").in("darjah", darjahNums),
-        supabase.from("kuiz_soalan").select("darjah, topik").in("darjah", darjahNums),
-        supabase.from("soalan_isi_kosong").select("darjah, topik").in("darjah", darjahNums),
-        supabase.from("soalan_bergambar_rajah").select("darjah, topik").in("darjah", darjahNums),
-        supabase
-          .from("user_progress")
-          .select("darjah, topik")
-          .eq("user_id", user.id)
-          .in("darjah", darjahStrs),
-      ]);
+      const { data, error } = await supabase.rpc("get_darjah_stats" as never, {
+        p_darjah: darjahNums,
+        p_user_id: user.id,
+      } as never);
 
-      if (cancelled) return;
+      if (cancelled || error || !data) return;
 
-      // Kumpul per-darjah: jumlah soalan + set topik unik.
-      const perDarjah = new Map<number, { bilSoalan: number; topik: Set<string> }>();
-      for (const n of darjahNums) perDarjah.set(n, { bilSoalan: 0, topik: new Set() });
-
-      for (const q of [lt.data, kz.data, ik.data, br.data]) {
-        for (const r of (q ?? []) as { darjah: number | string | null; topik: string | null }[]) {
-          const dNum = Number(r.darjah);
-          const bucket = perDarjah.get(dNum);
-          if (!bucket) continue;
-          bucket.bilSoalan += 1;
-          const t = (r.topik ?? "").trim();
-          if (t) bucket.topik.add(t);
-        }
-      }
-
-      // Topik selesai per-darjah dari user_progress.
-      const progressPerDarjah = new Map<number, Set<string>>();
-      for (const n of darjahNums) progressPerDarjah.set(n, new Set());
-      for (const r of (up.data ?? []) as { darjah: number | string | null; topik: string | null }[]) {
-        const dNum = Number(r.darjah);
-        const set = progressPerDarjah.get(dNum);
-        if (!set) continue;
-        const t = (r.topik ?? "").trim();
-        if (t) set.add(t);
-      }
+      const rows = data as Array<{
+        darjah: number;
+        bil_soalan: number | string;
+        jumlah_topik: number | string;
+        topik_selesai: number | string;
+      }>;
 
       const nextMap: Record<number, DarjahStats> = {};
       for (const n of darjahNums) {
-        const bucket = perDarjah.get(n)!;
-        const progressSet = progressPerDarjah.get(n)!;
-        const topikSelesaiSet = new Set<string>();
-        for (const t of progressSet) {
-          if (bucket.topik.has(t)) topikSelesaiSet.add(t);
-        }
         nextMap[n] = {
           bilSubjek: subjekList.length,
-          bilSoalan: bucket.bilSoalan,
-          jumlahTopik: bucket.topik.size,
-          topikSelesai: topikSelesaiSet.size,
+          bilSoalan: 0,
+          jumlahTopik: 0,
+          topikSelesai: 0,
+        };
+      }
+      for (const r of rows) {
+        const dNum = Number(r.darjah);
+        if (!(dNum in nextMap)) continue;
+        nextMap[dNum] = {
+          bilSubjek: subjekList.length,
+          bilSoalan: Number(r.bil_soalan) || 0,
+          jumlahTopik: Number(r.jumlah_topik) || 0,
+          topikSelesai: Number(r.topik_selesai) || 0,
         };
       }
 
@@ -147,6 +124,7 @@ function DarjahDashboard() {
       cancelled = true;
     };
   }, [user, darjahAksesKey, subjekList.length, darjahAkses]);
+
 
   function handleLockedClick(d: Darjah) {
     if (typeof window !== "undefined") {
