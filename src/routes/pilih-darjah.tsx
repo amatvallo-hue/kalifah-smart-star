@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { Lock, Sparkles, Star, LogOut, ArrowRight, Trophy, BookOpen, FileText } from "lucide-react";
+import { Lock, Sparkles, Star, LogOut, ArrowRight, Trophy, BookOpen, FileText, Target, TrendingUp, CalendarDays } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
