@@ -46,6 +46,11 @@ export const Route = createFileRoute("/dashboard/ibu-bapa")({
 
 const HIJAU = "#1B8A5A";
 const EMAS = "#F5A623";
+// Sistem warna kad statistik (semantik, gaya pale/soft konsisten)
+const STAT_HIJAU = "#16A34A";
+const STAT_BIRU = "#3B82F6";
+const STAT_OREN = "#FB923C";
+const STAT_EMAS = "#F5B82E";
 
 interface ProgressRow {
   id: string;
