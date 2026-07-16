@@ -536,6 +536,18 @@ function DarjahCard({
   );
 }
 
+function MingguStat({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
+  return (
+    <div className="rounded-2xl border border-[#F5B82E]/40 bg-white/85 px-3.5 py-2 shadow-soft">
+      <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide text-[#8A5A00]">
+        {icon}
+        {label}
+      </div>
+      <div className="mt-0.5 font-display text-lg font-extrabold text-foreground">{value}</div>
+    </div>
+  );
+}
+
 function StatChip({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
   return (
     <div className="rounded-xl border border-border/60 bg-background/60 px-3 py-2">
