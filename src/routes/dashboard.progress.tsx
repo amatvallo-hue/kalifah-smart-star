@@ -340,13 +340,13 @@ function ProgressDashboard() {
         </section>
 
         {fetching ? (
-          <div className="mt-8 rounded-3xl bg-card p-10 text-center shadow-card">
+          <div className="mt-6 rounded-3xl bg-card p-10 text-center shadow-card">
             <p className="text-muted-foreground">Memuatkan data progress...</p>
           </div>
         ) : (
           <>
             {/* Lencana */}
-            <section className="mt-8">
+            <section className="mt-6">
               <div className="flex items-center gap-2">
                 <h2 className="font-display text-xl font-extrabold text-foreground">Lencana Saya</h2>
                 <BadgeInfoButton />
@@ -384,7 +384,7 @@ function ProgressDashboard() {
 
 
             {/* Kad Subjek */}
-            <section className="mt-8">
+            <section className="mt-6">
               <h2 className="font-display text-xl font-extrabold text-foreground">Ringkasan Subjek</h2>
               <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {ringkasanSubjek.map((r) => (
@@ -425,7 +425,7 @@ function ProgressDashboard() {
             </section>
 
             {/* Bab Lemah */}
-            <section className="mt-8">
+            <section className="mt-6">
               <h2 className="font-display text-xl font-extrabold text-foreground">Bab Lemah</h2>
               {babLemah.length === 0 ? (
                 <div className="mt-3 rounded-2xl bg-card p-5 text-center shadow-soft">
@@ -462,7 +462,7 @@ function ProgressDashboard() {
             </section>
 
             {/* Aktiviti Terkini */}
-            <section className="mt-8 mb-12">
+            <section className="mt-6 mb-12">
               <h2 className="font-display text-xl font-extrabold text-foreground">Aktiviti Terkini</h2>
               {progress.length === 0 ? (
                 <div className="mt-3 rounded-2xl bg-card p-5 text-center shadow-soft">
@@ -627,7 +627,7 @@ function SeksyenSijil({
   const semua = [...sijilDarjah.map((s) => ({ ...s, _kind: "darjah" as const })), ...sijilSubjek.map((s) => ({ ...s, _kind: "subjek" as const }))];
 
   return (
-    <section className="mt-8">
+    <section className="mt-6">
       <div className="mb-3 flex items-center gap-2">
         <Trophy className="h-5 w-5" style={{ color: EMAS }} />
         <h2 className="font-display text-xl font-extrabold text-foreground">Sijil Saya</h2>
