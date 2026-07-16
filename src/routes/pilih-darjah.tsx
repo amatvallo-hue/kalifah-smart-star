@@ -348,25 +348,32 @@ function DarjahCard({
             />
           </div>
 
-          {/* Progress bar topik */}
-          <div>
-            <div className="flex items-center justify-between text-xs font-bold text-foreground/80">
-              <span>Topik selesai</span>
-              <span>
-                {stats ? `${stats.topikSelesai}/${stats.jumlahTopik}` : "—/—"}
-              </span>
+          {/* Skor purata */}
+          {stats && stats.bilAktiviti > 0 ? (
+            <div>
+              <div className="flex items-center justify-between text-xs font-bold text-foreground/80">
+                <span>Skor Purata</span>
+                <span>{stats.skorPurata.toFixed(1)}%</span>
+              </div>
+              <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-muted">
+                <div
+                  className={`h-full rounded-full transition-all ${
+                    stats.skorPurata >= 60 ? "bg-gradient-primary" : "bg-orange-500"
+                  }`}
+                  style={{ width: `${Math.min(100, Math.max(0, stats.skorPurata))}%` }}
+                />
+              </div>
             </div>
-            <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-muted">
-              <div
-                className="h-full rounded-full bg-gradient-primary transition-all"
-                style={{
-                  width: stats && stats.jumlahTopik > 0
-                    ? `${Math.min(100, Math.round((stats.topikSelesai / stats.jumlahTopik) * 100))}%`
-                    : "0%",
-                }}
-              />
+          ) : (
+            <div>
+              <div className="flex items-center justify-between text-xs font-bold text-muted-foreground">
+                <span>Skor Purata</span>
+                <span>Belum mula aktiviti</span>
+              </div>
+              <div className="mt-1.5 h-2 overflow-hidden rounded-full bg-muted" />
             </div>
-          </div>
+          )}
+
         </div>
       )}
 
