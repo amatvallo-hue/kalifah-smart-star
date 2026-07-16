@@ -1010,6 +1010,17 @@ function ParentDashboard() {
                       </div>
                     </Seksyen>
 
+                    {/* PERCUBAAN MPT4 — Darjah 4 sahaja */}
+                    {anakAktif.darjah === "4" && (
+                      <Seksyen tajuk="Percubaan MPT4 (Darjah 4)" ikon={<Target className="h-5 w-5" />}>
+                        <p className="-mt-2 mb-3 text-sm text-muted-foreground">
+                          Mock exam ikut format peperiksaan sebenar.
+                        </p>
+                        <SeksyenMpt4 keputusan={mpt4Keputusan} />
+                      </Seksyen>
+                    )}
+
+
                     {/* MINGGU INI */}
                     <Seksyen tajuk="Minggu Ini" ikon={<Calendar className="h-5 w-5" />}>
                       <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
