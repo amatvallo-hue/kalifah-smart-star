@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as UjianPercumaRouteImport } from './routes/ujian-percuma'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as PraKalifahRouteImport } from './routes/pra-kalifah'
 import { Route as PilihDarjahRouteImport } from './routes/pilih-darjah'
 import { Route as LupaPasswordRouteImport } from './routes/lupa-password'
 import { Route as LoginRouteImport } from './routes/login'
@@ -60,6 +61,11 @@ const UjianPercumaRoute = UjianPercumaRouteImport.update({
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PraKalifahRoute = PraKalifahRouteImport.update({
+  id: '/pra-kalifah',
+  path: '/pra-kalifah',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PilihDarjahRoute = PilihDarjahRouteImport.update({
@@ -287,6 +293,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/lupa-password': typeof LupaPasswordRoute
   '/pilih-darjah': typeof PilihDarjahRoute
+  '/pra-kalifah': typeof PraKalifahRoute
   '/reset-password': typeof ResetPasswordRoute
   '/ujian-percuma': typeof UjianPercumaRoute
   '/admin/affiliates': typeof AdminAffiliatesRoute
@@ -331,6 +338,7 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/lupa-password': typeof LupaPasswordRoute
   '/pilih-darjah': typeof PilihDarjahRoute
+  '/pra-kalifah': typeof PraKalifahRoute
   '/reset-password': typeof ResetPasswordRoute
   '/ujian-percuma': typeof UjianPercumaRoute
   '/admin/affiliates': typeof AdminAffiliatesRoute
@@ -376,6 +384,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/lupa-password': typeof LupaPasswordRoute
   '/pilih-darjah': typeof PilihDarjahRoute
+  '/pra-kalifah': typeof PraKalifahRoute
   '/reset-password': typeof ResetPasswordRoute
   '/ujian-percuma': typeof UjianPercumaRoute
   '/admin_/affiliates': typeof AdminAffiliatesRoute
@@ -422,6 +431,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/lupa-password'
     | '/pilih-darjah'
+    | '/pra-kalifah'
     | '/reset-password'
     | '/ujian-percuma'
     | '/admin/affiliates'
@@ -466,6 +476,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/lupa-password'
     | '/pilih-darjah'
+    | '/pra-kalifah'
     | '/reset-password'
     | '/ujian-percuma'
     | '/admin/affiliates'
@@ -510,6 +521,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/lupa-password'
     | '/pilih-darjah'
+    | '/pra-kalifah'
     | '/reset-password'
     | '/ujian-percuma'
     | '/admin_/affiliates'
@@ -555,6 +567,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   LupaPasswordRoute: typeof LupaPasswordRoute
   PilihDarjahRoute: typeof PilihDarjahRoute
+  PraKalifahRoute: typeof PraKalifahRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   UjianPercumaRoute: typeof UjianPercumaRoute
   AdminAffiliatesRoute: typeof AdminAffiliatesRoute
@@ -604,6 +617,13 @@ declare module '@tanstack/react-router' {
       path: '/reset-password'
       fullPath: '/reset-password'
       preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pra-kalifah': {
+      id: '/pra-kalifah'
+      path: '/pra-kalifah'
+      fullPath: '/pra-kalifah'
+      preLoaderRoute: typeof PraKalifahRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/pilih-darjah': {
@@ -899,6 +919,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   LupaPasswordRoute: LupaPasswordRoute,
   PilihDarjahRoute: PilihDarjahRoute,
+  PraKalifahRoute: PraKalifahRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   UjianPercumaRoute: UjianPercumaRoute,
   AdminAffiliatesRoute: AdminAffiliatesRoute,
@@ -941,13 +962,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
