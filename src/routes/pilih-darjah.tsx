@@ -233,7 +233,7 @@ function DarjahDashboard() {
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-2">
-              {darjahMurid && (
+              {isChild && darjahMurid && (
                 <Link
                   to="/darjah/$darjahId"
                   params={{ darjahId: darjahMurid }}
