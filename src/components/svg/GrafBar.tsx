@@ -63,17 +63,26 @@ export function GrafBar({ items, unit, orientasi = "menegak" }: Props) {
 
   // menegak
   const barW = 42;
-  const gap = 18;
+  const labelFontSize = 12;
+  const maxLabelLen = Math.max(1, ...list.map((x) => (x.nama ?? "").length));
+  // Rough character-width estimate for sans-serif at labelFontSize
+  const approxLabelPx = maxLabelLen * (labelFontSize * 0.58);
+  const cellW = barW + 18;
+  // Rotate labels when horizontal text would overflow the cell width
+  const rotateLabels = approxLabelPx > cellW - 4;
+  const gap = rotateLabels ? 28 : 18;
   const chartH = 180;
   const paddingL = 44;
   const paddingR = 16;
   const paddingT = 16;
-  const paddingB = 40;
+  // Extra bottom padding when labels are rotated to fit diagonal text
+  const paddingB = rotateLabels ? Math.min(96, 30 + Math.ceil(approxLabelPx * 0.55)) : 40;
   const width = paddingL + paddingR + list.length * (barW + gap);
   const height = paddingT + chartH + paddingB;
+  const maxRenderW = Math.max(420, width); // don't downscale when we deliberately widened for long labels
 
   return (
-    <svg viewBox={`0 0 ${width} ${height}`} width={Math.min(width, 420)} xmlns="http://www.w3.org/2000/svg" style={{ background: "transparent", maxWidth: "100%" }}>
+    <svg viewBox={`0 0 ${width} ${height}`} width={Math.min(width, maxRenderW)} xmlns="http://www.w3.org/2000/svg" style={{ background: "transparent", maxWidth: "100%" }}>
       {/* y ticks */}
       {Array.from({ length: ticks + 1 }).map((_, i) => {
         const v = (scale / ticks) * i;
@@ -92,11 +101,28 @@ export function GrafBar({ items, unit, orientasi = "menegak" }: Props) {
         const h = ((it.nilai || 0) / scale) * chartH;
         const x = paddingL + gap / 2 + i * (barW + gap);
         const y = paddingT + chartH - h;
+        const labelCx = x + barW / 2;
+        const labelBaseY = paddingT + chartH + (rotateLabels ? 12 : 16);
         return (
           <g key={i}>
             <rect x={x} y={y} width={barW} height={Math.max(0, h)} fill={BAR} stroke={AXIS} strokeWidth={1.5} />
-            <text x={x + barW / 2} y={y - 6} textAnchor="middle" fontSize={12} fontWeight={700} fill={AXIS} fontFamily="sans-serif">{it.nilai}</text>
-            <text x={x + barW / 2} y={paddingT + chartH + 16} textAnchor="middle" fontSize={12} fontWeight={700} fill={AXIS} fontFamily="sans-serif">{it.nama}</text>
+            <text x={labelCx} y={y - 6} textAnchor="middle" fontSize={12} fontWeight={700} fill={AXIS} fontFamily="sans-serif">{it.nilai}</text>
+            {rotateLabels ? (
+              <text
+                x={labelCx}
+                y={labelBaseY}
+                textAnchor="end"
+                fontSize={labelFontSize}
+                fontWeight={700}
+                fill={AXIS}
+                fontFamily="sans-serif"
+                transform={`rotate(-35 ${labelCx} ${labelBaseY})`}
+              >
+                {it.nama}
+              </text>
+            ) : (
+              <text x={labelCx} y={labelBaseY} textAnchor="middle" fontSize={labelFontSize} fontWeight={700} fill={AXIS} fontFamily="sans-serif">{it.nama}</text>
+            )}
           </g>
         );
       })}
