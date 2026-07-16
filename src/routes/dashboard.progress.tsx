@@ -971,3 +971,96 @@ function BarisMisiBinari({
   );
 }
 
+const BIRU_STATUS = "#3B82F6";
+
+function KesediaanPeperiksaan({
+  ringkasanSubjek,
+}: {
+  ringkasanSubjek: Array<{
+    subjek: { id: string; title: string };
+    purata: number;
+    jumlahAktiviti: number;
+  }>;
+}) {
+  const aktif = ringkasanSubjek.filter((r) => r.jumlahAktiviti > 0);
+  const purataKeseluruhan =
+    aktif.length === 0
+      ? 0
+      : Math.round(aktif.reduce((a, r) => a + r.purata, 0) / aktif.length);
+
+  let statusLabel: string;
+  let statusWarna: string;
+  if (aktif.length === 0 || purataKeseluruhan < 40) {
+    statusLabel = "BARU BERMULA";
+    statusWarna = BIRU_STATUS;
+  } else if (purataKeseluruhan < 70) {
+    statusLabel = "PERLU LATIHAN";
+    statusWarna = EMAS;
+  } else {
+    statusLabel = "SEDIA";
+    statusWarna = HIJAU;
+  }
+
+  return (
+    <section
+      className="mt-6 rounded-3xl p-5 shadow-card"
+      style={{
+        background: `linear-gradient(135deg, #FFFDF5 0%, #FFFFFF 55%, ${EMAS}18 100%)`,
+        border: `2px solid ${EMAS}66`,
+      }}
+    >
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-2">
+          <Trophy className="h-5 w-5" style={{ color: EMAS }} />
+          <h2 className="font-display text-xl font-extrabold text-foreground">
+            Kesediaan Peperiksaan
+          </h2>
+        </div>
+        <span
+          className="rounded-full px-4 py-1.5 font-display text-sm font-extrabold text-white shadow-soft"
+          style={{ background: `linear-gradient(135deg, ${statusWarna}, ${statusWarna}cc)` }}
+        >
+          {statusLabel}
+        </span>
+      </div>
+
+      <div className="mt-4 space-y-3">
+        {ringkasanSubjek.map((r) => {
+          const belumMula = r.jumlahAktiviti === 0;
+          const purata = Math.min(100, Math.max(0, r.purata));
+          let warnaBar: string;
+          if (belumMula) warnaBar = "#9CA3AF";
+          else if (purata >= 70) warnaBar = HIJAU;
+          else if (purata >= 40) warnaBar = EMAS;
+          else warnaBar = "#dc2626";
+
+          return (
+            <div key={r.subjek.id}>
+              <div className="flex items-center justify-between gap-2">
+                <p className="text-sm font-bold text-foreground">{r.subjek.title}</p>
+                {belumMula ? (
+                  <span className="text-xs font-bold text-muted-foreground">Belum mula</span>
+                ) : (
+                  <span className="text-xs font-extrabold" style={{ color: warnaBar }}>
+                    {purata}%
+                  </span>
+                )}
+              </div>
+              <div className="mt-1.5 h-2.5 overflow-hidden rounded-full" style={{ backgroundColor: `${HIJAU}1a` }}>
+                <div
+                  className="h-full rounded-full transition-all"
+                  style={{
+                    width: belumMula ? "0%" : `${purata}%`,
+                    background: `linear-gradient(90deg, ${warnaBar}, ${warnaBar}cc)`,
+                  }}
+                />
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+
