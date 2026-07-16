@@ -146,6 +146,37 @@ function DarjahDashboard() {
     };
   }, [user, darjahAksesKey, subjekList.length, darjahAkses]);
 
+  // Progress minggu ini — reuse logic tarikh 7 hari dari dashboard.ibu-bapa.tsx,
+  // tapi untuk murid sendiri (bukan anak). Cutoff via .gte() supaya elak row-limit.
+  useEffect(() => {
+    if (!user) {
+      setMinggu(null);
+      return;
+    }
+    let cancelled = false;
+    (async () => {
+      const cutoffKL = daysAgoKL(6);
+      const cutoffISO = `${cutoffKL}T00:00:00+08:00`;
+      const { data, error } = await supabase
+        .from("user_progress")
+        .select("jumlah_soalan, peratus, created_at")
+        .eq("user_id", user.id)
+        .gte("created_at", cutoffISO);
+      if (cancelled || error) return;
+      const tarikhSet = new Set<string>();
+      for (let i = 0; i < 7; i++) tarikhSet.add(daysAgoKL(i));
+      const rows = (data ?? []).filter((r) => tarikhSet.has(toKLDate(r.created_at as string)));
+      const soalan = rows.reduce((a, r) => a + Number(r.jumlah_soalan ?? 0), 0);
+      const peratus = rows.length === 0
+        ? 0
+        : Math.round(rows.reduce((a, r) => a + Number(r.peratus ?? 0), 0) / rows.length);
+      setMinggu({ soalan, peratus, bilAktiviti: rows.length });
+    })();
+    return () => { cancelled = true; };
+  }, [user]);
+
+
+
 
   function handleLockedClick(d: Darjah) {
     if (typeof window !== "undefined") {
