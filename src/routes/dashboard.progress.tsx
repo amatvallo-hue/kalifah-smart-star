@@ -392,14 +392,17 @@ function ProgressDashboard() {
                     key={r.subjek.id}
                     to="/darjah/$darjahId/$subjekId"
                     params={{ darjahId: r.darjahTerkini, subjekId: r.subjek.id }}
-                    className="block rounded-3xl bg-card p-5 shadow-card transition hover:-translate-y-0.5"
-                    style={{ border: `2px solid ${HIJAU}22` }}
+                    className="block rounded-3xl p-5 shadow-card transition hover:-translate-y-0.5"
+                    style={{
+                      background: `linear-gradient(135deg, ${HIJAU}14 0%, #FFFDF5 60%, ${EMAS}12 100%)`,
+                      border: `2px solid ${HIJAU}40`,
+                    }}
                   >
                     <div className="flex items-center justify-between gap-2">
                       <h3 className="font-display text-lg font-extrabold text-foreground">{r.subjek.title}</h3>
                       <span
-                        className="rounded-full px-2 py-0.5 text-xs font-extrabold"
-                        style={{ backgroundColor: `${EMAS}33`, color: "#7a5300" }}
+                        className="rounded-full px-3 py-1 text-xs font-extrabold text-white shadow-gold"
+                        style={{ background: `linear-gradient(135deg, ${EMAS}, #E48A0A)` }}
                       >
                         Skor: {r.purata}%
                       </span>
@@ -410,7 +413,7 @@ function ProgressDashboard() {
                     <div className="mt-3 h-3 overflow-hidden rounded-full" style={{ backgroundColor: `${HIJAU}1a` }}>
                       <div
                         className="h-full rounded-full transition-all"
-                        style={{ width: `${r.peratusSiap}%`, backgroundColor: HIJAU }}
+                        style={{ width: `${r.peratusSiap}%`, background: `linear-gradient(90deg, ${HIJAU}, #2AAE72)` }}
                       />
                     </div>
                     <p className="mt-2 text-xs font-bold" style={{ color: HIJAU }}>
