@@ -307,6 +307,14 @@ function ProgressDashboard() {
 
         </div>
 
+        {/* Misi Hari Ini */}
+        <MisiHariIni
+          soalan={soalanHariIni}
+          masa={masaHariIni}
+          skorTertinggi={progressHariIni.reduce((m, r) => Math.max(m, Number(r.peratus) || 0), 0)}
+          adaAktiviti={progressHariIni.length > 0}
+        />
+
         {/* Statistik harian */}
         <section className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-4">
           <StatKad
@@ -819,3 +827,143 @@ function BadgeInfoButton() {
     </>
   );
 }
+
+function MisiHariIni({
+  soalan,
+  masa,
+  skorTertinggi,
+  adaAktiviti,
+}: {
+  soalan: number;
+  masa: number;
+  skorTertinggi: number;
+  adaAktiviti: boolean;
+}) {
+  const misi1Siap = soalan >= 10;
+  const misi2Siap = masa >= 15;
+  const misi3Siap = adaAktiviti && skorTertinggi >= 80;
+  const semuaSiap = misi1Siap && misi2Siap && misi3Siap;
+
+  return (
+    <section
+      className="mt-6 rounded-3xl p-5 shadow-card"
+      style={{
+        background: `linear-gradient(135deg, ${HIJAU}18 0%, #FFFDF5 55%, ${EMAS}20 100%)`,
+        border: `2px solid ${HIJAU}55`,
+      }}
+    >
+      <div className="flex items-center gap-2">
+        <span className="text-2xl leading-none">🎯</span>
+        <h2 className="font-display text-xl font-extrabold text-foreground">Misi Hari Ini</h2>
+      </div>
+
+      <div className="mt-4 space-y-3">
+        <BarisMisi label="Jawab 10 soalan" nilai={soalan} target={10} siap={misi1Siap} unit="soalan" />
+        <BarisMisi label="Belajar 15 minit" nilai={masa} target={15} siap={misi2Siap} unit="min" />
+        <BarisMisiBinari
+          label="Capai skor 80% ke atas"
+          siap={misi3Siap}
+          adaAktiviti={adaAktiviti}
+          skor={skorTertinggi}
+        />
+      </div>
+
+      {semuaSiap && (
+        <p
+          className="mt-4 rounded-2xl px-4 py-2 text-center font-display text-sm font-extrabold"
+          style={{
+            background: `linear-gradient(135deg, ${EMAS}, #E48A0A)`,
+            color: "#fff",
+          }}
+        >
+          🎉 Semua misi hari ini selesai!
+        </p>
+      )}
+    </section>
+  );
+}
+
+function BarisMisi({
+  label,
+  nilai,
+  target,
+  siap,
+  unit,
+}: {
+  label: string;
+  nilai: number;
+  target: number;
+  siap: boolean;
+  unit: string;
+}) {
+  const peratus = Math.min(100, Math.round((nilai / target) * 100));
+  return (
+    <div>
+      <div className="flex items-center justify-between gap-2">
+        <p className="text-sm font-bold text-foreground">{label}</p>
+        {siap ? (
+          <span
+            className="rounded-full px-3 py-1 text-xs font-extrabold text-white"
+            style={{ background: `linear-gradient(135deg, ${HIJAU}, #2AAE72)` }}
+          >
+            ✓ Selesai
+          </span>
+        ) : (
+          <span className="text-xs font-bold text-muted-foreground">
+            {nilai}/{target} {unit}
+          </span>
+        )}
+      </div>
+      <div className="mt-1.5 h-2.5 overflow-hidden rounded-full" style={{ backgroundColor: `${HIJAU}1a` }}>
+        <div
+          className="h-full rounded-full transition-all"
+          style={{
+            width: `${peratus}%`,
+            background: siap
+              ? `linear-gradient(90deg, ${HIJAU}, #2AAE72)`
+              : `linear-gradient(90deg, ${EMAS}, #E48A0A)`,
+          }}
+        />
+      </div>
+    </div>
+  );
+}
+
+function BarisMisiBinari({
+  label,
+  siap,
+  adaAktiviti,
+  skor,
+}: {
+  label: string;
+  siap: boolean;
+  adaAktiviti: boolean;
+  skor: number;
+}) {
+  return (
+    <div className="flex items-center justify-between gap-2">
+      <div>
+        <p className="text-sm font-bold text-foreground">{label}</p>
+        <p className="text-xs text-muted-foreground">
+          {adaAktiviti ? `Skor tertinggi hari ini: ${Math.round(skor)}%` : "Belum ada aktiviti hari ini"}
+        </p>
+      </div>
+      {siap ? (
+        <span
+          className="rounded-full px-3 py-1 text-xs font-extrabold text-white"
+          style={{ background: `linear-gradient(135deg, ${HIJAU}, #2AAE72)` }}
+        >
+          ✓ Selesai
+        </span>
+      ) : (
+        <span
+          className="rounded-full px-3 py-1 text-xs font-extrabold"
+          style={{ background: "#fff", border: `2px solid ${EMAS}`, color: "#8a5a00" }}
+        >
+          Belum
+        </span>
+      )}
+    </div>
+  );
+}
+
