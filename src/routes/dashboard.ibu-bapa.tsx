@@ -608,7 +608,16 @@ function ParentDashboard() {
     if (!user) return;
     senaraikanAnak().then((list) => {
       setAnakList(list);
-      if (!aktifId && list.length > 0) setAktifId(list[0].id);
+      const saved = typeof window === "undefined" ? null : localStorage.getItem(AKTIF_ANAK_KEY);
+      const savedValid = saved && list.some((a) => a.id === saved);
+      if (savedValid) {
+        if (saved !== aktifId) pilihAnak(saved);
+      } else if (list.length > 0) {
+        if (!aktifId) pilihAnak(list[0].id);
+      }
+      if (saved && !savedValid) {
+        localStorage.removeItem(AKTIF_ANAK_KEY);
+      }
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
