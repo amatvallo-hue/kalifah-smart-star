@@ -9,6 +9,13 @@ export interface SimpanProgressInput {
   jumlahSoalan: number;
   masaAmbil?: number; // saat
   topik?: string;
+  /**
+   * Kalau `true` (default), `user_stats.bab_selesai` akan +1 bila insert
+   * baris user_progress baru. Untuk sesi multi-topik (contoh: latih-tubi
+   * yang panggil simpanProgress sekali per topik), set `false` untuk semua
+   * panggilan SELEPAS yang pertama supaya bab_selesai tak inflate.
+   */
+  bumpBabSelesai?: boolean;
 }
 
 export interface BadgeRow {
@@ -208,16 +215,19 @@ export async function simpanProgress(input: SimpanProgressInput): Promise<void> 
       .eq("tarikh", tarikh)
       .maybeSingle();
 
+    const bumpBab = input.bumpBabSelesai ?? true;
+    const babInc = bumpBab && !existing ? 1 : 0;
+
     if (statRow) {
       await supabase.from("user_stats").update({
         soalan_dijawab: (statRow.soalan_dijawab ?? 0) + jumlah,
         masa_belajar: (statRow.masa_belajar ?? 0) + minit,
-        bab_selesai: (statRow.bab_selesai ?? 0) + (existing ? 0 : 1),
+        bab_selesai: (statRow.bab_selesai ?? 0) + babInc,
         updated_at: new Date().toISOString(),
       }).eq("id", statRow.id);
     } else {
       await supabase.from("user_stats").upsert(
-        { user_id: userId, tarikh, soalan_dijawab: jumlah, masa_belajar: minit, bab_selesai: 1 },
+        { user_id: userId, tarikh, soalan_dijawab: jumlah, masa_belajar: minit, bab_selesai: babInc },
         { onConflict: "user_id,tarikh", ignoreDuplicates: false }
       );
     }

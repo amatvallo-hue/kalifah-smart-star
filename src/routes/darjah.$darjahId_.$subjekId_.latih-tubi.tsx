@@ -152,7 +152,7 @@ function LatihTubiPage() {
       const entries = Object.entries(topikStats);
       if (entries.length > 0) {
         const masaPerSoalan = jawab > 0 ? masaSec / jawab : 0;
-        entries.forEach(([t, s]) => {
+        entries.forEach(([t, s], idx) => {
           simpanProgress({
             darjah: darjahId,
             subjek: subjekId,
@@ -161,6 +161,7 @@ function LatihTubiPage() {
             jumlahSoalan: s.jumlah,
             masaAmbil: Math.round(masaPerSoalan * s.jumlah),
             topik: t,
+            bumpBabSelesai: idx === 0,
           });
         });
       } else {
