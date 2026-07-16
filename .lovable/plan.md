@@ -1,101 +1,74 @@
-# Laporan Siasatan: Topik-Level Tracking di `user_progress`
+# Laporan Siasatan: Navigasi & Role (read-only)
 
-Ini laporan sahaja — tiada perubahan kod dicadangkan lagi. Selepas awak baca, kita bincang strategi baru buat pelan sebenar.
+## Ringkasan
+Tiada pembezaan role di lapisan routing/landing. **Semua akaun** (murid, ibu bapa biasa, admin, affiliate) mendarat di `/pilih-darjah` selepas login. Tab nav dan kad darjah yang boleh dibuka ditentukan sepenuhnya oleh **`profiles.darjah_akses`** (+ beberapa flag tambahan untuk tab admin/affiliate). Tiada logic "kalau role=user, redirect ke /dashboard/ibu-bapa".
 
-## 1. Bilangan tempat insert ke `user_progress`
+---
 
-Semua insert/update ke `user_progress` melalui **satu fungsi kongsi**: `simpanProgress()` dalam `src/lib/progress.ts`. Tiada tempat lain query terus ke jadual itu untuk tulis.
+## 1) Landing selepas login & tab "Pilih Darjah"
 
-Tetapi fungsi kongsi itu dipanggil dari **14 tempat berbeza** merentasi 13 fail:
+**Landing lalai selepas login — sama untuk semua akaun:**
+- `src/routes/login.tsx:40` — selepas `signInWithPassword` berjaya, redirect keras: `navigate({ to: "/pilih-darjah" })`. Tiada cabang ikut role/darjah_akses.
 
-| # | Fail | Aktiviti | Hantar `topik`? |
-|---|---|---|---|
-| 1 | `routes/darjah.$darjahId_.$subjekId_.kuiz.tsx` | `kuiz` (kuiz umum/rawak) | ❌ Tidak |
-| 2 | `components/KuizBMTopik.tsx` | `kuiz` (kuiz ikut topik — BM/Mat/Sains) | ❌ Tidak (walaupun ada state `topik`!) |
-| 3 | `routes/darjah.$darjahId_.$subjekId_.latihan.tsx` | `latihan` | ❌ Tidak |
-| 4 | `routes/darjah.$darjahId_.$subjekId_.latih-tubi.tsx` (loop per-topik) | `latih-tubi` | ✅ Ya |
-| 5 | `routes/darjah.$darjahId_.$subjekId_.latih-tubi.tsx` (fallback tanpa breakdown) | `latih-tubi` | ❌ Tidak |
-| 6 | `routes/darjah.$darjahId_.$subjekId_.isi-kosong.tsx` | `isi-kosong` | ✅ Ya |
-| 7 | `routes/darjah.$darjahId_.$subjekId_.bergambar-rajah.tsx` | `bergambar-rajah` | ✅ Ya |
-| 8 | `routes/darjah.$darjahId_.$subjekId_.nota-ringkas.tsx` | `nota` | ❌ Tidak (walaupun `selectedTopik` wujud!) |
-| 9 | `routes/darjah.$darjahId_.$subjekId_.game.tsx` | `game-race` | ❌ Tidak |
-| 10 | `components/games/BetulSalahGame.tsx` | `game-betul` | ❌ Tidak |
-| 11 | `components/games/PadankanJawapanGame.tsx` | `game-padan` | ❌ Tidak |
-| 12 | `components/games/SusunAyatGame.tsx` | `game-susun` | ❌ Tidak |
-| 13 | `components/games/MatikDragGame.tsx` | `game-matik-drag` | ❌ Tidak |
-| 14 | `components/games/MatikNeonGame.tsx` | `game-matik-neon` | ❌ Tidak |
+**Tab "Pilih Darjah" dalam nav bar — sentiasa dipapar untuk sesiapa yang login:**
+- `src/components/SiteHeader.tsx:41-50` — link `/pilih-darjah` di-render tanpa syarat (di dalam `navLinks`, luar mana-mana kondisi role). Tab lain baru bersyarat:
+  - "Progress Saya" — `userName && isChild` (`isChild` = email berakhir `@anak.kalifah.local`, baris 32).
+  - "Ibu Bapa" — `userName && !isChild`.
+  - "Dashboard Affiliate" — `isAffiliate` (baris 38-46, query `affiliates` table).
+  - "Admin Dashboard" — `profile?.role === "admin"`.
 
-**Kesimpulan:** hanya 3 call-site (isi-kosong, bergambar-rajah, latih-tubi per-topik) yang sudah hantar `topik`. 11 lagi tak hantar — inilah sebab lajur `topik` NULL untuk hampir semua rekod.
+**Kandungan skrin `/pilih-darjah`:**
+- `src/routes/pilih-darjah.tsx:337-351` — loop `DARJAH_LIST` (D1-D6) dan tandakan setiap kad `hasAccess = darjahAkses.includes(Number(d.id))`. Kad yang `hasAccess=false` dipapar dengan overlay 🔒 "Naik Taraf" (baris 415-420) dan klik dia panggil `handleLockedClick` → `/preview/nama` (baris 181-186), BUKAN aktiviti sebenar.
+- `src/routes/pilih-darjah.tsx:68-90` — kesan "darjah semasa murid": kalau ada row `child_profiles` untuk `user.id`, guna `child_profiles.darjah`; kalau tak (iaitu akaun parent/admin), fallback ke `darjahAkses[0]`. CTA "Sambung Belajar" (baris 234-243) render bila `darjahMurid` ada — jadi untuk parent yang ada `darjah_akses` tak kosong, butang ini juga muncul dan pergi terus ke `/darjah/$darjahId`.
 
-## 2. Adakah setiap aktiviti tahu topik soalan?
+**Kesimpulan #1:** Tab "Pilih Darjah" dan landing `/pilih-darjah` **sama untuk semua akaun profile** (role='user' biasa, admin, affiliate). Tiada gate ikut role. Beza cuma: kad darjah yang tak wujud dalam `darjah_akses` dikunci. Untuk akaun yang `darjah_akses` kosong (contoh: parent baru daftar, belum bayar), semua 6 kad kunci — tapi skrin `/pilih-darjah` sendiri masih dibuka dan hero + "Progress Minggu Ini" masih dipapar.
 
-Klasifikasi ikut sumber data & aliran sesi:
+---
 
-### A. Sesi terkunci kepada SATU topik (senang — tinggal pass sahaja)
-- **`KuizBMTopik`** — user pilih topik dulu, semua 10 soalan `.eq("topik", pilihTopik)`. State `topik` sudah wujud (line 128), tetapi tidak dihantar ke `simpanProgress`. **Trivial fix.**
-- **`nota-ringkas`** — `selectedTopik` sedia ada; user baca satu topik pada satu masa. **Trivial fix.**
-- **`isi-kosong`** ✅ sudah betul.
-- **`bergambar-rajah`** ✅ sudah betul.
-- **`latih-tubi` (dengan `?topik=` param)** ✅ sudah betul.
+## 2) Parent biasa (role='user') — boleh jawab kuiz bawah akaun sendiri?
 
-### B. Sesi CAMPUR beberapa topik dalam satu sesi
-- **`kuiz.tsx` (kuiz umum darjah/subjek)** — soalan random dari `quiz-bank` merentasi topik. Satu sesi = pelbagai topik.
-- **`latihan.tsx`** — sama, campur pelbagai topik (guna quiz-bank).
-- **`latih-tubi.tsx` tanpa `?topik=`** — sudah ada `topikStats` per topik dalam sesi (line 138), dan loop per-topik sudah wujud (line 152–165) — tetapi ada fallback (line 167) yang insert satu row tanpa topik bila `topikStats` kosong. Struktur sudah betul; hanya perlu pastikan setiap soalan yang dijawab dikira ke bucket topik masing-masing.
-- **`game-race` (game.tsx)** — soalan campur dari quiz-bank; satu sesi = pelbagai topik.
+**Ya, boleh — tiada apa-apa yang halang.** Route pembelajaran (`/darjah/$darjahId`, `.../kuiz`, `.../latih-tubi`, dll) hanya perlukan session valid; tiada semakan "adakah user ni murid vs parent". Contoh:
+- `src/routes/pilih-darjah.tsx:62-64` — satu-satunya gate: `if (!loading && !user) navigate({ to: "/login" })`.
+- CTA "Sambung Belajar" (baris 234-243) dan kad darjah yang `hasAccess` (baris 341-351 + `<Link to="/darjah/$darjahId">` dalam `DarjahCard`) aktif untuk sesiapa sahaja yang `darjahAkses` merangkumi darjah tu — termasuk parent.
+- `SiteHeader` tidak sorok "Pilih Darjah" untuk `!isChild`. Sebaliknya ia **menambah** "Ibu Bapa" untuk `!isChild` — kedua-dua muncul serentak.
 
-### C. Games komponen (BetulSalah, Padan, Susun, MatikDrag, MatikNeon)
-- Sumber data adalah **soalan game statik dari `games-bank.ts`** — perlu semak sama ada setiap item ada field `topik`. Kalau tak, aktiviti-aktiviti ini takkan pernah dapat topik tepat tanpa migration data. Perlu siasat lanjut.
+**Kesimpulan #2:** Parent biasa yang login guna email/password sendiri **memang nampak "Pilih Darjah"** sebagai tab DAN sebagai landing lalai selepas login, dan **memang boleh** terus jawab kuiz/latih-tubi/game di bawah akaun parent sendiri, asalkan `profiles.darjah_akses` mereka merangkumi darjah tersebut. Tiada redirect otomatik ke `/dashboard/ibu-bapa`.
 
-## 3. Cara handle sesi campur-topik
+---
 
-Dua pilihan seni bina — awak kena pilih:
+## 3) Adakah ini sengaja atau kesan sampingan?
 
-**Pilihan (i): Satu row per topik dalam sesi**
-- Untuk kuiz/latihan/game-race yang campur, kumpul soalan ikut topik, kemudian panggil `simpanProgress` sekali per topik (macam `latih-tubi` sudah buat).
-- Implikasi: satu sesi kuiz 10 soalan boleh jadi 3-4 rows dalam `user_progress`. Ini memberi tracking tepat per topik.
-- Kesan pada logic sedia ada:
-  - **Markah**: kekal — setiap row masih ada `markah`/`jumlah_soalan` sendiri.
-  - **Streak/`user_stats`**: `simpanProgress` sudah tambah `soalan_dijawab` per panggilan; kalau panggil 3 kali untuk 1 sesi, jumlah soalan_dijawab akan tepat tetapi `bab_selesai` akan naik 3 (bukan 1). Perlu ubah kiraan `bab_selesai` — mungkin count sesi, bukan row.
-  - **Lencana**: `semakDanBeriLencana` akan panggil 3 kali per sesi (extra query, tapi idempotent) — perlu debounce atau panggil sekali sahaja di penghujung sesi.
-  - **Unique constraint `(user_id, darjah, subjek, aktiviti)`** dari migration `20260607130000_badges_dedup.sql` — akan pecah! Perlu tambah `topik` ke constraint: `UNIQUE (user_id, darjah, subjek, aktiviti, topik)`. Migration baru diperlukan.
-  - **Dedup vs accumulate**: `progress.ts` sekarang dedup (simpan skor terbaik) kecuali `latih-tubi` dengan topik (accumulate). Perlu putuskan tingkah laku bila `topik` ada untuk kuiz/latihan juga.
+Bukti menunjukkan **kesan sampingan seni bina**, bukan reka bentuk produk eksplisit "parent boleh preview":
 
-**Pilihan (ii): Satu row per sesi, simpan array topik dalam JSONB**
-- Tambah lajur `topik_stats jsonb` (contoh `[{topik, betul, jumlah}, ...]`).
-- Kurang row, tapi susah query "X/Y topik selesai".
-- Tidak sepadan dengan struktur sedia ada (`peratus`, `markah` single-value).
+- **`darjah_akses` dipopulate atas profile pembeli** (bukan atas akaun anak) apabila bayaran diluluskan:
+  - `lovable/migrations/20260608170000_payments_trigger.sql:80-92` — trigger `apply_payment_unlock` merge tier yang dibeli ke `profiles.darjah_akses` **milik `pesanan.user_id`** (iaitu akaun yang buat pembelian = parent).
+  - `lovable/migrations/20260608180000_fix_apply_payment_unlock.sql:94-121` dan `20260615100000_admin_approve_pesanan.sql:49-57` — sama; kira semula `darjah_akses` untuk `pesanan.user_id` (parent), bukan untuk child_profiles.
+  - `lovable/migrations/20260611120000_backfill_child_darjah_akses.sql:7-12` — migration berasingan yang isi `darjah_akses` untuk akaun anak berdasarkan `child_profiles.darjah`. Fakta bahawa child perlu di-backfill secara berasingan mengesahkan model asal: `darjah_akses` diletak atas profile parent semasa pembelian, dan akaun anak sintetik diberi `darjah_akses` sendiri secara berasingan supaya login anak boleh buka darjah dia.
 
-**Cadangan (kena awak sahkan):** Pilihan (i) — sepadan dengan corak `latih-tubi` yang sudah wujud, tetapi memerlukan migration constraint baru + adjust dedup logic + adjust `bab_selesai`.
+- **Satu-satunya "role gate" yang wujud** dalam kod adalah:
+  - `role='admin'` → dedah tab "Admin Dashboard" (`SiteHeader.tsx:82`, `use-profile.ts` pulangkan `role`).
+  - `isChild` (dikesan via email domain `@anak.kalifah.local`, `src/lib/child-auth.ts` via `CHILD_EMAIL_DOMAIN`) → tukar "Ibu Bapa" ↔ "Progress Saya" dalam nav.
+  - `affiliates` row wujud → dedah tab "Dashboard Affiliate".
+  - Tiada `role='parent'` distinct — parent = "bukan admin, bukan email `@anak.kalifah.local`". Sebab tu bahagian "belajar" tak pernah membezakan parent vs murid.
 
-## 4. Anggaran skop
+**Kesimpulan #3:** Ini **kesan sampingan**. `darjah_akses` diletak atas profile pembeli (parent) sebagai tempat semulajadi untuk trigger pembayaran menulis, dan tiada lapisan "audience" (parent vs child) di atas `darjah_akses` untuk sorok skrin belajar daripada pembeli. Akibatnya, apa sahaja akaun yang `darjah_akses` populated akan nampak `/pilih-darjah` lengkap dengan kad terbuka dan boleh terus jawab kuiz — termasuk parent yang beli untuk anak, dan admin (kes anda: `darjah_akses=[1..6]`).
 
-**Fail yang PASTI perlu disentuh:**
+---
 
-1. **`src/lib/progress.ts`** — teras logic:
-   - Kendali dedup/accumulate bila `topik` diberi untuk semua aktiviti (bukan hanya latih-tubi).
-   - Kira `bab_selesai` betul untuk multi-row-per-sesi.
-2. **Migration SQL baru** — tukar unique constraint `user_progress_user_aktiviti_unik` untuk sertakan `topik` (dengan handling NULL — Postgres NULL tidak equal pada NULL, jadi mungkin perlu partial index).
-3. **11 call-site** yang perlu hantar `topik`:
-   - Trivial (state sudah ada): `KuizBMTopik.tsx`, `nota-ringkas.tsx` — 2 fail.
-   - Perlu bucket per-topik: `kuiz.tsx`, `latihan.tsx`, `game.tsx` (game-race), `latih-tubi.tsx` fallback path — 4 fail.
-   - Games statik (perlu semak `games-bank.ts` dulu ada topik atau tidak): `BetulSalahGame`, `PadankanJawapanGame`, `SusunAyatGame`, `MatikDragGame`, `MatikNeonGame` — 5 fail + `games-bank.ts`.
-4. **`src/lib/games-bank.ts`** — mungkin perlu tambah field `topik` per soalan (kalau belum ada). Perlu siasat.
-5. **`semakDanBeriLencana`** logic dalam `progress.ts` — sudah bergantung pada `topik` untuk "Pakar Subjek" (line via `nota_topik`), tetapi kuiz/latih-tubi pukul rata semua rows. Kekal berfungsi, tapi patut disemak semula selepas data topik lebih kaya.
+## Fail rujukan utama
+- `src/routes/login.tsx:40` — redirect keras selepas login.
+- `src/components/SiteHeader.tsx:41-90` — semua logic paparan tab.
+- `src/routes/pilih-darjah.tsx:62-64, 68-90, 181-186, 337-351, 415-420` — gate akses, deteksi darjah semasa, kad kunci.
+- `src/hooks/use-profile.ts` — sumber `darjah_akses` + `role` untuk komponen.
+- `lovable/migrations/20260608170000_payments_trigger.sql`, `20260608180000_fix_apply_payment_unlock.sql`, `20260615100000_admin_approve_pesanan.sql` — semua tulis `darjah_akses` ke profile `pesanan.user_id` (parent).
+- `lovable/migrations/20260611120000_backfill_child_darjah_akses.sql` — bukti akaun anak perlu backfill berasingan.
 
-**Fail yang perlu diUJI (tidak disentuh, tapi baca `user_progress`):**
-- `dashboard.progress.tsx`, `pilih-darjah.tsx`, `dashboard.ibu-bapa.tsx`, sijil rekod — semua ini bergantung pada shape rekod. Perlu regression test manual selepas perubahan.
+---
 
-**Anggaran total fail disentuh:** **~10–12 fail kod + 1 migration**.
+## Cadangan (kalau nak dibincang lain kali, bukan sekarang)
+Kalau kita nak parent **tidak** nampak `/pilih-darjah` sebagai landing/tab, pilihan yang biasa:
+1. Redirect selepas login ikut isyarat: jika ada row `child_profiles` di mana `parent_id = user.id` → `/dashboard/ibu-bapa`; kalau `child_profiles` di mana `child_user_id = user.id` → `/pilih-darjah`; admin → `/admin` atau kekal.
+2. Sorok tab "Pilih Darjah" bila `!isChild && !isAdmin && parentHasChildren` dalam `SiteHeader`.
+3. Perkenalkan `profiles.audience` eksplisit ('parent' | 'murid' | 'admin') dan gate skrin belajar ikut itu — beza dengan `darjah_akses` yang kekal sebagai "hak akses tier dibeli".
 
-**Risiko utama:**
-- Unique constraint change boleh gagal kalau ada data lama duplicate — perlu cleanup dulu.
-- Multi-row per sesi boleh double-count `bab_selesai` dan `soalan_dijawab` di `user_stats` — perlu adjust dengan teliti.
-- Perubahan dedup→accumulate untuk sesetengah aktiviti boleh ubah paparan "skor tertinggi" pada dashboard.
-
-## Cadangan langkah seterusnya (belum implement)
-
-Sebelum edit sebarang kod, tolong sahkan:
-1. Guna Pilihan (i) — satu row per topik per sesi?
-2. Untuk games statik (BetulSalah, Padan, Susun, MatikDrag, MatikNeon), boleh saya siasat dulu `games-bank.ts` untuk lihat sama ada topik boleh diextract? (Kalau tidak, aktiviti ini kekal `topik=NULL` sampai data diperkaya — bukan bug.)
-3. Approach fasa: mula dengan trivial fixes (KuizBMTopik, nota-ringkas) untuk validate pattern sebelum bergerak ke fail yang lebih kompleks?
+Tiada perubahan kod dibuat.
