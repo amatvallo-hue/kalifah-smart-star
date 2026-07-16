@@ -401,7 +401,7 @@ function ProgressDashboard() {
                         className="rounded-full px-2 py-0.5 text-xs font-extrabold"
                         style={{ backgroundColor: `${EMAS}33`, color: "#7a5300" }}
                       >
-                        ⭐ {r.purata}%
+                        Skor: {r.purata}%
                       </span>
                     </div>
                     <p className="mt-1 text-xs text-muted-foreground">
@@ -414,7 +414,7 @@ function ProgressDashboard() {
                       />
                     </div>
                     <p className="mt-2 text-xs font-bold" style={{ color: HIJAU }}>
-                      {r.peratusSiap}% siap
+                      Kemajuan: {r.peratusSiap}% siap
                     </p>
                   </Link>
                 ))}
