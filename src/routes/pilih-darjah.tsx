@@ -335,14 +335,16 @@ function DarjahDashboard() {
               Pilih Darjah Anda
             </h2>
             <p className="text-sm text-muted-foreground">
-              Darjah anda ditonjolkan di bawah. Darjah lain memerlukan langganan.
+              {isChild
+                ? "Darjah anda ditonjolkan di bawah. Darjah lain memerlukan langganan."
+                : "Pilih darjah untuk lihat pakej atau navigasi. Darjah lain memerlukan langganan."}
             </p>
           </div>
 
           <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {DARJAH_LIST.map((d, i) => {
               const hasAccess = darjahAkses.includes(Number(d.id));
-              const isCurrent = darjahMurid === d.id;
+              const isCurrent = isChild && darjahMurid === d.id;
               return (
                 <DarjahCard
                   key={d.id}
