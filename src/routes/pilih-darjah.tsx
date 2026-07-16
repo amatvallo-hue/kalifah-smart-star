@@ -259,7 +259,71 @@ function DarjahDashboard() {
           </div>
         </section>
 
+        {/* Progress Minggu Ini */}
+        <section className="mt-6">
+          <div
+            className="relative overflow-hidden rounded-3xl border-2 p-5 shadow-card md:p-6"
+            style={{
+              borderColor: "#FBC02D",
+              background:
+                "linear-gradient(135deg, #FFF8E1 0%, #FFFDF5 55%, #FFF3D1 100%)",
+            }}
+          >
+            <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-[#F9A825]/15 blur-3xl" />
+            <div className="relative flex flex-wrap items-center justify-between gap-4">
+              <div className="flex items-center gap-4">
+                <div
+                  className="flex h-14 w-14 items-center justify-center rounded-2xl text-white shadow-soft"
+                  style={{ background: "linear-gradient(135deg, #F5B82E, #E48A0A)" }}
+                >
+                  <CalendarDays className="h-7 w-7" />
+                </div>
+                <div>
+                  <div className="inline-flex items-center gap-1.5 rounded-full bg-white/80 px-2.5 py-0.5 font-display text-[10px] font-extrabold uppercase tracking-wide text-[#8A5A00] shadow-soft">
+                    <TrendingUp className="h-3 w-3" />
+                    7 Hari Terakhir
+                  </div>
+                  <h2 className="mt-1 font-display text-xl font-extrabold text-foreground md:text-2xl">
+                    Progress Minggu Ini
+                  </h2>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-3">
+                <MingguStat
+                  icon={<BookOpen className="h-4 w-4" />}
+                  label="Soalan Dijawab"
+                  value={minggu ? minggu.soalan.toLocaleString("ms-MY") : "—"}
+                />
+                <MingguStat
+                  icon={<Target className="h-4 w-4" />}
+                  label="Skor Purata"
+                  value={
+                    minggu && minggu.bilAktiviti > 0
+                      ? `${minggu.peratus}%`
+                      : "—"
+                  }
+                />
+                <Link
+                  to="/dashboard/progress"
+                  className="inline-flex items-center gap-2 rounded-full px-4 py-2.5 font-display text-sm font-extrabold text-white shadow-soft transition hover:opacity-90"
+                  style={{ background: "linear-gradient(135deg, #F5B82E, #E48A0A)" }}
+                >
+                  Lihat Penuh
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
+            </div>
+            {minggu && minggu.bilAktiviti === 0 && (
+              <p className="relative mt-3 text-xs font-bold text-[#8A5A00]/80">
+                Belum ada aktiviti minggu ini — jom mula belajar!
+              </p>
+            )}
+          </div>
+        </section>
+
         <section className="mt-8">
+
           <div>
             <h2 className="font-display text-2xl font-extrabold text-foreground md:text-3xl">
               Pilih Darjah Anda
