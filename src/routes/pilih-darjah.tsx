@@ -7,6 +7,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { usePoints } from "@/hooks/use-points";
 import { useProfile } from "@/hooks/use-profile";
 import { DARJAH_LIST, subjekListUntukRole, type Darjah } from "@/lib/curriculum";
+import { CHILD_EMAIL_DOMAIN } from "@/lib/child-auth";
 
 export const Route = createFileRoute("/pilih-darjah")({
   head: () => ({
