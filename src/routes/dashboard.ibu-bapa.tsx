@@ -658,6 +658,7 @@ function ParentDashboard() {
     setBadges((b ?? []) as BadgeRow[]);
     setSijilList(sj);
     setEmotions((em ?? []) as EmotionRow[]);
+    setMpt4Keputusan((mpt4 ?? []) as unknown as Mpt4KeputusanRow[]);
     if (showSpinner) setFetching(false);
   }
 
