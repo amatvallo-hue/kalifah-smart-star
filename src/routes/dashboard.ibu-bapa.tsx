@@ -51,6 +51,7 @@ const STAT_HIJAU = "#16A34A";
 const STAT_BIRU = "#3B82F6";
 const STAT_OREN = "#FB923C";
 const STAT_EMAS = "#F5B82E";
+const AKTIF_ANAK_KEY = "kalifah_ibubapa_aktif_anak";
 
 interface ProgressRow {
   id: string;
