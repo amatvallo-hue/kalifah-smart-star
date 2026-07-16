@@ -935,7 +935,7 @@ function ParentDashboard() {
               setAnakList(list);
               setShowAdd(false);
               // Fokus pada anak yang baru ditambah (terakhir mengikut created_at asc)
-              if (list.length > 0) setAktifId(list[list.length - 1].id);
+              if (list.length > 0) pilihAnak(list[list.length - 1].id);
             }}
           />
         )}
@@ -965,7 +965,7 @@ function ParentDashboard() {
                 return (
                   <button
                     key={a.id}
-                    onClick={() => setAktifId(a.id)}
+                    onClick={() => pilihAnak(a.id)}
                     className="rounded-full px-4 py-2 font-display text-sm font-extrabold transition"
                     style={{
                       backgroundColor: aktif ? HIJAU : `${HIJAU}14`,
@@ -1361,7 +1361,7 @@ function ParentDashboard() {
                           if (ok) {
                             const list = await senaraikanAnak();
                             setAnakList(list);
-                            setAktifId(list[0]?.id ?? null);
+                            pilihAnak(list[0]?.id ?? null);
                           }
                         }}
                         className="inline-flex items-center gap-2 rounded-full px-4 py-2 text-xs font-extrabold text-destructive hover:bg-destructive/10"
