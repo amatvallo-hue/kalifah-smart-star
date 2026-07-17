@@ -24,7 +24,7 @@ const IMG_TAHAP3_ROKET =
 export const Route = createFileRoute("/pra-kalifah")({
   head: () => ({
     meta: [
-      { title: "Pulau Pra Kalifah — Pilih Tahap" },
+      { title: "Dunia Pra Kalifah — Pilih Tahap" },
       {
         name: "description",
         content: "Pilih tahap pembelajaran untuk kanak-kanak pra sekolah di Kalifah.my.",
@@ -189,7 +189,19 @@ function PulauPraKalifahPage() {
           </Link>
         </div>
 
-        <div className="flex items-end gap-4 rounded-3xl bg-gradient-to-br from-[#FF7B9C]/30 via-[#FFD166]/30 to-[#5AC8FA]/30 p-5 shadow-card sm:gap-6 sm:p-6">
+        <div className="relative flex items-end gap-4 overflow-hidden rounded-3xl bg-gradient-to-br from-[#FF7B9C]/30 via-[#FFD166]/30 to-[#5AC8FA]/30 p-5 shadow-card sm:gap-6 sm:p-6">
+          {/* Decorative clouds */}
+          <span className="pointer-events-none absolute left-4 top-3 text-2xl opacity-40 animate-cloud-drift">☁️</span>
+          <span className="pointer-events-none absolute right-12 top-5 text-xl opacity-30 animate-cloud-drift" style={{ animationDelay: "6s" }}>☁️</span>
+
+          {/* Decorative stars */}
+          <span className="pointer-events-none absolute left-1/4 top-4 text-xl opacity-60 animate-twinkle">⭐</span>
+          <span className="pointer-events-none absolute right-1/3 top-2 text-lg opacity-50 animate-twinkle" style={{ animationDelay: "0.7s" }}>⭐</span>
+          <span className="pointer-events-none absolute left-2/3 top-6 text-xl opacity-55 animate-twinkle" style={{ animationDelay: "1.4s" }}>⭐</span>
+
+          {/* Decorative balloon */}
+          <span className="pointer-events-none absolute right-4 bottom-3 text-2xl opacity-50 animate-balloon-float">🎈</span>
+
           <img
             src={IMG_MASCOT}
             alt="Mascot"
@@ -197,7 +209,7 @@ function PulauPraKalifahPage() {
           />
           <div className="flex flex-col gap-1 pb-1">
             <h1 className="font-display text-2xl font-extrabold text-[#0F172A] sm:text-4xl">
-              Pulau Pra Kalifah 🌈
+              Dunia Pra Kalifah 🌈
             </h1>
             <p className="text-sm font-semibold text-[#0F172A]/70 sm:text-base">
               {tahapDipilih === 1
