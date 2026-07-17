@@ -81,6 +81,32 @@ const IKON_KIRA: Record<string, { Icon: LucideIcon; cls: string }> = {
   flower: { Icon: Flower2, cls: "fill-fuchsia-400 text-fuchsia-500" },
 };
 
+const IKON_ADAB: Record<string, LucideIcon> = {
+  Alhamdulillah: Sparkles,
+  Assalamualaikum: Hand,
+  "Buka Almari": DoorOpen,
+  Diam: VolumeX,
+  Doa: HandHeart,
+  Gajet: Smartphone,
+  "Ibu Bapa": Home,
+  Jerit: Megaphone,
+  Kawan: Users,
+  Ketawa: Laugh,
+  Kucing: Cat,
+  Lari: Footprints,
+  Maaf: Heart,
+  Makan: Utensils,
+  Marah: Angry,
+  Menangis: Frown,
+  Nyanyi: Music,
+  Salam: Handshake,
+  "Tak Nak": Ban,
+  "Terima Kasih": ThumbsUp,
+  "Terus Masuk": LogIn,
+  Tidur: Moon,
+  Tolong: HandHelping,
+};
+
 const BIDANG_CONFIG: Record<
   string,
   { namaAktiviti: string; tajuk: string; mesejSelesai: string; jenis: "huruf" | "kira" | "adab" }
