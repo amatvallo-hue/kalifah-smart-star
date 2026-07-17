@@ -284,8 +284,6 @@ function AktivitiPraKalifahPage() {
       ? `Cari huruf ${current.huruf_sasaran ?? ""}!`
       : "Kira, berapa banyak?");
 
-  const tema = temaBidangDariSlug(bidang);
-
   return (
     <div className="relative min-h-screen overflow-hidden bg-background p-4">
       <BlobsLatar />
