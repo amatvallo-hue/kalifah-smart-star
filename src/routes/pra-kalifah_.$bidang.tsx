@@ -389,11 +389,12 @@ function ConfettiButang() {
             className={`absolute h-2.5 w-2.5 rounded-sm ${warna} animate-confetti-burst`}
             style={
               {
-                ["--cx" as string]: `${cx}px`,
-                ["--cy" as string]: `${cy}px`,
+                "--cx": `${cx}px`,
+                "--cy": `${cy}px`,
                 animationDelay: `${i * 30}ms`,
-              } as React.CSSProperties & Record<string, string>
+              } as Record<string, string>
             }
+
           />
         );
       })}
