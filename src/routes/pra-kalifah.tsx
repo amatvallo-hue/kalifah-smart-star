@@ -191,16 +191,16 @@ function PulauPraKalifahPage() {
 
         <div className="relative flex items-end gap-4 overflow-hidden rounded-3xl bg-gradient-to-br from-[#FF7B9C]/30 via-[#FFD166]/30 to-[#5AC8FA]/30 p-5 shadow-card sm:gap-6 sm:p-6">
           {/* Decorative clouds */}
-          <span className="pointer-events-none absolute left-4 top-3 text-2xl opacity-40 animate-cloud-drift">☁️</span>
-          <span className="pointer-events-none absolute right-12 top-5 text-xl opacity-30 animate-cloud-drift" style={{ animationDelay: "6s" }}>☁️</span>
+          <span className="pointer-events-none absolute left-4 top-3 text-5xl opacity-60 animate-cloud-drift">☁️</span>
+          <span className="pointer-events-none absolute right-12 top-5 text-4xl opacity-50 animate-cloud-drift" style={{ animationDelay: "6s" }}>☁️</span>
 
           {/* Decorative stars */}
-          <span className="pointer-events-none absolute left-1/4 top-4 text-xl opacity-60 animate-twinkle">⭐</span>
-          <span className="pointer-events-none absolute right-1/3 top-2 text-lg opacity-50 animate-twinkle" style={{ animationDelay: "0.7s" }}>⭐</span>
-          <span className="pointer-events-none absolute left-2/3 top-6 text-xl opacity-55 animate-twinkle" style={{ animationDelay: "1.4s" }}>⭐</span>
+          <span className="pointer-events-none absolute left-1/4 top-4 text-3xl opacity-70 animate-twinkle">⭐</span>
+          <span className="pointer-events-none absolute right-1/3 top-2 text-2xl opacity-80 animate-twinkle" style={{ animationDelay: "0.7s" }}>⭐</span>
+          <span className="pointer-events-none absolute left-2/3 top-6 text-3xl opacity-75 animate-twinkle" style={{ animationDelay: "1.4s" }}>⭐</span>
 
           {/* Decorative balloon */}
-          <span className="pointer-events-none absolute right-4 bottom-3 text-2xl opacity-50 animate-balloon-float">🎈</span>
+          <span className="pointer-events-none absolute right-6 bottom-4 text-6xl opacity-70 animate-balloon-float">🎈</span>
 
           <img
             src={IMG_MASCOT}
