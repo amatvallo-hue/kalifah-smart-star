@@ -35,6 +35,12 @@ import {
   BookOpen,
   Image as ImageIcon,
   PencilRuler,
+  Hash,
+  Palette,
+  Shapes,
+  Square,
+  Triangle,
+  Diamond,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -53,7 +59,38 @@ export const Route = createFileRoute("/pra-kalifah_/$bidang")({
   component: AktivitiPraKalifahPage,
 });
 
-type JenisAktiviti = "huruf" | "kira" | "adab" | "huruf-gambar" | "lengkap";
+type JenisAktiviti =
+  | "huruf"
+  | "kira"
+  | "adab"
+  | "huruf-gambar"
+  | "lengkap"
+  | "nombor"
+  | "warna"
+  | "bentuk";
+
+const WARNA_SWATCH: Record<string, string> = {
+  Merah: "bg-red-500",
+  Biru: "bg-blue-500",
+  Hijau: "bg-green-500",
+  Kuning: "bg-yellow-400",
+  Oren: "bg-orange-500",
+  Ungu: "bg-purple-500",
+  Hitam: "bg-gray-900",
+  Coklat: "bg-amber-800",
+  Putih: "bg-white",
+  "Merah Jambu": "bg-pink-400",
+  Kelabu: "bg-gray-400",
+};
+
+const IKON_BENTUK: Record<string, LucideIcon> = {
+  Bulatan: Circle,
+  "Segi Empat": Square,
+  "Segi Tiga": Triangle,
+  Bintang: Star,
+  Hati: Heart,
+  Delima: Diamond,
+};
 
 interface DataAktiviti {
   bilangan?: number;
@@ -156,6 +193,27 @@ const BIDANG_CONFIG: Record<string, AktivitiConfig[]> = {
       mesejSelesai: "Syabas! Kamu dah pandai kira!",
       jenis: "kira",
       ikon: Star,
+    },
+    {
+      namaAktiviti: "Pilih Nombor",
+      tajuk: "Pilih Nombor",
+      mesejSelesai: "Syabas! Kamu dah kenal nombor!",
+      jenis: "nombor",
+      ikon: Hash,
+    },
+    {
+      namaAktiviti: "Warna",
+      tajuk: "Warna",
+      mesejSelesai: "Syabas! Kamu dah kenal warna!",
+      jenis: "warna",
+      ikon: Palette,
+    },
+    {
+      namaAktiviti: "Bentuk",
+      tajuk: "Bentuk",
+      mesejSelesai: "Syabas! Kamu dah kenal bentuk!",
+      jenis: "bentuk",
+      ikon: Shapes,
     },
   ],
   kerohanian: [
@@ -480,6 +538,12 @@ function AktivitiPraKalifahPage() {
             const disabled = betul !== null;
             const baseColor = BUTANG_WARNA[i];
             const IkonAdab = guna_ikon_besar ? (IKON_ADAB[p.nilai] ?? HelpCircle) : null;
+            const IkonBentuk = config.jenis === "bentuk" ? (IKON_BENTUK[p.nilai] ?? HelpCircle) : null;
+            const swatchCls = config.jenis === "warna" ? (WARNA_SWATCH[p.nilai] ?? "bg-gray-300") : null;
+            const isVisual = config.jenis === "warna" || config.jenis === "bentuk";
+            const bgCls = swatchCls
+              ? `${swatchCls} hover:brightness-110 text-white ring-4 ring-white/60`
+              : baseColor;
             return (
               <button
                 key={p.key}
@@ -487,6 +551,7 @@ function AktivitiPraKalifahPage() {
                 disabled={disabled}
                 onClick={() => pilih(p.key, p.nilai)}
                 style={!disabled ? { animationDelay: `${i * 350}ms` } : undefined}
+                aria-label={p.nilai}
                 className={`relative flex aspect-square flex-col items-center justify-center gap-2 overflow-visible rounded-3xl p-3 text-center font-display font-extrabold shadow-card transition ${
                   guna_ikon_besar
                     ? "text-sm sm:text-base"
@@ -495,8 +560,8 @@ function AktivitiPraKalifahPage() {
                   isBetul
                     ? "bg-emerald-500 text-white animate-pop"
                     : isSalah
-                      ? `${baseColor} animate-shake`
-                      : `${baseColor} animate-idle-pulse hover:-translate-y-1 hover:shadow-soft`
+                      ? `${bgCls} animate-shake`
+                      : `${bgCls} animate-idle-pulse hover:-translate-y-1 hover:shadow-soft`
                 } ${disabled && !isBetul ? "opacity-70" : ""}`}
               >
                 {IkonAdab ? (
@@ -504,7 +569,13 @@ function AktivitiPraKalifahPage() {
                     <IkonAdab className="h-10 w-10 sm:h-12 sm:w-12" strokeWidth={2.5} />
                     <span className="leading-tight">{p.nilai}</span>
                   </>
-                ) : (
+                ) : IkonBentuk ? (
+                  <IkonBentuk
+                    className="h-20 w-20 sm:h-24 sm:w-24 text-white"
+                    strokeWidth={2.5}
+                    fill="currentColor"
+                  />
+                ) : isVisual ? null : (
                   p.nilai
                 )}
                 {isBetul && <ConfettiButang />}
