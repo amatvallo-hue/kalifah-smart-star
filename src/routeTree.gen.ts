@@ -23,6 +23,7 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PreviewNamaRouteImport } from './routes/preview.nama'
 import { Route as PreviewDarjahIdRouteImport } from './routes/preview.$darjahId'
+import { Route as PraKalifahBidangRouteImport } from './routes/pra-kalifah_.$bidang'
 import { Route as DashboardProgressRouteImport } from './routes/dashboard.progress'
 import { Route as DashboardIbuBapaRouteImport } from './routes/dashboard.ibu-bapa'
 import { Route as DarjahDarjahIdRouteImport } from './routes/darjah.$darjahId'
@@ -121,6 +122,11 @@ const PreviewNamaRoute = PreviewNamaRouteImport.update({
 const PreviewDarjahIdRoute = PreviewDarjahIdRouteImport.update({
   id: '/preview/$darjahId',
   path: '/preview/$darjahId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PraKalifahBidangRoute = PraKalifahBidangRouteImport.update({
+  id: '/pra-kalifah_/$bidang',
+  path: '/pra-kalifah/$bidang',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardProgressRoute = DashboardProgressRouteImport.update({
@@ -309,6 +315,7 @@ export interface FileRoutesByFullPath {
   '/darjah/$darjahId': typeof DarjahDarjahIdRoute
   '/dashboard/ibu-bapa': typeof DashboardIbuBapaRoute
   '/dashboard/progress': typeof DashboardProgressRoute
+  '/pra-kalifah/$bidang': typeof PraKalifahBidangRoute
   '/preview/$darjahId': typeof PreviewDarjahIdRoute
   '/preview/nama': typeof PreviewNamaRoute
   '/darjah/$darjahId/$subjekId': typeof DarjahDarjahIdSubjekIdRoute
@@ -354,6 +361,7 @@ export interface FileRoutesByTo {
   '/darjah/$darjahId': typeof DarjahDarjahIdRoute
   '/dashboard/ibu-bapa': typeof DashboardIbuBapaRoute
   '/dashboard/progress': typeof DashboardProgressRoute
+  '/pra-kalifah/$bidang': typeof PraKalifahBidangRoute
   '/preview/$darjahId': typeof PreviewDarjahIdRoute
   '/preview/nama': typeof PreviewNamaRoute
   '/darjah/$darjahId/$subjekId': typeof DarjahDarjahIdSubjekIdRoute
@@ -400,6 +408,7 @@ export interface FileRoutesById {
   '/darjah/$darjahId': typeof DarjahDarjahIdRoute
   '/dashboard/ibu-bapa': typeof DashboardIbuBapaRoute
   '/dashboard/progress': typeof DashboardProgressRoute
+  '/pra-kalifah_/$bidang': typeof PraKalifahBidangRoute
   '/preview/$darjahId': typeof PreviewDarjahIdRoute
   '/preview/nama': typeof PreviewNamaRoute
   '/darjah/$darjahId_/$subjekId': typeof DarjahDarjahIdSubjekIdRoute
@@ -447,6 +456,7 @@ export interface FileRouteTypes {
     | '/darjah/$darjahId'
     | '/dashboard/ibu-bapa'
     | '/dashboard/progress'
+    | '/pra-kalifah/$bidang'
     | '/preview/$darjahId'
     | '/preview/nama'
     | '/darjah/$darjahId/$subjekId'
@@ -492,6 +502,7 @@ export interface FileRouteTypes {
     | '/darjah/$darjahId'
     | '/dashboard/ibu-bapa'
     | '/dashboard/progress'
+    | '/pra-kalifah/$bidang'
     | '/preview/$darjahId'
     | '/preview/nama'
     | '/darjah/$darjahId/$subjekId'
@@ -537,6 +548,7 @@ export interface FileRouteTypes {
     | '/darjah/$darjahId'
     | '/dashboard/ibu-bapa'
     | '/dashboard/progress'
+    | '/pra-kalifah_/$bidang'
     | '/preview/$darjahId'
     | '/preview/nama'
     | '/darjah/$darjahId_/$subjekId'
@@ -583,6 +595,7 @@ export interface RootRouteChildren {
   DarjahDarjahIdRoute: typeof DarjahDarjahIdRoute
   DashboardIbuBapaRoute: typeof DashboardIbuBapaRoute
   DashboardProgressRoute: typeof DashboardProgressRoute
+  PraKalifahBidangRoute: typeof PraKalifahBidangRoute
   PreviewDarjahIdRoute: typeof PreviewDarjahIdRoute
   PreviewNamaRoute: typeof PreviewNamaRoute
   DarjahDarjahIdSubjekIdRoute: typeof DarjahDarjahIdSubjekIdRoute
@@ -701,6 +714,13 @@ declare module '@tanstack/react-router' {
       path: '/preview/$darjahId'
       fullPath: '/preview/$darjahId'
       preLoaderRoute: typeof PreviewDarjahIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pra-kalifah_/$bidang': {
+      id: '/pra-kalifah_/$bidang'
+      path: '/pra-kalifah/$bidang'
+      fullPath: '/pra-kalifah/$bidang'
+      preLoaderRoute: typeof PraKalifahBidangRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard/progress': {
@@ -935,6 +955,7 @@ const rootRouteChildren: RootRouteChildren = {
   DarjahDarjahIdRoute: DarjahDarjahIdRoute,
   DashboardIbuBapaRoute: DashboardIbuBapaRoute,
   DashboardProgressRoute: DashboardProgressRoute,
+  PraKalifahBidangRoute: PraKalifahBidangRoute,
   PreviewDarjahIdRoute: PreviewDarjahIdRoute,
   PreviewNamaRoute: PreviewNamaRoute,
   DarjahDarjahIdSubjekIdRoute: DarjahDarjahIdSubjekIdRoute,
