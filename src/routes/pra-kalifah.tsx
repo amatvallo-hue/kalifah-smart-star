@@ -5,13 +5,21 @@ import {
   BookOpen,
   Shapes,
   Loader2,
-  Baby,
   Sparkles,
   Lock,
   Rocket,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+
+const IMG_MASCOT =
+  "https://pgpkqbdyxoejwvubluqq.supabase.co/storage/v1/object/public/pra-kalifah-imej/a%20lush%203d%20render%20of%20Adorable%20teal%20green%20baby%20owl%20mascot%20character%2C%20premium%203D%20cartoon%20illustration%2C%20educational%20mascot%20for%20preschool%20learning%20platform.%20Large%20glossy%20expressive%20eyes%2C%20one%20eye%20playfully%20winking%2C%20cheerful%20smile%2C%20waving%20one%20wing.jpg";
+const IMG_TAHAP1_ISTANA =
+  "https://pgpkqbdyxoejwvubluqq.supabase.co/storage/v1/object/public/pra-kalifah-imej/a%20lush%203d%20render%20of%20Cute%20magical%20pink%20fairytale%20castle%20island%2C%20premium%203D%20cartoon%20illustration%2C%20learning%20world%20for%20preschool%20children.%20Beautiful%20pastel%20pink%20castle%20with%20rounded%20towers%2C%20soft%20coral-pink%20roofs%2C%20golden%20flags%2C%20floating%20clouds%2C%20t.jpg";
+const IMG_TAHAP2_RUMAH =
+  "https://pgpkqbdyxoejwvubluqq.supabase.co/storage/v1/object/public/pra-kalifah-imej/a%20lush%203d%20render%20of%20Cute%20cozy%20learning%20village%20island%2C%20premium%203D%20cartoon%20illustration%2C%20preschool%20educational%20world.%20Small%20charming%20yellow-orange%20cottage%20house%20with%20glowing%20windows%2C%20rounded%20roof%2C%20stone%20pathway%2C%20tiny%20trees%2C%20flowers%20and%20frien.jpg";
+const IMG_TAHAP3_ROKET =
+  "https://pgpkqbdyxoejwvubluqq.supabase.co/storage/v1/object/public/pra-kalifah-imej/a%20lush%203d%20render%20of%20Cute%20futuristic%20rocket%20launch%20island%2C%20premium%203D%20cartoon%20illustration%2C%20final%20learning%20world%20before%20entering%20primary%20school.%20Friendly%20green%20and%20white%20rocket%20ship%20with%20rounded%20body%2C%20large%20circular%20window%2C%20soft%20fins%20and%20smi.jpg";
 
 export const Route = createFileRoute("/pra-kalifah")({
   head: () => ({
@@ -176,8 +184,12 @@ function PulauPraKalifahPage() {
         </div>
 
         <div className="flex items-center gap-4 rounded-3xl bg-gradient-to-br from-[#FF7B9C]/30 via-[#FFD166]/30 to-[#5AC8FA]/30 p-5 shadow-card sm:gap-6 sm:p-6">
-          <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-3xl bg-gradient-to-br from-[#FF7B9C] to-[#CBA6F7] text-white shadow-lg ring-[6px] ring-white animate-wiggle-float sm:h-28 sm:w-28">
-            <Baby className="h-12 w-12 sm:h-14 sm:w-14" strokeWidth={2.5} />
+          <div className="flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-3xl bg-gradient-to-br from-[#FF7B9C] to-[#CBA6F7] text-white shadow-lg ring-[6px] ring-white animate-wiggle-float sm:h-28 sm:w-28">
+            <img
+              src={IMG_MASCOT}
+              alt="Mascot"
+              className="h-full w-full rounded-3xl object-cover"
+            />
           </div>
           <div className="flex flex-col gap-1">
             <h1 className="font-display text-2xl font-extrabold text-[#0F172A] sm:text-4xl">
@@ -247,7 +259,8 @@ function PulauPraKalifahPage() {
         ) : (
           <div className="flex flex-col gap-4">
             {TAHAP_LIST.map((t, i) => {
-              const Ikon = t.ikon;
+              const tahapImg =
+                [IMG_TAHAP1_ISTANA, IMG_TAHAP2_RUMAH, IMG_TAHAP3_ROKET][t.nombor - 1];
               const totalBadge =
                 t.nombor === 1 && totalAktiviti > 0 ? `${totalAktiviti} aktiviti` : null;
               const boleh = !t.terkunci;
@@ -265,10 +278,14 @@ function PulauPraKalifahPage() {
                   }}
                 >
                   <div
-                    className="flex h-20 w-20 shrink-0 items-center justify-center rounded-3xl text-white shadow-lg ring-[6px] ring-white sm:h-24 sm:w-24"
+                    className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-3xl text-white shadow-lg ring-[6px] ring-white sm:h-24 sm:w-24"
                     style={{ backgroundColor: t.warna }}
                   >
-                    <Ikon className="h-10 w-10 sm:h-12 sm:w-12" strokeWidth={2.5} />
+                    <img
+                      src={tahapImg}
+                      alt={t.nama}
+                      className="h-full w-full rounded-3xl object-cover"
+                    />
                   </div>
                   <div className="flex flex-1 flex-col gap-1">
                     <div className="flex items-center gap-2">
