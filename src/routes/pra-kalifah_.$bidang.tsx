@@ -41,6 +41,9 @@ import {
   Square,
   Triangle,
   Diamond,
+  PawPrint,
+  Apple,
+  PersonStanding,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -67,7 +70,8 @@ type JenisAktiviti =
   | "lengkap"
   | "nombor"
   | "warna"
-  | "bentuk";
+  | "bentuk"
+  | "kosa-kata";
 
 const WARNA_SWATCH: Record<string, string> = {
   Merah: "bg-red-500",
@@ -184,6 +188,27 @@ const BIDANG_CONFIG: Record<string, AktivitiConfig[]> = {
       mesejSelesai: "Syabas! Kamu dah pandai susun huruf!",
       jenis: "lengkap",
       ikon: PencilRuler,
+    },
+    {
+      namaAktiviti: "Haiwan",
+      tajuk: "Haiwan",
+      mesejSelesai: "Syabas! Kamu kenal haiwan!",
+      jenis: "kosa-kata",
+      ikon: PawPrint,
+    },
+    {
+      namaAktiviti: "Buah-buahan",
+      tajuk: "Buah-buahan",
+      mesejSelesai: "Syabas! Kamu kenal buah-buahan!",
+      jenis: "kosa-kata",
+      ikon: Apple,
+    },
+    {
+      namaAktiviti: "Anggota Badan",
+      tajuk: "Anggota Badan",
+      mesejSelesai: "Syabas! Kamu kenal anggota badan!",
+      jenis: "kosa-kata",
+      ikon: PersonStanding,
     },
   ],
   kognitif: [
@@ -555,7 +580,9 @@ function AktivitiPraKalifahPage() {
                 className={`relative flex aspect-square flex-col items-center justify-center gap-2 overflow-visible rounded-3xl p-3 text-center font-display font-extrabold shadow-card transition ${
                   guna_ikon_besar
                     ? "text-sm sm:text-base"
-                    : "text-6xl sm:text-7xl"
+                    : config.jenis === "kosa-kata"
+                      ? "text-5xl sm:text-6xl"
+                      : "text-6xl sm:text-7xl"
                 } ${
                   isBetul
                     ? "bg-emerald-500 text-white animate-pop"
