@@ -152,11 +152,11 @@ function PulauPraKalifahPage() {
                   key={b.id}
                   to="/pra-kalifah/$bidang"
                   params={{ bidang: slug }}
-                  className="group flex flex-col items-center gap-4 rounded-3xl border border-border/60 bg-card p-6 shadow-card transition animate-idle-pulse hover:-translate-y-1 hover:shadow-soft"
+                  className={`group flex flex-col items-center gap-4 rounded-3xl border-2 ${tema.kadBorder} ${tema.kadBg} p-6 shadow-card transition animate-idle-pulse hover:-translate-y-1 hover:shadow-soft`}
                   style={{ animationDelay: `${i * 300}ms` }}
                 >
                   <div
-                    className={`flex h-24 w-24 items-center justify-center rounded-3xl bg-gradient-to-br ${tema.grad} ${tema.text} shadow-soft transition group-hover:scale-110`}
+                    className={`flex h-24 w-24 items-center justify-center rounded-3xl bg-gradient-to-br ${tema.grad} ${tema.text} shadow-soft ring-8 ring-white/60 transition group-hover:scale-110`}
                   >
                     <Ikon className="h-12 w-12" strokeWidth={2.5} />
                   </div>
