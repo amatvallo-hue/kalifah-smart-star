@@ -241,8 +241,8 @@ function AktivitiPraKalifahPage() {
       <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background p-4">
         <BlobsLatar />
         <ConfettiPenuhSkrin />
-        <div className="relative z-10 w-full max-w-md rounded-3xl border border-border/60 bg-card p-8 text-center shadow-card">
-          <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-3xl bg-gradient-to-br from-rose-400 to-rose-300 text-rose-900 shadow-soft animate-wiggle-float">
+        <div className={`relative z-10 w-full max-w-md rounded-3xl border-2 ${tema.kadBorder} ${tema.kadBg} p-8 text-center shadow-card`}>
+          <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-3xl bg-gradient-to-br from-rose-400 to-rose-300 text-rose-900 shadow-soft ring-8 ring-rose-200/70 animate-wiggle-float">
             <Baby className="h-12 w-12" strokeWidth={2.5} />
           </div>
           <h1 className="mt-6 font-display text-3xl font-extrabold text-foreground animate-pop">
