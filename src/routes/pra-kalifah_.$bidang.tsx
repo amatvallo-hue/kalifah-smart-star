@@ -59,7 +59,38 @@ export const Route = createFileRoute("/pra-kalifah_/$bidang")({
   component: AktivitiPraKalifahPage,
 });
 
-type JenisAktiviti = "huruf" | "kira" | "adab" | "huruf-gambar" | "lengkap";
+type JenisAktiviti =
+  | "huruf"
+  | "kira"
+  | "adab"
+  | "huruf-gambar"
+  | "lengkap"
+  | "nombor"
+  | "warna"
+  | "bentuk";
+
+const WARNA_SWATCH: Record<string, string> = {
+  Merah: "bg-red-500",
+  Biru: "bg-blue-500",
+  Hijau: "bg-green-500",
+  Kuning: "bg-yellow-400",
+  Oren: "bg-orange-500",
+  Ungu: "bg-purple-500",
+  Hitam: "bg-gray-900",
+  Coklat: "bg-amber-800",
+  Putih: "bg-white",
+  "Merah Jambu": "bg-pink-400",
+  Kelabu: "bg-gray-400",
+};
+
+const IKON_BENTUK: Record<string, LucideIcon> = {
+  Bulatan: Circle,
+  "Segi Empat": Square,
+  "Segi Tiga": Triangle,
+  Bintang: Star,
+  Hati: Heart,
+  Delima: Diamond,
+};
 
 interface DataAktiviti {
   bilangan?: number;
