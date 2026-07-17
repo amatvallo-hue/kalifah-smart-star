@@ -1,16 +1,25 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { ArrowLeft, BookOpen, Shapes, Loader2, Baby, Sparkles } from "lucide-react";
+import {
+  ArrowLeft,
+  BookOpen,
+  Shapes,
+  Loader2,
+  Baby,
+  Sparkles,
+  Lock,
+  Rocket,
+} from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/pra-kalifah")({
   head: () => ({
     meta: [
-      { title: "Pulau Pra Kalifah — Pilih Bidang" },
+      { title: "Pulau Pra Kalifah — Pilih Tahap" },
       {
         name: "description",
-        content: "Pilih bidang pembelajaran untuk kanak-kanak pra sekolah di Kalifah.my.",
+        content: "Pilih tahap pembelajaran untuk kanak-kanak pra sekolah di Kalifah.my.",
       },
     ],
   }),
@@ -32,7 +41,6 @@ const IKON_MAP: Record<string, LucideIcon> = {
   "moon-star": Sparkles,
 };
 
-// map bidang → slug rute + tema warna kad
 function bidangSlug(ikon: string | null, nama: string): string {
   if (ikon === "abc") return "bahasa";
   if (ikon === "shapes") return "kognitif";
@@ -62,7 +70,6 @@ function bidangTema(warna: string | null): {
       kadBorder: "border-emerald-300",
     };
   }
-  // accent (default)
   return {
     grad: "from-sky-400 to-cyan-300",
     text: "text-sky-900",
@@ -71,7 +78,6 @@ function bidangTema(warna: string | null): {
   };
 }
 
-// Tema mengikut slug bidang — untuk skrin aktiviti
 export function temaBidangDariSlug(slug: string) {
   if (slug === "kognitif") return bidangTema("pro");
   if (slug === "kerohanian") return bidangTema("success");
@@ -80,15 +86,32 @@ export function temaBidangDariSlug(slug: string) {
 
 const TAGLINE_MAP: Record<string, string> = {
   "Bahasa dan Literasi": "Kenal huruf & perkataan",
-  "Kognitif": "Kira, warna & bentuk",
+  Kognitif: "Kira, warna & bentuk",
   "Kerohanian Nilai dan Kewarganegaraan": "Doa & adab harian",
 };
+
+interface TahapInfo {
+  nombor: number;
+  nama: string;
+  umur: string;
+  ikon: LucideIcon;
+  warna: string; // hex
+  terkunci: boolean;
+}
+
+const TAHAP_LIST: TahapInfo[] = [
+  { nombor: 1, nama: "Pengenalan", umur: "4 tahun", ikon: BookOpen, warna: "#FF7B9C", terkunci: false },
+  { nombor: 2, nama: "Asas", umur: "5 tahun", ikon: Shapes, warna: "#FFD166", terkunci: true },
+  { nombor: 3, nama: "Persediaan Darjah 1", umur: "6 tahun", ikon: Rocket, warna: "#16A34A", terkunci: true },
+];
 
 function PulauPraKalifahPage() {
   const [bidang, setBidang] = useState<Bidang[]>([]);
   const [kiraan, setKiraan] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState<string | null>(null);
+  const [tahapDipilih, setTahapDipilih] = useState<number | null>(null);
+  const [toast, setToast] = useState<string | null>(null);
 
   useEffect(() => {
     let mounted = true;
@@ -123,117 +146,223 @@ function PulauPraKalifahPage() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!toast) return;
+    const t = setTimeout(() => setToast(null), 2200);
+    return () => clearTimeout(t);
+  }, [toast]);
+
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <div className="flex min-h-screen items-center justify-center bg-[#FFFDF8]">
+        <Loader2 className="h-8 w-8 animate-spin text-[#FF7B9C]" />
       </div>
     );
   }
 
+  const totalAktiviti = Object.values(kiraan).reduce((a, b) => a + b, 0);
+
   return (
-    <div className="relative min-h-screen overflow-hidden bg-background p-4">
+    <div className="relative min-h-screen overflow-hidden bg-[#FFFDF8] p-4 text-[#0F172A]">
       <BlobsLatar />
       <div className="relative z-10 mx-auto flex w-full max-w-3xl flex-col gap-6 pt-4">
         <div className="flex items-center justify-between">
           <Link
             to="/pilih-darjah"
-            className="inline-flex items-center gap-2 rounded-full bg-card px-4 py-2 font-display text-xs font-extrabold text-foreground shadow-card transition hover:bg-secondary"
+            className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 font-display text-xs font-extrabold text-[#0F172A] shadow-card transition hover:bg-white/80"
           >
             <ArrowLeft className="h-4 w-4" /> Kembali
           </Link>
         </div>
 
-        <div className="flex items-center gap-4 rounded-3xl bg-gradient-to-br from-rose-200 via-orange-200 to-amber-200 p-5 shadow-card sm:gap-6 sm:p-6">
-          <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-3xl bg-gradient-to-br from-rose-400 to-rose-300 text-rose-900 shadow-lg ring-[6px] ring-white animate-wiggle-float sm:h-28 sm:w-28">
+        <div className="flex items-center gap-4 rounded-3xl bg-gradient-to-br from-[#FF7B9C]/30 via-[#FFD166]/30 to-[#5AC8FA]/30 p-5 shadow-card sm:gap-6 sm:p-6">
+          <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-3xl bg-gradient-to-br from-[#FF7B9C] to-[#CBA6F7] text-white shadow-lg ring-[6px] ring-white animate-wiggle-float sm:h-28 sm:w-28">
             <Baby className="h-12 w-12 sm:h-14 sm:w-14" strokeWidth={2.5} />
           </div>
           <div className="flex flex-col gap-1">
-            <h1 className="font-display text-2xl font-extrabold text-rose-950 sm:text-4xl">
-              Pulau Pra Kalifah
+            <h1 className="font-display text-2xl font-extrabold text-[#0F172A] sm:text-4xl">
+              Pulau Pra Kalifah 🌈
             </h1>
-            <p className="text-sm font-semibold text-rose-900/80 sm:text-base">
-              Pilih bidang yang kamu nak belajar hari ini!
+            <p className="text-sm font-semibold text-[#0F172A]/70 sm:text-base">
+              {tahapDipilih === 1
+                ? "Pilih bidang yang kamu nak belajar hari ini!"
+                : "Pilih tahap yang sesuai untuk anak kamu!"}
             </p>
           </div>
         </div>
 
         {err ? (
-          <div className="rounded-3xl border border-border/60 bg-card p-6 text-center text-sm text-muted-foreground shadow-card">
+          <div className="rounded-3xl border border-border/60 bg-white p-6 text-center text-sm text-muted-foreground shadow-card">
             {err}
           </div>
+        ) : tahapDipilih === 1 ? (
+          <>
+            <button
+              type="button"
+              onClick={() => setTahapDipilih(null)}
+              className="inline-flex w-fit items-center gap-2 rounded-full bg-white px-4 py-2 font-display text-xs font-extrabold text-[#0F172A] shadow-card transition hover:bg-white/80"
+            >
+              <ArrowLeft className="h-4 w-4" /> Kembali ke Tahap
+            </button>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              {bidang.map((b, i) => {
+                const Ikon = IKON_MAP[b.ikon_nama ?? ""] ?? BookOpen;
+                const tema = bidangTema(b.warna_kod);
+                const slug = bidangSlug(b.ikon_nama, b.nama);
+                const tagline = TAGLINE_MAP[b.nama] ?? "";
+                const count = kiraan[b.id] ?? 0;
+                return (
+                  <Link
+                    key={b.id}
+                    to="/pra-kalifah/$bidang"
+                    params={{ bidang: slug }}
+                    className={`group flex flex-col items-center gap-4 rounded-3xl border-2 ${tema.kadBorder} ${tema.kadBg} p-6 shadow-card transition animate-idle-pulse hover:-translate-y-1 hover:shadow-soft`}
+                    style={{ animationDelay: `${i * 300}ms` }}
+                  >
+                    <div
+                      className={`flex h-24 w-24 items-center justify-center rounded-3xl bg-gradient-to-br ${tema.grad} ${tema.text} shadow-lg ring-[6px] ring-white transition group-hover:scale-110`}
+                    >
+                      <Ikon className="h-12 w-12" strokeWidth={2.5} />
+                    </div>
+                    <div className="flex flex-col items-center gap-2 text-center">
+                      <h2 className="font-display text-xl font-extrabold text-foreground sm:text-2xl">
+                        {b.nama}
+                      </h2>
+                      {tagline && (
+                        <p className="text-xs font-semibold text-muted-foreground sm:text-sm">
+                          {tagline}
+                        </p>
+                      )}
+                      {count > 0 && (
+                        <span className="inline-flex items-center rounded-full bg-white/80 px-3 py-1 font-display text-xs font-extrabold text-foreground shadow-sm">
+                          {count} aktiviti
+                        </span>
+                      )}
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+          </>
         ) : (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            {bidang.map((b, i) => {
-              const Ikon = IKON_MAP[b.ikon_nama ?? ""] ?? BookOpen;
-              const tema = bidangTema(b.warna_kod);
-              const slug = bidangSlug(b.ikon_nama, b.nama);
-              const tagline = TAGLINE_MAP[b.nama] ?? "";
-              const count = kiraan[b.id] ?? 0;
-              return (
-                <Link
-                  key={b.id}
-                  to="/pra-kalifah/$bidang"
-                  params={{ bidang: slug }}
-                  className={`group flex flex-col items-center gap-4 rounded-3xl border-2 ${tema.kadBorder} ${tema.kadBg} p-6 shadow-card transition animate-idle-pulse hover:-translate-y-1 hover:shadow-soft`}
-                  style={{ animationDelay: `${i * 300}ms` }}
+          <div className="flex flex-col gap-4">
+            {TAHAP_LIST.map((t, i) => {
+              const Ikon = t.ikon;
+              const totalBadge =
+                t.nombor === 1 && totalAktiviti > 0 ? `${totalAktiviti} aktiviti` : null;
+              const boleh = !t.terkunci;
+              const content = (
+                <div
+                  className={`relative flex items-center gap-5 rounded-3xl border-2 p-5 shadow-card transition sm:p-6 ${
+                    boleh
+                      ? "animate-idle-pulse hover:-translate-y-1 hover:shadow-soft"
+                      : "opacity-60 grayscale-[30%]"
+                  }`}
+                  style={{
+                    backgroundColor: `${t.warna}1A`,
+                    borderColor: t.warna,
+                    animationDelay: `${i * 300}ms`,
+                  }}
                 >
                   <div
-                    className={`flex h-24 w-24 items-center justify-center rounded-3xl bg-gradient-to-br ${tema.grad} ${tema.text} shadow-lg ring-[6px] ring-white transition group-hover:scale-110`}
+                    className="flex h-20 w-20 shrink-0 items-center justify-center rounded-3xl text-white shadow-lg ring-[6px] ring-white sm:h-24 sm:w-24"
+                    style={{ backgroundColor: t.warna }}
                   >
-                    <Ikon className="h-12 w-12" strokeWidth={2.5} />
+                    <Ikon className="h-10 w-10 sm:h-12 sm:w-12" strokeWidth={2.5} />
                   </div>
-                  <div className="flex flex-col items-center gap-2 text-center">
-                    <h2 className="font-display text-xl font-extrabold text-foreground sm:text-2xl">
-                      {b.nama}
+                  <div className="flex flex-1 flex-col gap-1">
+                    <div className="flex items-center gap-2">
+                      <span
+                        className="rounded-full px-2.5 py-0.5 font-display text-[10px] font-extrabold text-white sm:text-xs"
+                        style={{ backgroundColor: t.warna }}
+                      >
+                        Tahap {t.nombor}
+                      </span>
+                      {t.terkunci && (
+                        <span className="inline-flex items-center gap-1 rounded-full bg-[#0F172A]/10 px-2.5 py-0.5 font-display text-[10px] font-extrabold text-[#0F172A] sm:text-xs">
+                          <Lock className="h-3 w-3" /> Akan Datang
+                        </span>
+                      )}
+                    </div>
+                    <h2 className="font-display text-xl font-extrabold text-[#0F172A] sm:text-2xl">
+                      {t.nama}
                     </h2>
-                    {tagline && (
-                      <p className="text-xs font-semibold text-muted-foreground sm:text-sm">
-                        {tagline}
-                      </p>
-                    )}
-                    {count > 0 && (
-                      <span className="inline-flex items-center rounded-full bg-white/80 px-3 py-1 font-display text-xs font-extrabold text-foreground shadow-sm">
-                        {count} aktiviti
+                    <p className="text-xs font-semibold text-[#0F172A]/70 sm:text-sm">
+                      {t.umur}
+                    </p>
+                    {totalBadge && (
+                      <span className="mt-1 inline-flex w-fit items-center rounded-full bg-white/90 px-3 py-1 font-display text-xs font-extrabold text-[#0F172A] shadow-sm">
+                        {totalBadge}
                       </span>
                     )}
                   </div>
-                </Link>
+                  {boleh && (
+                    <span
+                      className="hidden shrink-0 rounded-full px-4 py-2 font-display text-sm font-extrabold text-white shadow-md sm:inline-flex"
+                      style={{ backgroundColor: t.warna }}
+                    >
+                      Mula →
+                    </span>
+                  )}
+                </div>
+              );
+              if (boleh) {
+                return (
+                  <button
+                    key={t.nombor}
+                    type="button"
+                    onClick={() => setTahapDipilih(t.nombor)}
+                    className="text-left"
+                  >
+                    {content}
+                  </button>
+                );
+              }
+              return (
+                <button
+                  key={t.nombor}
+                  type="button"
+                  onClick={() => setToast("Tahap ni akan datang tak lama lagi!")}
+                  className="cursor-not-allowed text-left"
+                  aria-disabled
+                >
+                  {content}
+                </button>
               );
             })}
           </div>
         )}
       </div>
+
+      {toast && (
+        <div className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2 rounded-full bg-[#0F172A] px-5 py-3 font-display text-sm font-extrabold text-white shadow-lg">
+          {toast}
+        </div>
+      )}
     </div>
   );
 }
-
 
 export function BlobsLatar() {
   return (
     <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
-      <div className="absolute -left-28 -top-28 h-96 w-96 rounded-full bg-rose-300 opacity-60 blur-3xl animate-blob-drift" />
+      <div className="absolute -left-28 -top-28 h-96 w-96 rounded-full bg-[#FF7B9C] opacity-40 blur-3xl animate-blob-drift" />
       <div
-        className="absolute -right-24 top-24 h-80 w-80 rounded-full bg-sky-300 opacity-60 blur-3xl animate-blob-drift"
+        className="absolute -right-24 top-24 h-80 w-80 rounded-full bg-[#5AC8FA] opacity-40 blur-3xl animate-blob-drift"
         style={{ animationDelay: "2s" }}
       />
       <div
-        className="absolute left-1/4 -bottom-28 h-[26rem] w-[26rem] rounded-full bg-amber-200 opacity-65 blur-3xl animate-blob-drift"
+        className="absolute left-1/4 -bottom-28 h-[26rem] w-[26rem] rounded-full bg-[#FFD166] opacity-45 blur-3xl animate-blob-drift"
         style={{ animationDelay: "4s" }}
       />
       <div
-        className="absolute -right-20 -bottom-24 h-96 w-96 rounded-full bg-violet-300 opacity-55 blur-3xl animate-blob-drift"
+        className="absolute -right-20 -bottom-24 h-96 w-96 rounded-full bg-[#CBA6F7] opacity-40 blur-3xl animate-blob-drift"
         style={{ animationDelay: "6s" }}
       />
       <div
-        className="absolute left-1/2 top-1/3 h-72 w-72 -translate-x-1/2 rounded-full bg-emerald-200 opacity-50 blur-3xl animate-blob-drift"
+        className="absolute left-1/2 top-1/3 h-72 w-72 -translate-x-1/2 rounded-full bg-[#16A34A] opacity-25 blur-3xl animate-blob-drift"
         style={{ animationDelay: "3s" }}
-      />
-      <div
-        className="absolute right-1/4 top-4 h-64 w-64 rounded-full bg-fuchsia-200 opacity-55 blur-3xl animate-blob-drift"
-        style={{ animationDelay: "5s" }}
       />
     </div>
   );
 }
-
