@@ -318,15 +318,16 @@ function AktivitiPraKalifahPage() {
             const isSalah = salah === p.key;
             const disabled = betul !== null;
             const baseColor = BUTANG_WARNA[i];
+            const IkonAdab = config.jenis === "adab" ? (IKON_ADAB[p.nilai] ?? HelpCircle) : null;
             return (
               <button
                 key={p.key}
                 type="button"
                 disabled={disabled}
                 onClick={() => pilih(p.key, p.nilai)}
-                className={`flex aspect-square items-center justify-center rounded-3xl p-3 text-center font-display font-extrabold shadow-card transition ${
+                className={`flex aspect-square flex-col items-center justify-center gap-2 rounded-3xl p-3 text-center font-display font-extrabold shadow-card transition ${
                   config.jenis === "adab"
-                    ? "text-base leading-snug sm:text-lg"
+                    ? "text-sm sm:text-base"
                     : "text-6xl sm:text-7xl"
                 } ${
                   isBetul
@@ -336,7 +337,14 @@ function AktivitiPraKalifahPage() {
                       : `${baseColor} hover:-translate-y-1 hover:shadow-soft`
                 } ${disabled && !isBetul ? "opacity-70" : ""}`}
               >
-                {p.nilai}
+                {IkonAdab ? (
+                  <>
+                    <IkonAdab className="h-10 w-10 sm:h-12 sm:w-12" strokeWidth={2.5} />
+                    <span className="leading-tight">{p.nilai}</span>
+                  </>
+                ) : (
+                  p.nilai
+                )}
               </button>
             );
           })}
