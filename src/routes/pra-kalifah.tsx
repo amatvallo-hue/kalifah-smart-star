@@ -40,24 +40,42 @@ function bidangSlug(ikon: string | null, nama: string): string {
   return nama.toLowerCase().replace(/\s+/g, "-");
 }
 
-function bidangTema(warna: string | null): { grad: string; text: string } {
+function bidangTema(warna: string | null): {
+  grad: string;
+  text: string;
+  kadBg: string;
+  kadBorder: string;
+} {
   if (warna === "pro") {
     return {
       grad: "from-violet-400 to-fuchsia-300",
       text: "text-violet-900",
+      kadBg: "bg-violet-50",
+      kadBorder: "border-violet-300",
     };
   }
   if (warna === "success") {
     return {
       grad: "from-emerald-400 to-teal-300",
       text: "text-emerald-900",
+      kadBg: "bg-emerald-50",
+      kadBorder: "border-emerald-300",
     };
   }
   // accent (default)
   return {
     grad: "from-sky-400 to-cyan-300",
     text: "text-sky-900",
+    kadBg: "bg-sky-50",
+    kadBorder: "border-sky-300",
   };
+}
+
+// Tema mengikut slug bidang — untuk skrin aktiviti
+export function temaBidangDariSlug(slug: string) {
+  if (slug === "kognitif") return bidangTema("pro");
+  if (slug === "kerohanian") return bidangTema("success");
+  return bidangTema("accent");
 }
 
 function PulauPraKalifahPage() {
@@ -108,8 +126,8 @@ function PulauPraKalifahPage() {
         </div>
 
         <div className="flex flex-col items-center gap-3 text-center">
-          <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-rose-400 to-rose-300 text-rose-900 shadow-soft animate-wiggle-float">
-            <Baby className="h-10 w-10" strokeWidth={2.5} />
+          <div className="flex h-24 w-24 items-center justify-center rounded-3xl bg-gradient-to-br from-rose-400 to-rose-300 text-rose-900 shadow-soft ring-8 ring-rose-200/70 animate-wiggle-float">
+            <Baby className="h-12 w-12" strokeWidth={2.5} />
           </div>
           <h1 className="font-display text-3xl font-extrabold text-foreground sm:text-4xl">
             Pulau Pra Kalifah
@@ -134,11 +152,11 @@ function PulauPraKalifahPage() {
                   key={b.id}
                   to="/pra-kalifah/$bidang"
                   params={{ bidang: slug }}
-                  className="group flex flex-col items-center gap-4 rounded-3xl border border-border/60 bg-card p-6 shadow-card transition animate-idle-pulse hover:-translate-y-1 hover:shadow-soft"
+                  className={`group flex flex-col items-center gap-4 rounded-3xl border-2 ${tema.kadBorder} ${tema.kadBg} p-6 shadow-card transition animate-idle-pulse hover:-translate-y-1 hover:shadow-soft`}
                   style={{ animationDelay: `${i * 300}ms` }}
                 >
                   <div
-                    className={`flex h-24 w-24 items-center justify-center rounded-3xl bg-gradient-to-br ${tema.grad} ${tema.text} shadow-soft transition group-hover:scale-110`}
+                    className={`flex h-24 w-24 items-center justify-center rounded-3xl bg-gradient-to-br ${tema.grad} ${tema.text} shadow-soft ring-8 ring-white/60 transition group-hover:scale-110`}
                   >
                     <Ikon className="h-12 w-12" strokeWidth={2.5} />
                   </div>
@@ -160,18 +178,26 @@ function PulauPraKalifahPage() {
 export function BlobsLatar() {
   return (
     <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
-      <div className="absolute -left-24 -top-24 h-72 w-72 rounded-full bg-rose-300 opacity-30 blur-3xl animate-blob-drift" />
+      <div className="absolute -left-28 -top-28 h-96 w-96 rounded-full bg-rose-300 opacity-60 blur-3xl animate-blob-drift" />
       <div
-        className="absolute -right-20 top-32 h-64 w-64 rounded-full bg-sky-300 opacity-30 blur-3xl animate-blob-drift"
+        className="absolute -right-24 top-24 h-80 w-80 rounded-full bg-sky-300 opacity-60 blur-3xl animate-blob-drift"
         style={{ animationDelay: "2s" }}
       />
       <div
-        className="absolute left-1/3 -bottom-24 h-80 w-80 rounded-full bg-amber-200 opacity-40 blur-3xl animate-blob-drift"
+        className="absolute left-1/4 -bottom-28 h-[26rem] w-[26rem] rounded-full bg-amber-200 opacity-65 blur-3xl animate-blob-drift"
         style={{ animationDelay: "4s" }}
       />
       <div
-        className="absolute -right-16 -bottom-20 h-72 w-72 rounded-full bg-violet-300 opacity-25 blur-3xl animate-blob-drift"
+        className="absolute -right-20 -bottom-24 h-96 w-96 rounded-full bg-violet-300 opacity-55 blur-3xl animate-blob-drift"
         style={{ animationDelay: "6s" }}
+      />
+      <div
+        className="absolute left-1/2 top-1/3 h-72 w-72 -translate-x-1/2 rounded-full bg-emerald-200 opacity-50 blur-3xl animate-blob-drift"
+        style={{ animationDelay: "3s" }}
+      />
+      <div
+        className="absolute right-1/4 top-4 h-64 w-64 rounded-full bg-fuchsia-200 opacity-55 blur-3xl animate-blob-drift"
+        style={{ animationDelay: "5s" }}
       />
     </div>
   );

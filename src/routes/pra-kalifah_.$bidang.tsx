@@ -36,7 +36,7 @@ import {
 import type { LucideIcon } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { StarReward } from "@/components/StarReward";
-import { BlobsLatar } from "./pra-kalifah";
+import { BlobsLatar, temaBidangDariSlug } from "./pra-kalifah";
 
 
 export const Route = createFileRoute("/pra-kalifah_/$bidang")({
@@ -174,6 +174,7 @@ function AktivitiPraKalifahPage() {
   }, [config]);
 
   const current = soalan[idx];
+  const tema = temaBidangDariSlug(bidang);
 
   function pilih(key: "a" | "b" | "c" | "d", nilai: string) {
     if (!current || betul) return;
@@ -240,8 +241,8 @@ function AktivitiPraKalifahPage() {
       <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background p-4">
         <BlobsLatar />
         <ConfettiPenuhSkrin />
-        <div className="relative z-10 w-full max-w-md rounded-3xl border border-border/60 bg-card p-8 text-center shadow-card">
-          <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-3xl bg-gradient-to-br from-rose-400 to-rose-300 text-rose-900 shadow-soft animate-wiggle-float">
+        <div className={`relative z-10 w-full max-w-md rounded-3xl border-2 ${tema.kadBorder} ${tema.kadBg} p-8 text-center shadow-card`}>
+          <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-3xl bg-gradient-to-br from-rose-400 to-rose-300 text-rose-900 shadow-soft ring-8 ring-rose-200/70 animate-wiggle-float">
             <Baby className="h-12 w-12" strokeWidth={2.5} />
           </div>
           <h1 className="mt-6 font-display text-3xl font-extrabold text-foreground animate-pop">
@@ -311,12 +312,12 @@ function AktivitiPraKalifahPage() {
         </div>
 
         {/* Mascot + arahan */}
-        <div className="flex items-center gap-4 rounded-3xl border border-border/60 bg-card p-5 shadow-card">
-          <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-3xl bg-gradient-to-br from-rose-400 to-rose-300 text-rose-900 shadow-soft animate-wiggle-float">
+        <div className={`flex items-center gap-4 rounded-3xl border-2 ${tema.kadBorder} ${tema.kadBg} p-5 shadow-card`}>
+          <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-3xl bg-gradient-to-br from-rose-400 to-rose-300 text-rose-900 shadow-soft ring-4 ring-rose-200/80 animate-wiggle-float">
             <Baby className="h-10 w-10" strokeWidth={2.5} />
           </div>
-          <div className="relative flex-1 rounded-2xl bg-secondary p-4">
-            <div className="absolute -left-2 top-6 h-4 w-4 rotate-45 bg-secondary" />
+          <div className="relative flex-1 rounded-2xl bg-white/70 p-4">
+            <div className="absolute -left-2 top-6 h-4 w-4 rotate-45 bg-white/70" />
             <p className="font-display text-xl font-extrabold text-foreground sm:text-2xl">{arahan}</p>
           </div>
         </div>
