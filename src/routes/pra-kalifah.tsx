@@ -40,24 +40,42 @@ function bidangSlug(ikon: string | null, nama: string): string {
   return nama.toLowerCase().replace(/\s+/g, "-");
 }
 
-function bidangTema(warna: string | null): { grad: string; text: string } {
+function bidangTema(warna: string | null): {
+  grad: string;
+  text: string;
+  kadBg: string;
+  kadBorder: string;
+} {
   if (warna === "pro") {
     return {
       grad: "from-violet-400 to-fuchsia-300",
       text: "text-violet-900",
+      kadBg: "bg-violet-50",
+      kadBorder: "border-violet-300",
     };
   }
   if (warna === "success") {
     return {
       grad: "from-emerald-400 to-teal-300",
       text: "text-emerald-900",
+      kadBg: "bg-emerald-50",
+      kadBorder: "border-emerald-300",
     };
   }
   // accent (default)
   return {
     grad: "from-sky-400 to-cyan-300",
     text: "text-sky-900",
+    kadBg: "bg-sky-50",
+    kadBorder: "border-sky-300",
   };
+}
+
+// Tema mengikut slug bidang — untuk skrin aktiviti
+export function temaBidangDariSlug(slug: string) {
+  if (slug === "kognitif") return bidangTema("pro");
+  if (slug === "kerohanian") return bidangTema("success");
+  return bidangTema("accent");
 }
 
 function PulauPraKalifahPage() {
