@@ -15,11 +15,11 @@ import { supabase } from "@/integrations/supabase/client";
 const IMG_MASCOT =
   "https://pgpkqbdyxoejwvubluqq.supabase.co/storage/v1/object/public/pra-kalifah-imej/owl-mascot-nobg.png";
 const IMG_TAHAP1_ISTANA =
-  "https://pgpkqbdyxoejwvubluqq.supabase.co/storage/v1/object/public/pra-kalifah-imej/a%20lush%203d%20render%20of%20Cute%20magical%20pink%20fairytale%20castle%20island%2C%20premium%203D%20cartoon%20illustration%2C%20learning%20world%20for%20preschool%20children.%20Beautiful%20pastel%20pink%20castle%20with%20rounded%20towers%2C%20soft%20coral-pink%20roofs%2C%20golden%20flags%2C%20floating%20clouds%2C%20t.jpg";
+  "https://pgpkqbdyxoejwvubluqq.supabase.co/storage/v1/object/public/pra-kalifah-imej/tahap1-istana-nobg.png";
 const IMG_TAHAP2_RUMAH =
-  "https://pgpkqbdyxoejwvubluqq.supabase.co/storage/v1/object/public/pra-kalifah-imej/a%20lush%203d%20render%20of%20Cute%20cozy%20learning%20village%20island%2C%20premium%203D%20cartoon%20illustration%2C%20preschool%20educational%20world.%20Small%20charming%20yellow-orange%20cottage%20house%20with%20glowing%20windows%2C%20rounded%20roof%2C%20stone%20pathway%2C%20tiny%20trees%2C%20flowers%20and%20frien.jpg";
+  "https://pgpkqbdyxoejwvubluqq.supabase.co/storage/v1/object/public/pra-kalifah-imej/tahap2-rumah-nobg.png";
 const IMG_TAHAP3_ROKET =
-  "https://pgpkqbdyxoejwvubluqq.supabase.co/storage/v1/object/public/pra-kalifah-imej/a%20lush%203d%20render%20of%20Cute%20futuristic%20rocket%20launch%20island%2C%20premium%203D%20cartoon%20illustration%2C%20final%20learning%20world%20before%20entering%20primary%20school.%20Friendly%20green%20and%20white%20rocket%20ship%20with%20rounded%20body%2C%20large%20circular%20window%2C%20soft%20fins%20and%20smi.jpg";
+  "https://pgpkqbdyxoejwvubluqq.supabase.co/storage/v1/object/public/pra-kalifah-imej/tahap3-roket-nobg.png";
 
 export const Route = createFileRoute("/pra-kalifah")({
   head: () => ({
