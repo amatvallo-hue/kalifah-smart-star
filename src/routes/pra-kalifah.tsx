@@ -113,6 +113,12 @@ const TAHAP_LIST: TahapInfo[] = [
   { nombor: 3, nama: "Persediaan Darjah 1", umur: "6 tahun", ikon: Rocket, warna: "#16A34A", terkunci: true },
 ];
 
+const TAHAP_DESC: Record<number, string> = {
+  1: "Belajar asas dengan cara yang menyeronokkan!",
+  2: "Bina kemahiran asas untuk langkah seterusnya!",
+  3: "Bersedia dengan yakin untuk Darjah 1!",
+};
+
 function PulauPraKalifahPage() {
   const [bidang, setBidang] = useState<Bidang[]>([]);
   const [kiraan, setKiraan] = useState<Record<string, number>>({});
@@ -183,15 +189,13 @@ function PulauPraKalifahPage() {
           </Link>
         </div>
 
-        <div className="flex items-center gap-4 rounded-3xl bg-gradient-to-br from-[#FF7B9C]/30 via-[#FFD166]/30 to-[#5AC8FA]/30 p-5 shadow-card sm:gap-6 sm:p-6">
-          <div className="flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-3xl bg-gradient-to-br from-[#FF7B9C] to-[#CBA6F7] text-white shadow-lg ring-[6px] ring-white animate-wiggle-float sm:h-28 sm:w-28">
-            <img
-              src={IMG_MASCOT}
-              alt="Mascot"
-              className="h-full w-full rounded-3xl object-cover"
-            />
-          </div>
-          <div className="flex flex-col gap-1">
+        <div className="flex items-end gap-4 rounded-3xl bg-gradient-to-br from-[#FF7B9C]/30 via-[#FFD166]/30 to-[#5AC8FA]/30 p-5 shadow-card sm:gap-6 sm:p-6">
+          <img
+            src={IMG_MASCOT}
+            alt="Mascot"
+            className="h-28 shrink-0 self-end object-contain sm:h-36"
+          />
+          <div className="flex flex-col gap-1 pb-1">
             <h1 className="font-display text-2xl font-extrabold text-[#0F172A] sm:text-4xl">
               Pulau Pra Kalifah 🌈
             </h1>
@@ -257,16 +261,17 @@ function PulauPraKalifahPage() {
             </div>
           </>
         ) : (
-          <div className="flex flex-col gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             {TAHAP_LIST.map((t, i) => {
               const tahapImg =
                 [IMG_TAHAP1_ISTANA, IMG_TAHAP2_RUMAH, IMG_TAHAP3_ROKET][t.nombor - 1];
               const totalBadge =
                 t.nombor === 1 && totalAktiviti > 0 ? `${totalAktiviti} aktiviti` : null;
               const boleh = !t.terkunci;
+              const Ikon = t.ikon;
               const content = (
                 <div
-                  className={`relative flex items-center gap-5 rounded-3xl border-2 p-5 shadow-card transition sm:p-6 ${
+                  className={`relative flex flex-col rounded-3xl border-2 p-5 shadow-card transition sm:p-6 ${
                     boleh
                       ? "animate-idle-pulse hover:-translate-y-1 hover:shadow-soft"
                       : "opacity-60 grayscale-[30%]"
@@ -277,50 +282,54 @@ function PulauPraKalifahPage() {
                     animationDelay: `${i * 300}ms`,
                   }}
                 >
-                  <div
-                    className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-3xl text-white shadow-lg ring-[6px] ring-white sm:h-24 sm:w-24"
-                    style={{ backgroundColor: t.warna }}
-                  >
-                    <img
-                      src={tahapImg}
-                      alt={t.nama}
-                      className="h-full w-full rounded-3xl object-cover"
-                    />
-                  </div>
-                  <div className="flex flex-1 flex-col gap-1">
-                    <div className="flex items-center gap-2">
-                      <span
-                        className="rounded-full px-2.5 py-0.5 font-display text-[10px] font-extrabold text-white sm:text-xs"
-                        style={{ backgroundColor: t.warna }}
-                      >
-                        Tahap {t.nombor}
-                      </span>
-                      {t.terkunci && (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-[#0F172A]/10 px-2.5 py-0.5 font-display text-[10px] font-extrabold text-[#0F172A] sm:text-xs">
-                          <Lock className="h-3 w-3" /> Akan Datang
-                        </span>
-                      )}
+                  <div className="flex items-start justify-between">
+                    <div
+                      className="flex h-10 w-10 items-center justify-center rounded-2xl text-white shadow-md"
+                      style={{ backgroundColor: t.warna }}
+                    >
+                      <Ikon className="h-5 w-5" strokeWidth={2.5} />
                     </div>
-                    <h2 className="font-display text-xl font-extrabold text-[#0F172A] sm:text-2xl">
-                      {t.nama}
-                    </h2>
-                    <p className="text-xs font-semibold text-[#0F172A]/70 sm:text-sm">
-                      {t.umur}
-                    </p>
-                    {totalBadge && (
-                      <span className="mt-1 inline-flex w-fit items-center rounded-full bg-white/90 px-3 py-1 font-display text-xs font-extrabold text-[#0F172A] shadow-sm">
-                        {totalBadge}
+                    {t.nombor === 1 && (
+                      <span className="rounded-full bg-[#FF7B9C] px-2.5 py-0.5 font-display text-[10px] font-extrabold text-white shadow-sm">
+                        BARU!
+                      </span>
+                    )}
+                    {t.terkunci && (
+                      <span className="inline-flex items-center gap-1 rounded-full bg-[#0F172A]/10 px-2.5 py-0.5 font-display text-[10px] font-extrabold text-[#0F172A]">
+                        <Lock className="h-3 w-3" /> Akan Datang
                       </span>
                     )}
                   </div>
-                  {boleh && (
-                    <span
-                      className="hidden shrink-0 rounded-full px-4 py-2 font-display text-sm font-extrabold text-white shadow-md sm:inline-flex"
-                      style={{ backgroundColor: t.warna }}
-                    >
-                      Mula →
+
+                  <img
+                    src={tahapImg}
+                    alt={t.nama}
+                    className="h-32 w-full object-contain sm:h-40"
+                  />
+
+                  <h2 className="mt-2 font-display text-xl font-extrabold text-[#0F172A]">
+                    {t.nama}
+                  </h2>
+                  <p className="text-xs font-semibold text-[#0F172A]/70">
+                    {TAHAP_DESC[t.nombor]}
+                  </p>
+
+                  {totalBadge ? (
+                    <span className="mt-2 inline-flex w-fit items-center rounded-full bg-white/90 px-3 py-1 font-display text-xs font-extrabold text-[#0F172A] shadow-sm">
+                      {totalBadge}
+                    </span>
+                  ) : (
+                    <span className="mt-2 inline-flex w-fit items-center rounded-full bg-white/60 px-3 py-1 font-display text-xs font-extrabold text-[#0F172A]/50">
+                      0 aktiviti
                     </span>
                   )}
+
+                  <span
+                    className="mt-auto flex w-full items-center justify-center gap-1 rounded-full px-4 py-2.5 font-display text-sm font-extrabold text-white shadow-md"
+                    style={{ backgroundColor: t.warna }}
+                  >
+                    Terokai Tahap {t.nombor} →
+                  </span>
                 </div>
               );
               if (boleh) {
@@ -363,39 +372,20 @@ function PulauPraKalifahPage() {
 export function BlobsLatar() {
   return (
     <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
-      {/* Large faded 3D island illustrations — atmospheric page background */}
-      <img
-        src={IMG_TAHAP1_ISTANA}
-        alt=""
-        className="absolute -left-10 -top-10 h-auto w-72 object-contain opacity-10 blur-sm animate-blob-drift sm:w-96"
+      <div
+        className="absolute -left-20 -top-20 h-80 w-80 rounded-full bg-[#FF7B9C] opacity-30 blur-3xl animate-blob-drift"
       />
-      <img
-        src={IMG_TAHAP2_RUMAH}
-        alt=""
-        className="absolute -right-10 top-16 h-auto w-72 object-contain opacity-10 blur-sm animate-blob-drift sm:w-96"
+      <div
+        className="absolute -right-20 top-0 h-96 w-96 rounded-full bg-[#FFD166] opacity-30 blur-3xl animate-blob-drift"
         style={{ animationDelay: "2s" }}
       />
-      <img
-        src={IMG_TAHAP3_ROKET}
-        alt=""
-        className="absolute -left-12 -bottom-12 h-auto w-72 object-contain opacity-10 blur-sm animate-blob-drift sm:w-96"
-        style={{ animationDelay: "4s" }}
-      />
-      <img
-        src={IMG_MASCOT}
-        alt=""
-        className="absolute -bottom-16 left-1/2 h-auto w-64 -translate-x-1/2 object-contain opacity-[0.12] blur-sm animate-blob-drift sm:w-80"
+      <div
+        className="absolute -right-20 -bottom-24 h-96 w-96 rounded-full bg-[#CBA6F7] opacity-40 blur-3xl animate-blob-drift"
         style={{ animationDelay: "6s" }}
       />
-
-      {/* Subtle color blobs for extra atmosphere */}
       <div
-        className="absolute -right-24 top-24 h-80 w-80 rounded-full bg-[#5AC8FA] opacity-25 blur-3xl animate-blob-drift"
+        className="absolute left-1/2 top-1/3 h-72 w-72 -translate-x-1/2 rounded-full bg-[#16A34A] opacity-25 blur-3xl animate-blob-drift"
         style={{ animationDelay: "3s" }}
-      />
-      <div
-        className="absolute left-1/4 -bottom-28 h-[26rem] w-[26rem] rounded-full bg-[#FFD166] opacity-30 blur-3xl animate-blob-drift"
-        style={{ animationDelay: "5s" }}
       />
     </div>
   );
