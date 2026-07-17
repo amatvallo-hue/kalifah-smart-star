@@ -95,8 +95,9 @@ function PulauPraKalifahPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background p-4">
-      <div className="mx-auto flex w-full max-w-3xl flex-col gap-6 pt-4">
+    <div className="relative min-h-screen overflow-hidden bg-background p-4">
+      <BlobsLatar />
+      <div className="relative z-10 mx-auto flex w-full max-w-3xl flex-col gap-6 pt-4">
         <div className="flex items-center justify-between">
           <Link
             to="/pilih-darjah"
@@ -107,7 +108,7 @@ function PulauPraKalifahPage() {
         </div>
 
         <div className="flex flex-col items-center gap-3 text-center">
-          <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-rose-400 to-rose-300 text-rose-900 shadow-soft animate-float">
+          <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-rose-400 to-rose-300 text-rose-900 shadow-soft animate-wiggle-float">
             <Baby className="h-10 w-10" strokeWidth={2.5} />
           </div>
           <h1 className="font-display text-3xl font-extrabold text-foreground sm:text-4xl">
@@ -124,7 +125,7 @@ function PulauPraKalifahPage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            {bidang.map((b) => {
+            {bidang.map((b, i) => {
               const Ikon = IKON_MAP[b.ikon_nama ?? ""] ?? BookOpen;
               const tema = bidangTema(b.warna_kod);
               const slug = bidangSlug(b.ikon_nama, b.nama);
@@ -133,7 +134,8 @@ function PulauPraKalifahPage() {
                   key={b.id}
                   to="/pra-kalifah/$bidang"
                   params={{ bidang: slug }}
-                  className="group flex flex-col items-center gap-4 rounded-3xl border border-border/60 bg-card p-6 shadow-card transition hover:-translate-y-1 hover:shadow-soft"
+                  className="group flex flex-col items-center gap-4 rounded-3xl border border-border/60 bg-card p-6 shadow-card transition animate-idle-pulse hover:-translate-y-1 hover:shadow-soft"
+                  style={{ animationDelay: `${i * 300}ms` }}
                 >
                   <div
                     className={`flex h-24 w-24 items-center justify-center rounded-3xl bg-gradient-to-br ${tema.grad} ${tema.text} shadow-soft transition group-hover:scale-110`}
@@ -154,3 +156,24 @@ function PulauPraKalifahPage() {
     </div>
   );
 }
+
+export function BlobsLatar() {
+  return (
+    <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+      <div className="absolute -left-24 -top-24 h-72 w-72 rounded-full bg-rose-300 opacity-30 blur-3xl animate-blob-drift" />
+      <div
+        className="absolute -right-20 top-32 h-64 w-64 rounded-full bg-sky-300 opacity-30 blur-3xl animate-blob-drift"
+        style={{ animationDelay: "2s" }}
+      />
+      <div
+        className="absolute left-1/3 -bottom-24 h-80 w-80 rounded-full bg-amber-200 opacity-40 blur-3xl animate-blob-drift"
+        style={{ animationDelay: "4s" }}
+      />
+      <div
+        className="absolute -right-16 -bottom-20 h-72 w-72 rounded-full bg-violet-300 opacity-25 blur-3xl animate-blob-drift"
+        style={{ animationDelay: "6s" }}
+      />
+    </div>
+  );
+}
+
