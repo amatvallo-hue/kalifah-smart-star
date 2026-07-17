@@ -386,61 +386,10 @@ function LatihTubiPage() {
     tiadaTopik: en ? "No topics available" : "Tiada topik tersedia",
   };
 
-  const subjekQueryResolved =
-    isMatematik
-      ? bahasa === "en"
-        ? "matematik-en"
-        : "matematik"
-      : subjekId === "sains" && bahasa === "en"
-        ? "sains-en"
-        : subjekId;
-
-  useEffect(() => {
-    if (showBahasaToggle && !bahasa) return;
-    if (!Number.isFinite(darjahNum)) return;
-    let cancelled = false;
-    setTopikList(null);
-    setTopikListLoading(true);
-    (async () => {
-      const { data } = await supabase
-        .from("soalan_latih_tubi")
-        .select("topik")
-        .eq("darjah", darjahNum)
-        .eq("subjek", subjekQueryResolved)
-        .not("feedback_a", "is", null)
-        .neq("feedback_a", "")
-        .not("topik", "is", null)
-        .neq("topik", "");
-      if (cancelled) return;
-      const uniq = Array.from(
-        new Set(((data ?? []) as { topik: string | null }[]).map((r) => r.topik ?? "").filter(Boolean)),
-      ).sort((a, b) => a.localeCompare(b));
-      setTopikList(uniq);
-      setTopikListLoading(false);
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [darjahNum, subjekQueryResolved, bahasa, showBahasaToggle]);
-
   function openTopikDialog() {
     setTopikDialogOpen(true);
   }
 
-  // Auto-clear stale topik param that doesn't exist in the current language's topic list.
-  // Topic taxonomies differ between BM and EN (e.g. "Haiwan" vs "Animals"), so a bookmarked
-  // ?topik=X from one language returns zero rows if the user picks the other language.
-  useEffect(() => {
-    if (!topikSearchParam) return;
-    if (topikListLoading || topikList === null) return;
-    if (topikList.includes(topikSearchParam)) return;
-    navigate({
-      to: "/darjah/$darjahId/$subjekId/latih-tubi",
-      params: { darjahId, subjekId },
-      search: { topik: undefined },
-      replace: true,
-    });
-  }, [topikSearchParam, topikList, topikListLoading, darjahId, subjekId, navigate]);
 
 
 
