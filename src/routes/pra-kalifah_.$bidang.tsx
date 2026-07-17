@@ -174,6 +174,7 @@ function AktivitiPraKalifahPage() {
   }, [config]);
 
   const current = soalan[idx];
+  const tema = temaBidangDariSlug(bidang);
 
   function pilih(key: "a" | "b" | "c" | "d", nilai: string) {
     if (!current || betul) return;
