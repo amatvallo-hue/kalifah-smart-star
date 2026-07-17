@@ -209,7 +209,7 @@ function PulauPraKalifahPage() {
           <img
             src={IMG_MASCOT}
             alt="Mascot"
-            className="absolute -left-4 -bottom-8 z-20 h-56 w-auto object-contain sm:h-72 sm:-bottom-10"
+            className="absolute -left-4 -bottom-2 z-20 h-56 w-auto object-contain sm:h-72 sm:-bottom-4"
           />
 
           {/* Speech bubble */}
