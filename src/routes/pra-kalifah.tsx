@@ -24,7 +24,7 @@ const IMG_TAHAP3_ROKET =
 export const Route = createFileRoute("/pra-kalifah")({
   head: () => ({
     meta: [
-      { title: "Pulau Pra Kalifah — Pilih Tahap" },
+      { title: "Dunia Pra Kalifah — Pilih Tahap" },
       {
         name: "description",
         content: "Pilih tahap pembelajaran untuk kanak-kanak pra sekolah di Kalifah.my.",
@@ -197,7 +197,7 @@ function PulauPraKalifahPage() {
           />
           <div className="flex flex-col gap-1 pb-1">
             <h1 className="font-display text-2xl font-extrabold text-[#0F172A] sm:text-4xl">
-              Pulau Pra Kalifah 🌈
+              Dunia Pra Kalifah 🌈
             </h1>
             <p className="text-sm font-semibold text-[#0F172A]/70 sm:text-base">
               {tahapDipilih === 1

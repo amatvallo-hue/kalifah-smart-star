@@ -468,7 +468,7 @@ function AktivitiPraKalifahPage() {
               to="/pra-kalifah"
               className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-primary px-6 py-3 font-display text-sm font-extrabold text-primary-foreground shadow-soft"
             >
-              <ArrowLeft className="h-4 w-4" /> Kembali ke Pulau Pra Kalifah
+              <ArrowLeft className="h-4 w-4" /> Kembali ke Dunia Pra Kalifah
             </Link>
           </div>
         </div>
