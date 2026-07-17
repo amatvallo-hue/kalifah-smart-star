@@ -183,15 +183,8 @@ function PulauPraKalifahPage() {
           </Link>
         </div>
 
-        <div className="flex items-center gap-4 rounded-3xl bg-gradient-to-br from-[#FF7B9C]/30 via-[#FFD166]/30 to-[#5AC8FA]/30 p-5 shadow-card sm:gap-6 sm:p-6">
-          <div className="flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-3xl bg-gradient-to-br from-[#FF7B9C] to-[#CBA6F7] text-white shadow-lg ring-[6px] ring-white animate-wiggle-float sm:h-28 sm:w-28">
-            <img
-              src={IMG_MASCOT}
-              alt="Mascot"
-              className="h-full w-full rounded-3xl object-cover"
-            />
-          </div>
-          <div className="flex flex-col gap-1">
+        <div className="relative flex min-h-[180px] items-center overflow-hidden rounded-3xl bg-gradient-to-br from-[#FF7B9C]/30 via-[#FFD166]/30 to-[#5AC8FA]/30 p-5 shadow-card sm:min-h-[220px] sm:p-6">
+          <div className="relative z-10 flex flex-col gap-1 pr-32 sm:pr-48">
             <h1 className="font-display text-2xl font-extrabold text-[#0F172A] sm:text-4xl">
               Pulau Pra Kalifah 🌈
             </h1>
@@ -201,6 +194,11 @@ function PulauPraKalifahPage() {
                 : "Pilih tahap yang sesuai untuk anak kamu!"}
             </p>
           </div>
+          <img
+            src={IMG_MASCOT}
+            alt="Mascot"
+            className="pointer-events-none absolute -right-2 -bottom-4 z-0 h-40 w-auto object-contain animate-wiggle-float sm:-right-4 sm:-bottom-6 sm:h-48"
+          />
         </div>
 
         {err ? (
@@ -266,7 +264,7 @@ function PulauPraKalifahPage() {
               const boleh = !t.terkunci;
               const content = (
                 <div
-                  className={`relative flex items-center gap-5 rounded-3xl border-2 p-5 shadow-card transition sm:p-6 ${
+                  className={`relative flex items-center gap-5 overflow-hidden rounded-3xl border-2 p-5 pr-40 shadow-card transition sm:p-6 sm:pr-56 ${
                     boleh
                       ? "animate-idle-pulse hover:-translate-y-1 hover:shadow-soft"
                       : "opacity-60 grayscale-[30%]"
@@ -277,17 +275,12 @@ function PulauPraKalifahPage() {
                     animationDelay: `${i * 300}ms`,
                   }}
                 >
-                  <div
-                    className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-3xl text-white shadow-lg ring-[6px] ring-white sm:h-24 sm:w-24"
-                    style={{ backgroundColor: t.warna }}
-                  >
-                    <img
-                      src={tahapImg}
-                      alt={t.nama}
-                      className="h-full w-full rounded-3xl object-cover"
-                    />
-                  </div>
-                  <div className="flex flex-1 flex-col gap-1">
+                  <img
+                    src={tahapImg}
+                    alt={t.nama}
+                    className="pointer-events-none absolute right-0 top-1/2 z-0 h-full w-48 -translate-y-1/2 object-contain sm:w-64"
+                  />
+                  <div className="relative z-10 flex flex-1 flex-col gap-1">
                     <div className="flex items-center gap-2">
                       <span
                         className="rounded-full px-2.5 py-0.5 font-display text-[10px] font-extrabold text-white sm:text-xs"
@@ -315,7 +308,7 @@ function PulauPraKalifahPage() {
                   </div>
                   {boleh && (
                     <span
-                      className="hidden shrink-0 rounded-full px-4 py-2 font-display text-sm font-extrabold text-white shadow-md sm:inline-flex"
+                      className="relative z-10 hidden shrink-0 rounded-full px-4 py-2 font-display text-sm font-extrabold text-white shadow-md sm:inline-flex"
                       style={{ backgroundColor: t.warna }}
                     >
                       Mula →
