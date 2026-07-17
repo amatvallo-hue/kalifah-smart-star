@@ -392,7 +392,7 @@ function ConfettiButang() {
                 ["--cx" as string]: `${cx}px`,
                 ["--cy" as string]: `${cy}px`,
                 animationDelay: `${i * 30}ms`,
-              } as React.CSSProperties
+              } as React.CSSProperties & Record<string, string>
             }
           />
         );
