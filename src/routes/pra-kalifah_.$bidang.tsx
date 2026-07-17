@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useParams } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   ArrowLeft,
   Baby,
@@ -32,6 +32,9 @@ import {
   Moon,
   HandHelping,
   HelpCircle,
+  BookOpen,
+  Image as ImageIcon,
+  PencilRuler,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -50,9 +53,14 @@ export const Route = createFileRoute("/pra-kalifah_/$bidang")({
   component: AktivitiPraKalifahPage,
 });
 
-interface DataKira {
+type JenisAktiviti = "huruf" | "kira" | "adab" | "huruf-gambar" | "lengkap";
+
+interface DataAktiviti {
   bilangan?: number;
   ikon?: string;
+  emoji?: string;
+  perkataan?: string;
+  urutan?: string[];
 }
 
 interface Soalan {
@@ -65,7 +73,15 @@ interface Soalan {
   pilihan_c: string;
   pilihan_d: string;
   jawapan_betul: string;
-  data_aktiviti: DataKira | null;
+  data_aktiviti: DataAktiviti | null;
+}
+
+interface AktivitiConfig {
+  namaAktiviti: string;
+  tajuk: string;
+  mesejSelesai: string;
+  jenis: JenisAktiviti;
+  ikon: LucideIcon;
 }
 
 const BUTANG_WARNA = [
@@ -109,48 +125,77 @@ const IKON_ADAB: Record<string, LucideIcon> = {
   Tolong: HandHelping,
 };
 
-const BIDANG_CONFIG: Record<
-  string,
-  { namaAktiviti: string; tajuk: string; mesejSelesai: string; jenis: "huruf" | "kira" | "adab" }
-> = {
-  bahasa: {
-    namaAktiviti: "Cari Huruf",
-    tajuk: "Cari Huruf",
-    mesejSelesai: "Syabas! Kamu dah kenal semua huruf!",
-    jenis: "huruf",
-  },
-  kognitif: {
-    namaAktiviti: "Kira Bersama",
-    tajuk: "Kira Bersama",
-    mesejSelesai: "Syabas! Kamu dah pandai kira!",
-    jenis: "kira",
-  },
-  kerohanian: {
-    namaAktiviti: "Adab Harian",
-    tajuk: "Adab Harian",
-    mesejSelesai: "Syabas! Kamu budak yang baik!",
-    jenis: "adab",
-  },
+const BIDANG_CONFIG: Record<string, AktivitiConfig[]> = {
+  bahasa: [
+    {
+      namaAktiviti: "Cari Huruf",
+      tajuk: "Cari Huruf",
+      mesejSelesai: "Syabas! Kamu dah kenal semua huruf!",
+      jenis: "huruf",
+      ikon: BookOpen,
+    },
+    {
+      namaAktiviti: "Huruf dan Gambar",
+      tajuk: "Huruf dan Gambar",
+      mesejSelesai: "Syabas! Kamu dah pandai padan huruf dan gambar!",
+      jenis: "huruf-gambar",
+      ikon: ImageIcon,
+    },
+    {
+      namaAktiviti: "Lengkapkan Huruf",
+      tajuk: "Lengkapkan Huruf",
+      mesejSelesai: "Syabas! Kamu dah pandai susun huruf!",
+      jenis: "lengkap",
+      ikon: PencilRuler,
+    },
+  ],
+  kognitif: [
+    {
+      namaAktiviti: "Kira Bersama",
+      tajuk: "Kira Bersama",
+      mesejSelesai: "Syabas! Kamu dah pandai kira!",
+      jenis: "kira",
+      ikon: Star,
+    },
+  ],
+  kerohanian: [
+    {
+      namaAktiviti: "Adab Harian",
+      tajuk: "Adab Harian",
+      mesejSelesai: "Syabas! Kamu budak yang baik!",
+      jenis: "adab",
+      ikon: HandHeart,
+    },
+  ],
 };
 
 function AktivitiPraKalifahPage() {
   const { bidang } = useParams({ from: "/pra-kalifah_/$bidang" });
-  const config = BIDANG_CONFIG[bidang];
+  const senaraiAktiviti = BIDANG_CONFIG[bidang];
+  const tema = temaBidangDariSlug(bidang);
+
+  // auto-pilih bila cuma 1 aktiviti
+  const [pilihIdx, setPilihIdx] = useState<number | null>(
+    senaraiAktiviti && senaraiAktiviti.length === 1 ? 0 : null,
+  );
+  const config = pilihIdx !== null && senaraiAktiviti ? senaraiAktiviti[pilihIdx] : null;
 
   const [soalan, setSoalan] = useState<Soalan[]>([]);
   const [idx, setIdx] = useState(0);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [betul, setBetul] = useState<string | null>(null);
   const [salah, setSalah] = useState<string | null>(null);
   const [selesai, setSelesai] = useState(false);
 
   useEffect(() => {
-    if (!config) {
-      setLoading(false);
-      return;
-    }
+    if (!config) return;
     let mounted = true;
+    setLoading(true);
+    setErr(null);
+    setSoalan([]);
+    setIdx(0);
+    setSelesai(false);
     (async () => {
       const { data, error } = await supabase
         .from("pra_kalifah_aktiviti" as never)
@@ -174,7 +219,6 @@ function AktivitiPraKalifahPage() {
   }, [config]);
 
   const current = soalan[idx];
-  const tema = temaBidangDariSlug(bidang);
 
   function pilih(key: "a" | "b" | "c" | "d", nilai: string) {
     if (!current || betul) return;
@@ -195,7 +239,16 @@ function AktivitiPraKalifahPage() {
     }
   }
 
-  if (!config) {
+  function kembaliKePemilihan() {
+    setPilihIdx(null);
+    setSoalan([]);
+    setIdx(0);
+    setSelesai(false);
+    setBetul(null);
+    setSalah(null);
+  }
+
+  if (!senaraiAktiviti) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background p-4">
         <div className="w-full max-w-md rounded-3xl border border-border/60 bg-card p-8 text-center shadow-card">
@@ -211,7 +264,64 @@ function AktivitiPraKalifahPage() {
     );
   }
 
-  if (loading) {
+  // Skrin pemilihan aktiviti (>1 aktiviti dan belum pilih)
+  if (pilihIdx === null) {
+    return (
+      <div className="relative min-h-screen overflow-hidden bg-background p-4">
+        <BlobsLatar />
+        <div className="relative z-10 mx-auto flex w-full max-w-2xl flex-col gap-6 pt-4">
+          <div className="flex items-center justify-between">
+            <Link
+              to="/pra-kalifah"
+              className="inline-flex items-center gap-2 rounded-full bg-card px-4 py-2 font-display text-xs font-extrabold text-foreground shadow-card transition hover:bg-secondary"
+            >
+              <ArrowLeft className="h-4 w-4" /> Kembali
+            </Link>
+          </div>
+
+          <div className="flex flex-col items-center gap-3 text-center">
+            <div className="flex h-24 w-24 items-center justify-center rounded-3xl bg-gradient-to-br from-rose-400 to-rose-300 text-rose-900 shadow-soft ring-8 ring-rose-200/70 animate-wiggle-float">
+              <Baby className="h-12 w-12" strokeWidth={2.5} />
+            </div>
+            <h1 className="font-display text-3xl font-extrabold text-foreground sm:text-4xl">
+              Pilih Aktiviti
+            </h1>
+            <p className="text-sm text-muted-foreground sm:text-base">
+              Kamu nak main aktiviti apa hari ini?
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+            {senaraiAktiviti.map((a, i) => {
+              const Ikon = a.ikon;
+              return (
+                <button
+                  key={a.namaAktiviti}
+                  type="button"
+                  onClick={() => setPilihIdx(i)}
+                  style={{ animationDelay: `${i * 250}ms` }}
+                  className={`group flex flex-col items-center gap-3 rounded-3xl border-2 ${tema.kadBorder} ${tema.kadBg} p-5 shadow-card transition animate-idle-pulse hover:-translate-y-1 hover:shadow-soft`}
+                >
+                  <div
+                    className={`flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br ${tema.grad} ${tema.text} shadow-soft ring-4 ring-white/60 transition group-hover:scale-110`}
+                  >
+                    <Ikon className="h-8 w-8" strokeWidth={2.5} />
+                  </div>
+                  <div className="text-center">
+                    <h2 className="font-display text-base font-extrabold text-foreground sm:text-lg">
+                      {a.tajuk}
+                    </h2>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (loading || !config) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -237,6 +347,7 @@ function AktivitiPraKalifahPage() {
   }
 
   if (selesai) {
+    const boleh_kembali_pilihan = senaraiAktiviti.length > 1;
     return (
       <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background p-4">
         <BlobsLatar />
@@ -260,12 +371,23 @@ function AktivitiPraKalifahPage() {
               </div>
             ))}
           </div>
-          <Link
-            to="/pra-kalifah"
-            className="mt-8 inline-flex items-center justify-center gap-2 rounded-full bg-gradient-primary px-6 py-3 font-display text-sm font-extrabold text-primary-foreground shadow-soft"
-          >
-            <ArrowLeft className="h-4 w-4" /> Kembali ke Pulau Pra Kalifah
-          </Link>
+          <div className="mt-8 flex flex-col gap-3">
+            {boleh_kembali_pilihan && (
+              <button
+                type="button"
+                onClick={kembaliKePemilihan}
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-card px-6 py-3 font-display text-sm font-extrabold text-foreground shadow-card hover:bg-secondary"
+              >
+                Pilih Aktiviti Lain
+              </button>
+            )}
+            <Link
+              to="/pra-kalifah"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-primary px-6 py-3 font-display text-sm font-extrabold text-primary-foreground shadow-soft"
+            >
+              <ArrowLeft className="h-4 w-4" /> Kembali ke Pulau Pra Kalifah
+            </Link>
+          </div>
         </div>
       </div>
     );
@@ -282,19 +404,32 @@ function AktivitiPraKalifahPage() {
     current.arahan_audio_teks ??
     (config.jenis === "huruf"
       ? `Cari huruf ${current.huruf_sasaran ?? ""}!`
-      : "Kira, berapa banyak?");
+      : config.jenis === "kira"
+        ? "Kira, berapa banyak?"
+        : config.jenis === "lengkap"
+          ? "Lengkapkan susunan."
+          : "Pilih jawapan!");
+
+  const guna_ikon_besar = config.jenis === "adab";
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-background p-4">
       <BlobsLatar />
       <div className="relative z-10 mx-auto flex w-full max-w-2xl flex-col gap-6 pt-4">
         <div className="flex items-center justify-between">
-          <Link
-            to="/pra-kalifah"
+          <button
+            type="button"
+            onClick={() => {
+              if (senaraiAktiviti.length > 1) {
+                kembaliKePemilihan();
+              } else {
+                window.history.back();
+              }
+            }}
             className="inline-flex items-center gap-2 rounded-full bg-card px-4 py-2 font-display text-xs font-extrabold text-foreground shadow-card transition hover:bg-secondary"
           >
             <ArrowLeft className="h-4 w-4" /> Keluar
-          </Link>
+          </button>
           <span className="rounded-full bg-card px-4 py-2 font-display text-xs font-extrabold text-primary shadow-card">
             {idx + 1} / {soalan.length}
           </span>
@@ -327,6 +462,16 @@ function AktivitiPraKalifahPage() {
           <PaparKira data={current.data_aktiviti} />
         )}
 
+        {/* Huruf dan Gambar */}
+        {config.jenis === "huruf-gambar" && current.data_aktiviti && (
+          <PaparHurufGambar data={current.data_aktiviti} tema={tema} />
+        )}
+
+        {/* Lengkapkan Huruf */}
+        {config.jenis === "lengkap" && current.data_aktiviti && (
+          <PaparLengkap data={current.data_aktiviti} tema={tema} />
+        )}
+
         {/* Pilihan 2x2 */}
         <div className="grid grid-cols-2 gap-4">
           {pilihanList.map((p, i) => {
@@ -334,7 +479,7 @@ function AktivitiPraKalifahPage() {
             const isSalah = salah === p.key;
             const disabled = betul !== null;
             const baseColor = BUTANG_WARNA[i];
-            const IkonAdab = config.jenis === "adab" ? (IKON_ADAB[p.nilai] ?? HelpCircle) : null;
+            const IkonAdab = guna_ikon_besar ? (IKON_ADAB[p.nilai] ?? HelpCircle) : null;
             return (
               <button
                 key={p.key}
@@ -343,7 +488,7 @@ function AktivitiPraKalifahPage() {
                 onClick={() => pilih(p.key, p.nilai)}
                 style={!disabled ? { animationDelay: `${i * 350}ms` } : undefined}
                 className={`relative flex aspect-square flex-col items-center justify-center gap-2 overflow-visible rounded-3xl p-3 text-center font-display font-extrabold shadow-card transition ${
-                  config.jenis === "adab"
+                  guna_ikon_besar
                     ? "text-sm sm:text-base"
                     : "text-6xl sm:text-7xl"
                 } ${
@@ -404,7 +549,7 @@ function ConfettiButang() {
 }
 
 function ConfettiPenuhSkrin() {
-  const kepingan = Array.from({ length: 40 });
+  const kepingan = useMemo(() => Array.from({ length: 40 }), []);
   return (
     <div className="pointer-events-none absolute inset-0 z-20 overflow-hidden">
       {kepingan.map((_, i) => {
@@ -433,7 +578,7 @@ function ConfettiPenuhSkrin() {
 }
 
 
-function PaparKira({ data }: { data: DataKira }) {
+function PaparKira({ data }: { data: DataAktiviti }) {
   const bilangan = Math.max(0, Math.min(10, data.bilangan ?? 0));
   const ikonKey = data.ikon ?? "star";
   const conf = IKON_KIRA[ikonKey] ?? IKON_KIRA.star;
@@ -449,6 +594,60 @@ function PaparKira({ data }: { data: DataKira }) {
             style={{ animationDelay: `${i * 80}ms` }}
           />
         ))}
+      </div>
+    </div>
+  );
+}
+
+function PaparHurufGambar({
+  data,
+  tema,
+}: {
+  data: DataAktiviti;
+  tema: ReturnType<typeof temaBidangDariSlug>;
+}) {
+  return (
+    <div className={`rounded-3xl border-2 ${tema.kadBorder} ${tema.kadBg} p-6 shadow-card`}>
+      <div className="flex flex-col items-center gap-2">
+        <div className="text-7xl sm:text-8xl animate-pop" aria-hidden>
+          {data.emoji ?? "❓"}
+        </div>
+        {data.perkataan && (
+          <div className="font-display text-lg font-extrabold text-foreground sm:text-xl">
+            {data.perkataan}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function PaparLengkap({
+  data,
+  tema,
+}: {
+  data: DataAktiviti;
+  tema: ReturnType<typeof temaBidangDariSlug>;
+}) {
+  const urutan = data.urutan ?? [];
+  return (
+    <div className={`rounded-3xl border-2 ${tema.kadBorder} ${tema.kadBg} p-5 shadow-card`}>
+      <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
+        {urutan.map((h, i) => {
+          const kosong = h === "_";
+          return (
+            <div
+              key={i}
+              className={`flex h-16 w-16 items-center justify-center rounded-2xl font-display text-4xl font-extrabold shadow-card sm:h-20 sm:w-20 sm:text-5xl ${
+                kosong
+                  ? "border-4 border-dashed border-rose-400 bg-white/50 text-rose-400 animate-idle-pulse"
+                  : "bg-white text-foreground"
+              }`}
+            >
+              {kosong ? "?" : h}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
