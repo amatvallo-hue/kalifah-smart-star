@@ -260,7 +260,8 @@ function PulauPraKalifahPage() {
         ) : (
           <div className="flex flex-col gap-4">
             {TAHAP_LIST.map((t, i) => {
-              const Ikon = t.ikon;
+              const tahapImg =
+                [IMG_TAHAP1_ISTANA, IMG_TAHAP2_RUMAH, IMG_TAHAP3_ROKET][t.nombor - 1];
               const totalBadge =
                 t.nombor === 1 && totalAktiviti > 0 ? `${totalAktiviti} aktiviti` : null;
               const boleh = !t.terkunci;
@@ -278,10 +279,14 @@ function PulauPraKalifahPage() {
                   }}
                 >
                   <div
-                    className="flex h-20 w-20 shrink-0 items-center justify-center rounded-3xl text-white shadow-lg ring-[6px] ring-white sm:h-24 sm:w-24"
+                    className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-3xl text-white shadow-lg ring-[6px] ring-white sm:h-24 sm:w-24"
                     style={{ backgroundColor: t.warna }}
                   >
-                    <Ikon className="h-10 w-10 sm:h-12 sm:w-12" strokeWidth={2.5} />
+                    <img
+                      src={tahapImg}
+                      alt={t.nama}
+                      className="h-full w-full rounded-3xl object-cover"
+                    />
                   </div>
                   <div className="flex flex-1 flex-col gap-1">
                     <div className="flex items-center gap-2">
