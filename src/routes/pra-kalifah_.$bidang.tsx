@@ -194,6 +194,27 @@ const BIDANG_CONFIG: Record<string, AktivitiConfig[]> = {
       jenis: "kira",
       ikon: Star,
     },
+    {
+      namaAktiviti: "Pilih Nombor",
+      tajuk: "Pilih Nombor",
+      mesejSelesai: "Syabas! Kamu dah kenal nombor!",
+      jenis: "nombor",
+      ikon: Hash,
+    },
+    {
+      namaAktiviti: "Warna",
+      tajuk: "Warna",
+      mesejSelesai: "Syabas! Kamu dah kenal warna!",
+      jenis: "warna",
+      ikon: Palette,
+    },
+    {
+      namaAktiviti: "Bentuk",
+      tajuk: "Bentuk",
+      mesejSelesai: "Syabas! Kamu dah kenal bentuk!",
+      jenis: "bentuk",
+      ikon: Shapes,
+    },
   ],
   kerohanian: [
     {
