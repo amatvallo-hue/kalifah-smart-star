@@ -35,6 +35,12 @@ import {
   BookOpen,
   Image as ImageIcon,
   PencilRuler,
+  Hash,
+  Palette,
+  Shapes,
+  Square,
+  Triangle,
+  Diamond,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
