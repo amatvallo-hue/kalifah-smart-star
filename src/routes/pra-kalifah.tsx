@@ -78,8 +78,15 @@ export function temaBidangDariSlug(slug: string) {
   return bidangTema("accent");
 }
 
+const TAGLINE_MAP: Record<string, string> = {
+  "Bahasa dan Literasi": "Kenal huruf & perkataan",
+  "Kognitif": "Kira, warna & bentuk",
+  "Kerohanian Nilai dan Kewarganegaraan": "Doa & adab harian",
+};
+
 function PulauPraKalifahPage() {
   const [bidang, setBidang] = useState<Bidang[]>([]);
+  const [kiraan, setKiraan] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(true);
   const [err, setErr] = useState<string | null>(null);
 
@@ -94,9 +101,21 @@ function PulauPraKalifahPage() {
       if (!mounted) return;
       if (error) {
         setErr(error.message);
-      } else {
-        setBidang((data ?? []) as unknown as Bidang[]);
+        setLoading(false);
+        return;
       }
+      const list = (data ?? []) as unknown as Bidang[];
+      setBidang(list);
+
+      const { data: aktData } = await supabase
+        .from("pra_kalifah_aktiviti" as never)
+        .select("id, bidang_id");
+      if (!mounted) return;
+      const counts: Record<string, number> = {};
+      for (const row of (aktData ?? []) as unknown as { bidang_id: string }[]) {
+        counts[row.bidang_id] = (counts[row.bidang_id] ?? 0) + 1;
+      }
+      setKiraan(counts);
       setLoading(false);
     })();
     return () => {
@@ -125,16 +144,18 @@ function PulauPraKalifahPage() {
           </Link>
         </div>
 
-        <div className="flex flex-col items-center gap-3 text-center">
-          <div className="flex h-24 w-24 items-center justify-center rounded-3xl bg-gradient-to-br from-rose-400 to-rose-300 text-rose-900 shadow-soft ring-8 ring-rose-200/70 animate-wiggle-float">
-            <Baby className="h-12 w-12" strokeWidth={2.5} />
+        <div className="flex items-center gap-4 rounded-3xl bg-gradient-to-br from-rose-200 via-orange-200 to-amber-200 p-5 shadow-card sm:gap-6 sm:p-6">
+          <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-3xl bg-gradient-to-br from-rose-400 to-rose-300 text-rose-900 shadow-lg ring-[6px] ring-white animate-wiggle-float sm:h-28 sm:w-28">
+            <Baby className="h-12 w-12 sm:h-14 sm:w-14" strokeWidth={2.5} />
           </div>
-          <h1 className="font-display text-3xl font-extrabold text-foreground sm:text-4xl">
-            Pulau Pra Kalifah
-          </h1>
-          <p className="text-sm text-muted-foreground sm:text-base">
-            Pilih bidang yang kamu nak belajar hari ini!
-          </p>
+          <div className="flex flex-col gap-1">
+            <h1 className="font-display text-2xl font-extrabold text-rose-950 sm:text-4xl">
+              Pulau Pra Kalifah
+            </h1>
+            <p className="text-sm font-semibold text-rose-900/80 sm:text-base">
+              Pilih bidang yang kamu nak belajar hari ini!
+            </p>
+          </div>
         </div>
 
         {err ? (
@@ -147,6 +168,8 @@ function PulauPraKalifahPage() {
               const Ikon = IKON_MAP[b.ikon_nama ?? ""] ?? BookOpen;
               const tema = bidangTema(b.warna_kod);
               const slug = bidangSlug(b.ikon_nama, b.nama);
+              const tagline = TAGLINE_MAP[b.nama] ?? "";
+              const count = kiraan[b.id] ?? 0;
               return (
                 <Link
                   key={b.id}
@@ -156,14 +179,24 @@ function PulauPraKalifahPage() {
                   style={{ animationDelay: `${i * 300}ms` }}
                 >
                   <div
-                    className={`flex h-24 w-24 items-center justify-center rounded-3xl bg-gradient-to-br ${tema.grad} ${tema.text} shadow-soft ring-8 ring-white/60 transition group-hover:scale-110`}
+                    className={`flex h-24 w-24 items-center justify-center rounded-3xl bg-gradient-to-br ${tema.grad} ${tema.text} shadow-lg ring-[6px] ring-white transition group-hover:scale-110`}
                   >
                     <Ikon className="h-12 w-12" strokeWidth={2.5} />
                   </div>
-                  <div className="text-center">
+                  <div className="flex flex-col items-center gap-2 text-center">
                     <h2 className="font-display text-xl font-extrabold text-foreground sm:text-2xl">
                       {b.nama}
                     </h2>
+                    {tagline && (
+                      <p className="text-xs font-semibold text-muted-foreground sm:text-sm">
+                        {tagline}
+                      </p>
+                    )}
+                    {count > 0 && (
+                      <span className="inline-flex items-center rounded-full bg-white/80 px-3 py-1 font-display text-xs font-extrabold text-foreground shadow-sm">
+                        {count} aktiviti
+                      </span>
+                    )}
                   </div>
                 </Link>
               );
@@ -174,6 +207,7 @@ function PulauPraKalifahPage() {
     </div>
   );
 }
+
 
 export function BlobsLatar() {
   return (
