@@ -5,7 +5,6 @@ import {
   BookOpen,
   Shapes,
   Loader2,
-  Baby,
   Sparkles,
   Lock,
   Rocket,
