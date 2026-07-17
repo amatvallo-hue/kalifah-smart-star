@@ -363,22 +363,39 @@ function PulauPraKalifahPage() {
 export function BlobsLatar() {
   return (
     <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
-      <div className="absolute -left-28 -top-28 h-96 w-96 rounded-full bg-[#FF7B9C] opacity-40 blur-3xl animate-blob-drift" />
-      <div
-        className="absolute -right-24 top-24 h-80 w-80 rounded-full bg-[#5AC8FA] opacity-40 blur-3xl animate-blob-drift"
+      {/* Large faded 3D island illustrations — atmospheric page background */}
+      <img
+        src={IMG_TAHAP1_ISTANA}
+        alt=""
+        className="absolute -left-10 -top-10 h-auto w-72 object-contain opacity-10 blur-sm animate-blob-drift sm:w-96"
+      />
+      <img
+        src={IMG_TAHAP2_RUMAH}
+        alt=""
+        className="absolute -right-10 top-16 h-auto w-72 object-contain opacity-10 blur-sm animate-blob-drift sm:w-96"
         style={{ animationDelay: "2s" }}
       />
-      <div
-        className="absolute left-1/4 -bottom-28 h-[26rem] w-[26rem] rounded-full bg-[#FFD166] opacity-45 blur-3xl animate-blob-drift"
+      <img
+        src={IMG_TAHAP3_ROKET}
+        alt=""
+        className="absolute -left-12 -bottom-12 h-auto w-72 object-contain opacity-10 blur-sm animate-blob-drift sm:w-96"
         style={{ animationDelay: "4s" }}
       />
-      <div
-        className="absolute -right-20 -bottom-24 h-96 w-96 rounded-full bg-[#CBA6F7] opacity-40 blur-3xl animate-blob-drift"
+      <img
+        src={IMG_MASCOT}
+        alt=""
+        className="absolute -bottom-16 left-1/2 h-auto w-64 -translate-x-1/2 object-contain opacity-[0.12] blur-sm animate-blob-drift sm:w-80"
         style={{ animationDelay: "6s" }}
       />
+
+      {/* Subtle color blobs for extra atmosphere */}
       <div
-        className="absolute left-1/2 top-1/3 h-72 w-72 -translate-x-1/2 rounded-full bg-[#16A34A] opacity-25 blur-3xl animate-blob-drift"
+        className="absolute -right-24 top-24 h-80 w-80 rounded-full bg-[#5AC8FA] opacity-25 blur-3xl animate-blob-drift"
         style={{ animationDelay: "3s" }}
+      />
+      <div
+        className="absolute left-1/4 -bottom-28 h-[26rem] w-[26rem] rounded-full bg-[#FFD166] opacity-30 blur-3xl animate-blob-drift"
+        style={{ animationDelay: "5s" }}
       />
     </div>
   );
