@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { ArrowLeft, BookOpen, Shapes, Loader2, Baby } from "lucide-react";
+import { ArrowLeft, BookOpen, Shapes, Loader2, Baby, Sparkles } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
