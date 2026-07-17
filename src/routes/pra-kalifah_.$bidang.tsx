@@ -237,15 +237,27 @@ function AktivitiPraKalifahPage() {
 
   if (selesai) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-background p-4">
-        <div className="w-full max-w-md rounded-3xl border border-border/60 bg-card p-8 text-center shadow-card">
-          <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-3xl bg-gradient-to-br from-rose-400 to-rose-300 text-rose-900 shadow-soft animate-float">
+      <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-background p-4">
+        <BlobsLatar />
+        <ConfettiPenuhSkrin />
+        <div className="relative z-10 w-full max-w-md rounded-3xl border border-border/60 bg-card p-8 text-center shadow-card">
+          <div className="mx-auto flex h-24 w-24 items-center justify-center rounded-3xl bg-gradient-to-br from-rose-400 to-rose-300 text-rose-900 shadow-soft animate-wiggle-float">
             <Baby className="h-12 w-12" strokeWidth={2.5} />
           </div>
-          <h1 className="mt-6 font-display text-3xl font-extrabold text-foreground">Misi Selesai! 🎉</h1>
+          <h1 className="mt-6 font-display text-3xl font-extrabold text-foreground animate-pop">
+            Misi Selesai! 🎉
+          </h1>
           <p className="mt-2 text-sm text-muted-foreground">{config.mesejSelesai}</p>
-          <div className="mt-6 flex justify-center">
-            <StarReward earned={3} />
+          <div className="mt-6 flex justify-center gap-1">
+            {[0, 1, 2].map((i) => (
+              <div
+                key={i}
+                className="animate-star-in"
+                style={{ animationDelay: `${300 + i * 250}ms` }}
+              >
+                <StarReward earned={1} total={1} />
+              </div>
+            ))}
           </div>
           <Link
             to="/pra-kalifah"
@@ -272,8 +284,9 @@ function AktivitiPraKalifahPage() {
       : "Kira, berapa banyak?");
 
   return (
-    <div className="min-h-screen bg-background p-4">
-      <div className="mx-auto flex w-full max-w-2xl flex-col gap-6 pt-4">
+    <div className="relative min-h-screen overflow-hidden bg-background p-4">
+      <BlobsLatar />
+      <div className="relative z-10 mx-auto flex w-full max-w-2xl flex-col gap-6 pt-4">
         <div className="flex items-center justify-between">
           <Link
             to="/pra-kalifah"
@@ -299,7 +312,7 @@ function AktivitiPraKalifahPage() {
 
         {/* Mascot + arahan */}
         <div className="flex items-center gap-4 rounded-3xl border border-border/60 bg-card p-5 shadow-card">
-          <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-3xl bg-gradient-to-br from-rose-400 to-rose-300 text-rose-900 shadow-soft animate-float">
+          <div className="flex h-20 w-20 shrink-0 items-center justify-center rounded-3xl bg-gradient-to-br from-rose-400 to-rose-300 text-rose-900 shadow-soft animate-wiggle-float">
             <Baby className="h-10 w-10" strokeWidth={2.5} />
           </div>
           <div className="relative flex-1 rounded-2xl bg-secondary p-4">
@@ -327,7 +340,8 @@ function AktivitiPraKalifahPage() {
                 type="button"
                 disabled={disabled}
                 onClick={() => pilih(p.key, p.nilai)}
-                className={`flex aspect-square flex-col items-center justify-center gap-2 rounded-3xl p-3 text-center font-display font-extrabold shadow-card transition ${
+                style={!disabled ? { animationDelay: `${i * 350}ms` } : undefined}
+                className={`relative flex aspect-square flex-col items-center justify-center gap-2 overflow-visible rounded-3xl p-3 text-center font-display font-extrabold shadow-card transition ${
                   config.jenis === "adab"
                     ? "text-sm sm:text-base"
                     : "text-6xl sm:text-7xl"
@@ -336,7 +350,7 @@ function AktivitiPraKalifahPage() {
                     ? "bg-emerald-500 text-white animate-pop"
                     : isSalah
                       ? `${baseColor} animate-shake`
-                      : `${baseColor} hover:-translate-y-1 hover:shadow-soft`
+                      : `${baseColor} animate-idle-pulse hover:-translate-y-1 hover:shadow-soft`
                 } ${disabled && !isBetul ? "opacity-70" : ""}`}
               >
                 {IkonAdab ? (
@@ -347,6 +361,7 @@ function AktivitiPraKalifahPage() {
                 ) : (
                   p.nilai
                 )}
+                {isBetul && <ConfettiButang />}
               </button>
             );
           })}
@@ -355,6 +370,66 @@ function AktivitiPraKalifahPage() {
     </div>
   );
 }
+
+const CONFETTI_WARNA = ["bg-rose-400", "bg-sky-400", "bg-amber-400", "bg-violet-400", "bg-emerald-400"];
+
+function ConfettiButang() {
+  const kepingan = Array.from({ length: 8 });
+  return (
+    <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+      {kepingan.map((_, i) => {
+        const angle = (i / kepingan.length) * Math.PI * 2;
+        const jarak = 60 + Math.random() * 30;
+        const cx = Math.cos(angle) * jarak;
+        const cy = Math.sin(angle) * jarak;
+        const warna = CONFETTI_WARNA[i % CONFETTI_WARNA.length];
+        return (
+          <span
+            key={i}
+            className={`absolute h-2.5 w-2.5 rounded-sm ${warna} animate-confetti-burst`}
+            style={
+              {
+                ["--cx" as string]: `${cx}px`,
+                ["--cy" as string]: `${cy}px`,
+                animationDelay: `${i * 30}ms`,
+              } as React.CSSProperties
+            }
+          />
+        );
+      })}
+    </div>
+  );
+}
+
+function ConfettiPenuhSkrin() {
+  const kepingan = Array.from({ length: 40 });
+  return (
+    <div className="pointer-events-none absolute inset-0 z-20 overflow-hidden">
+      {kepingan.map((_, i) => {
+        const left = Math.random() * 100;
+        const delay = Math.random() * 0.6;
+        const dur = 1.8 + Math.random() * 1.4;
+        const size = 8 + Math.random() * 8;
+        const warna = CONFETTI_WARNA[i % CONFETTI_WARNA.length];
+        const bulat = i % 2 === 0;
+        return (
+          <span
+            key={i}
+            className={`absolute top-0 ${warna} ${bulat ? "rounded-full" : "rounded-sm"} animate-confetti-fall`}
+            style={{
+              left: `${left}%`,
+              width: `${size}px`,
+              height: `${size}px`,
+              animationDelay: `${delay}s`,
+              animationDuration: `${dur}s`,
+            }}
+          />
+        );
+      })}
+    </div>
+  );
+}
+
 
 function PaparKira({ data }: { data: DataKira }) {
   const bilangan = Math.max(0, Math.min(10, data.bilangan ?? 0));
