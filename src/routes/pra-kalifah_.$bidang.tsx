@@ -51,7 +51,7 @@ const IKON_KIRA: Record<string, { Icon: LucideIcon; cls: string }> = {
 
 const BIDANG_CONFIG: Record<
   string,
-  { namaAktiviti: string; tajuk: string; mesejSelesai: string; jenis: "huruf" | "kira" }
+  { namaAktiviti: string; tajuk: string; mesejSelesai: string; jenis: "huruf" | "kira" | "adab" }
 > = {
   bahasa: {
     namaAktiviti: "Cari Huruf",
@@ -64,6 +64,12 @@ const BIDANG_CONFIG: Record<
     tajuk: "Kira Bersama",
     mesejSelesai: "Syabas! Kamu dah pandai kira!",
     jenis: "kira",
+  },
+  kerohanian: {
+    namaAktiviti: "Adab Harian",
+    tajuk: "Adab Harian",
+    mesejSelesai: "Syabas! Kamu budak yang baik!",
+    jenis: "adab",
   },
 };
 
@@ -260,7 +266,11 @@ function AktivitiPraKalifahPage() {
                 type="button"
                 disabled={disabled}
                 onClick={() => pilih(p.key, p.nilai)}
-                className={`flex aspect-square items-center justify-center rounded-3xl font-display text-6xl font-extrabold shadow-card transition sm:text-7xl ${
+                className={`flex aspect-square items-center justify-center rounded-3xl p-3 text-center font-display font-extrabold shadow-card transition ${
+                  config.jenis === "adab"
+                    ? "text-base leading-snug sm:text-lg"
+                    : "text-6xl sm:text-7xl"
+                } ${
                   isBetul
                     ? "bg-emerald-500 text-white animate-pop"
                     : isSalah
