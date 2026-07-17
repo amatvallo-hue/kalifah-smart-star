@@ -29,12 +29,14 @@ interface Bidang {
 const IKON_MAP: Record<string, LucideIcon> = {
   abc: BookOpen,
   shapes: Shapes,
+  "moon-star": Sparkles,
 };
 
 // map bidang → slug rute + tema warna kad
 function bidangSlug(ikon: string | null, nama: string): string {
   if (ikon === "abc") return "bahasa";
   if (ikon === "shapes") return "kognitif";
+  if (ikon === "moon-star") return "kerohanian";
   return nama.toLowerCase().replace(/\s+/g, "-");
 }
 
@@ -43,6 +45,12 @@ function bidangTema(warna: string | null): { grad: string; text: string } {
     return {
       grad: "from-violet-400 to-fuchsia-300",
       text: "text-violet-900",
+    };
+  }
+  if (warna === "success") {
+    return {
+      grad: "from-emerald-400 to-teal-300",
+      text: "text-emerald-900",
     };
   }
   // accent (default)
