@@ -189,25 +189,44 @@ function PulauPraKalifahPage() {
           </Link>
         </div>
 
-        <div className="relative flex items-end gap-4 overflow-hidden rounded-3xl bg-gradient-to-br from-[#FF7B9C]/30 via-[#FFD166]/30 to-[#5AC8FA]/30 p-5 shadow-card sm:gap-6 sm:p-6">
-          {/* Decorative clouds */}
-          <span className="pointer-events-none absolute left-4 top-3 text-5xl opacity-60 animate-cloud-drift">☁️</span>
-          <span className="pointer-events-none absolute right-12 top-5 text-4xl opacity-50 animate-cloud-drift" style={{ animationDelay: "6s" }}>☁️</span>
+        <div className="relative min-h-[220px] rounded-3xl p-5 shadow-card sm:min-h-[300px] sm:p-6">
+          {/* Background gradient + decorations (clipped to card shape) */}
+          <div className="absolute inset-0 overflow-hidden rounded-3xl bg-gradient-to-br from-[#FF7B9C]/30 via-[#FFD166]/30 to-[#5AC8FA]/30">
+            {/* Decorative clouds */}
+            <span className="pointer-events-none absolute left-4 top-3 text-5xl opacity-60 animate-cloud-drift">☁️</span>
+            <span className="pointer-events-none absolute right-12 top-5 text-4xl opacity-50 animate-cloud-drift" style={{ animationDelay: "6s" }}>☁️</span>
 
-          {/* Decorative stars */}
-          <span className="pointer-events-none absolute left-1/4 top-4 text-3xl opacity-70 animate-twinkle">⭐</span>
-          <span className="pointer-events-none absolute right-1/3 top-2 text-2xl opacity-80 animate-twinkle" style={{ animationDelay: "0.7s" }}>⭐</span>
-          <span className="pointer-events-none absolute left-2/3 top-6 text-3xl opacity-75 animate-twinkle" style={{ animationDelay: "1.4s" }}>⭐</span>
+            {/* Decorative stars */}
+            <span className="pointer-events-none absolute left-1/4 top-4 text-3xl opacity-70 animate-twinkle">⭐</span>
+            <span className="pointer-events-none absolute right-1/3 top-2 text-2xl opacity-80 animate-twinkle" style={{ animationDelay: "0.7s" }}>⭐</span>
+            <span className="pointer-events-none absolute left-2/3 top-6 text-3xl opacity-75 animate-twinkle" style={{ animationDelay: "1.4s" }}>⭐</span>
 
-          {/* Decorative balloon */}
-          <span className="pointer-events-none absolute right-6 bottom-4 text-6xl opacity-70 animate-balloon-float">🎈</span>
+            {/* Decorative balloon */}
+            <span className="pointer-events-none absolute right-6 bottom-4 text-6xl opacity-70 animate-balloon-float">🎈</span>
+          </div>
 
+          {/* Mascot — pops out past the card edge */}
           <img
             src={IMG_MASCOT}
             alt="Mascot"
-            className="h-28 shrink-0 self-end object-contain sm:h-36"
+            className="absolute -left-4 -bottom-8 z-20 h-56 w-auto object-contain sm:h-72 sm:-bottom-10"
           />
-          <div className="flex flex-col gap-1 pb-1">
+
+          {/* Speech bubble */}
+          <div className="absolute left-40 top-4 z-30 sm:left-56 sm:top-8">
+            <div className="relative rounded-2xl bg-[#FFFBF0] px-3 py-2 shadow-lg sm:rounded-3xl sm:px-4 sm:py-2.5">
+              <p className="font-display text-sm font-extrabold text-[#0F172A] sm:text-lg">
+                Hai kawan! 👋
+              </p>
+              <p className="text-xs font-semibold text-[#0F172A]/70 sm:text-sm">
+                Jom belajar hari ini!
+              </p>
+              <div className="absolute -left-2 top-1/2 h-3 w-3 -translate-y-1/2 rotate-45 bg-[#FFFBF0] sm:h-4 sm:w-4" />
+            </div>
+          </div>
+
+          {/* Heading */}
+          <div className="absolute left-44 right-5 bottom-5 z-10 text-right sm:left-auto sm:bottom-6 sm:right-6 sm:max-w-[320px]">
             <h1 className="font-display text-2xl font-extrabold text-[#0F172A] sm:text-4xl">
               Dunia Pra Kalifah 🌈
             </h1>
