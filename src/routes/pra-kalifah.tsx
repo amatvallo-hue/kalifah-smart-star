@@ -185,8 +185,12 @@ function PulauPraKalifahPage() {
         </div>
 
         <div className="flex items-center gap-4 rounded-3xl bg-gradient-to-br from-[#FF7B9C]/30 via-[#FFD166]/30 to-[#5AC8FA]/30 p-5 shadow-card sm:gap-6 sm:p-6">
-          <div className="flex h-24 w-24 shrink-0 items-center justify-center rounded-3xl bg-gradient-to-br from-[#FF7B9C] to-[#CBA6F7] text-white shadow-lg ring-[6px] ring-white animate-wiggle-float sm:h-28 sm:w-28">
-            <Baby className="h-12 w-12 sm:h-14 sm:w-14" strokeWidth={2.5} />
+          <div className="flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-3xl bg-gradient-to-br from-[#FF7B9C] to-[#CBA6F7] text-white shadow-lg ring-[6px] ring-white animate-wiggle-float sm:h-28 sm:w-28">
+            <img
+              src={IMG_MASCOT}
+              alt="Mascot"
+              className="h-full w-full rounded-3xl object-cover"
+            />
           </div>
           <div className="flex flex-col gap-1">
             <h1 className="font-display text-2xl font-extrabold text-[#0F172A] sm:text-4xl">
