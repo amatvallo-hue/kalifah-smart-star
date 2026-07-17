@@ -126,8 +126,8 @@ function PulauPraKalifahPage() {
         </div>
 
         <div className="flex flex-col items-center gap-3 text-center">
-          <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-rose-400 to-rose-300 text-rose-900 shadow-soft animate-wiggle-float">
-            <Baby className="h-10 w-10" strokeWidth={2.5} />
+          <div className="flex h-24 w-24 items-center justify-center rounded-3xl bg-gradient-to-br from-rose-400 to-rose-300 text-rose-900 shadow-soft ring-8 ring-rose-200/70 animate-wiggle-float">
+            <Baby className="h-12 w-12" strokeWidth={2.5} />
           </div>
           <h1 className="font-display text-3xl font-extrabold text-foreground sm:text-4xl">
             Pulau Pra Kalifah
