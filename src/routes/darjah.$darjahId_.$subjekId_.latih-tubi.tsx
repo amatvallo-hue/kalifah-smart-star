@@ -124,6 +124,15 @@ function LatihTubiPage() {
   const [bahasa, setBahasa] = useState<"bm" | "en" | null>(showBahasaToggle ? null : "bm");
   const darjahNum = Number(darjahId);
 
+  const subjekQueryResolved =
+    isMatematik
+      ? bahasa === "en"
+        ? "matematik-en"
+        : "matematik"
+      : subjekId === "sains" && bahasa === "en"
+        ? "sains-en"
+        : subjekId;
+
   const [bank, setBank] = useState<Soalan[]>([]);
   const [order, setOrder] = useState<number[]>([]);
   const [cursor, setCursor] = useState(0);
