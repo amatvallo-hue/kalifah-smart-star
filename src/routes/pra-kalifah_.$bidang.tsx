@@ -266,7 +266,11 @@ function AktivitiPraKalifahPage() {
                 type="button"
                 disabled={disabled}
                 onClick={() => pilih(p.key, p.nilai)}
-                className={`flex aspect-square items-center justify-center rounded-3xl font-display text-6xl font-extrabold shadow-card transition sm:text-7xl ${
+                className={`flex aspect-square items-center justify-center rounded-3xl p-3 text-center font-display font-extrabold shadow-card transition ${
+                  config.jenis === "adab"
+                    ? "text-base leading-snug sm:text-lg"
+                    : "text-6xl sm:text-7xl"
+                } ${
                   isBetul
                     ? "bg-emerald-500 text-white animate-pop"
                     : isSalah
