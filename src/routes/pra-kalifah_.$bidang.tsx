@@ -51,7 +51,7 @@ const IKON_KIRA: Record<string, { Icon: LucideIcon; cls: string }> = {
 
 const BIDANG_CONFIG: Record<
   string,
-  { namaAktiviti: string; tajuk: string; mesejSelesai: string; jenis: "huruf" | "kira" }
+  { namaAktiviti: string; tajuk: string; mesejSelesai: string; jenis: "huruf" | "kira" | "adab" }
 > = {
   bahasa: {
     namaAktiviti: "Cari Huruf",
@@ -64,6 +64,12 @@ const BIDANG_CONFIG: Record<
     tajuk: "Kira Bersama",
     mesejSelesai: "Syabas! Kamu dah pandai kira!",
     jenis: "kira",
+  },
+  kerohanian: {
+    namaAktiviti: "Adab Harian",
+    tajuk: "Adab Harian",
+    mesejSelesai: "Syabas! Kamu budak yang baik!",
+    jenis: "adab",
   },
 };
 
