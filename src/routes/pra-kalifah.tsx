@@ -314,15 +314,12 @@ function PulauPraKalifahPage() {
                     {TAHAP_DESC[t.nombor]}
                   </p>
 
-                  {totalBadge ? (
+                  {totalBadge && (
                     <span className="mt-2 inline-flex w-fit items-center rounded-full bg-white/90 px-3 py-1 font-display text-xs font-extrabold text-[#0F172A] shadow-sm">
                       {totalBadge}
                     </span>
-                  ) : (
-                    <span className="mt-2 inline-flex w-fit items-center rounded-full bg-white/60 px-3 py-1 font-display text-xs font-extrabold text-[#0F172A]/50">
-                      0 aktiviti
-                    </span>
                   )}
+
 
                   <span
                     className="mt-auto flex w-full items-center justify-center gap-1 rounded-full px-4 py-2.5 font-display text-sm font-extrabold text-white shadow-md"
