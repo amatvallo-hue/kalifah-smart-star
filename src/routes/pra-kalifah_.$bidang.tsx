@@ -1,6 +1,38 @@
 import { createFileRoute, Link, useParams } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { ArrowLeft, Baby, Loader2, Star, Heart, Sun, Circle, Flower2 } from "lucide-react";
+import {
+  ArrowLeft,
+  Baby,
+  Loader2,
+  Star,
+  Heart,
+  Sun,
+  Circle,
+  Flower2,
+  Sparkles,
+  Hand,
+  DoorOpen,
+  VolumeX,
+  HandHeart,
+  Smartphone,
+  Home,
+  Megaphone,
+  Users,
+  Laugh,
+  Cat,
+  Footprints,
+  Utensils,
+  Angry,
+  Frown,
+  Music,
+  Handshake,
+  Ban,
+  ThumbsUp,
+  LogIn,
+  Moon,
+  HandHelping,
+  HelpCircle,
+} from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { StarReward } from "@/components/StarReward";
@@ -47,6 +79,32 @@ const IKON_KIRA: Record<string, { Icon: LucideIcon; cls: string }> = {
   sun: { Icon: Sun, cls: "fill-yellow-300 text-yellow-500" },
   circle: { Icon: Circle, cls: "fill-sky-400 text-sky-500" },
   flower: { Icon: Flower2, cls: "fill-fuchsia-400 text-fuchsia-500" },
+};
+
+const IKON_ADAB: Record<string, LucideIcon> = {
+  Alhamdulillah: Sparkles,
+  Assalamualaikum: Hand,
+  "Buka Almari": DoorOpen,
+  Diam: VolumeX,
+  Doa: HandHeart,
+  Gajet: Smartphone,
+  "Ibu Bapa": Home,
+  Jerit: Megaphone,
+  Kawan: Users,
+  Ketawa: Laugh,
+  Kucing: Cat,
+  Lari: Footprints,
+  Maaf: Heart,
+  Makan: Utensils,
+  Marah: Angry,
+  Menangis: Frown,
+  Nyanyi: Music,
+  Salam: Handshake,
+  "Tak Nak": Ban,
+  "Terima Kasih": ThumbsUp,
+  "Terus Masuk": LogIn,
+  Tidur: Moon,
+  Tolong: HandHelping,
 };
 
 const BIDANG_CONFIG: Record<
@@ -260,15 +318,16 @@ function AktivitiPraKalifahPage() {
             const isSalah = salah === p.key;
             const disabled = betul !== null;
             const baseColor = BUTANG_WARNA[i];
+            const IkonAdab = config.jenis === "adab" ? (IKON_ADAB[p.nilai] ?? HelpCircle) : null;
             return (
               <button
                 key={p.key}
                 type="button"
                 disabled={disabled}
                 onClick={() => pilih(p.key, p.nilai)}
-                className={`flex aspect-square items-center justify-center rounded-3xl p-3 text-center font-display font-extrabold shadow-card transition ${
+                className={`flex aspect-square flex-col items-center justify-center gap-2 rounded-3xl p-3 text-center font-display font-extrabold shadow-card transition ${
                   config.jenis === "adab"
-                    ? "text-base leading-snug sm:text-lg"
+                    ? "text-sm sm:text-base"
                     : "text-6xl sm:text-7xl"
                 } ${
                   isBetul
@@ -278,7 +337,14 @@ function AktivitiPraKalifahPage() {
                       : `${baseColor} hover:-translate-y-1 hover:shadow-soft`
                 } ${disabled && !isBetul ? "opacity-70" : ""}`}
               >
-                {p.nilai}
+                {IkonAdab ? (
+                  <>
+                    <IkonAdab className="h-10 w-10 sm:h-12 sm:w-12" strokeWidth={2.5} />
+                    <span className="leading-tight">{p.nilai}</span>
+                  </>
+                ) : (
+                  p.nilai
+                )}
               </button>
             );
           })}
