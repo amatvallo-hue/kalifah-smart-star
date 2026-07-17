@@ -226,11 +226,11 @@ function PulauPraKalifahPage() {
           </div>
 
           {/* Heading */}
-          <div className="absolute left-44 right-5 bottom-5 z-10 text-right sm:left-auto sm:bottom-6 sm:right-6 sm:max-w-[320px]">
-            <h1 className="font-display text-2xl font-extrabold text-[#0F172A] sm:text-4xl">
+          <div className="absolute left-44 right-5 top-0 bottom-0 z-10 flex flex-col justify-center text-right sm:left-auto sm:right-10 sm:max-w-[360px]">
+            <h1 className="font-display text-2xl font-extrabold leading-tight text-[#0F172A] sm:text-5xl">
               Dunia Pra Kalifah 🌈
             </h1>
-            <p className="text-sm font-semibold text-[#0F172A]/70 sm:text-base">
+            <p className="mt-1 text-sm font-semibold text-[#0F172A]/70 sm:text-lg">
               {tahapDipilih === 1
                 ? "Pilih bidang yang kamu nak belajar hari ini!"
                 : "Pilih tahap yang sesuai untuk anak kamu!"}
