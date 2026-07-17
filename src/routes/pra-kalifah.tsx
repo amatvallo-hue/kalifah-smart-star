@@ -178,18 +178,26 @@ function PulauPraKalifahPage() {
 export function BlobsLatar() {
   return (
     <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
-      <div className="absolute -left-24 -top-24 h-72 w-72 rounded-full bg-rose-300 opacity-30 blur-3xl animate-blob-drift" />
+      <div className="absolute -left-28 -top-28 h-96 w-96 rounded-full bg-rose-300 opacity-60 blur-3xl animate-blob-drift" />
       <div
-        className="absolute -right-20 top-32 h-64 w-64 rounded-full bg-sky-300 opacity-30 blur-3xl animate-blob-drift"
+        className="absolute -right-24 top-24 h-80 w-80 rounded-full bg-sky-300 opacity-60 blur-3xl animate-blob-drift"
         style={{ animationDelay: "2s" }}
       />
       <div
-        className="absolute left-1/3 -bottom-24 h-80 w-80 rounded-full bg-amber-200 opacity-40 blur-3xl animate-blob-drift"
+        className="absolute left-1/4 -bottom-28 h-[26rem] w-[26rem] rounded-full bg-amber-200 opacity-65 blur-3xl animate-blob-drift"
         style={{ animationDelay: "4s" }}
       />
       <div
-        className="absolute -right-16 -bottom-20 h-72 w-72 rounded-full bg-violet-300 opacity-25 blur-3xl animate-blob-drift"
+        className="absolute -right-20 -bottom-24 h-96 w-96 rounded-full bg-violet-300 opacity-55 blur-3xl animate-blob-drift"
         style={{ animationDelay: "6s" }}
+      />
+      <div
+        className="absolute left-1/2 top-1/3 h-72 w-72 -translate-x-1/2 rounded-full bg-emerald-200 opacity-50 blur-3xl animate-blob-drift"
+        style={{ animationDelay: "3s" }}
+      />
+      <div
+        className="absolute right-1/4 top-4 h-64 w-64 rounded-full bg-fuchsia-200 opacity-55 blur-3xl animate-blob-drift"
+        style={{ animationDelay: "5s" }}
       />
     </div>
   );
