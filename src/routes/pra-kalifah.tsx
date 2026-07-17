@@ -13,7 +13,7 @@ import type { LucideIcon } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 const IMG_MASCOT =
-  "https://pgpkqbdyxoejwvubluqq.supabase.co/storage/v1/object/public/pra-kalifah-imej/a%20lush%203d%20render%20of%20Adorable%20teal%20green%20baby%20owl%20mascot%20character%2C%20premium%203D%20cartoon%20illustration%2C%20educational%20mascot%20for%20preschool%20learning%20platform.%20Large%20glossy%20expressive%20eyes%2C%20one%20eye%20playfully%20winking%2C%20cheerful%20smile%2C%20waving%20one%20wing.jpg";
+  "https://pgpkqbdyxoejwvubluqq.supabase.co/storage/v1/object/public/pra-kalifah-imej/owl-mascot-nobg.png";
 const IMG_TAHAP1_ISTANA =
   "https://pgpkqbdyxoejwvubluqq.supabase.co/storage/v1/object/public/pra-kalifah-imej/a%20lush%203d%20render%20of%20Cute%20magical%20pink%20fairytale%20castle%20island%2C%20premium%203D%20cartoon%20illustration%2C%20learning%20world%20for%20preschool%20children.%20Beautiful%20pastel%20pink%20castle%20with%20rounded%20towers%2C%20soft%20coral-pink%20roofs%2C%20golden%20flags%2C%20floating%20clouds%2C%20t.jpg";
 const IMG_TAHAP2_RUMAH =
