@@ -577,12 +577,12 @@ function AktivitiPraKalifahPage() {
                 onClick={() => pilih(p.key, p.nilai)}
                 style={!disabled ? { animationDelay: `${i * 350}ms` } : undefined}
                 aria-label={p.nilai}
-                className={`relative flex aspect-square flex-col items-center justify-center gap-2 overflow-visible rounded-3xl p-3 text-center font-display font-extrabold shadow-card transition ${
+                className={`relative flex aspect-square flex-col items-center justify-center gap-2 overflow-visible rounded-3xl text-center font-display font-extrabold shadow-card transition ${
                   guna_ikon_besar
-                    ? "text-sm sm:text-base"
+                    ? "p-3 text-sm sm:text-base"
                     : config.jenis === "kosa-kata"
-                      ? "text-5xl sm:text-6xl"
-                      : "text-6xl sm:text-7xl"
+                      ? "p-1 text-7xl sm:text-8xl"
+                      : "p-3 text-6xl sm:text-7xl"
                 } ${
                   isBetul
                     ? "bg-emerald-500 text-white animate-pop"
