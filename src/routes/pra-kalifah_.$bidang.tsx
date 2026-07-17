@@ -1,6 +1,38 @@
 import { createFileRoute, Link, useParams } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { ArrowLeft, Baby, Loader2, Star, Heart, Sun, Circle, Flower2 } from "lucide-react";
+import {
+  ArrowLeft,
+  Baby,
+  Loader2,
+  Star,
+  Heart,
+  Sun,
+  Circle,
+  Flower2,
+  Sparkles,
+  Hand,
+  DoorOpen,
+  VolumeX,
+  HandHeart,
+  Smartphone,
+  Home,
+  Megaphone,
+  Users,
+  Laugh,
+  Cat,
+  Footprints,
+  Utensils,
+  Angry,
+  Frown,
+  Music,
+  Handshake,
+  Ban,
+  ThumbsUp,
+  LogIn,
+  Moon,
+  HandHelping,
+  HelpCircle,
+} from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { StarReward } from "@/components/StarReward";
