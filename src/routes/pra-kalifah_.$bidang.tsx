@@ -538,6 +538,12 @@ function AktivitiPraKalifahPage() {
             const disabled = betul !== null;
             const baseColor = BUTANG_WARNA[i];
             const IkonAdab = guna_ikon_besar ? (IKON_ADAB[p.nilai] ?? HelpCircle) : null;
+            const IkonBentuk = config.jenis === "bentuk" ? (IKON_BENTUK[p.nilai] ?? HelpCircle) : null;
+            const swatchCls = config.jenis === "warna" ? (WARNA_SWATCH[p.nilai] ?? "bg-gray-300") : null;
+            const isVisual = config.jenis === "warna" || config.jenis === "bentuk";
+            const bgCls = swatchCls
+              ? `${swatchCls} hover:brightness-110 text-white ring-4 ring-white/60`
+              : baseColor;
             return (
               <button
                 key={p.key}
@@ -545,6 +551,7 @@ function AktivitiPraKalifahPage() {
                 disabled={disabled}
                 onClick={() => pilih(p.key, p.nilai)}
                 style={!disabled ? { animationDelay: `${i * 350}ms` } : undefined}
+                aria-label={p.nilai}
                 className={`relative flex aspect-square flex-col items-center justify-center gap-2 overflow-visible rounded-3xl p-3 text-center font-display font-extrabold shadow-card transition ${
                   guna_ikon_besar
                     ? "text-sm sm:text-base"
@@ -553,8 +560,8 @@ function AktivitiPraKalifahPage() {
                   isBetul
                     ? "bg-emerald-500 text-white animate-pop"
                     : isSalah
-                      ? `${baseColor} animate-shake`
-                      : `${baseColor} animate-idle-pulse hover:-translate-y-1 hover:shadow-soft`
+                      ? `${bgCls} animate-shake`
+                      : `${bgCls} animate-idle-pulse hover:-translate-y-1 hover:shadow-soft`
                 } ${disabled && !isBetul ? "opacity-70" : ""}`}
               >
                 {IkonAdab ? (
@@ -562,7 +569,13 @@ function AktivitiPraKalifahPage() {
                     <IkonAdab className="h-10 w-10 sm:h-12 sm:w-12" strokeWidth={2.5} />
                     <span className="leading-tight">{p.nilai}</span>
                   </>
-                ) : (
+                ) : IkonBentuk ? (
+                  <IkonBentuk
+                    className="h-20 w-20 sm:h-24 sm:w-24 text-white"
+                    strokeWidth={2.5}
+                    fill="currentColor"
+                  />
+                ) : isVisual ? null : (
                   p.nilai
                 )}
                 {isBetul && <ConfettiButang />}
