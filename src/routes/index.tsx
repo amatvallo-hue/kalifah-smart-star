@@ -3,6 +3,7 @@ import {
   Sparkles,
   Star,
   Check,
+  CheckCircle2,
   PenLine,
   Languages,
   Calculator,
@@ -228,23 +229,89 @@ function DashboardMockup() {
           className="rounded-full px-3 py-1 font-display text-[11px] font-extrabold text-white"
           style={{ backgroundColor: HIJAU, border: `2px solid ${HIJAU}` }}
         >
-          Aisyah Sufiya • D5
+          Musa • D4
         </span>
         <span
           className="rounded-full px-3 py-1 font-display text-[11px] font-extrabold"
           style={{ backgroundColor: `${HIJAU}14`, color: HIJAU, border: `2px solid ${HIJAU}33` }}
         >
-          Adam Safwan • D3
+          Airis • D2
         </span>
       </div>
 
-      {/* Minggu Ini */}
-      <SectionHead ikon={<Calendar className="h-3.5 w-3.5" />} tajuk="Minggu Ini" />
-      <div className="grid grid-cols-4 gap-2">
-        <MockStat label="Soalan" nilai="124" icon={<BookOpen className="h-3.5 w-3.5" />} warna={HIJAU} />
-        <MockStat label="Ketepatan" nilai="92%" icon={<Target className="h-3.5 w-3.5" />} warna={EMAS} light />
-        <MockStat label="Masa" nilai="45m" icon={<Clock className="h-3.5 w-3.5" />} warna={HIJAU} light />
-        <MockStat label="Bab" nilai="18" icon={<TrendingUp className="h-3.5 w-3.5" />} warna={EMAS} />
+      {/* Progress Minggu Ini */}
+      <SectionHead ikon={<Calendar className="h-3.5 w-3.5" />} tajuk="Progress Minggu Ini" />
+      <div
+        className="relative overflow-hidden rounded-2xl border-2 p-3 shadow-soft"
+        style={{
+          borderColor: "#FBC02D",
+          background:
+            "linear-gradient(135deg, #FFF8E1 0%, #FFFDF5 55%, #FFF3D1 100%)",
+        }}
+      >
+        <div className="absolute -right-6 -top-6 h-20 w-20 rounded-full bg-[#F9A825]/15 blur-2xl" />
+        <div className="relative flex items-center gap-3">
+          <div
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white shadow-soft"
+            style={{ background: "linear-gradient(135deg, #F5B82E, #E48A0A)" }}
+          >
+            <TrendingUp className="h-5 w-5" />
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="text-[10px] font-extrabold uppercase tracking-wide text-[#8A5A00]">7 Hari Terakhir</p>
+            <div className="mt-1 flex flex-wrap gap-3">
+              <span className="font-display text-lg font-extrabold leading-tight text-foreground">
+                124 <span className="text-[10px] font-bold text-muted-foreground">soalan</span>
+              </span>
+              <span className="font-display text-lg font-extrabold leading-tight text-foreground">
+                92% <span className="text-[10px] font-bold text-muted-foreground">ketepatan</span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Misi Harian */}
+      <SectionHead ikon={<Target className="h-3.5 w-3.5" />} tajuk="Misi Harian" />
+      <div className="grid gap-2">
+        <div
+          className="flex items-center gap-2 rounded-xl bg-card p-2 shadow-soft"
+          style={{ border: `2px solid ${HIJAU}1f` }}
+        >
+          <CheckCircle2 className="h-4 w-4 shrink-0" style={{ color: HIJAU }} />
+          <span className="text-[10px] font-bold text-foreground">10 Soalan</span>
+          <span className="ml-auto text-[9px] font-extrabold text-emerald-600">Selesai</span>
+        </div>
+        <div
+          className="flex items-center gap-2 rounded-xl bg-card p-2 shadow-soft"
+          style={{ border: `2px solid ${HIJAU}1f` }}
+        >
+          <CheckCircle2 className="h-4 w-4 shrink-0" style={{ color: HIJAU }} />
+          <span className="text-[10px] font-bold text-foreground">15 Minit</span>
+          <span className="ml-auto text-[9px] font-extrabold text-emerald-600">Selesai</span>
+        </div>
+        <div
+          className="flex items-center gap-2 rounded-xl bg-card p-2 shadow-soft"
+          style={{ border: `2px solid ${HIJAU}1f` }}
+        >
+          <Award className="h-4 w-4 shrink-0" style={{ color: EMAS }} />
+          <span className="text-[10px] font-bold text-foreground">Skor 80%+</span>
+          <span className="ml-auto text-[9px] font-extrabold text-muted-foreground">○</span>
+        </div>
+      </div>
+
+      {/* Kesediaan Peperiksaan */}
+      <SectionHead ikon={<ShieldCheck className="h-3.5 w-3.5" />} tajuk="Kesediaan Peperiksaan" />
+      <div className="flex flex-wrap gap-2">
+        <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-1 text-[10px] font-extrabold text-emerald-700">
+          <Check className="h-3 w-3" /> BM SEDIA
+        </span>
+        <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-1 text-[10px] font-extrabold text-emerald-700">
+          <Check className="h-3 w-3" /> Matematik SEDIA
+        </span>
+        <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2.5 py-1 text-[10px] font-extrabold text-amber-700">
+          <Clock className="h-3 w-3" /> BI 65%
+        </span>
       </div>
 
       {/* Kemajuan Subjek */}
