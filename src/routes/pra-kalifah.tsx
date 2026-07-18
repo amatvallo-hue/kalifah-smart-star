@@ -254,9 +254,11 @@ function PulauPraKalifahPage() {
             to="/pilih-darjah"
             className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 font-display text-xs font-extrabold text-[#0F172A] shadow-card transition hover:bg-white/80"
           >
-            <ArrowLeft className="h-4 w-4" /> Kembali
+            <ArrowLeft className="h-4 w-4" /> {bahasa === "en" ? "Back" : "Kembali"}
           </Link>
+          <ToggleBahasa bahasa={bahasa} setBahasa={setBahasa} />
         </div>
+
 
         <div className="relative min-h-[220px] rounded-3xl p-5 shadow-card sm:min-h-[300px] sm:p-6">
           {/* Background gradient + decorations (clipped to card shape) */}
