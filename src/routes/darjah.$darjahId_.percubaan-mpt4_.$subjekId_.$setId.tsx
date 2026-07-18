@@ -474,10 +474,11 @@ function SoalanCard({
   onChange: (v: string) => void;
 }) {
   const { bm, en } = splitBilingual(soalan.teks_soalan);
-  const isMcq = soalan.kaedah_penskoran === "dikotomus" && soalan.pilihan_a != null;
-  const isWordFill = soalan.kaedah_penskoran === "dikotomus" && soalan.pilihan_a == null;
-  const isAnalitikal = soalan.kaedah_penskoran === "analitikal";
-  const isHolistik = soalan.kaedah_penskoran === "holistik";
+  const isSrtb = soalan.jenis_item === "SRTb" && !!soalan.langkah_bertingkat;
+  const isMcq = !isSrtb && soalan.kaedah_penskoran === "dikotomus" && soalan.pilihan_a != null;
+  const isWordFill = !isSrtb && soalan.kaedah_penskoran === "dikotomus" && soalan.pilihan_a == null;
+  const isAnalitikal = !isSrtb && soalan.kaedah_penskoran === "analitikal";
+  const isHolistik = !isSrtb && soalan.kaedah_penskoran === "holistik";
 
   return (
     <article className="rounded-3xl border border-border/60 bg-card p-5 shadow-card md:p-6">
@@ -519,9 +520,23 @@ function SoalanCard({
       ) : null}
 
       <div className="mt-4">
-        <p className="text-base leading-relaxed text-foreground whitespace-pre-wrap">{bm}</p>
-        {en && <p className="mt-1 text-sm italic leading-relaxed text-muted-foreground whitespace-pre-wrap">{en}</p>}
+        <p
+          className="text-base leading-relaxed text-foreground whitespace-pre-wrap"
+          dangerouslySetInnerHTML={{ __html: bm }}
+        />
+        {en && (
+          <p
+            className="mt-1 text-sm italic leading-relaxed text-muted-foreground whitespace-pre-wrap"
+            dangerouslySetInnerHTML={{ __html: en }}
+          />
+        )}
       </div>
+
+      {isSrtb && soalan.langkah_bertingkat && (
+        <div className="mt-4">
+          <SrtbBlock lb={soalan.langkah_bertingkat} value={value} onChange={onChange} />
+        </div>
+      )}
 
       <div className="mt-4">
         {isMcq && (
