@@ -412,7 +412,7 @@ function AktivitiPraKalifahPage() {
                   </div>
                   <div className="text-center">
                     <h2 className="font-display text-base font-extrabold text-foreground sm:text-lg">
-                      {a.tajuk}
+                      {bahasa === "en" && a.tajukEn ? a.tajukEn : a.tajuk}
                     </h2>
                   </div>
                 </button>
