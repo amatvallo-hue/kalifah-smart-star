@@ -542,23 +542,27 @@ function AktivitiPraKalifahPage() {
       <BlobsLatar />
       <div className="relative z-10 mx-auto flex w-full max-w-2xl flex-col gap-6 pt-4">
         <div className="flex items-center justify-between">
-          <button
-            type="button"
-            onClick={() => {
-              if (senaraiAktiviti.length > 1) {
-                kembaliKePemilihan();
-              } else {
-                window.history.back();
-              }
-            }}
-            className="inline-flex items-center gap-2 rounded-full bg-card px-4 py-2 font-display text-xs font-extrabold text-foreground shadow-card transition hover:bg-secondary"
-          >
-            <ArrowLeft className="h-4 w-4" /> Keluar
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                if (senaraiAktiviti.length > 1) {
+                  kembaliKePemilihan();
+                } else {
+                  window.history.back();
+                }
+              }}
+              className="inline-flex items-center gap-2 rounded-full bg-card px-4 py-2 font-display text-xs font-extrabold text-foreground shadow-card transition hover:bg-secondary"
+            >
+              <ArrowLeft className="h-4 w-4" /> {bahasa === "en" ? "Exit" : "Keluar"}
+            </button>
+            <ToggleBahasa bahasa={bahasa} setBahasa={setBahasa} />
+          </div>
           <span className="rounded-full bg-card px-4 py-2 font-display text-xs font-extrabold text-primary shadow-card">
             {idx + 1} / {soalan.length}
           </span>
         </div>
+
 
         <div className="flex flex-wrap justify-center gap-1.5">
           {soalan.map((_, i) => (
