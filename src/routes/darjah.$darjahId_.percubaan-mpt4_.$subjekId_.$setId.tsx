@@ -8,6 +8,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { usePoints } from "@/hooks/use-points";
 import { useProfile } from "@/hooks/use-profile";
 import { getDarjah, getSubjek, TONE_GRADIENT } from "@/lib/curriculum";
+import { SrtbBlock, type LangkahBertingkat } from "@/lib/mpt4-srtb";
 
 export const Route = createFileRoute("/darjah/$darjahId_/percubaan-mpt4_/$subjekId_/$setId")({
   head: () => ({
