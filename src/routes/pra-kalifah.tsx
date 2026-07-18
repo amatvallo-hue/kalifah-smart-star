@@ -145,6 +145,25 @@ const TAGLINE_MAP: Record<string, string> = {
   "Kerohanian Nilai dan Kewarganegaraan": "Doa & adab harian",
 };
 
+const TAGLINE_MAP_EN: Record<string, string> = {
+  "Bahasa dan Literasi": "Learn letters & words",
+  Kognitif: "Count, colors & shapes",
+  "Kerohanian Nilai dan Kewarganegaraan": "Prayers & daily manners",
+};
+
+const TAHAP_NAMA_EN: Record<number, string> = {
+  1: "Introduction",
+  2: "Basics",
+  3: "Ready for Year 1",
+};
+
+const TAHAP_DESC_EN: Record<number, string> = {
+  1: "Learn the basics in a fun way!",
+  2: "Build basic skills for the next step!",
+  3: "Get ready with confidence for Year 1!",
+};
+
+
 interface TahapInfo {
   nombor: number;
   nama: string;
