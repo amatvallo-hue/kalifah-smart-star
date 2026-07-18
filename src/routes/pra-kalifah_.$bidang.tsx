@@ -299,7 +299,7 @@ function AktivitiPraKalifahPage() {
       const { data, error } = await supabase
         .from("pra_kalifah_aktiviti" as never)
         .select(
-          "id, tertib, arahan_audio_teks, huruf_sasaran, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan_betul, data_aktiviti",
+          "id, tertib, arahan_audio_teks, arahan_audio_teks_en, huruf_sasaran, pilihan_a, pilihan_b, pilihan_c, pilihan_d, pilihan_a_en, pilihan_b_en, pilihan_c_en, pilihan_d_en, jawapan_betul, data_aktiviti",
         )
         .eq("nama_aktiviti", config.namaAktiviti)
         .eq("umur_tahun", 4)
