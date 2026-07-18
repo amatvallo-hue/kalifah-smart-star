@@ -292,6 +292,30 @@ function PulauPraKalifahPage() {
             </div>
           </>
         ) : (
+          <div className="flex items-center justify-center gap-1 rounded-full bg-white/70 px-3 py-3 shadow-card sm:gap-3 sm:px-6">
+            {TAHAP_LIST.map((t, i) => (
+              <div key={t.nombor} className="flex items-center gap-1 sm:gap-3">
+                <div className="flex flex-col items-center gap-1">
+                  <div
+                    className="flex h-11 w-11 items-center justify-center rounded-full text-xl shadow-md sm:h-14 sm:w-14 sm:text-3xl"
+                    style={{ backgroundColor: t.warna, opacity: t.terkunci ? 0.5 : 1 }}
+                  >
+                    {["🏰", "🏡", "🚀"][i]}
+                  </div>
+                  <span
+                    className="font-display text-[10px] font-extrabold sm:text-xs"
+                    style={{ color: t.terkunci ? "#0F172A66" : "#0F172A" }}
+                  >
+                    Tahap {t.nombor}
+                  </span>
+                </div>
+                {i < TAHAP_LIST.length - 1 && (
+                  <div className="mb-4 h-1 w-6 rounded-full bg-[#0F172A]/15 sm:w-14" />
+                )}
+              </div>
+            ))}
+          </div>
+
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             {TAHAP_LIST.map((t, i) => {
               const tahapImg =
