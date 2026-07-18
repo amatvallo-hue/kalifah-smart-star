@@ -388,7 +388,8 @@ function PulauPraKalifahPage() {
                     className="font-display text-[10px] font-extrabold sm:text-xs"
                     style={{ color: t.terkunci ? "#0F172A66" : "#0F172A" }}
                   >
-                    Tahap {t.nombor}
+                    {bahasa === "en" ? "Level" : "Tahap"} {t.nombor}
+
                   </span>
                 </div>
                 {i < TAHAP_LIST.length - 1 && (
