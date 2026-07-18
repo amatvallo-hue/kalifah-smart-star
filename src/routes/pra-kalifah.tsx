@@ -325,14 +325,18 @@ function PulauPraKalifahPage() {
               onClick={() => setTahapDipilih(null)}
               className="inline-flex w-fit items-center gap-2 rounded-full bg-white px-4 py-2 font-display text-xs font-extrabold text-[#0F172A] shadow-card transition hover:bg-white/80"
             >
-              <ArrowLeft className="h-4 w-4" /> Kembali ke Tahap
+              <ArrowLeft className="h-4 w-4" /> {bahasa === "en" ? "Back to Levels" : "Kembali ke Tahap"}
             </button>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               {bidang.map((b, i) => {
                 const Ikon = IKON_MAP[b.ikon_nama ?? ""] ?? BookOpen;
                 const tema = bidangTema(b.warna_kod);
                 const slug = bidangSlug(b.ikon_nama, b.nama);
-                const tagline = TAGLINE_MAP[b.nama] ?? "";
+                const tagline =
+                  bahasa === "en"
+                    ? (TAGLINE_MAP_EN[b.nama] ?? "")
+                    : (TAGLINE_MAP[b.nama] ?? "");
+                const nama = bahasa === "en" && b.nama_en ? b.nama_en : b.nama;
                 const count = kiraan[b.id] ?? 0;
                 return (
                   <Link
@@ -349,7 +353,7 @@ function PulauPraKalifahPage() {
                     </div>
                     <div className="flex flex-col items-center gap-2 text-center">
                       <h2 className="font-display text-xl font-extrabold text-foreground sm:text-2xl">
-                        {b.nama}
+                        {nama}
                       </h2>
                       {tagline && (
                         <p className="text-xs font-semibold text-muted-foreground sm:text-sm">
@@ -358,13 +362,14 @@ function PulauPraKalifahPage() {
                       )}
                       {count > 0 && (
                         <span className="inline-flex items-center rounded-full bg-white/80 px-3 py-1 font-display text-xs font-extrabold text-foreground shadow-sm">
-                          {count} aktiviti
+                          {count} {bahasa === "en" ? "activities" : "aktiviti"}
                         </span>
                       )}
                     </div>
                   </Link>
                 );
               })}
+
             </div>
           </>
         ) : (
