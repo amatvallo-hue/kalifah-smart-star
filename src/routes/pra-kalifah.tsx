@@ -500,7 +500,7 @@ function PulauPraKalifahPage() {
                 <button
                   key={t.nombor}
                   type="button"
-                  onClick={() => setToast("Tahap ni akan datang tak lama lagi!")}
+                  onClick={() => setToast(bahasa === "en" ? "This level is coming soon!" : "Tahap ni akan datang tak lama lagi!")}
                   className="cursor-not-allowed text-left"
                   aria-disabled
                 >
