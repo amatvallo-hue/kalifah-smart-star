@@ -432,12 +432,12 @@ function PulauPraKalifahPage() {
                     </div>
                     {t.nombor === 1 && (
                       <span className="rounded-full bg-[#FF7B9C] px-2.5 py-0.5 font-display text-[10px] font-extrabold text-white shadow-sm">
-                        BARU!
+                        {bahasa === "en" ? "NEW!" : "BARU!"}
                       </span>
                     )}
                     {t.terkunci && (
                       <span className="inline-flex items-center gap-1 rounded-full bg-[#0F172A]/10 px-2.5 py-0.5 font-display text-[10px] font-extrabold text-[#0F172A]">
-                        <Lock className="h-3 w-3" /> Akan Datang
+                        <Lock className="h-3 w-3" /> {bahasa === "en" ? "Coming Soon" : "Akan Datang"}
                       </span>
                     )}
                   </div>
@@ -449,10 +449,10 @@ function PulauPraKalifahPage() {
                   />
 
                   <h2 className="mt-2 font-display text-xl font-extrabold text-[#0F172A]">
-                    {t.nama}
+                    {bahasa === "en" ? TAHAP_NAMA_EN[t.nombor] : t.nama}
                   </h2>
                   <p className="text-xs font-semibold text-[#0F172A]/70">
-                    {TAHAP_DESC[t.nombor]}
+                    {bahasa === "en" ? TAHAP_DESC_EN[t.nombor] : TAHAP_DESC[t.nombor]}
                   </p>
 
                   {totalBadge && (
@@ -464,13 +464,13 @@ function PulauPraKalifahPage() {
                   {t.nombor === 1 && (
                     <div className="mt-3 rounded-2xl bg-white/70 p-3">
                       <p className="mb-2 font-display text-[10px] font-extrabold uppercase tracking-wide text-[#0F172A]/50">
-                        Aktiviti Hari Ini
+                        {bahasa === "en" ? "Today's Activities" : "Aktiviti Hari Ini"}
                       </p>
                       <div className="grid grid-cols-2 gap-x-2 gap-y-1.5">
-                        <span className="text-xs font-semibold text-[#0F172A]">🔤 Cari Huruf</span>
-                        <span className="text-xs font-semibold text-[#0F172A]">🍎 Buah-buahan</span>
-                        <span className="text-xs font-semibold text-[#0F172A]">🐱 Haiwan</span>
-                        <span className="text-xs font-semibold text-[#0F172A]">🔢 Pilih Nombor</span>
+                        <span className="text-xs font-semibold text-[#0F172A]">🔤 {bahasa === "en" ? "Find Letters" : "Cari Huruf"}</span>
+                        <span className="text-xs font-semibold text-[#0F172A]">🍎 {bahasa === "en" ? "Fruits" : "Buah-buahan"}</span>
+                        <span className="text-xs font-semibold text-[#0F172A]">🐱 {bahasa === "en" ? "Animals" : "Haiwan"}</span>
+                        <span className="text-xs font-semibold text-[#0F172A]">🔢 {bahasa === "en" ? "Choose Numbers" : "Pilih Nombor"}</span>
                       </div>
                     </div>
                   )}
@@ -479,8 +479,9 @@ function PulauPraKalifahPage() {
                     className="mt-auto flex w-full items-center justify-center gap-1 rounded-full px-4 py-2.5 font-display text-sm font-extrabold text-white shadow-md"
                     style={{ backgroundColor: t.warna }}
                   >
-                    Terokai Tahap {t.nombor} →
+                    {bahasa === "en" ? `Explore Level ${t.nombor} →` : `Terokai Tahap ${t.nombor} →`}
                   </span>
+
                 </div>
               );
               if (boleh) {
