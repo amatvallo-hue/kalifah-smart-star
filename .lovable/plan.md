@@ -1,50 +1,86 @@
-# Laporan Siasatan — Dashboard Ibu Bapa
+## Penemuan (Investigation Report)
 
-Data DB + RLS confirmed OK. Punca sebenar hampir pasti di **frontend selector**, bukan fetch/filter/timezone.
+### 1. `game-matik-drag` — timer TIDAK di-wire (BUG dikonfirmasi)
 
-## 1. Punca paling mungkin: default child = anak pertama dicipta (BUKAN Aisyah)
+**Fail:** `src/components/games/MatikDragGame.tsx`, baris **88–100**
 
-**Fail: `src/routes/dashboard.ibu-bapa.tsx`**
+```tsx
+useEffect(() => {
+  if (habis) {
+    simpanProgress({
+      ...
+      masaAmbil: 0,   // ← hardcoded 0
+    });
+  }
+}, [habis]);
+```
 
-- Baris 573: `const [aktifId, setAktifId] = useState<string | null>(null);` — state lokal, **tidak dipersist** (tak simpan ke localStorage/URL).
-- Baris 592–599: bila mount, `senaraikanAnak()` dipanggil dan default:
-  ```
-  if (!aktifId && list.length > 0) setAktifId(list[0].id);
-  ```
-- Baris 601–602: `anakUserId` diambil dari `anakAktif = list.find(id === aktifId)`.
+Tiada `useState(() => Date.now())`, tiada `mulaMasa`, tiada pengiraan tempoh. Nilai `0` di-hantar terus setiap kali. Ini menjelaskan 100% rekod `masa_ambil = 0` untuk aktiviti ini.
 
-**Fail: `src/lib/parent.ts` baris 28–32** — `senaraikanAnak()` order by `created_at ASC`, jadi `list[0]` = **anak PERTAMA yang Amat cipta**.
+**Fix cadangan (selamat, terhad):** tambah `const [mulaMasa] = useState(() => Date.now())` dan tukar `masaAmbil: 0` → `masaAmbil: Math.round((Date.now() - mulaMasa) / 1000)`. Sama corak dengan `MatikNeonGame.tsx` (baris 264) dan `kuiz.tsx` (baris 283/297).
 
-Kalau Adam Safwan dicipta dahulu, dashboard sentiasa default ke Adam. Chip switcher wujud (baris 938–942) — Amat kena klik "Aisyah Sufiya" secara manual. Setiap kali refresh/masuk semula dashboard, pilihan reset balik ke Adam.
+**Semak sekali:** `MatikNeonGame.tsx:264` sudah hantar masaAmbil sebenar — jadi memang cuma Drag Game yang tertinggal.
 
-**Ujian pantas untuk sahkan:** minta Amat buka dashboard, klik chip "Aisyah Sufiya" di seksyen senarai anak (sekitar baris 938), pastikan aktiviti "bergambar-rajah" 10/10 muncul di "Aktiviti Terkini".
+---
 
-## 2. Fetch/caching — TIDAK jadi punca
+### 2. Timer tiada logik pause / idle / tab-blur (DIKONFIRMASI — kira masa tab terbuka, bukan masa aktif)
 
-- Baris 683–722: `useEffect` bergantung pada `[anakUserId]`. Tukar anak → refetch. Realtime channel juga di-subscribe untuk `user_progress`/`user_stats` filter `user_id=eq.${anakUserId}` — sepatutnya auto-refresh bila Aisyah siap aktiviti baru (kalau chip Aisyah aktif).
-- Query fetch (baris 614–618) `select(...)` tak ada filter aktiviti/tarikh — semua rekod Aisyah diambil.
+Semua timer guna corak sama:
 
-## 3. Filter aktiviti — TIDAK exclude "bergambar-rajah"
+| Fail | Baris | Corak |
+|---|---|---|
+| `latih-tubi.tsx` | 148, 160 | `useState(() => Date.now())` → `Math.round((Date.now() - mulaMasa)/1000)` |
+| `kuiz.tsx` | 283, 297 | Sama |
+| `bergambar-rajah.tsx` | 149, 234 | Sama |
+| `game.tsx` (race) | 605 | `totalTime - masa` (countdown — SELAMAT, ada had atas) |
+| `MatikNeonGame.tsx` | 264 | Sama corak wall-clock |
 
-- Baris 1258 "Aktiviti Terkini": `progress.slice(0, 10)` — tiada whitelist. Rekod "bergambar-rajah" DIPAPAR.
-- Baris 1271: `AKTIVITI_LABEL[row.aktiviti] ?? row.aktiviti` — `AKTIVITI_LABEL` (baris 169–179) **tiada key "bergambar-rajah"** (juga tiada "isi-kosong", "game-neon", "game-drag"). Fallback ke string mentah, jadi label akan papar "bergambar-rajah" (buruk tapi masih papar). Kosmetik, bukan bug hilang data.
-- `bulanTopikLemah` (baris 778–785) filter `aktiviti !== "nota"` + wajib ada `topik`. "bergambar-rajah" tiada topik → dikecualikan dari seksyen "Topik Lemah" sahaja (betul, bukan bug).
-- `kemajuanSubjek` (baris 823–832) kira unique `aktiviti`/5 tanpa whitelist — "bergambar-rajah" tetap dikira.
-- `minggu`/`bulan` agregat (baris 736–773) guna `stats.soalan_dijawab` dan `progress.jumlah_soalan` — takde pengecualian.
+**Konsekuensi:** Wall-clock diff dari mount hingga submit. Kalau murid buka tab, tinggal 60 minit, balik jawab satu soalan, submit → direkod 60+ minit. Tiada:
+- `visibilitychange` listener (pause bila tab tidak aktif)
+- Idle detection (tiada input X saat)
+- Cap maksimum per aktiviti
 
-## 4. Timezone — TIDAK exclude rekod 04:01 UTC
+Ini menjelaskan outlier: latih-tubi 4531s (~75 min), kuiz 1206s (~20 min), bergambar-rajah 1469s (~24 min). Bukan bug logik — memang begini reka bentuknya.
 
-- 2026-07-16 04:01 UTC = 2026-07-16 12:01 KL. `toKLDate(created_at)` (baris 132–134) pulangkan `"2026-07-16"`, iaitu `daysAgoKL(0)` = hari ini KL. Dalam `tarikhMingguIni`/`tarikhBulanIni` (baris 725–734). OK.
+**Fix cadangan (pilih satu, ikut selera Amat):**
+- **Ringkas:** cap `masaAmbil` di `simpanProgress()` (`src/lib/progress.ts:146`) — cth `Math.min(masa, 1800)` (max 30 min/rekod). Satu tempat, semua aktiviti terlindung, tiada risiko regresi.
+- **Sederhana:** tambah `document.visibilitychange` pause di setiap komponen. Lebih tepat, tapi kena sentuh 5+ fail.
+- **Lengkap:** hook `useActiveTime()` yang pause bila tab blur + idle >30s. Terbaik, tapi kerja besar.
 
-## 5. Nota kecil (tak berkaitan bug ini)
+Untuk parent dashboard, cadangan **Ringkas** (cap 30 min/rekod) menutup 90% masalah persepsi tanpa risiko.
 
-- Baris 596 & 669: kalau `list` berubah (contoh anak baru ditambah/dipadam) dan `aktifId` sudah wujud tapi merujuk anak yang telah dibuang, `anakAktif` jadi `null`, `anakUserId` `null`, dashboard clear data (baris 683–689). Bukan kes Amat.
+---
 
-## Cadangan (untuk kelulusan berasingan)
+### 3. Agregat harian guna `Math.round`, BUKAN `Math.floor` (SEPARA dikonfirmasi)
 
-Kalau nak fix root cause selain klik manual:
-1. Persist `aktifId` ke `localStorage` supaya pilihan Amat kekal antara reload.
-2. Kalau tiada `aktifId` tersimpan, default ke anak yang **paling baru ada aktiviti** (query `user_progress` ringkas per child) daripada anak pertama dicipta.
-3. Tambah "bergambar-rajah", "isi-kosong", "game-neon", "game-drag" ke `AKTIVITI_LABEL` (baris 169) supaya label tak papar string kod mentah.
+**Fail:** `src/lib/progress.ts`, baris **210**
 
-Tiada perubahan kod dibuat dalam siasatan ini.
+```ts
+const minit = Math.max(0, Math.round(masa / 60));
+```
+
+**Analisis:**
+- 30–89 saat → 1 minit (dikira ✅)
+- 0–29 saat → **0 minit** (HILANG dari `user_stats.masa_belajar` ❌)
+- 90–149 saat → 2 minit, dll.
+
+Jadi aktiviti sangat pendek (<30s) memang hilang dari jumlah minit harian. Tapi bukan sama teruk macam `floor` (yang akan buang sehingga 59s).
+
+**Nota penting:** `user_progress.masa_ambil` disimpan dalam **SAAT PENUH** (baris 178 & 202) — tepat, tiada kehilangan di sini. Masalah pembundaran hanya berlaku semasa agregat ke `user_stats.masa_belajar` (minit). Jadi dashboard yang tunjuk masa per-aktiviti (kalau ada) tetap tepat; hanya jumlah minit harian yang boleh under-count.
+
+**Fix cadangan (kalau nak semua saat dikira):**
+- Tukar `user_stats.masa_belajar` simpan **saat** dan format ke minit di UI (kerja migrasi + backfill — besar).
+- Atau tambah kolum `masa_belajar_saat` selari (kecil, tak break).
+- Atau terima trade-off semasa dan biarkan (kerugian purata: ~15s × bilangan aktiviti pendek/hari).
+
+---
+
+### Ringkasan untuk Amat
+
+| # | Isu | Status | Impak | Fix mudah? |
+|---|---|---|---|---|
+| 1 | Drag Game masa selalu 0 | **Bug jelas** | Sedang | Ya — 2 baris di `MatikDragGame.tsx` |
+| 2 | Timer kira masa tab terbuka | **By design**, tiada pause | Tinggi (outlier ~75 min) | Ya — cap `Math.min(masa, 1800)` di `progress.ts:146` |
+| 3 | Aktiviti <30s hilang dari minit harian | **Round, bukan floor** | Rendah (per-rekod saat masih tepat) | Tidak (perlu ubah skema) |
+
+**Tiada perubahan dibuat.** Tunggu arahan Amat sebelum implement fix mana-mana.
