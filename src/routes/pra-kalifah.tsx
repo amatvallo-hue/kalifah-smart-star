@@ -377,6 +377,19 @@ function PulauPraKalifahPage() {
                     </span>
                   )}
 
+                  {t.nombor === 1 && (
+                    <div className="mt-3 rounded-2xl bg-white/70 p-3">
+                      <p className="mb-2 font-display text-[10px] font-extrabold uppercase tracking-wide text-[#0F172A]/50">
+                        Aktiviti Hari Ini
+                      </p>
+                      <div className="grid grid-cols-2 gap-x-2 gap-y-1.5">
+                        <span className="text-xs font-semibold text-[#0F172A]">🔤 Cari Huruf</span>
+                        <span className="text-xs font-semibold text-[#0F172A]">🍎 Buah-buahan</span>
+                        <span className="text-xs font-semibold text-[#0F172A]">🐱 Haiwan</span>
+                        <span className="text-xs font-semibold text-[#0F172A]">🔢 Pilih Nombor</span>
+                      </div>
+                    </div>
+                  )}
 
                   <span
                     className="mt-auto flex w-full items-center justify-center gap-1 rounded-full px-4 py-2.5 font-display text-sm font-extrabold text-white shadow-md"
