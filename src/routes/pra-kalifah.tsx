@@ -404,7 +404,10 @@ function PulauPraKalifahPage() {
               const tahapImg =
                 [IMG_TAHAP1_ISTANA, IMG_TAHAP2_RUMAH, IMG_TAHAP3_ROKET][t.nombor - 1];
               const totalBadge =
-                t.nombor === 1 && totalAktiviti > 0 ? `${totalAktiviti} aktiviti` : null;
+                t.nombor === 1 && totalAktiviti > 0
+                  ? `${totalAktiviti} ${bahasa === "en" ? "activities" : "aktiviti"}`
+                  : null;
+
               const boleh = !t.terkunci;
               const Ikon = t.ikon;
               const content = (
