@@ -352,12 +352,13 @@ function AktivitiPraKalifahPage() {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background p-4">
         <div className="w-full max-w-md rounded-3xl border border-border/60 bg-card p-8 text-center shadow-card">
-          <h1 className="font-display text-2xl font-extrabold text-foreground">Bidang tidak dijumpai</h1>
+          <h1 className="font-display text-2xl font-extrabold text-foreground">{bahasa === "en" ? "Section not found" : "Bidang tidak dijumpai"}</h1>
           <Link
             to="/pra-kalifah"
             className="mt-6 inline-flex items-center justify-center gap-2 rounded-full bg-gradient-primary px-6 py-3 font-display text-sm font-extrabold text-primary-foreground shadow-soft"
           >
-            <ArrowLeft className="h-4 w-4" /> Kembali
+            <ArrowLeft className="h-4 w-4" /> {bahasa === "en" ? "Back" : "Kembali"}
+
           </Link>
         </div>
       </div>
