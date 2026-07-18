@@ -38,6 +38,7 @@ export const Route = createFileRoute("/pra-kalifah")({
 interface Bidang {
   id: string;
   nama: string;
+  nama_en: string | null;
   warna_kod: string | null;
   ikon_nama: string | null;
   tertib: number;
@@ -48,6 +49,52 @@ const IKON_MAP: Record<string, LucideIcon> = {
   shapes: Shapes,
   "moon-star": Sparkles,
 };
+
+type Bahasa = "bm" | "en";
+
+export function usePraBahasa() {
+  const [bahasa, setBahasaState] = useState<Bahasa>(() => {
+    if (typeof window === "undefined") return "bm";
+    return (localStorage.getItem("kalifah_pra_bahasa") as Bahasa) ?? "bm";
+  });
+  const setBahasa = (b: Bahasa) => {
+    setBahasaState(b);
+    if (typeof window !== "undefined") localStorage.setItem("kalifah_pra_bahasa", b);
+  };
+  return [bahasa, setBahasa] as const;
+}
+
+export function ToggleBahasa({
+  bahasa,
+  setBahasa,
+}: {
+  bahasa: Bahasa;
+  setBahasa: (b: Bahasa) => void;
+}) {
+  return (
+    <div className="inline-flex items-center gap-1 rounded-full bg-white p-1 shadow-card">
+      <button
+        type="button"
+        onClick={() => setBahasa("bm")}
+        className={`rounded-full px-3 py-1.5 font-display text-xs font-extrabold transition ${
+          bahasa === "bm" ? "bg-[#FF7B9C] text-white" : "text-[#0F172A]/50"
+        }`}
+      >
+        BM
+      </button>
+      <button
+        type="button"
+        onClick={() => setBahasa("en")}
+        className={`rounded-full px-3 py-1.5 font-display text-xs font-extrabold transition ${
+          bahasa === "en" ? "bg-[#FF7B9C] text-white" : "text-[#0F172A]/50"
+        }`}
+      >
+        EN
+      </button>
+    </div>
+  );
+}
+
 
 function bidangSlug(ikon: string | null, nama: string): string {
   if (ikon === "abc") return "bahasa";
@@ -98,6 +145,25 @@ const TAGLINE_MAP: Record<string, string> = {
   "Kerohanian Nilai dan Kewarganegaraan": "Doa & adab harian",
 };
 
+const TAGLINE_MAP_EN: Record<string, string> = {
+  "Bahasa dan Literasi": "Learn letters & words",
+  Kognitif: "Count, colors & shapes",
+  "Kerohanian Nilai dan Kewarganegaraan": "Prayers & daily manners",
+};
+
+const TAHAP_NAMA_EN: Record<number, string> = {
+  1: "Introduction",
+  2: "Basics",
+  3: "Ready for Year 1",
+};
+
+const TAHAP_DESC_EN: Record<number, string> = {
+  1: "Learn the basics in a fun way!",
+  2: "Build basic skills for the next step!",
+  3: "Get ready with confidence for Year 1!",
+};
+
+
 interface TahapInfo {
   nombor: number;
   nama: string;
@@ -126,13 +192,15 @@ function PulauPraKalifahPage() {
   const [err, setErr] = useState<string | null>(null);
   const [tahapDipilih, setTahapDipilih] = useState<number | null>(null);
   const [toast, setToast] = useState<string | null>(null);
+  const [bahasa, setBahasa] = usePraBahasa();
+
 
   useEffect(() => {
     let mounted = true;
     (async () => {
       const { data, error } = await supabase
         .from("pra_kalifah_bidang" as never)
-        .select("id, nama, warna_kod, ikon_nama, tertib, status")
+        .select("id, nama, nama_en, warna_kod, ikon_nama, tertib, status")
         .eq("status", "aktif")
         .order("tertib", { ascending: true });
       if (!mounted) return;
@@ -186,9 +254,11 @@ function PulauPraKalifahPage() {
             to="/pilih-darjah"
             className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 font-display text-xs font-extrabold text-[#0F172A] shadow-card transition hover:bg-white/80"
           >
-            <ArrowLeft className="h-4 w-4" /> Kembali
+            <ArrowLeft className="h-4 w-4" /> {bahasa === "en" ? "Back" : "Kembali"}
           </Link>
+          <ToggleBahasa bahasa={bahasa} setBahasa={setBahasa} />
         </div>
+
 
         <div className="relative min-h-[220px] rounded-3xl p-5 shadow-card sm:min-h-[300px] sm:p-6">
           {/* Background gradient + decorations (clipped to card shape) */}
@@ -217,10 +287,10 @@ function PulauPraKalifahPage() {
           <div className="absolute left-40 top-4 z-30 sm:left-56 sm:top-8">
             <div className="relative rounded-2xl bg-[#FFFBF0] px-3 py-2 shadow-lg sm:rounded-3xl sm:px-4 sm:py-2.5">
               <p className="font-display text-sm font-extrabold text-[#0F172A] sm:text-lg">
-                Hai kawan! 👋
+                {bahasa === "en" ? "Hi friend! 👋" : "Hai kawan! 👋"}
               </p>
               <p className="text-xs font-semibold text-[#0F172A]/70 sm:text-sm">
-                Jom belajar hari ini!
+                {bahasa === "en" ? "Let's learn today!" : "Jom belajar hari ini!"}
               </p>
               <div className="absolute -left-2 top-1/2 h-3 w-3 -translate-y-1/2 rotate-45 bg-[#FFFBF0] sm:h-4 sm:w-4" />
             </div>
@@ -229,14 +299,19 @@ function PulauPraKalifahPage() {
           {/* Heading */}
           <div className="absolute left-44 right-5 top-0 bottom-0 z-10 flex flex-col justify-center text-right sm:left-auto sm:right-10 sm:max-w-[360px]">
             <h1 className="font-display text-2xl font-extrabold leading-tight text-[#0F172A] sm:text-5xl">
-              Dunia Pra Kalifah 🌈
+              {bahasa === "en" ? "Pra Kalifah World 🌈" : "Dunia Pra Kalifah 🌈"}
             </h1>
             <p className="mt-1 text-sm font-semibold text-[#0F172A]/70 sm:text-lg">
               {tahapDipilih === 1
-                ? "Pilih bidang yang kamu nak belajar hari ini!"
-                : "Pilih tahap yang sesuai untuk anak kamu!"}
+                ? bahasa === "en"
+                  ? "Choose what you want to learn today!"
+                  : "Pilih bidang yang kamu nak belajar hari ini!"
+                : bahasa === "en"
+                  ? "Choose the right level for your child!"
+                  : "Pilih tahap yang sesuai untuk anak kamu!"}
             </p>
           </div>
+
         </div>
 
         {err ? (
@@ -250,14 +325,18 @@ function PulauPraKalifahPage() {
               onClick={() => setTahapDipilih(null)}
               className="inline-flex w-fit items-center gap-2 rounded-full bg-white px-4 py-2 font-display text-xs font-extrabold text-[#0F172A] shadow-card transition hover:bg-white/80"
             >
-              <ArrowLeft className="h-4 w-4" /> Kembali ke Tahap
+              <ArrowLeft className="h-4 w-4" /> {bahasa === "en" ? "Back to Levels" : "Kembali ke Tahap"}
             </button>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               {bidang.map((b, i) => {
                 const Ikon = IKON_MAP[b.ikon_nama ?? ""] ?? BookOpen;
                 const tema = bidangTema(b.warna_kod);
                 const slug = bidangSlug(b.ikon_nama, b.nama);
-                const tagline = TAGLINE_MAP[b.nama] ?? "";
+                const tagline =
+                  bahasa === "en"
+                    ? (TAGLINE_MAP_EN[b.nama] ?? "")
+                    : (TAGLINE_MAP[b.nama] ?? "");
+                const nama = bahasa === "en" && b.nama_en ? b.nama_en : b.nama;
                 const count = kiraan[b.id] ?? 0;
                 return (
                   <Link
@@ -274,7 +353,7 @@ function PulauPraKalifahPage() {
                     </div>
                     <div className="flex flex-col items-center gap-2 text-center">
                       <h2 className="font-display text-xl font-extrabold text-foreground sm:text-2xl">
-                        {b.nama}
+                        {nama}
                       </h2>
                       {tagline && (
                         <p className="text-xs font-semibold text-muted-foreground sm:text-sm">
@@ -283,13 +362,14 @@ function PulauPraKalifahPage() {
                       )}
                       {count > 0 && (
                         <span className="inline-flex items-center rounded-full bg-white/80 px-3 py-1 font-display text-xs font-extrabold text-foreground shadow-sm">
-                          {count} aktiviti
+                          {count} {bahasa === "en" ? "activities" : "aktiviti"}
                         </span>
                       )}
                     </div>
                   </Link>
                 );
               })}
+
             </div>
           </>
         ) : (
@@ -308,7 +388,8 @@ function PulauPraKalifahPage() {
                     className="font-display text-[10px] font-extrabold sm:text-xs"
                     style={{ color: t.terkunci ? "#0F172A66" : "#0F172A" }}
                   >
-                    Tahap {t.nombor}
+                    {bahasa === "en" ? "Level" : "Tahap"} {t.nombor}
+
                   </span>
                 </div>
                 {i < TAHAP_LIST.length - 1 && (
@@ -323,7 +404,10 @@ function PulauPraKalifahPage() {
               const tahapImg =
                 [IMG_TAHAP1_ISTANA, IMG_TAHAP2_RUMAH, IMG_TAHAP3_ROKET][t.nombor - 1];
               const totalBadge =
-                t.nombor === 1 && totalAktiviti > 0 ? `${totalAktiviti} aktiviti` : null;
+                t.nombor === 1 && totalAktiviti > 0
+                  ? `${totalAktiviti} ${bahasa === "en" ? "activities" : "aktiviti"}`
+                  : null;
+
               const boleh = !t.terkunci;
               const Ikon = t.ikon;
               const content = (
@@ -348,12 +432,12 @@ function PulauPraKalifahPage() {
                     </div>
                     {t.nombor === 1 && (
                       <span className="rounded-full bg-[#FF7B9C] px-2.5 py-0.5 font-display text-[10px] font-extrabold text-white shadow-sm">
-                        BARU!
+                        {bahasa === "en" ? "NEW!" : "BARU!"}
                       </span>
                     )}
                     {t.terkunci && (
                       <span className="inline-flex items-center gap-1 rounded-full bg-[#0F172A]/10 px-2.5 py-0.5 font-display text-[10px] font-extrabold text-[#0F172A]">
-                        <Lock className="h-3 w-3" /> Akan Datang
+                        <Lock className="h-3 w-3" /> {bahasa === "en" ? "Coming Soon" : "Akan Datang"}
                       </span>
                     )}
                   </div>
@@ -365,10 +449,10 @@ function PulauPraKalifahPage() {
                   />
 
                   <h2 className="mt-2 font-display text-xl font-extrabold text-[#0F172A]">
-                    {t.nama}
+                    {bahasa === "en" ? TAHAP_NAMA_EN[t.nombor] : t.nama}
                   </h2>
                   <p className="text-xs font-semibold text-[#0F172A]/70">
-                    {TAHAP_DESC[t.nombor]}
+                    {bahasa === "en" ? TAHAP_DESC_EN[t.nombor] : TAHAP_DESC[t.nombor]}
                   </p>
 
                   {totalBadge && (
@@ -380,13 +464,13 @@ function PulauPraKalifahPage() {
                   {t.nombor === 1 && (
                     <div className="mt-3 rounded-2xl bg-white/70 p-3">
                       <p className="mb-2 font-display text-[10px] font-extrabold uppercase tracking-wide text-[#0F172A]/50">
-                        Aktiviti Hari Ini
+                        {bahasa === "en" ? "Today's Activities" : "Aktiviti Hari Ini"}
                       </p>
                       <div className="grid grid-cols-2 gap-x-2 gap-y-1.5">
-                        <span className="text-xs font-semibold text-[#0F172A]">🔤 Cari Huruf</span>
-                        <span className="text-xs font-semibold text-[#0F172A]">🍎 Buah-buahan</span>
-                        <span className="text-xs font-semibold text-[#0F172A]">🐱 Haiwan</span>
-                        <span className="text-xs font-semibold text-[#0F172A]">🔢 Pilih Nombor</span>
+                        <span className="text-xs font-semibold text-[#0F172A]">🔤 {bahasa === "en" ? "Find Letters" : "Cari Huruf"}</span>
+                        <span className="text-xs font-semibold text-[#0F172A]">🍎 {bahasa === "en" ? "Fruits" : "Buah-buahan"}</span>
+                        <span className="text-xs font-semibold text-[#0F172A]">🐱 {bahasa === "en" ? "Animals" : "Haiwan"}</span>
+                        <span className="text-xs font-semibold text-[#0F172A]">🔢 {bahasa === "en" ? "Choose Numbers" : "Pilih Nombor"}</span>
                       </div>
                     </div>
                   )}
@@ -395,8 +479,9 @@ function PulauPraKalifahPage() {
                     className="mt-auto flex w-full items-center justify-center gap-1 rounded-full px-4 py-2.5 font-display text-sm font-extrabold text-white shadow-md"
                     style={{ backgroundColor: t.warna }}
                   >
-                    Terokai Tahap {t.nombor} →
+                    {bahasa === "en" ? `Explore Level ${t.nombor} →` : `Terokai Tahap ${t.nombor} →`}
                   </span>
+
                 </div>
               );
               if (boleh) {
@@ -415,7 +500,7 @@ function PulauPraKalifahPage() {
                 <button
                   key={t.nombor}
                   type="button"
-                  onClick={() => setToast("Tahap ni akan datang tak lama lagi!")}
+                  onClick={() => setToast(bahasa === "en" ? "This level is coming soon!" : "Tahap ni akan datang tak lama lagi!")}
                   className="cursor-not-allowed text-left"
                   aria-disabled
                 >
