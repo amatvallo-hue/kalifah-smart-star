@@ -1149,7 +1149,7 @@ function ReviewScreen({
                   }
                   const s = answers[baseKey] ?? "";
                   const ok = chk(s, inp.ans);
-                  return <StepLine key={inp.id} label={inp.lbl} student={s || "—"} correct={inp.d ?? inp.ans} ok={ok} />;
+                  return <StepLine key={inp.id} label={inp.lbl} student={s || "—"} correct={("d" in inp ? inp.d : undefined) ?? inp.ans} ok={ok} />;
                 })}
                 {lg.galus?.rAns && (
                   <StepLine
