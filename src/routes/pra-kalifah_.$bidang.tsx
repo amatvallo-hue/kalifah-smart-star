@@ -48,7 +48,7 @@ import {
 import type { LucideIcon } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { StarReward } from "@/components/StarReward";
-import { BlobsLatar, temaBidangDariSlug } from "./pra-kalifah";
+import { BlobsLatar, temaBidangDariSlug, usePraBahasa, ToggleBahasa } from "./pra-kalifah";
 
 
 export const Route = createFileRoute("/pra-kalifah_/$bidang")({
