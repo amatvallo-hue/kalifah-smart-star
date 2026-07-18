@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { usePoints } from "@/hooks/use-points";
 import { getDarjah, getSubjek, TONE_GRADIENT } from "@/lib/curriculum";
+import { SrtbReview, gradeSrtb, type LangkahBertingkat } from "@/lib/mpt4-srtb";
 
 export const Route = createFileRoute(
   "/darjah/$darjahId_/percubaan-mpt4_/$subjekId_/$setId_/keputusan",
@@ -43,6 +44,7 @@ interface Mpt4Soalan {
   markah: number;
   stimulus_keterangan: string | null;
   stimulus_svg: { svg_type: string; params: any; bahasa?: "bm" | "en" } | null;
+  langkah_bertingkat: LangkahBertingkat | null;
 }
 
 interface EseiPenilaianItem {
@@ -152,7 +154,7 @@ function KeputusanPage() {
         supabase
           .from("mpt4_soalan")
           .select(
-            "id, bahagian, no_soalan, sub_bahagian, teks_soalan, jenis_item, kaedah_penskoran, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan_betul, markah, stimulus_keterangan, stimulus_svg",
+            "id, bahagian, no_soalan, sub_bahagian, teks_soalan, jenis_item, kaedah_penskoran, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan_betul, markah, stimulus_keterangan, stimulus_svg, langkah_bertingkat",
           )
           .eq("set_id", setId)
           .order("bahagian", { ascending: true })
@@ -212,6 +214,10 @@ function KeputusanPage() {
         const dikotomusMarks: Record<string, number> = {};
         for (const s of soalanList) {
           if (s.kaedah_penskoran !== "dikotomus") continue;
+          if (s.jenis_item === "SRTb" && s.langkah_bertingkat) {
+            dikotomusMarks[s.id] = gradeSrtb(s.langkah_bertingkat, jawapan[s.id], s.markah);
+            continue;
+          }
           const murid = (jawapan[s.id] ?? "").trim().toUpperCase();
           const betul = (s.jawapan_betul ?? "").trim().toUpperCase();
           dikotomusMarks[s.id] =
@@ -457,6 +463,10 @@ function ResultView({
   const markPerSoalan = new Map<string, number>();
   for (const s of soalanList) {
     if (s.kaedah_penskoran === "dikotomus") {
+      if (s.jenis_item === "SRTb" && s.langkah_bertingkat) {
+        markPerSoalan.set(s.id, gradeSrtb(s.langkah_bertingkat, jawapan[s.id], s.markah));
+        continue;
+      }
       const murid = (jawapan[s.id] ?? "").trim().toUpperCase();
       const betul = (s.jawapan_betul ?? "").trim().toUpperCase();
       markPerSoalan.set(s.id, murid.length > 0 && murid === betul ? s.markah : 0);
@@ -574,7 +584,10 @@ function ReviewCard({
 }) {
   const { bm, en } = splitBilingual(soalan.teks_soalan);
   const isDikotomus = soalan.kaedah_penskoran === "dikotomus";
-  const betul = isDikotomus && jawapanMurid.trim().toUpperCase() === (soalan.jawapan_betul ?? "").trim().toUpperCase() && jawapanMurid.trim().length > 0;
+  const isSrtb = soalan.jenis_item === "SRTb" && !!soalan.langkah_bertingkat;
+  const betul = isDikotomus && !isSrtb && jawapanMurid.trim().toUpperCase() === (soalan.jawapan_betul ?? "").trim().toUpperCase() && jawapanMurid.trim().length > 0;
+  const srtbFullMarks = isSrtb && markahDiperoleh === soalan.markah;
+  const srtbNoMarks = isSrtb && markahDiperoleh === 0;
 
   return (
     <article className="rounded-2xl border border-border/60 bg-background/50 p-4 md:p-5">
@@ -588,13 +601,22 @@ function ReviewCard({
               {soalan.sub_bahagian}
             </span>
           )}
-          {isDikotomus && (
+          {isDikotomus && !isSrtb && (
             <span
               className={`inline-flex h-6 w-6 items-center justify-center rounded-full ${
                 betul ? "bg-emerald-500 text-white" : "bg-rose-500 text-white"
               }`}
             >
               {betul ? <Check className="h-4 w-4" /> : <X className="h-4 w-4" />}
+            </span>
+          )}
+          {isSrtb && (
+            <span
+              className={`inline-flex h-6 w-6 items-center justify-center rounded-full ${
+                srtbFullMarks ? "bg-emerald-500 text-white" : srtbNoMarks ? "bg-rose-500 text-white" : "bg-amber-500 text-white"
+              }`}
+            >
+              {srtbFullMarks ? <Check className="h-4 w-4" /> : srtbNoMarks ? <X className="h-4 w-4" /> : <Check className="h-4 w-4" />}
             </span>
           )}
         </div>
@@ -612,8 +634,16 @@ function ReviewCard({
       </div>
 
       <div className="mt-3">
-        <p className="text-sm leading-relaxed text-foreground whitespace-pre-wrap">{bm}</p>
-        {en && <p className="mt-1 text-xs italic leading-relaxed text-muted-foreground whitespace-pre-wrap">{en}</p>}
+        <p
+          className="text-sm leading-relaxed text-foreground whitespace-pre-wrap"
+          dangerouslySetInnerHTML={{ __html: bm }}
+        />
+        {en && (
+          <p
+            className="mt-1 text-xs italic leading-relaxed text-muted-foreground whitespace-pre-wrap"
+            dangerouslySetInnerHTML={{ __html: en }}
+          />
+        )}
       </div>
 
       {soalan.stimulus_svg ? (
@@ -631,49 +661,57 @@ function ReviewCard({
         </div>
       ) : null}
 
-      <div className="mt-3 space-y-2 text-sm">
-        <div className="rounded-xl bg-secondary/60 px-3 py-2">
-          <div className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">Jawapan anda</div>
-          <div className="mt-0.5 whitespace-pre-wrap text-foreground">
-            {jawapanMurid.trim().length > 0 ? jawapanMurid : <span className="italic text-muted-foreground">Tiada jawapan</span>}
-          </div>
+      {isSrtb && soalan.langkah_bertingkat && (
+        <div className="mt-3">
+          <SrtbReview lb={soalan.langkah_bertingkat} valueJson={jawapanMurid} />
         </div>
+      )}
 
-        {isDikotomus && !betul && soalan.jawapan_betul && (
-          <div className="rounded-xl bg-emerald-50 px-3 py-2">
-            <div className="text-[11px] font-bold uppercase tracking-wide text-emerald-700">Jawapan betul</div>
-            <div className="mt-0.5 whitespace-pre-wrap text-emerald-800">{soalan.jawapan_betul}</div>
+      {!isSrtb && (
+        <div className="mt-3 space-y-2 text-sm">
+          <div className="rounded-xl bg-secondary/60 px-3 py-2">
+            <div className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">Jawapan anda</div>
+            <div className="mt-0.5 whitespace-pre-wrap text-foreground">
+              {jawapanMurid.trim().length > 0 ? jawapanMurid : <span className="italic text-muted-foreground">Tiada jawapan</span>}
+            </div>
           </div>
-        )}
 
-        {!isDikotomus && eseiItem && (
-          <div className="rounded-xl bg-primary/5 px-3 py-2">
-            {eseiItem.band && (
-              <div className="mb-1 inline-block rounded-full bg-primary/20 px-2 py-0.5 text-[10px] font-extrabold uppercase text-primary">
-                Band: {eseiItem.band}
-              </div>
-            )}
-            {eseiItem.kekuatan && (
-              <div className="mt-1">
-                <span className="text-[11px] font-bold uppercase tracking-wide text-emerald-700">✨ Kekuatan: </span>
-                <span className="text-foreground">{eseiItem.kekuatan}</span>
-              </div>
-            )}
-            {eseiItem.cadangan_penambahbaikan && (
-              <div className="mt-1">
-                <span className="text-[11px] font-bold uppercase tracking-wide text-amber-700">💡 Cadangan: </span>
-                <span className="text-foreground">{eseiItem.cadangan_penambahbaikan}</span>
-              </div>
-            )}
-          </div>
-        )}
+          {isDikotomus && !betul && soalan.jawapan_betul && (
+            <div className="rounded-xl bg-emerald-50 px-3 py-2">
+              <div className="text-[11px] font-bold uppercase tracking-wide text-emerald-700">Jawapan betul</div>
+              <div className="mt-0.5 whitespace-pre-wrap text-emerald-800">{soalan.jawapan_betul}</div>
+            </div>
+          )}
 
-        {!isDikotomus && !eseiItem && jawapanMurid.trim().length > 0 && (
-          <div className="rounded-xl bg-muted/50 px-3 py-2 text-xs text-muted-foreground">
-            Penilaian AI belum tersedia untuk soalan ini.
-          </div>
-        )}
-      </div>
+          {!isDikotomus && eseiItem && (
+            <div className="rounded-xl bg-primary/5 px-3 py-2">
+              {eseiItem.band && (
+                <div className="mb-1 inline-block rounded-full bg-primary/20 px-2 py-0.5 text-[10px] font-extrabold uppercase text-primary">
+                  Band: {eseiItem.band}
+                </div>
+              )}
+              {eseiItem.kekuatan && (
+                <div className="mt-1">
+                  <span className="text-[11px] font-bold uppercase tracking-wide text-emerald-700">✨ Kekuatan: </span>
+                  <span className="text-foreground">{eseiItem.kekuatan}</span>
+                </div>
+              )}
+              {eseiItem.cadangan_penambahbaikan && (
+                <div className="mt-1">
+                  <span className="text-[11px] font-bold uppercase tracking-wide text-amber-700">💡 Cadangan: </span>
+                  <span className="text-foreground">{eseiItem.cadangan_penambahbaikan}</span>
+                </div>
+              )}
+            </div>
+          )}
+
+          {!isDikotomus && !eseiItem && jawapanMurid.trim().length > 0 && (
+            <div className="rounded-xl bg-muted/50 px-3 py-2 text-xs text-muted-foreground">
+              Penilaian AI belum tersedia untuk soalan ini.
+            </div>
+          )}
+        </div>
+      )}
     </article>
   );
 }
