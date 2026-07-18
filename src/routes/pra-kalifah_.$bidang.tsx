@@ -179,10 +179,13 @@ const BIDANG_CONFIG: Record<string, AktivitiConfig[]> = {
     {
       namaAktiviti: "Cari Huruf",
       tajuk: "Cari Huruf",
+      tajukEn: "Find Letters",
       mesejSelesai: "Syabas! Kamu dah kenal semua huruf!",
+      mesejSelesaiEn: "Great job! You know all the letters!",
       jenis: "huruf",
       ikon: BookOpen,
     },
+
     {
       namaAktiviti: "Huruf dan Gambar",
       tajuk: "Huruf dan Gambar",
