@@ -602,39 +602,150 @@ function LongDivGrid({
 }) {
   const dividend = g.dividend ?? [];
   const qAns = g.qAns ?? [];
-  const nCols = dividend.length;
-  const gridStyle = { gridTemplateColumns: `40px repeat(${nCols}, minmax(0, 1fr))` };
-  const kCell = (col: number) => `l${lIdx}:${g.pfx}:q:${col}`;
+  const n = dividend.length;
+  const dividendFill = g.dividendFill !== false;
+  // Grid: 1 gutter col + n dividend cols. Each cell occupies 1 grid col.
+  const gridStyle = { gridTemplateColumns: `48px repeat(${n}, minmax(0, 1fr))` };
+  const pfx = g.pfx;
+  const kQ = (i: number) => `l${lIdx}:${pfx}:q:${i}`;
+  const kD = (i: number) => `l${lIdx}:${pfx}:d:${i}`;
+  const kDiv = `l${lIdx}:${pfx}:div`;
+  const kM = (i: number, j: number) => `l${lIdx}:${pfx}:m:${i}_${j}`;
+  const kR = (i: number, j: number) => `l${lIdx}:${pfx}:r:${i}_${j}`;
+  const kRf = `l${lIdx}:${pfx}:rf`;
+
+  // Helper: cell wrapper positioned in a specific column via gridColumn.
+  const posCell = (col1based: number, span: number, node: React.ReactNode, key: string) => (
+    <div key={key} style={{ gridColumn: `${col1based} / span ${span}` }}>
+      {node}
+    </div>
+  );
 
   return (
     <div className="mx-auto max-w-md space-y-1">
+      {/* Quotient row */}
       <div className="grid gap-1" style={gridStyle}>
         <div />
         {qAns.map((c, i) => {
           if (c === null) return <div key={i} />;
           return (
-            <GalusCell key={i} cKey={kCell(i)} answers={answers} setAns={setAns} disabled={disabled} />
+            <GalusCell key={i} cKey={kQ(i)} answers={answers} setAns={setAns} disabled={disabled} />
           );
         })}
       </div>
 
+      {/* Divisor ) Dividend */}
       <div className="grid items-center gap-1" style={gridStyle}>
         <div className="flex items-center justify-end gap-1 pr-1">
-          <span className="font-display text-lg font-extrabold">{g.divisor}</span>
+          <input
+            type="text"
+            inputMode="numeric"
+            maxLength={2}
+            value={answers[kDiv] ?? ""}
+            onChange={(e) => setAns(kDiv, e.target.value)}
+            disabled={disabled}
+            placeholder="?"
+            className="w-10 rounded-lg border-2 border-border bg-card py-1 text-center font-display text-base font-extrabold outline-none focus:border-primary"
+          />
           <span className="font-display text-2xl font-extrabold leading-none">)</span>
         </div>
-        {dividend.map((c, i) => (
-          <div
-            key={i}
-            className="rounded-b-lg border-t-4 border-foreground bg-card py-2 text-center font-display text-lg font-extrabold"
-          >
-            {renderStatic(c)}
-          </div>
-        ))}
+        {dividend.map((c, i) => {
+          if (dividendFill) {
+            return (
+              <div key={i} className="border-t-4 border-foreground pt-1">
+                <GalusCell cKey={kD(i)} answers={answers} setAns={setAns} disabled={disabled} />
+              </div>
+            );
+          }
+          return (
+            <div
+              key={i}
+              className="rounded-b-lg border-t-4 border-foreground bg-card py-2 text-center font-display text-lg font-extrabold"
+            >
+              {renderStatic(c)}
+            </div>
+          );
+        })}
       </div>
 
+      {/* Per-step work rows: multiply row + remainder/bring-down row */}
+      {qAns.map((_, i) => {
+        // multiply row: step 0 = 1 cell at col (i+1); other steps = 2 cells at cols (i..i+1) i.e. grid cols i+1..i+2
+        const isLast = i === qAns.length - 1;
+        return (
+          <div key={`step-${i}`} className="space-y-1">
+            <div className="grid gap-1" style={gridStyle}>
+              {i === 0 ? (
+                posCell(
+                  2 + i,
+                  1,
+                  <GalusCell cKey={kM(i, 0)} answers={answers} setAns={setAns} disabled={disabled} />,
+                  `m-${i}-0`,
+                )
+              ) : (
+                <>
+                  {posCell(
+                    1 + i,
+                    1,
+                    <GalusCell cKey={kM(i, 0)} answers={answers} setAns={setAns} disabled={disabled} />,
+                    `m-${i}-0`,
+                  )}
+                  {posCell(
+                    2 + i,
+                    1,
+                    <GalusCell cKey={kM(i, 1)} answers={answers} setAns={setAns} disabled={disabled} />,
+                    `m-${i}-1`,
+                  )}
+                </>
+              )}
+            </div>
+            {/* underline under the multiply cells */}
+            <div className="grid gap-1" style={gridStyle}>
+              {posCell(
+                i === 0 ? 2 + i : 1 + i,
+                i === 0 ? 1 : 2,
+                <div className="h-0.5 rounded bg-foreground" />,
+                `u-${i}`,
+              )}
+            </div>
+            {/* remainder + bring-down row */}
+            <div className="grid gap-1" style={gridStyle}>
+              {isLast ? (
+                posCell(
+                  2 + i,
+                  1,
+                  <GalusCell
+                    cKey={kRf}
+                    answers={answers}
+                    setAns={setAns}
+                    disabled={disabled}
+                    className="bg-amber-50/50"
+                  />,
+                  `rf`,
+                )
+              ) : (
+                <>
+                  {posCell(
+                    1 + i,
+                    1,
+                    <GalusCell cKey={kR(i, 0)} answers={answers} setAns={setAns} disabled={disabled} />,
+                    `r-${i}-0`,
+                  )}
+                  {posCell(
+                    2 + i,
+                    1,
+                    <GalusCell cKey={kR(i, 1)} answers={answers} setAns={setAns} disabled={disabled} />,
+                    `r-${i}-1`,
+                  )}
+                </>
+              )}
+            </div>
+          </div>
+        );
+      })}
+
       <p className="pt-2 text-center text-[11px] text-muted-foreground">
-        Isi hasil bahagi (quotient) di atas.
+        Isi hasil bahagi (quotient) di atas. Tunjuk jalan kerja darab &amp; baki di bawah.
       </p>
     </div>
   );
