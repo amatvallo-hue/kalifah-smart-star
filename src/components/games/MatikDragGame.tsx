@@ -81,6 +81,7 @@ export function MatikDragGame({ darjah, subjekId }: { darjah: string; subjekId: 
   const [habis, setHabis] = useState(false);
   const [dragging, setDragging] = useState<number | null>(null);
   const [confetti, setConfetti] = useState(false);
+  const [mulaMasa] = useState(() => Date.now());
 
   const q = soalan[idx];
   const progress = soalan.length ? (idx / soalan.length) * 100 : 0;
@@ -93,7 +94,7 @@ export function MatikDragGame({ darjah, subjekId }: { darjah: string; subjekId: 
         aktiviti: "game-matik-drag",
         markah,
         jumlahSoalan: soalan.length,
-        masaAmbil: 0,
+        masaAmbil: Math.round((Date.now() - mulaMasa) / 1000),
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
