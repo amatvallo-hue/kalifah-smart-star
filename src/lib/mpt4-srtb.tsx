@@ -51,11 +51,14 @@ export interface Galus {
   cols?: string[];
   r1?: Cell[];
   r2?: Cell[];
+  r1fill?: boolean;
+  r2fill?: boolean;
   pAns?: Cell[];
   rAns?: Cell[];
   bAns?: Cell[];
   divisor?: number;
   dividend?: Cell[];
+  dividendFill?: boolean;
   qAns?: Cell[];
   cellLen?: number;
 }
