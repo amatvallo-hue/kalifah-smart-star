@@ -292,7 +292,8 @@ function PulauPraKalifahPage() {
             </div>
           </>
         ) : (
-          <div className="flex items-center justify-center gap-1 rounded-full bg-white/70 px-3 py-3 shadow-card sm:gap-3 sm:px-6">
+          <>
+            <div className="flex items-center justify-center gap-1 rounded-full bg-white/70 px-3 py-3 shadow-card sm:gap-3 sm:px-6">
             {TAHAP_LIST.map((t, i) => (
               <div key={t.nombor} className="flex items-center gap-1 sm:gap-3">
                 <div className="flex flex-col items-center gap-1">
