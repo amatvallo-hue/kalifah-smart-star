@@ -200,7 +200,7 @@ function PulauPraKalifahPage() {
     (async () => {
       const { data, error } = await supabase
         .from("pra_kalifah_bidang" as never)
-        .select("id, nama, warna_kod, ikon_nama, tertib, status")
+        .select("id, nama, nama_en, warna_kod, ikon_nama, tertib, status")
         .eq("status", "aktif")
         .order("tertib", { ascending: true });
       if (!mounted) return;
