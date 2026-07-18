@@ -319,9 +319,9 @@ function AktivitiPraKalifahPage() {
 
   const current = soalan[idx];
 
-  function pilih(key: "a" | "b" | "c" | "d", nilai: string) {
+  function pilih(key: "a" | "b" | "c" | "d") {
     if (!current || betul) return;
-    if (nilai === current.jawapan_betul) {
+    if (key === kunciBetul) {
       setBetul(key);
       setSalah(null);
       setTimeout(() => {
@@ -337,6 +337,7 @@ function AktivitiPraKalifahPage() {
       setTimeout(() => setSalah(null), 450);
     }
   }
+
 
   function kembaliKePemilihan() {
     setPilihIdx(null);
