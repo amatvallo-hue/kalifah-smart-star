@@ -376,8 +376,9 @@ function AktivitiPraKalifahPage() {
               to="/pra-kalifah"
               className="inline-flex items-center gap-2 rounded-full bg-card px-4 py-2 font-display text-xs font-extrabold text-foreground shadow-card transition hover:bg-secondary"
             >
-              <ArrowLeft className="h-4 w-4" /> Kembali
+              <ArrowLeft className="h-4 w-4" /> {bahasa === "en" ? "Back" : "Kembali"}
             </Link>
+            <ToggleBahasa bahasa={bahasa} setBahasa={setBahasa} />
           </div>
 
           <div className="flex flex-col items-center gap-3 text-center">
@@ -385,11 +386,12 @@ function AktivitiPraKalifahPage() {
               <Baby className="h-12 w-12" strokeWidth={2.5} />
             </div>
             <h1 className="font-display text-3xl font-extrabold text-foreground sm:text-4xl">
-              Pilih Aktiviti
+              {bahasa === "en" ? "Choose Activity" : "Pilih Aktiviti"}
             </h1>
             <p className="text-sm text-muted-foreground sm:text-base">
-              Kamu nak main aktiviti apa hari ini?
+              {bahasa === "en" ? "What do you want to play today?" : "Kamu nak main aktiviti apa hari ini?"}
             </p>
+
           </div>
 
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
