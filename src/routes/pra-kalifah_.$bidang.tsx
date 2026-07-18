@@ -461,9 +461,9 @@ function AktivitiPraKalifahPage() {
             <Baby className="h-12 w-12" strokeWidth={2.5} />
           </div>
           <h1 className="mt-6 font-display text-3xl font-extrabold text-foreground animate-pop">
-            Misi Selesai! 🎉
+            {bahasa === "en" ? "Mission Complete! 🎉" : "Misi Selesai! 🎉"}
           </h1>
-          <p className="mt-2 text-sm text-muted-foreground">{config.mesejSelesai}</p>
+          <p className="mt-2 text-sm text-muted-foreground">{bahasa === "en" && config.mesejSelesaiEn ? config.mesejSelesaiEn : config.mesejSelesai}</p>
           <div className="mt-6 flex justify-center gap-1">
             {[0, 1, 2].map((i) => (
               <div
@@ -482,15 +482,16 @@ function AktivitiPraKalifahPage() {
                 onClick={kembaliKePemilihan}
                 className="inline-flex items-center justify-center gap-2 rounded-full bg-card px-6 py-3 font-display text-sm font-extrabold text-foreground shadow-card hover:bg-secondary"
               >
-                Pilih Aktiviti Lain
+                {bahasa === "en" ? "Choose Another Activity" : "Pilih Aktiviti Lain"}
               </button>
             )}
             <Link
               to="/pra-kalifah"
               className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-primary px-6 py-3 font-display text-sm font-extrabold text-primary-foreground shadow-soft"
             >
-              <ArrowLeft className="h-4 w-4" /> Kembali ke Dunia Pra Kalifah
+              <ArrowLeft className="h-4 w-4" /> {bahasa === "en" ? "Back to Pra Kalifah World" : "Kembali ke Dunia Pra Kalifah"}
             </Link>
+
           </div>
         </div>
       </div>
