@@ -448,23 +448,23 @@ export function BlobsLatar() {
 
 export function PolaLatarSubtle() {
   const items: { emoji: string; top: string; left: string; size: string; rotate: number }[] = [
-    { emoji: "☁️", top: "5%", left: "8%", size: "text-7xl", rotate: -8 },
-    { emoji: "⭐", top: "12%", left: "85%", size: "text-5xl", rotate: 12 },
-    { emoji: "🌸", top: "20%", left: "45%", size: "text-6xl", rotate: 0 },
-    { emoji: "🌈", top: "28%", left: "20%", size: "text-6xl", rotate: -6 },
-    { emoji: "☁️", top: "34%", left: "70%", size: "text-8xl", rotate: 5 },
-    { emoji: "⭐", top: "44%", left: "6%", size: "text-4xl", rotate: -15 },
-    { emoji: "🌸", top: "50%", left: "90%", size: "text-5xl", rotate: 10 },
-    { emoji: "🌈", top: "58%", left: "55%", size: "text-7xl", rotate: 4 },
-    { emoji: "☁️", top: "66%", left: "25%", size: "text-6xl", rotate: -10 },
-    { emoji: "⭐", top: "74%", left: "65%", size: "text-5xl", rotate: 8 },
-    { emoji: "🌸", top: "82%", left: "12%", size: "text-6xl", rotate: -4 },
-    { emoji: "☁️", top: "90%", left: "50%", size: "text-5xl", rotate: 6 },
-    { emoji: "⭐", top: "95%", left: "80%", size: "text-4xl", rotate: -20 },
-    { emoji: "🌸", top: "8%", left: "60%", size: "text-4xl", rotate: 15 },
+    { emoji: "☁️", top: "5%", left: "8%", size: "text-8xl", rotate: -8 },
+    { emoji: "⭐", top: "12%", left: "85%", size: "text-6xl", rotate: 12 },
+    { emoji: "🌸", top: "20%", left: "45%", size: "text-7xl", rotate: 0 },
+    { emoji: "🌈", top: "28%", left: "20%", size: "text-7xl", rotate: -6 },
+    { emoji: "☁️", top: "34%", left: "70%", size: "text-9xl", rotate: 5 },
+    { emoji: "⭐", top: "44%", left: "6%", size: "text-5xl", rotate: -15 },
+    { emoji: "🌸", top: "50%", left: "90%", size: "text-6xl", rotate: 10 },
+    { emoji: "🌈", top: "58%", left: "55%", size: "text-8xl", rotate: 4 },
+    { emoji: "☁️", top: "66%", left: "25%", size: "text-7xl", rotate: -10 },
+    { emoji: "⭐", top: "74%", left: "65%", size: "text-6xl", rotate: 8 },
+    { emoji: "🌸", top: "82%", left: "12%", size: "text-7xl", rotate: -4 },
+    { emoji: "☁️", top: "90%", left: "50%", size: "text-6xl", rotate: 6 },
+    { emoji: "⭐", top: "95%", left: "80%", size: "text-5xl", rotate: -20 },
+    { emoji: "🌸", top: "8%", left: "60%", size: "text-5xl", rotate: 15 },
   ];
   return (
-    <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden opacity-[0.07]">
+    <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden opacity-[0.14]">
       {items.map((it, i) => (
         <span
           key={i}
