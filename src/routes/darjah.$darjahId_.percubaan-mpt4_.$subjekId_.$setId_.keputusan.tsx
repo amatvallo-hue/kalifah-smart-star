@@ -214,6 +214,10 @@ function KeputusanPage() {
         const dikotomusMarks: Record<string, number> = {};
         for (const s of soalanList) {
           if (s.kaedah_penskoran !== "dikotomus") continue;
+          if (s.jenis_item === "SRTb" && s.langkah_bertingkat) {
+            dikotomusMarks[s.id] = gradeSrtb(s.langkah_bertingkat, jawapan[s.id], s.markah);
+            continue;
+          }
           const murid = (jawapan[s.id] ?? "").trim().toUpperCase();
           const betul = (s.jawapan_betul ?? "").trim().toUpperCase();
           dikotomusMarks[s.id] =
@@ -459,6 +463,10 @@ function ResultView({
   const markPerSoalan = new Map<string, number>();
   for (const s of soalanList) {
     if (s.kaedah_penskoran === "dikotomus") {
+      if (s.jenis_item === "SRTb" && s.langkah_bertingkat) {
+        markPerSoalan.set(s.id, gradeSrtb(s.langkah_bertingkat, jawapan[s.id], s.markah));
+        continue;
+      }
       const murid = (jawapan[s.id] ?? "").trim().toUpperCase();
       const betul = (s.jawapan_betul ?? "").trim().toUpperCase();
       markPerSoalan.set(s.id, murid.length > 0 && murid === betul ? s.markah : 0);
