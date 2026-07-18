@@ -210,10 +210,13 @@ const BIDANG_CONFIG: Record<string, AktivitiConfig[]> = {
     {
       namaAktiviti: "Buah-buahan",
       tajuk: "Buah-buahan",
+      tajukEn: "Fruits",
       mesejSelesai: "Syabas! Kamu kenal buah-buahan!",
+      mesejSelesaiEn: "Great job! You know your fruits!",
       jenis: "kosa-kata",
       ikon: Apple,
     },
+
     {
       namaAktiviti: "Anggota Badan",
       tajuk: "Anggota Badan",
