@@ -287,10 +287,10 @@ function PulauPraKalifahPage() {
           <div className="absolute left-40 top-4 z-30 sm:left-56 sm:top-8">
             <div className="relative rounded-2xl bg-[#FFFBF0] px-3 py-2 shadow-lg sm:rounded-3xl sm:px-4 sm:py-2.5">
               <p className="font-display text-sm font-extrabold text-[#0F172A] sm:text-lg">
-                Hai kawan! 👋
+                {bahasa === "en" ? "Hi friend! 👋" : "Hai kawan! 👋"}
               </p>
               <p className="text-xs font-semibold text-[#0F172A]/70 sm:text-sm">
-                Jom belajar hari ini!
+                {bahasa === "en" ? "Let's learn today!" : "Jom belajar hari ini!"}
               </p>
               <div className="absolute -left-2 top-1/2 h-3 w-3 -translate-y-1/2 rotate-45 bg-[#FFFBF0] sm:h-4 sm:w-4" />
             </div>
@@ -299,14 +299,19 @@ function PulauPraKalifahPage() {
           {/* Heading */}
           <div className="absolute left-44 right-5 top-0 bottom-0 z-10 flex flex-col justify-center text-right sm:left-auto sm:right-10 sm:max-w-[360px]">
             <h1 className="font-display text-2xl font-extrabold leading-tight text-[#0F172A] sm:text-5xl">
-              Dunia Pra Kalifah 🌈
+              {bahasa === "en" ? "Pra Kalifah World 🌈" : "Dunia Pra Kalifah 🌈"}
             </h1>
             <p className="mt-1 text-sm font-semibold text-[#0F172A]/70 sm:text-lg">
               {tahapDipilih === 1
-                ? "Pilih bidang yang kamu nak belajar hari ini!"
-                : "Pilih tahap yang sesuai untuk anak kamu!"}
+                ? bahasa === "en"
+                  ? "Choose what you want to learn today!"
+                  : "Pilih bidang yang kamu nak belajar hari ini!"
+                : bahasa === "en"
+                  ? "Choose the right level for your child!"
+                  : "Pilih tahap yang sesuai untuk anak kamu!"}
             </p>
           </div>
+
         </div>
 
         {err ? (
