@@ -284,6 +284,8 @@ function AktivitiPraKalifahPage() {
   const [betul, setBetul] = useState<string | null>(null);
   const [salah, setSalah] = useState<string | null>(null);
   const [selesai, setSelesai] = useState(false);
+  const [bahasa, setBahasa] = usePraBahasa();
+
 
   useEffect(() => {
     if (!config) return;
