@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { usePoints } from "@/hooks/use-points";
 import { getDarjah, getSubjek, TONE_GRADIENT } from "@/lib/curriculum";
+import { SrtbReview, gradeSrtb, type LangkahBertingkat } from "@/lib/mpt4-srtb";
 
 export const Route = createFileRoute(
   "/darjah/$darjahId_/percubaan-mpt4_/$subjekId_/$setId_/keputusan",
@@ -43,6 +44,7 @@ interface Mpt4Soalan {
   markah: number;
   stimulus_keterangan: string | null;
   stimulus_svg: { svg_type: string; params: any; bahasa?: "bm" | "en" } | null;
+  langkah_bertingkat: LangkahBertingkat | null;
 }
 
 interface EseiPenilaianItem {
@@ -152,7 +154,7 @@ function KeputusanPage() {
         supabase
           .from("mpt4_soalan")
           .select(
-            "id, bahagian, no_soalan, sub_bahagian, teks_soalan, jenis_item, kaedah_penskoran, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan_betul, markah, stimulus_keterangan, stimulus_svg",
+            "id, bahagian, no_soalan, sub_bahagian, teks_soalan, jenis_item, kaedah_penskoran, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan_betul, markah, stimulus_keterangan, stimulus_svg, langkah_bertingkat",
           )
           .eq("set_id", setId)
           .order("bahagian", { ascending: true })
