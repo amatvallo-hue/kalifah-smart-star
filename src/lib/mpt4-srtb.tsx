@@ -511,22 +511,50 @@ function ColumnFormGrid({
       {g.r1 && (
         <div className="grid gap-1" style={gridStyle}>
           <div />
-          {g.r1.map((c, i) => (
-            <div key={i} className="rounded-lg bg-card py-2 text-center font-display text-lg font-extrabold">
-              {renderStatic(c)}
-            </div>
-          ))}
+          {g.r1.map((c, i) => {
+            if (g.r1fill && c !== null && c !== ".") {
+              return (
+                <GalusCell
+                  key={i}
+                  cKey={`l${lIdx}:${g.pfx}:r1:${i}`}
+                  answers={answers}
+                  setAns={setAns}
+                  disabled={disabled}
+                  maxLen={cellLen}
+                />
+              );
+            }
+            return (
+              <div key={i} className="rounded-lg bg-card py-2 text-center font-display text-lg font-extrabold">
+                {renderStatic(c)}
+              </div>
+            );
+          })}
         </div>
       )}
 
       {g.r2 && (
         <div className="grid gap-1 border-b-4 border-foreground pb-1" style={gridStyle}>
           <div className="pt-2 text-center font-display text-lg font-extrabold">{opSym}</div>
-          {g.r2.map((c, i) => (
-            <div key={i} className="rounded-lg bg-card py-2 text-center font-display text-lg font-extrabold">
-              {renderStatic(c)}
-            </div>
-          ))}
+          {g.r2.map((c, i) => {
+            if (g.r2fill && c !== null && c !== ".") {
+              return (
+                <GalusCell
+                  key={i}
+                  cKey={`l${lIdx}:${g.pfx}:r2:${i}`}
+                  answers={answers}
+                  setAns={setAns}
+                  disabled={disabled}
+                  maxLen={cellLen}
+                />
+              );
+            }
+            return (
+              <div key={i} className="rounded-lg bg-card py-2 text-center font-display text-lg font-extrabold">
+                {renderStatic(c)}
+              </div>
+            );
+          })}
         </div>
       )}
 
