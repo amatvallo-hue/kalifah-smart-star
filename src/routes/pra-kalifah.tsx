@@ -38,6 +38,7 @@ export const Route = createFileRoute("/pra-kalifah")({
 interface Bidang {
   id: string;
   nama: string;
+  nama_en: string | null;
   warna_kod: string | null;
   ikon_nama: string | null;
   tertib: number;
@@ -48,6 +49,52 @@ const IKON_MAP: Record<string, LucideIcon> = {
   shapes: Shapes,
   "moon-star": Sparkles,
 };
+
+type Bahasa = "bm" | "en";
+
+export function usePraBahasa() {
+  const [bahasa, setBahasaState] = useState<Bahasa>(() => {
+    if (typeof window === "undefined") return "bm";
+    return (localStorage.getItem("kalifah_pra_bahasa") as Bahasa) ?? "bm";
+  });
+  const setBahasa = (b: Bahasa) => {
+    setBahasaState(b);
+    if (typeof window !== "undefined") localStorage.setItem("kalifah_pra_bahasa", b);
+  };
+  return [bahasa, setBahasa] as const;
+}
+
+export function ToggleBahasa({
+  bahasa,
+  setBahasa,
+}: {
+  bahasa: Bahasa;
+  setBahasa: (b: Bahasa) => void;
+}) {
+  return (
+    <div className="inline-flex items-center gap-1 rounded-full bg-white p-1 shadow-card">
+      <button
+        type="button"
+        onClick={() => setBahasa("bm")}
+        className={`rounded-full px-3 py-1.5 font-display text-xs font-extrabold transition ${
+          bahasa === "bm" ? "bg-[#FF7B9C] text-white" : "text-[#0F172A]/50"
+        }`}
+      >
+        BM
+      </button>
+      <button
+        type="button"
+        onClick={() => setBahasa("en")}
+        className={`rounded-full px-3 py-1.5 font-display text-xs font-extrabold transition ${
+          bahasa === "en" ? "bg-[#FF7B9C] text-white" : "text-[#0F172A]/50"
+        }`}
+      >
+        EN
+      </button>
+    </div>
+  );
+}
+
 
 function bidangSlug(ikon: string | null, nama: string): string {
   if (ikon === "abc") return "bahasa";
