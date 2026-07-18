@@ -498,14 +498,23 @@ function AktivitiPraKalifahPage() {
     );
   }
 
-  const pilihanList: Array<{ key: "a" | "b" | "c" | "d"; nilai: string }> = [
-    { key: "a", nilai: current.pilihan_a },
-    { key: "b", nilai: current.pilihan_b },
-    { key: "c", nilai: current.pilihan_c },
-    { key: "d", nilai: current.pilihan_d },
+  const kunciBetul: "a" | "b" | "c" | "d" =
+    current.pilihan_a === current.jawapan_betul
+      ? "a"
+      : current.pilihan_b === current.jawapan_betul
+        ? "b"
+        : current.pilihan_c === current.jawapan_betul
+          ? "c"
+          : "d";
+
+  const pilihanList: Array<{ key: "a" | "b" | "c" | "d"; nilai: string; paparan: string }> = [
+    { key: "a", nilai: current.pilihan_a, paparan: bahasa === "en" && current.pilihan_a_en ? current.pilihan_a_en : current.pilihan_a },
+    { key: "b", nilai: current.pilihan_b, paparan: bahasa === "en" && current.pilihan_b_en ? current.pilihan_b_en : current.pilihan_b },
+    { key: "c", nilai: current.pilihan_c, paparan: bahasa === "en" && current.pilihan_c_en ? current.pilihan_c_en : current.pilihan_c },
+    { key: "d", nilai: current.pilihan_d, paparan: bahasa === "en" && current.pilihan_d_en ? current.pilihan_d_en : current.pilihan_d },
   ];
 
-  const arahan =
+  const arahanBM =
     current.arahan_audio_teks ??
     (config.jenis === "huruf"
       ? `Cari huruf ${current.huruf_sasaran ?? ""}!`
@@ -514,6 +523,17 @@ function AktivitiPraKalifahPage() {
         : config.jenis === "lengkap"
           ? "Lengkapkan susunan."
           : "Pilih jawapan!");
+  const arahanEN =
+    current.arahan_audio_teks_en ??
+    (config.jenis === "huruf"
+      ? `Find the letter ${current.huruf_sasaran ?? ""}!`
+      : config.jenis === "kira"
+        ? "Count, how many?"
+        : config.jenis === "lengkap"
+          ? "Complete the sequence."
+          : "Choose the answer!");
+  const arahan = bahasa === "en" ? arahanEN : arahanBM;
+
 
   const guna_ikon_besar = config.jenis === "adab";
 
