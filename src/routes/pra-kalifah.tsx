@@ -179,6 +179,7 @@ function PulauPraKalifahPage() {
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#FFFDF8] p-4 text-[#0F172A]">
       <BlobsLatar />
+      <PolaLatarSubtle />
       <div className="relative z-10 mx-auto flex w-full max-w-3xl flex-col gap-6 pt-4">
         <div className="flex items-center justify-between">
           <Link
@@ -441,6 +442,38 @@ export function BlobsLatar() {
         className="absolute left-1/2 top-1/3 h-72 w-72 -translate-x-1/2 rounded-full bg-[#16A34A] opacity-25 blur-3xl animate-blob-drift"
         style={{ animationDelay: "3s" }}
       />
+    </div>
+  );
+}
+
+export function PolaLatarSubtle() {
+  const items: { emoji: string; top: string; left: string; size: string; rotate: number }[] = [
+    { emoji: "☁️", top: "5%", left: "8%", size: "text-7xl", rotate: -8 },
+    { emoji: "⭐", top: "12%", left: "85%", size: "text-5xl", rotate: 12 },
+    { emoji: "🌸", top: "20%", left: "45%", size: "text-6xl", rotate: 0 },
+    { emoji: "🌈", top: "28%", left: "20%", size: "text-6xl", rotate: -6 },
+    { emoji: "☁️", top: "34%", left: "70%", size: "text-8xl", rotate: 5 },
+    { emoji: "⭐", top: "44%", left: "6%", size: "text-4xl", rotate: -15 },
+    { emoji: "🌸", top: "50%", left: "90%", size: "text-5xl", rotate: 10 },
+    { emoji: "🌈", top: "58%", left: "55%", size: "text-7xl", rotate: 4 },
+    { emoji: "☁️", top: "66%", left: "25%", size: "text-6xl", rotate: -10 },
+    { emoji: "⭐", top: "74%", left: "65%", size: "text-5xl", rotate: 8 },
+    { emoji: "🌸", top: "82%", left: "12%", size: "text-6xl", rotate: -4 },
+    { emoji: "☁️", top: "90%", left: "50%", size: "text-5xl", rotate: 6 },
+    { emoji: "⭐", top: "95%", left: "80%", size: "text-4xl", rotate: -20 },
+    { emoji: "🌸", top: "8%", left: "60%", size: "text-4xl", rotate: 15 },
+  ];
+  return (
+    <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden opacity-[0.07]">
+      {items.map((it, i) => (
+        <span
+          key={i}
+          className={`absolute select-none ${it.size}`}
+          style={{ top: it.top, left: it.left, transform: `rotate(${it.rotate}deg)` }}
+        >
+          {it.emoji}
+        </span>
+      ))}
     </div>
   );
 }
