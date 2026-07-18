@@ -47,6 +47,7 @@ interface Mpt4Soalan {
   pilihan_c: string | null;
   pilihan_d: string | null;
   markah: number;
+  langkah_bertingkat: LangkahBertingkat | null;
 }
 
 interface Mpt4Keputusan {
@@ -125,7 +126,7 @@ function PercubaanMpt4JawabPage() {
         supabase
           .from("mpt4_soalan")
           .select(
-            "id, set_id, bahagian, no_soalan, sub_bahagian, teks_soalan, konteks, stimulus_keterangan, stimulus_svg, jenis_item, kaedah_penskoran, pilihan_a, pilihan_b, pilihan_c, pilihan_d, markah",
+            "id, set_id, bahagian, no_soalan, sub_bahagian, teks_soalan, konteks, stimulus_keterangan, stimulus_svg, jenis_item, kaedah_penskoran, pilihan_a, pilihan_b, pilihan_c, pilihan_d, markah, langkah_bertingkat",
           )
           .eq("set_id", setId)
           .order("bahagian", { ascending: true })
