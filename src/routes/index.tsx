@@ -3,6 +3,7 @@ import {
   Sparkles,
   Star,
   Check,
+  CheckCircle2,
   PenLine,
   Languages,
   Calculator,
