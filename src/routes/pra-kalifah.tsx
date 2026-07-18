@@ -192,6 +192,8 @@ function PulauPraKalifahPage() {
   const [err, setErr] = useState<string | null>(null);
   const [tahapDipilih, setTahapDipilih] = useState<number | null>(null);
   const [toast, setToast] = useState<string | null>(null);
+  const [bahasa, setBahasa] = usePraBahasa();
+
 
   useEffect(() => {
     let mounted = true;
