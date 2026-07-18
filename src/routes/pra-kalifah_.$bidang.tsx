@@ -620,9 +620,9 @@ function AktivitiPraKalifahPage() {
                 key={p.key}
                 type="button"
                 disabled={disabled}
-                onClick={() => pilih(p.key, p.nilai)}
+                onClick={() => pilih(p.key)}
                 style={!disabled ? { animationDelay: `${i * 350}ms` } : undefined}
-                aria-label={p.nilai}
+                aria-label={p.paparan}
                 className={`relative flex aspect-square flex-col items-center justify-center gap-2 overflow-visible rounded-3xl text-center font-display font-extrabold shadow-card transition ${
                   guna_ikon_besar
                     ? "p-3 text-sm sm:text-base"
@@ -640,7 +640,7 @@ function AktivitiPraKalifahPage() {
                 {IkonAdab ? (
                   <>
                     <IkonAdab className="h-10 w-10 sm:h-12 sm:w-12" strokeWidth={2.5} />
-                    <span className="leading-tight">{p.nilai}</span>
+                    <span className="leading-tight">{p.paparan}</span>
                   </>
                 ) : IkonBentuk ? (
                   <IkonBentuk
@@ -649,8 +649,9 @@ function AktivitiPraKalifahPage() {
                     fill="currentColor"
                   />
                 ) : isVisual ? null : (
-                  p.nilai
+                  p.paparan
                 )}
+
                 {isBetul && <ConfettiButang />}
               </button>
             );
