@@ -48,7 +48,7 @@ import {
 import type { LucideIcon } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { StarReward } from "@/components/StarReward";
-import { BlobsLatar, temaBidangDariSlug } from "./pra-kalifah";
+import { BlobsLatar, temaBidangDariSlug, usePraBahasa, ToggleBahasa } from "./pra-kalifah";
 
 
 export const Route = createFileRoute("/pra-kalifah_/$bidang")({
@@ -108,11 +108,16 @@ interface Soalan {
   id: string;
   tertib: number;
   arahan_audio_teks: string | null;
+  arahan_audio_teks_en: string | null;
   huruf_sasaran: string | null;
   pilihan_a: string;
   pilihan_b: string;
   pilihan_c: string;
   pilihan_d: string;
+  pilihan_a_en: string | null;
+  pilihan_b_en: string | null;
+  pilihan_c_en: string | null;
+  pilihan_d_en: string | null;
   jawapan_betul: string;
   data_aktiviti: DataAktiviti | null;
 }
@@ -120,10 +125,13 @@ interface Soalan {
 interface AktivitiConfig {
   namaAktiviti: string;
   tajuk: string;
+  tajukEn?: string;
   mesejSelesai: string;
+  mesejSelesaiEn?: string;
   jenis: JenisAktiviti;
   ikon: LucideIcon;
 }
+
 
 const BUTANG_WARNA = [
   "bg-rose-400 hover:bg-rose-500 text-white",
@@ -171,10 +179,13 @@ const BIDANG_CONFIG: Record<string, AktivitiConfig[]> = {
     {
       namaAktiviti: "Cari Huruf",
       tajuk: "Cari Huruf",
+      tajukEn: "Find Letters",
       mesejSelesai: "Syabas! Kamu dah kenal semua huruf!",
+      mesejSelesaiEn: "Great job! You know all the letters!",
       jenis: "huruf",
       ikon: BookOpen,
     },
+
     {
       namaAktiviti: "Huruf dan Gambar",
       tajuk: "Huruf dan Gambar",
@@ -199,10 +210,13 @@ const BIDANG_CONFIG: Record<string, AktivitiConfig[]> = {
     {
       namaAktiviti: "Buah-buahan",
       tajuk: "Buah-buahan",
+      tajukEn: "Fruits",
       mesejSelesai: "Syabas! Kamu kenal buah-buahan!",
+      mesejSelesaiEn: "Great job! You know your fruits!",
       jenis: "kosa-kata",
       ikon: Apple,
     },
+
     {
       namaAktiviti: "Anggota Badan",
       tajuk: "Anggota Badan",
@@ -270,6 +284,8 @@ function AktivitiPraKalifahPage() {
   const [betul, setBetul] = useState<string | null>(null);
   const [salah, setSalah] = useState<string | null>(null);
   const [selesai, setSelesai] = useState(false);
+  const [bahasa, setBahasa] = usePraBahasa();
+
 
   useEffect(() => {
     if (!config) return;
@@ -283,7 +299,7 @@ function AktivitiPraKalifahPage() {
       const { data, error } = await supabase
         .from("pra_kalifah_aktiviti" as never)
         .select(
-          "id, tertib, arahan_audio_teks, huruf_sasaran, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan_betul, data_aktiviti",
+          "id, tertib, arahan_audio_teks, arahan_audio_teks_en, huruf_sasaran, pilihan_a, pilihan_b, pilihan_c, pilihan_d, pilihan_a_en, pilihan_b_en, pilihan_c_en, pilihan_d_en, jawapan_betul, data_aktiviti",
         )
         .eq("nama_aktiviti", config.namaAktiviti)
         .eq("umur_tahun", 4)
@@ -303,9 +319,9 @@ function AktivitiPraKalifahPage() {
 
   const current = soalan[idx];
 
-  function pilih(key: "a" | "b" | "c" | "d", nilai: string) {
+  function pilih(key: "a" | "b" | "c" | "d") {
     if (!current || betul) return;
-    if (nilai === current.jawapan_betul) {
+    if (key === kunciBetul) {
       setBetul(key);
       setSalah(null);
       setTimeout(() => {
@@ -322,6 +338,7 @@ function AktivitiPraKalifahPage() {
     }
   }
 
+
   function kembaliKePemilihan() {
     setPilihIdx(null);
     setSoalan([]);
@@ -335,12 +352,13 @@ function AktivitiPraKalifahPage() {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background p-4">
         <div className="w-full max-w-md rounded-3xl border border-border/60 bg-card p-8 text-center shadow-card">
-          <h1 className="font-display text-2xl font-extrabold text-foreground">Bidang tidak dijumpai</h1>
+          <h1 className="font-display text-2xl font-extrabold text-foreground">{bahasa === "en" ? "Section not found" : "Bidang tidak dijumpai"}</h1>
           <Link
             to="/pra-kalifah"
             className="mt-6 inline-flex items-center justify-center gap-2 rounded-full bg-gradient-primary px-6 py-3 font-display text-sm font-extrabold text-primary-foreground shadow-soft"
           >
-            <ArrowLeft className="h-4 w-4" /> Kembali
+            <ArrowLeft className="h-4 w-4" /> {bahasa === "en" ? "Back" : "Kembali"}
+
           </Link>
         </div>
       </div>
@@ -358,8 +376,9 @@ function AktivitiPraKalifahPage() {
               to="/pra-kalifah"
               className="inline-flex items-center gap-2 rounded-full bg-card px-4 py-2 font-display text-xs font-extrabold text-foreground shadow-card transition hover:bg-secondary"
             >
-              <ArrowLeft className="h-4 w-4" /> Kembali
+              <ArrowLeft className="h-4 w-4" /> {bahasa === "en" ? "Back" : "Kembali"}
             </Link>
+            <ToggleBahasa bahasa={bahasa} setBahasa={setBahasa} />
           </div>
 
           <div className="flex flex-col items-center gap-3 text-center">
@@ -367,11 +386,12 @@ function AktivitiPraKalifahPage() {
               <Baby className="h-12 w-12" strokeWidth={2.5} />
             </div>
             <h1 className="font-display text-3xl font-extrabold text-foreground sm:text-4xl">
-              Pilih Aktiviti
+              {bahasa === "en" ? "Choose Activity" : "Pilih Aktiviti"}
             </h1>
             <p className="text-sm text-muted-foreground sm:text-base">
-              Kamu nak main aktiviti apa hari ini?
+              {bahasa === "en" ? "What do you want to play today?" : "Kamu nak main aktiviti apa hari ini?"}
             </p>
+
           </div>
 
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
@@ -392,7 +412,7 @@ function AktivitiPraKalifahPage() {
                   </div>
                   <div className="text-center">
                     <h2 className="font-display text-base font-extrabold text-foreground sm:text-lg">
-                      {a.tajuk}
+                      {bahasa === "en" && a.tajukEn ? a.tajukEn : a.tajuk}
                     </h2>
                   </div>
                 </button>
@@ -416,14 +436,15 @@ function AktivitiPraKalifahPage() {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background p-4">
         <div className="w-full max-w-md rounded-3xl border border-border/60 bg-card p-8 text-center shadow-card">
-          <h1 className="font-display text-2xl font-extrabold text-foreground">Tiada aktiviti</h1>
-          <p className="mt-3 text-sm text-muted-foreground">{err ?? "Belum ada soalan tersedia."}</p>
+          <h1 className="font-display text-2xl font-extrabold text-foreground">{bahasa === "en" ? "No activities" : "Tiada aktiviti"}</h1>
+          <p className="mt-3 text-sm text-muted-foreground">{err ?? (bahasa === "en" ? "No questions available yet." : "Belum ada soalan tersedia.")}</p>
           <Link
             to="/pra-kalifah"
             className="mt-6 inline-flex items-center justify-center gap-2 rounded-full bg-gradient-primary px-6 py-3 font-display text-sm font-extrabold text-primary-foreground shadow-soft"
           >
-            <ArrowLeft className="h-4 w-4" /> Kembali
+            <ArrowLeft className="h-4 w-4" /> {bahasa === "en" ? "Back" : "Kembali"}
           </Link>
+
         </div>
       </div>
     );
@@ -440,9 +461,9 @@ function AktivitiPraKalifahPage() {
             <Baby className="h-12 w-12" strokeWidth={2.5} />
           </div>
           <h1 className="mt-6 font-display text-3xl font-extrabold text-foreground animate-pop">
-            Misi Selesai! 🎉
+            {bahasa === "en" ? "Mission Complete! 🎉" : "Misi Selesai! 🎉"}
           </h1>
-          <p className="mt-2 text-sm text-muted-foreground">{config.mesejSelesai}</p>
+          <p className="mt-2 text-sm text-muted-foreground">{bahasa === "en" && config.mesejSelesaiEn ? config.mesejSelesaiEn : config.mesejSelesai}</p>
           <div className="mt-6 flex justify-center gap-1">
             {[0, 1, 2].map((i) => (
               <div
@@ -461,29 +482,39 @@ function AktivitiPraKalifahPage() {
                 onClick={kembaliKePemilihan}
                 className="inline-flex items-center justify-center gap-2 rounded-full bg-card px-6 py-3 font-display text-sm font-extrabold text-foreground shadow-card hover:bg-secondary"
               >
-                Pilih Aktiviti Lain
+                {bahasa === "en" ? "Choose Another Activity" : "Pilih Aktiviti Lain"}
               </button>
             )}
             <Link
               to="/pra-kalifah"
               className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-primary px-6 py-3 font-display text-sm font-extrabold text-primary-foreground shadow-soft"
             >
-              <ArrowLeft className="h-4 w-4" /> Kembali ke Dunia Pra Kalifah
+              <ArrowLeft className="h-4 w-4" /> {bahasa === "en" ? "Back to Pra Kalifah World" : "Kembali ke Dunia Pra Kalifah"}
             </Link>
+
           </div>
         </div>
       </div>
     );
   }
 
-  const pilihanList: Array<{ key: "a" | "b" | "c" | "d"; nilai: string }> = [
-    { key: "a", nilai: current.pilihan_a },
-    { key: "b", nilai: current.pilihan_b },
-    { key: "c", nilai: current.pilihan_c },
-    { key: "d", nilai: current.pilihan_d },
+  const kunciBetul: "a" | "b" | "c" | "d" =
+    current.pilihan_a === current.jawapan_betul
+      ? "a"
+      : current.pilihan_b === current.jawapan_betul
+        ? "b"
+        : current.pilihan_c === current.jawapan_betul
+          ? "c"
+          : "d";
+
+  const pilihanList: Array<{ key: "a" | "b" | "c" | "d"; nilai: string; paparan: string }> = [
+    { key: "a", nilai: current.pilihan_a, paparan: bahasa === "en" && current.pilihan_a_en ? current.pilihan_a_en : current.pilihan_a },
+    { key: "b", nilai: current.pilihan_b, paparan: bahasa === "en" && current.pilihan_b_en ? current.pilihan_b_en : current.pilihan_b },
+    { key: "c", nilai: current.pilihan_c, paparan: bahasa === "en" && current.pilihan_c_en ? current.pilihan_c_en : current.pilihan_c },
+    { key: "d", nilai: current.pilihan_d, paparan: bahasa === "en" && current.pilihan_d_en ? current.pilihan_d_en : current.pilihan_d },
   ];
 
-  const arahan =
+  const arahanBM =
     current.arahan_audio_teks ??
     (config.jenis === "huruf"
       ? `Cari huruf ${current.huruf_sasaran ?? ""}!`
@@ -492,6 +523,17 @@ function AktivitiPraKalifahPage() {
         : config.jenis === "lengkap"
           ? "Lengkapkan susunan."
           : "Pilih jawapan!");
+  const arahanEN =
+    current.arahan_audio_teks_en ??
+    (config.jenis === "huruf"
+      ? `Find the letter ${current.huruf_sasaran ?? ""}!`
+      : config.jenis === "kira"
+        ? "Count, how many?"
+        : config.jenis === "lengkap"
+          ? "Complete the sequence."
+          : "Choose the answer!");
+  const arahan = bahasa === "en" ? arahanEN : arahanBM;
+
 
   const guna_ikon_besar = config.jenis === "adab";
 
@@ -500,23 +542,27 @@ function AktivitiPraKalifahPage() {
       <BlobsLatar />
       <div className="relative z-10 mx-auto flex w-full max-w-2xl flex-col gap-6 pt-4">
         <div className="flex items-center justify-between">
-          <button
-            type="button"
-            onClick={() => {
-              if (senaraiAktiviti.length > 1) {
-                kembaliKePemilihan();
-              } else {
-                window.history.back();
-              }
-            }}
-            className="inline-flex items-center gap-2 rounded-full bg-card px-4 py-2 font-display text-xs font-extrabold text-foreground shadow-card transition hover:bg-secondary"
-          >
-            <ArrowLeft className="h-4 w-4" /> Keluar
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                if (senaraiAktiviti.length > 1) {
+                  kembaliKePemilihan();
+                } else {
+                  window.history.back();
+                }
+              }}
+              className="inline-flex items-center gap-2 rounded-full bg-card px-4 py-2 font-display text-xs font-extrabold text-foreground shadow-card transition hover:bg-secondary"
+            >
+              <ArrowLeft className="h-4 w-4" /> {bahasa === "en" ? "Exit" : "Keluar"}
+            </button>
+            <ToggleBahasa bahasa={bahasa} setBahasa={setBahasa} />
+          </div>
           <span className="rounded-full bg-card px-4 py-2 font-display text-xs font-extrabold text-primary shadow-card">
             {idx + 1} / {soalan.length}
           </span>
         </div>
+
 
         <div className="flex flex-wrap justify-center gap-1.5">
           {soalan.map((_, i) => (
@@ -574,9 +620,9 @@ function AktivitiPraKalifahPage() {
                 key={p.key}
                 type="button"
                 disabled={disabled}
-                onClick={() => pilih(p.key, p.nilai)}
+                onClick={() => pilih(p.key)}
                 style={!disabled ? { animationDelay: `${i * 350}ms` } : undefined}
-                aria-label={p.nilai}
+                aria-label={p.paparan}
                 className={`relative flex aspect-square flex-col items-center justify-center gap-2 overflow-visible rounded-3xl text-center font-display font-extrabold shadow-card transition ${
                   guna_ikon_besar
                     ? "p-3 text-sm sm:text-base"
@@ -594,7 +640,7 @@ function AktivitiPraKalifahPage() {
                 {IkonAdab ? (
                   <>
                     <IkonAdab className="h-10 w-10 sm:h-12 sm:w-12" strokeWidth={2.5} />
-                    <span className="leading-tight">{p.nilai}</span>
+                    <span className="leading-tight">{p.paparan}</span>
                   </>
                 ) : IkonBentuk ? (
                   <IkonBentuk
@@ -603,8 +649,9 @@ function AktivitiPraKalifahPage() {
                     fill="currentColor"
                   />
                 ) : isVisual ? null : (
-                  p.nilai
+                  p.paparan
                 )}
+
                 {isBetul && <ConfettiButang />}
               </button>
             );
