@@ -108,11 +108,16 @@ interface Soalan {
   id: string;
   tertib: number;
   arahan_audio_teks: string | null;
+  arahan_audio_teks_en: string | null;
   huruf_sasaran: string | null;
   pilihan_a: string;
   pilihan_b: string;
   pilihan_c: string;
   pilihan_d: string;
+  pilihan_a_en: string | null;
+  pilihan_b_en: string | null;
+  pilihan_c_en: string | null;
+  pilihan_d_en: string | null;
   jawapan_betul: string;
   data_aktiviti: DataAktiviti | null;
 }
@@ -120,10 +125,13 @@ interface Soalan {
 interface AktivitiConfig {
   namaAktiviti: string;
   tajuk: string;
+  tajukEn?: string;
   mesejSelesai: string;
+  mesejSelesaiEn?: string;
   jenis: JenisAktiviti;
   ikon: LucideIcon;
 }
+
 
 const BUTANG_WARNA = [
   "bg-rose-400 hover:bg-rose-500 text-white",
