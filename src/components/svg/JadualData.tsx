@@ -14,15 +14,15 @@ export function JadualData({ tajuk, lajur, baris }: Props) {
   return (
     <div className="mx-auto w-full max-w-md overflow-hidden rounded-xl border border-slate-300 bg-slate-50 text-slate-800 shadow-sm">
       {tajuk && (
-        <div className="border-b border-slate-300 bg-slate-100 px-4 py-2 font-display text-sm font-extrabold">
+        <div className="whitespace-pre-line border-b border-slate-300 bg-slate-100 px-4 py-2 font-display text-sm font-extrabold">
           {tajuk}
         </div>
       )}
       <table className="w-full text-sm">
         <thead>
           <tr className="bg-slate-200/70 text-left">
-            <th className="border-b border-slate-300 px-4 py-2 font-bold">{lajur[0]}</th>
-            <th className="border-b border-slate-300 px-4 py-2 font-bold">{lajur[1]}</th>
+            <th className="whitespace-pre-line border-b border-slate-300 px-4 py-2 font-bold">{lajur[0]}</th>
+            <th className="whitespace-pre-line border-b border-slate-300 px-4 py-2 font-bold">{lajur[1]}</th>
           </tr>
         </thead>
         <tbody>
@@ -33,8 +33,8 @@ export function JadualData({ tajuk, lajur, baris }: Props) {
           ) : (
             list.map((r, i) => (
               <tr key={i} className={i % 2 === 0 ? "bg-white" : "bg-slate-50"}>
-                <td className="border-b border-slate-200 px-4 py-2 font-semibold">{r.label}</td>
-                <td className="border-b border-slate-200 px-4 py-2">{r.nilai}</td>
+                <td className="whitespace-pre-line border-b border-slate-200 px-4 py-2 font-semibold">{r.label}</td>
+                <td className="whitespace-pre-line border-b border-slate-200 px-4 py-2">{r.nilai}</td>
               </tr>
             ))
           )}
