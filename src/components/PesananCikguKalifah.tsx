@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
 const BUCKET = "cikgu-kalifah";
@@ -11,12 +11,30 @@ interface Pesanan {
 }
 
 function GambarCikgu() {
+  const [url, setUrl] = useState<string | null>(null);
   const [broken, setBroken] = useState(false);
-  const url = useMemo(
-    () => supabase.storage.from(BUCKET).getPublicUrl("cikgu-kalifah.png").data.publicUrl,
-    [],
-  );
-  if (broken) {
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const { data } = await supabase.storage
+        .from(BUCKET)
+        .list("", { limit: 1, sortBy: { column: "created_at", order: "desc" } });
+      if (cancelled) return;
+      const file = data?.[0];
+      if (!file) {
+        setBroken(true);
+        return;
+      }
+      const { data: pub } = supabase.storage.from(BUCKET).getPublicUrl(file.name);
+      setUrl(pub.publicUrl);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  if (broken || !url) {
     return (
       <div className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50 text-3xl">
         👨‍🏫
