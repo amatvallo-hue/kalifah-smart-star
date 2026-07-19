@@ -41,6 +41,9 @@ import { downloadSijil } from "@/lib/sijil";
 export const Route = createFileRoute("/dashboard/ibu-bapa")({
   head: () => ({ meta: [{ title: "Dashboard Ibu Bapa — Kalifah.my" }] }),
   ssr: false,
+  validateSearch: (search: Record<string, unknown>) => ({
+    tambahAnak: search.tambahAnak === "1" || search.tambahAnak === 1 ? "1" : undefined,
+  }),
   component: ParentDashboard,
 });
 
