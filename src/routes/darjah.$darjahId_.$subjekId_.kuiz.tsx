@@ -8,7 +8,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { getDarjah, getSubjek } from "@/lib/curriculum";
 import { downloadSijil } from "@/lib/sijil";
 import { getQuiz, getQuizSet2, type QuizQuestion } from "@/lib/quiz-bank";
-import { simpanProgress } from "@/lib/progress";
+import { simpanProgress, rekodJawapan } from "@/lib/progress";
 import { KuizBMTopik } from "@/components/KuizBMTopik";
 import { useAward } from "@/hooks/use-award";
 
@@ -281,6 +281,8 @@ function KuizPage() {
   const [skor, setSkor] = useState(0);
   const [selesai, setSelesai] = useState(false);
   const [mulaMasa] = useState(() => Date.now());
+  const [sesiId] = useState(() => (typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`));
+  const [mulaSoalan, setMulaSoalan] = useState(() => Date.now());
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
@@ -430,13 +432,28 @@ function KuizPage() {
     else {
       setI(i + 1);
       setPilih(null);
+      setMulaSoalan(Date.now());
     }
   };
 
   const handlePilih = (idx: number) => {
     if (pilih !== null) return;
     setPilih(idx);
-    if (idx === soalan.jawapan) {
+    const isBetul = idx === soalan.jawapan;
+    const masaSoalanSaat = Math.max(0, Math.round((Date.now() - mulaSoalan) / 1000));
+    const huruf = ["A", "B", "C", "D"];
+    rekodJawapan({
+      sesiId,
+      darjah: Number(darjahId),
+      subjek: subjekId,
+      aktiviti: "kuiz",
+      soalanTeks: soalan.soalan,
+      jawapanMurid: huruf[idx],
+      jawapanBetul: huruf[soalan.jawapan],
+      betul: isBetul,
+      masaSoalanSaat,
+    });
+    if (isBetul) {
       setSkor((s) => s + 1);
       award({ sumber: "kuiz", darjah: darjahId, subjek: subjekId });
     }

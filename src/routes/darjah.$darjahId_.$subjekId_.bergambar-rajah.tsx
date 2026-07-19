@@ -6,7 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { usePoints } from "@/hooks/use-points";
 import { getDarjah, getSubjek } from "@/lib/curriculum";
-import { simpanProgress } from "@/lib/progress";
+import { simpanProgress, rekodJawapan } from "@/lib/progress";
 import { tambahMata } from "@/lib/tambah-mata";
 import { renderSoalanSvg } from "@/lib/render-soalan-svg";
 
@@ -147,6 +147,14 @@ function BergambarRajahPage() {
   const [selesai, setSelesai] = useState(false);
   const [berhenti, setBerhenti] = useState(false);
   const [mulaMasa, setMulaMasa] = useState(() => Date.now());
+  const [sesiId] = useState(() => (typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`));
+  const [mulaSoalan, setMulaSoalan] = useState(() => Date.now());
+  const subjekResolved =
+    subjekId === "matematik"
+      ? (bahasa === "en" ? "matematik-en" : "matematik")
+      : subjekId === "sains"
+        ? (bahasa === "en" ? "sains-en" : "sains")
+        : subjekId;
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
@@ -227,6 +235,7 @@ function BergambarRajahPage() {
     setSelesai(false);
     setBerhenti(false);
     setMulaMasa(Date.now());
+    setMulaSoalan(Date.now());
   }, [selected]);
 
   useEffect(() => {
@@ -264,6 +273,21 @@ function BergambarRajahPage() {
     if (pilih !== null || !soalan) return;
     setPilih(idx);
     const isBetul = idx === soalan.jawapan;
+    const masaSoalanSaat = Math.max(0, Math.round((Date.now() - mulaSoalan) / 1000));
+    const huruf = ["A", "B", "C", "D"];
+    rekodJawapan({
+      sesiId,
+      darjah: darjahNum,
+      subjek: subjekResolved,
+      aktiviti: "bergambar-rajah",
+      topik: selected?.topik_nama ?? undefined,
+      soalanRef: soalan.id,
+      soalanTeks: soalan.soalan,
+      jawapanMurid: huruf[idx],
+      jawapanBetul: huruf[soalan.jawapan],
+      betul: isBetul,
+      masaSoalanSaat,
+    });
     if (isBetul) {
       setBetul((b) => b + 1);
       if (user) {
@@ -283,6 +307,7 @@ function BergambarRajahPage() {
   const goToNext = () => {
     if (!selected) return;
     setPilih(null);
+    setMulaSoalan(Date.now());
     if (cursor + 1 >= selected.soalan.length) {
       setSelesai(true);
     } else {
