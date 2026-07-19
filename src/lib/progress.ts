@@ -207,10 +207,9 @@ export async function simpanProgress(input: SimpanProgressInput): Promise<void> 
 
     // ── 2) STATS HARIAN — upsert atomic supaya tak ada race condition
     const tarikh = todayKL();
-    const minit = Math.max(0, Math.round(masa / 60));
     const { data: statRow } = await supabase
       .from("user_stats")
-      .select("id, soalan_dijawab, masa_belajar, bab_selesai")
+      .select("id, soalan_dijawab, masa_belajar, masa_belajar_saat, bab_selesai")
       .eq("user_id", userId)
       .eq("tarikh", tarikh)
       .maybeSingle();
@@ -218,16 +217,21 @@ export async function simpanProgress(input: SimpanProgressInput): Promise<void> 
     const bumpBab = input.bumpBabSelesai ?? true;
     const babInc = bumpBab && !existing ? 1 : 0;
 
+    // Kumpul saat DULU, baru bundar sekali ke minit — elak kehilangan aktiviti pendek (<30s).
+    const newSaat = Number((statRow as any)?.masa_belajar_saat ?? 0) + masa;
+    const newMinit = Math.max(0, Math.round(newSaat / 60));
+
     if (statRow) {
       await supabase.from("user_stats").update({
         soalan_dijawab: (statRow.soalan_dijawab ?? 0) + jumlah,
-        masa_belajar: (statRow.masa_belajar ?? 0) + minit,
+        masa_belajar_saat: newSaat,
+        masa_belajar: newMinit,
         bab_selesai: (statRow.bab_selesai ?? 0) + babInc,
         updated_at: new Date().toISOString(),
       }).eq("id", statRow.id);
     } else {
       await supabase.from("user_stats").upsert(
-        { user_id: userId, tarikh, soalan_dijawab: jumlah, masa_belajar: minit, bab_selesai: babInc },
+        { user_id: userId, tarikh, soalan_dijawab: jumlah, masa_belajar_saat: newSaat, masa_belajar: newMinit, bab_selesai: babInc },
         { onConflict: "user_id,tarikh", ignoreDuplicates: false }
       );
     }
