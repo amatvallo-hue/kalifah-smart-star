@@ -125,6 +125,15 @@ export interface FaField {
   markah?: number;
 }
 
+export interface UnitConvert {
+  checkQ: string;
+  checkPilihan?: string[];
+  checkAns: string;
+  ar: string;
+  factorLabel: string;
+  galus: Galus;
+}
+
 export interface LangkahBertingkat {
   id?: string;
   topik?: string;
@@ -132,6 +141,7 @@ export interface LangkahBertingkat {
   hint?: string;
   diberi?: { l: string; v: string }[];
   langkah: Langkah[];
+  unitConvert?: UnitConvert;
   fa: FaField;
   fa2?: FaField;
 }
