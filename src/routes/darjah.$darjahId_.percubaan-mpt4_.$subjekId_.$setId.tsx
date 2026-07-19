@@ -381,7 +381,7 @@ function PercubaanMpt4JawabPage() {
           params={{ darjahId, subjekId }}
           className="inline-flex items-center gap-2 text-sm font-bold text-muted-foreground hover:text-primary"
         >
-          <ArrowLeft className="h-4 w-4" /> Kembali ke Senarai Set
+          <ArrowLeft className="h-4 w-4" /> {isEnglish ? "Back to Set List" : "Kembali ke Senarai Set"}
         </Link>
 
         {fetchError && (
