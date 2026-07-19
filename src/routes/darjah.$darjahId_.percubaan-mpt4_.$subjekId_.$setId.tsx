@@ -412,6 +412,7 @@ function PercubaanMpt4JawabPage() {
                   soalan={s}
                   value={jawapan[s.id] ?? ""}
                   onChange={(v) => updateJawapan(s.id, v)}
+                  isEnglish={isEnglish}
                 />
               ))}
             </div>
