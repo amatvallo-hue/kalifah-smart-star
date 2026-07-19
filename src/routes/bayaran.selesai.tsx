@@ -118,10 +118,11 @@ function BayaranSelesai() {
               Darjah anda telah dibuka. Selamat belajar!
             </p>
             <Link
-              to="/pilih-darjah"
+              to="/dashboard/ibu-bapa"
+              search={{ tambahAnak: "1" }}
               className="mt-6 inline-flex rounded-full bg-gradient-primary px-6 py-3 font-display font-extrabold text-primary-foreground shadow-soft"
             >
-              Ke Pilihan Darjah
+              Tambah Akaun Anak
             </Link>
           </>
         )}

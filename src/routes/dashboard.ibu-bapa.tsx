@@ -41,6 +41,9 @@ import { downloadSijil } from "@/lib/sijil";
 export const Route = createFileRoute("/dashboard/ibu-bapa")({
   head: () => ({ meta: [{ title: "Dashboard Ibu Bapa — Kalifah.my" }] }),
   ssr: false,
+  validateSearch: (search: Record<string, unknown>) => ({
+    tambahAnak: search.tambahAnak === "1" || search.tambahAnak === 1 ? "1" : undefined,
+  }),
   component: ParentDashboard,
 });
 
@@ -598,6 +601,12 @@ function ParentDashboard() {
   }, []);
 
   const isChild = !!user?.email?.includes(CHILD_EMAIL_DOMAIN);
+
+  const { tambahAnak } = Route.useSearch();
+
+  useEffect(() => {
+    if (tambahAnak === "1") setShowAdd(true);
+  }, [tambahAnak]);
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
