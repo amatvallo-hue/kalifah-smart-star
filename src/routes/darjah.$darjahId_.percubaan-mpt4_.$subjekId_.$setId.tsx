@@ -607,11 +607,11 @@ function SoalanCard({
               value={value}
               onChange={(e) => onChange(e.target.value)}
               rows={10}
-              placeholder="Tulis karangan / jawapan panjang anda di sini..."
+              placeholder={isEnglish ? "Write your essay / long answer here..." : "Tulis karangan / jawapan panjang anda di sini..."}
               className="w-full rounded-2xl border-2 border-border/60 bg-card px-4 py-3 text-sm leading-relaxed text-foreground focus:border-primary focus:outline-none"
             />
             <div className="mt-1 text-right text-[11px] font-bold text-muted-foreground">
-              {countWords(value)} patah kata
+              {countWords(value)} {isEnglish ? "words" : "patah kata"}
             </div>
           </div>
         )}
