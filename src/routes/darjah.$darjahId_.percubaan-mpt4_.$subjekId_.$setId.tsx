@@ -442,9 +442,11 @@ function PercubaanMpt4JawabPage() {
       {confirmOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={() => !submitting && setConfirmOpen(false)}>
           <div className="w-full max-w-sm rounded-3xl border border-border/60 bg-card p-6 shadow-card" onClick={(e) => e.stopPropagation()}>
-            <h3 className="font-display text-xl font-extrabold text-foreground">Hantar sekarang?</h3>
+            <h3 className="font-display text-xl font-extrabold text-foreground">{isEnglish ? "Submit now?" : "Hantar sekarang?"}</h3>
             <p className="mt-2 text-sm text-muted-foreground">
-              {jumlahDijawab} daripada {jumlahSoalan} soalan telah dijawab. Selepas hantar, jawapan tidak boleh diubah.
+              {isEnglish
+                ? `${jumlahDijawab} out of ${jumlahSoalan} questions have been answered. Once submitted, answers cannot be changed.`
+                : `${jumlahDijawab} daripada ${jumlahSoalan} soalan telah dijawab. Selepas hantar, jawapan tidak boleh diubah.`}
             </p>
             <div className="mt-5 flex gap-2">
               <button
