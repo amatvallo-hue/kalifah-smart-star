@@ -586,7 +586,7 @@ function SoalanCard({
             value={value}
             onChange={(e) => onChange(e.target.value.slice(0, 5))}
             maxLength={5}
-            placeholder="Jawapan"
+            placeholder={isEnglish ? "Answer" : "Jawapan"}
             className="w-32 rounded-xl border-2 border-border/60 bg-card px-4 py-2.5 text-center font-display text-lg font-extrabold uppercase tracking-widest text-foreground focus:border-primary focus:outline-none"
           />
         )}
