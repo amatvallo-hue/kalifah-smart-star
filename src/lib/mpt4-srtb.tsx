@@ -266,8 +266,6 @@ export function SrtbBlock({
         setAns={setAns}
         disabled={disabled}
       />
-        disabled={disabled}
-      />
       {lb.fa2 && (
         <FinalAnswerRow
           fa={lb.fa2}
