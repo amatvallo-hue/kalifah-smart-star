@@ -5,7 +5,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { getDarjah, getSubjek } from "@/lib/curriculum";
-import { simpanProgress } from "@/lib/progress";
+import { simpanProgress, rekodJawapan } from "@/lib/progress";
 import { tambahMata } from "@/lib/tambah-mata";
 import { usePoints } from "@/hooks/use-points";
 import { gradeAnswer, type SoalanIsiKosong as SoalanGrade } from "@/lib/gradeIsiKosong";
@@ -94,6 +94,8 @@ function IsiKosongPage() {
   const [salah, setSalah] = useState(0);
   const [selesai, setSelesai] = useState(false);
   const [mulaMasa, setMulaMasa] = useState(() => Date.now());
+  const [sesiId] = useState(() => (typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`));
+  const [mulaSoalan, setMulaSoalan] = useState(() => Date.now());
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
@@ -174,6 +176,7 @@ function IsiKosongPage() {
     setSalah(0);
     setSelesai(false);
     setMulaMasa(Date.now());
+    setMulaSoalan(Date.now());
     setStarted(true);
     setFetching(false);
   }
@@ -183,6 +186,20 @@ function IsiKosongPage() {
   function semak() {
     if (!soalan || hasil) return;
     const res = gradeAnswer(input, soalan);
+    const masaSoalanSaat = Math.max(0, Math.round((Date.now() - mulaSoalan) / 1000));
+    rekodJawapan({
+      sesiId,
+      darjah: darjahNum,
+      subjek: subjekQuery,
+      aktiviti: "isi-kosong",
+      topik: soalan.topik_nama,
+      soalanRef: soalan.id,
+      soalanTeks: soalan.soalan,
+      jawapanMurid: input,
+      jawapanBetul: soalan.jawapan_utama,
+      betul: res.betul,
+      masaSoalanSaat,
+    });
     setHasil(res);
     if (res.betul) {
       setBetul((b) => b + 1);
@@ -221,6 +238,7 @@ function IsiKosongPage() {
     setInput("");
     setHasil(null);
     setTunjukPetunjuk(false);
+    setMulaSoalan(Date.now());
   }
 
   function ulangSesi() {
