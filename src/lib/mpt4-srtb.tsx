@@ -849,6 +849,7 @@ export function SrtbReview({
         <ReviewLangkah key={li} langkah={lg} lIdx={li} answers={answers} />
       ))}
 
+      {lb.unitConvert && <UnitConvertReviewBlock uc={lb.unitConvert} answers={answers} />}
       <FinalReviewRow fa={lb.fa} aKey="final" answers={answers} ok={fa1Ok} />
       {lb.fa2 && <FinalReviewRow fa={lb.fa2} aKey="final2" answers={answers} ok={fa2Ok} />}
 
