@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { Lock, Sparkles, Star, LogOut, ArrowRight, Trophy, BookOpen, FileText, Target, TrendingUp, CalendarDays, Baby } from "lucide-react";
+import { Lock, Sparkles, Star, LogOut, ArrowRight, Trophy, BookOpen, FileText, Target, TrendingUp, CalendarDays } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
@@ -553,25 +553,52 @@ function DarjahCard({
 }
 
 function PraKalifahCard() {
+  const [jumlahAktiviti, setJumlahAktiviti] = useState<number | null>(null);
+
+  useEffect(() => {
+    let mounted = true;
+    (async () => {
+      const { count } = await supabase
+        .from("pra_kalifah_aktiviti" as never)
+        .select("*", { count: "exact", head: true });
+      if (mounted) setJumlahAktiviti(count ?? null);
+    })();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
   return (
     <Link to="/pra-kalifah" className="group">
-      <div className="relative flex h-full flex-col justify-between gap-5 rounded-3xl border border-border/60 bg-card p-6 shadow-card transition group-hover:-translate-y-1 group-hover:shadow-soft">
-        <div className="absolute right-4 top-4 flex items-center gap-1.5 rounded-full bg-rose-400/90 px-3 py-1 font-display text-[10px] font-extrabold uppercase tracking-wide text-white shadow-soft">
-          Akan Datang
+      <div className="relative flex h-full flex-col items-center justify-between gap-3 overflow-hidden rounded-3xl border-2 border-white/50 bg-gradient-to-br from-[#FF7B9C] via-[#FFD166] to-[#5AC8FA] p-6 text-center shadow-card transition group-hover:-translate-y-1 group-hover:shadow-soft">
+        <span className="pointer-events-none absolute left-3 top-3 text-3xl opacity-80">☁️</span>
+        <span className="pointer-events-none absolute right-3 top-3 text-3xl opacity-90">🌈</span>
+        <span className="pointer-events-none absolute left-4 bottom-16 text-xl opacity-70">⭐</span>
+
+        <img
+          src="https://pgpkqbdyxoejwvubluqq.supabase.co/storage/v1/object/public/pra-kalifah-imej/owl-mascot-nobg.png"
+          alt="Mascot Pra Kalifah"
+          className="h-20 w-auto object-contain drop-shadow-lg transition group-hover:scale-110"
+        />
+
+        <h3 className="font-display text-xl font-extrabold uppercase leading-tight text-white drop-shadow-md">
+          Dunia
+          <br />
+          Pra Kalifah
+        </h3>
+
+        <div className="flex items-center gap-2 text-2xl drop-shadow-sm">
+          <span>🏰</span>
+          <span>🏡</span>
+          <span>🚀</span>
         </div>
-        <div className="flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-rose-400 to-rose-300 text-rose-900 shadow-soft transition group-hover:scale-110">
-          <Baby className="h-10 w-10" strokeWidth={2.5} />
-        </div>
-        <div>
-          <h3 className="font-display text-2xl font-extrabold text-foreground">
-            Pra Kalifah
-          </h3>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Mod pembelajaran untuk kanak-kanak 4–6 tahun.
-          </p>
-        </div>
-        <span className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-primary px-5 py-2.5 font-display text-sm font-extrabold text-primary-foreground shadow-soft transition group-hover:translate-x-0.5">
-          Lihat Info
+
+        <span className="inline-flex items-center gap-1 rounded-full bg-white/90 px-3 py-1 font-display text-xs font-extrabold text-[#0F172A] shadow-sm">
+          {jumlahAktiviti ? `${jumlahAktiviti}+ Aktiviti` : "Aktiviti Percuma"}
+        </span>
+
+        <span className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-white px-5 py-2.5 font-display text-sm font-extrabold text-[#FF7B9C] shadow-soft transition group-hover:translate-x-0.5">
+          Jom Bermain!
           <ArrowRight className="h-4 w-4" />
         </span>
       </div>
