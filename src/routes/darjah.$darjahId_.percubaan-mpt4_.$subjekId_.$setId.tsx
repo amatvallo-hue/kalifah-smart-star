@@ -455,7 +455,7 @@ function PercubaanMpt4JawabPage() {
                 disabled={submitting}
                 className="flex-1 rounded-full border border-border/60 bg-secondary px-4 py-2.5 font-display text-sm font-extrabold text-foreground disabled:opacity-60"
               >
-                Batal
+                {isEnglish ? "Cancel" : "Batal"}
               </button>
               <button
                 type="button"
