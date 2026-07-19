@@ -403,7 +403,7 @@ function PercubaanMpt4JawabPage() {
         {bahagianGroups.map(({ bahagian, items }) => (
           <section key={bahagian} className="mt-8">
             <h2 className="font-display text-2xl font-extrabold text-primary">
-              Bahagian {bahagian}
+              {isEnglish ? "Section" : "Bahagian"} {bahagian}
             </h2>
             <div className="mt-4 flex flex-col gap-5">
               {items.map((s) => (
