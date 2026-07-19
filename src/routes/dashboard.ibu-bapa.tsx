@@ -602,6 +602,12 @@ function ParentDashboard() {
 
   const isChild = !!user?.email?.includes(CHILD_EMAIL_DOMAIN);
 
+  const { tambahAnak } = Route.useSearch();
+
+  useEffect(() => {
+    if (tambahAnak === "1") setShowAdd(true);
+  }, [tambahAnak]);
+
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
     else if (!loading && isChild) navigate({ to: "/dashboard/progress" });
