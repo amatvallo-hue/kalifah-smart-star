@@ -6,7 +6,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { getDarjah, getSubjek } from "@/lib/curriculum";
-import { simpanProgress } from "@/lib/progress";
+import { simpanProgress, rekodJawapan } from "@/lib/progress";
 import { tambahMata } from "@/lib/tambah-mata";
 import { usePoints } from "@/hooks/use-points";
 import { JamAnalog } from "@/components/svg/JamAnalog";
