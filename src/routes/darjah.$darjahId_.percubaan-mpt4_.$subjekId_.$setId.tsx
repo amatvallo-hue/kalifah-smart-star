@@ -59,10 +59,15 @@ interface Mpt4Keputusan {
 
 type Jawapan = Record<string, string>;
 
-function formatTempoh(minit: number | null): string {
+function formatTempoh(minit: number | null, isEnglish = false): string {
   if (!minit || minit <= 0) return "—";
   const jam = Math.floor(minit / 60);
   const baki = minit % 60;
+  if (isEnglish) {
+    if (jam === 0) return `${baki} minutes`;
+    if (baki === 0) return `${jam} hours`;
+    return `${jam} hours ${baki} minutes`;
+  }
   if (jam === 0) return `${baki} minit`;
   if (baki === 0) return `${jam} jam`;
   return `${jam} jam ${baki} minit`;
