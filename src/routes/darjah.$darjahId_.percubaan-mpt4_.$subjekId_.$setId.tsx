@@ -477,10 +477,12 @@ function SoalanCard({
   soalan,
   value,
   onChange,
+  isEnglish = false,
 }: {
   soalan: Mpt4Soalan;
   value: string;
   onChange: (v: string) => void;
+  isEnglish?: boolean;
 }) {
   const { bm, en } = splitBilingual(soalan.teks_soalan);
   const isSrtb = soalan.jenis_item === "SRTb" && !!soalan.langkah_bertingkat;
