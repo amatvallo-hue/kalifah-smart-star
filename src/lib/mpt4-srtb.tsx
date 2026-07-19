@@ -936,6 +936,9 @@ function StepLine({
 function ReviewInputLine({ inp, lIdx, answers }: { inp: LInput; lIdx: number; answers: AnswerMap }) {
   const baseKey = `l${lIdx}:${inp.id}`;
 
+  if ("type" in inp && inp.type === "frac-op") {
+    return <FracOpReviewBlock inp={inp} baseKey={baseKey} answers={answers} />;
+  }
   if ("type" in inp && (inp.type === "frac2" || inp.type === "pct-frac")) {
     const s = `${answers[`${baseKey}_n`] ?? "?"} / ${answers[`${baseKey}_d`] ?? "?"}`;
     const ok = chk(answers[`${baseKey}_n`], inp.ans_n) && chk(answers[`${baseKey}_d`], inp.ans_d);
@@ -947,9 +950,11 @@ function ReviewInputLine({ inp, lIdx, answers }: { inp: LInput; lIdx: number; an
     return <StepLine label={inp.lbl} student={s || "—"} correct={inp.ans} ok={ok} />;
   }
   const s = answers[baseKey] ?? "";
-  const ok = chk(s, inp.ans);
-  const correct = "d" in inp && inp.d ? inp.d : inp.ans;
-  return <StepLine label={inp.lbl} student={s || "—"} correct={correct} ok={ok} />;
+  const ans = (inp as TextInput | Peratus2Input).ans;
+  const ok = chk(s, ans);
+  const correct = "d" in inp && inp.d ? inp.d : ans;
+  const lbl = inp.lbl ?? "";
+  return <StepLine label={lbl} student={s || "—"} correct={correct} ok={ok} />;
 }
 
 function ReviewGalusRes({ g, lIdx, answers }: { g: Galus; lIdx: number; answers: AnswerMap }) {
