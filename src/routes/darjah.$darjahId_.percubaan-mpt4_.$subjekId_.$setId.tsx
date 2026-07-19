@@ -433,7 +433,7 @@ function PercubaanMpt4JawabPage() {
               disabled={submitting}
               className="inline-flex items-center gap-2 rounded-full bg-gradient-primary px-6 py-3 font-display text-sm font-extrabold text-primary-foreground shadow-soft transition hover:translate-y-[-1px] disabled:opacity-60"
             >
-              Hantar Jawapan →
+              {isEnglish ? "Submit Answers →" : "Hantar Jawapan →"}
             </button>
           </div>
         </div>
