@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 const BUCKET = "cikgu-kalifah";
@@ -84,20 +85,22 @@ export function PesananCikguKalifah({ nama, kategori, onDone }: Props) {
     };
   }, [kategori]);
 
-  useEffect(() => {
-    if (!pesanan) return;
-    const t = setTimeout(() => onDone(), 5000);
-    return () => clearTimeout(t);
-  }, [pesanan, onDone]);
 
   if (loading || !pesanan) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
       <div
-        className="w-full max-w-sm rounded-3xl bg-white p-6 text-center shadow-2xl"
+        className="relative w-full max-w-sm rounded-3xl bg-white p-6 text-center shadow-2xl"
         style={{ border: `3px solid ${HIJAU_BORDER}` }}
       >
+        <button
+          onClick={onDone}
+          className="absolute right-4 top-4 rounded-full p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-600"
+          aria-label="Tutup"
+        >
+          <X className="h-5 w-5" />
+        </button>
         <div className="flex justify-center">
           <GambarCikgu />
         </div>
