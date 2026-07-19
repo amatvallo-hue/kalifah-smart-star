@@ -355,8 +355,8 @@ function PercubaanMpt4JawabPage() {
             </div>
             <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-[11px] font-bold text-muted-foreground">
               <span>{subjek.title}</span>
-              {setInfo?.jumlah_markah != null && <span>Jumlah: {setInfo.jumlah_markah} markah</span>}
-              {setInfo?.tempoh_minit != null && <span>Tempoh disyorkan: {formatTempoh(setInfo.tempoh_minit)}</span>}
+              {setInfo?.jumlah_markah != null && <span>{isEnglish ? `Total: ${setInfo.jumlah_markah} marks` : `Jumlah: ${setInfo.jumlah_markah} markah`}</span>}
+              {setInfo?.tempoh_minit != null && <span>{isEnglish ? `Recommended duration: ${formatTempoh(setInfo.tempoh_minit, true)}` : `Tempoh disyorkan: ${formatTempoh(setInfo.tempoh_minit)}`}</span>}
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -365,10 +365,10 @@ function PercubaanMpt4JawabPage() {
             </div>
             <div className="hidden text-xs text-muted-foreground sm:block">
               {saveState === "saving" && (
-                <span className="inline-flex items-center gap-1"><Loader2 className="h-3 w-3 animate-spin" /> Menyimpan...</span>
+                <span className="inline-flex items-center gap-1"><Loader2 className="h-3 w-3 animate-spin" /> {isEnglish ? "Saving..." : "Menyimpan..."}</span>
               )}
               {saveState === "saved" && (
-                <span className="inline-flex items-center gap-1 text-primary"><Check className="h-3 w-3" /> Disimpan</span>
+                <span className="inline-flex items-center gap-1 text-primary"><Check className="h-3 w-3" /> {isEnglish ? "Saved" : "Disimpan"}</span>
               )}
             </div>
           </div>
