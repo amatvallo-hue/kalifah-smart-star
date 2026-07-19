@@ -253,12 +253,19 @@ export function SrtbBlock({
         <LangkahBlock key={li} langkah={lg} lIdx={li} answers={answers} setAns={setAns} disabled={disabled} />
       ))}
 
+      {/* Semak Unit (opsyenal) */}
+      {lb.unitConvert && (
+        <UnitConvertBlock uc={lb.unitConvert} answers={answers} setAns={setAns} disabled={disabled} />
+      )}
+
       {/* Jawapan Akhir */}
       <FinalAnswerRow
         fa={lb.fa}
         aKey="final"
         answers={answers}
         setAns={setAns}
+        disabled={disabled}
+      />
         disabled={disabled}
       />
       {lb.fa2 && (
