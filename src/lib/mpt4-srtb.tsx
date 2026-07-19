@@ -43,7 +43,54 @@ export interface Peratus2Input {
   d?: string;
   type: "peratus2";
 }
-export type LInput = MCQInput | TextInput | FracInput | PctFracInput | Peratus2Input;
+export interface FracOpInput {
+  id: string;
+  lbl?: string;
+  type: "frac-op";
+  op_pilihan?: string[];
+  samakecil_pilihan?: string[];
+  op_ans: string;
+  f1n_ans: string;
+  f1d_ans: string;
+  f2n_ans: string;
+  f2d_ans: string;
+  sama_ans?: string;
+  kgd_ans?: string;
+  f1eq_n_ans?: string;
+  f1eq_d_ans?: string;
+  f2eq_n_ans?: string;
+  f2eq_d_ans?: string;
+  f2flip_n_ans?: string;
+  f2flip_d_ans?: string;
+  res_n_ans: string;
+  res_d_ans: string;
+  kecil_ans?: string;
+  gcd_simp_ans?: string;
+  fin_n_ans?: string;
+  fin_d_ans?: string;
+}
+export type LInput = MCQInput | TextInput | FracInput | PctFracInput | Peratus2Input | FracOpInput;
+
+const DEFAULT_OP_PILIHAN = [
+  "Tambah (+) / Addition (+)",
+  "Tolak (−) / Subtraction (−)",
+  "Darab (×) / Multiplication (×)",
+  "Bahagi (÷) / Division (÷)",
+];
+const DEFAULT_YESNO = ["Ya / Yes", "Tidak / No"];
+
+function opSymOf(label: string | undefined | null): "+" | "−" | "×" | "÷" | null {
+  if (!label) return null;
+  if (label.includes("÷")) return "÷";
+  if (label.includes("×")) return "×";
+  if (label.includes("−") || label.includes("-")) return "−";
+  if (label.includes("+")) return "+";
+  return null;
+}
+function isYes(label: string | undefined | null): boolean {
+  if (!label) return false;
+  return /ya|yes/i.test(label);
+}
 
 export interface Galus {
   type: "tambah" | "tolak" | "darab" | "bahagi";
