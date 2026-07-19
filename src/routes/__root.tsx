@@ -15,6 +15,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { CHILD_EMAIL_DOMAIN } from "@/lib/child-auth";
 import { supabase } from "@/integrations/supabase/client";
 import { KalifahHatiCheckIn } from "@/components/KalifahHatiCheckIn";
+import { PesananCikguKalifah } from "@/components/PesananCikguKalifah";
 import { Toaster } from "@/components/ui/sonner";
 
 function NotFoundComponent() {
