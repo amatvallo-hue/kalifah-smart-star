@@ -18,6 +18,54 @@ export interface SimpanProgressInput {
   bumpBabSelesai?: boolean;
 }
 
+export interface RekodJawapanInput {
+  sesiId: string;
+  darjah: number;
+  subjek: string;
+  aktiviti: string;
+  topik?: string;
+  soalanRef?: string;
+  soalanTeks?: string;
+  jawapanMurid?: string;
+  jawapanBetul?: string;
+  betul: boolean;
+  masaSoalanSaat: number;
+  percubaanKe?: number;
+}
+
+/**
+ * Fire-and-forget: log SATU jawapan soalan ke `jawapan_log`.
+ * JANGAN await — panggil tanpa await. Kegagalan hanya console.error,
+ * tidak throw/block UX murid. Ini logging sekunder untuk analytics.
+ */
+export function rekodJawapan(input: RekodJawapanInput): void {
+  (async () => {
+    try {
+      const { data: sess } = await supabase.auth.getSession();
+      const userId = sess.session?.user?.id;
+      if (!userId) return;
+      const { error } = await supabase.from("jawapan_log").insert({
+        user_id: userId,
+        sesi_id: input.sesiId,
+        darjah: String(input.darjah),
+        subjek: input.subjek,
+        aktiviti: input.aktiviti,
+        topik: input.topik ?? null,
+        soalan_ref: input.soalanRef ?? null,
+        soalan_teks: input.soalanTeks ?? null,
+        jawapan_murid: input.jawapanMurid ?? null,
+        jawapan_betul: input.jawapanBetul ?? null,
+        betul: input.betul,
+        masa_soalan_saat: Math.max(0, Math.round(input.masaSoalanSaat)),
+        percubaan_ke: input.percubaanKe ?? 1,
+      });
+      if (error) console.error("rekodJawapan insert gagal:", error);
+    } catch (e) {
+      console.error("rekodJawapan gagal:", e);
+    }
+  })();
+}
+
 export interface BadgeRow {
   id: string;
   kod: string;
