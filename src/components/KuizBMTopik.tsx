@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { ArrowLeft, Check, X, Sparkles, BookOpen, Lightbulb } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { simpanProgress } from "@/lib/progress";
+import { simpanProgress, rekodJawapan } from "@/lib/progress";
 import { downloadSijil } from "@/lib/sijil";
 import { simpanRekodSijil } from "@/lib/sijil-rekod";
 import { useAuth } from "@/hooks/use-auth";
@@ -136,9 +136,17 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
   const [skor, setSkor] = useState(0);
   const [selesai, setSelesai] = useState(false);
   const [mulaMasa, setMulaMasa] = useState(() => Date.now());
+  const [sesiId] = useState(() => (typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`));
+  const [mulaSoalan, setMulaSoalan] = useState(() => Date.now());
   const [bahasa, setBahasa] = useState<"bm" | "en" | null>(null);
   const isEnglish = subjekKod === "Bahasa Inggeris";
   const effectiveSubjekKod = showBahasaToggle && bahasa ? (bahasa === "en" ? `${subjekKod}-EN` : subjekKod) : subjekKod;
+  const subjekResolved =
+    subjekId === "matematik"
+      ? (bahasa === "en" ? "matematik-en" : "matematik")
+      : subjekId === "sains"
+        ? (bahasa === "en" ? "sains-en" : "sains")
+        : subjekId;
   const en = (showBahasaToggle && bahasa === "en") || isEnglish;
   const tr = {
     pilihTopik: en ? "Choose Topic" : "Pilih Topik",
@@ -279,6 +287,7 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
     setSkor(0);
     setSelesai(false);
     setMulaMasa(Date.now());
+    setMulaSoalan(Date.now());
     setFetching(false);
   }
 
@@ -301,7 +310,23 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
       next[i] = idx;
       return next;
     });
-    if (idx === soalanList[i].jawapan) {
+    const isBetul = idx === soalanList[i].jawapan;
+    const masaSoalanSaat = Math.max(0, Math.round((Date.now() - mulaSoalan) / 1000));
+    const huruf = ["A", "B", "C", "D"];
+    rekodJawapan({
+      sesiId,
+      darjah: darjahNum,
+      subjek: subjekResolved,
+      aktiviti: "kuiz",
+      topik,
+      soalanRef: soalanList[i].id,
+      soalanTeks: soalanList[i].soalan,
+      jawapanMurid: huruf[idx],
+      jawapanBetul: huruf[soalanList[i].jawapan],
+      betul: isBetul,
+      masaSoalanSaat,
+    });
+    if (isBetul) {
       setSkor((s) => s + 1);
       award({ sumber: "kuiz", darjah: darjahId, subjek: subjekId });
     }
@@ -312,6 +337,7 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
     else {
       setI(i + 1);
       setPilih(null);
+      setMulaSoalan(Date.now());
     }
   }
 

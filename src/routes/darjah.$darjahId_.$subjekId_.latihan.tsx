@@ -6,7 +6,7 @@ import { StarReward } from "@/components/StarReward";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { getDarjah, getSubjek } from "@/lib/curriculum";
-import { simpanProgress } from "@/lib/progress";
+import { simpanProgress, rekodJawapan } from "@/lib/progress";
 
 export const Route = createFileRoute("/darjah/$darjahId_/$subjekId_/latihan")({
   head: () => ({ meta: [{ title: "Latihan Bertulis — Kalifah.my" }] }),
@@ -505,6 +505,8 @@ function LatihanSubjekPage() {
   const [bintang, setBintang] = useState(0);
   const [habis, setHabis] = useState(false);
   const [mulaMasa] = useState(() => Date.now());
+  const [sesiId] = useState(() => (typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`));
+  const [mulaSoalan, setMulaSoalan] = useState(() => Date.now());
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
@@ -562,6 +564,18 @@ function LatihanSubjekPage() {
       (nJwp === nCorrect ||
         nCorrect.startsWith(nJwp) ||
         nJwp.includes(nCorrect));
+    const masaSoalanSaat = Math.max(0, Math.round((Date.now() - mulaSoalan) / 1000));
+    rekodJawapan({
+      sesiId,
+      darjah: Number(darjahId),
+      subjek: subjekId,
+      aktiviti: "latihan",
+      soalanTeks: soalan.soalan,
+      jawapanMurid: jwp,
+      jawapanBetul: soalan.jawapan,
+      betul,
+      masaSoalanSaat,
+    });
     setSemak(betul);
     if (betul) setBintang((b) => b + 1);
   }
@@ -570,6 +584,19 @@ function LatihanSubjekPage() {
     if (semak !== null) return;
     setPilihan(i);
     const betul = i === mcq.betul;
+    const masaSoalanSaat = Math.max(0, Math.round((Date.now() - mulaSoalan) / 1000));
+    const huruf = ["A", "B", "C", "D"];
+    rekodJawapan({
+      sesiId,
+      darjah: Number(darjahId),
+      subjek: subjekId,
+      aktiviti: "latihan",
+      soalanTeks: mcq.soalan,
+      jawapanMurid: huruf[i],
+      jawapanBetul: huruf[mcq.betul],
+      betul,
+      masaSoalanSaat,
+    });
     setSemak(betul);
     if (betul) setBintang((b) => b + 1);
   }
@@ -582,6 +609,7 @@ function LatihanSubjekPage() {
       setJwp("");
       setSemak(null);
       setPilihan(null);
+      setMulaSoalan(Date.now());
     }
   }
 
