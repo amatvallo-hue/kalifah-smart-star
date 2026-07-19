@@ -100,6 +100,7 @@ function PercubaanMpt4JawabPage() {
   const { profile, loading: profileLoading } = useProfile();
   const darjah = getDarjah(darjahId);
   const subjek = getSubjek(subjekId);
+  const isEnglish = subjek?.title === "Bahasa Inggeris";
   const mata = usePoints();
   const studentName = user?.user_metadata?.name as string | undefined;
 
