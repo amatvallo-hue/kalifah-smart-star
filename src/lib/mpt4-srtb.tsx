@@ -1052,6 +1052,73 @@ function FracStatic({ n, d }: { n: string; d: string }) {
   );
 }
 
+const UC_DEFAULT_PILIHAN = ["Ya, unit sama / Yes, same unit", "Tidak, unit berbeza / No, different units"];
+
+function UnitConvertBlock({
+  uc,
+  answers,
+  setAns,
+  disabled,
+}: {
+  uc: UnitConvert;
+  answers: AnswerMap;
+  setAns: (k: string, v: string) => void;
+  disabled: boolean;
+}) {
+  const checkKey = "uc:check";
+  const chosen = answers[checkKey];
+  const pilihan = uc.checkPilihan ?? UC_DEFAULT_PILIHAN;
+  const berbeza = chosen ? /tidak|no/i.test(chosen) : false;
+
+  return (
+    <div className="space-y-3 rounded-2xl border-2 border-amber-300 bg-amber-50/60 p-4">
+      <p className="text-[10px] font-bold uppercase tracking-wide text-amber-800">Semak Unit</p>
+      <p className="whitespace-pre-line text-sm font-semibold text-foreground">{uc.checkQ}</p>
+      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+        {pilihan.map((p) => {
+          const isChosen = chosen === p;
+          return (
+            <button
+              key={p}
+              type="button"
+              onClick={() => setAns(checkKey, p)}
+              disabled={disabled}
+              className={`rounded-2xl border-2 px-3 py-2 font-display text-sm font-extrabold shadow-soft transition ${
+                isChosen ? "border-primary bg-primary/10 text-primary" : "border-border bg-card hover:border-primary"
+              }`}
+            >
+              {p}
+            </button>
+          );
+        })}
+      </div>
+
+      {berbeza && (
+        <div className="space-y-3 rounded-xl border border-amber-200 bg-white/70 p-3">
+          <p className="whitespace-pre-line text-sm font-semibold text-foreground">{uc.ar}</p>
+          <div className="inline-flex rounded-full border-2 border-amber-400 bg-amber-100 px-3 py-1 text-xs font-extrabold text-amber-900">
+            {uc.factorLabel}
+          </div>
+          <GalusGrid g={uc.galus} lIdx={-1} answers={answers} setAns={setAns} disabled={disabled} />
+        </div>
+      )}
+    </div>
+  );
+}
+
+function UnitConvertReviewBlock({ uc, answers }: { uc: UnitConvert; answers: AnswerMap }) {
+  const student = answers["uc:check"] ?? "";
+  const ok = chk(student, uc.checkAns);
+  return (
+    <div className="rounded-2xl border border-border/60 bg-muted/20 p-3">
+      <p className="text-xs font-bold text-foreground">Semak Unit</p>
+      <StepLine label="Adakah unit sama?" student={student || "—"} correct={uc.checkAns} ok={ok} />
+      {uc.galus.rAns && <ReviewGalusRes g={uc.galus} lIdx={-1} answers={answers} />}
+    </div>
+  );
+}
+
+
 function YesNoButtons({
   cKey,
   pilihan,
