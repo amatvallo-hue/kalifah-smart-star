@@ -572,8 +572,14 @@ function PraKalifahCard() {
     <Link to="/pra-kalifah" className="group">
       <div className="relative flex h-full flex-col items-center justify-between gap-3 overflow-hidden rounded-3xl border-2 border-white/50 bg-gradient-to-br from-[#FF7B9C] via-[#FFD166] to-[#5AC8FA] p-6 text-center shadow-card transition group-hover:-translate-y-1 group-hover:shadow-soft">
         <span className="pointer-events-none absolute left-3 top-3 text-3xl opacity-80">☁️</span>
-        <span className="pointer-events-none absolute right-3 top-3 text-3xl opacity-90">🌈</span>
+        <span className="pointer-events-none absolute right-8 top-16 text-4xl opacity-60">☁️</span>
+        <span className="pointer-events-none absolute -left-3 bottom-20 text-6xl opacity-50">☁️</span>
+        <span className="pointer-events-none absolute right-3 top-3 text-5xl opacity-90">🌈</span>
         <span className="pointer-events-none absolute left-4 bottom-16 text-xl opacity-70">⭐</span>
+        <span className="pointer-events-none absolute right-6 top-24 text-lg opacity-60">⭐</span>
+        <span className="pointer-events-none absolute left-10 top-28 text-base opacity-50">⭐</span>
+        <span className="pointer-events-none absolute right-10 bottom-28 text-lg opacity-65">⭐</span>
+        <span className="pointer-events-none absolute left-1/2 top-10 text-base opacity-55">⭐</span>
 
         <img
           src="https://pgpkqbdyxoejwvubluqq.supabase.co/storage/v1/object/public/pra-kalifah-imej/owl-mascot-nobg.png"
