@@ -425,7 +425,7 @@ function PercubaanMpt4JawabPage() {
         <div className="fixed inset-x-0 bottom-0 z-30 border-t border-border/60 bg-card/95 shadow-card backdrop-blur">
           <div className="container mx-auto flex flex-wrap items-center justify-between gap-3 px-4 py-3">
             <div className="text-sm font-bold text-muted-foreground">
-              {jumlahDijawab} / {jumlahSoalan} soalan dijawab
+              {jumlahDijawab} / {jumlahSoalan} {isEnglish ? "questions answered" : "soalan dijawab"}
             </div>
             <button
               type="button"
