@@ -1,86 +1,89 @@
-## Penemuan (Investigation Report)
+## Investigation Only — No Code Changes
 
-### 1. `game-matik-drag` — timer TIDAK di-wire (BUG dikonfirmasi)
-
-**Fail:** `src/components/games/MatikDragGame.tsx`, baris **88–100**
-
-```tsx
-useEffect(() => {
-  if (habis) {
-    simpanProgress({
-      ...
-      masaAmbil: 0,   // ← hardcoded 0
-    });
-  }
-}, [habis]);
-```
-
-Tiada `useState(() => Date.now())`, tiada `mulaMasa`, tiada pengiraan tempoh. Nilai `0` di-hantar terus setiap kali. Ini menjelaskan 100% rekod `masa_ambil = 0` untuk aktiviti ini.
-
-**Fix cadangan (selamat, terhad):** tambah `const [mulaMasa] = useState(() => Date.now())` dan tukar `masaAmbil: 0` → `masaAmbil: Math.round((Date.now() - mulaMasa) / 1000)`. Sama corak dengan `MatikNeonGame.tsx` (baris 264) dan `kuiz.tsx` (baris 283/297).
-
-**Semak sekali:** `MatikNeonGame.tsx:264` sudah hantar masaAmbil sebenar — jadi memang cuma Drag Game yang tertinggal.
+Laporan siasatan gap "Parent Onboarding" (post-payment → tambah anak → anak log masuk pertama kali). Semua rujukan fail+baris disahkan dari kod semasa. **Tiada perubahan kod dicadangkan di sini** — plan ini semata-mata jawapan siasatan.
 
 ---
 
-### 2. Timer tiada logik pause / idle / tab-blur (DIKONFIRMASI — kira masa tab terbuka, bukan masa aktif)
+### 1) Selepas bayar berjaya — apa yang berlaku sekarang?
 
-Semua timer guna corak sama:
+**Alir masa (verified):**
+- ToyyibPay POST callback → `src/routes/api.public.toyyibpay.callback.ts:76-121` insert baris ke `public.payments`. Trigger DB `apply_payment_unlock` (rujukan: `lovable/migrations/20260608170000_payments_trigger.sql`, `20260608180000_fix_apply_payment_unlock.sql`) update `pesanan.status='paid'` + `profiles.darjah_akses`.
+- Parent di-redirect ke `/bayaran/selesai` — `src/routes/bayaran.selesai.tsx:22-101`. Muka polling status pesanan (max 6 cuba × 2s), kemudian papar satu skrin "Pembayaran berjaya!" dengan **satu butang tunggal: "Ke Pilihan Darjah"** → `/pilih-darjah` (baris 120-125).
 
-| Fail | Baris | Corak |
+**Gap:**
+- **Tiada email konfirmasi bayaran** — tiada `resend`/edge function dipanggil dalam callback (`api.public.toyyibpay.callback.ts` tak sentuh Resend).
+- **Tiada onboarding CTA langsung** — parent didorong ke `/pilih-darjah`, bukan ke `/dashboard/ibu-bapa` untuk cipta akaun anak. Parent tak tahu langkah seterusnya untuk anak.
+- **Tiada tracking pixel/analytics selain FB/GA `Purchase`** (`bayaran.selesai.tsx:55-64`) — tiada penanda "onboarding_step_completed".
+
+---
+
+### 2) "Tambah Anak" — di mana dalam UI parent?
+
+**Verified:** Butang `<PlusCircle /> Tambah Anak` wujud di header `dashboard/ibu-bapa` — `src/routes/dashboard.ibu-bapa.tsx:920-926`. Bila klik → toggle `<FormTambahAnak />` (baris 931-941, definisi baris 1552-1588).
+
+**Access path parent kena ambil dari post-bayar:**
+1. `/bayaran/selesai` → klik "Ke Pilihan Darjah" → landing `/pilih-darjah` (bukan dashboard ibu bapa).
+2. Parent kena navigate manual ke `/dashboard/ibu-bapa` (tiada link auto).
+3. Baru nampak butang "Tambah Anak" di header.
+
+**Empty-state ada tapi hanya di dalam dashboard:** `dashboard.ibu-bapa.tsx:953-959` — teks "Belum ada profil anak. Klik **Tambah Anak** untuk mula." Bermakna parent yang tak pernah masuk dashboard **langsung tak nampak empty-state ini**.
+
+**Verdict:** Fungsi wujud tapi **tersorok dari flow post-payment**. Tiada CTA/redirect terus dari `bayaran/selesai` → dashboard ibu bapa.
+
+---
+
+### 3) Anak log masuk kali pertama — bagaimana?
+
+**Verified flow (`src/lib/child-auth.ts` + `src/routes/login.tsx`):**
+- Parent isi borang: **Nama, Darjah, Username, Password** (dashboard `ibu-bapa.tsx:1596-1646`).
+- `ciptaAkaunAnak()` cipta akaun auth Supabase dengan email sintetik `{username}@anak.kalifah.local` (`child-auth.ts:57`), simpan `child_profiles` row dengan `kod_jemputan` 6-aksara (`child-auth.ts:69-79`).
+- Selepas cipta: **hanya toast/mesej "Akaun {nama} berjaya dicipta! Anak boleh log masuk dengan username: {uname}"** (`dashboard.ibu-bapa.tsx:1583`). **Password TIDAK dipaparkan semula** (parent sendiri tetapkan, jadi asumsinya parent ingat).
+- Anak log masuk di `/login` dengan **username + password** (`login.tsx:32-34`) — sistem convert username → sintetik email di belakang tabir.
+- `kod_jemputan` disebut dalam UI (`ibu-bapa.tsx:957`) tapi **tiada flow yang benar-benar guna kod ini untuk pairing/login anak** — hanya field DB (belum wired). Anak login guna username/password, bukan kod.
+
+**Gap:**
+- Tiada **"kad kredential" print/share** (username + password + link login) — parent yang lupa password anak tiada cara reset melainkan guna admin function `reset-child-password` edge function.
+- Tiada QR code / magic link / device-pairing untuk anak (walaupun `kod_jemputan` ada di DB).
+- Tiada CTA "buka /login dalam tab baru" atau "hantar kepada anak" selepas cipta.
+
+---
+
+### 4) Parent bayar tapi TAK PERNAH tambah anak — ada reminder?
+
+**Verified — `supabase/functions/remind-inactive-students/index.ts`:**
+- Baris 66-70: query **hanya baris dari `child_profiles`** yang `child_user_id IS NOT NULL`.
+- Untuk setiap anak yang wujud, semak `user_progress` dalam 3 hari terakhir; jika tiada, hantar email peringatan pada parent.
+
+**Verdict:** Function ini **hanya cover kes "anak dah wujud tapi tak aktif"**. **Parent yang tak pernah tambah anak langsung TIDAK akan dapat sebarang email/nudge** — mereka jatuh keluar sepenuhnya dari radar reminder sistem semasa.
+
+Tiada job/edge function lain yang query `pesanan.status='paid'` cross-check dengan `child_profiles` kosong. Tiada welcome email post-payment yang boleh berfungsi sebagai reminder pasif.
+
+---
+
+### 5) Query anggaran parent-bayar-tanpa-anak
+
+Anda kata akan query sendiri. Rujukan skema untuk memudahkan:
+- Table `pesanan` (`lovable/migrations/20260608140000_pesanan_toyyibpay.sql`) — column `status`, `user_id`.
+- Table `child_profiles` — column `parent_id`.
+- Rough query:
+  ```sql
+  select count(distinct p.user_id)
+  from pesanan p
+  left join child_profiles c on c.parent_id = p.user_id
+  where p.status = 'paid' and c.id is null;
+  ```
+
+---
+
+### Ringkasan Gap (untuk sesi reka bentuk seterusnya)
+
+| Gap | Impak | Fail berkaitan |
 |---|---|---|
-| `latih-tubi.tsx` | 148, 160 | `useState(() => Date.now())` → `Math.round((Date.now() - mulaMasa)/1000)` |
-| `kuiz.tsx` | 283, 297 | Sama |
-| `bergambar-rajah.tsx` | 149, 234 | Sama |
-| `game.tsx` (race) | 605 | `totalTime - masa` (countdown — SELAMAT, ada had atas) |
-| `MatikNeonGame.tsx` | 264 | Sama corak wall-clock |
+| Tiada email/receipt selepas bayar | Parent tak tahu apa nak buat next | `api.public.toyyibpay.callback.ts` |
+| Post-payment CTA hantar ke `/pilih-darjah` bukan dashboard | Parent tak jumpa "Tambah Anak" | `bayaran.selesai.tsx:120` |
+| Tiada wizard/checklist onboarding | Discovery cacat | `dashboard.ibu-bapa.tsx` |
+| Kredential anak tak dipaparkan/dishare | Parent lupa password | `child-auth.ts`, `dashboard.ibu-bapa.tsx:1583` |
+| `kod_jemputan` wujud tapi tak wired | Peluang UX pairing terlepas | `child-auth.ts:78` |
+| Reminder cron abai parent tanpa anak | Kohort "onboarding gagal" tak dinudge | `remind-inactive-students/index.ts:66-70` |
 
-**Konsekuensi:** Wall-clock diff dari mount hingga submit. Kalau murid buka tab, tinggal 60 minit, balik jawab satu soalan, submit → direkod 60+ minit. Tiada:
-- `visibilitychange` listener (pause bila tab tidak aktif)
-- Idle detection (tiada input X saat)
-- Cap maksimum per aktiviti
-
-Ini menjelaskan outlier: latih-tubi 4531s (~75 min), kuiz 1206s (~20 min), bergambar-rajah 1469s (~24 min). Bukan bug logik — memang begini reka bentuknya.
-
-**Fix cadangan (pilih satu, ikut selera Amat):**
-- **Ringkas:** cap `masaAmbil` di `simpanProgress()` (`src/lib/progress.ts:146`) — cth `Math.min(masa, 1800)` (max 30 min/rekod). Satu tempat, semua aktiviti terlindung, tiada risiko regresi.
-- **Sederhana:** tambah `document.visibilitychange` pause di setiap komponen. Lebih tepat, tapi kena sentuh 5+ fail.
-- **Lengkap:** hook `useActiveTime()` yang pause bila tab blur + idle >30s. Terbaik, tapi kerja besar.
-
-Untuk parent dashboard, cadangan **Ringkas** (cap 30 min/rekod) menutup 90% masalah persepsi tanpa risiko.
-
----
-
-### 3. Agregat harian guna `Math.round`, BUKAN `Math.floor` (SEPARA dikonfirmasi)
-
-**Fail:** `src/lib/progress.ts`, baris **210**
-
-```ts
-const minit = Math.max(0, Math.round(masa / 60));
-```
-
-**Analisis:**
-- 30–89 saat → 1 minit (dikira ✅)
-- 0–29 saat → **0 minit** (HILANG dari `user_stats.masa_belajar` ❌)
-- 90–149 saat → 2 minit, dll.
-
-Jadi aktiviti sangat pendek (<30s) memang hilang dari jumlah minit harian. Tapi bukan sama teruk macam `floor` (yang akan buang sehingga 59s).
-
-**Nota penting:** `user_progress.masa_ambil` disimpan dalam **SAAT PENUH** (baris 178 & 202) — tepat, tiada kehilangan di sini. Masalah pembundaran hanya berlaku semasa agregat ke `user_stats.masa_belajar` (minit). Jadi dashboard yang tunjuk masa per-aktiviti (kalau ada) tetap tepat; hanya jumlah minit harian yang boleh under-count.
-
-**Fix cadangan (kalau nak semua saat dikira):**
-- Tukar `user_stats.masa_belajar` simpan **saat** dan format ke minit di UI (kerja migrasi + backfill — besar).
-- Atau tambah kolum `masa_belajar_saat` selari (kecil, tak break).
-- Atau terima trade-off semasa dan biarkan (kerugian purata: ~15s × bilangan aktiviti pendek/hari).
-
----
-
-### Ringkasan untuk Amat
-
-| # | Isu | Status | Impak | Fix mudah? |
-|---|---|---|---|---|
-| 1 | Drag Game masa selalu 0 | **Bug jelas** | Sedang | Ya — 2 baris di `MatikDragGame.tsx` |
-| 2 | Timer kira masa tab terbuka | **By design**, tiada pause | Tinggi (outlier ~75 min) | Ya — cap `Math.min(masa, 1800)` di `progress.ts:146` |
-| 3 | Aktiviti <30s hilang dari minit harian | **Round, bukan floor** | Rendah (per-rekod saat masih tepat) | Tidak (perlu ubah skema) |
-
-**Tiada perubahan dibuat.** Tunggu arahan Amat sebelum implement fix mana-mana.
+Siasatan selesai. Approve untuk teruskan ke fasa reka bentuk (masih plan mode), atau minta siasatan tambahan.
