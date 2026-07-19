@@ -363,6 +363,7 @@ function LatihTubiPage() {
 
   const goToNext = () => {
     setPilih(null);
+    setMulaSoalan(Date.now());
     setCursor((c) => {
       const next = c + 1;
       if (next >= order.length) {
