@@ -596,7 +596,7 @@ function SoalanCard({
             value={value}
             onChange={(e) => onChange(e.target.value)}
             rows={3}
-            placeholder="Tulis jawapan anda..."
+            placeholder={isEnglish ? "Write your answer..." : "Tulis jawapan anda..."}
             className="w-full rounded-2xl border-2 border-border/60 bg-card px-4 py-3 text-sm leading-relaxed text-foreground focus:border-primary focus:outline-none"
           />
         )}
