@@ -463,7 +463,7 @@ function PercubaanMpt4JawabPage() {
                 disabled={submitting}
                 className="flex-1 rounded-full bg-gradient-primary px-4 py-2.5 font-display text-sm font-extrabold text-primary-foreground shadow-soft disabled:opacity-60"
               >
-                {submitting ? "Menghantar..." : "Ya, Hantar"}
+                {submitting ? (isEnglish ? "Submitting..." : "Menghantar...") : (isEnglish ? "Yes, Submit" : "Ya, Hantar")}
               </button>
             </div>
           </div>
