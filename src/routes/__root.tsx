@@ -15,6 +15,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { CHILD_EMAIL_DOMAIN } from "@/lib/child-auth";
 import { supabase } from "@/integrations/supabase/client";
 import { KalifahHatiCheckIn } from "@/components/KalifahHatiCheckIn";
+import { PesananCikguKalifah } from "@/components/PesananCikguKalifah";
 import { Toaster } from "@/components/ui/sonner";
 
 function NotFoundComponent() {
@@ -181,6 +182,38 @@ function KalifahHatiGate() {
   );
 }
 
+function PesananCikguGate() {
+  const { user } = useAuth();
+  const [show, setShow] = useState(false);
+  const isChild = !!user?.email?.includes(CHILD_EMAIL_DOMAIN);
+  const kategori: "murid" | "ibu_bapa" = isChild ? "murid" : "ibu_bapa";
+  const profileName =
+    (user?.user_metadata?.name as string | undefined) ||
+    (user?.user_metadata?.full_name as string | undefined) ||
+    (user?.email ? user.email.split("@")[0].replace(/[._-]+/g, " ") : undefined);
+
+  useEffect(() => {
+    if (!user) return;
+    const todayKey = `pesanan_cikgu_${user.id}_${new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Kuala_Lumpur" })}`;
+    if (localStorage.getItem(todayKey)) return;
+    setShow(true);
+  }, [user]);
+
+  if (!show || !user) return null;
+
+  return (
+    <PesananCikguKalifah
+      nama={profileName ?? (isChild ? "Murid" : "Ibu Bapa")}
+      kategori={kategori}
+      onDone={() => {
+        const todayKey = `pesanan_cikgu_${user.id}_${new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Kuala_Lumpur" })}`;
+        localStorage.setItem(todayKey, "1");
+        setShow(false);
+      }}
+    />
+  );
+}
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
@@ -212,6 +245,7 @@ function RootComponent() {
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Outlet />
       <KalifahHatiGate />
+      <PesananCikguGate />
       <Toaster richColors position="top-center" />
     </QueryClientProvider>
   );
