@@ -59,10 +59,15 @@ interface Mpt4Keputusan {
 
 type Jawapan = Record<string, string>;
 
-function formatTempoh(minit: number | null): string {
+function formatTempoh(minit: number | null, isEnglish = false): string {
   if (!minit || minit <= 0) return "—";
   const jam = Math.floor(minit / 60);
   const baki = minit % 60;
+  if (isEnglish) {
+    if (jam === 0) return `${baki} minutes`;
+    if (baki === 0) return `${jam} hours`;
+    return `${jam} hours ${baki} minutes`;
+  }
   if (jam === 0) return `${baki} minit`;
   if (baki === 0) return `${jam} jam`;
   return `${jam} jam ${baki} minit`;
@@ -95,6 +100,7 @@ function PercubaanMpt4JawabPage() {
   const { profile, loading: profileLoading } = useProfile();
   const darjah = getDarjah(darjahId);
   const subjek = getSubjek(subjekId);
+  const isEnglish = subjek?.title === "Bahasa Inggeris";
   const mata = usePoints();
   const studentName = user?.user_metadata?.name as string | undefined;
 
@@ -349,8 +355,8 @@ function PercubaanMpt4JawabPage() {
             </div>
             <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-[11px] font-bold text-muted-foreground">
               <span>{subjek.title}</span>
-              {setInfo?.jumlah_markah != null && <span>Jumlah: {setInfo.jumlah_markah} markah</span>}
-              {setInfo?.tempoh_minit != null && <span>Tempoh disyorkan: {formatTempoh(setInfo.tempoh_minit)}</span>}
+              {setInfo?.jumlah_markah != null && <span>{isEnglish ? `Total: ${setInfo.jumlah_markah} marks` : `Jumlah: ${setInfo.jumlah_markah} markah`}</span>}
+              {setInfo?.tempoh_minit != null && <span>{isEnglish ? `Recommended duration: ${formatTempoh(setInfo.tempoh_minit, true)}` : `Tempoh disyorkan: ${formatTempoh(setInfo.tempoh_minit)}`}</span>}
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -359,10 +365,10 @@ function PercubaanMpt4JawabPage() {
             </div>
             <div className="hidden text-xs text-muted-foreground sm:block">
               {saveState === "saving" && (
-                <span className="inline-flex items-center gap-1"><Loader2 className="h-3 w-3 animate-spin" /> Menyimpan...</span>
+                <span className="inline-flex items-center gap-1"><Loader2 className="h-3 w-3 animate-spin" /> {isEnglish ? "Saving..." : "Menyimpan..."}</span>
               )}
               {saveState === "saved" && (
-                <span className="inline-flex items-center gap-1 text-primary"><Check className="h-3 w-3" /> Disimpan</span>
+                <span className="inline-flex items-center gap-1 text-primary"><Check className="h-3 w-3" /> {isEnglish ? "Saved" : "Disimpan"}</span>
               )}
             </div>
           </div>
@@ -375,7 +381,7 @@ function PercubaanMpt4JawabPage() {
           params={{ darjahId, subjekId }}
           className="inline-flex items-center gap-2 text-sm font-bold text-muted-foreground hover:text-primary"
         >
-          <ArrowLeft className="h-4 w-4" /> Kembali ke Senarai Set
+          <ArrowLeft className="h-4 w-4" /> {isEnglish ? "Back to Set List" : "Kembali ke Senarai Set"}
         </Link>
 
         {fetchError && (
@@ -385,19 +391,19 @@ function PercubaanMpt4JawabPage() {
         )}
 
         {soalanList === null && !fetchError && (
-          <p className="mt-8 text-muted-foreground">Memuatkan soalan...</p>
+          <p className="mt-8 text-muted-foreground">{isEnglish ? "Loading questions..." : "Memuatkan soalan..."}</p>
         )}
 
         {soalanList !== null && soalanList.length === 0 && !fetchError && (
           <div className="mt-8 rounded-2xl border border-border/60 bg-card p-6 text-center text-muted-foreground">
-            Tiada soalan untuk set ini.
+            {isEnglish ? "No questions for this set." : "Tiada soalan untuk set ini."}
           </div>
         )}
 
         {bahagianGroups.map(({ bahagian, items }) => (
           <section key={bahagian} className="mt-8">
             <h2 className="font-display text-2xl font-extrabold text-primary">
-              Bahagian {bahagian}
+              {isEnglish ? "Section" : "Bahagian"} {bahagian}
             </h2>
             <div className="mt-4 flex flex-col gap-5">
               {items.map((s) => (
@@ -406,6 +412,7 @@ function PercubaanMpt4JawabPage() {
                   soalan={s}
                   value={jawapan[s.id] ?? ""}
                   onChange={(v) => updateJawapan(s.id, v)}
+                  isEnglish={isEnglish}
                 />
               ))}
             </div>
@@ -418,7 +425,7 @@ function PercubaanMpt4JawabPage() {
         <div className="fixed inset-x-0 bottom-0 z-30 border-t border-border/60 bg-card/95 shadow-card backdrop-blur">
           <div className="container mx-auto flex flex-wrap items-center justify-between gap-3 px-4 py-3">
             <div className="text-sm font-bold text-muted-foreground">
-              {jumlahDijawab} / {jumlahSoalan} soalan dijawab
+              {jumlahDijawab} / {jumlahSoalan} {isEnglish ? "questions answered" : "soalan dijawab"}
             </div>
             <button
               type="button"
@@ -426,7 +433,7 @@ function PercubaanMpt4JawabPage() {
               disabled={submitting}
               className="inline-flex items-center gap-2 rounded-full bg-gradient-primary px-6 py-3 font-display text-sm font-extrabold text-primary-foreground shadow-soft transition hover:translate-y-[-1px] disabled:opacity-60"
             >
-              Hantar Jawapan →
+              {isEnglish ? "Submit Answers →" : "Hantar Jawapan →"}
             </button>
           </div>
         </div>
@@ -435,9 +442,11 @@ function PercubaanMpt4JawabPage() {
       {confirmOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={() => !submitting && setConfirmOpen(false)}>
           <div className="w-full max-w-sm rounded-3xl border border-border/60 bg-card p-6 shadow-card" onClick={(e) => e.stopPropagation()}>
-            <h3 className="font-display text-xl font-extrabold text-foreground">Hantar sekarang?</h3>
+            <h3 className="font-display text-xl font-extrabold text-foreground">{isEnglish ? "Submit now?" : "Hantar sekarang?"}</h3>
             <p className="mt-2 text-sm text-muted-foreground">
-              {jumlahDijawab} daripada {jumlahSoalan} soalan telah dijawab. Selepas hantar, jawapan tidak boleh diubah.
+              {isEnglish
+                ? `${jumlahDijawab} out of ${jumlahSoalan} questions have been answered. Once submitted, answers cannot be changed.`
+                : `${jumlahDijawab} daripada ${jumlahSoalan} soalan telah dijawab. Selepas hantar, jawapan tidak boleh diubah.`}
             </p>
             <div className="mt-5 flex gap-2">
               <button
@@ -446,7 +455,7 @@ function PercubaanMpt4JawabPage() {
                 disabled={submitting}
                 className="flex-1 rounded-full border border-border/60 bg-secondary px-4 py-2.5 font-display text-sm font-extrabold text-foreground disabled:opacity-60"
               >
-                Batal
+                {isEnglish ? "Cancel" : "Batal"}
               </button>
               <button
                 type="button"
@@ -454,7 +463,7 @@ function PercubaanMpt4JawabPage() {
                 disabled={submitting}
                 className="flex-1 rounded-full bg-gradient-primary px-4 py-2.5 font-display text-sm font-extrabold text-primary-foreground shadow-soft disabled:opacity-60"
               >
-                {submitting ? "Menghantar..." : "Ya, Hantar"}
+                {submitting ? (isEnglish ? "Submitting..." : "Menghantar...") : (isEnglish ? "Yes, Submit" : "Ya, Hantar")}
               </button>
             </div>
           </div>
@@ -468,10 +477,12 @@ function SoalanCard({
   soalan,
   value,
   onChange,
+  isEnglish = false,
 }: {
   soalan: Mpt4Soalan;
   value: string;
   onChange: (v: string) => void;
+  isEnglish?: boolean;
 }) {
   const { bm, en } = splitBilingual(soalan.teks_soalan);
   const isSrtb = soalan.jenis_item === "SRTb" && !!soalan.langkah_bertingkat;
@@ -494,7 +505,7 @@ function SoalanCard({
           )}
         </div>
         <span className="rounded-full bg-gold/20 px-3 py-1 font-display text-[11px] font-extrabold text-gold-foreground">
-          {soalan.markah} markah
+          {soalan.markah} {isEnglish ? "marks" : "markah"}
         </span>
       </div>
 
@@ -575,7 +586,7 @@ function SoalanCard({
             value={value}
             onChange={(e) => onChange(e.target.value.slice(0, 5))}
             maxLength={5}
-            placeholder="Jawapan"
+            placeholder={isEnglish ? "Answer" : "Jawapan"}
             className="w-32 rounded-xl border-2 border-border/60 bg-card px-4 py-2.5 text-center font-display text-lg font-extrabold uppercase tracking-widest text-foreground focus:border-primary focus:outline-none"
           />
         )}
@@ -585,7 +596,7 @@ function SoalanCard({
             value={value}
             onChange={(e) => onChange(e.target.value)}
             rows={3}
-            placeholder="Tulis jawapan anda..."
+            placeholder={isEnglish ? "Write your answer..." : "Tulis jawapan anda..."}
             className="w-full rounded-2xl border-2 border-border/60 bg-card px-4 py-3 text-sm leading-relaxed text-foreground focus:border-primary focus:outline-none"
           />
         )}
@@ -596,11 +607,11 @@ function SoalanCard({
               value={value}
               onChange={(e) => onChange(e.target.value)}
               rows={10}
-              placeholder="Tulis karangan / jawapan panjang anda di sini..."
+              placeholder={isEnglish ? "Write your essay / long answer here..." : "Tulis karangan / jawapan panjang anda di sini..."}
               className="w-full rounded-2xl border-2 border-border/60 bg-card px-4 py-3 text-sm leading-relaxed text-foreground focus:border-primary focus:outline-none"
             />
             <div className="mt-1 text-right text-[11px] font-bold text-muted-foreground">
-              {countWords(value)} patah kata
+              {countWords(value)} {isEnglish ? "words" : "patah kata"}
             </div>
           </div>
         )}
