@@ -353,6 +353,10 @@ function InputRow({
 }) {
   const baseKey = `l${lIdx}:${inp.id}`;
 
+  if ("type" in inp && inp.type === "frac-op") {
+    return <FracOpBlock inp={inp} baseKey={baseKey} answers={answers} setAns={setAns} disabled={disabled} />;
+  }
+
   if ("type" in inp && (inp.type === "mcq4" || inp.type === "mcq3")) {
     const chosen = answers[baseKey];
     const cols = inp.pilihan.length >= 4 ? "grid-cols-2" : "grid-cols-1 sm:grid-cols-3";
