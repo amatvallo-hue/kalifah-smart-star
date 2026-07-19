@@ -986,3 +986,416 @@ function ReviewGalusQ({ g, lIdx, answers }: { g: Galus; lIdx: number; answers: A
   });
   return <StepLine label="Hasil bahagi (quotient)" student={student} correct={correct} ok={ok} />;
 }
+
+// ============================================================
+// frac-op — self-contained multi-step fraction operation widget
+// ============================================================
+function FracField({
+  nKey,
+  dKey,
+  answers,
+  setAns,
+  disabled,
+}: {
+  nKey: string;
+  dKey: string;
+  answers: AnswerMap;
+  setAns: (k: string, v: string) => void;
+  disabled: boolean;
+}) {
+  return (
+    <div className="inline-flex flex-col items-center">
+      <input
+        type="text"
+        value={answers[nKey] ?? ""}
+        onChange={(e) => setAns(nKey, e.target.value)}
+        disabled={disabled}
+        placeholder="?"
+        className="w-14 rounded-lg border-2 border-border bg-card px-1 py-1 text-center font-display text-base font-extrabold outline-none focus:border-primary"
+      />
+      <div className="my-0.5 h-0.5 w-16 rounded bg-foreground" />
+      <input
+        type="text"
+        value={answers[dKey] ?? ""}
+        onChange={(e) => setAns(dKey, e.target.value)}
+        disabled={disabled}
+        placeholder="?"
+        className="w-14 rounded-lg border-2 border-border bg-card px-1 py-1 text-center font-display text-base font-extrabold outline-none focus:border-primary"
+      />
+    </div>
+  );
+}
+
+function FracStatic({ n, d }: { n: string; d: string }) {
+  return (
+    <div className="inline-flex flex-col items-center">
+      <span className="font-display text-base font-extrabold">{n || "?"}</span>
+      <div className="my-0.5 h-0.5 w-14 rounded bg-foreground" />
+      <span className="font-display text-base font-extrabold">{d || "?"}</span>
+    </div>
+  );
+}
+
+function YesNoButtons({
+  cKey,
+  pilihan,
+  answers,
+  setAns,
+  disabled,
+}: {
+  cKey: string;
+  pilihan: string[];
+  answers: AnswerMap;
+  setAns: (k: string, v: string) => void;
+  disabled: boolean;
+}) {
+  const chosen = answers[cKey];
+  return (
+    <div className="grid grid-cols-2 gap-2">
+      {pilihan.map((p) => {
+        const isChosen = chosen === p;
+        return (
+          <button
+            key={p}
+            type="button"
+            onClick={() => setAns(cKey, p)}
+            disabled={disabled}
+            className={`rounded-2xl border-2 px-3 py-2 font-display text-sm font-extrabold shadow-soft transition ${
+              isChosen ? "border-primary bg-primary/10 text-primary" : "border-border bg-card hover:border-primary"
+            }`}
+          >
+            {p}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+function FracOpBlock({
+  inp,
+  baseKey,
+  answers,
+  setAns,
+  disabled,
+}: {
+  inp: FracOpInput;
+  baseKey: string;
+  answers: AnswerMap;
+  setAns: (k: string, v: string) => void;
+  disabled: boolean;
+}) {
+  const K = {
+    op: `${baseKey}_op`,
+    f1n: `${baseKey}_f1n`, f1d: `${baseKey}_f1d`,
+    f2n: `${baseKey}_f2n`, f2d: `${baseKey}_f2d`,
+    sama: `${baseKey}_sama`,
+    kgd: `${baseKey}_kgd`,
+    f1eq_n: `${baseKey}_f1eq_n`, f1eq_d: `${baseKey}_f1eq_d`,
+    f2eq_n: `${baseKey}_f2eq_n`, f2eq_d: `${baseKey}_f2eq_d`,
+    f2flip_n: `${baseKey}_f2flip_n`, f2flip_d: `${baseKey}_f2flip_d`,
+    res_n: `${baseKey}_res_n`, res_d: `${baseKey}_res_d`,
+    kecil: `${baseKey}_kecil`,
+    gcd_simp: `${baseKey}_gcd_simp`,
+    fin_n: `${baseKey}_fin_n`, fin_d: `${baseKey}_fin_d`,
+  };
+
+  const opPilihan = inp.op_pilihan ?? DEFAULT_OP_PILIHAN;
+  const yesNo = inp.samakecil_pilihan ?? DEFAULT_YESNO;
+  const opChosen = answers[K.op];
+  const sym = opSymOf(opChosen);
+  const f1n = answers[K.f1n], f1d = answers[K.f1d];
+  const f2n = answers[K.f2n], f2d = answers[K.f2d];
+  const fractionsFilled = !!(f1n && f1d && f2n && f2d);
+
+  const isAddSub = sym === "+" || sym === "−";
+  const isDiv = sym === "÷";
+  const isMulOrDiv = sym === "×" || sym === "÷";
+
+  const samaVal = answers[K.sama];
+  const samaNeeded = isYes(samaVal);
+  const denomStepDone = isMulOrDiv
+    ? fractionsFilled
+    : isAddSub
+      ? (samaVal ? (samaNeeded ? !!(answers[K.kgd] && answers[K.f1eq_n] && answers[K.f1eq_d] && answers[K.f2eq_n] && answers[K.f2eq_d]) : true) : false)
+      : false;
+
+  const flipDone = isDiv ? !!(answers[K.f2flip_n] && answers[K.f2flip_d]) : true;
+
+  // Working fractions to display before "="
+  let workA_n = f1n ?? "", workA_d = f1d ?? "";
+  let workB_n = f2n ?? "", workB_d = f2d ?? "";
+  let workSym: string = sym ?? "";
+  if (isAddSub && samaNeeded) {
+    workA_n = answers[K.f1eq_n] ?? workA_n;
+    workA_d = answers[K.f1eq_d] ?? workA_d;
+    workB_n = answers[K.f2eq_n] ?? workB_n;
+    workB_d = answers[K.f2eq_d] ?? workB_d;
+  } else if (isDiv) {
+    workB_n = answers[K.f2flip_n] ?? "";
+    workB_d = answers[K.f2flip_d] ?? "";
+    workSym = "×";
+  }
+
+  const resFilled = !!(answers[K.res_n] && answers[K.res_d]);
+  const kecilVal = answers[K.kecil];
+
+  return (
+    <div className="space-y-4 rounded-2xl border-2 border-primary/30 bg-primary/5 p-4">
+      {inp.lbl && (
+        <p className="text-sm font-bold text-foreground">
+          <HTML html={inp.lbl} />
+        </p>
+      )}
+
+      {/* Step 1: choose operation */}
+      <div>
+        <p className="mb-2 text-xs font-bold uppercase tracking-wide text-muted-foreground">
+          ① Pilih operasi / Choose operation
+        </p>
+        <div className="grid gap-2 grid-cols-1 sm:grid-cols-2">
+          {opPilihan.map((p) => {
+            const chosen = opChosen === p;
+            return (
+              <button
+                key={p}
+                type="button"
+                onClick={() => setAns(K.op, p)}
+                disabled={disabled}
+                className={`rounded-2xl border-2 px-3 py-2 font-display text-sm font-extrabold shadow-soft transition ${
+                  chosen ? "border-primary bg-primary/10 text-primary" : "border-border bg-card hover:border-primary"
+                }`}
+              >
+                {p}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Step 2: write both fractions */}
+      {opChosen && (
+        <div>
+          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-muted-foreground">
+            ② Tulis kedua-dua pecahan / Write both fractions
+          </p>
+          <div className="flex items-center justify-center gap-3">
+            <FracField nKey={K.f1n} dKey={K.f1d} answers={answers} setAns={setAns} disabled={disabled} />
+            <span className="font-display text-2xl font-extrabold">{sym ?? "?"}</span>
+            <FracField nKey={K.f2n} dKey={K.f2d} answers={answers} setAns={setAns} disabled={disabled} />
+          </div>
+        </div>
+      )}
+
+      {/* Step 3: denominators */}
+      {opChosen && fractionsFilled && (
+        <div>
+          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-muted-foreground">
+            ③ Penyebut / Denominators
+          </p>
+          {isMulOrDiv ? (
+            <p className="rounded-xl bg-muted/50 px-3 py-2 text-xs font-semibold text-muted-foreground">
+              ℹ️ Untuk operasi {sym}, tidak perlu samakan penyebut. / For {sym}, no need to equalize denominators.
+            </p>
+          ) : (
+            <div className="space-y-3">
+              <p className="text-sm font-semibold">
+                Perlu samakan penyebut? / Need to equalize denominators?
+              </p>
+              <YesNoButtons cKey={K.sama} pilihan={yesNo} answers={answers} setAns={setAns} disabled={disabled} />
+              {samaVal && samaNeeded && (
+                <div className="space-y-3 rounded-xl bg-card/60 p-3">
+                  <div className="flex flex-wrap items-center gap-2 text-sm font-semibold">
+                    <span>LCM ({f1d}, {f2d}) =</span>
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      value={answers[K.kgd] ?? ""}
+                      onChange={(e) => setAns(K.kgd, e.target.value)}
+                      disabled={disabled}
+                      placeholder="?"
+                      className="w-20 rounded-lg border-2 border-border bg-card px-2 py-1 text-center font-display text-base font-extrabold outline-none focus:border-primary"
+                    />
+                  </div>
+                  <div className="flex items-center justify-center gap-3">
+                    <FracStatic n={f1n ?? ""} d={f1d ?? ""} />
+                    <span className="text-lg font-extrabold">=</span>
+                    <FracField nKey={K.f1eq_n} dKey={K.f1eq_d} answers={answers} setAns={setAns} disabled={disabled} />
+                    <span className="w-4" />
+                    <FracStatic n={f2n ?? ""} d={f2d ?? ""} />
+                    <span className="text-lg font-extrabold">=</span>
+                    <FracField nKey={K.f2eq_n} dKey={K.f2eq_d} answers={answers} setAns={setAns} disabled={disabled} />
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Step 4: invert (÷ only) */}
+      {isDiv && denomStepDone && (
+        <div>
+          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-muted-foreground">
+            ④ Songsangkan pecahan kedua / Invert the second fraction
+          </p>
+          <div className="flex items-center justify-center gap-3">
+            <FracStatic n={f1n ?? ""} d={f1d ?? ""} />
+            <span className="font-display text-2xl font-extrabold">÷</span>
+            <FracStatic n={f2n ?? ""} d={f2d ?? ""} />
+            <span className="text-xl font-extrabold">=</span>
+            <FracStatic n={f1n ?? ""} d={f1d ?? ""} />
+            <span className="font-display text-2xl font-extrabold">×</span>
+            <FracField nKey={K.f2flip_n} dKey={K.f2flip_d} answers={answers} setAns={setAns} disabled={disabled} />
+          </div>
+        </div>
+      )}
+
+      {/* Step 5: compute result */}
+      {opChosen && denomStepDone && flipDone && (
+        <div>
+          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-muted-foreground">
+            {isDiv ? "⑤" : "④"} Kira hasil / Compute the result
+          </p>
+          <div className="flex items-center justify-center gap-3">
+            <FracStatic n={workA_n} d={workA_d} />
+            <span className="font-display text-2xl font-extrabold">{workSym}</span>
+            <FracStatic n={workB_n} d={workB_d} />
+            <span className="text-xl font-extrabold">=</span>
+            <FracField nKey={K.res_n} dKey={K.res_d} answers={answers} setAns={setAns} disabled={disabled} />
+          </div>
+        </div>
+      )}
+
+      {/* Step 6: simplify */}
+      {opChosen && denomStepDone && flipDone && resFilled && (
+        <div>
+          <p className="mb-2 text-xs font-bold uppercase tracking-wide text-muted-foreground">
+            {isDiv ? "⑥" : "⑤"} Permudahkan / Simplify
+          </p>
+          <div className="space-y-3">
+            <div className="flex flex-wrap items-center gap-2 text-sm font-semibold">
+              <span>Hasil / Result =</span>
+              <FracStatic n={answers[K.res_n] ?? ""} d={answers[K.res_d] ?? ""} />
+              <span className="ml-4">Boleh permudahkan? / Can simplify?</span>
+            </div>
+            <YesNoButtons cKey={K.kecil} pilihan={yesNo} answers={answers} setAns={setAns} disabled={disabled} />
+            {isYes(kecilVal) && (
+              <div className="space-y-3 rounded-xl bg-card/60 p-3">
+                <div className="flex flex-wrap items-center gap-2 text-sm font-semibold">
+                  <span>GCD =</span>
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    value={answers[K.gcd_simp] ?? ""}
+                    onChange={(e) => setAns(K.gcd_simp, e.target.value)}
+                    disabled={disabled}
+                    placeholder="?"
+                    className="w-20 rounded-lg border-2 border-border bg-card px-2 py-1 text-center font-display text-base font-extrabold outline-none focus:border-primary"
+                  />
+                </div>
+                <div className="flex items-center justify-center gap-3">
+                  <FracStatic n={answers[K.res_n] ?? ""} d={answers[K.res_d] ?? ""} />
+                  <span className="text-xl font-extrabold">=</span>
+                  <FracField nKey={K.fin_n} dKey={K.fin_d} answers={answers} setAns={setAns} disabled={disabled} />
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ReviewCell({ label, student, correct }: { label: string; student: string; correct: string }) {
+  const ok = chk(student, correct);
+  return (
+    <div className="flex items-start gap-2 text-xs">
+      {ok ? (
+        <Check className="mt-0.5 h-4 w-4 shrink-0 text-green-600" strokeWidth={3} />
+      ) : (
+        <X className="mt-0.5 h-4 w-4 shrink-0 text-red-600" strokeWidth={3} />
+      )}
+      <div className="flex-1">
+        <span className="font-semibold text-foreground">{label}: </span>
+        <span className={ok ? "font-extrabold text-green-800" : "font-extrabold text-red-800"}>{student || "—"}</span>
+        {!ok && (
+          <span className="text-red-800"> · Betul: <span className="font-extrabold">{correct}</span></span>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function FracOpReviewBlock({
+  inp,
+  baseKey,
+  answers,
+}: {
+  inp: FracOpInput;
+  baseKey: string;
+  answers: AnswerMap;
+}) {
+  const K = {
+    op: `${baseKey}_op`,
+    f1n: `${baseKey}_f1n`, f1d: `${baseKey}_f1d`,
+    f2n: `${baseKey}_f2n`, f2d: `${baseKey}_f2d`,
+    sama: `${baseKey}_sama`,
+    kgd: `${baseKey}_kgd`,
+    f1eq_n: `${baseKey}_f1eq_n`, f1eq_d: `${baseKey}_f1eq_d`,
+    f2eq_n: `${baseKey}_f2eq_n`, f2eq_d: `${baseKey}_f2eq_d`,
+    f2flip_n: `${baseKey}_f2flip_n`, f2flip_d: `${baseKey}_f2flip_d`,
+    res_n: `${baseKey}_res_n`, res_d: `${baseKey}_res_d`,
+    kecil: `${baseKey}_kecil`,
+    gcd_simp: `${baseKey}_gcd_simp`,
+    fin_n: `${baseKey}_fin_n`, fin_d: `${baseKey}_fin_d`,
+  };
+  const sym = opSymOf(inp.op_ans);
+  const isAddSub = sym === "+" || sym === "−";
+  const isDiv = sym === "÷";
+  const equalized = isAddSub && isYes(inp.sama_ans);
+  const simplified = isYes(inp.kecil_ans);
+
+  const rows: { label: string; student: string; correct: string }[] = [
+    { label: "Operasi / Operation", student: answers[K.op] ?? "", correct: inp.op_ans },
+    { label: "Pecahan 1 / Fraction 1", student: `${answers[K.f1n] ?? "?"}/${answers[K.f1d] ?? "?"}`, correct: `${inp.f1n_ans}/${inp.f1d_ans}` },
+    { label: "Pecahan 2 / Fraction 2", student: `${answers[K.f2n] ?? "?"}/${answers[K.f2d] ?? "?"}`, correct: `${inp.f2n_ans}/${inp.f2d_ans}` },
+  ];
+
+  if (isAddSub && inp.sama_ans !== undefined) {
+    rows.push({ label: "Samakan penyebut? / Equalize?", student: answers[K.sama] ?? "", correct: inp.sama_ans });
+  }
+  if (equalized) {
+    if (inp.kgd_ans !== undefined) rows.push({ label: "LCM", student: answers[K.kgd] ?? "", correct: inp.kgd_ans });
+    if (inp.f1eq_n_ans && inp.f1eq_d_ans)
+      rows.push({ label: "Pecahan 1 setara / Fraction 1 equiv", student: `${answers[K.f1eq_n] ?? "?"}/${answers[K.f1eq_d] ?? "?"}`, correct: `${inp.f1eq_n_ans}/${inp.f1eq_d_ans}` });
+    if (inp.f2eq_n_ans && inp.f2eq_d_ans)
+      rows.push({ label: "Pecahan 2 setara / Fraction 2 equiv", student: `${answers[K.f2eq_n] ?? "?"}/${answers[K.f2eq_d] ?? "?"}`, correct: `${inp.f2eq_n_ans}/${inp.f2eq_d_ans}` });
+  }
+  if (isDiv && inp.f2flip_n_ans && inp.f2flip_d_ans) {
+    rows.push({ label: "Pecahan 2 songsang / Inverted fraction 2", student: `${answers[K.f2flip_n] ?? "?"}/${answers[K.f2flip_d] ?? "?"}`, correct: `${inp.f2flip_n_ans}/${inp.f2flip_d_ans}` });
+  }
+  rows.push({ label: "Hasil / Result", student: `${answers[K.res_n] ?? "?"}/${answers[K.res_d] ?? "?"}`, correct: `${inp.res_n_ans}/${inp.res_d_ans}` });
+  if (inp.kecil_ans !== undefined) {
+    rows.push({ label: "Boleh permudahkan? / Can simplify?", student: answers[K.kecil] ?? "", correct: inp.kecil_ans });
+  }
+  if (simplified) {
+    if (inp.gcd_simp_ans !== undefined) rows.push({ label: "GCD", student: answers[K.gcd_simp] ?? "", correct: inp.gcd_simp_ans });
+    if (inp.fin_n_ans && inp.fin_d_ans)
+      rows.push({ label: "Bentuk termudah / Simplest form", student: `${answers[K.fin_n] ?? "?"}/${answers[K.fin_d] ?? "?"}`, correct: `${inp.fin_n_ans}/${inp.fin_d_ans}` });
+  }
+
+  return (
+    <div className="mt-2 space-y-1 rounded-xl border border-border/60 bg-card/40 p-2">
+      {inp.lbl && (
+        <p className="mb-1 text-xs font-bold text-foreground">
+          <HTML html={inp.lbl} />
+        </p>
+      )}
+      {rows.map((r, i) => (
+        <ReviewCell key={i} label={r.label} student={r.student} correct={r.correct} />
+      ))}
+    </div>
+  );
+}
