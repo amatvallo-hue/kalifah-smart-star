@@ -391,7 +391,7 @@ function PercubaanMpt4JawabPage() {
         )}
 
         {soalanList === null && !fetchError && (
-          <p className="mt-8 text-muted-foreground">Memuatkan soalan...</p>
+          <p className="mt-8 text-muted-foreground">{isEnglish ? "Loading questions..." : "Memuatkan soalan..."}</p>
         )}
 
         {soalanList !== null && soalanList.length === 0 && !fetchError && (
