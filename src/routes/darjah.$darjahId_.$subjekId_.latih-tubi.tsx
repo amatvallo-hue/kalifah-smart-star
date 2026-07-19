@@ -146,6 +146,8 @@ function LatihTubiPage() {
 
   const [topikStats, setTopikStats] = useState<Record<string, { betul: number; jumlah: number }>>({});
   const [mulaMasa, setMulaMasa] = useState(() => Date.now());
+  const [sesiId] = useState(() => (typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`));
+  const [mulaSoalan, setMulaSoalan] = useState(() => Date.now());
 
   const [topikDialogOpen, setTopikDialogOpen] = useState(false);
   const [topikList, setTopikList] = useState<string[] | null>(null);
