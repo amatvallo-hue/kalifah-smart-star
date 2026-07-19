@@ -6,7 +6,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { getDarjah, getSubjek } from "@/lib/curriculum";
-import { simpanProgress } from "@/lib/progress";
+import { simpanProgress, rekodJawapan } from "@/lib/progress";
 import { tambahMata } from "@/lib/tambah-mata";
 import { usePoints } from "@/hooks/use-points";
 import { JamAnalog } from "@/components/svg/JamAnalog";
@@ -146,6 +146,8 @@ function LatihTubiPage() {
 
   const [topikStats, setTopikStats] = useState<Record<string, { betul: number; jumlah: number }>>({});
   const [mulaMasa, setMulaMasa] = useState(() => Date.now());
+  const [sesiId] = useState(() => (typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`));
+  const [mulaSoalan, setMulaSoalan] = useState(() => Date.now());
 
   const [topikDialogOpen, setTopikDialogOpen] = useState(false);
   const [topikList, setTopikList] = useState<string[] | null>(null);
@@ -312,6 +314,21 @@ function LatihTubiPage() {
     if (pilih !== null || !soalan) return;
     setPilih(idx);
     const isBetul = idx === soalan.jawapan;
+    const masaSoalanSaat = Math.max(0, Math.round((Date.now() - mulaSoalan) / 1000));
+    const huruf = ["A", "B", "C", "D"];
+    rekodJawapan({
+      sesiId,
+      darjah: darjahNum,
+      subjek: subjekQueryResolved,
+      aktiviti: "latih-tubi",
+      topik: soalan.topik ?? undefined,
+      soalanRef: soalan.id,
+      soalanTeks: soalan.soalan,
+      jawapanMurid: huruf[idx],
+      jawapanBetul: huruf[soalan.jawapan],
+      betul: isBetul,
+      masaSoalanSaat,
+    });
     if (isBetul) setBetul((b) => b + 1);
     if (isBetul && user) {
       tambahMata({ userId: user.id, mata: 1, sumber: "latih-tubi", darjah: darjahId, subjek: subjekId });
@@ -328,6 +345,7 @@ function LatihTubiPage() {
     if (isBetul) {
       setTimeout(() => {
         setPilih(null);
+        setMulaSoalan(Date.now());
         setCursor((c) => {
           const next = c + 1;
           if (next >= order.length) {
@@ -345,6 +363,7 @@ function LatihTubiPage() {
 
   const goToNext = () => {
     setPilih(null);
+    setMulaSoalan(Date.now());
     setCursor((c) => {
       const next = c + 1;
       if (next >= order.length) {
