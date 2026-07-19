@@ -396,7 +396,7 @@ function PercubaanMpt4JawabPage() {
 
         {soalanList !== null && soalanList.length === 0 && !fetchError && (
           <div className="mt-8 rounded-2xl border border-border/60 bg-card p-6 text-center text-muted-foreground">
-            Tiada soalan untuk set ini.
+            {isEnglish ? "No questions for this set." : "Tiada soalan untuk set ini."}
           </div>
         )}
 
