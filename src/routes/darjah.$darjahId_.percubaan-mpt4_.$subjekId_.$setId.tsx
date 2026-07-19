@@ -505,7 +505,7 @@ function SoalanCard({
           )}
         </div>
         <span className="rounded-full bg-gold/20 px-3 py-1 font-display text-[11px] font-extrabold text-gold-foreground">
-          {soalan.markah} markah
+          {soalan.markah} {isEnglish ? "marks" : "markah"}
         </span>
       </div>
 
