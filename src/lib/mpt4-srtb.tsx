@@ -69,7 +69,12 @@ export interface FracOpInput {
   fin_n_ans?: string;
   fin_d_ans?: string;
 }
-export type LInput = MCQInput | TextInput | FracInput | PctFracInput | Peratus2Input | FracOpInput;
+export interface Cara2Input {
+  id: string;
+  type: "cara2";
+  pilihan: [string, string];
+}
+export type LInput = MCQInput | TextInput | FracInput | PctFracInput | Peratus2Input | FracOpInput | Cara2Input;
 
 const DEFAULT_OP_PILIHAN = [
   "Tambah (+) / Addition (+)",
@@ -115,7 +120,16 @@ export interface Langkah {
   ar: string;
   inputs?: LInput[];
   galus?: Galus;
+  caraGrp?: "A" | "B";
+  caraRef?: string;
 }
+
+export interface FracSetup {
+  num: string;
+  den: string;
+  times: string;
+}
+
 
 export interface FaField {
   lbl: string;
@@ -138,6 +152,7 @@ export interface LangkahBertingkat {
   id?: string;
   topik?: string;
   cari?: string;
+  fracSetup?: FracSetup;
   hint?: string;
   diberi?: { l: string; v: string }[];
   langkah: Langkah[];
@@ -248,10 +263,50 @@ export function SrtbBlock({
         </div>
       )}
 
+      {lb.fracSetup && (
+        <div className="rounded-2xl border-2 border-dashed border-primary/30 bg-card p-4">
+          <p className="mb-2 text-xs font-semibold text-muted-foreground">
+            Tulis dalam bentuk darab pecahan / Write as a fraction multiplication:
+          </p>
+          <div className="flex items-center justify-center gap-3">
+            <FracStatic n={lb.fracSetup.num} d={lb.fracSetup.den} />
+            <span className="font-display text-xl font-extrabold">×</span>
+            <span className="font-display text-xl font-extrabold">{lb.fracSetup.times}</span>
+            <span className="font-display text-xl font-extrabold">=</span>
+            <span className="font-display text-xl font-extrabold">?</span>
+          </div>
+        </div>
+      )}
+
       {/* Langkah */}
-      {lb.langkah.map((lg, li) => (
-        <LangkahBlock key={li} langkah={lg} lIdx={li} answers={answers} setAns={setAns} disabled={disabled} />
-      ))}
+      {lb.langkah.map((lg, li) => {
+        if (lg.caraGrp && lg.caraRef) {
+          const chooserIdx = lb.langkah.findIndex((l) =>
+            l.inputs?.some((i) => "type" in i && i.type === "cara2" && i.id === lg.caraRef),
+          );
+          if (chooserIdx === -1) return null;
+          const chooserInp = lb.langkah[chooserIdx].inputs!.find(
+            (i): i is Cara2Input => "type" in i && i.type === "cara2" && i.id === lg.caraRef,
+          )!;
+          const chosen = answers[`l${chooserIdx}:${chooserInp.id}`];
+          const selGrp = chosen === chooserInp.pilihan[0] ? "A" : chosen === chooserInp.pilihan[1] ? "B" : undefined;
+          if (selGrp !== lg.caraGrp) return null;
+
+          const sameGroup = lb.langkah.filter((l) => l.caraGrp === lg.caraGrp && l.caraRef === lg.caraRef);
+          const posInGroup = sameGroup.indexOf(lg);
+          const prevInGroup = posInGroup > 0 ? sameGroup[posInGroup - 1] : null;
+          let prevDone = true;
+          if (prevInGroup) {
+            const prevOpInput = prevInGroup.inputs?.find(
+              (i): i is MCQInput => "type" in i && (i.type === "mcq4" || i.type === "mcq3"),
+            );
+            const prevIdx = lb.langkah.indexOf(prevInGroup);
+            prevDone = !prevOpInput || !!answers[`l${prevIdx}:${prevOpInput.id}`];
+          }
+          if (!prevDone) return null;
+        }
+        return <LangkahBlock key={li} langkah={lg} lIdx={li} answers={answers} setAns={setAns} disabled={disabled} />;
+      })}
 
       {/* Semak Unit (opsyenal) */}
       {lb.unitConvert && (
@@ -370,6 +425,33 @@ function InputRow({
 
   if ("type" in inp && inp.type === "frac-op") {
     return <FracOpBlock inp={inp} baseKey={baseKey} answers={answers} setAns={setAns} disabled={disabled} />;
+  }
+
+  if ("type" in inp && inp.type === "cara2") {
+    const chosen = answers[baseKey];
+    return (
+      <div>
+        <p className="mb-2 text-sm font-bold text-foreground">Pilih cara pengiraan / Choose calculation method:</p>
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+          {inp.pilihan.map((p) => {
+            const isChosen = chosen === p;
+            return (
+              <button
+                key={p}
+                type="button"
+                onClick={() => setAns(baseKey, p)}
+                disabled={disabled}
+                className={`rounded-2xl border-2 px-4 py-3 text-left font-display text-sm font-extrabold shadow-soft transition ${
+                  isChosen ? "border-primary bg-primary/10 text-primary" : "border-border bg-card hover:border-primary"
+                }`}
+              >
+                {p}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    );
   }
 
   if ("type" in inp && (inp.type === "mcq4" || inp.type === "mcq3")) {
@@ -845,9 +927,34 @@ export function SrtbReview({
         </div>
       )}
 
-      {lb.langkah.map((lg, li) => (
-        <ReviewLangkah key={li} langkah={lg} lIdx={li} answers={answers} />
-      ))}
+      {lb.fracSetup && (
+        <div className="rounded-2xl border-2 border-dashed border-primary/30 bg-card p-3">
+          <p className="mb-2 text-[11px] font-semibold text-muted-foreground">
+            Bentuk darab pecahan / Fraction multiplication:
+          </p>
+          <div className="flex items-center justify-center gap-3">
+            <FracStatic n={lb.fracSetup.num} d={lb.fracSetup.den} />
+            <span className="font-display text-lg font-extrabold">×</span>
+            <span className="font-display text-lg font-extrabold">{lb.fracSetup.times}</span>
+          </div>
+        </div>
+      )}
+
+      {lb.langkah.map((lg, li) => {
+        if (lg.caraGrp && lg.caraRef) {
+          const chooserIdx = lb.langkah.findIndex((l) =>
+            l.inputs?.some((i) => "type" in i && i.type === "cara2" && i.id === lg.caraRef),
+          );
+          if (chooserIdx === -1) return null;
+          const chooserInp = lb.langkah[chooserIdx].inputs!.find(
+            (i): i is Cara2Input => "type" in i && i.type === "cara2" && i.id === lg.caraRef,
+          )!;
+          const chosen = answers[`l${chooserIdx}:${chooserInp.id}`];
+          const selGrp = chosen === chooserInp.pilihan[0] ? "A" : chosen === chooserInp.pilihan[1] ? "B" : undefined;
+          if (selGrp !== lg.caraGrp) return null;
+        }
+        return <ReviewLangkah key={li} langkah={lg} lIdx={li} answers={answers} />;
+      })}
 
       {lb.unitConvert && <UnitConvertReviewBlock uc={lb.unitConvert} answers={answers} />}
       <FinalReviewRow fa={lb.fa} aKey="final" answers={answers} ok={fa1Ok} />
@@ -950,7 +1057,9 @@ function StepLine({
 }
 
 function ReviewInputLine({ inp, lIdx, answers }: { inp: LInput; lIdx: number; answers: AnswerMap }) {
+  if ("type" in inp && inp.type === "cara2") return null;
   const baseKey = `l${lIdx}:${inp.id}`;
+
 
   if ("type" in inp && inp.type === "frac-op") {
     return <FracOpReviewBlock inp={inp} baseKey={baseKey} answers={answers} />;
