@@ -927,9 +927,34 @@ export function SrtbReview({
         </div>
       )}
 
-      {lb.langkah.map((lg, li) => (
-        <ReviewLangkah key={li} langkah={lg} lIdx={li} answers={answers} />
-      ))}
+      {lb.fracSetup && (
+        <div className="rounded-2xl border-2 border-dashed border-primary/30 bg-card p-3">
+          <p className="mb-2 text-[11px] font-semibold text-muted-foreground">
+            Bentuk darab pecahan / Fraction multiplication:
+          </p>
+          <div className="flex items-center justify-center gap-3">
+            <FracStatic n={lb.fracSetup.num} d={lb.fracSetup.den} />
+            <span className="font-display text-lg font-extrabold">×</span>
+            <span className="font-display text-lg font-extrabold">{lb.fracSetup.times}</span>
+          </div>
+        </div>
+      )}
+
+      {lb.langkah.map((lg, li) => {
+        if (lg.caraGrp && lg.caraRef) {
+          const chooserIdx = lb.langkah.findIndex((l) =>
+            l.inputs?.some((i) => "type" in i && i.type === "cara2" && i.id === lg.caraRef),
+          );
+          if (chooserIdx === -1) return null;
+          const chooserInp = lb.langkah[chooserIdx].inputs!.find(
+            (i): i is Cara2Input => "type" in i && i.type === "cara2" && i.id === lg.caraRef,
+          )!;
+          const chosen = answers[`l${chooserIdx}:${chooserInp.id}`];
+          const selGrp = chosen === chooserInp.pilihan[0] ? "A" : chosen === chooserInp.pilihan[1] ? "B" : undefined;
+          if (selGrp !== lg.caraGrp) return null;
+        }
+        return <ReviewLangkah key={li} langkah={lg} lIdx={li} answers={answers} />;
+      })}
 
       {lb.unitConvert && <UnitConvertReviewBlock uc={lb.unitConvert} answers={answers} />}
       <FinalReviewRow fa={lb.fa} aKey="final" answers={answers} ok={fa1Ok} />
