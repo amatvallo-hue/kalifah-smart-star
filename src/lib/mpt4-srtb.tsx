@@ -120,7 +120,20 @@ export interface Langkah {
   ar: string;
   inputs?: LInput[];
   galus?: Galus;
+  caraGrp?: "A" | "B";
+  caraRef?: string;
 }
+
+export interface FracSetup {
+  num: string;
+  den: string;
+  times: string;
+}
+
+export interface FaField {
+  lbl: string;
+  ans: string;
+  d?: string;
 
 export interface FaField {
   lbl: string;
