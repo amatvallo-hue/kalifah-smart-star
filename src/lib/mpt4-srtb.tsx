@@ -130,10 +130,6 @@ export interface FracSetup {
   times: string;
 }
 
-export interface FaField {
-  lbl: string;
-  ans: string;
-  d?: string;
 
 export interface FaField {
   lbl: string;
