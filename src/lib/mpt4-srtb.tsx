@@ -387,6 +387,33 @@ function InputRow({
     return <FracOpBlock inp={inp} baseKey={baseKey} answers={answers} setAns={setAns} disabled={disabled} />;
   }
 
+  if ("type" in inp && inp.type === "cara2") {
+    const chosen = answers[baseKey];
+    return (
+      <div>
+        <p className="mb-2 text-sm font-bold text-foreground">Pilih cara pengiraan / Choose calculation method:</p>
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+          {inp.pilihan.map((p) => {
+            const isChosen = chosen === p;
+            return (
+              <button
+                key={p}
+                type="button"
+                onClick={() => setAns(baseKey, p)}
+                disabled={disabled}
+                className={`rounded-2xl border-2 px-4 py-3 text-left font-display text-sm font-extrabold shadow-soft transition ${
+                  isChosen ? "border-primary bg-primary/10 text-primary" : "border-border bg-card hover:border-primary"
+                }`}
+              >
+                {p}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+
   if ("type" in inp && (inp.type === "mcq4" || inp.type === "mcq3")) {
     const chosen = answers[baseKey];
     const cols = inp.pilihan.length >= 4 ? "grid-cols-2" : "grid-cols-1 sm:grid-cols-3";
