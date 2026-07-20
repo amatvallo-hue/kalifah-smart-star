@@ -263,10 +263,50 @@ export function SrtbBlock({
         </div>
       )}
 
+      {lb.fracSetup && (
+        <div className="rounded-2xl border-2 border-dashed border-primary/30 bg-card p-4">
+          <p className="mb-2 text-xs font-semibold text-muted-foreground">
+            Tulis dalam bentuk darab pecahan / Write as a fraction multiplication:
+          </p>
+          <div className="flex items-center justify-center gap-3">
+            <FracStatic n={lb.fracSetup.num} d={lb.fracSetup.den} />
+            <span className="font-display text-xl font-extrabold">×</span>
+            <span className="font-display text-xl font-extrabold">{lb.fracSetup.times}</span>
+            <span className="font-display text-xl font-extrabold">=</span>
+            <span className="font-display text-xl font-extrabold">?</span>
+          </div>
+        </div>
+      )}
+
       {/* Langkah */}
-      {lb.langkah.map((lg, li) => (
-        <LangkahBlock key={li} langkah={lg} lIdx={li} answers={answers} setAns={setAns} disabled={disabled} />
-      ))}
+      {lb.langkah.map((lg, li) => {
+        if (lg.caraGrp && lg.caraRef) {
+          const chooserIdx = lb.langkah.findIndex((l) =>
+            l.inputs?.some((i) => "type" in i && i.type === "cara2" && i.id === lg.caraRef),
+          );
+          if (chooserIdx === -1) return null;
+          const chooserInp = lb.langkah[chooserIdx].inputs!.find(
+            (i): i is Cara2Input => "type" in i && i.type === "cara2" && i.id === lg.caraRef,
+          )!;
+          const chosen = answers[`l${chooserIdx}:${chooserInp.id}`];
+          const selGrp = chosen === chooserInp.pilihan[0] ? "A" : chosen === chooserInp.pilihan[1] ? "B" : undefined;
+          if (selGrp !== lg.caraGrp) return null;
+
+          const sameGroup = lb.langkah.filter((l) => l.caraGrp === lg.caraGrp && l.caraRef === lg.caraRef);
+          const posInGroup = sameGroup.indexOf(lg);
+          const prevInGroup = posInGroup > 0 ? sameGroup[posInGroup - 1] : null;
+          let prevDone = true;
+          if (prevInGroup) {
+            const prevOpInput = prevInGroup.inputs?.find(
+              (i): i is MCQInput => "type" in i && (i.type === "mcq4" || i.type === "mcq3"),
+            );
+            const prevIdx = lb.langkah.indexOf(prevInGroup);
+            prevDone = !prevOpInput || !!answers[`l${prevIdx}:${prevOpInput.id}`];
+          }
+          if (!prevDone) return null;
+        }
+        return <LangkahBlock key={li} langkah={lg} lIdx={li} answers={answers} setAns={setAns} disabled={disabled} />;
+      })}
 
       {/* Semak Unit (opsyenal) */}
       {lb.unitConvert && (
