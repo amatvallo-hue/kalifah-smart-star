@@ -152,6 +152,7 @@ export interface LangkahBertingkat {
   id?: string;
   topik?: string;
   cari?: string;
+  fracSetup?: FracSetup;
   hint?: string;
   diberi?: { l: string; v: string }[];
   langkah: Langkah[];
