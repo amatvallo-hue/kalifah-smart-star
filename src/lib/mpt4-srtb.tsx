@@ -69,7 +69,12 @@ export interface FracOpInput {
   fin_n_ans?: string;
   fin_d_ans?: string;
 }
-export type LInput = MCQInput | TextInput | FracInput | PctFracInput | Peratus2Input | FracOpInput;
+export interface Cara2Input {
+  id: string;
+  type: "cara2";
+  pilihan: [string, string];
+}
+export type LInput = MCQInput | TextInput | FracInput | PctFracInput | Peratus2Input | FracOpInput | Cara2Input;
 
 const DEFAULT_OP_PILIHAN = [
   "Tambah (+) / Addition (+)",
