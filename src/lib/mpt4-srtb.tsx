@@ -992,7 +992,9 @@ function StepLine({
 }
 
 function ReviewInputLine({ inp, lIdx, answers }: { inp: LInput; lIdx: number; answers: AnswerMap }) {
+  if ("type" in inp && inp.type === "cara2") return null;
   const baseKey = `l${lIdx}:${inp.id}`;
+
 
   if ("type" in inp && inp.type === "frac-op") {
     return <FracOpReviewBlock inp={inp} baseKey={baseKey} answers={answers} />;
