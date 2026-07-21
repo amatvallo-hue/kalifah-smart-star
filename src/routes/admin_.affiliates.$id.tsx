@@ -131,6 +131,8 @@ function AdminAffiliateProfile() {
   const [savingTag, setSavingTag] = useState(false);
 
   const [copied, setCopied] = useState<string | null>(null);
+  const [maxKlik, setMaxKlik] = useState(0);
+  const [maxJualan, setMaxJualan] = useState(0);
 
   useEffect(() => {
     if (authLoading) return;
