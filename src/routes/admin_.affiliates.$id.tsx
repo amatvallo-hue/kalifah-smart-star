@@ -304,6 +304,14 @@ function AdminAffiliateProfile() {
                 <span className={`rounded-full px-2 py-0.5 text-xs font-bold ${badge.className}`}>
                   {badge.label}
                 </span>
+                {(() => {
+                  const hb = healthBadge(healthScore(aff, maxKlik, maxJualan));
+                  return (
+                    <span className={`rounded-full px-2 py-0.5 text-xs font-bold ${hb.className}`} title="Health Score">
+                      {hb.label}
+                    </span>
+                  );
+                })()}
               </div>
               <div className="mt-1 text-sm text-muted-foreground">{aff.email}</div>
               <div className="mt-1 text-sm">
