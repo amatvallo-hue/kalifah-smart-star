@@ -33,7 +33,21 @@ type AffRow = {
   total_dibayar: number;
   platform_promosi?: string[] | null;
   last_klik_at?: string | null;
+  created_at?: string | null;
 };
+
+function statusBadge(r: AffRow): { label: string; className: string } {
+  const now = Date.now();
+  const createdAt = r.created_at ? new Date(r.created_at).getTime() : 0;
+  const ageDays = createdAt ? (now - createdAt) / (1000 * 60 * 60 * 24) : Infinity;
+  if (ageDays <= 7) {
+    return { label: "🟡 Baru", className: "bg-amber-100 text-amber-700" };
+  }
+  if (!isInactive(r.last_klik_at)) {
+    return { label: "🟢 Aktif", className: "bg-emerald-100 text-emerald-700" };
+  }
+  return { label: "🔴 Tidak Aktif", className: "bg-red-100 text-red-700" };
+}
 
 function rm(ringgit: number) {
   return `RM ${(ringgit ?? 0).toFixed(2)}`;
