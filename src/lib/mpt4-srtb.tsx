@@ -390,7 +390,7 @@ function LangkahBlock({
   );
   const opKey = opInput ? `l${lIdx}:${opInput.id}` : null;
   const opChosen = opKey ? answers[opKey] : undefined;
-  const showGalus = langkah.galus && (!opInput || !!opChosen);
+  const showGalus = langkah.galus && (!opInput || opChosen === opInput?.ans);
 
   return (
     <section className="rounded-2xl border-2 border-primary/20 bg-card p-4">
