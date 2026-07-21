@@ -18,6 +18,18 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  ResponsiveContainer,
+  LineChart,
+  Line,
+  BarChart,
+  Bar,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+} from "recharts";
 
 export const Route = createFileRoute("/admin_/affiliates")({
   head: () => ({ meta: [{ title: "Admin Affiliates — Kalifah.my" }] }),
