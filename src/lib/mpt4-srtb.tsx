@@ -858,35 +858,42 @@ function LongDivGrid({
             </div>
             {/* remainder + bring-down row */}
             <div className="grid gap-1" style={gridStyle}>
-              {isLast ? (
-                posCell(
+            {isLast ? (
+              posCell(
+                2 + i,
+                1,
+                <GalusCell
+                  cKey={kRf}
+                  answers={answers}
+                  setAns={setAns}
+                  disabled={disabled}
+                  className="bg-amber-50/50"
+                />,
+                `rf`,
+              )
+            ) : i === 0 ? (
+              posCell(
+                2 + i,
+                1,
+                <GalusCell cKey={kR(i, 0)} answers={answers} setAns={setAns} disabled={disabled} />,
+                `r-${i}-0`,
+              )
+            ) : (
+              <>
+                {posCell(
+                  1 + i,
+                  1,
+                  <GalusCell cKey={kR(i, 0)} answers={answers} setAns={setAns} disabled={disabled} />,
+                  `r-${i}-0`,
+                )}
+                {posCell(
                   2 + i,
                   1,
-                  <GalusCell
-                    cKey={kRf}
-                    answers={answers}
-                    setAns={setAns}
-                    disabled={disabled}
-                    className="bg-amber-50/50"
-                  />,
-                  `rf`,
-                )
-              ) : (
-                <>
-                  {posCell(
-                    1 + i,
-                    1,
-                    <GalusCell cKey={kR(i, 0)} answers={answers} setAns={setAns} disabled={disabled} />,
-                    `r-${i}-0`,
-                  )}
-                  {posCell(
-                    2 + i,
-                    1,
-                    <GalusCell cKey={kR(i, 1)} answers={answers} setAns={setAns} disabled={disabled} />,
-                    `r-${i}-1`,
-                  )}
-                </>
-              )}
+                  <GalusCell cKey={kR(i, 1)} answers={answers} setAns={setAns} disabled={disabled} />,
+                  `r-${i}-1`,
+                )}
+              </>
+            )}
             </div>
           </div>
         );
