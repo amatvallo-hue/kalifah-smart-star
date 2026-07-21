@@ -105,6 +105,12 @@ export interface Galus {
   r2?: Cell[];
   r1fill?: boolean;
   r2fill?: boolean;
+  r3?: Cell[];
+  r3fill?: boolean;
+  r3carry?: Cell[];
+  r4?: Cell[];
+  r4fill?: boolean;
+  r4carry?: Cell[];
   pAns?: Cell[];
   rAns?: Cell[];
   bAns?: Cell[];
