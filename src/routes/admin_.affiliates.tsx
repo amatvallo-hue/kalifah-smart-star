@@ -34,6 +34,8 @@ type AffRow = {
   avatar_url?: string | null;
   nama_bank: string;
   no_akaun_bank: string;
+  nama_pemilik_bank?: string | null;
+  no_telefon?: string | null;
   total_klik: number;
   total_jualan: number;
   total_komisyen: number;
@@ -42,6 +44,23 @@ type AffRow = {
   last_klik_at?: string | null;
   created_at?: string | null;
 };
+
+type JualanRow = {
+  id: string;
+  created_at: string | null;
+  produk?: string | null;
+  jumlah_bayar: number | null;
+  komisyen: number | null;
+  status_bayar: string | null;
+};
+
+function waLink(phone: string | null | undefined): string | null {
+  if (!phone) return null;
+  let digits = phone.replace(/\D/g, "");
+  if (!digits) return null;
+  if (digits.startsWith("0")) digits = "60" + digits.slice(1);
+  return `https://wa.me/${digits}`;
+}
 
 function statusBadge(r: AffRow): { label: string; className: string } {
   const now = Date.now();
