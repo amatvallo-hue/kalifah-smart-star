@@ -341,6 +341,16 @@ function AdminAffiliates() {
     return champ;
   }, [rows]);
 
+  const { maxKlik, maxJualan } = useMemo(() => {
+    let mk = 0;
+    let mj = 0;
+    for (const r of rows) {
+      if ((r.total_klik ?? 0) > mk) mk = r.total_klik ?? 0;
+      if ((r.total_jualan ?? 0) > mj) mj = r.total_jualan ?? 0;
+    }
+    return { maxKlik: mk, maxJualan: mj };
+  }, [rows]);
+
   const needAttention = useMemo(() => {
     return [...rows]
       .filter((r) => (r.total_klik ?? 0) > 0 && (r.total_jualan ?? 0) === 0)
