@@ -514,6 +514,16 @@ function AffiliateDashboardPage() {
             )}
           </div>
         ) : null}
+
+        {/* Tips Jual Hari Ini */}
+        {tipHariIni ? (
+          <div className="mt-6 rounded-2xl border border-sky-200 bg-sky-50 p-5 shadow-soft">
+            <h2 className="font-display text-lg font-extrabold text-sky-900">
+              💡 Tips Jual Hari Ini
+            </h2>
+            <p className="mt-2 text-sky-900/90">{tipHariIni}</p>
+          </div>
+        ) : null}
       </div>
     </div>
   );
