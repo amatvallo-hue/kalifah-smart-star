@@ -341,22 +341,24 @@ function AffiliateDashboardPage() {
           </div>
 
           {/* QR */}
-          <div className="mt-5 flex flex-col items-center gap-2">
-            <div className="text-xs font-bold uppercase text-muted-foreground">
-              QR Code Pautan Anda
-            </div>
+          <div className="mt-5 flex flex-row items-center gap-3">
             <img
-              src={`https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(refLink)}`}
+              src={`https://api.qrserver.com/v1/create-qr-code/?size=96x96&data=${encodeURIComponent(refLink)}`}
               alt="QR Code Affiliate"
               className="rounded-lg bg-white p-2"
             />
-            <a
-              href={`https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodeURIComponent(refLink)}`}
-              download="qr-affiliate.png"
-              className="inline-flex items-center justify-center gap-1 rounded-md border border-input bg-background px-3 py-1.5 text-xs font-bold text-foreground hover:bg-muted"
-            >
-              Muat Turun QR
-            </a>
+            <div className="flex flex-col gap-1">
+              <div className="text-xs font-bold uppercase text-muted-foreground">
+                QR Code Pautan Anda
+              </div>
+              <a
+                href={`https://api.qrserver.com/v1/create-qr-code/?size=96x96&data=${encodeURIComponent(refLink)}`}
+                download="qr-affiliate.png"
+                className="inline-flex items-center justify-center gap-1 rounded-md border border-input bg-background px-3 py-1.5 text-xs font-bold text-foreground hover:bg-muted"
+              >
+                Muat Turun QR
+              </a>
+            </div>
           </div>
 
           {/* Captions */}
