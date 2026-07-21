@@ -30,6 +30,7 @@ interface Affiliate {
   total_jualan: number;
   total_komisyen: number;
   total_dibayar: number;
+  komisyen_rate: number;
 }
 
 interface Jualan {
