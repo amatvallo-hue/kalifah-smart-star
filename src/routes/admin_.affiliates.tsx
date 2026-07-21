@@ -489,9 +489,9 @@ function AdminAffiliates() {
                           )}
                           <button
                             type="button"
-                            title="Prestasi (coming soon)"
-                            disabled
-                            className="cursor-not-allowed rounded border border-border bg-muted p-2 text-muted-foreground opacity-50"
+                            title="Prestasi 30 hari"
+                            onClick={() => openPrestasi(r)}
+                            className="rounded border border-sky-200 bg-sky-50 p-2 text-sky-700 hover:bg-sky-100"
                           >
                             <BarChart3 className="h-4 w-4" />
                           </button>
