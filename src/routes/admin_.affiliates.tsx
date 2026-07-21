@@ -291,6 +291,39 @@ function AdminAffiliates() {
     return { totalAffiliates, totalKomisyen, totalDibayar, belumDibayar };
   }, [rows]);
 
+  const filteredRows = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    const topSellerIds = new Set(
+      [...rows]
+        .filter((r) => (r.total_jualan ?? 0) > 0)
+        .sort((a, b) => (b.total_jualan ?? 0) - (a.total_jualan ?? 0))
+        .slice(0, 3)
+        .map((r) => r.id),
+    );
+    const now = Date.now();
+    return rows.filter((r) => {
+      if (q) {
+        const code = (r.custom_ref_code ?? r.ref_code ?? "").toLowerCase();
+        const hay = `${r.nama ?? ""} ${r.email ?? ""} ${code}`.toLowerCase();
+        if (!hay.includes(q)) return false;
+      }
+      const createdAt = r.created_at ? new Date(r.created_at).getTime() : 0;
+      const ageDays = createdAt ? (now - createdAt) / (1000 * 60 * 60 * 24) : Infinity;
+      const isBaru = ageDays <= 7;
+      switch (filterMode) {
+        case "semua": return true;
+        case "aktif": return !isInactive(r.last_klik_at) && !isBaru;
+        case "belum_aktif": return isInactive(r.last_klik_at) && !isBaru;
+        case "ada_pending": return (r.total_komisyen ?? 0) - (r.total_dibayar ?? 0) > 0;
+        case "tiada_jualan": return (r.total_jualan ?? 0) === 0;
+        case "top_seller": return topSellerIds.has(r.id);
+        case "baru_daftar": return isBaru;
+        default: return true;
+      }
+    });
+  }, [rows, searchQuery, filterMode]);
+
+
   const markPaid = async (row: AffRow) => {
     const baki = Number(row.total_komisyen || 0) - Number(row.total_dibayar || 0);
     if (baki <= 0) {
