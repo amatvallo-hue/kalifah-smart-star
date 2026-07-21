@@ -60,6 +60,8 @@ const AYAT_HERO = [
   "Misi anda hari ini: Kongsi kepada sekurang-kurangnya 10 ibu bapa.",
 ];
 
+const NAMA_BULAN = ["Januari","Februari","Mac","April","Mei","Jun","Julai","Ogos","September","Oktober","November","Disember"];
+
 function AffiliateDashboardPage() {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
@@ -518,15 +520,20 @@ function AffiliateDashboardPage() {
         {challenge ? (
           <div className="mt-6 rounded-2xl border-2 border-amber-300 bg-gradient-to-br from-amber-50 to-yellow-50 p-5 shadow-soft">
             <div className="flex items-center gap-2 text-amber-700">
-              <Trophy className="h-5 w-5" />
+              <Trophy className="h-6 w-6" />
               <h2 className="font-display text-xl font-extrabold">
-                🏆 Challenge Bulan Ini
+                🏆 Challenge {NAMA_BULAN[challenge.bulan - 1]}
               </h2>
             </div>
-            <p className="mt-1 text-sm text-amber-900">
-              Jual {challenge.target_jualan} pakej bulan ini, dapat bonus RM
-              {Number(challenge.bonus_rm).toFixed(2)}!
+            <p className="mt-1 text-sm font-bold text-amber-900">
+              Jual {challenge.target_jualan} Langganan
             </p>
+            <div className="mt-3">
+              <div className="text-xs font-bold uppercase tracking-wide text-amber-700">Bonus</div>
+              <div className="font-display text-4xl font-extrabold text-amber-600">
+                RM{Number(challenge.bonus_rm).toFixed(2)}
+              </div>
+            </div>
             <div className="mt-3">
               <div className="flex items-center justify-between text-xs font-bold text-amber-900">
                 <span>
