@@ -71,6 +71,7 @@ function AffiliateDashboardPage() {
   const [challenge, setChallenge] = useState<Challenge | null>(null);
   const [jualanBulanIni, setJualanBulanIni] = useState<number>(0);
   const [metrikBulan, setMetrikBulan] = useState<{ klik: number; jualan: number; komisen: number }>({ klik: 0, jualan: 0, komisen: 0 });
+  const [metrikBulanLepas, setMetrikBulanLepas] = useState<{ jualan: number; komisen: number }>({ jualan: 0, komisen: 0 });
   const [tipHariIni, setTipHariIni] = useState<string | null>(null);
 
   useEffect(() => {
@@ -132,11 +133,26 @@ function AffiliateDashboardPage() {
         .eq("affiliate_id", (a as Affiliate).id)
         .gte("created_at", firstDay);
 
+      // Metrik bulan lepas (untuk trend arrow)
+      const firstDayLepas = new Date(tahun, bulan - 2, 1).toISOString();
+      const { data: jBulanLepas } = await supabase
+        .from("affiliate_jualan")
+        .select("komisyen")
+        .eq("affiliate_id", (a as Affiliate).id)
+        .gte("created_at", firstDayLepas)
+        .lt("created_at", firstDay);
+      const jualanLepasCount = jBulanLepas?.length ?? 0;
+      const komisenLepasSum = (jBulanLepas ?? []).reduce(
+        (acc, row: { komisyen: number | null }) => acc + Number(row.komisyen ?? 0),
+        0,
+      );
+
       setMetrikBulan({
         klik: klikCount ?? 0,
         jualan: jualanCount,
         komisen: komisenSum,
       });
+      setMetrikBulanLepas({ jualan: jualanLepasCount, komisen: komisenLepasSum });
       setJualanBulanIni(jualanCount);
 
       // Challenge bulan ini
