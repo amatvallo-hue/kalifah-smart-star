@@ -76,6 +76,23 @@ function isInactive(ts: string | null | undefined): boolean {
   return diffDays > 14;
 }
 
+function platformLabel(raw: string): { icon: string; label: string } {
+  switch (raw) {
+    case "WhatsApp/Telegram":
+      return { icon: "📱", label: "WhatsApp" };
+    case "Instagram/Facebook":
+      return { icon: "📘", label: "Facebook" };
+    case "TikTok":
+      return { icon: "🎵", label: "TikTok" };
+    case "Threads":
+      return { icon: "🧵", label: "Threads" };
+    case "Lain-lain":
+      return { icon: "✨", label: "Lain-lain" };
+    default:
+      return { icon: "🔗", label: raw };
+  }
+}
+
 function AdminAffiliates() {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
@@ -359,14 +376,17 @@ function AdminAffiliates() {
                   </TableCell>
                   <TableCell>
                     <div className="flex flex-wrap gap-1">
-                      {(r.platform_promosi ?? []).map((p) => (
-                        <span
-                          key={p}
-                          className="rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground"
-                        >
-                          {p}
-                        </span>
-                      ))}
+                      {(r.platform_promosi ?? []).map((p) => {
+                        const mapped = platformLabel(p);
+                        return (
+                          <span
+                            key={p}
+                            className="rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground"
+                          >
+                            {mapped.icon} {mapped.label}
+                          </span>
+                        );
+                      })}
                       {(!r.platform_promosi || r.platform_promosi.length === 0) && (
                         <span className="text-xs text-muted-foreground">-</span>
                       )}
