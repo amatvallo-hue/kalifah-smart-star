@@ -63,6 +63,7 @@ function AffiliateDashboardPage() {
   const [copied, setCopied] = useState(false);
   const [challenge, setChallenge] = useState<Challenge | null>(null);
   const [jualanBulanIni, setJualanBulanIni] = useState<number>(0);
+  const [metrikBulan, setMetrikBulan] = useState<{ klik: number; jualan: number; komisen: number }>({ klik: 0, jualan: 0, komisen: 0 });
 
   useEffect(() => {
     if (authLoading) return;
