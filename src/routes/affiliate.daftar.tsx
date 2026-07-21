@@ -11,7 +11,7 @@ export const Route = createFileRoute("/affiliate/daftar")({
       {
         name: "description",
         content:
-          "Sertai program affiliate Kalifah.my dan dapatkan komisyen 10% untuk setiap jualan.",
+          "Sertai program affiliate Kalifah.my dan dapatkan komisyen 30% untuk setiap jualan.",
       },
     ],
   }),
@@ -154,7 +154,7 @@ function DaftarAffiliatePage() {
             <p className="mt-4 text-muted-foreground">
               Anda kini adalah affiliate Kalifah.my. Kongsikan pautan unik anda di
               media sosial atau WhatsApp dan dapatkan komisyen{" "}
-              <strong>10%</strong> bagi setiap jualan.
+              <strong>30%</strong> bagi setiap jualan.
             </p>
 
             <div className="mt-6 rounded-2xl bg-muted/40 p-4">
