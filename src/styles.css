@@ -247,3 +247,32 @@
   animation: balloon-float 4.5s ease-in-out infinite;
 }
 
+/* Inline fraction markup used in MPT4 Matematik question text */
+.frac {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  font-size: 0.85em;
+  line-height: 1;
+  margin: 0 0.15em;
+  text-align: center;
+}
+
+.frac .fn,
+.frac .fd {
+  display: block;
+  padding: 0 0.15em;
+}
+
+.frac .fn {
+  border-bottom: 1px solid currentColor;
+  margin-bottom: 1px;
+}
+
+.frac .fd {
+  margin-top: 1px;
+}
+
+
