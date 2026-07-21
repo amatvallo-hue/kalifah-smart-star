@@ -42,8 +42,8 @@ import { Route as UjianPercumaKeputusanReportTokenRouteImport } from './routes/u
 import { Route as PreviewDarjahIdScoreRouteImport } from './routes/preview.$darjahId_.score'
 import { Route as DarjahDarjahIdPercubaanMpt4RouteImport } from './routes/darjah.$darjahId_.percubaan-mpt4'
 import { Route as DarjahDarjahIdSubjekIdRouteImport } from './routes/darjah.$darjahId_.$subjekId'
-import { Route as AdminAffiliatesDashboardRouteImport } from './routes/admin_.affiliates.dashboard'
-import { Route as AdminAffiliatesIdRouteImport } from './routes/admin_.affiliates.$id'
+import { Route as AdminAffiliatesDashboardRouteImport } from './routes/admin_.affiliates_.dashboard'
+import { Route as AdminAffiliatesIdRouteImport } from './routes/admin_.affiliates_.$id'
 import { Route as DarjahDarjahIdPercubaanMpt4SubjekIdRouteImport } from './routes/darjah.$darjahId_.percubaan-mpt4_.$subjekId'
 import { Route as DarjahDarjahIdSubjekIdNotaRingkasRouteImport } from './routes/darjah.$darjahId_.$subjekId_.nota-ringkas'
 import { Route as DarjahDarjahIdSubjekIdLatihanBerpanduPreviewRouteImport } from './routes/darjah.$darjahId_.$subjekId_.latihan-berpandu-preview'
@@ -227,14 +227,14 @@ const DarjahDarjahIdSubjekIdRoute = DarjahDarjahIdSubjekIdRouteImport.update({
 } as any)
 const AdminAffiliatesDashboardRoute =
   AdminAffiliatesDashboardRouteImport.update({
-    id: '/dashboard',
-    path: '/dashboard',
-    getParentRoute: () => AdminAffiliatesRoute,
+    id: '/admin_/affiliates_/dashboard',
+    path: '/admin/affiliates/dashboard',
+    getParentRoute: () => rootRouteImport,
   } as any)
 const AdminAffiliatesIdRoute = AdminAffiliatesIdRouteImport.update({
-  id: '/$id',
-  path: '/$id',
-  getParentRoute: () => AdminAffiliatesRoute,
+  id: '/admin_/affiliates_/$id',
+  path: '/admin/affiliates/$id',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const DarjahDarjahIdPercubaanMpt4SubjekIdRoute =
   DarjahDarjahIdPercubaanMpt4SubjekIdRouteImport.update({
@@ -322,7 +322,7 @@ export interface FileRoutesByFullPath {
   '/pra-kalifah': typeof PraKalifahRoute
   '/reset-password': typeof ResetPasswordRoute
   '/ujian-percuma': typeof UjianPercumaRoute
-  '/admin/affiliates': typeof AdminAffiliatesRouteWithChildren
+  '/admin/affiliates': typeof AdminAffiliatesRoute
   '/admin/challenge': typeof AdminChallengeRoute
   '/affiliate/daftar': typeof AffiliateDaftarRoute
   '/affiliate/dashboard': typeof AffiliateDashboardRoute
@@ -371,7 +371,7 @@ export interface FileRoutesByTo {
   '/pra-kalifah': typeof PraKalifahRoute
   '/reset-password': typeof ResetPasswordRoute
   '/ujian-percuma': typeof UjianPercumaRoute
-  '/admin/affiliates': typeof AdminAffiliatesRouteWithChildren
+  '/admin/affiliates': typeof AdminAffiliatesRoute
   '/admin/challenge': typeof AdminChallengeRoute
   '/affiliate/daftar': typeof AffiliateDaftarRoute
   '/affiliate/dashboard': typeof AffiliateDashboardRoute
@@ -421,7 +421,7 @@ export interface FileRoutesById {
   '/pra-kalifah': typeof PraKalifahRoute
   '/reset-password': typeof ResetPasswordRoute
   '/ujian-percuma': typeof UjianPercumaRoute
-  '/admin_/affiliates': typeof AdminAffiliatesRouteWithChildren
+  '/admin_/affiliates': typeof AdminAffiliatesRoute
   '/admin_/challenge': typeof AdminChallengeRoute
   '/affiliate/daftar': typeof AffiliateDaftarRoute
   '/affiliate/dashboard': typeof AffiliateDashboardRoute
@@ -437,8 +437,8 @@ export interface FileRoutesById {
   '/pra-kalifah_/$bidang': typeof PraKalifahBidangRoute
   '/preview/$darjahId': typeof PreviewDarjahIdRoute
   '/preview/nama': typeof PreviewNamaRoute
-  '/admin_/affiliates/$id': typeof AdminAffiliatesIdRoute
-  '/admin_/affiliates/dashboard': typeof AdminAffiliatesDashboardRoute
+  '/admin_/affiliates_/$id': typeof AdminAffiliatesIdRoute
+  '/admin_/affiliates_/dashboard': typeof AdminAffiliatesDashboardRoute
   '/darjah/$darjahId_/$subjekId': typeof DarjahDarjahIdSubjekIdRoute
   '/darjah/$darjahId_/percubaan-mpt4': typeof DarjahDarjahIdPercubaanMpt4Route
   '/preview/$darjahId_/score': typeof PreviewDarjahIdScoreRoute
@@ -586,8 +586,8 @@ export interface FileRouteTypes {
     | '/pra-kalifah_/$bidang'
     | '/preview/$darjahId'
     | '/preview/nama'
-    | '/admin_/affiliates/$id'
-    | '/admin_/affiliates/dashboard'
+    | '/admin_/affiliates_/$id'
+    | '/admin_/affiliates_/dashboard'
     | '/darjah/$darjahId_/$subjekId'
     | '/darjah/$darjahId_/percubaan-mpt4'
     | '/preview/$darjahId_/score'
@@ -620,7 +620,7 @@ export interface RootRouteChildren {
   PraKalifahRoute: typeof PraKalifahRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   UjianPercumaRoute: typeof UjianPercumaRoute
-  AdminAffiliatesRoute: typeof AdminAffiliatesRouteWithChildren
+  AdminAffiliatesRoute: typeof AdminAffiliatesRoute
   AdminChallengeRoute: typeof AdminChallengeRoute
   AffiliateDaftarRoute: typeof AffiliateDaftarRoute
   AffiliateDashboardRoute: typeof AffiliateDashboardRoute
@@ -636,6 +636,8 @@ export interface RootRouteChildren {
   PraKalifahBidangRoute: typeof PraKalifahBidangRoute
   PreviewDarjahIdRoute: typeof PreviewDarjahIdRoute
   PreviewNamaRoute: typeof PreviewNamaRoute
+  AdminAffiliatesIdRoute: typeof AdminAffiliatesIdRoute
+  AdminAffiliatesDashboardRoute: typeof AdminAffiliatesDashboardRoute
   DarjahDarjahIdSubjekIdRoute: typeof DarjahDarjahIdSubjekIdRoute
   DarjahDarjahIdPercubaanMpt4Route: typeof DarjahDarjahIdPercubaanMpt4Route
   PreviewDarjahIdScoreRoute: typeof PreviewDarjahIdScoreRoute
@@ -888,19 +890,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DarjahDarjahIdSubjekIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin_/affiliates/dashboard': {
-      id: '/admin_/affiliates/dashboard'
-      path: '/dashboard'
+    '/admin_/affiliates_/dashboard': {
+      id: '/admin_/affiliates_/dashboard'
+      path: '/admin/affiliates/dashboard'
       fullPath: '/admin/affiliates/dashboard'
       preLoaderRoute: typeof AdminAffiliatesDashboardRouteImport
-      parentRoute: typeof AdminAffiliatesRoute
+      parentRoute: typeof rootRouteImport
     }
-    '/admin_/affiliates/$id': {
-      id: '/admin_/affiliates/$id'
-      path: '/$id'
+    '/admin_/affiliates_/$id': {
+      id: '/admin_/affiliates_/$id'
+      path: '/admin/affiliates/$id'
       fullPath: '/admin/affiliates/$id'
       preLoaderRoute: typeof AdminAffiliatesIdRouteImport
-      parentRoute: typeof AdminAffiliatesRoute
+      parentRoute: typeof rootRouteImport
     }
     '/darjah/$darjahId_/percubaan-mpt4_/$subjekId': {
       id: '/darjah/$darjahId_/percubaan-mpt4_/$subjekId'
@@ -989,20 +991,6 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface AdminAffiliatesRouteChildren {
-  AdminAffiliatesIdRoute: typeof AdminAffiliatesIdRoute
-  AdminAffiliatesDashboardRoute: typeof AdminAffiliatesDashboardRoute
-}
-
-const AdminAffiliatesRouteChildren: AdminAffiliatesRouteChildren = {
-  AdminAffiliatesIdRoute: AdminAffiliatesIdRoute,
-  AdminAffiliatesDashboardRoute: AdminAffiliatesDashboardRoute,
-}
-
-const AdminAffiliatesRouteWithChildren = AdminAffiliatesRoute._addFileChildren(
-  AdminAffiliatesRouteChildren,
-)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
@@ -1016,7 +1004,7 @@ const rootRouteChildren: RootRouteChildren = {
   PraKalifahRoute: PraKalifahRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   UjianPercumaRoute: UjianPercumaRoute,
-  AdminAffiliatesRoute: AdminAffiliatesRouteWithChildren,
+  AdminAffiliatesRoute: AdminAffiliatesRoute,
   AdminChallengeRoute: AdminChallengeRoute,
   AffiliateDaftarRoute: AffiliateDaftarRoute,
   AffiliateDashboardRoute: AffiliateDashboardRoute,
@@ -1032,6 +1020,8 @@ const rootRouteChildren: RootRouteChildren = {
   PraKalifahBidangRoute: PraKalifahBidangRoute,
   PreviewDarjahIdRoute: PreviewDarjahIdRoute,
   PreviewNamaRoute: PreviewNamaRoute,
+  AdminAffiliatesIdRoute: AdminAffiliatesIdRoute,
+  AdminAffiliatesDashboardRoute: AdminAffiliatesDashboardRoute,
   DarjahDarjahIdSubjekIdRoute: DarjahDarjahIdSubjekIdRoute,
   DarjahDarjahIdPercubaanMpt4Route: DarjahDarjahIdPercubaanMpt4Route,
   PreviewDarjahIdScoreRoute: PreviewDarjahIdScoreRoute,
