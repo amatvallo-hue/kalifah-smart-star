@@ -90,6 +90,11 @@ function AdminAffiliates() {
 
   const [rows, setRows] = useState<AffRow[]>([]);
   const [jualanCounts, setJualanCounts] = useState<Record<string, number>>({});
+  const [komisenBulanIni, setKomisenBulanIni] = useState(0);
+  const [jualanBulanIniCount, setJualanBulanIniCount] = useState(0);
+  const [klikHariIniCount, setKlikHariIniCount] = useState(0);
+  const [jualanHariIniCount, setJualanHariIniCount] = useState(0);
+  const [affiliateBaruHariIni, setAffiliateBaruHariIni] = useState(0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -103,9 +108,18 @@ function AdminAffiliates() {
       const affiliates = (affData ?? []) as AffRow[];
       setRows(affiliates);
 
+      const now = new Date();
+      const firstDay = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+      const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString();
+
+      setAffiliateBaruHariIni(
+        affiliates.filter((a) => {
+          const c = (a as unknown as { created_at?: string }).created_at;
+          return c ? c >= todayStart : false;
+        }).length,
+      );
+
       if (affiliates.length > 0) {
-        const now = new Date();
-        const firstDay = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
         const ids = affiliates.map((a) => a.id);
         const { data: jualanData } = await supabase
           .from("affiliate_jualan")
@@ -120,9 +134,40 @@ function AdminAffiliates() {
         setJualanCounts(counts);
       }
 
+      const { data: jBulanAll } = await supabase
+        .from("affiliate_jualan")
+        .select("komisyen")
+        .gte("created_at", firstDay);
+      const jBulanRows = (jBulanAll ?? []) as { komisyen: number | null }[];
+      setJualanBulanIniCount(jBulanRows.length);
+      setKomisenBulanIni(
+        jBulanRows.reduce((acc, r) => acc + Number(r.komisyen ?? 0), 0),
+      );
+
+      const { count: klikToday } = await supabase
+        .from("affiliate_klik_log")
+        .select("*", { count: "exact", head: true })
+        .gte("created_at", todayStart);
+      setKlikHariIniCount(klikToday ?? 0);
+
+      const { count: jualanToday } = await supabase
+        .from("affiliate_jualan")
+        .select("*", { count: "exact", head: true })
+        .gte("created_at", todayStart);
+      setJualanHariIniCount(jualanToday ?? 0);
+
       setLoading(false);
     })();
   }, []);
+
+  const aktifCount = useMemo(
+    () => rows.filter((r) => !isInactive(r.last_klik_at)).length,
+    [rows],
+  );
+  const conversionHariIni =
+    klikHariIniCount > 0
+      ? ((jualanHariIniCount / klikHariIniCount) * 100).toFixed(1) + "%"
+      : "0%";
 
   const totals = useMemo(() => {
     const totalAffiliates = rows.length;
@@ -212,10 +257,20 @@ function AdminAffiliates() {
 
       {/* Stat cards */}
       <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Total Affiliate" value={String(totals.totalAffiliates)} />
-        <StatCard label="Total Komisyen Terkumpul" value={rm(totals.totalKomisyen)} />
-        <StatCard label="Total Dibayar" value={rm(totals.totalDibayar)} />
-        <StatCard label="Belum Dibayar" value={rm(totals.belumDibayar)} highlight />
+        <StatCard label="👥 Affiliate Aktif" value={`${aktifCount} / ${rows.length}`} />
+        <StatCard label="💰 Komisen Bulan Ini" value={rm(komisenBulanIni)} />
+        <StatCard label="📚 Jualan Bulan Ini" value={String(jualanBulanIniCount)} />
+        <StatCard label="⏳ Pending Payout" value={rm(totals.belumDibayar)} highlight />
+      </div>
+
+      {/* Prestasi Hari Ini */}
+      <div className="mt-6">
+        <h2 className="mb-3 font-display text-lg font-extrabold">Prestasi Hari Ini</h2>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <StatCard label="Klik Hari Ini" value={String(klikHariIniCount)} />
+          <StatCard label="Conversion" value={conversionHariIni} />
+          <StatCard label="Affiliate Baru" value={String(affiliateBaruHariIni)} />
+        </div>
       </div>
 
       <div className="mt-6 overflow-hidden rounded-2xl border border-border bg-card">
