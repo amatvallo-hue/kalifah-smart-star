@@ -25,6 +25,7 @@ interface DarjahStats {
   bilSoalan: number;
   skorPurata: number;
   bilAktiviti: number;
+  bilSoalanMpt4: number;
 }
 
 interface MingguStats {
@@ -116,6 +117,7 @@ function DarjahDashboard() {
         bil_soalan: number | string;
         purata_skor: number | string | null;
         bil_aktiviti: number | string | null;
+        bil_soalan_mpt4: number | string | null;
       }>;
 
       const nextMap: Record<number, DarjahStats> = {};
@@ -125,6 +127,7 @@ function DarjahDashboard() {
           bilSoalan: 0,
           skorPurata: 0,
           bilAktiviti: 0,
+          bilSoalanMpt4: 0,
         };
       }
       for (const r of rows) {
@@ -135,6 +138,7 @@ function DarjahDashboard() {
           bilSoalan: Number(r.bil_soalan) || 0,
           skorPurata: Number(r.purata_skor) || 0,
           bilAktiviti: Number(r.bil_aktiviti) || 0,
+          bilSoalanMpt4: Number(r.bil_soalan_mpt4) || 0,
         };
       }
 
@@ -473,6 +477,14 @@ function DarjahCard({
               value={stats ? stats.bilSoalan.toLocaleString("ms-MY") : "—"}
             />
           </div>
+
+          {stats && stats.bilSoalanMpt4 > 0 && (
+            <StatChip
+              icon={<Trophy className="h-3.5 w-3.5" />}
+              label="Soalan MPT4"
+              value={stats.bilSoalanMpt4.toLocaleString("ms-MY")}
+            />
+          )}
 
           {/* Skor purata — hanya untuk akaun anak */}
           {isChild && (
