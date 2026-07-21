@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { Loader2, ShieldAlert, Eye, MessageCircle, BarChart3, Wallet } from "lucide-react";
+import { Loader2, ShieldAlert, MessageCircle, BarChart3, Wallet, Search } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { SiteHeader } from "@/components/SiteHeader";
@@ -57,14 +57,8 @@ type AffRow = {
   created_at?: string | null;
 };
 
-type JualanRow = {
-  id: string;
-  created_at: string | null;
-  produk?: string | null;
-  jumlah_bayar: number | null;
-  komisyen: number | null;
-  status_bayar: string | null;
-};
+
+
 
 function waLink(phone: string | null | undefined): string | null {
   if (!phone) return null;
@@ -165,25 +159,13 @@ function AdminAffiliates() {
   const [jualanHariIniCount, setJualanHariIniCount] = useState(0);
   const [affiliateBaruHariIni, setAffiliateBaruHariIni] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [detailAff, setDetailAff] = useState<AffRow | null>(null);
-  const [detailJualan, setDetailJualan] = useState<JualanRow[] | null>(null);
-  const [detailJualanLoading, setDetailJualanLoading] = useState(false);
   const [prestasiAff, setPrestasiAff] = useState<AffRow | null>(null);
   const [prestasiData, setPrestasiData] = useState<{ date: string; klik: number; jualan: number; komisen: number }[] | null>(null);
   const [prestasiLoading, setPrestasiLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterMode, setFilterMode] = useState<"semua" | "aktif" | "belum_aktif" | "ada_pending" | "tiada_jualan" | "top_seller" | "baru_daftar">("semua");
 
-  const openDetail = async (r: AffRow) => {
-    setDetailAff(r);
-    setDetailJualan(null);
-    setDetailJualanLoading(true);
-    const { data } = await supabase
-      .from("affiliate_jualan")
-      .select("id, created_at, produk, jumlah_bayar, komisyen, status_bayar")
-      .eq("affiliate_id", r.id)
-      .order("created_at", { ascending: false });
-    setDetailJualan((data ?? []) as JualanRow[]);
-    setDetailJualanLoading(false);
-  };
+
 
   const openPrestasi = async (r: AffRow) => {
     setPrestasiAff(r);
@@ -303,6 +285,39 @@ function AdminAffiliates() {
     return { totalAffiliates, totalKomisyen, totalDibayar, belumDibayar };
   }, [rows]);
 
+  const filteredRows = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    const topSellerIds = new Set(
+      [...rows]
+        .filter((r) => (r.total_jualan ?? 0) > 0)
+        .sort((a, b) => (b.total_jualan ?? 0) - (a.total_jualan ?? 0))
+        .slice(0, 3)
+        .map((r) => r.id),
+    );
+    const now = Date.now();
+    return rows.filter((r) => {
+      if (q) {
+        const code = (r.custom_ref_code ?? r.ref_code ?? "").toLowerCase();
+        const hay = `${r.nama ?? ""} ${r.email ?? ""} ${code}`.toLowerCase();
+        if (!hay.includes(q)) return false;
+      }
+      const createdAt = r.created_at ? new Date(r.created_at).getTime() : 0;
+      const ageDays = createdAt ? (now - createdAt) / (1000 * 60 * 60 * 24) : Infinity;
+      const isBaru = ageDays <= 7;
+      switch (filterMode) {
+        case "semua": return true;
+        case "aktif": return !isInactive(r.last_klik_at) && !isBaru;
+        case "belum_aktif": return isInactive(r.last_klik_at) && !isBaru;
+        case "ada_pending": return (r.total_komisyen ?? 0) - (r.total_dibayar ?? 0) > 0;
+        case "tiada_jualan": return (r.total_jualan ?? 0) === 0;
+        case "top_seller": return topSellerIds.has(r.id);
+        case "baru_daftar": return isBaru;
+        default: return true;
+      }
+    });
+  }, [rows, searchQuery, filterMode]);
+
+
   const markPaid = async (row: AffRow) => {
     const baki = Number(row.total_komisyen || 0) - Number(row.total_dibayar || 0);
     if (baki <= 0) {
@@ -399,6 +414,49 @@ function AdminAffiliates() {
         </div>
       </div>
 
+      {/* Search + filter */}
+      <div className="mt-6 rounded-2xl border border-border bg-card p-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="relative flex-1 sm:max-w-md">
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Cari affiliate..."
+              className="w-full rounded-lg border border-border bg-background py-2 pl-9 pr-3 text-sm focus:border-primary focus:outline-none"
+            />
+          </div>
+          <div className="text-xs text-muted-foreground">
+            Menunjukkan {filteredRows.length} daripada {rows.length} affiliate
+          </div>
+        </div>
+        <div className="mt-3 flex flex-wrap gap-2">
+          {([
+            ["semua", "Semua"],
+            ["aktif", "🟢 Aktif"],
+            ["belum_aktif", "🔴 Belum Aktif"],
+            ["ada_pending", "⏳ Ada Pending"],
+            ["tiada_jualan", "📭 Tiada Jualan"],
+            ["top_seller", "🏆 Top Seller"],
+            ["baru_daftar", "🟡 Baru Daftar"],
+          ] as const).map(([key, label]) => (
+            <button
+              key={key}
+              type="button"
+              onClick={() => setFilterMode(key)}
+              className={`rounded-full px-3 py-1 text-xs font-bold transition ${
+                filterMode === key
+                  ? "bg-primary text-primary-foreground"
+                  : "border border-border bg-card text-foreground hover:bg-muted"
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      </div>
+
       <div className="mt-6 overflow-hidden rounded-2xl border border-border bg-card">
         <Table>
           <TableHeader>
@@ -418,17 +476,21 @@ function AdminAffiliates() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {rows.length === 0 ? (
+            {filteredRows.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={12} className="py-6 text-center text-muted-foreground">
-                  Tiada affiliate berdaftar lagi.
+                  {rows.length === 0 ? "Tiada affiliate berdaftar lagi." : "Tiada affiliate sepadan dengan carian/tapisan."}
                 </TableCell>
               </TableRow>
             ) : (
-              rows.map((r) => (
+              filteredRows.map((r) => (
                 <TableRow key={r.id}>
                   <TableCell>
-                    <div className="flex items-center gap-3">
+                    <Link
+                      to="/admin_/affiliates/$id"
+                      params={{ id: r.id }}
+                      className="group flex items-center gap-3"
+                    >
                       {r.avatar_url ? (
                         <img
                           src={r.avatar_url}
@@ -441,12 +503,12 @@ function AdminAffiliates() {
                         </div>
                       )}
                       <div className="flex flex-col">
-                        <span className="font-bold">{r.nama}</span>
+                        <span className="font-bold text-foreground group-hover:text-primary group-hover:underline">{r.nama}</span>
                         <span className="font-mono text-xs text-muted-foreground">
                           {r.custom_ref_code ?? r.ref_code}
                         </span>
                       </div>
-                    </div>
+                    </Link>
                   </TableCell>
                   <TableCell>
                     {(() => {
@@ -512,14 +574,7 @@ function AdminAffiliates() {
                       const wa = waLink(r.no_telefon);
                       return (
                         <div className="flex gap-1">
-                          <button
-                            type="button"
-                            title="Detail affiliate"
-                            onClick={() => openDetail(r)}
-                            className="rounded border border-border bg-card p-2 text-foreground hover:bg-muted"
-                          >
-                            <Eye className="h-4 w-4" />
-                          </button>
+
                           {wa ? (
                             <a
                               href={wa}
@@ -568,82 +623,8 @@ function AdminAffiliates() {
         </Table>
       </div>
 
-      <Dialog open={!!detailAff} onOpenChange={(o) => { if (!o) { setDetailAff(null); setDetailJualan(null); } }}>
-        <DialogContent className="max-h-[85vh] max-w-2xl overflow-y-auto">
-          {detailAff && (
-            <>
-              <DialogHeader>
-                <DialogTitle>{detailAff.nama}</DialogTitle>
-              </DialogHeader>
-              <div className="mt-2 grid grid-cols-1 gap-3 text-sm sm:grid-cols-2">
-                <div><span className="text-muted-foreground">Email:</span> <span className="font-medium">{detailAff.email}</span></div>
-                <div><span className="text-muted-foreground">Telefon:</span> <span className="font-medium">{detailAff.no_telefon ?? "-"}</span></div>
-                <div><span className="text-muted-foreground">Kod:</span> <span className="font-mono">{detailAff.custom_ref_code ?? detailAff.ref_code}</span></div>
-                <div><span className="text-muted-foreground">Bank:</span> <span className="font-medium">{detailAff.nama_bank || "-"}</span></div>
-                <div><span className="text-muted-foreground">No. Akaun:</span> <span className="font-mono">{detailAff.no_akaun_bank || "-"}</span></div>
-                <div><span className="text-muted-foreground">Pemilik Akaun:</span> <span className="font-medium">{detailAff.nama_pemilik_bank ?? "-"}</span></div>
-                <div className="sm:col-span-2">
-                  <span className="text-muted-foreground">Platform Promosi:</span>{" "}
-                  <span className="font-medium">
-                    {(detailAff.platform_promosi ?? []).length > 0
-                      ? (detailAff.platform_promosi ?? []).map((p) => {
-                          const m = platformLabel(p);
-                          return `${m.icon} ${m.label}`;
-                        }).join(", ")
-                      : "-"}
-                  </span>
-                </div>
-              </div>
 
-              <div className="mt-4">
-                <h3 className="mb-2 font-bold">Semua Jualan</h3>
-                {detailJualanLoading ? (
-                  <div className="py-4 text-center text-muted-foreground">
-                    <Loader2 className="mx-auto h-4 w-4 animate-spin" />
-                  </div>
-                ) : (detailJualan?.length ?? 0) === 0 ? (
-                  <div className="py-4 text-center text-sm text-muted-foreground">Tiada jualan.</div>
-                ) : (
-                  <div className="overflow-hidden rounded border border-border">
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>Tarikh</TableHead>
-                          <TableHead>Produk</TableHead>
-                          <TableHead className="text-right">Bayar</TableHead>
-                          <TableHead className="text-right">Komisyen</TableHead>
-                          <TableHead>Status</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {(detailJualan ?? []).map((j) => (
-                          <TableRow key={j.id}>
-                            <TableCell className="text-xs">{fmtDateTimeMY(j.created_at)}</TableCell>
-                            <TableCell className="text-xs">{j.produk ?? "-"}</TableCell>
-                            <TableCell className="text-right text-xs">{rm(Number(j.jumlah_bayar ?? 0))}</TableCell>
-                            <TableCell className="text-right text-xs">{rm(Number(j.komisyen ?? 0))}</TableCell>
-                            <TableCell className="text-xs">{j.status_bayar ?? "-"}</TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </div>
-                )}
-              </div>
 
-              <div className="mt-4 flex justify-end">
-                <button
-                  type="button"
-                  onClick={() => { setDetailAff(null); setDetailJualan(null); }}
-                  className="rounded border border-border bg-card px-4 py-2 text-sm font-bold hover:bg-muted"
-                >
-                  Tutup
-                </button>
-              </div>
-            </>
-          )}
-        </DialogContent>
-      </Dialog>
 
       <Dialog open={!!prestasiAff} onOpenChange={(o) => { if (!o) { setPrestasiAff(null); setPrestasiData(null); } }}>
         <DialogContent className="max-h-[85vh] max-w-3xl overflow-y-auto">
