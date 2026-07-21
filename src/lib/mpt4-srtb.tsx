@@ -639,7 +639,7 @@ function ColumnFormGrid({
             {g.type === "tolak" ? "pinjam" : "simpan"}
           </div>
           {carryRow.map((c, i) => {
-            if (c === null || c === 0 || c === ".") return <div key={i} />;
+            if (c === null || c === ".") return <div key={i} />;
             return (
               <div key={i} className="text-xs">
                 <GalusCell
@@ -647,7 +647,7 @@ function ColumnFormGrid({
                   answers={answers}
                   setAns={setAns}
                   disabled={disabled}
-                  maxLen={cellLen}
+                  maxLen={2}
                   className="!py-0.5 !text-xs bg-amber-50/50"
                 />
               </div>
