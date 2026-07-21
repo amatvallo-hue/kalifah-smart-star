@@ -90,10 +90,39 @@ function AffiliateDashboardPage() {
         .limit(50);
       setJualan((j as Jualan[]) ?? []);
 
-      // Challenge bulan ini
+      // Metrik bulan ini (shared: challenge + KPI cards)
       const now = new Date();
       const bulan = now.getMonth() + 1;
       const tahun = now.getFullYear();
+      const firstDay = new Date(tahun, bulan - 1, 1).toISOString();
+
+      // Jualan + komisen bulan ini
+      const { data: jBulan } = await supabase
+        .from("affiliate_jualan")
+        .select("komisyen")
+        .eq("affiliate_id", (a as Affiliate).id)
+        .gte("created_at", firstDay);
+      const jualanCount = jBulan?.length ?? 0;
+      const komisenSum = (jBulan ?? []).reduce(
+        (acc, row: { komisyen: number | null }) => acc + Number(row.komisyen ?? 0),
+        0,
+      );
+
+      // Klik bulan ini
+      const { count: klikCount } = await supabase
+        .from("affiliate_klik_log")
+        .select("id", { count: "exact", head: true })
+        .eq("affiliate_id", (a as Affiliate).id)
+        .gte("created_at", firstDay);
+
+      setMetrikBulan({
+        klik: klikCount ?? 0,
+        jualan: jualanCount,
+        komisen: komisenSum,
+      });
+      setJualanBulanIni(jualanCount);
+
+      // Challenge bulan ini
       const { data: ch } = await supabase
         .from("challenge_bulanan")
         .select("*")
@@ -103,13 +132,6 @@ function AffiliateDashboardPage() {
         .maybeSingle();
       if (ch) {
         setChallenge(ch as Challenge);
-        const firstDay = new Date(tahun, bulan - 1, 1).toISOString();
-        const { count } = await supabase
-          .from("affiliate_jualan")
-          .select("id", { count: "exact", head: true })
-          .eq("affiliate_id", (a as Affiliate).id)
-          .gte("created_at", firstDay);
-        setJualanBulanIni(count ?? 0);
       }
 
       setLoading(false);
