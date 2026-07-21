@@ -1,9 +1,9 @@
 import { Link, useLocation } from "@tanstack/react-router";
 
 const TABS = [
-  { to: "/admin_/affiliates/dashboard", label: "📊 Dashboard", match: "/admin/affiliates/dashboard" },
-  { to: "/admin_/affiliates", label: "👥 Affiliate", match: "/admin/affiliates" },
-  { to: "/admin_/challenge", label: "🏆 Challenge", match: "/admin/challenge" },
+  { to: "/admin/affiliates/dashboard", label: "📊 Dashboard", match: "/admin/affiliates/dashboard" },
+  { to: "/admin/affiliates", label: "👥 Affiliate", match: "/admin/affiliates" },
+  { to: "/admin/challenge", label: "🏆 Challenge", match: "/admin/challenge" },
 ] as const;
 
 export function AdminAffiliateNav() {
