@@ -309,14 +309,34 @@ function AdminAffiliates() {
           <TableBody>
             {rows.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={13} className="py-6 text-center text-muted-foreground">
+                <TableCell colSpan={12} className="py-6 text-center text-muted-foreground">
                   Tiada affiliate berdaftar lagi.
                 </TableCell>
               </TableRow>
             ) : (
               rows.map((r) => (
                 <TableRow key={r.id}>
-                  <TableCell className="font-bold">{r.nama}</TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-3">
+                      {r.avatar_url ? (
+                        <img
+                          src={r.avatar_url}
+                          alt={r.nama}
+                          className="h-9 w-9 rounded-full object-cover"
+                        />
+                      ) : (
+                        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/20 font-bold text-primary">
+                          {r.nama.charAt(0).toUpperCase()}
+                        </div>
+                      )}
+                      <div className="flex flex-col">
+                        <span className="font-bold">{r.nama}</span>
+                        <span className="font-mono text-xs text-muted-foreground">
+                          {r.custom_ref_code ?? r.ref_code}
+                        </span>
+                      </div>
+                    </div>
+                  </TableCell>
                   <TableCell>
                     {(() => {
                       const s = statusBadge(r);
@@ -328,7 +348,6 @@ function AdminAffiliates() {
                     })()}
                   </TableCell>
                   <TableCell>{r.email}</TableCell>
-                  <TableCell className="font-mono">{r.custom_ref_code ?? r.ref_code}</TableCell>
                   <TableCell className="text-right">{r.total_klik ?? 0}</TableCell>
                   <TableCell>
                     <span className={isInactive(r.last_klik_at) ? "text-amber-600" : "text-emerald-600"}>
