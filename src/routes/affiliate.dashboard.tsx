@@ -77,6 +77,37 @@ function AffiliateDashboardPage() {
   const [metrikBulan, setMetrikBulan] = useState<{ klik: number; jualan: number; komisen: number }>({ klik: 0, jualan: 0, komisen: 0 });
   const [metrikBulanLepas, setMetrikBulanLepas] = useState<{ jualan: number; komisen: number }>({ jualan: 0, komisen: 0 });
   const [tipHariIni, setTipHariIni] = useState<string | null>(null);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file || !user || !aff) return;
+    setUploadingAvatar(true);
+    try {
+      const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
+      const path = `${user.id}/avatar.${ext}`;
+      const { error: upErr } = await supabase.storage
+        .from("affiliate-avatars")
+        .upload(path, file, { upsert: true, contentType: file.type });
+      if (upErr) throw upErr;
+      const { data: pub } = supabase.storage.from("affiliate-avatars").getPublicUrl(path);
+      const publicUrl = `${pub.publicUrl}?t=${Date.now()}`;
+      const { error: updErr } = await supabase
+        .from("affiliates")
+        .update({ avatar_url: publicUrl })
+        .eq("id", aff.id);
+      if (updErr) throw updErr;
+      setAff({ ...aff, avatar_url: publicUrl });
+      toast.success("Foto profil dikemaskini");
+    } catch (err) {
+      console.error("[avatar upload]", err);
+      toast.error("Gagal muat naik foto. Cuba lagi.");
+    } finally {
+      setUploadingAvatar(false);
+    }
+  };
 
   useEffect(() => {
     if (authLoading) return;
