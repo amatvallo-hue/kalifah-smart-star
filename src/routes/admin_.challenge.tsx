@@ -93,6 +93,56 @@ function AdminChallengePage() {
     setLoading(false);
   }
 
+  async function loadRanking() {
+    setRankingLoading(true);
+    const now = new Date();
+    const bulanNow = now.getMonth() + 1;
+    const tahunNow = now.getFullYear();
+    const firstDay = new Date(tahunNow, bulanNow - 1, 1).toISOString();
+
+    const { data: chData } = await supabase
+      .from("challenge_bulanan")
+      .select("*")
+      .eq("bulan", bulanNow)
+      .eq("tahun", tahunNow)
+      .eq("aktif", true)
+      .maybeSingle();
+    const ch = (chData as Challenge | null) ?? null;
+    setActiveChallenge(ch);
+
+    if (!ch) {
+      setRanking([]);
+      setRankingLoading(false);
+      return;
+    }
+
+    const { data: jualanData } = await supabase
+      .from("affiliate_jualan")
+      .select("affiliate_id")
+      .gte("created_at", firstDay);
+
+    const counts: Record<string, number> = {};
+    for (const j of (jualanData ?? []) as { affiliate_id: string }[]) {
+      counts[j.affiliate_id] = (counts[j.affiliate_id] || 0) + 1;
+    }
+    const ids = Object.keys(counts);
+    if (ids.length === 0) {
+      setRanking([]);
+      setRankingLoading(false);
+      return;
+    }
+    const { data: affData } = await supabase
+      .from("affiliates")
+      .select("id, nama, avatar_url")
+      .in("id", ids);
+    const affs = (affData ?? []) as { id: string; nama: string; avatar_url: string | null }[];
+    const merged = affs
+      .map((a) => ({ ...a, jualan: counts[a.id] ?? 0 }))
+      .sort((a, b) => b.jualan - a.jualan);
+    setRanking(merged);
+    setRankingLoading(false);
+  }
+
   async function simpan() {
     if (bulan < 1 || bulan > 12) {
       toast.error("Bulan mesti antara 1-12");
