@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { Loader2, ShieldAlert } from "lucide-react";
+import { Loader2, ShieldAlert, Eye, MessageCircle, BarChart3, Wallet } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { SiteHeader } from "@/components/SiteHeader";
@@ -12,6 +12,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 export const Route = createFileRoute("/admin_/affiliates")({
   head: () => ({ meta: [{ title: "Admin Affiliates — Kalifah.my" }] }),
@@ -28,6 +34,8 @@ type AffRow = {
   avatar_url?: string | null;
   nama_bank: string;
   no_akaun_bank: string;
+  nama_pemilik_bank?: string | null;
+  no_telefon?: string | null;
   total_klik: number;
   total_jualan: number;
   total_komisyen: number;
@@ -36,6 +44,23 @@ type AffRow = {
   last_klik_at?: string | null;
   created_at?: string | null;
 };
+
+type JualanRow = {
+  id: string;
+  created_at: string | null;
+  produk?: string | null;
+  jumlah_bayar: number | null;
+  komisyen: number | null;
+  status_bayar: string | null;
+};
+
+function waLink(phone: string | null | undefined): string | null {
+  if (!phone) return null;
+  let digits = phone.replace(/\D/g, "");
+  if (!digits) return null;
+  if (digits.startsWith("0")) digits = "60" + digits.slice(1);
+  return `https://wa.me/${digits}`;
+}
 
 function statusBadge(r: AffRow): { label: string; className: string } {
   const now = Date.now();
@@ -128,6 +153,22 @@ function AdminAffiliates() {
   const [jualanHariIniCount, setJualanHariIniCount] = useState(0);
   const [affiliateBaruHariIni, setAffiliateBaruHariIni] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [detailAff, setDetailAff] = useState<AffRow | null>(null);
+  const [detailJualan, setDetailJualan] = useState<JualanRow[] | null>(null);
+  const [detailJualanLoading, setDetailJualanLoading] = useState(false);
+
+  const openDetail = async (r: AffRow) => {
+    setDetailAff(r);
+    setDetailJualan(null);
+    setDetailJualanLoading(true);
+    const { data } = await supabase
+      .from("affiliate_jualan")
+      .select("id, created_at, produk, jumlah_bayar, komisyen, status_bayar")
+      .eq("affiliate_id", r.id)
+      .order("created_at", { ascending: false });
+    setDetailJualan((data ?? []) as JualanRow[]);
+    setDetailJualanLoading(false);
+  };
 
   useEffect(() => {
     (async () => {
@@ -414,19 +455,142 @@ function AdminAffiliates() {
                     RM {Number(r.total_dibayar).toFixed(2)}
                   </TableCell>
                   <TableCell>
-                    <button
-                      onClick={() => markPaid(r)}
-                      className="rounded bg-amber-600 px-3 py-1 text-sm font-bold text-white hover:bg-amber-700"
-                    >
-                      Tandakan Dibayar
-                    </button>
+                    {(() => {
+                      const wa = waLink(r.no_telefon);
+                      return (
+                        <div className="flex gap-1">
+                          <button
+                            type="button"
+                            title="Detail affiliate"
+                            onClick={() => openDetail(r)}
+                            className="rounded border border-border bg-card p-2 text-foreground hover:bg-muted"
+                          >
+                            <Eye className="h-4 w-4" />
+                          </button>
+                          {wa ? (
+                            <a
+                              href={wa}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              title={`WhatsApp ${r.no_telefon}`}
+                              className="rounded border border-emerald-200 bg-emerald-50 p-2 text-emerald-700 hover:bg-emerald-100"
+                            >
+                              <MessageCircle className="h-4 w-4" />
+                            </a>
+                          ) : (
+                            <button
+                              type="button"
+                              disabled
+                              title="Tiada nombor telefon"
+                              className="cursor-not-allowed rounded border border-border bg-muted p-2 text-muted-foreground opacity-50"
+                            >
+                              <MessageCircle className="h-4 w-4" />
+                            </button>
+                          )}
+                          <button
+                            type="button"
+                            title="Prestasi (coming soon)"
+                            disabled
+                            className="cursor-not-allowed rounded border border-border bg-muted p-2 text-muted-foreground opacity-50"
+                          >
+                            <BarChart3 className="h-4 w-4" />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => markPaid(r)}
+                            title="Tandakan Dibayar"
+                            className="inline-flex items-center gap-1 rounded border border-amber-600 bg-amber-600 px-2 py-1 text-xs font-bold text-white hover:bg-amber-700"
+                          >
+                            <Wallet className="h-4 w-4" /> Bayar
+                          </button>
+                        </div>
+                      );
+                    })()}
                   </TableCell>
+
                 </TableRow>
               ))
             )}
           </TableBody>
         </Table>
       </div>
+
+      <Dialog open={!!detailAff} onOpenChange={(o) => { if (!o) { setDetailAff(null); setDetailJualan(null); } }}>
+        <DialogContent className="max-h-[85vh] max-w-2xl overflow-y-auto">
+          {detailAff && (
+            <>
+              <DialogHeader>
+                <DialogTitle>{detailAff.nama}</DialogTitle>
+              </DialogHeader>
+              <div className="mt-2 grid grid-cols-1 gap-3 text-sm sm:grid-cols-2">
+                <div><span className="text-muted-foreground">Email:</span> <span className="font-medium">{detailAff.email}</span></div>
+                <div><span className="text-muted-foreground">Telefon:</span> <span className="font-medium">{detailAff.no_telefon ?? "-"}</span></div>
+                <div><span className="text-muted-foreground">Kod:</span> <span className="font-mono">{detailAff.custom_ref_code ?? detailAff.ref_code}</span></div>
+                <div><span className="text-muted-foreground">Bank:</span> <span className="font-medium">{detailAff.nama_bank || "-"}</span></div>
+                <div><span className="text-muted-foreground">No. Akaun:</span> <span className="font-mono">{detailAff.no_akaun_bank || "-"}</span></div>
+                <div><span className="text-muted-foreground">Pemilik Akaun:</span> <span className="font-medium">{detailAff.nama_pemilik_bank ?? "-"}</span></div>
+                <div className="sm:col-span-2">
+                  <span className="text-muted-foreground">Platform Promosi:</span>{" "}
+                  <span className="font-medium">
+                    {(detailAff.platform_promosi ?? []).length > 0
+                      ? (detailAff.platform_promosi ?? []).map((p) => {
+                          const m = platformLabel(p);
+                          return `${m.icon} ${m.label}`;
+                        }).join(", ")
+                      : "-"}
+                  </span>
+                </div>
+              </div>
+
+              <div className="mt-4">
+                <h3 className="mb-2 font-bold">Semua Jualan</h3>
+                {detailJualanLoading ? (
+                  <div className="py-4 text-center text-muted-foreground">
+                    <Loader2 className="mx-auto h-4 w-4 animate-spin" />
+                  </div>
+                ) : (detailJualan?.length ?? 0) === 0 ? (
+                  <div className="py-4 text-center text-sm text-muted-foreground">Tiada jualan.</div>
+                ) : (
+                  <div className="overflow-hidden rounded border border-border">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Tarikh</TableHead>
+                          <TableHead>Produk</TableHead>
+                          <TableHead className="text-right">Bayar</TableHead>
+                          <TableHead className="text-right">Komisyen</TableHead>
+                          <TableHead>Status</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {(detailJualan ?? []).map((j) => (
+                          <TableRow key={j.id}>
+                            <TableCell className="text-xs">{fmtDateTimeMY(j.created_at)}</TableCell>
+                            <TableCell className="text-xs">{j.produk ?? "-"}</TableCell>
+                            <TableCell className="text-right text-xs">{rm(Number(j.jumlah_bayar ?? 0))}</TableCell>
+                            <TableCell className="text-right text-xs">{rm(Number(j.komisyen ?? 0))}</TableCell>
+                            <TableCell className="text-xs">{j.status_bayar ?? "-"}</TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                )}
+              </div>
+
+              <div className="mt-4 flex justify-end">
+                <button
+                  type="button"
+                  onClick={() => { setDetailAff(null); setDetailJualan(null); }}
+                  className="rounded border border-border bg-card px-4 py-2 text-sm font-bold hover:bg-muted"
+                >
+                  Tutup
+                </button>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
