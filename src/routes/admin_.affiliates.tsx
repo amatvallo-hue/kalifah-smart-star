@@ -1,9 +1,10 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { Loader2, ShieldAlert, MessageCircle, BarChart3, Wallet, Search, Trophy, AlertTriangle } from "lucide-react";
+import { Loader2, ShieldAlert, MessageCircle, BarChart3, Wallet, Search } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { SiteHeader } from "@/components/SiteHeader";
+import { AdminAffiliateNav } from "@/components/AdminAffiliateNav";
 import {
   Table,
   TableBody,
@@ -32,7 +33,7 @@ import {
 } from "recharts";
 
 export const Route = createFileRoute("/admin_/affiliates")({
-  head: () => ({ meta: [{ title: "Admin Affiliates — Kalifah.my" }] }),
+  head: () => ({ meta: [{ title: "Affiliate — Admin Kalifah.my" }] }),
   ssr: false,
   component: AdminAffiliates,
 });
@@ -57,9 +58,6 @@ type AffRow = {
   created_at?: string | null;
 };
 
-
-
-
 function waLink(phone: string | null | undefined): string | null {
   if (!phone) return null;
   let digits = phone.replace(/\D/g, "");
@@ -79,10 +77,6 @@ function statusBadge(r: AffRow): { label: string; className: string } {
     return { label: "🟢 Aktif", className: "bg-emerald-100 text-emerald-700" };
   }
   return { label: "🔴 Tidak Aktif", className: "bg-red-100 text-red-700" };
-}
-
-function rm(ringgit: number) {
-  return `RM ${(ringgit ?? 0).toFixed(2)}`;
 }
 
 function fmtDateTimeMY(ts: string | null | undefined): string {
@@ -170,19 +164,12 @@ function AdminAffiliates() {
 
   const [rows, setRows] = useState<AffRow[]>([]);
   const [jualanCounts, setJualanCounts] = useState<Record<string, number>>({});
-  const [komisenBulanIni, setKomisenBulanIni] = useState(0);
-  const [jualanBulanIniCount, setJualanBulanIniCount] = useState(0);
-  const [klikHariIniCount, setKlikHariIniCount] = useState(0);
-  const [jualanHariIniCount, setJualanHariIniCount] = useState(0);
-  const [affiliateBaruHariIni, setAffiliateBaruHariIni] = useState(0);
   const [loading, setLoading] = useState(true);
   const [prestasiAff, setPrestasiAff] = useState<AffRow | null>(null);
   const [prestasiData, setPrestasiData] = useState<{ date: string; klik: number; jualan: number; komisen: number }[] | null>(null);
   const [prestasiLoading, setPrestasiLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterMode, setFilterMode] = useState<"semua" | "aktif" | "belum_aktif" | "ada_pending" | "tiada_jualan" | "top_seller" | "baru_daftar">("semua");
-
-
 
   const openPrestasi = async (r: AffRow) => {
     setPrestasiAff(r);
@@ -235,14 +222,6 @@ function AdminAffiliates() {
 
       const now = new Date();
       const firstDay = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
-      const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString();
-
-      setAffiliateBaruHariIni(
-        affiliates.filter((a) => {
-          const c = (a as unknown as { created_at?: string }).created_at;
-          return c ? c >= todayStart : false;
-        }).length,
-      );
 
       if (affiliates.length > 0) {
         const ids = affiliates.map((a) => a.id);
@@ -259,48 +238,9 @@ function AdminAffiliates() {
         setJualanCounts(counts);
       }
 
-      const { data: jBulanAll } = await supabase
-        .from("affiliate_jualan")
-        .select("komisyen")
-        .gte("created_at", firstDay);
-      const jBulanRows = (jBulanAll ?? []) as { komisyen: number | null }[];
-      setJualanBulanIniCount(jBulanRows.length);
-      setKomisenBulanIni(
-        jBulanRows.reduce((acc, r) => acc + Number(r.komisyen ?? 0), 0),
-      );
-
-      const { count: klikToday } = await supabase
-        .from("affiliate_klik_log")
-        .select("*", { count: "exact", head: true })
-        .gte("created_at", todayStart);
-      setKlikHariIniCount(klikToday ?? 0);
-
-      const { count: jualanToday } = await supabase
-        .from("affiliate_jualan")
-        .select("*", { count: "exact", head: true })
-        .gte("created_at", todayStart);
-      setJualanHariIniCount(jualanToday ?? 0);
-
       setLoading(false);
     })();
   }, []);
-
-  const aktifCount = useMemo(
-    () => rows.filter((r) => !isInactive(r.last_klik_at)).length,
-    [rows],
-  );
-  const conversionHariIni =
-    klikHariIniCount > 0
-      ? ((jualanHariIniCount / klikHariIniCount) * 100).toFixed(1) + "%"
-      : "0%";
-
-  const totals = useMemo(() => {
-    const totalAffiliates = rows.length;
-    const totalKomisyen = rows.reduce((sum, r) => sum + (r.total_komisyen ?? 0), 0);
-    const totalDibayar = rows.reduce((sum, r) => sum + (r.total_dibayar ?? 0), 0);
-    const belumDibayar = totalKomisyen - totalDibayar;
-    return { totalAffiliates, totalKomisyen, totalDibayar, belumDibayar };
-  }, [rows]);
 
   const filteredRows = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
@@ -334,13 +274,6 @@ function AdminAffiliates() {
     });
   }, [rows, searchQuery, filterMode]);
 
-  const topPerformer = useMemo(() => {
-    if (rows.length === 0) return null;
-    const champ = [...rows].sort((a, b) => (b.total_komisyen ?? 0) - (a.total_komisyen ?? 0))[0];
-    if ((champ.total_komisyen ?? 0) === 0) return null;
-    return champ;
-  }, [rows]);
-
   const { maxKlik, maxJualan } = useMemo(() => {
     let mk = 0;
     let mj = 0;
@@ -349,13 +282,6 @@ function AdminAffiliates() {
       if ((r.total_jualan ?? 0) > mj) mj = r.total_jualan ?? 0;
     }
     return { maxKlik: mk, maxJualan: mj };
-  }, [rows]);
-
-  const needAttention = useMemo(() => {
-    return [...rows]
-      .filter((r) => (r.total_klik ?? 0) > 0 && (r.total_jualan ?? 0) === 0)
-      .sort((a, b) => (b.total_klik ?? 0) - (a.total_klik ?? 0))
-      .slice(0, 3);
   }, [rows]);
 
   const markPaid = async (row: AffRow) => {
@@ -417,130 +343,10 @@ function AdminAffiliates() {
 
   return (
     <div className="min-h-screen bg-background p-6">
-      <h1 className="text-3xl font-extrabold">Admin — Affiliates</h1>
+      <AdminAffiliateNav />
+      <h1 className="text-3xl font-extrabold">Affiliate</h1>
       <p className="mt-1 text-muted-foreground">Senarai semua affiliate dan komisyen mereka.</p>
 
-      {/* Quick nav */}
-      <div className="mt-4 flex flex-wrap gap-2">
-        <Link
-          to="/admin/challenge"
-          className="inline-flex items-center gap-1 rounded-full bg-primary px-4 py-2 text-sm font-bold text-primary-foreground hover:opacity-90"
-        >
-          🏆 Urus Challenge Bulanan
-        </Link>
-        <Link
-          to="/admin"
-          className="inline-flex items-center gap-1 rounded-full border border-border bg-card px-4 py-2 text-sm font-bold text-foreground hover:bg-muted"
-        >
-          ← Kembali ke Admin
-        </Link>
-      </div>
-
-      {/* Stat cards */}
-      <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="👥 Affiliate Aktif" value={`${aktifCount} / ${rows.length}`} />
-        <StatCard label="💰 Komisen Bulan Ini" value={rm(komisenBulanIni)} />
-        <StatCard label="📚 Jualan Bulan Ini" value={String(jualanBulanIniCount)} />
-        <StatCard label="⏳ Pending Payout" value={rm(totals.belumDibayar)} highlight />
-      </div>
-
-      {/* Prestasi Hari Ini */}
-      <div className="mt-6">
-        <h2 className="mb-3 font-display text-lg font-extrabold">Prestasi Hari Ini</h2>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-          <StatCard label="Klik Hari Ini" value={String(klikHariIniCount)} />
-          <StatCard label="Conversion" value={conversionHariIni} />
-          <StatCard label="Affiliate Baru" value={String(affiliateBaruHariIni)} />
-        </div>
-      </div>
-
-      {/* Top Performer + Need Attention */}
-      <div className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-2">
-        {/* Top Performer */}
-        <div className="relative overflow-hidden rounded-2xl border border-amber-200 bg-gradient-to-br from-amber-100 to-yellow-50 p-5 shadow-soft">
-          <div className="absolute right-3 top-3 text-4xl opacity-30">🏆</div>
-          <h2 className="mb-4 flex items-center gap-2 font-display text-lg font-extrabold text-amber-900">
-            <Trophy className="h-5 w-5 text-amber-600" /> Top Performer
-          </h2>
-          {topPerformer ? (
-            <div className="flex items-start gap-4">
-              {topPerformer.avatar_url ? (
-                <img
-                  src={topPerformer.avatar_url}
-                  alt={topPerformer.nama}
-                  className="h-14 w-14 rounded-full border-2 border-amber-300 object-cover shadow-sm"
-                />
-              ) : (
-                <div className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-amber-300 bg-amber-200 font-bold text-amber-800 shadow-sm">
-                  {topPerformer.nama.charAt(0).toUpperCase()}
-                </div>
-              )}
-              <div className="flex-1">
-                <div className="font-display text-xl font-extrabold text-amber-950">{topPerformer.nama}</div>
-                <div className="mt-1 font-display text-4xl font-extrabold text-amber-700">
-                  {rm(topPerformer.total_komisyen)}
-                </div>
-                <div className="mt-2 flex flex-wrap gap-3 text-sm text-amber-800">
-                  <span className="rounded-full bg-white/60 px-2.5 py-0.5 font-bold">
-                    {topPerformer.total_jualan ?? 0} jualan
-                  </span>
-                  <span className="rounded-full bg-white/60 px-2.5 py-0.5 font-bold">
-                    {topPerformer.total_klik > 0
-                      ? (((topPerformer.total_jualan ?? 0) / topPerformer.total_klik) * 100).toFixed(1) + "%"
-                      : "0%"} conversion
-                  </span>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div className="flex flex-col items-center justify-center py-6 text-center text-amber-800/80">
-              <Trophy className="mb-2 h-8 w-8 opacity-40" />
-              <p className="font-bold">Belum ada jualan lagi</p>
-              <p className="text-sm opacity-80">Top performer akan muncul selepas affiliate mula menjana komisen.</p>
-            </div>
-          )}
-        </div>
-
-        {/* Need Attention */}
-        <div className="rounded-2xl border border-amber-200 bg-card p-5 shadow-soft">
-          <h2 className="mb-1 flex items-center gap-2 font-display text-lg font-extrabold text-amber-800">
-            <AlertTriangle className="h-5 w-5 text-amber-600" /> Perlu Perhatian
-          </h2>
-          <p className="mb-4 text-xs text-muted-foreground">
-            Klik tinggi tapi tiada jualan — mungkin isu landing page, follow-up, atau kualiti traffic.
-          </p>
-          {needAttention.length > 0 ? (
-            <ul className="space-y-3">
-              {needAttention.map((r) => (
-                <li key={r.id} className="flex items-center justify-between rounded-xl border border-amber-100 bg-amber-50/60 p-3">
-                  <div className="flex items-center gap-3">
-                    {r.avatar_url ? (
-                      <img src={r.avatar_url} alt={r.nama} className="h-9 w-9 rounded-full object-cover" />
-                    ) : (
-                      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-amber-200 font-bold text-amber-800">
-                        {r.nama.charAt(0).toUpperCase()}
-                      </div>
-                    )}
-                    <span className="font-bold text-foreground">{r.nama}</span>
-                  </div>
-                  <div className="text-right">
-                    <div className="font-bold text-amber-700">{r.total_klik ?? 0} klik</div>
-                    <div className="text-xs font-bold text-red-600">0 jualan</div>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <div className="flex flex-col items-center justify-center py-6 text-center text-muted-foreground">
-              <AlertTriangle className="mb-2 h-8 w-8 opacity-30" />
-              <p className="font-bold">Tiada affiliate perlu perhatian sekarang 👍</p>
-              <p className="text-sm">Semua affiliate yang ada klik sudah menjana sekurang-kurangnya satu jualan.</p>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Search + filter */}
       <div className="mt-6 rounded-2xl border border-border bg-card p-4">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div className="relative flex-1 sm:max-w-md">
@@ -710,7 +516,6 @@ function AdminAffiliates() {
                       const wa = waLink(r.no_telefon);
                       return (
                         <div className="flex gap-1">
-
                           {wa ? (
                             <a
                               href={wa}
@@ -751,16 +556,12 @@ function AdminAffiliates() {
                       );
                     })()}
                   </TableCell>
-
                 </TableRow>
               ))
             )}
           </TableBody>
         </Table>
       </div>
-
-
-
 
       <Dialog open={!!prestasiAff} onOpenChange={(o) => { if (!o) { setPrestasiAff(null); setPrestasiData(null); } }}>
         <DialogContent className="max-h-[85vh] max-w-3xl overflow-y-auto">
@@ -822,27 +623,6 @@ function AdminAffiliates() {
           )}
         </DialogContent>
       </Dialog>
-    </div>
-  );
-}
-
-function StatCard({
-  label,
-  value,
-  highlight,
-}: {
-  label: string;
-  value: string;
-  highlight?: boolean;
-}) {
-  return (
-    <div
-      className={`rounded-2xl border p-5 shadow-soft ${
-        highlight ? "border-primary/40 bg-primary/5" : "border-border bg-card"
-      }`}
-    >
-      <div className="text-xs font-bold uppercase text-muted-foreground">{label}</div>
-      <div className="mt-2 font-display text-2xl font-extrabold">{value}</div>
     </div>
   );
 }

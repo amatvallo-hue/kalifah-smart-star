@@ -42,6 +42,7 @@ import { Route as UjianPercumaKeputusanReportTokenRouteImport } from './routes/u
 import { Route as PreviewDarjahIdScoreRouteImport } from './routes/preview.$darjahId_.score'
 import { Route as DarjahDarjahIdPercubaanMpt4RouteImport } from './routes/darjah.$darjahId_.percubaan-mpt4'
 import { Route as DarjahDarjahIdSubjekIdRouteImport } from './routes/darjah.$darjahId_.$subjekId'
+import { Route as AdminAffiliatesDashboardRouteImport } from './routes/admin_.affiliates.dashboard'
 import { Route as AdminAffiliatesIdRouteImport } from './routes/admin_.affiliates.$id'
 import { Route as DarjahDarjahIdPercubaanMpt4SubjekIdRouteImport } from './routes/darjah.$darjahId_.percubaan-mpt4_.$subjekId'
 import { Route as DarjahDarjahIdSubjekIdNotaRingkasRouteImport } from './routes/darjah.$darjahId_.$subjekId_.nota-ringkas'
@@ -224,6 +225,12 @@ const DarjahDarjahIdSubjekIdRoute = DarjahDarjahIdSubjekIdRouteImport.update({
   path: '/darjah/$darjahId/$subjekId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminAffiliatesDashboardRoute =
+  AdminAffiliatesDashboardRouteImport.update({
+    id: '/dashboard',
+    path: '/dashboard',
+    getParentRoute: () => AdminAffiliatesRoute,
+  } as any)
 const AdminAffiliatesIdRoute = AdminAffiliatesIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -332,6 +339,7 @@ export interface FileRoutesByFullPath {
   '/preview/$darjahId': typeof PreviewDarjahIdRoute
   '/preview/nama': typeof PreviewNamaRoute
   '/admin/affiliates/$id': typeof AdminAffiliatesIdRoute
+  '/admin/affiliates/dashboard': typeof AdminAffiliatesDashboardRoute
   '/darjah/$darjahId/$subjekId': typeof DarjahDarjahIdSubjekIdRoute
   '/darjah/$darjahId/percubaan-mpt4': typeof DarjahDarjahIdPercubaanMpt4Route
   '/preview/$darjahId/score': typeof PreviewDarjahIdScoreRoute
@@ -380,6 +388,7 @@ export interface FileRoutesByTo {
   '/preview/$darjahId': typeof PreviewDarjahIdRoute
   '/preview/nama': typeof PreviewNamaRoute
   '/admin/affiliates/$id': typeof AdminAffiliatesIdRoute
+  '/admin/affiliates/dashboard': typeof AdminAffiliatesDashboardRoute
   '/darjah/$darjahId/$subjekId': typeof DarjahDarjahIdSubjekIdRoute
   '/darjah/$darjahId/percubaan-mpt4': typeof DarjahDarjahIdPercubaanMpt4Route
   '/preview/$darjahId/score': typeof PreviewDarjahIdScoreRoute
@@ -429,6 +438,7 @@ export interface FileRoutesById {
   '/preview/$darjahId': typeof PreviewDarjahIdRoute
   '/preview/nama': typeof PreviewNamaRoute
   '/admin_/affiliates/$id': typeof AdminAffiliatesIdRoute
+  '/admin_/affiliates/dashboard': typeof AdminAffiliatesDashboardRoute
   '/darjah/$darjahId_/$subjekId': typeof DarjahDarjahIdSubjekIdRoute
   '/darjah/$darjahId_/percubaan-mpt4': typeof DarjahDarjahIdPercubaanMpt4Route
   '/preview/$darjahId_/score': typeof PreviewDarjahIdScoreRoute
@@ -479,6 +489,7 @@ export interface FileRouteTypes {
     | '/preview/$darjahId'
     | '/preview/nama'
     | '/admin/affiliates/$id'
+    | '/admin/affiliates/dashboard'
     | '/darjah/$darjahId/$subjekId'
     | '/darjah/$darjahId/percubaan-mpt4'
     | '/preview/$darjahId/score'
@@ -527,6 +538,7 @@ export interface FileRouteTypes {
     | '/preview/$darjahId'
     | '/preview/nama'
     | '/admin/affiliates/$id'
+    | '/admin/affiliates/dashboard'
     | '/darjah/$darjahId/$subjekId'
     | '/darjah/$darjahId/percubaan-mpt4'
     | '/preview/$darjahId/score'
@@ -575,6 +587,7 @@ export interface FileRouteTypes {
     | '/preview/$darjahId'
     | '/preview/nama'
     | '/admin_/affiliates/$id'
+    | '/admin_/affiliates/dashboard'
     | '/darjah/$darjahId_/$subjekId'
     | '/darjah/$darjahId_/percubaan-mpt4'
     | '/preview/$darjahId_/score'
@@ -875,6 +888,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DarjahDarjahIdSubjekIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin_/affiliates/dashboard': {
+      id: '/admin_/affiliates/dashboard'
+      path: '/dashboard'
+      fullPath: '/admin/affiliates/dashboard'
+      preLoaderRoute: typeof AdminAffiliatesDashboardRouteImport
+      parentRoute: typeof AdminAffiliatesRoute
+    }
     '/admin_/affiliates/$id': {
       id: '/admin_/affiliates/$id'
       path: '/$id'
@@ -971,10 +991,12 @@ declare module '@tanstack/react-router' {
 
 interface AdminAffiliatesRouteChildren {
   AdminAffiliatesIdRoute: typeof AdminAffiliatesIdRoute
+  AdminAffiliatesDashboardRoute: typeof AdminAffiliatesDashboardRoute
 }
 
 const AdminAffiliatesRouteChildren: AdminAffiliatesRouteChildren = {
   AdminAffiliatesIdRoute: AdminAffiliatesIdRoute,
+  AdminAffiliatesDashboardRoute: AdminAffiliatesDashboardRoute,
 }
 
 const AdminAffiliatesRouteWithChildren = AdminAffiliatesRoute._addFileChildren(
