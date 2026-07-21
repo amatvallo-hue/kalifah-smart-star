@@ -420,6 +420,49 @@ function AdminAffiliates() {
         </div>
       </div>
 
+      {/* Search + filter */}
+      <div className="mt-6 rounded-2xl border border-border bg-card p-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="relative flex-1 sm:max-w-md">
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Cari affiliate..."
+              className="w-full rounded-lg border border-border bg-background py-2 pl-9 pr-3 text-sm focus:border-primary focus:outline-none"
+            />
+          </div>
+          <div className="text-xs text-muted-foreground">
+            Menunjukkan {filteredRows.length} daripada {rows.length} affiliate
+          </div>
+        </div>
+        <div className="mt-3 flex flex-wrap gap-2">
+          {([
+            ["semua", "Semua"],
+            ["aktif", "🟢 Aktif"],
+            ["belum_aktif", "🔴 Belum Aktif"],
+            ["ada_pending", "⏳ Ada Pending"],
+            ["tiada_jualan", "📭 Tiada Jualan"],
+            ["top_seller", "🏆 Top Seller"],
+            ["baru_daftar", "🟡 Baru Daftar"],
+          ] as const).map(([key, label]) => (
+            <button
+              key={key}
+              type="button"
+              onClick={() => setFilterMode(key)}
+              className={`rounded-full px-3 py-1 text-xs font-bold transition ${
+                filterMode === key
+                  ? "bg-primary text-primary-foreground"
+                  : "border border-border bg-card text-foreground hover:bg-muted"
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      </div>
+
       <div className="mt-6 overflow-hidden rounded-2xl border border-border bg-card">
         <Table>
           <TableHeader>
