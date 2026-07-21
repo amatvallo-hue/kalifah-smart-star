@@ -74,6 +74,7 @@ function AdminChallengePage() {
       if ((data as { role?: string } | null)?.role === "admin") {
         setIsAdmin(true);
         await loadItems();
+        await loadRanking();
       } else {
         navigate({ to: "/" });
       }
