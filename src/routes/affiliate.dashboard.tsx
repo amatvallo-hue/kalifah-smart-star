@@ -262,6 +262,48 @@ function AffiliateDashboardPage() {
           </div>
         </div>
 
+        {/* KPI Bulan Ini */}
+        <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
+          <StatCard
+            icon={<Coins className="h-5 w-5" />}
+            label="Komisen Bulan Ini"
+            value={rm(metrikBulan.komisen)}
+            subtext={`Jumlah Keseluruhan: ${rm(aff.total_komisyen)}`}
+            highlight
+          />
+          <StatCard
+            icon={<ShoppingBag className="h-5 w-5" />}
+            label="Jualan Bulan Ini"
+            value={String(metrikBulan.jualan)}
+            subtext={`Jumlah Keseluruhan: ${aff.total_jualan}`}
+          />
+          <StatCard
+            icon={<MousePointerClick className="h-5 w-5" />}
+            label="Klik Bulan Ini"
+            value={String(metrikBulan.klik)}
+            subtext={`Jumlah Keseluruhan: ${aff.total_klik}`}
+          />
+          <StatCard
+            icon={<TrendingUp className="h-5 w-5" />}
+            label="Conversion Bulan Ini"
+            value={
+              metrikBulan.klik > 0
+                ? ((metrikBulan.jualan / metrikBulan.klik) * 100).toFixed(1) + "%"
+                : "0%"
+            }
+          />
+        </div>
+
+        <div className="mt-3 flex flex-wrap gap-x-6 gap-y-1 text-sm text-muted-foreground">
+          <div>
+            Baki Belum Dibayar:{" "}
+            <strong className="text-primary">{rm(baki)}</strong>
+          </div>
+          <div>
+            Sudah Dibayar: <strong>{rm(aff.total_dibayar)}</strong>
+          </div>
+        </div>
+
         {/* Marketing Tools */}
         <div className="mt-6 rounded-2xl border border-primary/20 bg-card p-5 shadow-soft">
           <h2 className="font-display text-xl font-extrabold">🧰 Marketing Tools</h2>
@@ -361,48 +403,56 @@ function AffiliateDashboardPage() {
           </div>
         </div>
 
-        {/* KPI Bulan Ini */}
-        <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
-          <StatCard
-            icon={<Coins className="h-5 w-5" />}
-            label="Komisen Bulan Ini"
-            value={rm(metrikBulan.komisen)}
-            subtext={`Jumlah Keseluruhan: ${rm(aff.total_komisyen)}`}
-            highlight
-          />
-          <StatCard
-            icon={<ShoppingBag className="h-5 w-5" />}
-            label="Jualan Bulan Ini"
-            value={String(metrikBulan.jualan)}
-            subtext={`Jumlah Keseluruhan: ${aff.total_jualan}`}
-          />
-          <StatCard
-            icon={<MousePointerClick className="h-5 w-5" />}
-            label="Klik Bulan Ini"
-            value={String(metrikBulan.klik)}
-            subtext={`Jumlah Keseluruhan: ${aff.total_klik}`}
-          />
-          <StatCard
-            icon={<TrendingUp className="h-5 w-5" />}
-            label="Conversion Bulan Ini"
-            value={
-              metrikBulan.klik > 0
-                ? ((metrikBulan.jualan / metrikBulan.klik) * 100).toFixed(1) + "%"
-                : "0%"
-            }
-          />
-        </div>
-
-        <div className="mt-3 flex flex-wrap gap-x-6 gap-y-1 text-sm text-muted-foreground">
-          <div>
-            Baki Belum Dibayar:{" "}
-            <strong className="text-primary">{rm(baki)}</strong>
+        {/* Pendapatan Anda */}
+        <div className="mt-8">
+          <h2 className="font-display text-xl font-extrabold">💰 Pendapatan Anda</h2>
+          <div className="mt-3 overflow-hidden rounded-2xl border border-border bg-card">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Tarikh</TableHead>
+                  <TableHead>Produk</TableHead>
+                  <TableHead>Harga</TableHead>
+                  <TableHead>Komisyen</TableHead>
+                  <TableHead>Status</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {jualan.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={5} className="text-center text-muted-foreground">
+                      Belum ada jualan lagi. Kongsikan pautan anda!
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  jualan.map((j) => (
+                    <TableRow key={j.id}>
+                      <TableCell>
+                        {new Date(j.created_at).toLocaleDateString("ms-MY")}
+                      </TableCell>
+                      <TableCell>{j.produk}</TableCell>
+                      <TableCell>{rm(j.jumlah_bayar)}</TableCell>
+                      <TableCell className="font-bold text-primary">
+                        {rm(j.komisyen)}
+                      </TableCell>
+                      <TableCell>
+                        <span
+                          className={
+                            j.status_bayar === "dibayar"
+                              ? "rounded-full bg-green-500/10 px-2 py-0.5 text-xs font-bold text-green-700"
+                              : "rounded-full bg-yellow-500/10 px-2 py-0.5 text-xs font-bold text-yellow-700"
+                          }
+                        >
+                          {j.status_bayar === "dibayar" ? "Dibayar" : "Belum Dibayar"}
+                        </span>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
           </div>
-          <div>
-            Sudah Dibayar: <strong>{rm(aff.total_dibayar)}</strong>
-          </div>
         </div>
-
 
         {/* Challenge bulan ini */}
         {challenge ? (
@@ -454,57 +504,6 @@ function AffiliateDashboardPage() {
             )}
           </div>
         ) : null}
-
-        {/* Pendapatan Anda */}
-        <div className="mt-8">
-          <h2 className="font-display text-xl font-extrabold">💰 Pendapatan Anda</h2>
-          <div className="mt-3 overflow-hidden rounded-2xl border border-border bg-card">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Tarikh</TableHead>
-                  <TableHead>Produk</TableHead>
-                  <TableHead>Harga</TableHead>
-                  <TableHead>Komisyen</TableHead>
-                  <TableHead>Status</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {jualan.length === 0 ? (
-                  <TableRow>
-                    <TableCell colSpan={5} className="text-center text-muted-foreground">
-                      Belum ada jualan lagi. Kongsikan pautan anda!
-                    </TableCell>
-                  </TableRow>
-                ) : (
-                  jualan.map((j) => (
-                    <TableRow key={j.id}>
-                      <TableCell>
-                        {new Date(j.created_at).toLocaleDateString("ms-MY")}
-                      </TableCell>
-                      <TableCell>{j.produk}</TableCell>
-                      <TableCell>{rm(j.jumlah_bayar)}</TableCell>
-                      <TableCell className="font-bold text-primary">
-                        {rm(j.komisyen)}
-                      </TableCell>
-                      <TableCell>
-                        <span
-                          className={
-                            j.status_bayar === "dibayar"
-                              ? "rounded-full bg-green-500/10 px-2 py-0.5 text-xs font-bold text-green-700"
-                              : "rounded-full bg-yellow-500/10 px-2 py-0.5 text-xs font-bold text-yellow-700"
-                          }
-                        >
-                          {j.status_bayar === "dibayar" ? "Dibayar" : "Belum Dibayar"}
-                        </span>
-                      </TableCell>
-                    </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
-          </div>
-        </div>
       </div>
     </div>
   );
