@@ -1,7 +1,8 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { PAKEJ_LIST } from "@/lib/curriculum";
-import { useEffect, useMemo, useState } from "react";
-import { Copy, Loader2, MousePointerClick, ShoppingBag, Coins, Share2, TrendingUp, Trophy } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Camera, Copy, Loader2, MousePointerClick, ShoppingBag, Coins, Share2, TrendingUp, Trophy } from "lucide-react";
+import { toast } from "sonner";
 import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
