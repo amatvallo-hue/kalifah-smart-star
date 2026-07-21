@@ -580,14 +580,7 @@ function AdminAffiliates() {
                       const wa = waLink(r.no_telefon);
                       return (
                         <div className="flex gap-1">
-                          <button
-                            type="button"
-                            title="Detail affiliate"
-                            onClick={() => openDetail(r)}
-                            className="rounded border border-border bg-card p-2 text-foreground hover:bg-muted"
-                          >
-                            <Eye className="h-4 w-4" />
-                          </button>
+
                           {wa ? (
                             <a
                               href={wa}
