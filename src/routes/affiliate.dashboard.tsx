@@ -232,6 +232,9 @@ function AffiliateDashboardPage() {
               <p className="mt-1 text-muted-foreground">
                 Dashboard Affiliate Kalifah.my
               </p>
+              <p className="mt-3 text-sm italic text-muted-foreground">
+                {AYAT_HERO[Math.floor(Date.now() / 86400000) % AYAT_HERO.length]}
+              </p>
             </div>
             <div className="flex shrink-0 items-center gap-3 rounded-2xl border border-gold/30 bg-gold/10 px-5 py-3">
               <div className="text-3xl font-extrabold text-gold-foreground">
