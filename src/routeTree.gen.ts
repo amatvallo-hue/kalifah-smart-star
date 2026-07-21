@@ -42,6 +42,7 @@ import { Route as UjianPercumaKeputusanReportTokenRouteImport } from './routes/u
 import { Route as PreviewDarjahIdScoreRouteImport } from './routes/preview.$darjahId_.score'
 import { Route as DarjahDarjahIdPercubaanMpt4RouteImport } from './routes/darjah.$darjahId_.percubaan-mpt4'
 import { Route as DarjahDarjahIdSubjekIdRouteImport } from './routes/darjah.$darjahId_.$subjekId'
+import { Route as AdminAffiliatesIdRouteImport } from './routes/admin_.affiliates.$id'
 import { Route as DarjahDarjahIdPercubaanMpt4SubjekIdRouteImport } from './routes/darjah.$darjahId_.percubaan-mpt4_.$subjekId'
 import { Route as DarjahDarjahIdSubjekIdNotaRingkasRouteImport } from './routes/darjah.$darjahId_.$subjekId_.nota-ringkas'
 import { Route as DarjahDarjahIdSubjekIdLatihanBerpanduPreviewRouteImport } from './routes/darjah.$darjahId_.$subjekId_.latihan-berpandu-preview'
@@ -223,6 +224,11 @@ const DarjahDarjahIdSubjekIdRoute = DarjahDarjahIdSubjekIdRouteImport.update({
   path: '/darjah/$darjahId/$subjekId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminAffiliatesIdRoute = AdminAffiliatesIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AdminAffiliatesRoute,
+} as any)
 const DarjahDarjahIdPercubaanMpt4SubjekIdRoute =
   DarjahDarjahIdPercubaanMpt4SubjekIdRouteImport.update({
     id: '/darjah/$darjahId_/percubaan-mpt4_/$subjekId',
@@ -309,7 +315,7 @@ export interface FileRoutesByFullPath {
   '/pra-kalifah': typeof PraKalifahRoute
   '/reset-password': typeof ResetPasswordRoute
   '/ujian-percuma': typeof UjianPercumaRoute
-  '/admin/affiliates': typeof AdminAffiliatesRoute
+  '/admin/affiliates': typeof AdminAffiliatesRouteWithChildren
   '/admin/challenge': typeof AdminChallengeRoute
   '/affiliate/daftar': typeof AffiliateDaftarRoute
   '/affiliate/dashboard': typeof AffiliateDashboardRoute
@@ -325,6 +331,7 @@ export interface FileRoutesByFullPath {
   '/pra-kalifah/$bidang': typeof PraKalifahBidangRoute
   '/preview/$darjahId': typeof PreviewDarjahIdRoute
   '/preview/nama': typeof PreviewNamaRoute
+  '/admin/affiliates/$id': typeof AdminAffiliatesIdRoute
   '/darjah/$darjahId/$subjekId': typeof DarjahDarjahIdSubjekIdRoute
   '/darjah/$darjahId/percubaan-mpt4': typeof DarjahDarjahIdPercubaanMpt4Route
   '/preview/$darjahId/score': typeof PreviewDarjahIdScoreRoute
@@ -356,7 +363,7 @@ export interface FileRoutesByTo {
   '/pra-kalifah': typeof PraKalifahRoute
   '/reset-password': typeof ResetPasswordRoute
   '/ujian-percuma': typeof UjianPercumaRoute
-  '/admin/affiliates': typeof AdminAffiliatesRoute
+  '/admin/affiliates': typeof AdminAffiliatesRouteWithChildren
   '/admin/challenge': typeof AdminChallengeRoute
   '/affiliate/daftar': typeof AffiliateDaftarRoute
   '/affiliate/dashboard': typeof AffiliateDashboardRoute
@@ -372,6 +379,7 @@ export interface FileRoutesByTo {
   '/pra-kalifah/$bidang': typeof PraKalifahBidangRoute
   '/preview/$darjahId': typeof PreviewDarjahIdRoute
   '/preview/nama': typeof PreviewNamaRoute
+  '/admin/affiliates/$id': typeof AdminAffiliatesIdRoute
   '/darjah/$darjahId/$subjekId': typeof DarjahDarjahIdSubjekIdRoute
   '/darjah/$darjahId/percubaan-mpt4': typeof DarjahDarjahIdPercubaanMpt4Route
   '/preview/$darjahId/score': typeof PreviewDarjahIdScoreRoute
@@ -404,7 +412,7 @@ export interface FileRoutesById {
   '/pra-kalifah': typeof PraKalifahRoute
   '/reset-password': typeof ResetPasswordRoute
   '/ujian-percuma': typeof UjianPercumaRoute
-  '/admin_/affiliates': typeof AdminAffiliatesRoute
+  '/admin_/affiliates': typeof AdminAffiliatesRouteWithChildren
   '/admin_/challenge': typeof AdminChallengeRoute
   '/affiliate/daftar': typeof AffiliateDaftarRoute
   '/affiliate/dashboard': typeof AffiliateDashboardRoute
@@ -420,6 +428,7 @@ export interface FileRoutesById {
   '/pra-kalifah_/$bidang': typeof PraKalifahBidangRoute
   '/preview/$darjahId': typeof PreviewDarjahIdRoute
   '/preview/nama': typeof PreviewNamaRoute
+  '/admin_/affiliates/$id': typeof AdminAffiliatesIdRoute
   '/darjah/$darjahId_/$subjekId': typeof DarjahDarjahIdSubjekIdRoute
   '/darjah/$darjahId_/percubaan-mpt4': typeof DarjahDarjahIdPercubaanMpt4Route
   '/preview/$darjahId_/score': typeof PreviewDarjahIdScoreRoute
@@ -469,6 +478,7 @@ export interface FileRouteTypes {
     | '/pra-kalifah/$bidang'
     | '/preview/$darjahId'
     | '/preview/nama'
+    | '/admin/affiliates/$id'
     | '/darjah/$darjahId/$subjekId'
     | '/darjah/$darjahId/percubaan-mpt4'
     | '/preview/$darjahId/score'
@@ -516,6 +526,7 @@ export interface FileRouteTypes {
     | '/pra-kalifah/$bidang'
     | '/preview/$darjahId'
     | '/preview/nama'
+    | '/admin/affiliates/$id'
     | '/darjah/$darjahId/$subjekId'
     | '/darjah/$darjahId/percubaan-mpt4'
     | '/preview/$darjahId/score'
@@ -563,6 +574,7 @@ export interface FileRouteTypes {
     | '/pra-kalifah_/$bidang'
     | '/preview/$darjahId'
     | '/preview/nama'
+    | '/admin_/affiliates/$id'
     | '/darjah/$darjahId_/$subjekId'
     | '/darjah/$darjahId_/percubaan-mpt4'
     | '/preview/$darjahId_/score'
@@ -595,7 +607,7 @@ export interface RootRouteChildren {
   PraKalifahRoute: typeof PraKalifahRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   UjianPercumaRoute: typeof UjianPercumaRoute
-  AdminAffiliatesRoute: typeof AdminAffiliatesRoute
+  AdminAffiliatesRoute: typeof AdminAffiliatesRouteWithChildren
   AdminChallengeRoute: typeof AdminChallengeRoute
   AffiliateDaftarRoute: typeof AffiliateDaftarRoute
   AffiliateDashboardRoute: typeof AffiliateDashboardRoute
@@ -863,6 +875,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DarjahDarjahIdSubjekIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin_/affiliates/$id': {
+      id: '/admin_/affiliates/$id'
+      path: '/$id'
+      fullPath: '/admin/affiliates/$id'
+      preLoaderRoute: typeof AdminAffiliatesIdRouteImport
+      parentRoute: typeof AdminAffiliatesRoute
+    }
     '/darjah/$darjahId_/percubaan-mpt4_/$subjekId': {
       id: '/darjah/$darjahId_/percubaan-mpt4_/$subjekId'
       path: '/darjah/$darjahId/percubaan-mpt4/$subjekId'
@@ -950,6 +969,18 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AdminAffiliatesRouteChildren {
+  AdminAffiliatesIdRoute: typeof AdminAffiliatesIdRoute
+}
+
+const AdminAffiliatesRouteChildren: AdminAffiliatesRouteChildren = {
+  AdminAffiliatesIdRoute: AdminAffiliatesIdRoute,
+}
+
+const AdminAffiliatesRouteWithChildren = AdminAffiliatesRoute._addFileChildren(
+  AdminAffiliatesRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
@@ -963,7 +994,7 @@ const rootRouteChildren: RootRouteChildren = {
   PraKalifahRoute: PraKalifahRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   UjianPercumaRoute: UjianPercumaRoute,
-  AdminAffiliatesRoute: AdminAffiliatesRoute,
+  AdminAffiliatesRoute: AdminAffiliatesRouteWithChildren,
   AdminChallengeRoute: AdminChallengeRoute,
   AffiliateDaftarRoute: AffiliateDaftarRoute,
   AffiliateDashboardRoute: AffiliateDashboardRoute,
