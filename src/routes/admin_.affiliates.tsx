@@ -33,7 +33,21 @@ type AffRow = {
   total_dibayar: number;
   platform_promosi?: string[] | null;
   last_klik_at?: string | null;
+  created_at?: string | null;
 };
+
+function statusBadge(r: AffRow): { label: string; className: string } {
+  const now = Date.now();
+  const createdAt = r.created_at ? new Date(r.created_at).getTime() : 0;
+  const ageDays = createdAt ? (now - createdAt) / (1000 * 60 * 60 * 24) : Infinity;
+  if (ageDays <= 7) {
+    return { label: "🟡 Baru", className: "bg-amber-100 text-amber-700" };
+  }
+  if (!isInactive(r.last_klik_at)) {
+    return { label: "🟢 Aktif", className: "bg-emerald-100 text-emerald-700" };
+  }
+  return { label: "🔴 Tidak Aktif", className: "bg-red-100 text-red-700" };
+}
 
 function rm(ringgit: number) {
   return `RM ${(ringgit ?? 0).toFixed(2)}`;
@@ -278,12 +292,14 @@ function AdminAffiliates() {
           <TableHeader>
             <TableRow>
               <TableHead>Nama</TableHead>
+              <TableHead>Status</TableHead>
               <TableHead>Email</TableHead>
               <TableHead>Kod</TableHead>
               <TableHead className="text-right">Klik</TableHead>
               <TableHead>Klik Terakhir</TableHead>
               <TableHead>Bank</TableHead>
               <TableHead>Platform Promosi</TableHead>
+              <TableHead className="text-right">Lifetime (Klik / Jualan / Conv%)</TableHead>
               <TableHead className="text-right">Jualan Bulan Ini</TableHead>
               <TableHead className="text-right">Komisyen</TableHead>
               <TableHead className="text-right">Dibayar</TableHead>
@@ -293,7 +309,7 @@ function AdminAffiliates() {
           <TableBody>
             {rows.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={11} className="py-6 text-center text-muted-foreground">
+                <TableCell colSpan={13} className="py-6 text-center text-muted-foreground">
                   Tiada affiliate berdaftar lagi.
                 </TableCell>
               </TableRow>
@@ -301,6 +317,16 @@ function AdminAffiliates() {
               rows.map((r) => (
                 <TableRow key={r.id}>
                   <TableCell className="font-bold">{r.nama}</TableCell>
+                  <TableCell>
+                    {(() => {
+                      const s = statusBadge(r);
+                      return (
+                        <span className={`rounded-full px-2 py-0.5 text-xs font-bold ${s.className}`}>
+                          {s.label}
+                        </span>
+                      );
+                    })()}
+                  </TableCell>
                   <TableCell>{r.email}</TableCell>
                   <TableCell className="font-mono">{r.custom_ref_code ?? r.ref_code}</TableCell>
                   <TableCell className="text-right">{r.total_klik ?? 0}</TableCell>
@@ -326,6 +352,20 @@ function AdminAffiliates() {
                         <span className="text-xs text-muted-foreground">-</span>
                       )}
                     </div>
+                  </TableCell>
+                  <TableCell className="text-right">
+                    {(() => {
+                      const k = r.total_klik ?? 0;
+                      const j = r.total_jualan ?? 0;
+                      const conv = k > 0 ? ((j / k) * 100).toFixed(1) + "%" : "0%";
+                      return (
+                        <div className="flex flex-col items-end text-xs">
+                          <span><span className="text-muted-foreground">Klik:</span> <span className="font-bold">{k}</span></span>
+                          <span><span className="text-muted-foreground">Jualan:</span> <span className="font-bold">{j}</span></span>
+                          <span><span className="text-muted-foreground">Conv:</span> <span className="font-bold text-emerald-700">{conv}</span></span>
+                        </div>
+                      );
+                    })()}
                   </TableCell>
                   <TableCell className="text-right">{jualanCounts[r.id] ?? 0}</TableCell>
                   <TableCell className="text-right">
