@@ -376,14 +376,17 @@ function AdminAffiliates() {
                   </TableCell>
                   <TableCell>
                     <div className="flex flex-wrap gap-1">
-                      {(r.platform_promosi ?? []).map((p) => (
-                        <span
-                          key={p}
-                          className="rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground"
-                        >
-                          {p}
-                        </span>
-                      ))}
+                      {(r.platform_promosi ?? []).map((p) => {
+                        const mapped = platformLabel(p);
+                        return (
+                          <span
+                            key={p}
+                            className="rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground"
+                          >
+                            {mapped.icon} {mapped.label}
+                          </span>
+                        );
+                      })}
                       {(!r.platform_promosi || r.platform_promosi.length === 0) && (
                         <span className="text-xs text-muted-foreground">-</span>
                       )}
