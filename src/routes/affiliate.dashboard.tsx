@@ -302,14 +302,38 @@ function AffiliateDashboardPage() {
             icon={<Coins className="h-5 w-5" />}
             label="Komisen Bulan Ini"
             value={rm(metrikBulan.komisen)}
+            emptyText={metrikBulan.komisen === 0 ? "Tiada komisen bulan ini." : undefined}
             subtext={`Jumlah Keseluruhan: ${rm(aff.total_komisyen)}`}
+            trend={
+              metrikBulan.komisen === 0
+                ? undefined
+                : metrikBulanLepas.komisen === 0
+                  ? { arah: "naik", teks: "🎉 Komisen pertama bulan ini!" }
+                  : metrikBulan.komisen > metrikBulanLepas.komisen
+                    ? { arah: "naik", teks: `↑ RM${Math.abs(metrikBulan.komisen - metrikBulanLepas.komisen).toFixed(2)} daripada bulan lepas` }
+                    : metrikBulan.komisen < metrikBulanLepas.komisen
+                      ? { arah: "turun", teks: `↓ RM${Math.abs(metrikBulan.komisen - metrikBulanLepas.komisen).toFixed(2)} daripada bulan lepas` }
+                      : { arah: "sama", teks: "Sama macam bulan lepas" }
+            }
             highlight
           />
           <StatCard
             icon={<ShoppingBag className="h-5 w-5" />}
             label="Jualan Bulan Ini"
             value={String(metrikBulan.jualan)}
+            emptyText={metrikBulan.jualan === 0 ? "Tiada jualan bulan ini." : undefined}
             subtext={`Jumlah Keseluruhan: ${aff.total_jualan}`}
+            trend={
+              metrikBulan.jualan === 0
+                ? undefined
+                : metrikBulanLepas.jualan === 0
+                  ? { arah: "naik", teks: "🎉 Jualan pertama bulan ini!" }
+                  : metrikBulan.jualan > metrikBulanLepas.jualan
+                    ? { arah: "naik", teks: `↑ +${Math.abs(metrikBulan.jualan - metrikBulanLepas.jualan)} jualan berbanding bulan lepas` }
+                    : metrikBulan.jualan < metrikBulanLepas.jualan
+                      ? { arah: "turun", teks: `↓ -${Math.abs(metrikBulan.jualan - metrikBulanLepas.jualan)} jualan berbanding bulan lepas` }
+                      : { arah: "sama", teks: "Sama macam bulan lepas" }
+            }
           />
           <StatCard
             icon={<MousePointerClick className="h-5 w-5" />}
@@ -559,15 +583,26 @@ function StatCard({
   icon,
   label,
   value,
+  emptyText,
   subtext,
+  trend,
   highlight,
 }: {
   icon: React.ReactNode;
   label: string;
   value: string;
+  emptyText?: string;
   subtext?: string;
+  trend?: { arah: "naik" | "turun" | "sama"; teks: string };
   highlight?: boolean;
 }) {
+  const isEmpty = emptyText && (value === "0" || value === "RM 0.00" || value === "0%");
+  const trendColor =
+    trend?.arah === "naik"
+      ? "text-green-600"
+      : trend?.arah === "turun"
+        ? "text-red-600"
+        : "text-muted-foreground";
   return (
     <div
       className={`rounded-2xl border p-4 shadow-soft ${
@@ -578,9 +613,16 @@ function StatCard({
         {icon}
         {label}
       </div>
-      <div className="mt-2 font-display text-2xl font-extrabold">{value}</div>
+      {isEmpty ? (
+        <div className="mt-2 text-base text-muted-foreground">{emptyText}</div>
+      ) : (
+        <div className="mt-2 font-display text-2xl font-extrabold">{value}</div>
+      )}
       {subtext ? (
         <div className="mt-1 text-xs text-muted-foreground">{subtext}</div>
+      ) : null}
+      {trend ? (
+        <div className={`mt-1 text-xs font-bold ${trendColor}`}>{trend.teks}</div>
       ) : null}
     </div>
   );
