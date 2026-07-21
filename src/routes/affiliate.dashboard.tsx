@@ -313,39 +313,48 @@ function AffiliateDashboardPage() {
           </div>
         </div>
 
-        {/* Stat cards */}
-        <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-5">
-          <StatCard
-            icon={<MousePointerClick className="h-5 w-5" />}
-            label="Total Klik"
-            value={String(aff.total_klik)}
-          />
-          <StatCard
-            icon={<ShoppingBag className="h-5 w-5" />}
-            label="Total Jualan"
-            value={String(aff.total_jualan)}
-          />
+        {/* KPI Bulan Ini */}
+        <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
           <StatCard
             icon={<Coins className="h-5 w-5" />}
-            label="Komisyen"
-            value={rm(aff.total_komisyen)}
-          />
-          <StatCard
-            icon={<Wallet className="h-5 w-5" />}
-            label="Baki Belum Dibayar"
-            value={rm(baki)}
+            label="Komisen Bulan Ini"
+            value={rm(metrikBulan.komisen)}
+            subtext={`Jumlah Keseluruhan: ${rm(aff.total_komisyen)}`}
             highlight
           />
           <StatCard
+            icon={<ShoppingBag className="h-5 w-5" />}
+            label="Jualan Bulan Ini"
+            value={String(metrikBulan.jualan)}
+            subtext={`Jumlah Keseluruhan: ${aff.total_jualan}`}
+          />
+          <StatCard
+            icon={<MousePointerClick className="h-5 w-5" />}
+            label="Klik Bulan Ini"
+            value={String(metrikBulan.klik)}
+            subtext={`Jumlah Keseluruhan: ${aff.total_klik}`}
+          />
+          <StatCard
             icon={<TrendingUp className="h-5 w-5" />}
-            label="Conversion"
-            value={aff.total_klik > 0 ? ((aff.total_jualan / aff.total_klik) * 100).toFixed(1) + '%' : '0%'}
+            label="Conversion Bulan Ini"
+            value={
+              metrikBulan.klik > 0
+                ? ((metrikBulan.jualan / metrikBulan.klik) * 100).toFixed(1) + "%"
+                : "0%"
+            }
           />
         </div>
 
-        <div className="mt-3 text-sm text-muted-foreground">
-          Sudah dibayar: <strong>{rm(aff.total_dibayar)}</strong>
+        <div className="mt-3 flex flex-wrap gap-x-6 gap-y-1 text-sm text-muted-foreground">
+          <div>
+            Baki Belum Dibayar:{" "}
+            <strong className="text-primary">{rm(baki)}</strong>
+          </div>
+          <div>
+            Sudah Dibayar: <strong>{rm(aff.total_dibayar)}</strong>
+          </div>
         </div>
+
 
         {/* Challenge bulan ini */}
         {challenge ? (
