@@ -158,6 +158,16 @@ function AffiliateDashboardPage() {
     }
   }
 
+  async function copyCaption(key: string, text: string) {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedCaption(key);
+      setTimeout(() => setCopiedCaption((c) => (c === key ? null : c)), 2500);
+    } catch {
+      /* ignore */
+    }
+  }
+
   if (authLoading || loading) {
     return (
       <div className="flex min-h-screen items-center justify-center">
