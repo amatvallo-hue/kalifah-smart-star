@@ -632,6 +632,67 @@ function AdminAffiliates() {
           )}
         </DialogContent>
       </Dialog>
+
+      <Dialog open={!!prestasiAff} onOpenChange={(o) => { if (!o) { setPrestasiAff(null); setPrestasiData(null); } }}>
+        <DialogContent className="max-h-[85vh] max-w-3xl overflow-y-auto">
+          {prestasiAff && (
+            <>
+              <DialogHeader>
+                <DialogTitle>Prestasi 30 Hari — {prestasiAff.nama}</DialogTitle>
+              </DialogHeader>
+              <div className="mt-4">
+                {prestasiLoading || !prestasiData ? (
+                  <div className="flex h-64 items-center justify-center">
+                    <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+                  </div>
+                ) : prestasiData.every((d) => d.klik === 0 && d.jualan === 0 && d.komisen === 0) ? (
+                  <div className="flex h-64 items-center justify-center text-sm text-muted-foreground">
+                    Tiada data 30 hari lepas
+                  </div>
+                ) : (
+                  <div className="space-y-6">
+                    <div>
+                      <div className="mb-2 text-xs font-bold uppercase text-muted-foreground">Klik & Jualan (harian)</div>
+                      <ResponsiveContainer width="100%" height={240}>
+                        <LineChart data={prestasiData} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                          <XAxis dataKey="date" tick={{ fontSize: 10 }} tickFormatter={(v: string) => v.slice(5)} />
+                          <YAxis allowDecimals={false} tick={{ fontSize: 10 }} />
+                          <Tooltip />
+                          <Legend />
+                          <Line type="monotone" dataKey="klik" stroke="#0ea5e9" name="Klik" dot={false} />
+                          <Line type="monotone" dataKey="jualan" stroke="#10b981" name="Jualan" dot={false} />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    </div>
+                    <div>
+                      <div className="mb-2 text-xs font-bold uppercase text-muted-foreground">Komisen Harian (RM)</div>
+                      <ResponsiveContainer width="100%" height={180}>
+                        <BarChart data={prestasiData} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                          <XAxis dataKey="date" tick={{ fontSize: 10 }} tickFormatter={(v: string) => v.slice(5)} />
+                          <YAxis tick={{ fontSize: 10 }} />
+                          <Tooltip />
+                          <Bar dataKey="komisen" fill="#f59e0b" name="Komisen (RM)" />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+                )}
+              </div>
+              <div className="mt-6 flex justify-end">
+                <button
+                  type="button"
+                  onClick={() => { setPrestasiAff(null); setPrestasiData(null); }}
+                  className="rounded border border-border bg-card px-4 py-2 text-sm font-bold hover:bg-muted"
+                >
+                  Tutup
+                </button>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
