@@ -153,6 +153,22 @@ function AdminAffiliates() {
   const [jualanHariIniCount, setJualanHariIniCount] = useState(0);
   const [affiliateBaruHariIni, setAffiliateBaruHariIni] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [detailAff, setDetailAff] = useState<AffRow | null>(null);
+  const [detailJualan, setDetailJualan] = useState<JualanRow[] | null>(null);
+  const [detailJualanLoading, setDetailJualanLoading] = useState(false);
+
+  const openDetail = async (r: AffRow) => {
+    setDetailAff(r);
+    setDetailJualan(null);
+    setDetailJualanLoading(true);
+    const { data } = await supabase
+      .from("affiliate_jualan")
+      .select("id, created_at, produk, jumlah_bayar, komisyen, status_bayar")
+      .eq("affiliate_id", r.id)
+      .order("created_at", { ascending: false });
+    setDetailJualan((data ?? []) as JualanRow[]);
+    setDetailJualanLoading(false);
+  };
 
   useEffect(() => {
     (async () => {
