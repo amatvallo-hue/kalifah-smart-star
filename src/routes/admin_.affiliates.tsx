@@ -427,6 +427,92 @@ function AdminAffiliates() {
         </div>
       </div>
 
+      {/* Top Performer + Need Attention */}
+      <div className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-2">
+        {/* Top Performer */}
+        <div className="relative overflow-hidden rounded-2xl border border-amber-200 bg-gradient-to-br from-amber-100 to-yellow-50 p-5 shadow-soft">
+          <div className="absolute right-3 top-3 text-4xl opacity-30">🏆</div>
+          <h2 className="mb-4 flex items-center gap-2 font-display text-lg font-extrabold text-amber-900">
+            <Trophy className="h-5 w-5 text-amber-600" /> Top Performer
+          </h2>
+          {topPerformer ? (
+            <div className="flex items-start gap-4">
+              {topPerformer.avatar_url ? (
+                <img
+                  src={topPerformer.avatar_url}
+                  alt={topPerformer.nama}
+                  className="h-14 w-14 rounded-full border-2 border-amber-300 object-cover shadow-sm"
+                />
+              ) : (
+                <div className="flex h-14 w-14 items-center justify-center rounded-full border-2 border-amber-300 bg-amber-200 font-bold text-amber-800 shadow-sm">
+                  {topPerformer.nama.charAt(0).toUpperCase()}
+                </div>
+              )}
+              <div className="flex-1">
+                <div className="font-display text-xl font-extrabold text-amber-950">{topPerformer.nama}</div>
+                <div className="mt-1 font-display text-4xl font-extrabold text-amber-700">
+                  {rm(topPerformer.total_komisyen)}
+                </div>
+                <div className="mt-2 flex flex-wrap gap-3 text-sm text-amber-800">
+                  <span className="rounded-full bg-white/60 px-2.5 py-0.5 font-bold">
+                    {topPerformer.total_jualan ?? 0} jualan
+                  </span>
+                  <span className="rounded-full bg-white/60 px-2.5 py-0.5 font-bold">
+                    {topPerformer.total_klik > 0
+                      ? (((topPerformer.total_jualan ?? 0) / topPerformer.total_klik) * 100).toFixed(1) + "%"
+                      : "0%"} conversion
+                  </span>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-6 text-center text-amber-800/80">
+              <Trophy className="mb-2 h-8 w-8 opacity-40" />
+              <p className="font-bold">Belum ada jualan lagi</p>
+              <p className="text-sm opacity-80">Top performer akan muncul selepas affiliate mula menjana komisen.</p>
+            </div>
+          )}
+        </div>
+
+        {/* Need Attention */}
+        <div className="rounded-2xl border border-amber-200 bg-card p-5 shadow-soft">
+          <h2 className="mb-1 flex items-center gap-2 font-display text-lg font-extrabold text-amber-800">
+            <AlertTriangle className="h-5 w-5 text-amber-600" /> Perlu Perhatian
+          </h2>
+          <p className="mb-4 text-xs text-muted-foreground">
+            Klik tinggi tapi tiada jualan — mungkin isu landing page, follow-up, atau kualiti traffic.
+          </p>
+          {needAttention.length > 0 ? (
+            <ul className="space-y-3">
+              {needAttention.map((r) => (
+                <li key={r.id} className="flex items-center justify-between rounded-xl border border-amber-100 bg-amber-50/60 p-3">
+                  <div className="flex items-center gap-3">
+                    {r.avatar_url ? (
+                      <img src={r.avatar_url} alt={r.nama} className="h-9 w-9 rounded-full object-cover" />
+                    ) : (
+                      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-amber-200 font-bold text-amber-800">
+                        {r.nama.charAt(0).toUpperCase()}
+                      </div>
+                    )}
+                    <span className="font-bold text-foreground">{r.nama}</span>
+                  </div>
+                  <div className="text-right">
+                    <div className="font-bold text-amber-700">{r.total_klik ?? 0} klik</div>
+                    <div className="text-xs font-bold text-red-600">0 jualan</div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-6 text-center text-muted-foreground">
+              <AlertTriangle className="mb-2 h-8 w-8 opacity-30" />
+              <p className="font-bold">Tiada affiliate perlu perhatian sekarang 👍</p>
+              <p className="text-sm">Semua affiliate yang ada klik sudah menjana sekurang-kurangnya satu jualan.</p>
+            </div>
+          )}
+        </div>
+      </div>
+
       {/* Search + filter */}
       <div className="mt-6 rounded-2xl border border-border bg-card p-4">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
