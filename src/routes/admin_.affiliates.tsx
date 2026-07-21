@@ -455,13 +455,59 @@ function AdminAffiliates() {
                     RM {Number(r.total_dibayar).toFixed(2)}
                   </TableCell>
                   <TableCell>
-                    <button
-                      onClick={() => markPaid(r)}
-                      className="rounded bg-amber-600 px-3 py-1 text-sm font-bold text-white hover:bg-amber-700"
-                    >
-                      Tandakan Dibayar
-                    </button>
+                    {(() => {
+                      const wa = waLink(r.no_telefon);
+                      return (
+                        <div className="flex gap-1">
+                          <button
+                            type="button"
+                            title="Detail affiliate"
+                            onClick={() => openDetail(r)}
+                            className="rounded border border-border bg-card p-2 text-foreground hover:bg-muted"
+                          >
+                            <Eye className="h-4 w-4" />
+                          </button>
+                          {wa ? (
+                            <a
+                              href={wa}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              title={`WhatsApp ${r.no_telefon}`}
+                              className="rounded border border-emerald-200 bg-emerald-50 p-2 text-emerald-700 hover:bg-emerald-100"
+                            >
+                              <MessageCircle className="h-4 w-4" />
+                            </a>
+                          ) : (
+                            <button
+                              type="button"
+                              disabled
+                              title="Tiada nombor telefon"
+                              className="cursor-not-allowed rounded border border-border bg-muted p-2 text-muted-foreground opacity-50"
+                            >
+                              <MessageCircle className="h-4 w-4" />
+                            </button>
+                          )}
+                          <button
+                            type="button"
+                            title="Prestasi (coming soon)"
+                            disabled
+                            className="cursor-not-allowed rounded border border-border bg-muted p-2 text-muted-foreground opacity-50"
+                          >
+                            <BarChart3 className="h-4 w-4" />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => markPaid(r)}
+                            title="Tandakan Dibayar"
+                            className="inline-flex items-center gap-1 rounded border border-amber-600 bg-amber-600 px-2 py-1 text-xs font-bold text-white hover:bg-amber-700"
+                          >
+                            <Wallet className="h-4 w-4" /> Bayar
+                          </button>
+                        </div>
+                      );
+                    })()}
                   </TableCell>
+
                 </TableRow>
               ))
             )}
