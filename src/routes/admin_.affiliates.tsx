@@ -165,12 +165,11 @@ function AdminAffiliates() {
   const [jualanHariIniCount, setJualanHariIniCount] = useState(0);
   const [affiliateBaruHariIni, setAffiliateBaruHariIni] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [detailAff, setDetailAff] = useState<AffRow | null>(null);
-  const [detailJualan, setDetailJualan] = useState<JualanRow[] | null>(null);
-  const [detailJualanLoading, setDetailJualanLoading] = useState(false);
   const [prestasiAff, setPrestasiAff] = useState<AffRow | null>(null);
   const [prestasiData, setPrestasiData] = useState<{ date: string; klik: number; jualan: number; komisen: number }[] | null>(null);
   const [prestasiLoading, setPrestasiLoading] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterMode, setFilterMode] = useState<"semua" | "aktif" | "belum_aktif" | "ada_pending" | "tiada_jualan" | "top_seller" | "baru_daftar">("semua");
 
   const openDetail = async (r: AffRow) => {
     setDetailAff(r);
