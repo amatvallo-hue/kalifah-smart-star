@@ -1,4 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { PAKEJ_LIST } from "@/lib/curriculum";
 import { useEffect, useMemo, useState } from "react";
 import { Copy, Loader2, MousePointerClick, ShoppingBag, Wallet, Coins, Share2, TrendingUp, Trophy } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
@@ -29,6 +30,7 @@ interface Affiliate {
   total_jualan: number;
   total_komisyen: number;
   total_dibayar: number;
+  komisyen_rate: number;
 }
 
 interface Jualan {
@@ -167,10 +169,63 @@ function AffiliateDashboardPage() {
     <div className="min-h-screen bg-background">
       <SiteHeader />
       <div className="container mx-auto max-w-5xl px-4 py-8">
-        <h1 className="font-display text-3xl font-extrabold">
-          Selamat datang, {aff.nama}
-        </h1>
-        <p className="mt-1 text-muted-foreground">Dashboard Affiliate Kalifah.my</p>
+        {/* Hero affiliate */}
+        <div className="rounded-3xl border border-primary/20 bg-card p-6 shadow-soft">
+          <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+            <div>
+              <div className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1 text-xs font-bold text-primary">
+                ⭐ Affiliate Rasmi Kalifah.my
+              </div>
+              <h1 className="mt-3 font-display text-3xl font-extrabold">
+                Selamat Datang, {aff.nama.split(" ")[0]} 👋
+              </h1>
+              <p className="mt-1 text-muted-foreground">
+                Dashboard Affiliate Kalifah.my
+              </p>
+            </div>
+            <div className="flex shrink-0 items-center gap-3 rounded-2xl border border-gold/30 bg-gold/10 px-5 py-3">
+              <div className="text-3xl font-extrabold text-gold-foreground">
+                {Math.round((aff.komisyen_rate ?? 0) * 100)}%
+              </div>
+              <div className="text-xs font-bold leading-tight text-gold-foreground/80">
+                Kadar
+                <br />
+                Komisen
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-5 rounded-2xl border border-amber-200 bg-gradient-to-r from-amber-50 to-yellow-50 p-4">
+            <p className="font-display text-lg font-extrabold text-amber-900">
+              💰 Jika anda berjaya jual 1 langganan hari ini, anda akan dapat
+              RM
+              {(
+                (PAKEJ_LIST.find((p) => p.id === "satu")?.jumlahBayar ?? 0) *
+                (aff.komisyen_rate ?? 0)
+              ).toFixed(2)}
+            </p>
+          </div>
+
+          <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+            <button
+              type="button"
+              onClick={copyLink}
+              className="inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-primary px-5 py-3 font-display font-extrabold text-primary-foreground shadow-soft hover:opacity-90"
+            >
+              📋 Copy Link
+            </button>
+            <a
+              href={`https://wa.me/?text=${encodeURIComponent(
+                `Assalamualaikum! 👋 Risau anak tak belajar bila kita tak tengok? Di Kalifah.my, anak buat latih tubi sendiri & ibu bapa boleh pantau progress bila-bila masa 📊 Tenang hati, anak pun seronok belajar! Darjah 1-6 | 32,000+ soalan. Cuba percuma: ${refLink}`,
+              )}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-[#25D366] px-5 py-3 font-display font-extrabold text-white shadow-soft hover:opacity-90"
+            >
+              💬 Share WhatsApp
+            </a>
+          </div>
+        </div>
 
         {/* Ref link */}
         <div className="mt-6 rounded-2xl border border-primary/20 bg-card p-5 shadow-soft">
