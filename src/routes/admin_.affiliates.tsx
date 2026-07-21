@@ -57,14 +57,8 @@ type AffRow = {
   created_at?: string | null;
 };
 
-type JualanRow = {
-  id: string;
-  created_at: string | null;
-  produk?: string | null;
-  jumlah_bayar: number | null;
-  komisyen: number | null;
-  status_bayar: string | null;
-};
+
+
 
 function waLink(phone: string | null | undefined): string | null {
   if (!phone) return null;
