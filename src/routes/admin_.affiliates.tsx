@@ -156,6 +156,9 @@ function AdminAffiliates() {
   const [detailAff, setDetailAff] = useState<AffRow | null>(null);
   const [detailJualan, setDetailJualan] = useState<JualanRow[] | null>(null);
   const [detailJualanLoading, setDetailJualanLoading] = useState(false);
+  const [prestasiAff, setPrestasiAff] = useState<AffRow | null>(null);
+  const [prestasiData, setPrestasiData] = useState<{ date: string; klik: number; jualan: number; komisen: number }[] | null>(null);
+  const [prestasiLoading, setPrestasiLoading] = useState(false);
 
   const openDetail = async (r: AffRow) => {
     setDetailAff(r);
@@ -168,6 +171,44 @@ function AdminAffiliates() {
       .order("created_at", { ascending: false });
     setDetailJualan((data ?? []) as JualanRow[]);
     setDetailJualanLoading(false);
+  };
+
+  const openPrestasi = async (r: AffRow) => {
+    setPrestasiAff(r);
+    setPrestasiData(null);
+    setPrestasiLoading(true);
+    const since = new Date();
+    since.setDate(since.getDate() - 29);
+    since.setHours(0, 0, 0, 0);
+    const sinceIso = since.toISOString();
+
+    const [klikRes, jualRes] = await Promise.all([
+      supabase.from("affiliate_klik_log").select("created_at").eq("affiliate_id", r.id).gte("created_at", sinceIso),
+      supabase.from("affiliate_jualan").select("created_at, komisyen").eq("affiliate_id", r.id).gte("created_at", sinceIso),
+    ]);
+
+    const buckets = new Map<string, { date: string; klik: number; jualan: number; komisen: number }>();
+    for (let i = 0; i < 30; i++) {
+      const d = new Date(since);
+      d.setDate(since.getDate() + i);
+      const key = d.toISOString().slice(0, 10);
+      buckets.set(key, { date: key, klik: 0, jualan: 0, komisen: 0 });
+    }
+    for (const row of (klikRes.data ?? []) as { created_at: string }[]) {
+      const k = row.created_at.slice(0, 10);
+      const b = buckets.get(k);
+      if (b) b.klik += 1;
+    }
+    for (const row of (jualRes.data ?? []) as { created_at: string; komisyen: number | null }[]) {
+      const k = row.created_at.slice(0, 10);
+      const b = buckets.get(k);
+      if (b) {
+        b.jualan += 1;
+        b.komisen += Number(row.komisyen ?? 0);
+      }
+    }
+    setPrestasiData(Array.from(buckets.values()));
+    setPrestasiLoading(false);
   };
 
   useEffect(() => {
