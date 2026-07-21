@@ -38,6 +38,7 @@ interface Jualan {
   jumlah_bayar: number;
   komisyen: number;
   status_bayar: string;
+  produk: string;
   created_at: string;
 }
 
@@ -85,7 +86,7 @@ function AffiliateDashboardPage() {
       setAff(a as Affiliate);
       const { data: j } = await supabase
         .from("affiliate_jualan")
-        .select("id, jumlah_bayar, komisyen, status_bayar, created_at")
+        .select("id, jumlah_bayar, komisyen, status_bayar, produk, created_at")
         .eq("affiliate_id", (a as Affiliate).id)
         .order("created_at", { ascending: false })
         .limit(50);
@@ -454,15 +455,16 @@ function AffiliateDashboardPage() {
           </div>
         ) : null}
 
-        {/* Jualan terkini */}
+        {/* Pendapatan Anda */}
         <div className="mt-8">
-          <h2 className="font-display text-xl font-extrabold">Jualan Terkini</h2>
+          <h2 className="font-display text-xl font-extrabold">💰 Pendapatan Anda</h2>
           <div className="mt-3 overflow-hidden rounded-2xl border border-border bg-card">
             <Table>
               <TableHeader>
                 <TableRow>
                   <TableHead>Tarikh</TableHead>
-                  <TableHead>Jumlah Bayar</TableHead>
+                  <TableHead>Produk</TableHead>
+                  <TableHead>Harga</TableHead>
                   <TableHead>Komisyen</TableHead>
                   <TableHead>Status</TableHead>
                 </TableRow>
@@ -470,7 +472,7 @@ function AffiliateDashboardPage() {
               <TableBody>
                 {jualan.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={4} className="text-center text-muted-foreground">
+                    <TableCell colSpan={5} className="text-center text-muted-foreground">
                       Belum ada jualan lagi. Kongsikan pautan anda!
                     </TableCell>
                   </TableRow>
@@ -480,6 +482,7 @@ function AffiliateDashboardPage() {
                       <TableCell>
                         {new Date(j.created_at).toLocaleDateString("ms-MY")}
                       </TableCell>
+                      <TableCell>{j.produk}</TableCell>
                       <TableCell>{rm(j.jumlah_bayar)}</TableCell>
                       <TableCell className="font-bold text-primary">
                         {rm(j.komisyen)}
