@@ -25,6 +25,7 @@ type AffRow = {
   email: string;
   ref_code: string;
   custom_ref_code?: string;
+  avatar_url?: string | null;
   nama_bank: string;
   no_akaun_bank: string;
   total_klik: number;
