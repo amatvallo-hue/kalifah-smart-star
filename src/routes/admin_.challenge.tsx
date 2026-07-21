@@ -315,7 +315,74 @@ function AdminChallengePage() {
             </Table>
           </div>
         </div>
+
+        <div className="mt-8">
+          <h2 className="flex items-center gap-2 font-display text-lg font-extrabold">
+            <Trophy className="h-5 w-5 text-amber-600" /> Ranking Bulan Ini
+          </h2>
+          {rankingLoading ? (
+            <div className="mt-3 flex items-center gap-2 text-sm text-muted-foreground">
+              <Loader2 className="h-4 w-4 animate-spin" /> Memuatkan…
+            </div>
+          ) : !activeChallenge ? (
+            <p className="mt-3 rounded-2xl border border-dashed border-border bg-muted/40 p-4 text-sm text-muted-foreground">
+              Tiada challenge aktif bulan ini.
+            </p>
+          ) : ranking.length === 0 ? (
+            <p className="mt-3 rounded-2xl border border-dashed border-border bg-muted/40 p-4 text-sm text-muted-foreground">
+              Belum ada jualan bulan ini.
+            </p>
+          ) : (
+            <div className="mt-3 space-y-2">
+              <p className="text-xs text-muted-foreground">
+                Target: <span className="font-bold text-foreground">{activeChallenge.target_jualan} jualan</span> · Bonus: <span className="font-bold text-amber-700">RM {Number(activeChallenge.bonus_rm).toFixed(2)}</span>
+              </p>
+              <ul className="space-y-2">
+                {ranking.map((r, i) => {
+                  const pct = Math.min(100, Math.round((r.jualan / activeChallenge.target_jualan) * 100));
+                  const isPemenang = r.jualan >= activeChallenge.target_jualan;
+                  return (
+                    <li key={r.id} className="rounded-2xl border border-border bg-card p-3 shadow-soft">
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-muted text-sm font-extrabold text-foreground">
+                          {i + 1}
+                        </div>
+                        {r.avatar_url ? (
+                          <img src={r.avatar_url} alt={r.nama} className="h-10 w-10 rounded-full object-cover" />
+                        ) : (
+                          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/20 font-bold text-primary">
+                            {r.nama.charAt(0).toUpperCase()}
+                          </div>
+                        )}
+                        <div className="flex-1">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span className="font-bold text-foreground">{r.nama}</span>
+                            {isPemenang && (
+                              <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-bold text-amber-800">
+                                🏆 Pemenang
+                              </span>
+                            )}
+                          </div>
+                          <div className="mt-1 text-xs text-muted-foreground">
+                            {r.jualan} / {activeChallenge.target_jualan} jualan
+                          </div>
+                          <div className="mt-1 h-2 w-full overflow-hidden rounded-full bg-muted">
+                            <div
+                              className={`h-full ${isPemenang ? "bg-amber-500" : "bg-primary"}`}
+                              style={{ width: `${pct}%` }}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          )}
+        </div>
       </div>
+
     </div>
   );
 }
