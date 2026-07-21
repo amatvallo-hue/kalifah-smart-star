@@ -329,7 +329,6 @@ function AdminAffiliates() {
       .filter((r) => (r.total_klik ?? 0) > 0 && (r.total_jualan ?? 0) === 0)
       .sort((a, b) => (b.total_klik ?? 0) - (a.total_klik ?? 0))
       .slice(0, 3);
-}
   }, [rows]);
 
   const markPaid = async (row: AffRow) => {
