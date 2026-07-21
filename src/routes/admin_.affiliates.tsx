@@ -18,6 +18,18 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  ResponsiveContainer,
+  LineChart,
+  Line,
+  BarChart,
+  Bar,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+} from "recharts";
 
 export const Route = createFileRoute("/admin_/affiliates")({
   head: () => ({ meta: [{ title: "Admin Affiliates — Kalifah.my" }] }),
@@ -156,6 +168,9 @@ function AdminAffiliates() {
   const [detailAff, setDetailAff] = useState<AffRow | null>(null);
   const [detailJualan, setDetailJualan] = useState<JualanRow[] | null>(null);
   const [detailJualanLoading, setDetailJualanLoading] = useState(false);
+  const [prestasiAff, setPrestasiAff] = useState<AffRow | null>(null);
+  const [prestasiData, setPrestasiData] = useState<{ date: string; klik: number; jualan: number; komisen: number }[] | null>(null);
+  const [prestasiLoading, setPrestasiLoading] = useState(false);
 
   const openDetail = async (r: AffRow) => {
     setDetailAff(r);
@@ -168,6 +183,44 @@ function AdminAffiliates() {
       .order("created_at", { ascending: false });
     setDetailJualan((data ?? []) as JualanRow[]);
     setDetailJualanLoading(false);
+  };
+
+  const openPrestasi = async (r: AffRow) => {
+    setPrestasiAff(r);
+    setPrestasiData(null);
+    setPrestasiLoading(true);
+    const since = new Date();
+    since.setDate(since.getDate() - 29);
+    since.setHours(0, 0, 0, 0);
+    const sinceIso = since.toISOString();
+
+    const [klikRes, jualRes] = await Promise.all([
+      supabase.from("affiliate_klik_log").select("created_at").eq("affiliate_id", r.id).gte("created_at", sinceIso),
+      supabase.from("affiliate_jualan").select("created_at, komisyen").eq("affiliate_id", r.id).gte("created_at", sinceIso),
+    ]);
+
+    const buckets = new Map<string, { date: string; klik: number; jualan: number; komisen: number }>();
+    for (let i = 0; i < 30; i++) {
+      const d = new Date(since);
+      d.setDate(since.getDate() + i);
+      const key = d.toISOString().slice(0, 10);
+      buckets.set(key, { date: key, klik: 0, jualan: 0, komisen: 0 });
+    }
+    for (const row of (klikRes.data ?? []) as { created_at: string }[]) {
+      const k = row.created_at.slice(0, 10);
+      const b = buckets.get(k);
+      if (b) b.klik += 1;
+    }
+    for (const row of (jualRes.data ?? []) as { created_at: string; komisyen: number | null }[]) {
+      const k = row.created_at.slice(0, 10);
+      const b = buckets.get(k);
+      if (b) {
+        b.jualan += 1;
+        b.komisen += Number(row.komisyen ?? 0);
+      }
+    }
+    setPrestasiData(Array.from(buckets.values()));
+    setPrestasiLoading(false);
   };
 
   useEffect(() => {
@@ -489,9 +542,9 @@ function AdminAffiliates() {
                           )}
                           <button
                             type="button"
-                            title="Prestasi (coming soon)"
-                            disabled
-                            className="cursor-not-allowed rounded border border-border bg-muted p-2 text-muted-foreground opacity-50"
+                            title="Prestasi 30 hari"
+                            onClick={() => openPrestasi(r)}
+                            className="rounded border border-sky-200 bg-sky-50 p-2 text-sky-700 hover:bg-sky-100"
                           >
                             <BarChart3 className="h-4 w-4" />
                           </button>
@@ -582,6 +635,67 @@ function AdminAffiliates() {
                 <button
                   type="button"
                   onClick={() => { setDetailAff(null); setDetailJualan(null); }}
+                  className="rounded border border-border bg-card px-4 py-2 text-sm font-bold hover:bg-muted"
+                >
+                  Tutup
+                </button>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={!!prestasiAff} onOpenChange={(o) => { if (!o) { setPrestasiAff(null); setPrestasiData(null); } }}>
+        <DialogContent className="max-h-[85vh] max-w-3xl overflow-y-auto">
+          {prestasiAff && (
+            <>
+              <DialogHeader>
+                <DialogTitle>Prestasi 30 Hari — {prestasiAff.nama}</DialogTitle>
+              </DialogHeader>
+              <div className="mt-4">
+                {prestasiLoading || !prestasiData ? (
+                  <div className="flex h-64 items-center justify-center">
+                    <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+                  </div>
+                ) : prestasiData.every((d) => d.klik === 0 && d.jualan === 0 && d.komisen === 0) ? (
+                  <div className="flex h-64 items-center justify-center text-sm text-muted-foreground">
+                    Tiada data 30 hari lepas
+                  </div>
+                ) : (
+                  <div className="space-y-6">
+                    <div>
+                      <div className="mb-2 text-xs font-bold uppercase text-muted-foreground">Klik & Jualan (harian)</div>
+                      <ResponsiveContainer width="100%" height={240}>
+                        <LineChart data={prestasiData} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                          <XAxis dataKey="date" tick={{ fontSize: 10 }} tickFormatter={(v: string) => v.slice(5)} />
+                          <YAxis allowDecimals={false} tick={{ fontSize: 10 }} />
+                          <Tooltip />
+                          <Legend />
+                          <Line type="monotone" dataKey="klik" stroke="#0ea5e9" name="Klik" dot={false} />
+                          <Line type="monotone" dataKey="jualan" stroke="#10b981" name="Jualan" dot={false} />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    </div>
+                    <div>
+                      <div className="mb-2 text-xs font-bold uppercase text-muted-foreground">Komisen Harian (RM)</div>
+                      <ResponsiveContainer width="100%" height={180}>
+                        <BarChart data={prestasiData} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                          <XAxis dataKey="date" tick={{ fontSize: 10 }} tickFormatter={(v: string) => v.slice(5)} />
+                          <YAxis tick={{ fontSize: 10 }} />
+                          <Tooltip />
+                          <Bar dataKey="komisen" fill="#f59e0b" name="Komisen (RM)" />
+                        </BarChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+                )}
+              </div>
+              <div className="mt-6 flex justify-end">
+                <button
+                  type="button"
+                  onClick={() => { setPrestasiAff(null); setPrestasiData(null); }}
                   className="rounded border border-border bg-card px-4 py-2 text-sm font-bold hover:bg-muted"
                 >
                   Tutup
