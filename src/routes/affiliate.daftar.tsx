@@ -20,17 +20,11 @@ export const Route = createFileRoute("/affiliate/daftar")({
 });
 
 async function getNextCikguCode(): Promise<string> {
-  const { data } = await supabase
-    .from("affiliates")
-    .select("custom_ref_code")
-    .like("custom_ref_code", "cikgu%")
-    .order("custom_ref_code", { ascending: false })
-    .limit(1);
-
-  const last = data?.[0]?.custom_ref_code;
-  const lastNum = last ? parseInt(last.replace("cikgu", ""), 10) : 0;
-  const nextNum = (isNaN(lastNum) ? 0 : lastNum) + 1;
-  return `cikgu${String(nextNum).padStart(2, "0")}`;
+  const { data, error } = await supabase.rpc("get_next_cikgu_code");
+  if (error || !data) {
+    throw new Error(error?.message ?? "Gagal jana kod affiliate");
+  }
+  return data as string;
 }
 
 function DaftarAffiliatePage() {
@@ -108,16 +102,14 @@ function DaftarAffiliatePage() {
           break;
         }
         insErr = error;
-        const isDupCustom =
+        const isDupCode =
           error.code === "23505" ||
-          /duplicate key value violates unique constraint.*custom_ref_code/.test(
+          /duplicate key value violates unique constraint.*(custom_ref_code|ref_code)/.test(
             error.message
           );
-        if (!isDupCustom) break;
-        // Retry with next number
-        const match = refCode.match(/cikgu(\d+)/);
-        const num = match ? parseInt(match[1], 10) : 0;
-        refCode = `cikgu${String(num + 1).padStart(2, "0")}`;
+        if (!isDupCode) break;
+        // Race condition — minta kod atomic baru dari server, bukan increment client-side
+        refCode = await getNextCikguCode();
       }
       if (insErr) {
         if (/email/.test(insErr.message)) {
