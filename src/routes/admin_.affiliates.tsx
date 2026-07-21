@@ -295,7 +295,6 @@ function AdminAffiliates() {
               <TableHead>Nama</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Email</TableHead>
-              <TableHead>Kod</TableHead>
               <TableHead className="text-right">Klik</TableHead>
               <TableHead>Klik Terakhir</TableHead>
               <TableHead>Bank</TableHead>
