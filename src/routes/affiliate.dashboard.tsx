@@ -66,6 +66,7 @@ function AffiliateDashboardPage() {
   const [challenge, setChallenge] = useState<Challenge | null>(null);
   const [jualanBulanIni, setJualanBulanIni] = useState<number>(0);
   const [metrikBulan, setMetrikBulan] = useState<{ klik: number; jualan: number; komisen: number }>({ klik: 0, jualan: 0, komisen: 0 });
+  const [tipHariIni, setTipHariIni] = useState<string | null>(null);
 
   useEffect(() => {
     if (authLoading) return;
@@ -84,6 +85,15 @@ function AffiliateDashboardPage() {
         return;
       }
       setAff(a as Affiliate);
+
+      // Tips jual hari ini (deterministic by day)
+      const { data: tipsData } = await supabase.from("affiliate_tips").select("id, teks");
+      if (tipsData && tipsData.length > 0) {
+        const hariKeBerapa = Math.floor(Date.now() / 86400000);
+        const index = hariKeBerapa % tipsData.length;
+        setTipHariIni(tipsData[index].teks);
+      }
+
       const { data: j } = await supabase
         .from("affiliate_jualan")
         .select("id, jumlah_bayar, komisyen, status_bayar, produk, created_at")
@@ -502,6 +512,16 @@ function AffiliateDashboardPage() {
                 capai bonus!
               </div>
             )}
+          </div>
+        ) : null}
+
+        {/* Tips Jual Hari Ini */}
+        {tipHariIni ? (
+          <div className="mt-6 rounded-2xl border border-sky-200 bg-sky-50 p-5 shadow-soft">
+            <h2 className="font-display text-lg font-extrabold text-sky-900">
+              💡 Tips Jual Hari Ini
+            </h2>
+            <p className="mt-2 text-sky-900/90">{tipHariIni}</p>
           </div>
         ) : null}
       </div>
