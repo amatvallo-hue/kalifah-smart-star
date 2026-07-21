@@ -1,7 +1,8 @@
-import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Loader2 } from "lucide-react";
+import { Loader2, Trophy } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
+import { AdminAffiliateNav } from "@/components/AdminAffiliateNav";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
@@ -47,6 +48,9 @@ function AdminChallengePage() {
   const [items, setItems] = useState<Challenge[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [activeChallenge, setActiveChallenge] = useState<Challenge | null>(null);
+  const [ranking, setRanking] = useState<{ id: string; nama: string; avatar_url: string | null; jualan: number }[]>([]);
+  const [rankingLoading, setRankingLoading] = useState(true);
 
   const now = new Date();
   const [bulan, setBulan] = useState<number>(now.getMonth() + 1);
@@ -70,6 +74,7 @@ function AdminChallengePage() {
       if ((data as { role?: string } | null)?.role === "admin") {
         setIsAdmin(true);
         await loadItems();
+        await loadRanking();
       } else {
         navigate({ to: "/" });
       }
@@ -86,6 +91,56 @@ function AdminChallengePage() {
       .order("bulan", { ascending: false });
     setItems((data as Challenge[]) ?? []);
     setLoading(false);
+  }
+
+  async function loadRanking() {
+    setRankingLoading(true);
+    const now = new Date();
+    const bulanNow = now.getMonth() + 1;
+    const tahunNow = now.getFullYear();
+    const firstDay = new Date(tahunNow, bulanNow - 1, 1).toISOString();
+
+    const { data: chData } = await supabase
+      .from("challenge_bulanan")
+      .select("*")
+      .eq("bulan", bulanNow)
+      .eq("tahun", tahunNow)
+      .eq("aktif", true)
+      .maybeSingle();
+    const ch = (chData as Challenge | null) ?? null;
+    setActiveChallenge(ch);
+
+    if (!ch) {
+      setRanking([]);
+      setRankingLoading(false);
+      return;
+    }
+
+    const { data: jualanData } = await supabase
+      .from("affiliate_jualan")
+      .select("affiliate_id")
+      .gte("created_at", firstDay);
+
+    const counts: Record<string, number> = {};
+    for (const j of (jualanData ?? []) as { affiliate_id: string }[]) {
+      counts[j.affiliate_id] = (counts[j.affiliate_id] || 0) + 1;
+    }
+    const ids = Object.keys(counts);
+    if (ids.length === 0) {
+      setRanking([]);
+      setRankingLoading(false);
+      return;
+    }
+    const { data: affData } = await supabase
+      .from("affiliates")
+      .select("id, nama, avatar_url")
+      .in("id", ids);
+    const affs = (affData ?? []) as { id: string; nama: string; avatar_url: string | null }[];
+    const merged = affs
+      .map((a) => ({ ...a, jualan: counts[a.id] ?? 0 }))
+      .sort((a, b) => b.jualan - a.jualan);
+    setRanking(merged);
+    setRankingLoading(false);
   }
 
   async function simpan() {
@@ -122,12 +177,9 @@ function AdminChallengePage() {
     <div className="min-h-screen bg-background">
       <SiteHeader />
       <div className="container mx-auto max-w-4xl px-4 py-8">
-        <div className="flex items-center justify-between">
-          <h1 className="font-display text-3xl font-extrabold">Challenge Bulanan</h1>
-          <Link to="/admin" className="text-sm text-primary hover:underline">
-            ← Admin
-          </Link>
-        </div>
+        <AdminAffiliateNav />
+        <h1 className="font-display text-3xl font-extrabold">Challenge Bulanan</h1>
+
 
         <div className="mt-6 rounded-2xl border border-border bg-card p-5 shadow-soft">
           <h2 className="font-display text-lg font-extrabold">Cipta / Kemaskini</h2>
@@ -263,7 +315,74 @@ function AdminChallengePage() {
             </Table>
           </div>
         </div>
+
+        <div className="mt-8">
+          <h2 className="flex items-center gap-2 font-display text-lg font-extrabold">
+            <Trophy className="h-5 w-5 text-amber-600" /> Ranking Bulan Ini
+          </h2>
+          {rankingLoading ? (
+            <div className="mt-3 flex items-center gap-2 text-sm text-muted-foreground">
+              <Loader2 className="h-4 w-4 animate-spin" /> Memuatkan…
+            </div>
+          ) : !activeChallenge ? (
+            <p className="mt-3 rounded-2xl border border-dashed border-border bg-muted/40 p-4 text-sm text-muted-foreground">
+              Tiada challenge aktif bulan ini.
+            </p>
+          ) : ranking.length === 0 ? (
+            <p className="mt-3 rounded-2xl border border-dashed border-border bg-muted/40 p-4 text-sm text-muted-foreground">
+              Belum ada jualan bulan ini.
+            </p>
+          ) : (
+            <div className="mt-3 space-y-2">
+              <p className="text-xs text-muted-foreground">
+                Target: <span className="font-bold text-foreground">{activeChallenge.target_jualan} jualan</span> · Bonus: <span className="font-bold text-amber-700">RM {Number(activeChallenge.bonus_rm).toFixed(2)}</span>
+              </p>
+              <ul className="space-y-2">
+                {ranking.map((r, i) => {
+                  const pct = Math.min(100, Math.round((r.jualan / activeChallenge.target_jualan) * 100));
+                  const isPemenang = r.jualan >= activeChallenge.target_jualan;
+                  return (
+                    <li key={r.id} className="rounded-2xl border border-border bg-card p-3 shadow-soft">
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-muted text-sm font-extrabold text-foreground">
+                          {i + 1}
+                        </div>
+                        {r.avatar_url ? (
+                          <img src={r.avatar_url} alt={r.nama} className="h-10 w-10 rounded-full object-cover" />
+                        ) : (
+                          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/20 font-bold text-primary">
+                            {r.nama.charAt(0).toUpperCase()}
+                          </div>
+                        )}
+                        <div className="flex-1">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <span className="font-bold text-foreground">{r.nama}</span>
+                            {isPemenang && (
+                              <span className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-bold text-amber-800">
+                                🏆 Pemenang
+                              </span>
+                            )}
+                          </div>
+                          <div className="mt-1 text-xs text-muted-foreground">
+                            {r.jualan} / {activeChallenge.target_jualan} jualan
+                          </div>
+                          <div className="mt-1 h-2 w-full overflow-hidden rounded-full bg-muted">
+                            <div
+                              className={`h-full ${isPemenang ? "bg-amber-500" : "bg-primary"}`}
+                              style={{ width: `${pct}%` }}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          )}
+        </div>
       </div>
+
     </div>
   );
 }
