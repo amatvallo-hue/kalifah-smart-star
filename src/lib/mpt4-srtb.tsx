@@ -390,7 +390,7 @@ function LangkahBlock({
   );
   const opKey = opInput ? `l${lIdx}:${opInput.id}` : null;
   const opChosen = opKey ? answers[opKey] : undefined;
-  const showGalus = langkah.galus && (!opInput || !!opChosen);
+  const showGalus = langkah.galus && (!opInput || opChosen === opInput?.ans);
 
   return (
     <section className="rounded-2xl border-2 border-primary/20 bg-card p-4">
@@ -462,6 +462,7 @@ function InputRow({
 
   if ("type" in inp && (inp.type === "mcq4" || inp.type === "mcq3")) {
     const chosen = answers[baseKey];
+    const isWrong = !!chosen && chosen !== inp.ans;
     const cols = inp.pilihan.length >= 4 ? "grid-cols-2" : "grid-cols-1 sm:grid-cols-3";
     return (
       <div>
@@ -471,6 +472,8 @@ function InputRow({
         <div className={`grid gap-2 ${cols}`}>
           {inp.pilihan.map((p) => {
             const isChosen = chosen === p;
+            const isCorrectChoice = isChosen && p === inp.ans;
+            const isWrongChoice = isChosen && p !== inp.ans;
             return (
               <button
                 key={p}
@@ -478,8 +481,10 @@ function InputRow({
                 onClick={() => setAns(baseKey, p)}
                 disabled={disabled}
                 className={`rounded-2xl border-2 px-4 py-3 font-display font-extrabold shadow-soft transition ${
-                  isChosen
-                    ? "border-primary bg-primary/10 text-primary"
+                  isCorrectChoice
+                    ? "border-success bg-success/10 text-success"
+                    : isWrongChoice
+                    ? "border-destructive bg-destructive/10 text-destructive"
                     : "border-border bg-card hover:border-primary"
                 }`}
               >
@@ -488,6 +493,11 @@ function InputRow({
             );
           })}
         </div>
+        {isWrong && (
+          <p className="mt-2 text-xs font-extrabold text-destructive">
+            Cuba lagi, pilih operasi yang betul! / Try again, choose the correct operation!
+          </p>
+        )}
       </div>
     );
   }
