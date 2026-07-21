@@ -85,6 +85,15 @@ function AffiliateDashboardPage() {
         return;
       }
       setAff(a as Affiliate);
+
+      // Tips jual hari ini (deterministic by day)
+      const { data: tipsData } = await supabase.from("affiliate_tips").select("id, teks");
+      if (tipsData && tipsData.length > 0) {
+        const hariKeBerapa = Math.floor(Date.now() / 86400000);
+        const index = hariKeBerapa % tipsData.length;
+        setTipHariIni(tipsData[index].teks);
+      }
+
       const { data: j } = await supabase
         .from("affiliate_jualan")
         .select("id, jumlah_bayar, komisyen, status_bayar, produk, created_at")
