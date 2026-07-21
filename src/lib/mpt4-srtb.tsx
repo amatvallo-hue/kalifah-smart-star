@@ -105,6 +105,12 @@ export interface Galus {
   r2?: Cell[];
   r1fill?: boolean;
   r2fill?: boolean;
+  r3?: Cell[];
+  r3fill?: boolean;
+  r3carry?: Cell[];
+  r4?: Cell[];
+  r4fill?: boolean;
+  r4carry?: Cell[];
   pAns?: Cell[];
   rAns?: Cell[];
   bAns?: Cell[];
@@ -682,7 +688,7 @@ function ColumnFormGrid({
       )}
 
       {g.r2 && (
-        <div className="grid gap-1 border-b-4 border-foreground pb-1" style={gridStyle}>
+        <div className={g.r3 ? "grid gap-1 pb-1" : "grid gap-1 border-b-4 border-foreground pb-1"} style={gridStyle}>
           <div className="pt-2 text-center font-display text-lg font-extrabold">{opSym}</div>
           {g.r2.map((c, i) => {
             if (g.r2fill && c !== null && c !== ".") {
@@ -690,6 +696,98 @@ function ColumnFormGrid({
                 <GalusCell
                   key={i}
                   cKey={`l${lIdx}:${g.pfx}:r2:${i}`}
+                  answers={answers}
+                  setAns={setAns}
+                  disabled={disabled}
+                  maxLen={cellLen}
+                />
+              );
+            }
+            return (
+              <div key={i} className="rounded-lg bg-card py-2 text-center font-display text-lg font-extrabold">
+                {renderStatic(c)}
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {g.r3carry && g.r3carry.some((c) => c !== null && c !== "." ) && (
+        <div className="grid gap-1" style={gridStyle}>
+          <div className="pt-1 text-center text-[10px] font-bold text-muted-foreground">simpan</div>
+          {g.r3carry.map((c, i) => {
+            if (c === null || c === ".") return <div key={i} />;
+            return (
+              <div key={i} className="text-xs">
+                <GalusCell
+                  cKey={kCell("r3carry", i)}
+                  answers={answers}
+                  setAns={setAns}
+                  disabled={disabled}
+                  maxLen={2}
+                  className="!py-0.5 !text-xs bg-amber-50/50"
+                />
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {g.r3 && (
+        <div className="grid gap-1" style={gridStyle}>
+          <div />
+          {g.r3.map((c, i) => {
+            if (g.r3fill && c !== null && c !== ".") {
+              return (
+                <GalusCell
+                  key={i}
+                  cKey={`l${lIdx}:${g.pfx}:r3:${i}`}
+                  answers={answers}
+                  setAns={setAns}
+                  disabled={disabled}
+                  maxLen={cellLen}
+                />
+              );
+            }
+            return (
+              <div key={i} className="rounded-lg bg-card py-2 text-center font-display text-lg font-extrabold">
+                {renderStatic(c)}
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {g.r4carry && g.r4carry.some((c) => c !== null && c !== ".") && (
+        <div className="grid gap-1" style={gridStyle}>
+          <div className="pt-1 text-center text-[10px] font-bold text-muted-foreground">simpan</div>
+          {g.r4carry.map((c, i) => {
+            if (c === null || c === ".") return <div key={i} />;
+            return (
+              <div key={i} className="text-xs">
+                <GalusCell
+                  cKey={kCell("r4carry", i)}
+                  answers={answers}
+                  setAns={setAns}
+                  disabled={disabled}
+                  maxLen={2}
+                  className="!py-0.5 !text-xs bg-amber-50/50"
+                />
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {g.r4 && (
+        <div className="grid gap-1 border-b-4 border-foreground pb-1" style={gridStyle}>
+          <div className="pt-2 text-center font-display text-lg font-extrabold">+</div>
+          {g.r4.map((c, i) => {
+            if (g.r4fill && c !== null && c !== ".") {
+              return (
+                <GalusCell
+                  key={i}
+                  cKey={`l${lIdx}:${g.pfx}:r4:${i}`}
                   answers={answers}
                   setAns={setAns}
                   disabled={disabled}
