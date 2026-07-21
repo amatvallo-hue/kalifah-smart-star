@@ -76,6 +76,23 @@ function isInactive(ts: string | null | undefined): boolean {
   return diffDays > 14;
 }
 
+function platformLabel(raw: string): { icon: string; label: string } {
+  switch (raw) {
+    case "WhatsApp/Telegram":
+      return { icon: "📱", label: "WhatsApp" };
+    case "Instagram/Facebook":
+      return { icon: "📘", label: "Facebook" };
+    case "TikTok":
+      return { icon: "🎵", label: "TikTok" };
+    case "Threads":
+      return { icon: "🧵", label: "Threads" };
+    case "Lain-lain":
+      return { icon: "✨", label: "Lain-lain" };
+    default:
+      return { icon: "🔗", label: raw };
+  }
+}
+
 function AdminAffiliates() {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
