@@ -629,7 +629,17 @@ function AdminAffiliates() {
                         </div>
                       )}
                       <div className="flex flex-col">
-                        <span className="font-bold text-foreground group-hover:text-primary group-hover:underline">{r.nama}</span>
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold text-foreground group-hover:text-primary group-hover:underline">{r.nama}</span>
+                          {(() => {
+                            const hb = healthBadge(healthScore(r, maxKlik, maxJualan));
+                            return (
+                              <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${hb.className}`} title="Health Score">
+                                {hb.label}
+                              </span>
+                            );
+                          })()}
+                        </div>
                         <span className="font-mono text-xs text-muted-foreground">
                           {r.custom_ref_code ?? r.ref_code}
                         </span>
