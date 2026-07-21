@@ -48,6 +48,9 @@ function AdminChallengePage() {
   const [items, setItems] = useState<Challenge[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [activeChallenge, setActiveChallenge] = useState<Challenge | null>(null);
+  const [ranking, setRanking] = useState<{ id: string; nama: string; avatar_url: string | null; jualan: number }[]>([]);
+  const [rankingLoading, setRankingLoading] = useState(true);
 
   const now = new Date();
   const [bulan, setBulan] = useState<number>(now.getMonth() + 1);
