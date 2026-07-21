@@ -629,82 +629,8 @@ function AdminAffiliates() {
         </Table>
       </div>
 
-      <Dialog open={!!detailAff} onOpenChange={(o) => { if (!o) { setDetailAff(null); setDetailJualan(null); } }}>
-        <DialogContent className="max-h-[85vh] max-w-2xl overflow-y-auto">
-          {detailAff && (
-            <>
-              <DialogHeader>
-                <DialogTitle>{detailAff.nama}</DialogTitle>
-              </DialogHeader>
-              <div className="mt-2 grid grid-cols-1 gap-3 text-sm sm:grid-cols-2">
-                <div><span className="text-muted-foreground">Email:</span> <span className="font-medium">{detailAff.email}</span></div>
-                <div><span className="text-muted-foreground">Telefon:</span> <span className="font-medium">{detailAff.no_telefon ?? "-"}</span></div>
-                <div><span className="text-muted-foreground">Kod:</span> <span className="font-mono">{detailAff.custom_ref_code ?? detailAff.ref_code}</span></div>
-                <div><span className="text-muted-foreground">Bank:</span> <span className="font-medium">{detailAff.nama_bank || "-"}</span></div>
-                <div><span className="text-muted-foreground">No. Akaun:</span> <span className="font-mono">{detailAff.no_akaun_bank || "-"}</span></div>
-                <div><span className="text-muted-foreground">Pemilik Akaun:</span> <span className="font-medium">{detailAff.nama_pemilik_bank ?? "-"}</span></div>
-                <div className="sm:col-span-2">
-                  <span className="text-muted-foreground">Platform Promosi:</span>{" "}
-                  <span className="font-medium">
-                    {(detailAff.platform_promosi ?? []).length > 0
-                      ? (detailAff.platform_promosi ?? []).map((p) => {
-                          const m = platformLabel(p);
-                          return `${m.icon} ${m.label}`;
-                        }).join(", ")
-                      : "-"}
-                  </span>
-                </div>
-              </div>
 
-              <div className="mt-4">
-                <h3 className="mb-2 font-bold">Semua Jualan</h3>
-                {detailJualanLoading ? (
-                  <div className="py-4 text-center text-muted-foreground">
-                    <Loader2 className="mx-auto h-4 w-4 animate-spin" />
-                  </div>
-                ) : (detailJualan?.length ?? 0) === 0 ? (
-                  <div className="py-4 text-center text-sm text-muted-foreground">Tiada jualan.</div>
-                ) : (
-                  <div className="overflow-hidden rounded border border-border">
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>Tarikh</TableHead>
-                          <TableHead>Produk</TableHead>
-                          <TableHead className="text-right">Bayar</TableHead>
-                          <TableHead className="text-right">Komisyen</TableHead>
-                          <TableHead>Status</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {(detailJualan ?? []).map((j) => (
-                          <TableRow key={j.id}>
-                            <TableCell className="text-xs">{fmtDateTimeMY(j.created_at)}</TableCell>
-                            <TableCell className="text-xs">{j.produk ?? "-"}</TableCell>
-                            <TableCell className="text-right text-xs">{rm(Number(j.jumlah_bayar ?? 0))}</TableCell>
-                            <TableCell className="text-right text-xs">{rm(Number(j.komisyen ?? 0))}</TableCell>
-                            <TableCell className="text-xs">{j.status_bayar ?? "-"}</TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </div>
-                )}
-              </div>
 
-              <div className="mt-4 flex justify-end">
-                <button
-                  type="button"
-                  onClick={() => { setDetailAff(null); setDetailJualan(null); }}
-                  className="rounded border border-border bg-card px-4 py-2 text-sm font-bold hover:bg-muted"
-                >
-                  Tutup
-                </button>
-              </div>
-            </>
-          )}
-        </DialogContent>
-      </Dialog>
 
       <Dialog open={!!prestasiAff} onOpenChange={(o) => { if (!o) { setPrestasiAff(null); setPrestasiData(null); } }}>
         <DialogContent className="max-h-[85vh] max-w-3xl overflow-y-auto">
