@@ -149,7 +149,7 @@ function AffiliateDashboardPage() {
             Anda belum berdaftar sebagai affiliate
           </h1>
           <p className="mt-2 text-muted-foreground">
-            Sertai program affiliate Kalifah.my dan dapatkan komisyen 10% bagi
+            Sertai program affiliate Kalifah.my dan dapatkan komisyen 30% bagi
             setiap jualan.
           </p>
           <Link
