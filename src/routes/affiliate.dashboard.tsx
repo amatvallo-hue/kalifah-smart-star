@@ -273,19 +273,57 @@ function AffiliateDashboardPage() {
         {/* Hero affiliate */}
         <div className="rounded-3xl border border-primary/20 bg-card p-6 shadow-soft">
           <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-            <div>
-              <div className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1 text-xs font-bold text-primary">
-                ⭐ Affiliate Rasmi Kalifah.my
+            <div className="flex items-start gap-4">
+              <div className="group relative shrink-0">
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={uploadingAvatar}
+                  className="relative block h-16 w-16 overflow-hidden rounded-full border-2 border-primary/30 bg-primary/20 shadow-soft transition hover:border-primary/60"
+                  aria-label="Tukar foto profil"
+                >
+                  {aff.avatar_url ? (
+                    <img
+                      src={aff.avatar_url}
+                      alt={aff.nama}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <span className="flex h-full w-full items-center justify-center font-display text-2xl font-extrabold text-primary">
+                      {aff.nama.charAt(0).toUpperCase()}
+                    </span>
+                  )}
+                  <span className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition group-hover:opacity-100">
+                    <Camera className="h-5 w-5 text-white" />
+                  </span>
+                  {uploadingAvatar && (
+                    <span className="absolute inset-0 flex items-center justify-center bg-black/50">
+                      <Loader2 className="h-5 w-5 animate-spin text-white" />
+                    </span>
+                  )}
+                </button>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleAvatarChange}
+                />
               </div>
-              <h1 className="mt-3 font-display text-3xl font-extrabold">
-                Selamat Datang, {aff.nama.split(" ")[0]} 👋
-              </h1>
-              <p className="mt-1 text-muted-foreground">
-                Dashboard Affiliate Kalifah.my
-              </p>
-              <p className="mt-3 text-sm italic text-muted-foreground">
-                {AYAT_HERO[Math.floor(Date.now() / 86400000) % AYAT_HERO.length]}
-              </p>
+              <div>
+                <div className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-3 py-1 text-xs font-bold text-primary">
+                  ⭐ Affiliate Rasmi Kalifah.my
+                </div>
+                <h1 className="mt-3 font-display text-3xl font-extrabold">
+                  Selamat Datang, {aff.nama.split(" ")[0]} 👋
+                </h1>
+                <p className="mt-1 text-muted-foreground">
+                  Dashboard Affiliate Kalifah.my
+                </p>
+                <p className="mt-3 text-sm italic text-muted-foreground">
+                  {AYAT_HERO[Math.floor(Date.now() / 86400000) % AYAT_HERO.length]}
+                </p>
+              </div>
             </div>
             <div className="flex shrink-0 items-center gap-3 rounded-2xl border border-gold/30 bg-gold/10 px-5 py-3">
               <div className="text-3xl font-extrabold text-gold-foreground">
