@@ -55,6 +55,11 @@ function rm(ringgit: number) {
   return `RM ${(ringgit ?? 0).toFixed(2)}`;
 }
 
+const AYAT_HERO = [
+  "Setiap ibu bapa yang anda bantu bermula dengan satu perkongsian hari ini.",
+  "Misi anda hari ini: Kongsi kepada sekurang-kurangnya 10 ibu bapa.",
+];
+
 function AffiliateDashboardPage() {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
