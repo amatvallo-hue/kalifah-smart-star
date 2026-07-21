@@ -257,10 +257,20 @@ function AdminAffiliates() {
 
       {/* Stat cards */}
       <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Total Affiliate" value={String(totals.totalAffiliates)} />
-        <StatCard label="Total Komisyen Terkumpul" value={rm(totals.totalKomisyen)} />
-        <StatCard label="Total Dibayar" value={rm(totals.totalDibayar)} />
-        <StatCard label="Belum Dibayar" value={rm(totals.belumDibayar)} highlight />
+        <StatCard label="👥 Affiliate Aktif" value={`${aktifCount} / ${rows.length}`} />
+        <StatCard label="💰 Komisen Bulan Ini" value={rm(komisenBulanIni)} />
+        <StatCard label="📚 Jualan Bulan Ini" value={String(jualanBulanIniCount)} />
+        <StatCard label="⏳ Pending Payout" value={rm(totals.belumDibayar)} highlight />
+      </div>
+
+      {/* Prestasi Hari Ini */}
+      <div className="mt-6">
+        <h2 className="mb-3 font-display text-lg font-extrabold">Prestasi Hari Ini</h2>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <StatCard label="Klik Hari Ini" value={String(klikHariIniCount)} />
+          <StatCard label="Conversion" value={conversionHariIni} />
+          <StatCard label="Affiliate Baru" value={String(affiliateBaruHariIni)} />
+        </div>
       </div>
 
       <div className="mt-6 overflow-hidden rounded-2xl border border-border bg-card">
