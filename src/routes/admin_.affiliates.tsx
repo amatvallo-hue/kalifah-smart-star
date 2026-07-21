@@ -419,7 +419,7 @@ function AdminAffiliates() {
                 <TableRow key={r.id}>
                   <TableCell>
                     <Link
-                      to="/admin_/affiliates/$id"
+                      to="/admin/affiliates/$id"
                       params={{ id: r.id }}
                       className="group flex items-center gap-3"
                     >

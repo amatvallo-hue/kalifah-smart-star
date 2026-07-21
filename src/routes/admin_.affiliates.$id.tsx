@@ -251,7 +251,7 @@ function AdminAffiliateProfile() {
         <div className="mx-auto max-w-3xl px-4 py-12 text-center">
           <ShieldAlert className="mx-auto h-10 w-10 text-muted-foreground" />
           <p className="mt-4 font-bold">Affiliate tidak dijumpai.</p>
-          <Link to="/admin_/affiliates" className="mt-4 inline-block text-primary underline">← Kembali</Link>
+          <Link to="/admin/affiliates" className="mt-4 inline-block text-primary underline">← Kembali</Link>
         </div>
       </div>
     );
@@ -278,7 +278,7 @@ function AdminAffiliateProfile() {
       <SiteHeader />
       <div className="mx-auto max-w-6xl px-4 py-8">
         <Link
-          to="/admin_/affiliates"
+          to="/admin/affiliates"
           className="inline-flex items-center gap-1 text-sm font-bold text-muted-foreground hover:text-foreground"
         >
           <ArrowLeft className="h-4 w-4" /> Kembali ke senarai
