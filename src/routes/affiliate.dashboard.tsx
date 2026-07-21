@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { PAKEJ_LIST } from "@/lib/curriculum";
 import { useEffect, useMemo, useState } from "react";
-import { Copy, Loader2, MousePointerClick, ShoppingBag, Wallet, Coins, Share2, TrendingUp, Trophy } from "lucide-react";
+import { Copy, Loader2, MousePointerClick, ShoppingBag, Coins, Share2, TrendingUp, Trophy } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
@@ -63,6 +63,7 @@ function AffiliateDashboardPage() {
   const [copied, setCopied] = useState(false);
   const [challenge, setChallenge] = useState<Challenge | null>(null);
   const [jualanBulanIni, setJualanBulanIni] = useState<number>(0);
+  const [metrikBulan, setMetrikBulan] = useState<{ klik: number; jualan: number; komisen: number }>({ klik: 0, jualan: 0, komisen: 0 });
 
   useEffect(() => {
     if (authLoading) return;
@@ -89,10 +90,39 @@ function AffiliateDashboardPage() {
         .limit(50);
       setJualan((j as Jualan[]) ?? []);
 
-      // Challenge bulan ini
+      // Metrik bulan ini (shared: challenge + KPI cards)
       const now = new Date();
       const bulan = now.getMonth() + 1;
       const tahun = now.getFullYear();
+      const firstDay = new Date(tahun, bulan - 1, 1).toISOString();
+
+      // Jualan + komisen bulan ini
+      const { data: jBulan } = await supabase
+        .from("affiliate_jualan")
+        .select("komisyen")
+        .eq("affiliate_id", (a as Affiliate).id)
+        .gte("created_at", firstDay);
+      const jualanCount = jBulan?.length ?? 0;
+      const komisenSum = (jBulan ?? []).reduce(
+        (acc, row: { komisyen: number | null }) => acc + Number(row.komisyen ?? 0),
+        0,
+      );
+
+      // Klik bulan ini
+      const { count: klikCount } = await supabase
+        .from("affiliate_klik_log")
+        .select("id", { count: "exact", head: true })
+        .eq("affiliate_id", (a as Affiliate).id)
+        .gte("created_at", firstDay);
+
+      setMetrikBulan({
+        klik: klikCount ?? 0,
+        jualan: jualanCount,
+        komisen: komisenSum,
+      });
+      setJualanBulanIni(jualanCount);
+
+      // Challenge bulan ini
       const { data: ch } = await supabase
         .from("challenge_bulanan")
         .select("*")
@@ -102,13 +132,6 @@ function AffiliateDashboardPage() {
         .maybeSingle();
       if (ch) {
         setChallenge(ch as Challenge);
-        const firstDay = new Date(tahun, bulan - 1, 1).toISOString();
-        const { count } = await supabase
-          .from("affiliate_jualan")
-          .select("id", { count: "exact", head: true })
-          .eq("affiliate_id", (a as Affiliate).id)
-          .gte("created_at", firstDay);
-        setJualanBulanIni(count ?? 0);
       }
 
       setLoading(false);
@@ -290,39 +313,48 @@ function AffiliateDashboardPage() {
           </div>
         </div>
 
-        {/* Stat cards */}
-        <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-5">
-          <StatCard
-            icon={<MousePointerClick className="h-5 w-5" />}
-            label="Total Klik"
-            value={String(aff.total_klik)}
-          />
-          <StatCard
-            icon={<ShoppingBag className="h-5 w-5" />}
-            label="Total Jualan"
-            value={String(aff.total_jualan)}
-          />
+        {/* KPI Bulan Ini */}
+        <div className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
           <StatCard
             icon={<Coins className="h-5 w-5" />}
-            label="Komisyen"
-            value={rm(aff.total_komisyen)}
-          />
-          <StatCard
-            icon={<Wallet className="h-5 w-5" />}
-            label="Baki Belum Dibayar"
-            value={rm(baki)}
+            label="Komisen Bulan Ini"
+            value={rm(metrikBulan.komisen)}
+            subtext={`Jumlah Keseluruhan: ${rm(aff.total_komisyen)}`}
             highlight
           />
           <StatCard
+            icon={<ShoppingBag className="h-5 w-5" />}
+            label="Jualan Bulan Ini"
+            value={String(metrikBulan.jualan)}
+            subtext={`Jumlah Keseluruhan: ${aff.total_jualan}`}
+          />
+          <StatCard
+            icon={<MousePointerClick className="h-5 w-5" />}
+            label="Klik Bulan Ini"
+            value={String(metrikBulan.klik)}
+            subtext={`Jumlah Keseluruhan: ${aff.total_klik}`}
+          />
+          <StatCard
             icon={<TrendingUp className="h-5 w-5" />}
-            label="Conversion"
-            value={aff.total_klik > 0 ? ((aff.total_jualan / aff.total_klik) * 100).toFixed(1) + '%' : '0%'}
+            label="Conversion Bulan Ini"
+            value={
+              metrikBulan.klik > 0
+                ? ((metrikBulan.jualan / metrikBulan.klik) * 100).toFixed(1) + "%"
+                : "0%"
+            }
           />
         </div>
 
-        <div className="mt-3 text-sm text-muted-foreground">
-          Sudah dibayar: <strong>{rm(aff.total_dibayar)}</strong>
+        <div className="mt-3 flex flex-wrap gap-x-6 gap-y-1 text-sm text-muted-foreground">
+          <div>
+            Baki Belum Dibayar:{" "}
+            <strong className="text-primary">{rm(baki)}</strong>
+          </div>
+          <div>
+            Sudah Dibayar: <strong>{rm(aff.total_dibayar)}</strong>
+          </div>
         </div>
+
 
         {/* Challenge bulan ini */}
         {challenge ? (
@@ -432,11 +464,13 @@ function StatCard({
   icon,
   label,
   value,
+  subtext,
   highlight,
 }: {
   icon: React.ReactNode;
   label: string;
   value: string;
+  subtext?: string;
   highlight?: boolean;
 }) {
   return (
@@ -450,6 +484,9 @@ function StatCard({
         {label}
       </div>
       <div className="mt-2 font-display text-2xl font-extrabold">{value}</div>
+      {subtext ? (
+        <div className="mt-1 text-xs text-muted-foreground">{subtext}</div>
+      ) : null}
     </div>
   );
 }
