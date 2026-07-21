@@ -123,12 +123,9 @@ function AdminChallengePage() {
     <div className="min-h-screen bg-background">
       <SiteHeader />
       <div className="container mx-auto max-w-4xl px-4 py-8">
-        <div className="flex items-center justify-between">
-          <h1 className="font-display text-3xl font-extrabold">Challenge Bulanan</h1>
-          <Link to="/admin" className="text-sm text-primary hover:underline">
-            ← Admin
-          </Link>
-        </div>
+        <AdminAffiliateNav />
+        <h1 className="font-display text-3xl font-extrabold">Challenge Bulanan</h1>
+
 
         <div className="mt-6 rounded-2xl border border-border bg-card p-5 shadow-soft">
           <h2 className="font-display text-lg font-extrabold">Cipta / Kemaskini</h2>
