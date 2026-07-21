@@ -292,12 +292,14 @@ function AdminAffiliates() {
           <TableHeader>
             <TableRow>
               <TableHead>Nama</TableHead>
+              <TableHead>Status</TableHead>
               <TableHead>Email</TableHead>
               <TableHead>Kod</TableHead>
               <TableHead className="text-right">Klik</TableHead>
               <TableHead>Klik Terakhir</TableHead>
               <TableHead>Bank</TableHead>
               <TableHead>Platform Promosi</TableHead>
+              <TableHead className="text-right">Lifetime (Klik / Jualan / Conv%)</TableHead>
               <TableHead className="text-right">Jualan Bulan Ini</TableHead>
               <TableHead className="text-right">Komisyen</TableHead>
               <TableHead className="text-right">Dibayar</TableHead>
@@ -307,7 +309,7 @@ function AdminAffiliates() {
           <TableBody>
             {rows.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={11} className="py-6 text-center text-muted-foreground">
+                <TableCell colSpan={13} className="py-6 text-center text-muted-foreground">
                   Tiada affiliate berdaftar lagi.
                 </TableCell>
               </TableRow>
