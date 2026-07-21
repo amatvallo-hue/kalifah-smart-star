@@ -171,18 +171,7 @@ function AdminAffiliates() {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterMode, setFilterMode] = useState<"semua" | "aktif" | "belum_aktif" | "ada_pending" | "tiada_jualan" | "top_seller" | "baru_daftar">("semua");
 
-  const openDetail = async (r: AffRow) => {
-    setDetailAff(r);
-    setDetailJualan(null);
-    setDetailJualanLoading(true);
-    const { data } = await supabase
-      .from("affiliate_jualan")
-      .select("id, created_at, produk, jumlah_bayar, komisyen, status_bayar")
-      .eq("affiliate_id", r.id)
-      .order("created_at", { ascending: false });
-    setDetailJualan((data ?? []) as JualanRow[]);
-    setDetailJualanLoading(false);
-  };
+
 
   const openPrestasi = async (r: AffRow) => {
     setPrestasiAff(r);
