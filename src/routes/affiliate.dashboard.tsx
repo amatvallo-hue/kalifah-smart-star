@@ -464,11 +464,13 @@ function StatCard({
   icon,
   label,
   value,
+  subtext,
   highlight,
 }: {
   icon: React.ReactNode;
   label: string;
   value: string;
+  subtext?: string;
   highlight?: boolean;
 }) {
   return (
@@ -482,6 +484,9 @@ function StatCard({
         {label}
       </div>
       <div className="mt-2 font-display text-2xl font-extrabold">{value}</div>
+      {subtext ? (
+        <div className="mt-1 text-xs text-muted-foreground">{subtext}</div>
+      ) : null}
     </div>
   );
 }
