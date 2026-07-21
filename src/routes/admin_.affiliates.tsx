@@ -482,17 +482,21 @@ function AdminAffiliates() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {rows.length === 0 ? (
+            {filteredRows.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={12} className="py-6 text-center text-muted-foreground">
-                  Tiada affiliate berdaftar lagi.
+                  {rows.length === 0 ? "Tiada affiliate berdaftar lagi." : "Tiada affiliate sepadan dengan carian/tapisan."}
                 </TableCell>
               </TableRow>
             ) : (
-              rows.map((r) => (
+              filteredRows.map((r) => (
                 <TableRow key={r.id}>
                   <TableCell>
-                    <div className="flex items-center gap-3">
+                    <Link
+                      to="/admin_/affiliates/$id"
+                      params={{ id: r.id }}
+                      className="group flex items-center gap-3"
+                    >
                       {r.avatar_url ? (
                         <img
                           src={r.avatar_url}
@@ -505,12 +509,12 @@ function AdminAffiliates() {
                         </div>
                       )}
                       <div className="flex flex-col">
-                        <span className="font-bold">{r.nama}</span>
+                        <span className="font-bold text-foreground group-hover:text-primary group-hover:underline">{r.nama}</span>
                         <span className="font-mono text-xs text-muted-foreground">
                           {r.custom_ref_code ?? r.ref_code}
                         </span>
                       </div>
-                    </div>
+                    </Link>
                   </TableCell>
                   <TableCell>
                     {(() => {
