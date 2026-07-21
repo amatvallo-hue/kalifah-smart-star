@@ -317,6 +317,16 @@ function AdminAffiliates() {
               rows.map((r) => (
                 <TableRow key={r.id}>
                   <TableCell className="font-bold">{r.nama}</TableCell>
+                  <TableCell>
+                    {(() => {
+                      const s = statusBadge(r);
+                      return (
+                        <span className={`rounded-full px-2 py-0.5 text-xs font-bold ${s.className}`}>
+                          {s.label}
+                        </span>
+                      );
+                    })()}
+                  </TableCell>
                   <TableCell>{r.email}</TableCell>
                   <TableCell className="font-mono">{r.custom_ref_code ?? r.ref_code}</TableCell>
                   <TableCell className="text-right">{r.total_klik ?? 0}</TableCell>
@@ -342,6 +352,20 @@ function AdminAffiliates() {
                         <span className="text-xs text-muted-foreground">-</span>
                       )}
                     </div>
+                  </TableCell>
+                  <TableCell className="text-right">
+                    {(() => {
+                      const k = r.total_klik ?? 0;
+                      const j = r.total_jualan ?? 0;
+                      const conv = k > 0 ? ((j / k) * 100).toFixed(1) + "%" : "0%";
+                      return (
+                        <div className="flex flex-col items-end text-xs">
+                          <span><span className="text-muted-foreground">Klik:</span> <span className="font-bold">{k}</span></span>
+                          <span><span className="text-muted-foreground">Jualan:</span> <span className="font-bold">{j}</span></span>
+                          <span><span className="text-muted-foreground">Conv:</span> <span className="font-bold text-emerald-700">{conv}</span></span>
+                        </div>
+                      );
+                    })()}
                   </TableCell>
                   <TableCell className="text-right">{jualanCounts[r.id] ?? 0}</TableCell>
                   <TableCell className="text-right">
