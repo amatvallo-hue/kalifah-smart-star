@@ -133,22 +133,27 @@ function AdminAffiliates() {
   }, [rows]);
 
   const markPaid = async (row: AffRow) => {
-    console.log("markPaid called", row.id);
+    const baki = Number(row.total_komisyen || 0) - Number(row.total_dibayar || 0);
+    if (baki <= 0) {
+      window.alert("Tiada baki belum dibayar untuk affiliate ini.");
+      return;
+    }
+    if (!window.confirm(`Sahkan bayaran RM${baki.toFixed(2)} kepada ${row.nama}?`)) {
+      return;
+    }
     await supabase
       .from("affiliates")
-      .update({
-        total_dibayar: row.total_dibayar + row.total_komisyen,
-        total_komisyen: 0,
-      })
+      .update({ total_dibayar: row.total_komisyen })
       .eq("id", row.id);
+    await supabase
+      .from("affiliate_jualan")
+      .update({ status_bayar: "dibayar" })
+      .eq("affiliate_id", row.id)
+      .eq("status_bayar", "belum_dibayar");
     setRows((prev) =>
       prev.map((r) =>
         r.id === row.id
-          ? {
-              ...r,
-              total_dibayar: Number(r.total_dibayar || 0) + Number(r.total_komisyen || 0),
-              total_komisyen: 0,
-            }
+          ? { ...r, total_dibayar: Number(r.total_komisyen || 0) }
           : r,
       ),
     );
