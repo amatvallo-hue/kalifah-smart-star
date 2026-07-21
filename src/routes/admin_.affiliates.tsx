@@ -107,6 +107,23 @@ function isInactive(ts: string | null | undefined): boolean {
   return diffDays > 14;
 }
 
+function healthScore(r: AffRow, maxKlik: number, maxJualan: number): number {
+  const klikScore = maxKlik > 0 ? ((r.total_klik ?? 0) / maxKlik) * 100 : 0;
+  const jualanScore = maxJualan > 0 ? ((r.total_jualan ?? 0) / maxJualan) * 100 : 0;
+  const days = r.last_klik_at
+    ? (Date.now() - new Date(r.last_klik_at).getTime()) / 86400000
+    : Infinity;
+  const konsistenScore = days <= 7 ? 100 : days >= 30 ? 0 : 100 - ((days - 7) / 23) * 100;
+  const score = Math.round(klikScore * 0.3 + jualanScore * 0.5 + konsistenScore * 0.2);
+  return Math.max(0, Math.min(100, score));
+}
+
+function healthBadge(score: number): { label: string; className: string } {
+  if (score >= 70) return { label: `🟢 ${score}`, className: "bg-emerald-100 text-emerald-700" };
+  if (score >= 40) return { label: `🟡 ${score}`, className: "bg-amber-100 text-amber-700" };
+  return { label: `🔴 ${score}`, className: "bg-red-100 text-red-700" };
+}
+
 function platformLabel(raw: string): { icon: string; label: string } {
   switch (raw) {
     case "WhatsApp/Telegram":
@@ -322,6 +339,16 @@ function AdminAffiliates() {
     const champ = [...rows].sort((a, b) => (b.total_komisyen ?? 0) - (a.total_komisyen ?? 0))[0];
     if ((champ.total_komisyen ?? 0) === 0) return null;
     return champ;
+  }, [rows]);
+
+  const { maxKlik, maxJualan } = useMemo(() => {
+    let mk = 0;
+    let mj = 0;
+    for (const r of rows) {
+      if ((r.total_klik ?? 0) > mk) mk = r.total_klik ?? 0;
+      if ((r.total_jualan ?? 0) > mj) mj = r.total_jualan ?? 0;
+    }
+    return { maxKlik: mk, maxJualan: mj };
   }, [rows]);
 
   const needAttention = useMemo(() => {
@@ -602,7 +629,17 @@ function AdminAffiliates() {
                         </div>
                       )}
                       <div className="flex flex-col">
-                        <span className="font-bold text-foreground group-hover:text-primary group-hover:underline">{r.nama}</span>
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold text-foreground group-hover:text-primary group-hover:underline">{r.nama}</span>
+                          {(() => {
+                            const hb = healthBadge(healthScore(r, maxKlik, maxJualan));
+                            return (
+                              <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${hb.className}`} title="Health Score">
+                                {hb.label}
+                              </span>
+                            );
+                          })()}
+                        </div>
                         <span className="font-mono text-xs text-muted-foreground">
                           {r.custom_ref_code ?? r.ref_code}
                         </span>

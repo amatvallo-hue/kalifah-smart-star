@@ -76,6 +76,23 @@ function statusBadge(r: AffRow): { label: string; className: string } {
   return { label: "🔴 Tidak Aktif", className: "bg-red-100 text-red-700" };
 }
 
+function healthScore(r: AffRow, maxKlik: number, maxJualan: number): number {
+  const klikScore = maxKlik > 0 ? ((r.total_klik ?? 0) / maxKlik) * 100 : 0;
+  const jualanScore = maxJualan > 0 ? ((r.total_jualan ?? 0) / maxJualan) * 100 : 0;
+  const days = r.last_klik_at
+    ? (Date.now() - new Date(r.last_klik_at).getTime()) / 86400000
+    : Infinity;
+  const konsistenScore = days <= 7 ? 100 : days >= 30 ? 0 : 100 - ((days - 7) / 23) * 100;
+  const score = Math.round(klikScore * 0.3 + jualanScore * 0.5 + konsistenScore * 0.2);
+  return Math.max(0, Math.min(100, score));
+}
+
+function healthBadge(score: number): { label: string; className: string } {
+  if (score >= 70) return { label: `🟢 ${score}`, className: "bg-emerald-100 text-emerald-700" };
+  if (score >= 40) return { label: `🟡 ${score}`, className: "bg-amber-100 text-amber-700" };
+  return { label: `🔴 ${score}`, className: "bg-red-100 text-red-700" };
+}
+
 function platformLabel(raw: string): { icon: string; label: string } {
   switch (raw) {
     case "WhatsApp/Telegram": return { icon: "📱", label: "WhatsApp" };
@@ -114,6 +131,8 @@ function AdminAffiliateProfile() {
   const [savingTag, setSavingTag] = useState(false);
 
   const [copied, setCopied] = useState<string | null>(null);
+  const [maxKlik, setMaxKlik] = useState(0);
+  const [maxJualan, setMaxJualan] = useState(0);
 
   useEffect(() => {
     if (authLoading) return;
@@ -142,11 +161,21 @@ function AdminAffiliateProfile() {
       since.setHours(0, 0, 0, 0);
       const sinceIso = since.toISOString();
 
-      const [klikRes, jualRes, allJualan] = await Promise.all([
+      const [klikRes, jualRes, allJualan, allAff] = await Promise.all([
         supabase.from("affiliate_klik_log").select("created_at").eq("affiliate_id", id).gte("created_at", sinceIso),
         supabase.from("affiliate_jualan").select("created_at, komisyen").eq("affiliate_id", id).gte("created_at", sinceIso),
         supabase.from("affiliate_jualan").select("id, created_at, produk, jumlah_bayar, komisyen, status_bayar").eq("affiliate_id", id).order("created_at", { ascending: false }),
+        supabase.from("affiliates").select("total_klik, total_jualan"),
       ]);
+
+      let mk = 0;
+      let mj = 0;
+      for (const row of (allAff.data ?? []) as { total_klik: number | null; total_jualan: number | null }[]) {
+        if ((row.total_klik ?? 0) > mk) mk = row.total_klik ?? 0;
+        if ((row.total_jualan ?? 0) > mj) mj = row.total_jualan ?? 0;
+      }
+      setMaxKlik(mk);
+      setMaxJualan(mj);
 
       const buckets = new Map<string, Bucket>();
       for (let i = 0; i < 30; i++) {
@@ -275,6 +304,14 @@ function AdminAffiliateProfile() {
                 <span className={`rounded-full px-2 py-0.5 text-xs font-bold ${badge.className}`}>
                   {badge.label}
                 </span>
+                {(() => {
+                  const hb = healthBadge(healthScore(aff, maxKlik, maxJualan));
+                  return (
+                    <span className={`rounded-full px-2 py-0.5 text-xs font-bold ${hb.className}`} title="Health Score">
+                      {hb.label}
+                    </span>
+                  );
+                })()}
               </div>
               <div className="mt-1 text-sm text-muted-foreground">{aff.email}</div>
               <div className="mt-1 text-sm">
