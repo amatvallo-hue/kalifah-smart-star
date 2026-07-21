@@ -161,11 +161,21 @@ function AdminAffiliateProfile() {
       since.setHours(0, 0, 0, 0);
       const sinceIso = since.toISOString();
 
-      const [klikRes, jualRes, allJualan] = await Promise.all([
+      const [klikRes, jualRes, allJualan, allAff] = await Promise.all([
         supabase.from("affiliate_klik_log").select("created_at").eq("affiliate_id", id).gte("created_at", sinceIso),
         supabase.from("affiliate_jualan").select("created_at, komisyen").eq("affiliate_id", id).gte("created_at", sinceIso),
         supabase.from("affiliate_jualan").select("id, created_at, produk, jumlah_bayar, komisyen, status_bayar").eq("affiliate_id", id).order("created_at", { ascending: false }),
+        supabase.from("affiliates").select("total_klik, total_jualan"),
       ]);
+
+      let mk = 0;
+      let mj = 0;
+      for (const row of (allAff.data ?? []) as { total_klik: number | null; total_jualan: number | null }[]) {
+        if ((row.total_klik ?? 0) > mk) mk = row.total_klik ?? 0;
+        if ((row.total_jualan ?? 0) > mj) mj = row.total_jualan ?? 0;
+      }
+      setMaxKlik(mk);
+      setMaxJualan(mj);
 
       const buckets = new Map<string, Bucket>();
       for (let i = 0; i < 30; i++) {
