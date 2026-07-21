@@ -317,6 +317,20 @@ function AdminAffiliates() {
     });
   }, [rows, searchQuery, filterMode]);
 
+  const topPerformer = useMemo(() => {
+    if (rows.length === 0) return null;
+    const champ = [...rows].sort((a, b) => (b.total_komisyen ?? 0) - (a.total_komisyen ?? 0))[0];
+    if ((champ.total_komisyen ?? 0) === 0) return null;
+    return champ;
+  }, [rows]);
+
+  const needAttention = useMemo(() => {
+    return [...rows]
+      .filter((r) => (r.total_klik ?? 0) > 0 && (r.total_jualan ?? 0) === 0)
+      .sort((a, b) => (b.total_klik ?? 0) - (a.total_klik ?? 0))
+      .slice(0, 3);
+}
+  }, [rows]);
 
   const markPaid = async (row: AffRow) => {
     const baki = Number(row.total_komisyen || 0) - Number(row.total_dibayar || 0);
