@@ -55,6 +55,11 @@ function rm(ringgit: number) {
   return `RM ${(ringgit ?? 0).toFixed(2)}`;
 }
 
+const AYAT_HERO = [
+  "Setiap ibu bapa yang anda bantu bermula dengan satu perkongsian hari ini.",
+  "Misi anda hari ini: Kongsi kepada sekurang-kurangnya 10 ibu bapa.",
+];
+
 function AffiliateDashboardPage() {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
@@ -226,6 +231,9 @@ function AffiliateDashboardPage() {
               </h1>
               <p className="mt-1 text-muted-foreground">
                 Dashboard Affiliate Kalifah.my
+              </p>
+              <p className="mt-3 text-sm italic text-muted-foreground">
+                {AYAT_HERO[Math.floor(Date.now() / 86400000) % AYAT_HERO.length]}
               </p>
             </div>
             <div className="flex shrink-0 items-center gap-3 rounded-2xl border border-gold/30 bg-gold/10 px-5 py-3">
