@@ -24,7 +24,7 @@ import {
   Legend,
 } from "recharts";
 
-export const Route = createFileRoute("/admin_/affiliates/$id")({
+export const Route = createFileRoute("/admin_/affiliates_/$id")({
   head: () => ({ meta: [{ title: "Profil Affiliate — Kalifah.my" }] }),
   ssr: false,
   component: AdminAffiliateProfile,

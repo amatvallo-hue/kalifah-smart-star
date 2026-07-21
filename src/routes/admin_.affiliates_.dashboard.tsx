@@ -6,7 +6,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { SiteHeader } from "@/components/SiteHeader";
 import { AdminAffiliateNav } from "@/components/AdminAffiliateNav";
 
-export const Route = createFileRoute("/admin_/affiliates/dashboard")({
+export const Route = createFileRoute("/admin_/affiliates_/dashboard")({
   head: () => ({ meta: [{ title: "Dashboard Affiliate — Admin Kalifah.my" }] }),
   ssr: false,
   component: AdminAffiliatesDashboard,
