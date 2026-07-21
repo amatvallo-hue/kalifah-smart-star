@@ -61,6 +61,7 @@ function AffiliateDashboardPage() {
   const [jualan, setJualan] = useState<Jualan[]>([]);
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
+  const [copiedCaption, setCopiedCaption] = useState<string | null>(null);
   const [challenge, setChallenge] = useState<Challenge | null>(null);
   const [jualanBulanIni, setJualanBulanIni] = useState<number>(0);
   const [metrikBulan, setMetrikBulan] = useState<{ klik: number; jualan: number; komisen: number }>({ klik: 0, jualan: 0, komisen: 0 });
@@ -152,6 +153,16 @@ function AffiliateDashboardPage() {
       await navigator.clipboard.writeText(refLink);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
+    } catch {
+      /* ignore */
+    }
+  }
+
+  async function copyCaption(key: string, text: string) {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedCaption(key);
+      setTimeout(() => setCopiedCaption((c) => (c === key ? null : c)), 2500);
     } catch {
       /* ignore */
     }
@@ -250,48 +261,34 @@ function AffiliateDashboardPage() {
           </div>
         </div>
 
-        {/* Ref link */}
+        {/* Marketing Tools */}
         <div className="mt-6 rounded-2xl border border-primary/20 bg-card p-5 shadow-soft">
-          <div className="text-xs font-bold uppercase text-muted-foreground">
-            Pautan Affiliate Anda
+          <h2 className="font-display text-xl font-extrabold">🧰 Marketing Tools</h2>
+
+          {/* Copy Link */}
+          <div className="mt-4">
+            <div className="text-xs font-bold uppercase text-muted-foreground">
+              Pautan Affiliate Anda
+            </div>
+            <div className="mt-2 flex flex-col gap-2 sm:flex-row sm:items-center">
+              <input
+                readOnly
+                value={refLink}
+                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+              />
+              <button
+                type="button"
+                onClick={copyLink}
+                className="inline-flex items-center justify-center gap-1 rounded-md bg-primary px-4 py-2 text-sm font-bold text-primary-foreground hover:opacity-90"
+              >
+                <Copy className="h-4 w-4" />
+                {copied ? "Disalin" : "Salin Pautan"}
+              </button>
+            </div>
           </div>
-          <div className="mt-2 flex flex-col gap-2 sm:flex-row sm:items-center">
-            <input
-              readOnly
-              value={refLink}
-              className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-            />
-            <button
-              type="button"
-              onClick={copyLink}
-              className="inline-flex items-center justify-center gap-1 rounded-md bg-primary px-4 py-2 text-sm font-bold text-primary-foreground hover:opacity-90"
-            >
-              <Copy className="h-4 w-4" />
-              {copied ? "Disalin" : "Salin Pautan"}
-            </button>
-          </div>
-          <div className="mt-3 text-xs text-muted-foreground">Pilih caption WhatsApp:</div>
-          <div className="mt-1 flex flex-col gap-2 sm:flex-row">
-            <a
-              href={`https://wa.me/?text=${encodeURIComponent(`Assalamualaikum! 👋 Risau anak tak belajar bila kita tak tengok? Di Kalifah.my, anak buat latih tubi sendiri & ibu bapa boleh pantau progress bila-bila masa 📊 Tenang hati, anak pun seronok belajar! Darjah 1-6 | 32,000+ soalan. Cuba percuma: ${refLink}`)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex flex-1 items-center justify-center gap-1 rounded-md bg-[#25D366] px-4 py-2 text-sm font-bold text-white hover:opacity-90"
-            >
-              <Share2 className="h-4 w-4" />
-              📱 Caption A
-            </a>
-            <a
-              href={`https://wa.me/?text=${encodeURIComponent(`Assalamualaikum! 👋 "Anak dah belajar ke belum?" — soalan yang ibu bapa selalu tertanya-tanya. Kini dengan Kalifah.my, anak buat latih tubi sendiri & ibu bapa boleh pantau terus dari phone! 📱 Darjah 1-6 | 32,000+ soalan. Cuba percuma: ${refLink}`)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex flex-1 items-center justify-center gap-1 rounded-md bg-[#25D366] px-4 py-2 text-sm font-bold text-white hover:opacity-90"
-            >
-              <Share2 className="h-4 w-4" />
-              📱 Caption B
-            </a>
-          </div>
-          <div className="mt-4 flex flex-col items-center gap-2">
+
+          {/* QR */}
+          <div className="mt-5 flex flex-col items-center gap-2">
             <div className="text-xs font-bold uppercase text-muted-foreground">
               QR Code Pautan Anda
             </div>
@@ -308,7 +305,57 @@ function AffiliateDashboardPage() {
               Muat Turun QR
             </a>
           </div>
-          <div className="mt-2 text-xs text-muted-foreground">
+
+          {/* Captions */}
+          <div className="mt-5">
+            <div className="text-xs font-bold uppercase text-muted-foreground">
+              Pilih caption ikut saluran
+            </div>
+            <div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-3">
+              <a
+                href={`https://wa.me/?text=${encodeURIComponent(`Assalamualaikum! 👋 Risau anak tak belajar bila kita tak tengok? Di Kalifah.my, anak buat latih tubi sendiri & ibu bapa boleh pantau progress bila-bila masa 📊 Tenang hati, anak pun seronok belajar! Darjah 1-6 | 32,000+ soalan. Cuba percuma: ${refLink}`)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center gap-1 rounded-md bg-[#25D366] px-4 py-2 text-sm font-bold text-white hover:opacity-90"
+              >
+                <Share2 className="h-4 w-4" />
+                💬 Caption WhatsApp
+              </a>
+              <button
+                type="button"
+                onClick={() =>
+                  copyCaption(
+                    "fb",
+                    `Sebagai ibu bapa, kita semua nak anak cemerlang dalam pelajaran — tapi selalu risau: "Anak dah faham ke belum bab ni?" 🤔 Kalifah.my ialah portal pembelajaran Darjah 1-6 yang bagi ibu bapa DASHBOARD PANTAU sebenar — bukan sekadar anak buat soalan, tapi kita nampak terus progress & topik mana perlu tumpuan. 32,000+ soalan latihan, sijil automatik, dan yang penting — anak belajar sendiri tanpa kita perlu duduk sebelah dia. Cuba percuma dulu: ${refLink}`,
+                  )
+                }
+                className="inline-flex items-center justify-center gap-1 rounded-md bg-[#1877F2] px-4 py-2 text-sm font-bold text-white hover:opacity-90"
+              >
+                <Copy className="h-4 w-4" />
+                {copiedCaption === "fb" ? "Disalin!" : "📘 Caption Facebook"}
+              </button>
+              <button
+                type="button"
+                onClick={() =>
+                  copyCaption(
+                    "tt",
+                    `POV: anak buat homework, korang tak tahu dia faham ke tak 😅 Kalifah.my — portal yang bagi korang nampak progress anak REAL-TIME. Darjah 1-6, 32,000+ soalan, percuma nak cuba! 🔥 ${refLink}`,
+                  )
+                }
+                className="inline-flex items-center justify-center gap-1 rounded-md bg-black px-4 py-2 text-sm font-bold text-white hover:opacity-90"
+              >
+                <Copy className="h-4 w-4" />
+                {copiedCaption === "tt" ? "Disalin!" : "🎵 Caption TikTok"}
+              </button>
+            </div>
+            {copiedCaption && copiedCaption !== "wa" ? (
+              <div className="mt-2 text-xs font-bold text-primary">
+                Disalin! Tampal di {copiedCaption === "fb" ? "Facebook" : "TikTok"} anda.
+              </div>
+            ) : null}
+          </div>
+
+          <div className="mt-4 text-xs text-muted-foreground">
             Kod: <span className="font-bold text-primary">{aff.custom_ref_code ?? aff.ref_code}</span>
           </div>
         </div>
