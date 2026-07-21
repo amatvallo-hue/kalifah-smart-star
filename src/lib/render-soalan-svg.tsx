@@ -114,6 +114,16 @@ export function renderSoalanSvg(
     if (svg_type === "image_url" && p.url) {
       return <img src={p.url} className="w-full max-w-xl mx-auto h-auto rounded-lg block" alt="Rajah soalan" loading="lazy" />;
     }
+    if (svg_type === "image_url_multi" && Array.isArray(p.urls) && p.urls.length > 0) {
+      return (
+        <div className="flex flex-wrap justify-center gap-3 w-full max-w-2xl mx-auto">
+          {p.urls.map((url: string, i: number) => (
+            <img key={i} src={url} className="h-40 w-auto rounded-lg block object-contain" alt={`Rajah soalan ${i + 1}`} loading="lazy" />
+          ))}
+        </div>
+      );
+    }
+
   } catch {
     return null;
   }
