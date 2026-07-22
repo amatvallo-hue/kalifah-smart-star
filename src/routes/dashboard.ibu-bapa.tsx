@@ -887,6 +887,12 @@ function ParentDashboard() {
     );
   }
 
+  const firstName =
+    (user.user_metadata?.name as string | undefined)?.split(" ")[0] ||
+    (user.user_metadata?.full_name as string | undefined)?.split(" ")[0] ||
+    user.email?.split("@")[0] ||
+    "Ibu/Bapa";
+
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader stars={badges.length} userName={user.email?.split("@")[0]} onLogout={handleLogout} />
