@@ -887,6 +887,12 @@ function ParentDashboard() {
     );
   }
 
+  const firstName =
+    (user.user_metadata?.name as string | undefined)?.split(" ")[0] ||
+    (user.user_metadata?.full_name as string | undefined)?.split(" ")[0] ||
+    user.email?.split("@")[0] ||
+    "Ibu/Bapa";
+
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader stars={badges.length} userName={user.email?.split("@")[0]} onLogout={handleLogout} />
@@ -908,8 +914,14 @@ function ParentDashboard() {
               <Users className="h-6 w-6" />
             </div>
             <div>
-              <h1 className="font-display text-3xl font-extrabold text-foreground">Dashboard Ibu Bapa</h1>
-              <p className="text-sm text-muted-foreground">Pantau pembelajaran anak anda dengan mudah.</p>
+              <h1 className="font-display text-3xl font-extrabold text-foreground">Assalamualaikum, {firstName}! 👋</h1>
+              <p className="text-sm text-muted-foreground">
+                {anakList.length === 0
+                  ? "Tambah profil anak untuk mula pantau pembelajaran."
+                  : anakList.length === 1
+                    ? `Pantau pembelajaran ${anakList[0].nama}.`
+                    : `Anda mempunyai ${anakList.length} orang anak. Pilih anak untuk dipantau.`}
+              </p>
             </div>
           </div>
           <div className="flex flex-wrap items-center gap-2">
