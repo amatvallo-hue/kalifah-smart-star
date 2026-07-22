@@ -908,8 +908,14 @@ function ParentDashboard() {
               <Users className="h-6 w-6" />
             </div>
             <div>
-              <h1 className="font-display text-3xl font-extrabold text-foreground">Dashboard Ibu Bapa</h1>
-              <p className="text-sm text-muted-foreground">Pantau pembelajaran anak anda dengan mudah.</p>
+              <h1 className="font-display text-3xl font-extrabold text-foreground">Assalamualaikum, {firstName}! 👋</h1>
+              <p className="text-sm text-muted-foreground">
+                {anakList.length === 0
+                  ? "Tambah profil anak untuk mula pantau pembelajaran."
+                  : anakList.length === 1
+                    ? `Pantau pembelajaran ${anakList[0].nama}.`
+                    : `Anda mempunyai ${anakList.length} orang anak. Pilih anak untuk dipantau.`}
+              </p>
             </div>
           </div>
           <div className="flex flex-wrap items-center gap-2">
