@@ -44,15 +44,17 @@ export function SiteHeader({
 
   const navLinks = (
     <>
-      <Link
-        to="/pilih-darjah"
-        activeOptions={{ exact: true }}
-        className="rounded-full px-4 py-2 font-display text-sm font-bold text-muted-foreground transition hover:bg-secondary hover:text-foreground"
-        activeProps={{ className: "bg-secondary text-primary" }}
-        onClick={() => setOpen(false)}
-      >
-        Pilih Darjah
-      </Link>
+      {isChild && (
+        <Link
+          to="/pilih-darjah"
+          activeOptions={{ exact: true }}
+          className="rounded-full px-4 py-2 font-display text-sm font-bold text-muted-foreground transition hover:bg-secondary hover:text-foreground"
+          activeProps={{ className: "bg-secondary text-primary" }}
+          onClick={() => setOpen(false)}
+        >
+          Pilih Darjah
+        </Link>
+      )}
       {userName && isChild && (
         <Link
           to="/dashboard/progress"
@@ -70,7 +72,17 @@ export function SiteHeader({
           activeProps={{ className: "bg-secondary text-primary" }}
           onClick={() => setOpen(false)}
         >
-          Ibu Bapa
+          🏠 Dashboard
+        </Link>
+      )}
+      {userName && !isChild && (
+        <Link
+          to="/harga"
+          className="rounded-full px-4 py-2 font-display text-sm font-bold text-muted-foreground transition hover:bg-secondary hover:text-foreground"
+          activeProps={{ className: "bg-secondary text-primary" }}
+          onClick={() => setOpen(false)}
+        >
+          💳 Langganan
         </Link>
       )}
       {isAffiliate && (
@@ -80,7 +92,7 @@ export function SiteHeader({
           activeProps={{ className: "bg-secondary text-primary" }}
           onClick={() => setOpen(false)}
         >
-          Dashboard Affiliate
+          👥 Affiliate
         </Link>
       )}
       {profile?.role === "admin" && (
