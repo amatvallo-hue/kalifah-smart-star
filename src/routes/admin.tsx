@@ -102,7 +102,7 @@ function AdminDashboard() {
   if (authLoading || checking) {
     return (
       <div className="min-h-screen bg-background">
-        <SiteHeader />
+        <SiteHeader userName={user?.user_metadata?.name as string | undefined} />
         <div className="flex items-center justify-center py-32 text-muted-foreground">
           <Loader2 className="h-6 w-6 animate-spin" />
         </div>
@@ -112,7 +112,7 @@ function AdminDashboard() {
   if (!isAdmin) {
     return (
       <div className="min-h-screen bg-background">
-        <SiteHeader />
+        <SiteHeader userName={user?.user_metadata?.name as string | undefined} />
         <div className="flex flex-col items-center justify-center py-32 text-center">
           <ShieldAlert className="h-10 w-10 text-destructive" />
           <p className="mt-3 text-muted-foreground">Akses ditolak.</p>
@@ -123,7 +123,7 @@ function AdminDashboard() {
 
   return (
     <div className="min-h-screen bg-background">
-      <SiteHeader />
+      <SiteHeader userName={user?.user_metadata?.name as string | undefined} />
       <main className="container mx-auto max-w-6xl px-4 py-8">
         <h1 className="mb-4 font-display text-3xl font-bold">Admin Dashboard</h1>
         <div className="mb-6 flex flex-wrap gap-2">
