@@ -233,7 +233,7 @@ function DarjahDashboard() {
                 Selamat datang, <span className="text-primary">{firstName}</span>! 🌟
               </h1>
               <p className="mt-0.5 text-sm text-muted-foreground">
-                Sedia sambung belajar hari ni?
+                {isChild ? "Sedia sambung belajar hari ni?" : "Pantau pembelajaran anak anda di sini."}
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-2">
