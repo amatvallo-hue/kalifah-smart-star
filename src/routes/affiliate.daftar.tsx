@@ -3,6 +3,7 @@ import { useMemo, useState, type FormEvent } from "react";
 import { Sparkles, Copy, CheckCircle2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { SiteHeader } from "@/components/SiteHeader";
+import { useAuth } from "@/hooks/use-auth";
 
 export const Route = createFileRoute("/affiliate/daftar")({
   head: () => ({
@@ -28,6 +29,7 @@ async function getNextCikguCode(): Promise<string> {
 }
 
 function DaftarAffiliatePage() {
+  const { user } = useAuth();
   const [nama, setNama] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -142,7 +144,7 @@ function DaftarAffiliatePage() {
   if (success) {
     return (
       <div className="min-h-screen bg-background">
-        <SiteHeader />
+        <SiteHeader userName={user?.user_metadata?.name as string | undefined} />
         <div className="container mx-auto max-w-2xl px-4 py-12">
           <div className="rounded-3xl border border-primary/20 bg-card p-8 shadow-soft">
             <div className="flex items-center gap-3">
@@ -207,7 +209,7 @@ function DaftarAffiliatePage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <SiteHeader />
+      <SiteHeader userName={user?.user_metadata?.name as string | undefined} />
       <div className="container mx-auto max-w-2xl px-4 py-12">
         <div className="mb-6 text-center">
           <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1 text-sm font-bold text-primary">
