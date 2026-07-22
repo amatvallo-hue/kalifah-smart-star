@@ -52,7 +52,7 @@ function ResetPasswordPage() {
       return;
     }
     setOk(true);
-    setTimeout(() => navigate({ to: "/pilih-darjah" }), 1500);
+    setTimeout(() => navigate({ to: "/dashboard/ibu-bapa" }), 1500);
   }
 
   if (ok) {
