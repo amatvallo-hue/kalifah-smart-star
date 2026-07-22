@@ -246,7 +246,7 @@ function AffiliateDashboardPage() {
   if (!aff) {
     return (
       <div className="min-h-screen bg-background">
-        <SiteHeader />
+        <SiteHeader userName={user?.user_metadata?.name as string | undefined} />
         <div className="container mx-auto max-w-2xl px-4 py-12 text-center">
           <h1 className="font-display text-2xl font-extrabold">
             Anda belum berdaftar sebagai affiliate
@@ -268,7 +268,7 @@ function AffiliateDashboardPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <SiteHeader />
+      <SiteHeader userName={user?.user_metadata?.name as string | undefined} />
       <div className="container mx-auto max-w-5xl px-4 py-8">
         {/* Hero affiliate */}
         <div className="rounded-3xl border border-primary/20 bg-card p-6 shadow-soft">
