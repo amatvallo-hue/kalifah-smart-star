@@ -37,7 +37,7 @@ function LoginPage() {
       setLoading(false);
       return;
     }
-    navigate({ to: "/pilih-darjah" });
+    navigate({ to: mode === "child" ? "/pilih-darjah" : "/dashboard/ibu-bapa" });
   }
 
   return (
