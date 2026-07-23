@@ -71,6 +71,8 @@ function AktivitiPage() {
 
   const [isiKosongCount, setIsiKosongCount] = useState<number | null>(null);
   const [bergambarCount, setBergambarCount] = useState<number | null>(null);
+  const [mendengarCount, setMendengarCount] = useState<number | null>(null);
+
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
