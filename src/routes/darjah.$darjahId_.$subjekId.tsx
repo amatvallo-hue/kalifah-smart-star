@@ -71,6 +71,8 @@ function AktivitiPage() {
 
   const [isiKosongCount, setIsiKosongCount] = useState<number | null>(null);
   const [bergambarCount, setBergambarCount] = useState<number | null>(null);
+  const [mendengarCount, setMendengarCount] = useState<number | null>(null);
+
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
@@ -104,6 +106,21 @@ function AktivitiPage() {
     } else {
       setBergambarCount(0);
     }
+
+    // Mendengar — beta pilot: Darjah 1, Bahasa Inggeris sahaja
+    if (subjekId === "bahasa-inggeris") {
+      (async () => {
+        const { count } = await supabase
+          .from("soalan_pendengaran")
+          .select("id", { count: "exact", head: true })
+          .eq("darjah", darjahNum)
+          .eq("subjek", "Bahasa Inggeris");
+        if (!cancelled) setMendengarCount(count ?? 0);
+      })();
+    } else {
+      setMendengarCount(0);
+    }
+
 
     return () => {
       cancelled = true;
@@ -256,6 +273,38 @@ function AktivitiPage() {
             </span>
           </Link>
         )}
+
+        {/* Latihan Mendengar (beta) */}
+        {mendengarCount !== null && (mendengarCount > 0 || isAdmin) && (
+          <Link
+            to="/darjah/$darjahId/$subjekId/mendengar"
+            params={{ darjahId, subjekId }}
+            className="group mt-4 flex items-center gap-5 rounded-2xl border-2 border-sky-200 bg-sky-50 p-5 shadow-card transition hover:-translate-y-1 hover:shadow-soft dark:border-sky-800/40 dark:bg-sky-950/20"
+          >
+            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-500 to-cyan-400 text-white shadow-soft transition group-hover:scale-110 text-2xl">
+              🎧
+            </div>
+            <div className="flex-1">
+              <div className="flex flex-wrap items-center gap-2">
+                <h3 className="font-display text-xl font-extrabold text-foreground">Latihan Mendengar</h3>
+                <span className="rounded-full bg-amber-400 px-2 py-0.5 font-display text-[10px] font-extrabold text-amber-950">
+                  BETA
+                </span>
+                {isAdmin && mendengarCount === 0 && (
+                  <span className="rounded-full bg-amber-200 px-2 py-0.5 font-display text-[10px] font-extrabold text-amber-900">
+                    Admin: belum ada data
+                  </span>
+                )}
+              </div>
+              <p className="mt-0.5 text-sm text-muted-foreground">Dengar audio & jawab soalan — latihan listening seperti ujian sebenar!</p>
+            </div>
+            <span className="shrink-0 inline-flex items-center gap-1 rounded-full bg-sky-500 px-4 py-2 font-display text-sm font-extrabold text-white shadow-soft transition group-hover:translate-x-1">
+              Mula →
+            </span>
+          </Link>
+        )}
+
+
 
 
 
