@@ -107,6 +107,21 @@ function AktivitiPage() {
       setBergambarCount(0);
     }
 
+    // Mendengar — beta pilot: Darjah 1, Bahasa Inggeris sahaja
+    if (subjekId === "bahasa-inggeris") {
+      (async () => {
+        const { count } = await supabase
+          .from("soalan_pendengaran")
+          .select("id", { count: "exact", head: true })
+          .eq("darjah", darjahNum)
+          .eq("subjek", "Bahasa Inggeris");
+        if (!cancelled) setMendengarCount(count ?? 0);
+      })();
+    } else {
+      setMendengarCount(0);
+    }
+
+
     return () => {
       cancelled = true;
     };
