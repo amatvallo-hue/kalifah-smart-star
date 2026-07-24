@@ -177,7 +177,14 @@ function ProgressDashboard() {
       setProgress((p ?? []) as ProgressRow[]);
       setStats((s ?? []) as StatsRow[]);
       setBadges((b ?? []) as BadgeRow[]);
-      setMpt4Keputusan((m ?? []) as Mpt4KeputusanRow[]);
+      setMpt4Keputusan(
+        ((m ?? []).map((row: unknown) => {
+          const r = row as { mpt4_set?: unknown };
+          const nested = Array.isArray(r.mpt4_set) ? r.mpt4_set[0] ?? null : r.mpt4_set;
+          return { ...r, mpt4_set: nested };
+        }) ?? []) as unknown as Mpt4KeputusanRow[],
+      );
+
 
       setFetching(false);
     })();
