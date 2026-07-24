@@ -258,7 +258,6 @@ function DarjahPicker({
     (initial ?? []).slice(0, max).sort((a, b) => a - b),
   );
   const min = pakej === "satu" ? 1 : 2;
-  const max = pakej === "satu" ? 1 : 5;
   const perDarjah = pakej === "satu" ? 49 : 39;
   const total = perDarjah * selected.length;
 
