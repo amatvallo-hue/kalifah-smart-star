@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { ArrowLeft, Check, Loader2, Star, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { HARGA_ASAL, PAKEJ_LIST, DARJAH_LIST } from "@/lib/curriculum";
 import { supabase } from "@/integrations/supabase/client";
@@ -24,7 +24,9 @@ type PakejId = "satu" | "perDarjah" | "bundle";
 function HargaPage() {
   const navigate = useNavigate();
   const [pickerFor, setPickerFor] = useState<PakejId | null>(null);
+  const [pickerInitial, setPickerInitial] = useState<number[]>([]);
   const [loading, setLoading] = useState<PakejId | null>(null);
+  const autoRan = useRef(false);
 
   async function mulaBayar(pakej: PakejId, darjah: number[]) {
     console.log("[harga] mulaBayar dipanggil", { pakej, darjah });
@@ -92,8 +94,33 @@ function HargaPage() {
     console.log("[harga] Bayar Sekarang diklik", { pakej });
     if (pakej === "bundle") return mulaBayar("bundle", [1, 2, 3, 4, 5, 6]);
     console.log("[harga] buka pemilih darjah", { pakej });
+    setPickerInitial([]);
     setPickerFor(pakej);
   }
+
+  useEffect(() => {
+    if (autoRan.current) return;
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const pakej = params.get("pakej");
+    if (pakej !== "satu" && pakej !== "perDarjah" && pakej !== "bundle") return;
+    autoRan.current = true;
+
+    const validIds = new Set(DARJAH_LIST.map((d) => Number(d.id)));
+    const darjahRaw = params.get("darjah") ?? "";
+    const darjah = darjahRaw
+      .split(",")
+      .map((s) => Number(s.trim()))
+      .filter((n) => Number.isFinite(n) && validIds.has(n));
+
+    if (pakej === "bundle") {
+      void mulaBayar("bundle", [1, 2, 3, 4, 5, 6]);
+      return;
+    }
+    setPickerInitial(darjah);
+    setPickerFor(pakej);
+  }, []);
+
 
   return (
     <div className="min-h-screen bg-background">
@@ -204,6 +231,7 @@ function HargaPage() {
         <DarjahPicker
           pakej={pickerFor}
           loading={loading === pickerFor}
+          initial={pickerInitial}
           onClose={() => setPickerFor(null)}
           onConfirm={(darjah) => mulaBayar(pickerFor, darjah)}
         />
@@ -215,17 +243,21 @@ function HargaPage() {
 function DarjahPicker({
   pakej,
   loading,
+  initial,
   onClose,
   onConfirm,
 }: {
   pakej: PakejId;
   loading: boolean;
+  initial?: number[];
   onClose: () => void;
   onConfirm: (darjah: number[]) => void;
 }) {
-  const [selected, setSelected] = useState<number[]>([]);
-  const min = pakej === "satu" ? 1 : 2;
   const max = pakej === "satu" ? 1 : 5;
+  const [selected, setSelected] = useState<number[]>(() =>
+    (initial ?? []).slice(0, max).sort((a, b) => a - b),
+  );
+  const min = pakej === "satu" ? 1 : 2;
   const perDarjah = pakej === "satu" ? 49 : 39;
   const total = perDarjah * selected.length;
 
