@@ -136,7 +136,9 @@ function ProgressDashboard() {
   const [progress, setProgress] = useState<ProgressRow[]>([]);
   const [stats, setStats] = useState<StatsRow[]>([]);
   const [badges, setBadges] = useState<BadgeRow[]>([]);
+  const [mpt4Keputusan, setMpt4Keputusan] = useState<Mpt4KeputusanRow[]>([]);
   const [fetching, setFetching] = useState(true);
+
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
