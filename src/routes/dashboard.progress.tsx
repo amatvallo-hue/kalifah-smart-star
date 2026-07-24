@@ -149,7 +149,7 @@ function ProgressDashboard() {
     let cancelled = false;
     (async () => {
       setFetching(true);
-      const [{ data: p }, { data: s }, { data: b }] = await Promise.all([
+      const [{ data: p }, { data: s }, { data: b }, { data: m }] = await Promise.all([
         supabase
           .from("user_progress")
           .select("id, darjah, subjek, aktiviti, markah, jumlah_soalan, peratus, masa_ambil, created_at")
@@ -166,11 +166,19 @@ function ProgressDashboard() {
           .select("id, kod, nama, ikon, created_at")
           .eq("user_id", user.id)
           .order("created_at", { ascending: false }),
+        supabase
+          .from("mpt4_keputusan")
+          .select("id, markah_keseluruhan, markah_penuh, completed_at, mpt4_set(subjek, nombor_set, tajuk, jumlah_markah)")
+          .eq("user_id", user.id)
+          .eq("status", "completed")
+          .order("completed_at", { ascending: false }),
       ]);
       if (cancelled) return;
       setProgress((p ?? []) as ProgressRow[]);
       setStats((s ?? []) as StatsRow[]);
       setBadges((b ?? []) as BadgeRow[]);
+      setMpt4Keputusan((m ?? []) as Mpt4KeputusanRow[]);
+
       setFetching(false);
     })();
     return () => {
