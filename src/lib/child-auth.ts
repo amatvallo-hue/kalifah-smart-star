@@ -83,21 +83,36 @@ export async function ciptaAkaunAnak(
     return { ok: false, mesej: insertErr?.message ?? "Gagal simpan profil anak." };
   }
 
-  // 5) Set darjah_akses pada profile anak (guna sesi anak — RLS benarkan
-  //    user kemas kini profile sendiri sahaja). Anak hanya dapat akses
-  //    darjah dia sendiri, bukan dari profil ibu bapa.
+  // 5) Set darjah_akses pada profile anak — HANYA mirror akses yang
+  //    parent sudah bayar. Jangan invent akses baharu (elak bypass bayaran).
   const darjahNum = Number(darjah);
   if (Number.isFinite(darjahNum) && darjahNum > 0) {
+    const { data: parentProfile } = await supabase
+      .from("profiles")
+      .select("darjah_akses")
+      .eq("id", parentId)
+      .maybeSingle();
+
+    const parentAksesRaw = (parentProfile as { darjah_akses: unknown } | null)?.darjah_akses;
+    const parentAkses: number[] = Array.isArray(parentAksesRaw)
+      ? (parentAksesRaw as number[]).map(Number).filter(Number.isFinite)
+      : typeof parentAksesRaw === "string"
+        ? parentAksesRaw.replace(/[{}]/g, "").split(",").map(Number).filter(Number.isFinite)
+        : [];
+
+    const aksesAnak = parentAkses.includes(darjahNum) ? [darjahNum] : [];
+
     const { error: profErr } = await secondary
       .from("profiles")
       .upsert(
-        { id: childUserId, darjah_akses: [darjahNum] },
+        { id: childUserId, darjah_akses: aksesAnak },
         { onConflict: "id" },
       );
     if (profErr) {
       console.error("[ciptaAkaunAnak] gagal set darjah_akses anak:", profErr);
     }
   }
+
 
   // 6) Sign out klien sekunder (bersihkan)
   await secondary.auth.signOut();
