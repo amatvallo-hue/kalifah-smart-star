@@ -231,6 +231,7 @@ function HargaPage() {
         <DarjahPicker
           pakej={pickerFor}
           loading={loading === pickerFor}
+          initial={pickerInitial}
           onClose={() => setPickerFor(null)}
           onConfirm={(darjah) => mulaBayar(pickerFor, darjah)}
         />
