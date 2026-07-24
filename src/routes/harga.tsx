@@ -24,7 +24,9 @@ type PakejId = "satu" | "perDarjah" | "bundle";
 function HargaPage() {
   const navigate = useNavigate();
   const [pickerFor, setPickerFor] = useState<PakejId | null>(null);
+  const [pickerInitial, setPickerInitial] = useState<number[]>([]);
   const [loading, setLoading] = useState<PakejId | null>(null);
+  const autoRan = useRef(false);
 
   async function mulaBayar(pakej: PakejId, darjah: number[]) {
     console.log("[harga] mulaBayar dipanggil", { pakej, darjah });
