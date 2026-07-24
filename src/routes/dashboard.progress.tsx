@@ -1113,4 +1113,80 @@ function KesediaanPeperiksaan({
   );
 }
 
+function SeksyenMpt4({ keputusan }: { keputusan: Mpt4KeputusanRow[] }) {
+  if (keputusan.length === 0) {
+    return (
+      <div
+        className="rounded-3xl p-6 text-center shadow-card"
+        style={{
+          background: `linear-gradient(135deg, ${HIJAU}10 0%, #FFFDF5 60%, ${EMAS}12 100%)`,
+          border: `2px solid ${HIJAU}33`,
+        }}
+      >
+        <Trophy className="mx-auto mb-2 h-8 w-8" style={{ color: EMAS }} />
+        <p className="font-display text-sm font-extrabold text-foreground">
+          Belum ada keputusan Percubaan MPT4 lagi
+        </p>
+        <p className="mt-1 text-xs text-muted-foreground">
+          Keputusan akan muncul di sini selepas anda menyiapkan set percubaan.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div
+      className="rounded-3xl p-4 shadow-card"
+      style={{
+        background: `linear-gradient(135deg, ${HIJAU}10 0%, #FFFDF5 60%, ${EMAS}14 100%)`,
+        border: `2px solid ${HIJAU}40`,
+      }}
+    >
+      <div className="grid gap-3 sm:grid-cols-2">
+        {keputusan.map((k) => {
+          const markah = k.markah_keseluruhan ?? 0;
+          const penuh = k.markah_penuh ?? k.mpt4_set?.jumlah_markah ?? 0;
+          const peratus = penuh > 0 ? Math.round((markah / penuh) * 100) : 0;
+          const warna = peratus >= 70 ? STAT_HIJAU : peratus >= 50 ? STAT_EMAS : STAT_OREN;
+          const tarikh = k.completed_at ? formatTarikh(k.completed_at) : "—";
+          const subjek = k.mpt4_set?.subjek ?? "—";
+          const tajuk = k.mpt4_set?.tajuk ?? (k.mpt4_set ? `Set ${k.mpt4_set.nombor_set}` : "");
+          return (
+            <div
+              key={k.id}
+              className="rounded-2xl bg-card p-4 shadow-soft"
+              style={{ border: `1.5px solid ${warna}55` }}
+            >
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0">
+                  <p className="font-display text-base font-extrabold text-foreground truncate">
+                    {subjek}
+                  </p>
+                  {tajuk && (
+                    <p className="mt-0.5 text-xs text-muted-foreground truncate">{tajuk}</p>
+                  )}
+                </div>
+                <span
+                  className="shrink-0 rounded-full px-3 py-1 text-xs font-extrabold text-white shadow-soft"
+                  style={{ background: `linear-gradient(135deg, ${warna}, ${warna}cc)` }}
+                >
+                  {peratus}%
+                </span>
+              </div>
+              <div className="mt-3 flex items-end justify-between gap-2">
+                <p className="font-display text-2xl font-extrabold" style={{ color: warna }}>
+                  {markah}
+                  <span className="text-sm font-bold text-muted-foreground">/{penuh || "—"}</span>
+                </p>
+                <p className="text-xs text-muted-foreground">{tarikh}</p>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+
 
