@@ -53,6 +53,20 @@ interface BadgeRow {
   created_at: string;
 }
 
+interface Mpt4KeputusanRow {
+  id: string;
+  markah_keseluruhan: number | null;
+  markah_penuh: number | null;
+  completed_at: string | null;
+  mpt4_set: {
+    subjek: string;
+    nombor_set: number;
+    tajuk: string | null;
+    jumlah_markah: number | null;
+  } | null;
+}
+
+
 const AKTIVITI_LABEL: Record<string, string> = {
   kuiz: "Kuiz",
   latihan: "Latihan Bertulis",
