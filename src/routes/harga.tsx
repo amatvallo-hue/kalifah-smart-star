@@ -94,8 +94,33 @@ function HargaPage() {
     console.log("[harga] Bayar Sekarang diklik", { pakej });
     if (pakej === "bundle") return mulaBayar("bundle", [1, 2, 3, 4, 5, 6]);
     console.log("[harga] buka pemilih darjah", { pakej });
+    setPickerInitial([]);
     setPickerFor(pakej);
   }
+
+  useEffect(() => {
+    if (autoRan.current) return;
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const pakej = params.get("pakej");
+    if (pakej !== "satu" && pakej !== "perDarjah" && pakej !== "bundle") return;
+    autoRan.current = true;
+
+    const validIds = new Set(DARJAH_LIST.map((d) => Number(d.id)));
+    const darjahRaw = params.get("darjah") ?? "";
+    const darjah = darjahRaw
+      .split(",")
+      .map((s) => Number(s.trim()))
+      .filter((n) => Number.isFinite(n) && validIds.has(n));
+
+    if (pakej === "bundle") {
+      void mulaBayar("bundle", [1, 2, 3, 4, 5, 6]);
+      return;
+    }
+    setPickerInitial(darjah);
+    setPickerFor(pakej);
+  }, []);
+
 
   return (
     <div className="min-h-screen bg-background">
