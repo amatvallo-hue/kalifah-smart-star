@@ -1061,7 +1061,7 @@ function ParentDashboard() {
                     {Number(anakAktif.darjah) === 4 && (
                       <Seksyen tajuk="Percubaan MPT4 (Darjah 4)" ikon={<Target className="h-5 w-5" />}>
                         <p className="-mt-2 mb-3 text-sm text-muted-foreground">
-                          Mock exam ikut format peperiksaan sebenar.
+                          Percubaan ikut format peperiksaan sebenar.
                         </p>
                         <SeksyenMpt4 keputusan={mpt4Keputusan} />
                       </Seksyen>
