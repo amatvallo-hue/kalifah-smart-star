@@ -243,15 +243,20 @@ function HargaPage() {
 function DarjahPicker({
   pakej,
   loading,
+  initial,
   onClose,
   onConfirm,
 }: {
   pakej: PakejId;
   loading: boolean;
+  initial?: number[];
   onClose: () => void;
   onConfirm: (darjah: number[]) => void;
 }) {
-  const [selected, setSelected] = useState<number[]>([]);
+  const max = pakej === "satu" ? 1 : 5;
+  const [selected, setSelected] = useState<number[]>(() =>
+    (initial ?? []).slice(0, max).sort((a, b) => a - b),
+  );
   const min = pakej === "satu" ? 1 : 2;
   const max = pakej === "satu" ? 1 : 5;
   const perDarjah = pakej === "satu" ? 49 : 39;
