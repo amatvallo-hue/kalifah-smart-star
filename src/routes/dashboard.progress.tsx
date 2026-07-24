@@ -349,7 +349,26 @@ function ProgressDashboard() {
         {/* Kesediaan Peperiksaan */}
         <KesediaanPeperiksaan ringkasanSubjek={ringkasanSubjek} />
 
+        {/* Percubaan MPT4 (Darjah 4) */}
+        {(profile?.darjah_akses ?? []).map(Number).includes(4) && (
+          <section className="mt-6">
+            <div className="mb-3 flex items-center gap-2">
+              <span
+                className="flex h-8 w-8 items-center justify-center rounded-lg text-white shadow-soft"
+                style={{ background: `linear-gradient(135deg, ${HIJAU}, #2AAE72)` }}
+              >
+                <Trophy className="h-4 w-4" />
+              </span>
+              <h2 className="font-display text-xl font-extrabold text-foreground">
+                🎯 Percubaan MPT4 (Darjah 4)
+              </h2>
+            </div>
+            <SeksyenMpt4 keputusan={mpt4Keputusan} />
+          </section>
+        )}
+
         {/* Statistik harian */}
+
 
         <section className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-4">
           <StatKad
