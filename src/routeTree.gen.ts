@@ -35,6 +35,7 @@ import { Route as ApiCheckoutRouteImport } from './routes/api.checkout'
 import { Route as AffiliateSyaratRouteImport } from './routes/affiliate.syarat'
 import { Route as AffiliateDashboardRouteImport } from './routes/affiliate.dashboard'
 import { Route as AffiliateDaftarRouteImport } from './routes/affiliate.daftar'
+import { Route as AdminTelegramRouteImport } from './routes/admin_.telegram'
 import { Route as AdminChallengeRouteImport } from './routes/admin_.challenge'
 import { Route as AdminAffiliatesRouteImport } from './routes/admin_.affiliates'
 import { Route as UjianPercumaSoalanSessionIdRouteImport } from './routes/ujian-percuma_.soalan.$sessionId'
@@ -188,6 +189,11 @@ const AffiliateDaftarRoute = AffiliateDaftarRouteImport.update({
   path: '/affiliate/daftar',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminTelegramRoute = AdminTelegramRouteImport.update({
+  id: '/admin_/telegram',
+  path: '/admin/telegram',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminChallengeRoute = AdminChallengeRouteImport.update({
   id: '/admin_/challenge',
   path: '/admin/challenge',
@@ -331,6 +337,7 @@ export interface FileRoutesByFullPath {
   '/ujian-percuma': typeof UjianPercumaRoute
   '/admin/affiliates': typeof AdminAffiliatesRoute
   '/admin/challenge': typeof AdminChallengeRoute
+  '/admin/telegram': typeof AdminTelegramRoute
   '/affiliate/daftar': typeof AffiliateDaftarRoute
   '/affiliate/dashboard': typeof AffiliateDashboardRoute
   '/affiliate/syarat': typeof AffiliateSyaratRoute
@@ -381,6 +388,7 @@ export interface FileRoutesByTo {
   '/ujian-percuma': typeof UjianPercumaRoute
   '/admin/affiliates': typeof AdminAffiliatesRoute
   '/admin/challenge': typeof AdminChallengeRoute
+  '/admin/telegram': typeof AdminTelegramRoute
   '/affiliate/daftar': typeof AffiliateDaftarRoute
   '/affiliate/dashboard': typeof AffiliateDashboardRoute
   '/affiliate/syarat': typeof AffiliateSyaratRoute
@@ -432,6 +440,7 @@ export interface FileRoutesById {
   '/ujian-percuma': typeof UjianPercumaRoute
   '/admin_/affiliates': typeof AdminAffiliatesRoute
   '/admin_/challenge': typeof AdminChallengeRoute
+  '/admin_/telegram': typeof AdminTelegramRoute
   '/affiliate/daftar': typeof AffiliateDaftarRoute
   '/affiliate/dashboard': typeof AffiliateDashboardRoute
   '/affiliate/syarat': typeof AffiliateSyaratRoute
@@ -484,6 +493,7 @@ export interface FileRouteTypes {
     | '/ujian-percuma'
     | '/admin/affiliates'
     | '/admin/challenge'
+    | '/admin/telegram'
     | '/affiliate/daftar'
     | '/affiliate/dashboard'
     | '/affiliate/syarat'
@@ -534,6 +544,7 @@ export interface FileRouteTypes {
     | '/ujian-percuma'
     | '/admin/affiliates'
     | '/admin/challenge'
+    | '/admin/telegram'
     | '/affiliate/daftar'
     | '/affiliate/dashboard'
     | '/affiliate/syarat'
@@ -584,6 +595,7 @@ export interface FileRouteTypes {
     | '/ujian-percuma'
     | '/admin_/affiliates'
     | '/admin_/challenge'
+    | '/admin_/telegram'
     | '/affiliate/daftar'
     | '/affiliate/dashboard'
     | '/affiliate/syarat'
@@ -635,6 +647,7 @@ export interface RootRouteChildren {
   UjianPercumaRoute: typeof UjianPercumaRoute
   AdminAffiliatesRoute: typeof AdminAffiliatesRoute
   AdminChallengeRoute: typeof AdminChallengeRoute
+  AdminTelegramRoute: typeof AdminTelegramRoute
   AffiliateDaftarRoute: typeof AffiliateDaftarRoute
   AffiliateDashboardRoute: typeof AffiliateDashboardRoute
   AffiliateSyaratRoute: typeof AffiliateSyaratRoute
@@ -855,6 +868,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AffiliateDaftarRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin_/telegram': {
+      id: '/admin_/telegram'
+      path: '/admin/telegram'
+      fullPath: '/admin/telegram'
+      preLoaderRoute: typeof AdminTelegramRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin_/challenge': {
       id: '/admin_/challenge'
       path: '/admin/challenge'
@@ -1027,6 +1047,7 @@ const rootRouteChildren: RootRouteChildren = {
   UjianPercumaRoute: UjianPercumaRoute,
   AdminAffiliatesRoute: AdminAffiliatesRoute,
   AdminChallengeRoute: AdminChallengeRoute,
+  AdminTelegramRoute: AdminTelegramRoute,
   AffiliateDaftarRoute: AffiliateDaftarRoute,
   AffiliateDashboardRoute: AffiliateDashboardRoute,
   AffiliateSyaratRoute: AffiliateSyaratRoute,
