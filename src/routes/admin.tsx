@@ -58,6 +58,7 @@ interface Profile {
   role: string;
   darjah_akses: number[];
   created_at: string;
+  ref_code?: string | null;
 }
 interface NotifSettings {
   id: string;
@@ -370,7 +371,7 @@ function AllUsers() {
     setLoading(true);
     const { data, error } = await supabase
       .from("profiles")
-      .select("id, email, username, role, darjah_akses, created_at")
+      .select("id, email, username, role, darjah_akses, created_at, ref_code")
       .order("created_at", { ascending: false });
     if (error) toast.error("Gagal muat pengguna: " + error.message);
     const all = (data as Profile[] | null) ?? [];
