@@ -658,7 +658,7 @@ function AllUsers() {
             {filteredRows.length === 0 && (
               <TableRow>
                 <TableCell
-                  colSpan={filter === "semua" ? 5 : 6}
+                  colSpan={filter === "semua" ? 6 : 7}
                   className="py-6 text-center text-sm text-muted-foreground"
                 >
                   Tiada rekod.
