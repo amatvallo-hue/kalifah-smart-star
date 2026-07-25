@@ -266,7 +266,7 @@ function AdminTelegramPage() {
   const perluPerhatian = useMemo(
     () =>
       aiMinggu
-        .filter((r) => r.needs_admin === true && !r.feedback)
+        .filter((r) => r.needs_admin === true && !r.feedback && !r.corrected_at)
         .slice(0, 5),
     [aiMinggu],
   );
