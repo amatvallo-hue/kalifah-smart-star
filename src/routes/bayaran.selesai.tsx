@@ -52,15 +52,26 @@ function BayaranSelesai() {
           if (json?.ok) {
             const amountSen = typeof json.amount_sen === "number" ? json.amount_sen : null;
             const value = amountSen && amountSen > 0 ? amountSen / 100 : 49;
-            if (typeof window !== "undefined" && typeof (window as any).fbq === "function") {
-              (window as any).fbq("track", "Purchase", { value, currency: "MYR" });
-            }
-            if (typeof window !== "undefined" && typeof (window as any).gtag === "function") {
-              (window as any).gtag("event", "purchase", {
-                transaction_id: search.order ?? search.billcode ?? undefined,
-                value,
-                currency: "MYR",
-              });
+            const trackId = search.order ?? search.billcode ?? null;
+            const flagKey = trackId ? `purchase_tracked_${trackId}` : null;
+            const already =
+              flagKey && typeof window !== "undefined"
+                ? window.localStorage.getItem(flagKey) === "1"
+                : false;
+            if (!already) {
+              if (flagKey && typeof window !== "undefined") {
+                window.localStorage.setItem(flagKey, "1");
+              }
+              if (typeof window !== "undefined" && typeof (window as any).fbq === "function") {
+                (window as any).fbq("track", "Purchase", { value, currency: "MYR" });
+              }
+              if (typeof window !== "undefined" && typeof (window as any).gtag === "function") {
+                (window as any).gtag("event", "purchase", {
+                  transaction_id: trackId ?? undefined,
+                  value,
+                  currency: "MYR",
+                });
+              }
             }
           } else {
             const tempRes = await fetch("/api/temporary-unlock", {
