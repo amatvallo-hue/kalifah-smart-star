@@ -505,8 +505,30 @@ function AllUsers() {
 
   return (
     <div className="space-y-4">
+      <div className="flex flex-wrap items-center gap-2 rounded-md border bg-muted/30 p-3">
+        <span className="text-xs font-bold text-muted-foreground">Sumber Pendaftaran:</span>
+        {sumberDaftar.affiliates.slice(0, 6).map((a) => (
+          <span
+            key={a.code}
+            className="rounded-full bg-blue-100 px-2.5 py-1 text-xs font-bold text-blue-700"
+          >
+            🔗 {a.code}: {a.count}
+          </span>
+        ))}
+        {sumberDaftar.affiliates.length > 6 && (
+          <span className="rounded-full bg-blue-50 px-2.5 py-1 text-xs font-bold text-blue-600">
+            +{sumberDaftar.affiliates.length - 6} affiliate lain
+          </span>
+        )}
+        <span className="rounded-full bg-gray-200 px-2.5 py-1 text-xs font-bold text-gray-700">
+          📢 Terus (Ads/Organic): {sumberDaftar.terus}
+        </span>
+        <span className="rounded-full bg-green-100 px-2.5 py-1 text-xs font-bold text-green-700">
+          Jumlah dari affiliate: {sumberDaftar.jumlahAffiliate}
+        </span>
+      </div>
       <div className="flex flex-wrap gap-2">
-        <Button
+
           variant={filter === "semua" ? "default" : "outline"}
           size="sm"
           onClick={() => setFilter("semua")}
