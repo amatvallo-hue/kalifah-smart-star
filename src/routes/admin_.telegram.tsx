@@ -822,6 +822,9 @@ function AdminTelegramPage() {
               )}
             </div>
           </section>
+          )}
+
+
 
           {showKbForm && (
             <KbFormModal
