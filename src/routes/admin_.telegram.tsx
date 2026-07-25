@@ -365,6 +365,8 @@ function AdminTelegramPage() {
   useEffect(() => {
     if (!isAdmin) return;
     loadKb();
+    loadModeration();
+
   }, [isAdmin]);
 
   useEffect(() => {
