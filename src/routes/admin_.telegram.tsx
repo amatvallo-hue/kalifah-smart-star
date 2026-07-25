@@ -73,7 +73,27 @@ type RingkasRow = {
   corrected_at: string | null;
 };
 
+type DomainRow = {
+  id: string;
+  domain: string;
+  created_at: string;
+  created_by: string | null;
+};
+
+type ModLogRow = {
+  id: string;
+  chat_id: number | string;
+  user_id: number | string | null;
+  username: string | null;
+  action: string;
+  reason: string | null;
+  message_text: string | null;
+  performed_by: string | null;
+  created_at: string;
+};
+
 const AI_TYPES = ["ai_dm", "ai_group"];
+
 
 const EVENT_LABEL: Record<string, string> = {
   start: "🚀 Start",
@@ -134,6 +154,106 @@ function AdminTelegramPage() {
   const [editKb, setEditKb] = useState<KbRow | null>(null);
   const [correctEvent, setCorrectEvent] = useState<EventRow | null>(null);
   const [expandedKb, setExpandedKb] = useState<Record<string, boolean>>({});
+
+  // ---- Fasa 3: Moderation ----
+  const [settings, setSettings] = useState<Record<string, string>>({});
+  const [domains, setDomains] = useState<DomainRow[]>([]);
+  const [modLog, setModLog] = useState<ModLogRow[]>([]);
+  const [modLoading, setModLoading] = useState(false);
+  const [modBusyId, setModBusyId] = useState<string | null>(null);
+
+  const loadModeration = async () => {
+    setModLoading(true);
+    const [s, d, l] = await Promise.all([
+      supabase.from("bot_settings").select("key, value"),
+      supabase.from("bot_domain_whitelist").select("*").order("domain", { ascending: true }),
+      supabase
+        .from("bot_moderation_log")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(30),
+    ]);
+    if (s.data) {
+      const m: Record<string, string> = {};
+      for (const r of s.data as { key: string; value: string }[]) m[r.key] = r.value;
+      setSettings(m);
+    }
+    setDomains((d.data ?? []) as DomainRow[]);
+    setModLog((l.data ?? []) as ModLogRow[]);
+    setModLoading(false);
+  };
+
+  const setSetting = async (key: string, next: boolean) => {
+    const prev = settings[key];
+    setSettings((s) => ({ ...s, [key]: next ? "true" : "false" }));
+    const { error } = await supabase
+      .from("bot_settings")
+      .upsert({ key, value: next ? "true" : "false", updated_by: user?.id ?? null }, { onConflict: "key" });
+    if (error) {
+      alert("Gagal simpan tetapan: " + error.message);
+      setSettings((s) => ({ ...s, [key]: prev ?? "false" }));
+    }
+  };
+
+  const tambahDomain = async (raw: string) => {
+    const domain = raw.trim().toLowerCase();
+    if (!domain) return;
+    if (domains.some((d) => d.domain === domain)) {
+      alert("Domain ni dah ada dalam senarai.");
+      return;
+    }
+    const { data, error } = await supabase
+      .from("bot_domain_whitelist")
+      .insert({ domain, created_by: user?.id ?? null })
+      .select("*")
+      .maybeSingle();
+    if (error) {
+      alert("Gagal tambah domain: " + error.message);
+      return;
+    }
+    if (data) setDomains((prev) => [...prev, data as DomainRow].sort((a, b) => a.domain.localeCompare(b.domain)));
+  };
+
+  const padamDomain = async (row: DomainRow) => {
+    if (!window.confirm(`Padam domain "${row.domain}"?`)) return;
+    const { error } = await supabase.from("bot_domain_whitelist").delete().eq("id", row.id);
+    if (error) {
+      alert("Gagal padam: " + error.message);
+      return;
+    }
+    setDomains((prev) => prev.filter((d) => d.id !== row.id));
+  };
+
+  const tindakanModerasi = async (row: ModLogRow, action: "ban" | "unban") => {
+    if (row.user_id == null) return;
+    const soalan =
+      action === "ban" ? "Block user ni dari group?" : "Buang block (unban) user ni?";
+    if (!window.confirm(soalan)) return;
+    setModBusyId(row.id);
+    try {
+      const { data, error } = await supabase.functions.invoke("telegram-moderation-action", {
+        body: {
+          action,
+          chat_id: Number(row.chat_id),
+          user_id: Number(row.user_id),
+          username: row.username ?? undefined,
+          reason: action === "ban" ? "Block manual oleh admin" : "Unban manual oleh admin",
+        },
+      });
+      const res = data as { success?: boolean; error?: string; detail?: string } | null;
+      if (error || res?.error) {
+        alert("Gagal: " + (res?.detail ?? res?.error ?? error?.message ?? "ralat tidak diketahui"));
+      } else {
+        alert(action === "ban" ? "✅ User berjaya diblock." : "✅ User berjaya di-unban.");
+        await loadModeration();
+      }
+    } catch (e) {
+      alert("Gagal: " + (e as Error).message);
+    } finally {
+      setModBusyId(null);
+    }
+  };
+
 
   const loadKb = async () => {
     setKbLoading(true);
@@ -245,6 +365,8 @@ function AdminTelegramPage() {
   useEffect(() => {
     if (!isAdmin) return;
     loadKb();
+    loadModeration();
+
   }, [isAdmin]);
 
   useEffect(() => {
@@ -514,7 +636,20 @@ function AdminTelegramPage() {
             onDelete={deleteKb}
           />
 
+          <ModerationSection
+            settings={settings}
+            onSetting={setSetting}
+            domains={domains}
+            onAddDomain={tambahDomain}
+            onDeleteDomain={padamDomain}
+            log={modLog}
+            loading={modLoading}
+            busyId={modBusyId}
+            onAction={tindakanModerasi}
+          />
+
           <section className="mt-8" id="perbualan-ai">
+
             <h2 className="mb-1 font-display text-lg font-extrabold">💬 Perbualan AI Terkini</h2>
             <p className="mb-3 text-xs text-muted-foreground">
               50 rekod terbaru (ai_dm &amp; ai_group) — untuk nilai kualiti jawapan AI.
@@ -996,5 +1131,236 @@ function CorrectionModal({
         </div>
       </form>
     </ModalShell>
+  );
+}
+
+const MOD_ACTION_STYLE: Record<string, { label: string; cls: string }> = {
+  flagged: { label: "🚩 Flagged", cls: "bg-amber-500/15 text-amber-600 border-amber-500/30" },
+  auto_deleted: { label: "🗑️ Auto-Padam", cls: "bg-orange-500/15 text-orange-600 border-orange-500/30" },
+  auto_warned: { label: "⚠️ Auto-Amaran", cls: "bg-blue-500/15 text-blue-600 border-blue-500/30" },
+  banned: { label: "🚫 Banned", cls: "bg-destructive/15 text-destructive border-destructive/30" },
+  unbanned: { label: "✅ Unbanned", cls: "bg-emerald-500/15 text-emerald-600 border-emerald-500/30" },
+};
+
+function ModActionBadge({ action }: { action: string }) {
+  const s = MOD_ACTION_STYLE[action] ?? {
+    label: action,
+    cls: "bg-muted text-muted-foreground border-border",
+  };
+  return (
+    <span className={`inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-bold ${s.cls}`}>
+      {s.label}
+    </span>
+  );
+}
+
+function ToggleRow({
+  label,
+  caption,
+  checked,
+  onChange,
+}: {
+  label: string;
+  caption: string;
+  checked: boolean;
+  onChange: (next: boolean) => void;
+}) {
+  return (
+    <div className="flex items-start justify-between gap-4 rounded-xl border border-border bg-background p-4">
+      <div>
+        <p className="text-sm font-bold">{label}</p>
+        <p className="mt-1 text-xs text-muted-foreground">{caption}</p>
+      </div>
+      <button
+        type="button"
+        role="switch"
+        aria-checked={checked}
+        aria-label={label}
+        onClick={() => onChange(!checked)}
+        className={`relative mt-1 h-6 w-11 shrink-0 rounded-full transition ${
+          checked ? "bg-primary" : "bg-muted"
+        }`}
+      >
+        <span
+          className={`absolute top-0.5 h-5 w-5 rounded-full bg-card shadow-soft transition-all ${
+            checked ? "left-[22px]" : "left-0.5"
+          }`}
+        />
+      </button>
+    </div>
+  );
+}
+
+function ModerationSection({
+  settings,
+  onSetting,
+  domains,
+  onAddDomain,
+  onDeleteDomain,
+  log,
+  loading,
+  busyId,
+  onAction,
+}: {
+  settings: Record<string, string>;
+  onSetting: (key: string, next: boolean) => void;
+  domains: DomainRow[];
+  onAddDomain: (domain: string) => void;
+  onDeleteDomain: (row: DomainRow) => void;
+  log: ModLogRow[];
+  loading: boolean;
+  busyId: string | null;
+  onAction: (row: ModLogRow, action: "ban" | "unban") => void;
+}) {
+  const [domainBaru, setDomainBaru] = useState("");
+
+  return (
+    <section className="mt-8">
+      <h2 className="mb-3 font-display text-lg font-extrabold">🛡️ Moderation</h2>
+
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <div className="rounded-2xl border border-border bg-card p-5 shadow-soft">
+          <h3 className="mb-3 text-sm font-extrabold uppercase text-muted-foreground">Tetapan Auto</h3>
+          <div className="space-y-3">
+            <ToggleRow
+              label="Auto-Padam Mesej Scam"
+              caption="Bot akan cuba padam terus mesej disyaki scam (perlukan bot jadi admin dalam group)"
+              checked={settings["scam_auto_delete"] === "true"}
+              onChange={(n) => onSetting("scam_auto_delete", n)}
+            />
+            <ToggleRow
+              label="Auto-Amaran Pengguna dalam Group"
+              caption="Bot akan reply amaran terus kepada penghantar dalam group"
+              checked={settings["scam_auto_warn"] === "true"}
+              onChange={(n) => onSetting("scam_auto_warn", n)}
+            />
+          </div>
+        </div>
+
+        <div className="rounded-2xl border border-border bg-card p-5 shadow-soft">
+          <h3 className="mb-1 text-sm font-extrabold uppercase text-muted-foreground">
+            Domain Whitelist
+          </h3>
+          <p className="mb-3 text-xs text-muted-foreground">
+            Bot anggap link ke domain ni selamat (tak flag sebagai scam/spam).
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {domains.length === 0 && (
+              <span className="text-sm text-muted-foreground">Tiada domain lagi.</span>
+            )}
+            {domains.map((d) => (
+              <span
+                key={d.id}
+                className="inline-flex items-center gap-1 rounded-full border border-border bg-muted px-3 py-1 text-xs font-bold"
+              >
+                {d.domain}
+                <button
+                  type="button"
+                  aria-label={`Padam ${d.domain}`}
+                  onClick={() => onDeleteDomain(d)}
+                  className="rounded-full p-0.5 text-muted-foreground hover:text-destructive"
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              </span>
+            ))}
+          </div>
+          <form
+            className="mt-4 flex gap-2"
+            onSubmit={(e) => {
+              e.preventDefault();
+              onAddDomain(domainBaru);
+              setDomainBaru("");
+            }}
+          >
+            <input
+              value={domainBaru}
+              onChange={(e) => setDomainBaru(e.target.value)}
+              placeholder="contoh.com"
+              className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm"
+            />
+            <button
+              type="submit"
+              className="inline-flex shrink-0 items-center gap-1 rounded-full bg-primary px-4 py-2 text-sm font-bold text-primary-foreground shadow-soft hover:opacity-90"
+            >
+              <Plus className="h-4 w-4" /> Tambah
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <div className="mt-4 overflow-x-auto rounded-2xl border border-border bg-card shadow-soft">
+        <div className="border-b border-border px-4 py-3 text-sm font-extrabold">
+          Log Moderation (30 terkini)
+        </div>
+        {loading ? (
+          <div className="flex items-center justify-center py-10 text-muted-foreground">
+            <Loader2 className="h-5 w-5 animate-spin" />
+          </div>
+        ) : log.length === 0 ? (
+          <div className="p-6 text-center text-muted-foreground">Tiada rekod moderation lagi.</div>
+        ) : (
+          <table className="w-full min-w-[880px] text-sm">
+            <thead className="bg-muted/50 text-left text-xs font-bold uppercase text-muted-foreground">
+              <tr>
+                <th className="px-4 py-3">Masa</th>
+                <th className="px-4 py-3">Chat ID</th>
+                <th className="px-4 py-3">Username</th>
+                <th className="px-4 py-3">Tindakan</th>
+                <th className="px-4 py-3">Sebab / Mesej</th>
+                <th className="px-4 py-3">Tindakan Admin</th>
+              </tr>
+            </thead>
+            <tbody>
+              {log.map((r) => {
+                const boleh =
+                  r.user_id != null &&
+                  ["flagged", "auto_deleted", "auto_warned"].includes(r.action);
+                const bolehUnban = r.user_id != null && r.action === "banned";
+                const busy = busyId === r.id;
+                return (
+                  <tr key={r.id} className="border-t border-border align-top">
+                    <td className="whitespace-nowrap px-4 py-3 text-xs text-muted-foreground">
+                      {formatMasa(r.created_at)}
+                    </td>
+                    <td className="px-4 py-3 text-xs">{String(r.chat_id)}</td>
+                    <td className="px-4 py-3 text-xs font-bold">
+                      {r.username ? `@${r.username}` : `user ${r.user_id ?? "—"}`}
+                    </td>
+                    <td className="px-4 py-3">
+                      <ModActionBadge action={r.action} />
+                    </td>
+                    <td className="px-4 py-3">{potong(r.reason ?? r.message_text, 60)}</td>
+                    <td className="px-4 py-3">
+                      {boleh && (
+                        <button
+                          type="button"
+                          disabled={busy}
+                          onClick={() => onAction(r, "ban")}
+                          className="inline-flex items-center gap-1 rounded-full border border-destructive/30 bg-destructive/10 px-3 py-1.5 text-xs font-bold text-destructive hover:bg-destructive/20 disabled:opacity-50"
+                        >
+                          {busy ? <Loader2 className="h-3 w-3 animate-spin" /> : null} 🚫 Block User
+                        </button>
+                      )}
+                      {bolehUnban && (
+                        <button
+                          type="button"
+                          disabled={busy}
+                          onClick={() => onAction(r, "unban")}
+                          className="inline-flex items-center gap-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-xs font-bold text-emerald-600 hover:bg-emerald-500/20 disabled:opacity-50"
+                        >
+                          {busy ? <Loader2 className="h-3 w-3 animate-spin" /> : null} ✅ Unban
+                        </button>
+                      )}
+                      {!boleh && !bolehUnban && <span className="text-xs text-muted-foreground">—</span>}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        )}
+      </div>
+    </section>
   );
 }
