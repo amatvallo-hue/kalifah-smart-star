@@ -1,10 +1,31 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { Loader2, ShieldAlert, Bot } from "lucide-react";
+import { Loader2, ShieldAlert, Bot, Pencil, Trash2, Plus, X, BookOpen } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { SiteHeader } from "@/components/SiteHeader";
 import { AdminAffiliateNav } from "@/components/AdminAffiliateNav";
+
+const KATEGORI_SUGGESTIONS = [
+  "Pendaftaran",
+  "Pembayaran",
+  "Affiliate",
+  "Harga",
+  "Lain-lain",
+];
+
+type KbRow = {
+  id: string;
+  category: string;
+  title: string;
+  content: string;
+  is_active: boolean;
+  source: string | null;
+  source_event_id: string | null;
+  created_by: string | null;
+  created_at: string;
+  updated_at: string;
+};
 
 export const Route = createFileRoute("/admin_/telegram")({
   head: () => ({
@@ -38,6 +59,7 @@ type EventRow = {
   reply_text: string | null;
   needs_admin: boolean | null;
   feedback: string | null;
+  corrected_at: string | null;
 };
 
 type RingkasRow = {
@@ -48,6 +70,7 @@ type RingkasRow = {
   message_text: string | null;
   needs_admin: boolean | null;
   feedback: string | null;
+  corrected_at: string | null;
 };
 
 const AI_TYPES = ["ai_dm", "ai_group"];
@@ -105,6 +128,125 @@ function AdminTelegramPage() {
   const [soalanHariIni, setSoalanHariIni] = useState(0);
   const [perluAdminHariIni, setPerluAdminHariIni] = useState(0);
 
+  const [kbRows, setKbRows] = useState<KbRow[]>([]);
+  const [kbLoading, setKbLoading] = useState(false);
+  const [showKbForm, setShowKbForm] = useState(false);
+  const [editKb, setEditKb] = useState<KbRow | null>(null);
+  const [correctEvent, setCorrectEvent] = useState<EventRow | null>(null);
+  const [expandedKb, setExpandedKb] = useState<Record<string, boolean>>({});
+
+  const loadKb = async () => {
+    setKbLoading(true);
+    const { data, error } = await supabase
+      .from("bot_knowledge_base")
+      .select("*")
+      .order("category", { ascending: true })
+      .order("title", { ascending: true });
+    if (error) console.error("[admin/telegram] KB", error);
+    setKbRows((data ?? []) as KbRow[]);
+    setKbLoading(false);
+  };
+
+  const toggleKbActive = async (row: KbRow, next: boolean) => {
+    setKbRows((prev) => prev.map((r) => (r.id === row.id ? { ...r, is_active: next } : r)));
+    const { error } = await supabase
+      .from("bot_knowledge_base")
+      .update({ is_active: next })
+      .eq("id", row.id);
+    if (error) {
+      console.error(error);
+      setKbRows((prev) => prev.map((r) => (r.id === row.id ? { ...r, is_active: !next } : r)));
+    }
+  };
+
+  const deleteKb = async (row: KbRow) => {
+    if (!window.confirm(`Padam "${row.title}"?`)) return;
+    const { error } = await supabase.from("bot_knowledge_base").delete().eq("id", row.id);
+    if (error) {
+      alert("Gagal padam: " + error.message);
+      return;
+    }
+    setKbRows((prev) => prev.filter((r) => r.id !== row.id));
+  };
+
+  const saveKb = async (payload: {
+    id?: string;
+    category: string;
+    title: string;
+    content: string;
+  }) => {
+    if (payload.id) {
+      const { error } = await supabase
+        .from("bot_knowledge_base")
+        .update({
+          category: payload.category,
+          title: payload.title,
+          content: payload.content,
+        })
+        .eq("id", payload.id);
+      if (error) {
+        alert("Gagal simpan: " + error.message);
+        return;
+      }
+    } else {
+      const { error } = await supabase.from("bot_knowledge_base").insert({
+        category: payload.category,
+        title: payload.title,
+        content: payload.content,
+        source: "manual",
+        created_by: user?.id ?? null,
+        is_active: true,
+      });
+      if (error) {
+        alert("Gagal simpan: " + error.message);
+        return;
+      }
+    }
+    setShowKbForm(false);
+    setEditKb(null);
+    await loadKb();
+  };
+
+  const saveCorrection = async (payload: {
+    eventId: string;
+    category: string;
+    title: string;
+    content: string;
+  }) => {
+    const { error: insErr } = await supabase.from("bot_knowledge_base").insert({
+      category: payload.category,
+      title: payload.title,
+      content: payload.content,
+      source: "correction",
+      source_event_id: payload.eventId,
+      created_by: user?.id ?? null,
+      is_active: true,
+    });
+    if (insErr) {
+      alert("Gagal simpan: " + insErr.message);
+      return;
+    }
+    const nowIso = new Date().toISOString();
+    const { error: updErr } = await supabase
+      .from("telegram_bot_events")
+      .update({ corrected_at: nowIso })
+      .eq("id", payload.eventId);
+    if (updErr) console.error(updErr);
+    setAiRows((prev) =>
+      prev.map((r) => (r.id === payload.eventId ? { ...r, corrected_at: nowIso } : r)),
+    );
+    setMinggu((prev) =>
+      prev.map((r) => (r.id === payload.eventId ? { ...r, corrected_at: nowIso } : r)),
+    );
+    setCorrectEvent(null);
+    await loadKb();
+  };
+
+  useEffect(() => {
+    if (!isAdmin) return;
+    loadKb();
+  }, [isAdmin]);
+
   useEffect(() => {
     if (authLoading) return;
     if (!user) {
@@ -144,13 +286,13 @@ function AdminTelegramPage() {
         supabase.from("telegram_bot_events").select("chat_id, event_type"),
         supabase
           .from("telegram_bot_events")
-          .select("id, created_at, chat_id, event_type, message_text, needs_admin, feedback")
+          .select("id, created_at, chat_id, event_type, message_text, needs_admin, feedback, corrected_at")
           .gte("created_at", weekStart)
           .order("created_at", { ascending: false }),
         supabase
           .from("telegram_bot_events")
           .select(
-            "id, created_at, chat_id, chat_type, event_type, message_text, reply_text, needs_admin, feedback",
+            "id, created_at, chat_id, chat_type, event_type, message_text, reply_text, needs_admin, feedback, corrected_at",
           )
           .in("event_type", AI_TYPES)
           .order("created_at", { ascending: false })
@@ -219,7 +361,7 @@ function AdminTelegramPage() {
   const perluPerhatian = useMemo(
     () =>
       aiMinggu
-        .filter((r) => r.needs_admin === true && !r.feedback)
+        .filter((r) => r.needs_admin === true && !r.feedback && !r.corrected_at)
         .slice(0, 5),
     [aiMinggu],
   );
@@ -355,6 +497,23 @@ function AdminTelegramPage() {
             </section>
           )}
 
+          <KnowledgeBaseSection
+            rows={kbRows}
+            loading={kbLoading}
+            expanded={expandedKb}
+            setExpanded={setExpandedKb}
+            onAdd={() => {
+              setEditKb(null);
+              setShowKbForm(true);
+            }}
+            onEdit={(row) => {
+              setEditKb(row);
+              setShowKbForm(true);
+            }}
+            onToggle={toggleKbActive}
+            onDelete={deleteKb}
+          />
+
           <section className="mt-8" id="perbualan-ai">
             <h2 className="mb-1 font-display text-lg font-extrabold">💬 Perbualan AI Terkini</h2>
             <p className="mb-3 text-xs text-muted-foreground">
@@ -366,7 +525,7 @@ function AdminTelegramPage() {
                   Belum ada perbualan AI direkod.
                 </div>
               ) : (
-                <table className="w-full min-w-[860px] text-sm">
+                <table className="w-full min-w-[960px] text-sm">
                   <thead className="bg-muted/50 text-left text-xs font-bold uppercase text-muted-foreground">
                     <tr>
                       <th className="px-4 py-3">Masa</th>
@@ -374,6 +533,7 @@ function AdminTelegramPage() {
                       <th className="px-4 py-3">Status</th>
                       <th className="px-4 py-3">Soalan</th>
                       <th className="px-4 py-3">Jawapan Bot</th>
+                      <th className="px-4 py-3">Tindakan</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -396,6 +556,20 @@ function AdminTelegramPage() {
                         <td className="max-w-md px-4 py-3 whitespace-pre-line text-muted-foreground">
                           {r.reply_text ?? "—"}
                         </td>
+                        <td className="whitespace-nowrap px-4 py-3">
+                          <button
+                            type="button"
+                            onClick={() => setCorrectEvent(r)}
+                            className="inline-flex items-center gap-1 rounded-full border border-border bg-card px-3 py-1 text-xs font-bold hover:bg-muted"
+                          >
+                            <Pencil className="h-3 w-3" /> Betulkan
+                          </button>
+                          {r.corrected_at && (
+                            <div className="mt-1 text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                              ✅ Dah dibetulkan
+                            </div>
+                          )}
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -403,6 +577,25 @@ function AdminTelegramPage() {
               )}
             </div>
           </section>
+
+          {showKbForm && (
+            <KbFormModal
+              initial={editKb}
+              onClose={() => {
+                setShowKbForm(false);
+                setEditKb(null);
+              }}
+              onSave={saveKb}
+            />
+          )}
+
+          {correctEvent && (
+            <CorrectionModal
+              event={correctEvent}
+              onClose={() => setCorrectEvent(null)}
+              onSave={saveCorrection}
+            />
+          )}
         </>
       )}
     </div>
@@ -462,5 +655,346 @@ function StatCard({
       <div className="text-xs font-bold uppercase text-muted-foreground">{label}</div>
       <div className="mt-2 font-display text-2xl font-extrabold">{value}</div>
     </div>
+  );
+}
+
+function KnowledgeBaseSection({
+  rows,
+  loading,
+  expanded,
+  setExpanded,
+  onAdd,
+  onEdit,
+  onToggle,
+  onDelete,
+}: {
+  rows: KbRow[];
+  loading: boolean;
+  expanded: Record<string, boolean>;
+  setExpanded: (fn: (prev: Record<string, boolean>) => Record<string, boolean>) => void;
+  onAdd: () => void;
+  onEdit: (row: KbRow) => void;
+  onToggle: (row: KbRow, next: boolean) => void;
+  onDelete: (row: KbRow) => void;
+}) {
+  const grouped = useMemo(() => {
+    const m = new Map<string, KbRow[]>();
+    for (const r of rows) {
+      const arr = m.get(r.category) ?? [];
+      arr.push(r);
+      m.set(r.category, arr);
+    }
+    return [...m.entries()].sort((a, b) => a[0].localeCompare(b[0]));
+  }, [rows]);
+
+  return (
+    <section className="mt-8">
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+        <h2 className="flex items-center gap-2 font-display text-lg font-extrabold">
+          <BookOpen className="h-5 w-5 text-primary" /> Knowledge Base
+        </h2>
+        <button
+          type="button"
+          onClick={onAdd}
+          className="inline-flex items-center gap-1 rounded-full bg-primary px-4 py-2 text-sm font-bold text-primary-foreground shadow-soft hover:opacity-90"
+        >
+          <Plus className="h-4 w-4" /> Tambah Knowledge
+        </button>
+      </div>
+
+      {loading ? (
+        <div className="flex items-center justify-center py-10 text-muted-foreground">
+          <Loader2 className="h-5 w-5 animate-spin" />
+        </div>
+      ) : rows.length === 0 ? (
+        <div className="rounded-2xl border border-dashed border-border bg-card p-8 text-center text-sm text-muted-foreground">
+          Belum ada entri knowledge base. Klik <b>+ Tambah Knowledge</b> untuk mula.
+        </div>
+      ) : (
+        <div className="space-y-6">
+          {grouped.map(([cat, list]) => (
+            <div key={cat}>
+              <h3 className="mb-2 text-sm font-extrabold uppercase text-muted-foreground">
+                {cat}
+              </h3>
+              <div className="grid gap-3 md:grid-cols-2">
+                {list.map((row) => {
+                  const isLong = row.content.length > 150;
+                  const isOpen = expanded[row.id] ?? false;
+                  const shown = !isLong || isOpen ? row.content : row.content.slice(0, 150) + "…";
+                  return (
+                    <div
+                      key={row.id}
+                      className={`rounded-2xl border p-4 shadow-soft ${
+                        row.is_active ? "border-border bg-card" : "border-border bg-muted/40 opacity-70"
+                      }`}
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="min-w-0 flex-1">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <p className="font-bold">{row.title}</p>
+                            {row.source === "correction" && (
+                              <span className="rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">
+                                Daripada Pembetulan
+                              </span>
+                            )}
+                          </div>
+                          <p className="mt-1 whitespace-pre-line text-sm text-muted-foreground">
+                            {shown}
+                          </p>
+                          {isLong && (
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setExpanded((prev) => ({ ...prev, [row.id]: !isOpen }))
+                              }
+                              className="mt-1 text-xs font-bold text-primary hover:underline"
+                            >
+                              {isOpen ? "Tutup" : "Baca lagi"}
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                      <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-border pt-3">
+                        <label className="inline-flex cursor-pointer items-center gap-2 text-xs font-bold">
+                          <input
+                            type="checkbox"
+                            checked={row.is_active}
+                            onChange={(e) => onToggle(row, e.target.checked)}
+                          />
+                          {row.is_active ? "Aktif" : "Tidak Aktif"}
+                        </label>
+                        <div className="flex items-center gap-1">
+                          <button
+                            type="button"
+                            onClick={() => onEdit(row)}
+                            className="inline-flex items-center gap-1 rounded-full border border-border px-3 py-1 text-xs font-bold hover:bg-muted"
+                          >
+                            <Pencil className="h-3 w-3" /> Edit
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => onDelete(row)}
+                            className="inline-flex items-center gap-1 rounded-full border border-destructive/40 px-3 py-1 text-xs font-bold text-destructive hover:bg-destructive/10"
+                          >
+                            <Trash2 className="h-3 w-3" /> Padam
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </section>
+  );
+}
+
+function ModalShell({
+  title,
+  onClose,
+  children,
+}: {
+  title: string;
+  onClose: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+      <div className="w-full max-w-lg rounded-2xl border border-border bg-card p-6 shadow-soft">
+        <div className="mb-4 flex items-center justify-between">
+          <h3 className="font-display text-lg font-extrabold">{title}</h3>
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-full p-1 hover:bg-muted"
+            aria-label="Tutup"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function KbFormModal({
+  initial,
+  onClose,
+  onSave,
+}: {
+  initial: KbRow | null;
+  onClose: () => void;
+  onSave: (p: { id?: string; category: string; title: string; content: string }) => Promise<void>;
+}) {
+  const [category, setCategory] = useState(initial?.category ?? "");
+  const [title, setTitle] = useState(initial?.title ?? "");
+  const [content, setContent] = useState(initial?.content ?? "");
+  const [saving, setSaving] = useState(false);
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!category.trim() || !title.trim() || !content.trim()) return;
+    setSaving(true);
+    await onSave({ id: initial?.id, category: category.trim(), title: title.trim(), content: content.trim() });
+    setSaving(false);
+  };
+
+  return (
+    <ModalShell title={initial ? "Edit Knowledge" : "Tambah Knowledge"} onClose={onClose}>
+      <form onSubmit={submit} className="space-y-3">
+        <div>
+          <label className="mb-1 block text-xs font-bold uppercase text-muted-foreground">
+            Kategori
+          </label>
+          <input
+            list="kb-kategori-list"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm"
+            required
+          />
+          <datalist id="kb-kategori-list">
+            {KATEGORI_SUGGESTIONS.map((k) => (
+              <option key={k} value={k} />
+            ))}
+          </datalist>
+        </div>
+        <div>
+          <label className="mb-1 block text-xs font-bold uppercase text-muted-foreground">Tajuk</label>
+          <input
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm"
+            required
+          />
+        </div>
+        <div>
+          <label className="mb-1 block text-xs font-bold uppercase text-muted-foreground">
+            Kandungan
+          </label>
+          <textarea
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            rows={6}
+            className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm"
+            required
+          />
+        </div>
+        <div className="flex justify-end gap-2 pt-2">
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-full border border-border px-4 py-2 text-sm font-bold hover:bg-muted"
+          >
+            Batal
+          </button>
+          <button
+            type="submit"
+            disabled={saving}
+            className="inline-flex items-center gap-1 rounded-full bg-primary px-4 py-2 text-sm font-bold text-primary-foreground shadow-soft hover:opacity-90 disabled:opacity-50"
+          >
+            {saving && <Loader2 className="h-3 w-3 animate-spin" />} Simpan
+          </button>
+        </div>
+      </form>
+    </ModalShell>
+  );
+}
+
+function CorrectionModal({
+  event,
+  onClose,
+  onSave,
+}: {
+  event: EventRow;
+  onClose: () => void;
+  onSave: (p: { eventId: string; category: string; title: string; content: string }) => Promise<void>;
+}) {
+  const defaultTitle = (event.message_text ?? "").slice(0, 80);
+  const [category, setCategory] = useState("Lain-lain");
+  const [title, setTitle] = useState(defaultTitle);
+  const [content, setContent] = useState(event.reply_text ?? "");
+  const [saving, setSaving] = useState(false);
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!category.trim() || !title.trim() || !content.trim()) return;
+    setSaving(true);
+    await onSave({
+      eventId: String(event.id),
+      category: category.trim(),
+      title: title.trim(),
+      content: content.trim(),
+    });
+    setSaving(false);
+  };
+
+  return (
+    <ModalShell title="Betulkan Jawapan" onClose={onClose}>
+      <form onSubmit={submit} className="space-y-3">
+        <div className="rounded-xl border border-border bg-muted/40 p-3 text-sm">
+          <div className="mb-1 text-xs font-bold uppercase text-muted-foreground">Soalan asal</div>
+          <p className="whitespace-pre-line">{event.message_text ?? "—"}</p>
+        </div>
+        <div>
+          <label className="mb-1 block text-xs font-bold uppercase text-muted-foreground">
+            Kategori
+          </label>
+          <select
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm"
+          >
+            {KATEGORI_SUGGESTIONS.map((k) => (
+              <option key={k} value={k}>
+                {k}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="mb-1 block text-xs font-bold uppercase text-muted-foreground">Tajuk</label>
+          <input
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm"
+            required
+          />
+        </div>
+        <div>
+          <label className="mb-1 block text-xs font-bold uppercase text-muted-foreground">
+            Jawapan Betul
+          </label>
+          <textarea
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            rows={6}
+            className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm"
+            required
+          />
+        </div>
+        <div className="flex justify-end gap-2 pt-2">
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-full border border-border px-4 py-2 text-sm font-bold hover:bg-muted"
+          >
+            Batal
+          </button>
+          <button
+            type="submit"
+            disabled={saving}
+            className="inline-flex items-center gap-1 rounded-full bg-primary px-4 py-2 text-sm font-bold text-primary-foreground shadow-soft hover:opacity-90 disabled:opacity-50"
+          >
+            {saving && <Loader2 className="h-3 w-3 animate-spin" />} Simpan Pembetulan
+          </button>
+        </div>
+      </form>
+    </ModalShell>
   );
 }
