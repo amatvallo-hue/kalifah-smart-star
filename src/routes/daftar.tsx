@@ -147,10 +147,18 @@ function DaftarPage() {
       setLoading(false);
       return;
     }
-    if (data.session) {
-      if (typeof window !== "undefined" && typeof (window as any).gtag === "function") {
+
+    // Akaun berjaya dicipta (dengan atau tanpa email confirmation) — track kedua-dua kes.
+    if (typeof window !== "undefined") {
+      if (typeof (window as any).gtag === "function") {
         (window as any).gtag("event", "sign_up", { method: "email" });
       }
+      if (typeof (window as any).fbq === "function") {
+        (window as any).fbq("track", "CompleteRegistration");
+      }
+    }
+
+    if (data.session) {
       navigate({ to: "/pilih-darjah" });
     } else {
       setInfo("Akaun dicipta. Sila semak emel anda untuk pengesahan, kemudian log masuk.");
