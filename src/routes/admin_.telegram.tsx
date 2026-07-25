@@ -736,7 +736,9 @@ function AdminTelegramPage() {
             onToggle={toggleKbActive}
             onDelete={deleteKb}
           />
+          )}
 
+          {tab === "moderation" && (
           <ModerationSection
             settings={settings}
             onSetting={setSetting}
@@ -748,8 +750,15 @@ function AdminTelegramPage() {
             busyId={modBusyId}
             onAction={tindakanModerasi}
           />
+          )}
 
+          {tab === "settings" && (
+            <SettingsSection settings={settings} onSave={setSettingValue} />
+          )}
+
+          {tab === "conversations" && (
           <section className="mt-8" id="perbualan-ai">
+
 
             <h2 className="mb-1 font-display text-lg font-extrabold">💬 Perbualan AI Terkini</h2>
             <p className="mb-3 text-xs text-muted-foreground">
