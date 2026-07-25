@@ -468,6 +468,21 @@ function AllUsers() {
     return { semua, dahBeli, belumBeli };
   }, [parentRows]);
 
+  const sumberDaftar = useMemo(() => {
+    const byRef = new Map<string, number>();
+    let terus = 0;
+    for (const r of parentRows) {
+      const code = (r.ref_code ?? "").trim();
+      if (code) byRef.set(code, (byRef.get(code) ?? 0) + 1);
+      else terus += 1;
+    }
+    const affiliates = [...byRef.entries()]
+      .map(([code, count]) => ({ code, count }))
+      .sort((a, b) => b.count - a.count);
+    return { affiliates, terus, jumlahAffiliate: parentRows.length - terus };
+  }, [parentRows]);
+
+
   const filteredRows = useMemo(() => {
     let base = parentRows;
     if (filter === "dah-beli") {
