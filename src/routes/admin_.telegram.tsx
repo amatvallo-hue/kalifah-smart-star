@@ -59,6 +59,7 @@ type EventRow = {
   reply_text: string | null;
   needs_admin: boolean | null;
   feedback: string | null;
+  corrected_at: string | null;
 };
 
 type RingkasRow = {
@@ -69,6 +70,7 @@ type RingkasRow = {
   message_text: string | null;
   needs_admin: boolean | null;
   feedback: string | null;
+  corrected_at: string | null;
 };
 
 const AI_TYPES = ["ai_dm", "ai_group"];
