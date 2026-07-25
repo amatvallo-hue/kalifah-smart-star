@@ -709,7 +709,18 @@ function AdminTelegramPage() {
             </section>
           )}
 
+          <TopQuestionsCard
+            cache={topQ}
+            busy={topQBusy}
+            ralat={topQRalat}
+            onGenerate={janaTopQ}
+          />
+          </>
+          )}
+
+          {tab === "knowledge" && (
           <KnowledgeBaseSection
+
             rows={kbRows}
             loading={kbLoading}
             expanded={expandedKb}
