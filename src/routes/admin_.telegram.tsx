@@ -436,6 +436,8 @@ function AdminTelegramPage() {
     if (!isAdmin) return;
     loadKb();
     loadModeration();
+    loadTopQ();
+
 
   }, [isAdmin]);
 
