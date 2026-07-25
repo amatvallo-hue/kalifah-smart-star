@@ -497,6 +497,23 @@ function AdminTelegramPage() {
             </section>
           )}
 
+          <KnowledgeBaseSection
+            rows={kbRows}
+            loading={kbLoading}
+            expanded={expandedKb}
+            setExpanded={setExpandedKb}
+            onAdd={() => {
+              setEditKb(null);
+              setShowKbForm(true);
+            }}
+            onEdit={(row) => {
+              setEditKb(row);
+              setShowKbForm(true);
+            }}
+            onToggle={toggleKbActive}
+            onDelete={deleteKb}
+          />
+
           <section className="mt-8" id="perbualan-ai">
             <h2 className="mb-1 font-display text-lg font-extrabold">💬 Perbualan AI Terkini</h2>
             <p className="mb-3 text-xs text-muted-foreground">
@@ -508,7 +525,7 @@ function AdminTelegramPage() {
                   Belum ada perbualan AI direkod.
                 </div>
               ) : (
-                <table className="w-full min-w-[860px] text-sm">
+                <table className="w-full min-w-[960px] text-sm">
                   <thead className="bg-muted/50 text-left text-xs font-bold uppercase text-muted-foreground">
                     <tr>
                       <th className="px-4 py-3">Masa</th>
@@ -516,6 +533,7 @@ function AdminTelegramPage() {
                       <th className="px-4 py-3">Status</th>
                       <th className="px-4 py-3">Soalan</th>
                       <th className="px-4 py-3">Jawapan Bot</th>
+                      <th className="px-4 py-3">Tindakan</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -538,6 +556,20 @@ function AdminTelegramPage() {
                         <td className="max-w-md px-4 py-3 whitespace-pre-line text-muted-foreground">
                           {r.reply_text ?? "—"}
                         </td>
+                        <td className="whitespace-nowrap px-4 py-3">
+                          <button
+                            type="button"
+                            onClick={() => setCorrectEvent(r)}
+                            className="inline-flex items-center gap-1 rounded-full border border-border bg-card px-3 py-1 text-xs font-bold hover:bg-muted"
+                          >
+                            <Pencil className="h-3 w-3" /> Betulkan
+                          </button>
+                          {r.corrected_at && (
+                            <div className="mt-1 text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                              ✅ Dah dibetulkan
+                            </div>
+                          )}
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -545,6 +577,25 @@ function AdminTelegramPage() {
               )}
             </div>
           </section>
+
+          {showKbForm && (
+            <KbFormModal
+              initial={editKb}
+              onClose={() => {
+                setShowKbForm(false);
+                setEditKb(null);
+              }}
+              onSave={saveKb}
+            />
+          )}
+
+          {correctEvent && (
+            <CorrectionModal
+              event={correctEvent}
+              onClose={() => setCorrectEvent(null)}
+              onSave={saveCorrection}
+            />
+          )}
         </>
       )}
     </div>
