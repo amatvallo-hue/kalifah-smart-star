@@ -608,7 +608,27 @@ function AdminTelegramPage() {
         </div>
       ) : (
         <>
+          <div className="mt-6 flex flex-wrap gap-2 border-b border-border pb-3">
+            {TABS.map((t) => (
+              <button
+                key={t.key}
+                type="button"
+                onClick={() => setTab(t.key)}
+                className={`rounded-full px-4 py-2 text-sm font-bold transition ${
+                  tab === t.key
+                    ? "bg-primary text-primary-foreground shadow-soft"
+                    : "border border-border bg-card text-foreground hover:bg-muted"
+                }`}
+              >
+                {t.label}
+              </button>
+            ))}
+          </div>
+
+          {tab === "overview" && (
+          <>
           <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+
             <StatCard label="👥 Pengguna Aktif (7 hari)" value={String(uniqueChats)} />
             <StatCard label="❓ Soalan Hari Ini" value={String(soalanHariIni)} />
             <StatCard label="🤖 Dijawab AI % (7 hari)" value={dijawabAiPct} highlight />
