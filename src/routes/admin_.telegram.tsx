@@ -191,13 +191,13 @@ function AdminTelegramPage() {
         supabase.from("telegram_bot_events").select("chat_id, event_type"),
         supabase
           .from("telegram_bot_events")
-          .select("id, created_at, chat_id, event_type, message_text, needs_admin, feedback")
+          .select("id, created_at, chat_id, event_type, message_text, needs_admin, feedback, corrected_at")
           .gte("created_at", weekStart)
           .order("created_at", { ascending: false }),
         supabase
           .from("telegram_bot_events")
           .select(
-            "id, created_at, chat_id, chat_type, event_type, message_text, reply_text, needs_admin, feedback",
+            "id, created_at, chat_id, chat_type, event_type, message_text, reply_text, needs_admin, feedback, corrected_at",
           )
           .in("event_type", AI_TYPES)
           .order("created_at", { ascending: false })
