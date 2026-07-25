@@ -568,6 +568,7 @@ function AllUsers() {
               <TableHead>Email</TableHead>
               <TableHead>Username</TableHead>
               <TableHead>Role</TableHead>
+              <TableHead>Sumber</TableHead>
               <TableHead>{isBelumBeli ? "Pilih Darjah Akses" : "Darjah Akses"}</TableHead>
               {filter === "dah-beli" && <TableHead>Tarikh Beli</TableHead>}
               <TableHead>Tarikh Daftar</TableHead>
@@ -591,6 +592,15 @@ function AllUsers() {
                         <SelectItem value="admin">admin</SelectItem>
                       </SelectContent>
                     </Select>
+                  </TableCell>
+                  <TableCell>
+                    {r.ref_code ? (
+                      <span className="rounded-full bg-blue-100 px-2 py-0.5 text-xs font-bold text-blue-700">
+                        🔗 {r.ref_code}
+                      </span>
+                    ) : (
+                      <span className="text-xs text-muted-foreground">Terus</span>
+                    )}
                   </TableCell>
                   <TableCell>
                     {isBelumBeli ? (
