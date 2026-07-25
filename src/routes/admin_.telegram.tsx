@@ -657,3 +657,344 @@ function StatCard({
     </div>
   );
 }
+
+function KnowledgeBaseSection({
+  rows,
+  loading,
+  expanded,
+  setExpanded,
+  onAdd,
+  onEdit,
+  onToggle,
+  onDelete,
+}: {
+  rows: KbRow[];
+  loading: boolean;
+  expanded: Record<string, boolean>;
+  setExpanded: (fn: (prev: Record<string, boolean>) => Record<string, boolean>) => void;
+  onAdd: () => void;
+  onEdit: (row: KbRow) => void;
+  onToggle: (row: KbRow, next: boolean) => void;
+  onDelete: (row: KbRow) => void;
+}) {
+  const grouped = useMemo(() => {
+    const m = new Map<string, KbRow[]>();
+    for (const r of rows) {
+      const arr = m.get(r.category) ?? [];
+      arr.push(r);
+      m.set(r.category, arr);
+    }
+    return [...m.entries()].sort((a, b) => a[0].localeCompare(b[0]));
+  }, [rows]);
+
+  return (
+    <section className="mt-8">
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+        <h2 className="flex items-center gap-2 font-display text-lg font-extrabold">
+          <BookOpen className="h-5 w-5 text-primary" /> Knowledge Base
+        </h2>
+        <button
+          type="button"
+          onClick={onAdd}
+          className="inline-flex items-center gap-1 rounded-full bg-primary px-4 py-2 text-sm font-bold text-primary-foreground shadow-soft hover:opacity-90"
+        >
+          <Plus className="h-4 w-4" /> Tambah Knowledge
+        </button>
+      </div>
+
+      {loading ? (
+        <div className="flex items-center justify-center py-10 text-muted-foreground">
+          <Loader2 className="h-5 w-5 animate-spin" />
+        </div>
+      ) : rows.length === 0 ? (
+        <div className="rounded-2xl border border-dashed border-border bg-card p-8 text-center text-sm text-muted-foreground">
+          Belum ada entri knowledge base. Klik <b>+ Tambah Knowledge</b> untuk mula.
+        </div>
+      ) : (
+        <div className="space-y-6">
+          {grouped.map(([cat, list]) => (
+            <div key={cat}>
+              <h3 className="mb-2 text-sm font-extrabold uppercase text-muted-foreground">
+                {cat}
+              </h3>
+              <div className="grid gap-3 md:grid-cols-2">
+                {list.map((row) => {
+                  const isLong = row.content.length > 150;
+                  const isOpen = expanded[row.id] ?? false;
+                  const shown = !isLong || isOpen ? row.content : row.content.slice(0, 150) + "…";
+                  return (
+                    <div
+                      key={row.id}
+                      className={`rounded-2xl border p-4 shadow-soft ${
+                        row.is_active ? "border-border bg-card" : "border-border bg-muted/40 opacity-70"
+                      }`}
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="min-w-0 flex-1">
+                          <div className="flex flex-wrap items-center gap-2">
+                            <p className="font-bold">{row.title}</p>
+                            {row.source === "correction" && (
+                              <span className="rounded-full border border-primary/30 bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">
+                                Daripada Pembetulan
+                              </span>
+                            )}
+                          </div>
+                          <p className="mt-1 whitespace-pre-line text-sm text-muted-foreground">
+                            {shown}
+                          </p>
+                          {isLong && (
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setExpanded((prev) => ({ ...prev, [row.id]: !isOpen }))
+                              }
+                              className="mt-1 text-xs font-bold text-primary hover:underline"
+                            >
+                              {isOpen ? "Tutup" : "Baca lagi"}
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                      <div className="mt-3 flex flex-wrap items-center justify-between gap-2 border-t border-border pt-3">
+                        <label className="inline-flex cursor-pointer items-center gap-2 text-xs font-bold">
+                          <input
+                            type="checkbox"
+                            checked={row.is_active}
+                            onChange={(e) => onToggle(row, e.target.checked)}
+                          />
+                          {row.is_active ? "Aktif" : "Tidak Aktif"}
+                        </label>
+                        <div className="flex items-center gap-1">
+                          <button
+                            type="button"
+                            onClick={() => onEdit(row)}
+                            className="inline-flex items-center gap-1 rounded-full border border-border px-3 py-1 text-xs font-bold hover:bg-muted"
+                          >
+                            <Pencil className="h-3 w-3" /> Edit
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => onDelete(row)}
+                            className="inline-flex items-center gap-1 rounded-full border border-destructive/40 px-3 py-1 text-xs font-bold text-destructive hover:bg-destructive/10"
+                          >
+                            <Trash2 className="h-3 w-3" /> Padam
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </section>
+  );
+}
+
+function ModalShell({
+  title,
+  onClose,
+  children,
+}: {
+  title: string;
+  onClose: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+      <div className="w-full max-w-lg rounded-2xl border border-border bg-card p-6 shadow-soft">
+        <div className="mb-4 flex items-center justify-between">
+          <h3 className="font-display text-lg font-extrabold">{title}</h3>
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-full p-1 hover:bg-muted"
+            aria-label="Tutup"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function KbFormModal({
+  initial,
+  onClose,
+  onSave,
+}: {
+  initial: KbRow | null;
+  onClose: () => void;
+  onSave: (p: { id?: string; category: string; title: string; content: string }) => Promise<void>;
+}) {
+  const [category, setCategory] = useState(initial?.category ?? "");
+  const [title, setTitle] = useState(initial?.title ?? "");
+  const [content, setContent] = useState(initial?.content ?? "");
+  const [saving, setSaving] = useState(false);
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!category.trim() || !title.trim() || !content.trim()) return;
+    setSaving(true);
+    await onSave({ id: initial?.id, category: category.trim(), title: title.trim(), content: content.trim() });
+    setSaving(false);
+  };
+
+  return (
+    <ModalShell title={initial ? "Edit Knowledge" : "Tambah Knowledge"} onClose={onClose}>
+      <form onSubmit={submit} className="space-y-3">
+        <div>
+          <label className="mb-1 block text-xs font-bold uppercase text-muted-foreground">
+            Kategori
+          </label>
+          <input
+            list="kb-kategori-list"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm"
+            required
+          />
+          <datalist id="kb-kategori-list">
+            {KATEGORI_SUGGESTIONS.map((k) => (
+              <option key={k} value={k} />
+            ))}
+          </datalist>
+        </div>
+        <div>
+          <label className="mb-1 block text-xs font-bold uppercase text-muted-foreground">Tajuk</label>
+          <input
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm"
+            required
+          />
+        </div>
+        <div>
+          <label className="mb-1 block text-xs font-bold uppercase text-muted-foreground">
+            Kandungan
+          </label>
+          <textarea
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            rows={6}
+            className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm"
+            required
+          />
+        </div>
+        <div className="flex justify-end gap-2 pt-2">
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-full border border-border px-4 py-2 text-sm font-bold hover:bg-muted"
+          >
+            Batal
+          </button>
+          <button
+            type="submit"
+            disabled={saving}
+            className="inline-flex items-center gap-1 rounded-full bg-primary px-4 py-2 text-sm font-bold text-primary-foreground shadow-soft hover:opacity-90 disabled:opacity-50"
+          >
+            {saving && <Loader2 className="h-3 w-3 animate-spin" />} Simpan
+          </button>
+        </div>
+      </form>
+    </ModalShell>
+  );
+}
+
+function CorrectionModal({
+  event,
+  onClose,
+  onSave,
+}: {
+  event: EventRow;
+  onClose: () => void;
+  onSave: (p: { eventId: string; category: string; title: string; content: string }) => Promise<void>;
+}) {
+  const defaultTitle = (event.message_text ?? "").slice(0, 80);
+  const [category, setCategory] = useState("Lain-lain");
+  const [title, setTitle] = useState(defaultTitle);
+  const [content, setContent] = useState(event.reply_text ?? "");
+  const [saving, setSaving] = useState(false);
+
+  const submit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!category.trim() || !title.trim() || !content.trim()) return;
+    setSaving(true);
+    await onSave({
+      eventId: String(event.id),
+      category: category.trim(),
+      title: title.trim(),
+      content: content.trim(),
+    });
+    setSaving(false);
+  };
+
+  return (
+    <ModalShell title="Betulkan Jawapan" onClose={onClose}>
+      <form onSubmit={submit} className="space-y-3">
+        <div className="rounded-xl border border-border bg-muted/40 p-3 text-sm">
+          <div className="mb-1 text-xs font-bold uppercase text-muted-foreground">Soalan asal</div>
+          <p className="whitespace-pre-line">{event.message_text ?? "—"}</p>
+        </div>
+        <div>
+          <label className="mb-1 block text-xs font-bold uppercase text-muted-foreground">
+            Kategori
+          </label>
+          <select
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm"
+          >
+            {KATEGORI_SUGGESTIONS.map((k) => (
+              <option key={k} value={k}>
+                {k}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="mb-1 block text-xs font-bold uppercase text-muted-foreground">Tajuk</label>
+          <input
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm"
+            required
+          />
+        </div>
+        <div>
+          <label className="mb-1 block text-xs font-bold uppercase text-muted-foreground">
+            Jawapan Betul
+          </label>
+          <textarea
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            rows={6}
+            className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm"
+            required
+          />
+        </div>
+        <div className="flex justify-end gap-2 pt-2">
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-full border border-border px-4 py-2 text-sm font-bold hover:bg-muted"
+          >
+            Batal
+          </button>
+          <button
+            type="submit"
+            disabled={saving}
+            className="inline-flex items-center gap-1 rounded-full bg-primary px-4 py-2 text-sm font-bold text-primary-foreground shadow-soft hover:opacity-90 disabled:opacity-50"
+          >
+            {saving && <Loader2 className="h-3 w-3 animate-spin" />} Simpan Pembetulan
+          </button>
+        </div>
+      </form>
+    </ModalShell>
+  );
+}
