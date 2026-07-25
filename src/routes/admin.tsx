@@ -58,6 +58,7 @@ interface Profile {
   role: string;
   darjah_akses: number[];
   created_at: string;
+  ref_code?: string | null;
 }
 interface NotifSettings {
   id: string;
@@ -370,7 +371,7 @@ function AllUsers() {
     setLoading(true);
     const { data, error } = await supabase
       .from("profiles")
-      .select("id, email, username, role, darjah_akses, created_at")
+      .select("id, email, username, role, darjah_akses, created_at, ref_code")
       .order("created_at", { ascending: false });
     if (error) toast.error("Gagal muat pengguna: " + error.message);
     const all = (data as Profile[] | null) ?? [];
@@ -467,6 +468,21 @@ function AllUsers() {
     return { semua, dahBeli, belumBeli };
   }, [parentRows]);
 
+  const sumberDaftar = useMemo(() => {
+    const byRef = new Map<string, number>();
+    let terus = 0;
+    for (const r of parentRows) {
+      const code = (r.ref_code ?? "").trim();
+      if (code) byRef.set(code, (byRef.get(code) ?? 0) + 1);
+      else terus += 1;
+    }
+    const affiliates = [...byRef.entries()]
+      .map(([code, count]) => ({ code, count }))
+      .sort((a, b) => b.count - a.count);
+    return { affiliates, terus, jumlahAffiliate: parentRows.length - terus };
+  }, [parentRows]);
+
+
   const filteredRows = useMemo(() => {
     let base = parentRows;
     if (filter === "dah-beli") {
@@ -489,8 +505,31 @@ function AllUsers() {
 
   return (
     <div className="space-y-4">
+      <div className="flex flex-wrap items-center gap-2 rounded-md border bg-muted/30 p-3">
+        <span className="text-xs font-bold text-muted-foreground">Sumber Pendaftaran:</span>
+        {sumberDaftar.affiliates.slice(0, 6).map((a) => (
+          <span
+            key={a.code}
+            className="rounded-full bg-blue-100 px-2.5 py-1 text-xs font-bold text-blue-700"
+          >
+            🔗 {a.code}: {a.count}
+          </span>
+        ))}
+        {sumberDaftar.affiliates.length > 6 && (
+          <span className="rounded-full bg-blue-50 px-2.5 py-1 text-xs font-bold text-blue-600">
+            +{sumberDaftar.affiliates.length - 6} affiliate lain
+          </span>
+        )}
+        <span className="rounded-full bg-gray-200 px-2.5 py-1 text-xs font-bold text-gray-700">
+          📢 Terus (Ads/Organic): {sumberDaftar.terus}
+        </span>
+        <span className="rounded-full bg-green-100 px-2.5 py-1 text-xs font-bold text-green-700">
+          Jumlah dari affiliate: {sumberDaftar.jumlahAffiliate}
+        </span>
+      </div>
       <div className="flex flex-wrap gap-2">
         <Button
+
           variant={filter === "semua" ? "default" : "outline"}
           size="sm"
           onClick={() => setFilter("semua")}
@@ -529,6 +568,7 @@ function AllUsers() {
               <TableHead>Email</TableHead>
               <TableHead>Username</TableHead>
               <TableHead>Role</TableHead>
+              <TableHead>Sumber</TableHead>
               <TableHead>{isBelumBeli ? "Pilih Darjah Akses" : "Darjah Akses"}</TableHead>
               {filter === "dah-beli" && <TableHead>Tarikh Beli</TableHead>}
               <TableHead>Tarikh Daftar</TableHead>
@@ -552,6 +592,15 @@ function AllUsers() {
                         <SelectItem value="admin">admin</SelectItem>
                       </SelectContent>
                     </Select>
+                  </TableCell>
+                  <TableCell>
+                    {r.ref_code ? (
+                      <span className="rounded-full bg-blue-100 px-2 py-0.5 text-xs font-bold text-blue-700">
+                        🔗 {r.ref_code}
+                      </span>
+                    ) : (
+                      <span className="text-xs text-muted-foreground">Terus</span>
+                    )}
                   </TableCell>
                   <TableCell>
                     {isBelumBeli ? (
@@ -609,7 +658,7 @@ function AllUsers() {
             {filteredRows.length === 0 && (
               <TableRow>
                 <TableCell
-                  colSpan={filter === "semua" ? 5 : 6}
+                  colSpan={filter === "semua" ? 6 : 7}
                   className="py-6 text-center text-sm text-muted-foreground"
                 >
                   Tiada rekod.
