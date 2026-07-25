@@ -135,6 +135,106 @@ function AdminTelegramPage() {
   const [correctEvent, setCorrectEvent] = useState<EventRow | null>(null);
   const [expandedKb, setExpandedKb] = useState<Record<string, boolean>>({});
 
+  // ---- Fasa 3: Moderation ----
+  const [settings, setSettings] = useState<Record<string, string>>({});
+  const [domains, setDomains] = useState<DomainRow[]>([]);
+  const [modLog, setModLog] = useState<ModLogRow[]>([]);
+  const [modLoading, setModLoading] = useState(false);
+  const [modBusyId, setModBusyId] = useState<string | null>(null);
+
+  const loadModeration = async () => {
+    setModLoading(true);
+    const [s, d, l] = await Promise.all([
+      supabase.from("bot_settings").select("key, value"),
+      supabase.from("bot_domain_whitelist").select("*").order("domain", { ascending: true }),
+      supabase
+        .from("bot_moderation_log")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(30),
+    ]);
+    if (s.data) {
+      const m: Record<string, string> = {};
+      for (const r of s.data as { key: string; value: string }[]) m[r.key] = r.value;
+      setSettings(m);
+    }
+    setDomains((d.data ?? []) as DomainRow[]);
+    setModLog((l.data ?? []) as ModLogRow[]);
+    setModLoading(false);
+  };
+
+  const setSetting = async (key: string, next: boolean) => {
+    const prev = settings[key];
+    setSettings((s) => ({ ...s, [key]: next ? "true" : "false" }));
+    const { error } = await supabase
+      .from("bot_settings")
+      .upsert({ key, value: next ? "true" : "false", updated_by: user?.id ?? null }, { onConflict: "key" });
+    if (error) {
+      alert("Gagal simpan tetapan: " + error.message);
+      setSettings((s) => ({ ...s, [key]: prev ?? "false" }));
+    }
+  };
+
+  const tambahDomain = async (raw: string) => {
+    const domain = raw.trim().toLowerCase();
+    if (!domain) return;
+    if (domains.some((d) => d.domain === domain)) {
+      alert("Domain ni dah ada dalam senarai.");
+      return;
+    }
+    const { data, error } = await supabase
+      .from("bot_domain_whitelist")
+      .insert({ domain, created_by: user?.id ?? null })
+      .select("*")
+      .maybeSingle();
+    if (error) {
+      alert("Gagal tambah domain: " + error.message);
+      return;
+    }
+    if (data) setDomains((prev) => [...prev, data as DomainRow].sort((a, b) => a.domain.localeCompare(b.domain)));
+  };
+
+  const padamDomain = async (row: DomainRow) => {
+    if (!window.confirm(`Padam domain "${row.domain}"?`)) return;
+    const { error } = await supabase.from("bot_domain_whitelist").delete().eq("id", row.id);
+    if (error) {
+      alert("Gagal padam: " + error.message);
+      return;
+    }
+    setDomains((prev) => prev.filter((d) => d.id !== row.id));
+  };
+
+  const tindakanModerasi = async (row: ModLogRow, action: "ban" | "unban") => {
+    if (row.user_id == null) return;
+    const soalan =
+      action === "ban" ? "Block user ni dari group?" : "Buang block (unban) user ni?";
+    if (!window.confirm(soalan)) return;
+    setModBusyId(row.id);
+    try {
+      const { data, error } = await supabase.functions.invoke("telegram-moderation-action", {
+        body: {
+          action,
+          chat_id: Number(row.chat_id),
+          user_id: Number(row.user_id),
+          username: row.username ?? undefined,
+          reason: action === "ban" ? "Block manual oleh admin" : "Unban manual oleh admin",
+        },
+      });
+      const res = data as { success?: boolean; error?: string; detail?: string } | null;
+      if (error || res?.error) {
+        alert("Gagal: " + (res?.detail ?? res?.error ?? error?.message ?? "ralat tidak diketahui"));
+      } else {
+        alert(action === "ban" ? "✅ User berjaya diblock." : "✅ User berjaya di-unban.");
+        await loadModeration();
+      }
+    } catch (e) {
+      alert("Gagal: " + (e as Error).message);
+    } finally {
+      setModBusyId(null);
+    }
+  };
+
+
   const loadKb = async () => {
     setKbLoading(true);
     const { data, error } = await supabase
