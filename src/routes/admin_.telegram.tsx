@@ -73,7 +73,27 @@ type RingkasRow = {
   corrected_at: string | null;
 };
 
+type DomainRow = {
+  id: string;
+  domain: string;
+  created_at: string;
+  created_by: string | null;
+};
+
+type ModLogRow = {
+  id: string;
+  chat_id: number | string;
+  user_id: number | string | null;
+  username: string | null;
+  action: string;
+  reason: string | null;
+  message_text: string | null;
+  performed_by: string | null;
+  created_at: string;
+};
+
 const AI_TYPES = ["ai_dm", "ai_group"];
+
 
 const EVENT_LABEL: Record<string, string> = {
   start: "🚀 Start",
