@@ -1477,3 +1477,218 @@ function ModerationSection({
     </section>
   );
 }
+
+function TopQuestionsCard({
+  cache,
+  busy,
+  ralat,
+  onGenerate,
+}: {
+  cache: TopQCache | null;
+  busy: boolean;
+  ralat: string | null;
+  onGenerate: () => void;
+}) {
+  const items = (cache?.results ?? []) as TopQItem[];
+  return (
+    <section className="mt-8">
+      <div className="rounded-2xl border border-border bg-card p-5 shadow-soft">
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <h2 className="font-display text-lg font-extrabold">🔎 Top Questions</h2>
+            {cache ? (
+              <p className="mt-1 text-xs text-muted-foreground">
+                Dijana {masaRelatif(cache.generated_at)} (analisis {cache.total_messages} soalan,{" "}
+                {cache.period_days} hari terakhir)
+              </p>
+            ) : (
+              <p className="mt-1 text-xs text-muted-foreground">
+                Belum ada analisis Top Questions lagi.
+              </p>
+            )}
+          </div>
+          <button
+            type="button"
+            onClick={onGenerate}
+            disabled={busy}
+            className="inline-flex items-center gap-1 rounded-full bg-primary px-4 py-2 text-sm font-bold text-primary-foreground shadow-soft hover:opacity-90 disabled:opacity-50"
+          >
+            {busy && <Loader2 className="h-4 w-4 animate-spin" />}
+            {cache ? "🔄 Jana Semula" : "Jana Sekarang"}
+          </button>
+        </div>
+
+        {ralat && (
+          <div className="mb-3 rounded-xl border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">
+            {ralat}
+          </div>
+        )}
+
+        {items.length === 0 ? (
+          <p className="text-sm text-muted-foreground">
+            {cache ? "Tiada tema dikesan." : "Klik butang di atas untuk jana analisis."}
+          </p>
+        ) : (
+          <ul className="space-y-2">
+            {items.map((it, i) => (
+              <li key={i} className="rounded-xl border border-border bg-background p-3">
+                <div className="flex items-start justify-between gap-3">
+                  <p className="font-bold">{it.title}</p>
+                  <span className="shrink-0 rounded-full border border-primary/30 bg-primary/10 px-2.5 py-0.5 text-xs font-extrabold text-primary">
+                    {it.count}
+                  </span>
+                </div>
+                {it.example && (
+                  <p className="mt-1 text-sm italic text-muted-foreground">“{it.example}”</p>
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </section>
+  );
+}
+
+function SettingField({
+  label,
+  caption,
+  value,
+  onSave,
+  children,
+}: {
+  label: string;
+  caption?: string;
+  value: string;
+  onSave: (v: string) => Promise<void>;
+  children: (v: string, set: (v: string) => void) => React.ReactNode;
+}) {
+  const [draft, setDraft] = useState(value);
+  const [saving, setSaving] = useState(false);
+  const [ok, setOk] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+
+  useEffect(() => {
+    setDraft(value);
+  }, [value]);
+
+  const simpan = async () => {
+    setSaving(true);
+    setErr(null);
+    setOk(false);
+    try {
+      await onSave(draft);
+      setOk(true);
+      setTimeout(() => setOk(false), 2500);
+    } catch (e) {
+      setErr((e as Error).message);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div className="rounded-2xl border border-border bg-card p-5 shadow-soft">
+      <p className="font-display text-base font-extrabold">{label}</p>
+      {caption && <p className="mt-1 text-xs text-muted-foreground">{caption}</p>}
+      <div className="mt-3">{children(draft, setDraft)}</div>
+      <div className="mt-3 flex items-center gap-3">
+        <button
+          type="button"
+          onClick={simpan}
+          disabled={saving}
+          className="inline-flex items-center gap-1 rounded-full bg-primary px-4 py-2 text-sm font-bold text-primary-foreground shadow-soft hover:opacity-90 disabled:opacity-50"
+        >
+          {saving && <Loader2 className="h-4 w-4 animate-spin" />} Simpan
+        </button>
+        {ok && <span className="text-sm font-bold text-emerald-600">✅ Tersimpan</span>}
+        {err && <span className="text-sm font-bold text-destructive">{err}</span>}
+      </div>
+    </div>
+  );
+}
+
+function SettingsSection({
+  settings,
+  onSave,
+}: {
+  settings: Record<string, string>;
+  onSave: (key: string, value: string) => Promise<void>;
+}) {
+  const inputCls =
+    "w-full rounded-xl border border-border bg-background px-3 py-2 text-sm";
+  return (
+    <section className="mt-8 grid gap-4 lg:grid-cols-2">
+      <SettingField
+        label="Model AI"
+        value={settings.ai_model ?? ""}
+        onSave={(v) => onSave("ai_model", v)}
+      >
+        {(v, set) => (
+          <input
+            value={v}
+            onChange={(e) => set(e.target.value)}
+            placeholder="cth: gpt-5.4-mini"
+            className={inputCls}
+          />
+        )}
+      </SettingField>
+
+      <SettingField
+        label="Ketepatan Jawapan (Temperature)"
+        caption="Nilai rendah = jawapan lebih konsisten. Nilai tinggi = jawapan lebih pelbagai/kreatif."
+        value={settings.ai_temperature ?? "0.4"}
+        onSave={(v) => onSave("ai_temperature", v)}
+      >
+        {(v, set) => (
+          <div className="flex items-center gap-3">
+            <input
+              type="range"
+              min={0}
+              max={1}
+              step={0.1}
+              value={Number(v) || 0}
+              onChange={(e) => set(e.target.value)}
+              className="w-full"
+            />
+            <span className="w-12 shrink-0 text-center font-display font-extrabold">
+              {Number(v) || 0}
+            </span>
+          </div>
+        )}
+      </SettingField>
+
+      <SettingField
+        label="Arahan Tambahan AI"
+        caption="Arahan ni akan disertakan terus dalam setiap jawapan AI, tambahan kepada arahan asal."
+        value={settings.extra_instructions ?? ""}
+        onSave={(v) => onSave("extra_instructions", v)}
+      >
+        {(v, set) => (
+          <textarea
+            value={v}
+            onChange={(e) => set(e.target.value)}
+            rows={8}
+            className={inputCls}
+          />
+        )}
+      </SettingField>
+
+      <SettingField
+        label="Mesej Alu-aluan Ahli Baru"
+        caption="Guna {{name}} untuk letak nama ahli baru secara automatik."
+        value={settings.welcome_message_template ?? ""}
+        onSave={(v) => onSave("welcome_message_template", v)}
+      >
+        {(v, set) => (
+          <textarea
+            value={v}
+            onChange={(e) => set(e.target.value)}
+            rows={5}
+            className={inputCls}
+          />
+        )}
+      </SettingField>
+    </section>
+  );
+}
