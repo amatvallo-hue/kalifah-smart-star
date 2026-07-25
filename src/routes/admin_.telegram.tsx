@@ -92,7 +92,29 @@ type ModLogRow = {
   created_at: string;
 };
 
+type TopQItem = { title: string; count: number; example: string };
+
+type TopQCache = {
+  id: string;
+  generated_at: string;
+  period_days: number;
+  total_messages: number;
+  results: TopQItem[] | null;
+  generated_by: string | null;
+};
+
+type TabKey = "overview" | "conversations" | "knowledge" | "moderation" | "settings";
+
+const TABS: { key: TabKey; label: string }[] = [
+  { key: "overview", label: "📊 Overview" },
+  { key: "conversations", label: "💬 Conversations" },
+  { key: "knowledge", label: "📚 Knowledge" },
+  { key: "moderation", label: "🛡️ Moderation" },
+  { key: "settings", label: "⚙️ Settings" },
+];
+
 const AI_TYPES = ["ai_dm", "ai_group"];
+
 
 
 const EVENT_LABEL: Record<string, string> = {
