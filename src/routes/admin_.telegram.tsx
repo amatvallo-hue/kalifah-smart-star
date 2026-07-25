@@ -147,6 +147,101 @@ function AdminTelegramPage() {
     setKbLoading(false);
   };
 
+  const toggleKbActive = async (row: KbRow, next: boolean) => {
+    setKbRows((prev) => prev.map((r) => (r.id === row.id ? { ...r, is_active: next } : r)));
+    const { error } = await supabase
+      .from("bot_knowledge_base")
+      .update({ is_active: next })
+      .eq("id", row.id);
+    if (error) {
+      console.error(error);
+      setKbRows((prev) => prev.map((r) => (r.id === row.id ? { ...r, is_active: !next } : r)));
+    }
+  };
+
+  const deleteKb = async (row: KbRow) => {
+    if (!window.confirm(`Padam "${row.title}"?`)) return;
+    const { error } = await supabase.from("bot_knowledge_base").delete().eq("id", row.id);
+    if (error) {
+      alert("Gagal padam: " + error.message);
+      return;
+    }
+    setKbRows((prev) => prev.filter((r) => r.id !== row.id));
+  };
+
+  const saveKb = async (payload: {
+    id?: string;
+    category: string;
+    title: string;
+    content: string;
+  }) => {
+    if (payload.id) {
+      const { error } = await supabase
+        .from("bot_knowledge_base")
+        .update({
+          category: payload.category,
+          title: payload.title,
+          content: payload.content,
+        })
+        .eq("id", payload.id);
+      if (error) {
+        alert("Gagal simpan: " + error.message);
+        return;
+      }
+    } else {
+      const { error } = await supabase.from("bot_knowledge_base").insert({
+        category: payload.category,
+        title: payload.title,
+        content: payload.content,
+        source: "manual",
+        created_by: user?.id ?? null,
+        is_active: true,
+      });
+      if (error) {
+        alert("Gagal simpan: " + error.message);
+        return;
+      }
+    }
+    setShowKbForm(false);
+    setEditKb(null);
+    await loadKb();
+  };
+
+  const saveCorrection = async (payload: {
+    eventId: string;
+    category: string;
+    title: string;
+    content: string;
+  }) => {
+    const { error: insErr } = await supabase.from("bot_knowledge_base").insert({
+      category: payload.category,
+      title: payload.title,
+      content: payload.content,
+      source: "correction",
+      source_event_id: payload.eventId,
+      created_by: user?.id ?? null,
+      is_active: true,
+    });
+    if (insErr) {
+      alert("Gagal simpan: " + insErr.message);
+      return;
+    }
+    const nowIso = new Date().toISOString();
+    const { error: updErr } = await supabase
+      .from("telegram_bot_events")
+      .update({ corrected_at: nowIso })
+      .eq("id", payload.eventId);
+    if (updErr) console.error(updErr);
+    setAiRows((prev) =>
+      prev.map((r) => (r.id === payload.eventId ? { ...r, corrected_at: nowIso } : r)),
+    );
+    setMinggu((prev) =>
+      prev.map((r) => (r.id === payload.eventId ? { ...r, corrected_at: nowIso } : r)),
+    );
+    setCorrectEvent(null);
+    await loadKb();
+  };
+
   useEffect(() => {
     if (!isAdmin) return;
     loadKb();
