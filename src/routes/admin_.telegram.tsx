@@ -636,7 +636,20 @@ function AdminTelegramPage() {
             onDelete={deleteKb}
           />
 
+          <ModerationSection
+            settings={settings}
+            onSetting={setSetting}
+            domains={domains}
+            onAddDomain={tambahDomain}
+            onDeleteDomain={padamDomain}
+            log={modLog}
+            loading={modLoading}
+            busyId={modBusyId}
+            onAction={tindakanModerasi}
+          />
+
           <section className="mt-8" id="perbualan-ai">
+
             <h2 className="mb-1 font-display text-lg font-extrabold">💬 Perbualan AI Terkini</h2>
             <p className="mb-3 text-xs text-muted-foreground">
               50 rekod terbaru (ai_dm &amp; ai_group) — untuk nilai kualiti jawapan AI.
