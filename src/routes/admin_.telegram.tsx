@@ -162,6 +162,54 @@ function AdminTelegramPage() {
   const [modLoading, setModLoading] = useState(false);
   const [modBusyId, setModBusyId] = useState<string | null>(null);
 
+  // ---- Fasa 4: Tab + Top Questions ----
+  const [tab, setTab] = useState<TabKey>("overview");
+  const [topQ, setTopQ] = useState<TopQCache | null>(null);
+  const [topQBusy, setTopQBusy] = useState(false);
+  const [topQRalat, setTopQRalat] = useState<string | null>(null);
+
+  const loadTopQ = async () => {
+    const { data } = await supabase
+      .from("bot_top_questions_cache")
+      .select("*")
+      .order("generated_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    if (data) setTopQ(data as TopQCache);
+  };
+
+  const janaTopQ = async () => {
+    setTopQBusy(true);
+    setTopQRalat(null);
+    try {
+      const { data, error } = await supabase.functions.invoke(
+        "telegram-top-questions-generate",
+        { body: { days: 30 } },
+      );
+      const res = data as
+        | { success?: boolean; cache?: TopQCache; error?: string; detail?: string }
+        | null;
+      if (error || res?.error) {
+        setTopQRalat(res?.detail ?? res?.error ?? error?.message ?? "Ralat tidak diketahui.");
+      } else if (res?.cache) {
+        setTopQ(res.cache);
+      }
+    } catch (e) {
+      setTopQRalat((e as Error).message);
+    } finally {
+      setTopQBusy(false);
+    }
+  };
+
+  const setSettingValue = async (key: string, value: string) => {
+    const { error } = await supabase
+      .from("bot_settings")
+      .upsert({ key, value, updated_by: user?.id ?? null }, { onConflict: "key" });
+    if (error) throw new Error(error.message);
+    setSettings((s) => ({ ...s, [key]: value }));
+  };
+
+
   const loadModeration = async () => {
     setModLoading(true);
     const [s, d, l] = await Promise.all([
