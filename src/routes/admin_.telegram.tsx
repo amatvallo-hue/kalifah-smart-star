@@ -1,10 +1,31 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { Loader2, ShieldAlert, Bot } from "lucide-react";
+import { Loader2, ShieldAlert, Bot, Pencil, Trash2, Plus, X, BookOpen } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { SiteHeader } from "@/components/SiteHeader";
 import { AdminAffiliateNav } from "@/components/AdminAffiliateNav";
+
+const KATEGORI_SUGGESTIONS = [
+  "Pendaftaran",
+  "Pembayaran",
+  "Affiliate",
+  "Harga",
+  "Lain-lain",
+];
+
+type KbRow = {
+  id: string;
+  category: string;
+  title: string;
+  content: string;
+  is_active: boolean;
+  source: string | null;
+  source_event_id: string | null;
+  created_by: string | null;
+  created_at: string;
+  updated_at: string;
+};
 
 export const Route = createFileRoute("/admin_/telegram")({
   head: () => ({
