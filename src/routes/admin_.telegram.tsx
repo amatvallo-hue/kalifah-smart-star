@@ -1133,3 +1133,234 @@ function CorrectionModal({
     </ModalShell>
   );
 }
+
+const MOD_ACTION_STYLE: Record<string, { label: string; cls: string }> = {
+  flagged: { label: "🚩 Flagged", cls: "bg-amber-500/15 text-amber-600 border-amber-500/30" },
+  auto_deleted: { label: "🗑️ Auto-Padam", cls: "bg-orange-500/15 text-orange-600 border-orange-500/30" },
+  auto_warned: { label: "⚠️ Auto-Amaran", cls: "bg-blue-500/15 text-blue-600 border-blue-500/30" },
+  banned: { label: "🚫 Banned", cls: "bg-destructive/15 text-destructive border-destructive/30" },
+  unbanned: { label: "✅ Unbanned", cls: "bg-emerald-500/15 text-emerald-600 border-emerald-500/30" },
+};
+
+function ModActionBadge({ action }: { action: string }) {
+  const s = MOD_ACTION_STYLE[action] ?? {
+    label: action,
+    cls: "bg-muted text-muted-foreground border-border",
+  };
+  return (
+    <span className={`inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-bold ${s.cls}`}>
+      {s.label}
+    </span>
+  );
+}
+
+function ToggleRow({
+  label,
+  caption,
+  checked,
+  onChange,
+}: {
+  label: string;
+  caption: string;
+  checked: boolean;
+  onChange: (next: boolean) => void;
+}) {
+  return (
+    <div className="flex items-start justify-between gap-4 rounded-xl border border-border bg-background p-4">
+      <div>
+        <p className="text-sm font-bold">{label}</p>
+        <p className="mt-1 text-xs text-muted-foreground">{caption}</p>
+      </div>
+      <button
+        type="button"
+        role="switch"
+        aria-checked={checked}
+        aria-label={label}
+        onClick={() => onChange(!checked)}
+        className={`relative mt-1 h-6 w-11 shrink-0 rounded-full transition ${
+          checked ? "bg-primary" : "bg-muted"
+        }`}
+      >
+        <span
+          className={`absolute top-0.5 h-5 w-5 rounded-full bg-card shadow-soft transition-all ${
+            checked ? "left-[22px]" : "left-0.5"
+          }`}
+        />
+      </button>
+    </div>
+  );
+}
+
+function ModerationSection({
+  settings,
+  onSetting,
+  domains,
+  onAddDomain,
+  onDeleteDomain,
+  log,
+  loading,
+  busyId,
+  onAction,
+}: {
+  settings: Record<string, string>;
+  onSetting: (key: string, next: boolean) => void;
+  domains: DomainRow[];
+  onAddDomain: (domain: string) => void;
+  onDeleteDomain: (row: DomainRow) => void;
+  log: ModLogRow[];
+  loading: boolean;
+  busyId: string | null;
+  onAction: (row: ModLogRow, action: "ban" | "unban") => void;
+}) {
+  const [domainBaru, setDomainBaru] = useState("");
+
+  return (
+    <section className="mt-8">
+      <h2 className="mb-3 font-display text-lg font-extrabold">🛡️ Moderation</h2>
+
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <div className="rounded-2xl border border-border bg-card p-5 shadow-soft">
+          <h3 className="mb-3 text-sm font-extrabold uppercase text-muted-foreground">Tetapan Auto</h3>
+          <div className="space-y-3">
+            <ToggleRow
+              label="Auto-Padam Mesej Scam"
+              caption="Bot akan cuba padam terus mesej disyaki scam (perlukan bot jadi admin dalam group)"
+              checked={settings["scam_auto_delete"] === "true"}
+              onChange={(n) => onSetting("scam_auto_delete", n)}
+            />
+            <ToggleRow
+              label="Auto-Amaran Pengguna dalam Group"
+              caption="Bot akan reply amaran terus kepada penghantar dalam group"
+              checked={settings["scam_auto_warn"] === "true"}
+              onChange={(n) => onSetting("scam_auto_warn", n)}
+            />
+          </div>
+        </div>
+
+        <div className="rounded-2xl border border-border bg-card p-5 shadow-soft">
+          <h3 className="mb-1 text-sm font-extrabold uppercase text-muted-foreground">
+            Domain Whitelist
+          </h3>
+          <p className="mb-3 text-xs text-muted-foreground">
+            Bot anggap link ke domain ni selamat (tak flag sebagai scam/spam).
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {domains.length === 0 && (
+              <span className="text-sm text-muted-foreground">Tiada domain lagi.</span>
+            )}
+            {domains.map((d) => (
+              <span
+                key={d.id}
+                className="inline-flex items-center gap-1 rounded-full border border-border bg-muted px-3 py-1 text-xs font-bold"
+              >
+                {d.domain}
+                <button
+                  type="button"
+                  aria-label={`Padam ${d.domain}`}
+                  onClick={() => onDeleteDomain(d)}
+                  className="rounded-full p-0.5 text-muted-foreground hover:text-destructive"
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              </span>
+            ))}
+          </div>
+          <form
+            className="mt-4 flex gap-2"
+            onSubmit={(e) => {
+              e.preventDefault();
+              onAddDomain(domainBaru);
+              setDomainBaru("");
+            }}
+          >
+            <input
+              value={domainBaru}
+              onChange={(e) => setDomainBaru(e.target.value)}
+              placeholder="contoh.com"
+              className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm"
+            />
+            <button
+              type="submit"
+              className="inline-flex shrink-0 items-center gap-1 rounded-full bg-primary px-4 py-2 text-sm font-bold text-primary-foreground shadow-soft hover:opacity-90"
+            >
+              <Plus className="h-4 w-4" /> Tambah
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <div className="mt-4 overflow-x-auto rounded-2xl border border-border bg-card shadow-soft">
+        <div className="border-b border-border px-4 py-3 text-sm font-extrabold">
+          Log Moderation (30 terkini)
+        </div>
+        {loading ? (
+          <div className="flex items-center justify-center py-10 text-muted-foreground">
+            <Loader2 className="h-5 w-5 animate-spin" />
+          </div>
+        ) : log.length === 0 ? (
+          <div className="p-6 text-center text-muted-foreground">Tiada rekod moderation lagi.</div>
+        ) : (
+          <table className="w-full min-w-[880px] text-sm">
+            <thead className="bg-muted/50 text-left text-xs font-bold uppercase text-muted-foreground">
+              <tr>
+                <th className="px-4 py-3">Masa</th>
+                <th className="px-4 py-3">Chat ID</th>
+                <th className="px-4 py-3">Username</th>
+                <th className="px-4 py-3">Tindakan</th>
+                <th className="px-4 py-3">Sebab / Mesej</th>
+                <th className="px-4 py-3">Tindakan Admin</th>
+              </tr>
+            </thead>
+            <tbody>
+              {log.map((r) => {
+                const boleh =
+                  r.user_id != null &&
+                  ["flagged", "auto_deleted", "auto_warned"].includes(r.action);
+                const bolehUnban = r.user_id != null && r.action === "banned";
+                const busy = busyId === r.id;
+                return (
+                  <tr key={r.id} className="border-t border-border align-top">
+                    <td className="whitespace-nowrap px-4 py-3 text-xs text-muted-foreground">
+                      {formatMasa(r.created_at)}
+                    </td>
+                    <td className="px-4 py-3 text-xs">{String(r.chat_id)}</td>
+                    <td className="px-4 py-3 text-xs font-bold">
+                      {r.username ? `@${r.username}` : `user ${r.user_id ?? "—"}`}
+                    </td>
+                    <td className="px-4 py-3">
+                      <ModActionBadge action={r.action} />
+                    </td>
+                    <td className="px-4 py-3">{potong(r.reason ?? r.message_text, 60)}</td>
+                    <td className="px-4 py-3">
+                      {boleh && (
+                        <button
+                          type="button"
+                          disabled={busy}
+                          onClick={() => onAction(r, "ban")}
+                          className="inline-flex items-center gap-1 rounded-full border border-destructive/30 bg-destructive/10 px-3 py-1.5 text-xs font-bold text-destructive hover:bg-destructive/20 disabled:opacity-50"
+                        >
+                          {busy ? <Loader2 className="h-3 w-3 animate-spin" /> : null} 🚫 Block User
+                        </button>
+                      )}
+                      {bolehUnban && (
+                        <button
+                          type="button"
+                          disabled={busy}
+                          onClick={() => onAction(r, "unban")}
+                          className="inline-flex items-center gap-1 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-xs font-bold text-emerald-600 hover:bg-emerald-500/20 disabled:opacity-50"
+                        >
+                          {busy ? <Loader2 className="h-3 w-3 animate-spin" /> : null} ✅ Unban
+                        </button>
+                      )}
+                      {!boleh && !bolehUnban && <span className="text-xs text-muted-foreground">—</span>}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        )}
+      </div>
+    </section>
+  );
+}
