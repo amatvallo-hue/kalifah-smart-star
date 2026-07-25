@@ -128,6 +128,30 @@ function AdminTelegramPage() {
   const [soalanHariIni, setSoalanHariIni] = useState(0);
   const [perluAdminHariIni, setPerluAdminHariIni] = useState(0);
 
+  const [kbRows, setKbRows] = useState<KbRow[]>([]);
+  const [kbLoading, setKbLoading] = useState(false);
+  const [showKbForm, setShowKbForm] = useState(false);
+  const [editKb, setEditKb] = useState<KbRow | null>(null);
+  const [correctEvent, setCorrectEvent] = useState<EventRow | null>(null);
+  const [expandedKb, setExpandedKb] = useState<Record<string, boolean>>({});
+
+  const loadKb = async () => {
+    setKbLoading(true);
+    const { data, error } = await supabase
+      .from("bot_knowledge_base")
+      .select("*")
+      .order("category", { ascending: true })
+      .order("title", { ascending: true });
+    if (error) console.error("[admin/telegram] KB", error);
+    setKbRows((data ?? []) as KbRow[]);
+    setKbLoading(false);
+  };
+
+  useEffect(() => {
+    if (!isAdmin) return;
+    loadKb();
+  }, [isAdmin]);
+
   useEffect(() => {
     if (authLoading) return;
     if (!user) {
