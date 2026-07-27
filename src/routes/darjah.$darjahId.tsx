@@ -73,9 +73,28 @@ function SubjekPage() {
         <main className="container mx-auto px-4 py-16 text-center">
           <h1 className="font-display text-3xl font-extrabold text-foreground">Darjah ini belum dibuka</h1>
           <p className="mt-2 text-muted-foreground">Sila pilih pakej untuk membuka darjah ini.</p>
-          <Link to="/harga" className="mt-6 inline-flex items-center gap-2 rounded-full bg-gradient-primary px-6 py-3 font-display font-extrabold text-primary-foreground shadow-soft">
-            Lihat Pakej
-          </Link>
+          {darjahId === "4" && adaTrial && (
+            <div className="mx-auto mt-6 max-w-md rounded-3xl border-2 p-6 shadow-card" style={{ background: "#FFF8E1", borderColor: "#FBC02D" }}>
+              <div className="text-3xl">🏆</div>
+              <h2 className="mt-2 font-display text-xl font-extrabold text-foreground">Cuba Percubaan MPT4 — Percuma!</h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Satu set Matematik dibuka percuma untuk anda cuba.
+              </p>
+              <Link
+                to="/darjah/$darjahId/percubaan-mpt4"
+                params={{ darjahId }}
+                className="mt-4 inline-flex items-center gap-2 rounded-full bg-gradient-primary px-6 py-3 font-display text-sm font-extrabold text-primary-foreground shadow-soft"
+              >
+                Mula Percubaan Percuma →
+              </Link>
+            </div>
+          )}
+          <div className="mt-6">
+            <Link to="/harga" className="inline-flex items-center gap-2 rounded-full bg-gradient-primary px-6 py-3 font-display font-extrabold text-primary-foreground shadow-soft">
+              Lihat Pakej
+            </Link>
+          </div>
+
           <div className="mt-3">
             <Link to="/pilih-darjah" className="inline-flex items-center gap-2 text-sm font-bold text-muted-foreground hover:text-primary">
               <ArrowLeft className="h-4 w-4" /> Kembali
