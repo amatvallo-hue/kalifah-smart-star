@@ -27,16 +27,37 @@ function PercubaanMpt4SubjekPage() {
   const mata = usePoints();
   const studentName = user?.user_metadata?.name as string | undefined;
 
+  const [adaTrial, setAdaTrial] = useState(false);
+  const [trialChecked, setTrialChecked] = useState(false);
+
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
   }, [loading, user, navigate]);
+
+  // Free-trial: does at least one is_trial set exist?
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const { data } = await supabase
+        .from("mpt4_set")
+        .select("id")
+        .eq("is_trial", true)
+        .limit(1);
+      if (cancelled) return;
+      setAdaTrial((data ?? []).length > 0);
+      setTrialChecked(true);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   async function handleLogout() {
     await supabase.auth.signOut();
     navigate({ to: "/login" });
   }
 
-  if (loading || !user || profileLoading) {
+  if (loading || !user || profileLoading || !trialChecked) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
         <p className="text-muted-foreground">Memuatkan...</p>
@@ -46,8 +67,9 @@ function PercubaanMpt4SubjekPage() {
 
   const darjahAkses = profile?.darjah_akses ?? [];
   const hasAccess = darjah ? darjahAkses.includes(Number(darjah.id)) : false;
+  const trialAccess = !!darjah && Number(darjah.id) === 4 && adaTrial;
 
-  if (!darjah || !hasAccess) {
+  if (!darjah || (!hasAccess && !trialAccess)) {
     return (
       <div className="min-h-screen bg-background">
         <SiteHeader onLogout={handleLogout} />
@@ -61,6 +83,7 @@ function PercubaanMpt4SubjekPage() {
       </div>
     );
   }
+
 
   const subjekMpt4 = SUBJEK_LIST.filter((s) => (MPT4_SUBJEK_IDS as readonly string[]).includes(s.id));
 
