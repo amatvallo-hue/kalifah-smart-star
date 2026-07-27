@@ -6,6 +6,7 @@ import { renderSoalanSvg } from "@/lib/render-soalan-svg";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { usePoints } from "@/hooks/use-points";
+import { useProfile } from "@/hooks/use-profile";
 import { getDarjah, getSubjek, TONE_GRADIENT } from "@/lib/curriculum";
 import { SrtbReview, gradeSrtb, type LangkahBertingkat } from "@/lib/mpt4-srtb";
 
@@ -26,6 +27,7 @@ interface Mpt4Set {
   nombor_set: number;
   tajuk: string | null;
   jumlah_markah: number | null;
+  is_trial: boolean | null;
 }
 
 interface Mpt4Soalan {
@@ -101,6 +103,7 @@ function KeputusanPage() {
   });
   const { user, loading } = useAuth();
   const mata = usePoints();
+  const { profile } = useProfile();
   const studentName = user?.user_metadata?.name as string | undefined;
   const darjah = getDarjah(darjahId);
   const subjek = getSubjek(subjekId);
@@ -148,7 +151,7 @@ function KeputusanPage() {
       const [setRes, soalanRes, kepRes] = await Promise.all([
         supabase
           .from("mpt4_set")
-          .select("id, nombor_set, tajuk, jumlah_markah")
+          .select("id, nombor_set, tajuk, jumlah_markah, is_trial")
           .eq("id", setId)
           .maybeSingle(),
         supabase
@@ -339,6 +342,10 @@ function KeputusanPage() {
     );
   }
 
+  const darjahAkses = profile?.darjah_akses ?? [];
+  const hasAccess = darjah ? darjahAkses.includes(Number(darjah.id)) : false;
+  const isFreeTrialUser = setInfo?.is_trial === true && !hasAccess;
+
   if (!darjah || !subjek) {
     return (
       <div className="min-h-screen bg-background">
@@ -415,6 +422,7 @@ function KeputusanPage() {
             setOpenBahagian={setOpenBahagian}
             onCubaLagi={handleCubaLagi}
             retrying={retrying}
+            isFreeTrialUser={isFreeTrialUser}
           />
         )}
       </main>
@@ -432,6 +440,7 @@ function ResultView({
   setOpenBahagian,
   onCubaLagi,
   retrying,
+  isFreeTrialUser,
 }: {
   keputusan: Mpt4Keputusan;
   soalanList: Mpt4Soalan[];
@@ -442,6 +451,7 @@ function ResultView({
   setOpenBahagian: (v: Record<string, boolean>) => void;
   onCubaLagi: () => void;
   retrying: boolean;
+  isFreeTrialUser: boolean;
 }) {
   const markahKeseluruhan = keputusan.markah_keseluruhan ?? 0;
   const markahPenuh = keputusan.markah_penuh ?? setInfo.jumlah_markah ?? 0;
@@ -500,16 +510,20 @@ function ResultView({
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-3">
-        <button
-          type="button"
-          onClick={onCubaLagi}
-          disabled={retrying}
-          className="inline-flex items-center gap-2 rounded-full bg-gradient-primary px-6 py-3 font-display text-sm font-extrabold text-primary-foreground shadow-soft transition hover:translate-y-[-1px] disabled:opacity-60"
-        >
-          {retrying ? "Memulakan..." : "🔄 Cuba Lagi"}
-        </button>
-      </div>
+      {!isFreeTrialUser && (
+        <div className="flex flex-wrap gap-3">
+          <button
+            type="button"
+            onClick={onCubaLagi}
+            disabled={retrying}
+            className="inline-flex items-center gap-2 rounded-full bg-gradient-primary px-6 py-3 font-display text-sm font-extrabold text-primary-foreground shadow-soft transition hover:translate-y-[-1px] disabled:opacity-60"
+          >
+            {retrying ? "Memulakan..." : "🔄 Cuba Lagi"}
+          </button>
+        </div>
+      )}
+
+      {isFreeTrialUser && <TrialUpsell soalanList={soalanList} esei={esei} />}
 
       {/* Pecahan bahagian */}
       <div className="rounded-3xl border border-border/60 bg-card p-5 shadow-card md:p-6">
