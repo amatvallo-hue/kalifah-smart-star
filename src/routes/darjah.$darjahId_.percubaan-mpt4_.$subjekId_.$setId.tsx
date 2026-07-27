@@ -25,6 +25,7 @@ interface Mpt4Set {
   tajuk: string | null;
   jumlah_markah: number | null;
   tempoh_minit: number | null;
+  is_trial: boolean | null;
 }
 
 type JenisItem = "OAP" | "OPB" | "SRTd" | "SRTb";
