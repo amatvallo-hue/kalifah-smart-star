@@ -127,6 +127,22 @@ function DaftarPage() {
       }
     }
 
+    const attributionKeys = [
+      "utm_source",
+      "utm_medium",
+      "utm_campaign",
+      "utm_content",
+      "utm_term",
+      "fbclid",
+    ] as const;
+    const attribution: Record<string, string> = {};
+    if (typeof window !== "undefined") {
+      for (const key of attributionKeys) {
+        const value = window.localStorage.getItem(`kalifah_${key}`);
+        if (value && value.trim().length > 0) attribution[key] = value.trim();
+      }
+    }
+
     const redirectTo =
       typeof window !== "undefined" ? `${window.location.origin}/pilih-darjah` : undefined;
     const { data, error } = await supabase.auth.signUp({
@@ -138,6 +154,7 @@ function DaftarPage() {
           full_name: name,
           display_name: name,
           ...(affiliateId ? { affiliate_id: affiliateId, ref_code: resolvedRefCode } : {}),
+          ...attribution,
         },
         emailRedirectTo: redirectTo,
       },

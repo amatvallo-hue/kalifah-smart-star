@@ -59,6 +59,8 @@ interface Profile {
   darjah_akses: number[];
   created_at: string;
   ref_code?: string | null;
+  utm_campaign?: string | null;
+  utm_source?: string | null;
 }
 interface NotifSettings {
   id: string;
@@ -371,7 +373,7 @@ function AllUsers() {
     setLoading(true);
     const { data, error } = await supabase
       .from("profiles")
-      .select("id, email, username, role, darjah_akses, created_at, ref_code")
+      .select("id, email, username, role, darjah_akses, created_at, ref_code, utm_campaign, utm_source")
       .order("created_at", { ascending: false });
     if (error) toast.error("Gagal muat pengguna: " + error.message);
     const all = (data as Profile[] | null) ?? [];
@@ -470,16 +472,28 @@ function AllUsers() {
 
   const sumberDaftar = useMemo(() => {
     const byRef = new Map<string, number>();
+    const byCampaign = new Map<string, number>();
     let terus = 0;
+    let dariAffiliate = 0;
     for (const r of parentRows) {
       const code = (r.ref_code ?? "").trim();
-      if (code) byRef.set(code, (byRef.get(code) ?? 0) + 1);
-      else terus += 1;
+      const campaign = (r.utm_campaign ?? "").trim();
+      if (code) {
+        byRef.set(code, (byRef.get(code) ?? 0) + 1);
+        dariAffiliate += 1;
+      } else if (campaign) {
+        byCampaign.set(campaign, (byCampaign.get(campaign) ?? 0) + 1);
+      } else {
+        terus += 1;
+      }
     }
     const affiliates = [...byRef.entries()]
       .map(([code, count]) => ({ code, count }))
       .sort((a, b) => b.count - a.count);
-    return { affiliates, terus, jumlahAffiliate: parentRows.length - terus };
+    const campaigns = [...byCampaign.entries()]
+      .map(([campaign, count]) => ({ campaign, count }))
+      .sort((a, b) => b.count - a.count);
+    return { affiliates, campaigns, terus, jumlahAffiliate: dariAffiliate };
   }, [parentRows]);
 
 
@@ -520,8 +534,21 @@ function AllUsers() {
             +{sumberDaftar.affiliates.length - 6} affiliate lain
           </span>
         )}
+        {sumberDaftar.campaigns.slice(0, 8).map((c) => (
+          <span
+            key={c.campaign}
+            className="rounded-full bg-amber-100 px-2.5 py-1 text-xs font-bold text-amber-700"
+          >
+            📢 {c.campaign}: {c.count}
+          </span>
+        ))}
+        {sumberDaftar.campaigns.length > 8 && (
+          <span className="rounded-full bg-amber-50 px-2.5 py-1 text-xs font-bold text-amber-600">
+            +{sumberDaftar.campaigns.length - 8} kempen lain
+          </span>
+        )}
         <span className="rounded-full bg-gray-200 px-2.5 py-1 text-xs font-bold text-gray-700">
-          📢 Terus (Ads/Organic): {sumberDaftar.terus}
+          Terus (Organic): {sumberDaftar.terus}
         </span>
         <span className="rounded-full bg-green-100 px-2.5 py-1 text-xs font-bold text-green-700">
           Jumlah dari affiliate: {sumberDaftar.jumlahAffiliate}
@@ -597,6 +624,13 @@ function AllUsers() {
                     {r.ref_code ? (
                       <span className="rounded-full bg-blue-100 px-2 py-0.5 text-xs font-bold text-blue-700">
                         🔗 {r.ref_code}
+                      </span>
+                    ) : r.utm_campaign ? (
+                      <span
+                        className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-bold text-amber-700"
+                        title={r.utm_source ?? undefined}
+                      >
+                        📢 {r.utm_campaign}
                       </span>
                     ) : (
                       <span className="text-xs text-muted-foreground">Terus</span>
