@@ -6,6 +6,7 @@ import { renderSoalanSvg } from "@/lib/render-soalan-svg";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { usePoints } from "@/hooks/use-points";
+import { useProfile } from "@/hooks/use-profile";
 import { getDarjah, getSubjek, TONE_GRADIENT } from "@/lib/curriculum";
 import { SrtbReview, gradeSrtb, type LangkahBertingkat } from "@/lib/mpt4-srtb";
 
@@ -26,6 +27,7 @@ interface Mpt4Set {
   nombor_set: number;
   tajuk: string | null;
   jumlah_markah: number | null;
+  is_trial: boolean | null;
 }
 
 interface Mpt4Soalan {
@@ -101,6 +103,7 @@ function KeputusanPage() {
   });
   const { user, loading } = useAuth();
   const mata = usePoints();
+  const { profile } = useProfile();
   const studentName = user?.user_metadata?.name as string | undefined;
   const darjah = getDarjah(darjahId);
   const subjek = getSubjek(subjekId);
@@ -148,7 +151,7 @@ function KeputusanPage() {
       const [setRes, soalanRes, kepRes] = await Promise.all([
         supabase
           .from("mpt4_set")
-          .select("id, nombor_set, tajuk, jumlah_markah")
+          .select("id, nombor_set, tajuk, jumlah_markah, is_trial")
           .eq("id", setId)
           .maybeSingle(),
         supabase
@@ -339,6 +342,10 @@ function KeputusanPage() {
     );
   }
 
+  const darjahAkses = profile?.darjah_akses ?? [];
+  const hasAccess = darjah ? darjahAkses.includes(Number(darjah.id)) : false;
+  const isFreeTrialUser = setInfo?.is_trial === true && !hasAccess;
+
   if (!darjah || !subjek) {
     return (
       <div className="min-h-screen bg-background">
@@ -415,6 +422,7 @@ function KeputusanPage() {
             setOpenBahagian={setOpenBahagian}
             onCubaLagi={handleCubaLagi}
             retrying={retrying}
+            isFreeTrialUser={isFreeTrialUser}
           />
         )}
       </main>
@@ -432,6 +440,7 @@ function ResultView({
   setOpenBahagian,
   onCubaLagi,
   retrying,
+  isFreeTrialUser,
 }: {
   keputusan: Mpt4Keputusan;
   soalanList: Mpt4Soalan[];
@@ -442,6 +451,7 @@ function ResultView({
   setOpenBahagian: (v: Record<string, boolean>) => void;
   onCubaLagi: () => void;
   retrying: boolean;
+  isFreeTrialUser: boolean;
 }) {
   const markahKeseluruhan = keputusan.markah_keseluruhan ?? 0;
   const markahPenuh = keputusan.markah_penuh ?? setInfo.jumlah_markah ?? 0;
@@ -500,16 +510,20 @@ function ResultView({
         </div>
       </div>
 
-      <div className="flex flex-wrap gap-3">
-        <button
-          type="button"
-          onClick={onCubaLagi}
-          disabled={retrying}
-          className="inline-flex items-center gap-2 rounded-full bg-gradient-primary px-6 py-3 font-display text-sm font-extrabold text-primary-foreground shadow-soft transition hover:translate-y-[-1px] disabled:opacity-60"
-        >
-          {retrying ? "Memulakan..." : "🔄 Cuba Lagi"}
-        </button>
-      </div>
+      {!isFreeTrialUser && (
+        <div className="flex flex-wrap gap-3">
+          <button
+            type="button"
+            onClick={onCubaLagi}
+            disabled={retrying}
+            className="inline-flex items-center gap-2 rounded-full bg-gradient-primary px-6 py-3 font-display text-sm font-extrabold text-primary-foreground shadow-soft transition hover:translate-y-[-1px] disabled:opacity-60"
+          >
+            {retrying ? "Memulakan..." : "🔄 Cuba Lagi"}
+          </button>
+        </div>
+      )}
+
+      {isFreeTrialUser && <TrialUpsell soalanList={soalanList} esei={esei} />}
 
       {/* Pecahan bahagian */}
       <div className="rounded-3xl border border-border/60 bg-card p-5 shadow-card md:p-6">
@@ -570,6 +584,86 @@ function ResultView({
     </div>
   );
 }
+
+function TrialUpsell({
+  soalanList,
+  esei,
+}: {
+  soalanList: Mpt4Soalan[];
+  esei: Record<string, EseiPenilaianItem>;
+}) {
+  const markahPenuhPerSoalan = new Map(soalanList.map((s) => [s.id, s.markah]));
+  const kuasai: string[] = [];
+  const tingkat: string[] = [];
+  for (const [soalanId, item] of Object.entries(esei)) {
+    const penuh = markahPenuhPerSoalan.get(soalanId);
+    if (penuh == null) continue;
+    const markah = typeof item?.markah === "number" ? item.markah : 0;
+    if (markah >= penuh) {
+      if (item?.kekuatan) kuasai.push(item.kekuatan);
+    } else if (item?.cadangan_penambahbaikan) {
+      tingkat.push(item.cadangan_penambahbaikan);
+    }
+  }
+  const kuasaiTop = kuasai.slice(0, 3);
+  const tingkatTop = tingkat.slice(0, 3);
+
+  return (
+    <div className="flex flex-col gap-6">
+      {(kuasaiTop.length > 0 || tingkatTop.length > 0) && (
+        <div className="grid gap-4 md:grid-cols-2">
+          <div className="rounded-3xl border border-border/60 bg-card p-5 shadow-card">
+            <h3 className="font-display text-lg font-extrabold text-emerald-600">✅ Yang Dikuasai</h3>
+            <ul className="mt-3 flex flex-col gap-2 text-sm text-muted-foreground">
+              {kuasaiTop.length > 0 ? (
+                kuasaiTop.map((t, i) => <li key={i}>• {t}</li>)
+              ) : (
+                <li>Belum ada — teruskan berlatih!</li>
+              )}
+            </ul>
+          </div>
+          <div className="rounded-3xl border border-border/60 bg-card p-5 shadow-card">
+            <h3 className="font-display text-lg font-extrabold text-amber-600">📈 Perlu Ditingkatkan</h3>
+            <ul className="mt-3 flex flex-col gap-2 text-sm text-muted-foreground">
+              {tingkatTop.length > 0 ? (
+                tingkatTop.map((t, i) => <li key={i}>• {t}</li>)
+              ) : (
+                <li>Hebat! Tiada kelemahan ketara.</li>
+              )}
+            </ul>
+          </div>
+        </div>
+      )}
+
+      <div className="rounded-3xl border-2 border-primary/40 bg-gradient-hero p-6 text-center shadow-card md:p-8">
+        <h3 className="font-display text-2xl font-extrabold text-foreground">
+          Ini baru satu set percuma 🎁
+        </h3>
+        <p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
+          Buka semua set Percubaan MPT4 dan semua subjek untuk latihan penuh.
+        </p>
+        <Link
+          to="/harga"
+          className="mt-5 inline-flex items-center gap-2 rounded-full bg-gradient-primary px-6 py-3 font-display text-sm font-extrabold text-primary-foreground shadow-soft transition hover:translate-y-[-1px]"
+        >
+          🔓 Unlock Semua Set MPT4 &amp; Subjek Lain
+        </Link>
+        <div className="mt-3">
+          <a
+            href="https://t.me/KalifahAssistantbot"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm font-bold text-muted-foreground underline-offset-4 hover:text-primary hover:underline"
+          >
+            Ada soalan? Tanya Bot Kalifah 📩
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
 
 function ReviewCard({
   soalan,

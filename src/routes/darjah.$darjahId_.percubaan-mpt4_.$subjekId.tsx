@@ -32,6 +32,7 @@ interface Mpt4Set {
   tempoh_minit: number | null;
   markah_andaian: boolean | null;
   status: string | null;
+  is_trial: boolean | null;
 }
 
 function formatTempoh(minit: number | null): string {
@@ -68,7 +69,7 @@ function PercubaanMpt4SetPage() {
     (async () => {
       const { data, error } = await supabase
         .from("mpt4_set")
-        .select("id, subjek, nombor_set, tajuk, jumlah_markah, tempoh_minit, markah_andaian, status")
+        .select("id, subjek, nombor_set, tajuk, jumlah_markah, tempoh_minit, markah_andaian, status, is_trial")
         .eq("subjek", subjekLabel)
         .order("nombor_set", { ascending: true });
       if (cancelled) return;
@@ -99,8 +100,10 @@ function PercubaanMpt4SetPage() {
 
   const darjahAkses = profile?.darjah_akses ?? [];
   const hasAccess = darjah ? darjahAkses.includes(Number(darjah.id)) : false;
+  const bolehLihat =
+    hasAccess || (!!darjah && Number(darjah.id) === 4 && subjekLabel === "Matematik");
 
-  if (!darjah || !subjek || !subjekLabel || !hasAccess) {
+  if (!darjah || !subjek || !subjekLabel || !bolehLihat) {
     return (
       <div className="min-h-screen bg-background">
         <SiteHeader onLogout={handleLogout} />
@@ -208,13 +211,22 @@ function PercubaanMpt4SetPage() {
                   </div>
                 )}
 
-                <Link
-                  to="/darjah/$darjahId/percubaan-mpt4/$subjekId/$setId"
-                  params={{ darjahId, subjekId, setId: s.id }}
-                  className="mt-auto inline-flex w-fit items-center gap-2 rounded-full bg-gradient-primary px-5 py-2.5 font-display text-sm font-extrabold text-primary-foreground shadow-soft transition hover:translate-x-1"
-                >
-                  Mula →
-                </Link>
+                {hasAccess || s.is_trial ? (
+                  <Link
+                    to="/darjah/$darjahId/percubaan-mpt4/$subjekId/$setId"
+                    params={{ darjahId, subjekId, setId: s.id }}
+                    className="mt-auto inline-flex w-fit items-center gap-2 rounded-full bg-gradient-primary px-5 py-2.5 font-display text-sm font-extrabold text-primary-foreground shadow-soft transition hover:translate-x-1"
+                  >
+                    {!hasAccess && s.is_trial ? "Cuba Percuma →" : "Mula →"}
+                  </Link>
+                ) : (
+                  <Link
+                    to="/harga"
+                    className="mt-auto inline-flex w-fit items-center gap-2 rounded-full bg-secondary px-5 py-2.5 font-display text-sm font-extrabold text-muted-foreground shadow-soft transition hover:text-foreground"
+                  >
+                    🔒 Berbayar
+                  </Link>
+                )}
               </div>
             ))}
           </section>
