@@ -226,6 +226,23 @@ function RootComponent() {
   useEffect(() => {
     if (typeof window === "undefined") return;
     const params = new URLSearchParams(window.location.search);
+
+    // Campaign attribution (sticky, same pattern as ref)
+    const attributionParams = [
+      "utm_source",
+      "utm_medium",
+      "utm_campaign",
+      "utm_content",
+      "utm_term",
+      "fbclid",
+    ] as const;
+    for (const key of attributionParams) {
+      const value = params.get(key);
+      if (value && value.trim().length > 0) {
+        window.localStorage.setItem(`kalifah_${key}`, value.trim().slice(0, 200));
+      }
+    }
+
     const ref = params.get("ref");
     if (ref && ref.trim().length > 0) {
       const code = ref.trim().toUpperCase().slice(0, 64);

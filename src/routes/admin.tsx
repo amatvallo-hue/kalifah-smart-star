@@ -625,6 +625,13 @@ function AllUsers() {
                       <span className="rounded-full bg-blue-100 px-2 py-0.5 text-xs font-bold text-blue-700">
                         🔗 {r.ref_code}
                       </span>
+                    ) : r.utm_campaign ? (
+                      <span
+                        className="rounded-full bg-amber-100 px-2 py-0.5 text-xs font-bold text-amber-700"
+                        title={r.utm_source ?? undefined}
+                      >
+                        📢 {r.utm_campaign}
+                      </span>
                     ) : (
                       <span className="text-xs text-muted-foreground">Terus</span>
                     )}
