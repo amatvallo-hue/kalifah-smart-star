@@ -32,6 +32,7 @@ interface Mpt4Set {
   tempoh_minit: number | null;
   markah_andaian: boolean | null;
   status: string | null;
+  is_trial: boolean | null;
 }
 
 function formatTempoh(minit: number | null): string {
@@ -68,7 +69,7 @@ function PercubaanMpt4SetPage() {
     (async () => {
       const { data, error } = await supabase
         .from("mpt4_set")
-        .select("id, subjek, nombor_set, tajuk, jumlah_markah, tempoh_minit, markah_andaian, status")
+        .select("id, subjek, nombor_set, tajuk, jumlah_markah, tempoh_minit, markah_andaian, status, is_trial")
         .eq("subjek", subjekLabel)
         .order("nombor_set", { ascending: true });
       if (cancelled) return;
