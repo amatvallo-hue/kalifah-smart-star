@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate, useParams } from "@tanstack/react-router";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Lock } from "lucide-react";
 import { useEffect, useState } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
@@ -118,26 +118,51 @@ function PercubaanMpt4SubjekPage() {
         </section>
 
         <section className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {subjekMpt4.map((s) => (
-            <Link
-              key={s.id}
-              to="/darjah/$darjahId/percubaan-mpt4/$subjekId"
-              params={{ darjahId, subjekId: s.id }}
-              className="group flex flex-col gap-4 rounded-3xl border border-border/60 bg-card p-6 shadow-card transition hover:-translate-y-1 hover:shadow-soft"
-            >
-              <div className="flex flex-col items-center gap-1">
-                <span className="text-4xl">{s.emoji}</span>
-                <div className={`flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br ${TONE_GRADIENT[s.tone]} shadow-soft transition group-hover:scale-110`}>
-                  <s.icon className="h-4 w-4" strokeWidth={2.5} />
+          {subjekMpt4.map((s) => {
+            const terkunci = !hasAccess && s.id !== "matematik";
+            const inner = (
+              <>
+                <div className="flex flex-col items-center gap-1">
+                  <span className="text-4xl">{s.emoji}</span>
+                  <div className={`flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-br ${TONE_GRADIENT[s.tone]} shadow-soft transition group-hover:scale-110`}>
+                    <s.icon className="h-4 w-4" strokeWidth={2.5} />
+                  </div>
                 </div>
-              </div>
-              <div>
-                <h3 className="font-display text-xl font-extrabold text-foreground">{s.title}</h3>
-                <p className="mt-1 text-sm text-muted-foreground">{s.description}</p>
-              </div>
-            </Link>
-          ))}
+                <div>
+                  <h3 className="font-display text-xl font-extrabold text-foreground">{s.title}</h3>
+                  <p className="mt-1 text-sm text-muted-foreground">{s.description}</p>
+                </div>
+              </>
+            );
+
+            if (terkunci) {
+              return (
+                <Link
+                  key={s.id}
+                  to="/harga"
+                  className="group relative flex flex-col gap-4 rounded-3xl border border-border/60 bg-card p-6 opacity-70 shadow-card transition hover:opacity-100"
+                >
+                  <span className="absolute right-4 top-4 inline-flex items-center gap-1 rounded-full bg-secondary px-2.5 py-1 font-display text-[10px] font-extrabold text-muted-foreground">
+                    <Lock className="h-3 w-3" /> Berbayar
+                  </span>
+                  {inner}
+                </Link>
+              );
+            }
+
+            return (
+              <Link
+                key={s.id}
+                to="/darjah/$darjahId/percubaan-mpt4/$subjekId"
+                params={{ darjahId, subjekId: s.id }}
+                className="group flex flex-col gap-4 rounded-3xl border border-border/60 bg-card p-6 shadow-card transition hover:-translate-y-1 hover:shadow-soft"
+              >
+                {inner}
+              </Link>
+            );
+          })}
         </section>
+
       </main>
     </div>
   );
