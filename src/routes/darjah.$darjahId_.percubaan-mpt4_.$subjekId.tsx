@@ -211,13 +211,22 @@ function PercubaanMpt4SetPage() {
                   </div>
                 )}
 
-                <Link
-                  to="/darjah/$darjahId/percubaan-mpt4/$subjekId/$setId"
-                  params={{ darjahId, subjekId, setId: s.id }}
-                  className="mt-auto inline-flex w-fit items-center gap-2 rounded-full bg-gradient-primary px-5 py-2.5 font-display text-sm font-extrabold text-primary-foreground shadow-soft transition hover:translate-x-1"
-                >
-                  Mula →
-                </Link>
+                {hasAccess || s.is_trial ? (
+                  <Link
+                    to="/darjah/$darjahId/percubaan-mpt4/$subjekId/$setId"
+                    params={{ darjahId, subjekId, setId: s.id }}
+                    className="mt-auto inline-flex w-fit items-center gap-2 rounded-full bg-gradient-primary px-5 py-2.5 font-display text-sm font-extrabold text-primary-foreground shadow-soft transition hover:translate-x-1"
+                  >
+                    {!hasAccess && s.is_trial ? "Cuba Percuma →" : "Mula →"}
+                  </Link>
+                ) : (
+                  <Link
+                    to="/harga"
+                    className="mt-auto inline-flex w-fit items-center gap-2 rounded-full bg-secondary px-5 py-2.5 font-display text-sm font-extrabold text-muted-foreground shadow-soft transition hover:text-foreground"
+                  >
+                    🔒 Berbayar
+                  </Link>
+                )}
               </div>
             ))}
           </section>
