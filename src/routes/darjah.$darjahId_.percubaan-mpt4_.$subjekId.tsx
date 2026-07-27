@@ -100,8 +100,10 @@ function PercubaanMpt4SetPage() {
 
   const darjahAkses = profile?.darjah_akses ?? [];
   const hasAccess = darjah ? darjahAkses.includes(Number(darjah.id)) : false;
+  const bolehLihat =
+    hasAccess || (!!darjah && Number(darjah.id) === 4 && subjekLabel === "Matematik");
 
-  if (!darjah || !subjek || !subjekLabel || !hasAccess) {
+  if (!darjah || !subjek || !subjekLabel || !bolehLihat) {
     return (
       <div className="min-h-screen bg-background">
         <SiteHeader onLogout={handleLogout} />
