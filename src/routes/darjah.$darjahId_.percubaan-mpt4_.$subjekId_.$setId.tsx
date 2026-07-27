@@ -127,7 +127,7 @@ function PercubaanMpt4JawabPage() {
       const [setRes, soalanRes] = await Promise.all([
         supabase
           .from("mpt4_set")
-          .select("id, subjek, nombor_set, tajuk, jumlah_markah, tempoh_minit")
+          .select("id, subjek, nombor_set, tajuk, jumlah_markah, tempoh_minit, is_trial")
           .eq("id", setId)
           .maybeSingle(),
         supabase
@@ -320,7 +320,19 @@ function PercubaanMpt4JawabPage() {
   }
 
   const darjahAkses = profile?.darjah_akses ?? [];
-  const hasAccess = darjah ? darjahAkses.includes(Number(darjah.id)) : false;
+  const hasAccess = darjah
+    ? darjahAkses.includes(Number(darjah.id)) ||
+      (Number(darjah.id) === 4 && setInfo?.is_trial === true)
+    : false;
+
+  // Tunggu maklumat set sebelum memutuskan akses (untuk kes trial)
+  if (darjah && !hasAccess && Number(darjah.id) === 4 && setInfo === null && !fetchError) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <p className="text-muted-foreground">Memuatkan...</p>
+      </div>
+    );
+  }
 
   if (!darjah || !subjek || !hasAccess) {
     return (
