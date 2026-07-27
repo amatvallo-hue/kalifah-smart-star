@@ -585,6 +585,86 @@ function ResultView({
   );
 }
 
+function TrialUpsell({
+  soalanList,
+  esei,
+}: {
+  soalanList: Mpt4Soalan[];
+  esei: Record<string, EseiPenilaianItem>;
+}) {
+  const markahPenuhPerSoalan = new Map(soalanList.map((s) => [s.id, s.markah]));
+  const kuasai: string[] = [];
+  const tingkat: string[] = [];
+  for (const [soalanId, item] of Object.entries(esei)) {
+    const penuh = markahPenuhPerSoalan.get(soalanId);
+    if (penuh == null) continue;
+    const markah = typeof item?.markah === "number" ? item.markah : 0;
+    if (markah >= penuh) {
+      if (item?.kekuatan) kuasai.push(item.kekuatan);
+    } else if (item?.cadangan_penambahbaikan) {
+      tingkat.push(item.cadangan_penambahbaikan);
+    }
+  }
+  const kuasaiTop = kuasai.slice(0, 3);
+  const tingkatTop = tingkat.slice(0, 3);
+
+  return (
+    <div className="flex flex-col gap-6">
+      {(kuasaiTop.length > 0 || tingkatTop.length > 0) && (
+        <div className="grid gap-4 md:grid-cols-2">
+          <div className="rounded-3xl border border-border/60 bg-card p-5 shadow-card">
+            <h3 className="font-display text-lg font-extrabold text-emerald-600">✅ Yang Dikuasai</h3>
+            <ul className="mt-3 flex flex-col gap-2 text-sm text-muted-foreground">
+              {kuasaiTop.length > 0 ? (
+                kuasaiTop.map((t, i) => <li key={i}>• {t}</li>)
+              ) : (
+                <li>Belum ada — teruskan berlatih!</li>
+              )}
+            </ul>
+          </div>
+          <div className="rounded-3xl border border-border/60 bg-card p-5 shadow-card">
+            <h3 className="font-display text-lg font-extrabold text-amber-600">📈 Perlu Ditingkatkan</h3>
+            <ul className="mt-3 flex flex-col gap-2 text-sm text-muted-foreground">
+              {tingkatTop.length > 0 ? (
+                tingkatTop.map((t, i) => <li key={i}>• {t}</li>)
+              ) : (
+                <li>Hebat! Tiada kelemahan ketara.</li>
+              )}
+            </ul>
+          </div>
+        </div>
+      )}
+
+      <div className="rounded-3xl border-2 border-primary/40 bg-gradient-hero p-6 text-center shadow-card md:p-8">
+        <h3 className="font-display text-2xl font-extrabold text-foreground">
+          Ini baru satu set percuma 🎁
+        </h3>
+        <p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
+          Buka semua set Percubaan MPT4 dan semua subjek untuk latihan penuh.
+        </p>
+        <Link
+          to="/harga"
+          className="mt-5 inline-flex items-center gap-2 rounded-full bg-gradient-primary px-6 py-3 font-display text-sm font-extrabold text-primary-foreground shadow-soft transition hover:translate-y-[-1px]"
+        >
+          🔓 Unlock Semua Set MPT4 &amp; Subjek Lain
+        </Link>
+        <div className="mt-3">
+          <a
+            href="https://t.me/KalifahAssistantbot"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm font-bold text-muted-foreground underline-offset-4 hover:text-primary hover:underline"
+          >
+            Ada soalan? Tanya Bot Kalifah 📩
+          </a>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
+
 function ReviewCard({
   soalan,
   jawapanMurid,
