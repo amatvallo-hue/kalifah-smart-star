@@ -1,6 +1,6 @@
 import { createFileRoute, Link, Outlet, useNavigate, useParams } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
@@ -26,15 +26,34 @@ function SubjekPage() {
   const studentName = user?.user_metadata?.name as string | undefined;
   const streak = useStreak();
   const mata = usePoints();
+  const [adaTrial, setAdaTrial] = useState(false);
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
   }, [loading, user, navigate]);
 
+  // Percubaan MPT4 free-trial: does at least one trial set exist?
+  useEffect(() => {
+    if (darjahId !== "4") return;
+    let cancelled = false;
+    (async () => {
+      const { data } = await supabase
+        .from("mpt4_set")
+        .select("id")
+        .eq("is_trial", true)
+        .limit(1);
+      if (!cancelled) setAdaTrial((data ?? []).length > 0);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [darjahId]);
+
   async function handleLogout() {
     await supabase.auth.signOut();
     navigate({ to: "/login" });
   }
+
 
   if (loading || !user || profileLoading) {
     return (
