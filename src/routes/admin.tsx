@@ -144,10 +144,11 @@ function AdminDashboard() {
           </Link>
         </div>
         <Tabs defaultValue="pembayaran">
-          <TabsList>
+          <TabsList className="flex-wrap">
             <TabsTrigger value="pembayaran">Pembayaran Manual</TabsTrigger>
             <TabsTrigger value="pengguna">Semua Pengguna</TabsTrigger>
             <TabsTrigger value="pengguna-anak">Pengguna & Anak</TabsTrigger>
+            <TabsTrigger value="testimoni">Testimoni & Feedback</TabsTrigger>
             <TabsTrigger value="notifikasi">Tetapan Notifikasi</TabsTrigger>
           </TabsList>
           <TabsContent value="pembayaran" className="mt-6">
@@ -159,10 +160,14 @@ function AdminDashboard() {
           <TabsContent value="pengguna-anak" className="mt-6">
             <PenggunaAnak />
           </TabsContent>
+          <TabsContent value="testimoni" className="mt-6">
+            <AdminTestimoni />
+          </TabsContent>
           <TabsContent value="notifikasi" className="mt-6">
             <NotificationSettings />
           </TabsContent>
         </Tabs>
+
       </main>
     </div>
   );
