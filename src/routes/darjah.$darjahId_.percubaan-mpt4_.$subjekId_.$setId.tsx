@@ -413,30 +413,56 @@ function PercubaanMpt4JawabPage() {
           </div>
         )}
 
-        {bahagianGroups.map(({ bahagian, items }) => (
-          <section key={bahagian} className="mt-8">
-            <div className="border-y border-border/60 py-3 text-center">
-              <h2 className="font-display text-lg font-extrabold uppercase tracking-[0.25em] text-primary">
-                {isEnglish ? "Section" : "Bahagian"} {bahagian}
-              </h2>
-              <p className="mt-1 text-xs text-muted-foreground">
-                {isEnglish ? "Answer all questions." : "Jawab semua soalan."}
+        {soalanList !== null && soalanList.length > 0 && (
+          <div className="mt-6 rounded-lg border border-border/60 bg-card p-6 md:p-10">
+            {/* Letterhead */}
+            <div className="text-center">
+              <div className="text-xs font-extrabold uppercase tracking-widest text-muted-foreground">KALIFAH.MY</div>
+              <h1 className="mt-2 font-display text-2xl font-extrabold text-foreground">
+                Percubaan MPT4 — {subjek.title}
+              </h1>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Set {setInfo?.nombor_set} · {setInfo?.jumlah_markah} {isEnglish ? "marks" : "markah"}
               </p>
+              <div className="my-4 border-b border-border/60" />
+              <div className="grid grid-cols-2 gap-6 text-sm">
+                <div className="text-left">
+                  <span className="font-bold text-muted-foreground">Nama:</span>
+                  <div className="border-b border-border/60 py-1 font-medium text-foreground">{studentName || "—"}</div>
+                </div>
+                <div className="text-left">
+                  <span className="font-bold text-muted-foreground">Darjah:</span>
+                  <div className="border-b border-border/60 py-1 font-medium text-foreground">{darjah.id}</div>
+                </div>
+              </div>
             </div>
-            <div className="mt-4 rounded-lg border border-border/60 bg-card p-6 md:p-8">
-              {items.map((s, idx) => (
-                <SoalanCard
-                  key={s.id}
-                  soalan={s}
-                  value={jawapan[s.id] ?? ""}
-                  onChange={(v) => updateJawapan(s.id, v)}
-                  isEnglish={isEnglish}
-                  isFirst={idx === 0}
-                />
-              ))}
-            </div>
-          </section>
-        ))}
+
+            {bahagianGroups.map(({ bahagian, items }) => (
+              <section key={bahagian} className="mt-8">
+                <div className="border-y border-border/60 py-3 text-center">
+                  <h2 className="font-display text-lg font-extrabold uppercase tracking-[0.25em] text-primary">
+                    {isEnglish ? "Section" : "Bahagian"} {bahagian}
+                  </h2>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    {isEnglish ? "Answer all questions." : "Jawab semua soalan."}
+                  </p>
+                </div>
+                <div className="mt-4">
+                  {items.map((s, idx) => (
+                    <SoalanCard
+                      key={s.id}
+                      soalan={s}
+                      value={jawapan[s.id] ?? ""}
+                      onChange={(v) => updateJawapan(s.id, v)}
+                      isEnglish={isEnglish}
+                      isFirst={idx === 0}
+                    />
+                  ))}
+                </div>
+              </section>
+            ))}
+          </div>
+        )}
       </main>
 
       {/* Sticky submit bar */}
