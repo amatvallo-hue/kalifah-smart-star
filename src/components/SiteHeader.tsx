@@ -114,7 +114,7 @@ export function SiteHeader({
     <header className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/85 backdrop-blur">
       <div className="container mx-auto flex h-16 items-center justify-between gap-3 px-4">
         <Link to="/" className="flex items-center gap-2">
-          <KalifahLogo className="h-8 md:h-9" textClassName="text-xl md:text-2xl" />
+          <KalifahLogo className="h-8 md:h-9" />
 
         </Link>
 

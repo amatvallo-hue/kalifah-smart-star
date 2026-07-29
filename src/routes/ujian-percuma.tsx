@@ -124,7 +124,7 @@ function UjianPercumaPage() {
 
       <div className="relative mx-auto flex min-h-screen max-w-xl flex-col items-center justify-center px-4 py-10">
         <div className="mb-6 flex items-center gap-2">
-          <KalifahLogo className="h-10 md:h-12" textClassName="text-2xl md:text-3xl" />
+          <KalifahLogo className="h-10 md:h-12" />
         </div>
 
         <div className="w-full rounded-3xl bg-card p-6 shadow-card md:p-8">

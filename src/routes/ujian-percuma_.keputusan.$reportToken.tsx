@@ -138,7 +138,7 @@ function KeputusanPage() {
 
       <div className="relative mx-auto flex min-h-screen max-w-2xl flex-col px-4 py-6 md:py-10">
         <Link to="/" className="mb-4 flex items-center gap-2">
-          <KalifahLogo className="h-8 md:h-9" textClassName="text-xl md:text-2xl" />
+          <KalifahLogo className="h-8 md:h-9" />
         </Link>
 
         {loading && (
