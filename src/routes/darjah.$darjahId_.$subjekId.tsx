@@ -196,7 +196,7 @@ function AktivitiPage() {
             <Link
               to="/darjah/$darjahId/$subjekId/latih-tubi"
               params={{ darjahId, subjekId }}
-              search={{}}
+              search={{ topik: undefined }}
               className="group mt-8 flex flex-col gap-4 rounded-3xl border-2 border-primary/30 bg-gradient-to-br from-emerald-50 to-amber-50 p-8 shadow-card transition hover:-translate-y-1 hover:shadow-soft dark:from-emerald-950/30 dark:to-amber-950/20"
             >
               <div className="flex items-center gap-3">

@@ -52,7 +52,7 @@ function ResetPasswordPage() {
       return;
     }
     setOk(true);
-    setTimeout(() => navigate({ to: "/dashboard/ibu-bapa", search: {} }), 1500);
+    setTimeout(() => navigate({ to: "/dashboard/ibu-bapa", search: { tambahAnak: undefined } }), 1500);
   }
 
   if (ok) {
