@@ -41,7 +41,7 @@ interface KaliCadangan {
 }
 
 interface Soalan {
-  id: number;
+  id: string;
   soalan: string;
   pilihan: string[];
   jawapan: number;
@@ -49,6 +49,10 @@ interface Soalan {
   gambar?: string | null;
   svg_type?: string | null;
   svg_params?: any;
+  rangsangan_teks?: string | null;
+  rangsangan_gambar_id?: string | null;
+  rangsangan_svg_type?: string | null;
+  rangsangan_svg_params?: any;
 }
 
 const TIER_BADGE: Record<string, { label: string; bg: string; fg: string }> = {
@@ -111,13 +115,48 @@ function KaliBelajarUntukSayaPage() {
         return;
       }
 
-      const { data: q, error: qErr } = await supabase
-        .from("soalan_latih_tubi")
-        .select(
-          "id, soalan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan_betul, feedback_a, feedback_b, feedback_c, feedback_d, gambar, svg_type, svg_params"
-        )
-        .eq("id", parseInt(row.question_source_id, 10))
-        .maybeSingle();
+      const tbl = row.question_source_table;
+      let q: any = null;
+      let qErr: any = null;
+
+      if (tbl === "soalan_latih_tubi") {
+        const res = await supabase
+          .from("soalan_latih_tubi")
+          .select(
+            "id, soalan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan_betul, feedback_a, feedback_b, feedback_c, feedback_d, gambar, svg_type, svg_params"
+          )
+          .eq("id", parseInt(row.question_source_id, 10))
+          .maybeSingle();
+        q = res.data;
+        qErr = res.error;
+      } else if (tbl === "kuiz_soalan") {
+        const res = await supabase
+          .from("kuiz_soalan")
+          .select(
+            "id, soalan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan, feedback_a, feedback_b, feedback_c, feedback_d, svg_type, svg_params"
+          )
+          .eq("id", row.question_source_id)
+          .maybeSingle();
+        q = res.data ? { ...(res.data as any), jawapan_betul: (res.data as any).jawapan } : null;
+        qErr = res.error;
+      } else if (tbl === "soalan_bergambar_rajah") {
+        const res = await supabase
+          .from("soalan_bergambar_rajah")
+          .select(
+            "id, soalan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan_betul, feedback_a, feedback_b, feedback_c, feedback_d, rangsangan_teks, rangsangan_gambar_id, rangsangan_svg_type, rangsangan_svg_params"
+          )
+          .eq("id", row.question_source_id)
+          .maybeSingle();
+        q = res.data;
+        qErr = res.error;
+      } else {
+        setCadangan(null);
+        setSoalan(null);
+        setHabisCadangan(true);
+        setFetching(false);
+        return;
+      }
+
       if (qErr) throw qErr;
       if (!q) {
         setCadangan(null);
@@ -128,7 +167,7 @@ function KaliBelajarUntukSayaPage() {
 
       setCadangan(row);
       setSoalan({
-        id: Number((q as any).id),
+        id: String((q as any).id),
         soalan: (q as any).soalan,
         pilihan: [
           (q as any).pilihan_a,
@@ -146,6 +185,10 @@ function KaliBelajarUntukSayaPage() {
         gambar: (q as any).gambar ?? null,
         svg_type: (q as any).svg_type ?? null,
         svg_params: (q as any).svg_params ?? null,
+        rangsangan_teks: (q as any).rangsangan_teks ?? null,
+        rangsangan_gambar_id: (q as any).rangsangan_gambar_id ?? null,
+        rangsangan_svg_type: (q as any).rangsangan_svg_type ?? null,
+        rangsangan_svg_params: (q as any).rangsangan_svg_params ?? null,
       });
       setHabisCadangan(false);
       setMulaSoalan(Date.now());
@@ -395,6 +438,36 @@ function KaliBelajarUntukSayaPage() {
                     loading="lazy"
                   />
                 )}
+
+                {(soalan.rangsangan_teks ||
+                  soalan.rangsangan_gambar_id ||
+                  soalan.rangsangan_svg_type) && (
+                  <div className="mb-4 rounded-2xl border-2 border-border bg-secondary/40 p-4">
+                    {soalan.rangsangan_svg_type && (
+                      <div className="mx-auto mb-3 flex justify-center">
+                        {renderSoalanSvg(soalan.rangsangan_svg_type, soalan.rangsangan_svg_params)}
+                      </div>
+                    )}
+                    {soalan.rangsangan_gambar_id && (
+                      <img
+                        src={
+                          supabase.storage
+                            .from("soalan-gambar-rajah")
+                            .getPublicUrl(`${soalan.rangsangan_gambar_id}.png`).data.publicUrl
+                        }
+                        alt="Rangsangan soalan"
+                        className="mx-auto mb-3 max-h-64 rounded-2xl object-contain"
+                        loading="lazy"
+                      />
+                    )}
+                    {soalan.rangsangan_teks && (
+                      <p className="whitespace-pre-line text-sm font-medium text-foreground">
+                        {soalan.rangsangan_teks}
+                      </p>
+                    )}
+                  </div>
+                )}
+
 
                 <h1 className="font-display text-2xl font-extrabold leading-snug text-foreground md:text-3xl">
                   {soalan.soalan}
