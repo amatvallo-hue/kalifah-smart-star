@@ -15,8 +15,8 @@ export function KalifahLogo({ className = "h-8 md:h-9" }: KalifahLogoProps) {
     <img
       src={kalifahLogo}
       alt="Kalifah.my"
-      width={1596}
-      height={321}
+      width={371}
+      height={66}
       className={cn("block w-auto max-w-none shrink-0 object-contain", className)}
     />
   );
