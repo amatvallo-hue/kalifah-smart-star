@@ -1314,3 +1314,122 @@ function NewManualOrderDialog({ onCreated }: { onCreated: () => void }) {
 }
 
 
+
+// ---------------- Tab: Riwayat Jualan ----------------
+interface JualanRow {
+  id: string;
+  user_id: string;
+  pakej: string;
+  amount_sen: number;
+  status: string;
+  created_at: string;
+  paid_at: string | null;
+}
+
+function SalesHistory() {
+  const [rows, setRows] = useState<JualanRow[]>([]);
+  const [profiles, setProfiles] = useState<Record<string, Profile>>({});
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    (async () => {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from("pesanan")
+        .select("id, user_id, pakej, amount_sen, status, created_at, paid_at")
+        .in("status", ["paid", "approved"])
+        .order("paid_at", { ascending: false, nullsFirst: false })
+        .order("created_at", { ascending: false })
+        .limit(100);
+      if (error) {
+        toast.error("Gagal muat jualan: " + error.message);
+        setLoading(false);
+        return;
+      }
+      const list = (data as JualanRow[] | null) ?? [];
+      setRows(list);
+      const ids = Array.from(new Set(list.map((r) => r.user_id)));
+      if (ids.length > 0) {
+        const { data: pp } = await supabase
+          .from("profiles")
+          .select(
+            "id, email, username, nama_penuh, role, darjah_akses, created_at, ref_code, utm_source, utm_medium, utm_campaign, utm_content, fbclid",
+          )
+          .in("id", ids);
+        const map: Record<string, Profile> = {};
+        for (const p of (pp as Profile[] | null) ?? []) map[p.id] = p;
+        setProfiles(map);
+      }
+      setLoading(false);
+    })();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center py-12">
+        <Loader2 className="h-6 w-6 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="rounded-2xl border bg-card p-4">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Tarikh</TableHead>
+            <TableHead>Nama / Emel</TableHead>
+            <TableHead>Pakej</TableHead>
+            <TableHead>Jumlah</TableHead>
+            <TableHead>Sumber</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {rows.length === 0 && (
+            <TableRow>
+              <TableCell colSpan={5} className="text-center text-sm text-muted-foreground">
+                Belum ada jualan.
+              </TableCell>
+            </TableRow>
+          )}
+          {rows.map((r) => {
+            const p = profiles[r.user_id];
+            const nama = p?.nama_penuh || p?.username || p?.email || r.user_id;
+            const tarikh = new Date(r.paid_at ?? r.created_at).toLocaleDateString("ms-MY", {
+              day: "2-digit",
+              month: "short",
+              year: "numeric",
+            });
+            const tooltip = [p?.utm_medium, p?.utm_campaign, p?.utm_content]
+              .filter(Boolean)
+              .join(" · ");
+            return (
+              <TableRow key={r.id}>
+                <TableCell className="whitespace-nowrap text-sm">{tarikh}</TableCell>
+                <TableCell className="text-sm">{nama}</TableCell>
+                <TableCell className="text-sm capitalize">{r.pakej}</TableCell>
+                <TableCell className="text-sm font-bold">{rm(r.amount_sen)}</TableCell>
+                <TableCell>
+                  {p?.ref_code ? (
+                    <span className="rounded-full bg-blue-100 px-2.5 py-1 text-xs font-bold text-blue-700">
+                      🔗 Affiliate: {p.ref_code}
+                    </span>
+                  ) : p?.utm_source || p?.utm_campaign ? (
+                    <span
+                      className="rounded-full bg-amber-100 px-2.5 py-1 text-xs font-bold text-amber-700"
+                      title={tooltip || undefined}
+                    >
+                      📢 {p?.utm_source ?? "Ads"}
+                    </span>
+                  ) : (
+                    <span className="text-xs text-muted-foreground">Terus (Organic)</span>
+                  )}
+                </TableCell>
+              </TableRow>
+            );
+          })}
+        </TableBody>
+      </Table>
+    </div>
+  );
+}
