@@ -423,14 +423,15 @@ function PercubaanMpt4JawabPage() {
                 {isEnglish ? "Answer all questions." : "Jawab semua soalan."}
               </p>
             </div>
-            <div className="mt-4 flex flex-col gap-5">
-              {items.map((s) => (
+            <div className="mt-4 rounded-lg border border-border/60 bg-card p-6 md:p-8">
+              {items.map((s, idx) => (
                 <SoalanCard
                   key={s.id}
                   soalan={s}
                   value={jawapan[s.id] ?? ""}
                   onChange={(v) => updateJawapan(s.id, v)}
                   isEnglish={isEnglish}
+                  isFirst={idx === 0}
                 />
               ))}
             </div>
@@ -496,11 +497,13 @@ function SoalanCard({
   value,
   onChange,
   isEnglish = false,
+  isFirst = false,
 }: {
   soalan: Mpt4Soalan;
   value: string;
   onChange: (v: string) => void;
   isEnglish?: boolean;
+  isFirst?: boolean;
 }) {
   const { bm, en } = splitBilingual(soalan.teks_soalan);
   const isSrtb = soalan.jenis_item === "SRTb" && !!soalan.langkah_bertingkat;
@@ -510,12 +513,8 @@ function SoalanCard({
   const isHolistik = !isSrtb && soalan.kaedah_penskoran === "holistik";
 
   return (
-    <article className="rounded-lg border border-border/60 bg-card p-5 md:p-6">
-      <div className="flex items-start justify-between gap-3">
-        <span className="font-display text-base font-extrabold text-foreground">
-          {soalan.no_soalan}
-          {soalan.sub_bahagian ? `(${soalan.sub_bahagian})` : ""}.
-        </span>
+    <div className={isFirst ? "" : "mt-6 border-t border-border/40 pt-6"}>
+      <div className="flex items-start justify-end gap-3">
         <span className="rounded-full border border-gold/60 px-2.5 py-0.5 text-[11px] font-bold text-gold-foreground">
           {soalan.markah} {isEnglish ? "marks" : "markah"}
         </span>
@@ -543,10 +542,13 @@ function SoalanCard({
       ) : null}
 
       <div className="mt-4">
-        <p
-          className="text-base leading-relaxed text-foreground whitespace-pre-wrap"
-          dangerouslySetInnerHTML={{ __html: bm }}
-        />
+        <p className="text-base leading-relaxed text-foreground whitespace-pre-wrap">
+          <span className="font-display font-extrabold text-foreground">
+            {soalan.no_soalan}
+            {soalan.sub_bahagian ? `(${soalan.sub_bahagian})` : ""}.{" "}
+          </span>
+          <span dangerouslySetInnerHTML={{ __html: bm }} />
+        </p>
         {en && (
           <p
             className="mt-1 text-sm italic leading-relaxed text-muted-foreground whitespace-pre-wrap"
@@ -639,6 +641,6 @@ function SoalanCard({
           </div>
         )}
       </div>
-    </article>
+    </div>
   );
 }
