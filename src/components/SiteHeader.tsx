@@ -13,6 +13,8 @@ import { useAuth } from "@/hooks/use-auth";
 import { useProfile } from "@/hooks/use-profile";
 import { CHILD_EMAIL_DOMAIN } from "@/lib/child-auth";
 import { supabase } from "@/integrations/supabase/client";
+import kalifahLogo from "@/assets/kalifah-logo.svg";
+
 
 export function SiteHeader({
   stars = 0,
