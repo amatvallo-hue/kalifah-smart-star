@@ -415,9 +415,14 @@ function PercubaanMpt4JawabPage() {
 
         {bahagianGroups.map(({ bahagian, items }) => (
           <section key={bahagian} className="mt-8">
-            <h2 className="font-display text-2xl font-extrabold text-primary">
-              {isEnglish ? "Section" : "Bahagian"} {bahagian}
-            </h2>
+            <div className="border-y border-border/60 py-3 text-center">
+              <h2 className="font-display text-lg font-extrabold uppercase tracking-[0.25em] text-primary">
+                {isEnglish ? "Section" : "Bahagian"} {bahagian}
+              </h2>
+              <p className="mt-1 text-xs text-muted-foreground">
+                {isEnglish ? "Answer all questions." : "Jawab semua soalan."}
+              </p>
+            </div>
             <div className="mt-4 flex flex-col gap-5">
               {items.map((s) => (
                 <SoalanCard
@@ -505,19 +510,13 @@ function SoalanCard({
   const isHolistik = !isSrtb && soalan.kaedah_penskoran === "holistik";
 
   return (
-    <article className="rounded-3xl border border-border/60 bg-card p-5 shadow-card md:p-6">
+    <article className="rounded-lg border border-border/60 bg-card p-5 md:p-6">
       <div className="flex items-start justify-between gap-3">
-        <div className="flex items-center gap-2">
-          <span className="inline-flex h-8 min-w-8 items-center justify-center rounded-full bg-primary px-2.5 font-display text-sm font-extrabold text-primary-foreground">
-            {soalan.no_soalan}
-          </span>
-          {soalan.sub_bahagian && (
-            <span className="rounded-full bg-secondary px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide text-muted-foreground">
-              {soalan.sub_bahagian}
-            </span>
-          )}
-        </div>
-        <span className="rounded-full bg-gold/20 px-3 py-1 font-display text-[11px] font-extrabold text-gold-foreground">
+        <span className="font-display text-base font-extrabold text-foreground">
+          {soalan.no_soalan}
+          {soalan.sub_bahagian ? `(${soalan.sub_bahagian})` : ""}.
+        </span>
+        <span className="rounded-full border border-gold/60 px-2.5 py-0.5 text-[11px] font-bold text-gold-foreground">
           {soalan.markah} {isEnglish ? "marks" : "markah"}
         </span>
       </div>
