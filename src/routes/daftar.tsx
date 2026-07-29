@@ -165,8 +165,16 @@ function DaftarPage() {
       return;
     }
 
-    // Akaun berjaya dicipta (dengan atau tanpa email confirmation) — track kedua-dua kes.
-    if (typeof window !== "undefined") {
+    // Hanya track conversion untuk akaun baru betul-betul (Supabase returns identities:[]
+    // untuk emel yang dah wujud/confirmed) dan pastikan emel yang sama tak fire dua kali.
+    const isNewAccount = !!data.user?.identities && data.user.identities.length > 0;
+    const normalizedEmail = email.toLowerCase().trim();
+    const signupTrackedKey = `signup_tracked_${normalizedEmail}`;
+    const alreadyTracked =
+      typeof window !== "undefined" && window.localStorage.getItem(signupTrackedKey) === "1";
+
+    if (isNewAccount && !alreadyTracked && typeof window !== "undefined") {
+      window.localStorage.setItem(signupTrackedKey, "1");
       if (typeof (window as any).gtag === "function") {
         (window as any).gtag("event", "sign_up", { method: "email" });
       }
@@ -174,6 +182,7 @@ function DaftarPage() {
         (window as any).fbq("track", "CompleteRegistration");
       }
     }
+
 
     if (data.session) {
       navigate({ to: "/pilih-darjah" });
