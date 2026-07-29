@@ -112,12 +112,8 @@ export function SiteHeader({
     <header className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/85 backdrop-blur">
       <div className="container mx-auto flex h-16 items-center justify-between gap-3 px-4">
         <Link to="/" className="flex items-center gap-2">
-          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-primary text-primary-foreground shadow-soft">
-            <span className="font-display text-xl font-extrabold">ك</span>
-          </div>
-          <span className="font-display text-2xl font-extrabold tracking-tight text-foreground">
-            Kalifah<span className="text-primary">.my</span>
-          </span>
+          <img src={kalifahLogo} alt="Kalifah.my" className="h-8 w-auto md:h-9" />
+
         </Link>
 
         <nav className="hidden items-center gap-1 md:flex">
