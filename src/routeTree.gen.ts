@@ -24,6 +24,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as PreviewNamaRouteImport } from './routes/preview.nama'
 import { Route as PreviewDarjahIdRouteImport } from './routes/preview.$darjahId'
 import { Route as PraKalifahBidangRouteImport } from './routes/pra-kalifah_.$bidang'
+import { Route as KaliTestBelajarUntukSayaRouteImport } from './routes/kali-test.belajar-untuk-saya'
 import { Route as DashboardProgressRouteImport } from './routes/dashboard.progress'
 import { Route as DashboardIbuBapaRouteImport } from './routes/dashboard.ibu-bapa'
 import { Route as DarjahDarjahIdRouteImport } from './routes/darjah.$darjahId'
@@ -134,6 +135,12 @@ const PraKalifahBidangRoute = PraKalifahBidangRouteImport.update({
   path: '/pra-kalifah/$bidang',
   getParentRoute: () => rootRouteImport,
 } as any)
+const KaliTestBelajarUntukSayaRoute =
+  KaliTestBelajarUntukSayaRouteImport.update({
+    id: '/kali-test/belajar-untuk-saya',
+    path: '/kali-test/belajar-untuk-saya',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const DashboardProgressRoute = DashboardProgressRouteImport.update({
   id: '/dashboard/progress',
   path: '/dashboard/progress',
@@ -349,6 +356,7 @@ export interface FileRoutesByFullPath {
   '/darjah/$darjahId': typeof DarjahDarjahIdRoute
   '/dashboard/ibu-bapa': typeof DashboardIbuBapaRoute
   '/dashboard/progress': typeof DashboardProgressRoute
+  '/kali-test/belajar-untuk-saya': typeof KaliTestBelajarUntukSayaRoute
   '/pra-kalifah/$bidang': typeof PraKalifahBidangRoute
   '/preview/$darjahId': typeof PreviewDarjahIdRoute
   '/preview/nama': typeof PreviewNamaRoute
@@ -400,6 +408,7 @@ export interface FileRoutesByTo {
   '/darjah/$darjahId': typeof DarjahDarjahIdRoute
   '/dashboard/ibu-bapa': typeof DashboardIbuBapaRoute
   '/dashboard/progress': typeof DashboardProgressRoute
+  '/kali-test/belajar-untuk-saya': typeof KaliTestBelajarUntukSayaRoute
   '/pra-kalifah/$bidang': typeof PraKalifahBidangRoute
   '/preview/$darjahId': typeof PreviewDarjahIdRoute
   '/preview/nama': typeof PreviewNamaRoute
@@ -452,6 +461,7 @@ export interface FileRoutesById {
   '/darjah/$darjahId': typeof DarjahDarjahIdRoute
   '/dashboard/ibu-bapa': typeof DashboardIbuBapaRoute
   '/dashboard/progress': typeof DashboardProgressRoute
+  '/kali-test/belajar-untuk-saya': typeof KaliTestBelajarUntukSayaRoute
   '/pra-kalifah_/$bidang': typeof PraKalifahBidangRoute
   '/preview/$darjahId': typeof PreviewDarjahIdRoute
   '/preview/nama': typeof PreviewNamaRoute
@@ -505,6 +515,7 @@ export interface FileRouteTypes {
     | '/darjah/$darjahId'
     | '/dashboard/ibu-bapa'
     | '/dashboard/progress'
+    | '/kali-test/belajar-untuk-saya'
     | '/pra-kalifah/$bidang'
     | '/preview/$darjahId'
     | '/preview/nama'
@@ -556,6 +567,7 @@ export interface FileRouteTypes {
     | '/darjah/$darjahId'
     | '/dashboard/ibu-bapa'
     | '/dashboard/progress'
+    | '/kali-test/belajar-untuk-saya'
     | '/pra-kalifah/$bidang'
     | '/preview/$darjahId'
     | '/preview/nama'
@@ -607,6 +619,7 @@ export interface FileRouteTypes {
     | '/darjah/$darjahId'
     | '/dashboard/ibu-bapa'
     | '/dashboard/progress'
+    | '/kali-test/belajar-untuk-saya'
     | '/pra-kalifah_/$bidang'
     | '/preview/$darjahId'
     | '/preview/nama'
@@ -659,6 +672,7 @@ export interface RootRouteChildren {
   DarjahDarjahIdRoute: typeof DarjahDarjahIdRoute
   DashboardIbuBapaRoute: typeof DashboardIbuBapaRoute
   DashboardProgressRoute: typeof DashboardProgressRoute
+  KaliTestBelajarUntukSayaRoute: typeof KaliTestBelajarUntukSayaRoute
   PraKalifahBidangRoute: typeof PraKalifahBidangRoute
   PreviewDarjahIdRoute: typeof PreviewDarjahIdRoute
   PreviewNamaRoute: typeof PreviewNamaRoute
@@ -789,6 +803,13 @@ declare module '@tanstack/react-router' {
       path: '/pra-kalifah/$bidang'
       fullPath: '/pra-kalifah/$bidang'
       preLoaderRoute: typeof PraKalifahBidangRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/kali-test/belajar-untuk-saya': {
+      id: '/kali-test/belajar-untuk-saya'
+      path: '/kali-test/belajar-untuk-saya'
+      fullPath: '/kali-test/belajar-untuk-saya'
+      preLoaderRoute: typeof KaliTestBelajarUntukSayaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard/progress': {
@@ -1059,6 +1080,7 @@ const rootRouteChildren: RootRouteChildren = {
   DarjahDarjahIdRoute: DarjahDarjahIdRoute,
   DashboardIbuBapaRoute: DashboardIbuBapaRoute,
   DashboardProgressRoute: DashboardProgressRoute,
+  KaliTestBelajarUntukSayaRoute: KaliTestBelajarUntukSayaRoute,
   PraKalifahBidangRoute: PraKalifahBidangRoute,
   PreviewDarjahIdRoute: PreviewDarjahIdRoute,
   PreviewNamaRoute: PreviewNamaRoute,
