@@ -148,6 +148,7 @@ function AdminDashboard() {
         <Tabs defaultValue="pembayaran">
           <TabsList className="flex-wrap">
             <TabsTrigger value="pembayaran">Pembayaran Manual</TabsTrigger>
+            <TabsTrigger value="jualan">Riwayat Jualan</TabsTrigger>
             <TabsTrigger value="pengguna">Semua Pengguna</TabsTrigger>
             <TabsTrigger value="pengguna-anak">Pengguna & Anak</TabsTrigger>
             <TabsTrigger value="testimoni">Testimoni & Feedback</TabsTrigger>
@@ -155,6 +156,9 @@ function AdminDashboard() {
           </TabsList>
           <TabsContent value="pembayaran" className="mt-6">
             <ManualPayments adminEmail={user?.email ?? ""} />
+          </TabsContent>
+          <TabsContent value="jualan" className="mt-6">
+            <SalesHistory />
           </TabsContent>
           <TabsContent value="pengguna" className="mt-6">
             <AllUsers />
