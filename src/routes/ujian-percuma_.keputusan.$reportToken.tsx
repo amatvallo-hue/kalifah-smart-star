@@ -267,6 +267,7 @@ function KeputusanPage() {
                 </div>
                 <Link
                   to="/daftar"
+                  search={{ ref: undefined }}
                   className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-card px-6 py-3 font-display text-base font-extrabold text-primary shadow-soft transition hover:-translate-y-0.5 sm:w-auto"
                 >
                   Mulakan Sekarang

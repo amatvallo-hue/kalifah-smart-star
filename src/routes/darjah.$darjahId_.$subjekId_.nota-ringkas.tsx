@@ -231,6 +231,7 @@ function NotaRingkasPage() {
               <Link
                 to="/darjah/$darjahId/$subjekId/latih-tubi"
                 params={{ darjahId, subjekId }}
+                search={{ topik: undefined }}
                 className="inline-flex items-center justify-center gap-2 rounded-2xl px-8 py-4 font-display text-lg font-extrabold text-white shadow-soft transition hover:-translate-y-0.5"
                 style={{ backgroundColor: HIJAU }}
               >
