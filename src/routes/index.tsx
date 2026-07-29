@@ -66,7 +66,7 @@ function LandingHeader() {
     <header className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/85 backdrop-blur">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <Link to="/" className="flex items-center gap-2">
-          <KalifahLogo className="h-8 md:h-9" textClassName="text-xl md:text-2xl" />
+          <KalifahLogo className="h-8 md:h-9" />
         </Link>
         <nav className="hidden items-center gap-6 md:flex">
           <a href="#ciri" className="font-display text-sm font-bold text-muted-foreground hover:text-foreground">Ciri-Ciri</a>
@@ -715,7 +715,7 @@ function Footer() {
       <div className="container mx-auto grid gap-8 px-4 py-12 md:grid-cols-3">
         <div>
           <Link to="/" className="flex items-center gap-2">
-          <KalifahLogo className="h-8 md:h-9" textClassName="text-xl md:text-2xl" />
+          <KalifahLogo className="h-8 md:h-9" />
           </Link>
           <p className="mt-3 text-sm text-muted-foreground">
             Portal pembelajaran online untuk Darjah 1–6. Belajar dengan ceria & berkat.
