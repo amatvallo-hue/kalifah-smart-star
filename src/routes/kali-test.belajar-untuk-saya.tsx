@@ -439,6 +439,36 @@ function KaliBelajarUntukSayaPage() {
                   />
                 )}
 
+                {(soalan.rangsangan_teks ||
+                  soalan.rangsangan_gambar_id ||
+                  soalan.rangsangan_svg_type) && (
+                  <div className="mb-4 rounded-2xl border-2 border-border bg-secondary/40 p-4">
+                    {soalan.rangsangan_svg_type && (
+                      <div className="mx-auto mb-3 flex justify-center">
+                        {renderSoalanSvg(soalan.rangsangan_svg_type, soalan.rangsangan_svg_params)}
+                      </div>
+                    )}
+                    {soalan.rangsangan_gambar_id && (
+                      <img
+                        src={
+                          supabase.storage
+                            .from("soalan-gambar-rajah")
+                            .getPublicUrl(`${soalan.rangsangan_gambar_id}.png`).data.publicUrl
+                        }
+                        alt="Rangsangan soalan"
+                        className="mx-auto mb-3 max-h-64 rounded-2xl object-contain"
+                        loading="lazy"
+                      />
+                    )}
+                    {soalan.rangsangan_teks && (
+                      <p className="whitespace-pre-line text-sm font-medium text-foreground">
+                        {soalan.rangsangan_teks}
+                      </p>
+                    )}
+                  </div>
+                )}
+
+
                 <h1 className="font-display text-2xl font-extrabold leading-snug text-foreground md:text-3xl">
                   {soalan.soalan}
                 </h1>
