@@ -4,7 +4,7 @@ import { User, Mail, Phone, Sparkles, CheckCircle2, Send, Copy, MessageCircle } 
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Field } from "./login";
-import kalifahLogo from "@/assets/kalifah-logo.svg";
+import { KalifahLogo } from "@/components/KalifahLogo";
 
 export const Route = createFileRoute("/ujian-percuma")({
   head: () => ({
@@ -124,7 +124,7 @@ function UjianPercumaPage() {
 
       <div className="relative mx-auto flex min-h-screen max-w-xl flex-col items-center justify-center px-4 py-10">
         <div className="mb-6 flex items-center gap-2">
-          <img src={kalifahLogo} alt="Kalifah.my" className="h-10 w-auto md:h-12" />
+          <KalifahLogo className="h-10 md:h-12" textClassName="text-2xl md:text-3xl" />
         </div>
 
         <div className="w-full rounded-3xl bg-card p-6 shadow-card md:p-8">

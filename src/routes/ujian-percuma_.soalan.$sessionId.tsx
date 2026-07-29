@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { ArrowRight, CheckCircle2, XCircle, Loader2, ArrowLeft, Sparkles, BookOpen } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { renderSoalanSvg } from "@/lib/render-soalan-svg";
-import kalifahLogo from "@/assets/kalifah-logo.svg";
+import { KalifahLogo } from "@/components/KalifahLogo";
 
 export const Route = createFileRoute("/ujian-percuma_/soalan/$sessionId")({
   head: () => ({
@@ -307,7 +307,7 @@ function SoalanPage() {
 
       <div className="relative mx-auto flex min-h-screen max-w-2xl flex-col px-4 py-6 md:py-10">
         <div className="mb-4 flex items-center gap-2">
-          <img src={kalifahLogo} alt="Kalifah.my" className="h-8 w-auto md:h-9" />
+          <KalifahLogo className="h-8 md:h-9" textClassName="text-xl md:text-2xl" />
         </div>
 
         {loading && (

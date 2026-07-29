@@ -13,7 +13,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useProfile } from "@/hooks/use-profile";
 import { CHILD_EMAIL_DOMAIN } from "@/lib/child-auth";
 import { supabase } from "@/integrations/supabase/client";
-import kalifahLogo from "@/assets/kalifah-logo.svg";
+import { KalifahLogo } from "@/components/KalifahLogo";
 
 
 export function SiteHeader({
@@ -114,7 +114,7 @@ export function SiteHeader({
     <header className="sticky top-0 z-40 w-full border-b border-border/60 bg-background/85 backdrop-blur">
       <div className="container mx-auto flex h-16 items-center justify-between gap-3 px-4">
         <Link to="/" className="flex items-center gap-2">
-          <img src={kalifahLogo} alt="Kalifah.my" className="h-8 w-auto md:h-9" />
+          <KalifahLogo className="h-8 md:h-9" textClassName="text-xl md:text-2xl" />
 
         </Link>
 

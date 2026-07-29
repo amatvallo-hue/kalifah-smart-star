@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Loader2, Trophy, Sparkles, ArrowRight, CheckCircle2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import kalifahLogo from "@/assets/kalifah-logo.svg";
+import { KalifahLogo } from "@/components/KalifahLogo";
 
 declare global {
   interface Window {
@@ -138,7 +138,7 @@ function KeputusanPage() {
 
       <div className="relative mx-auto flex min-h-screen max-w-2xl flex-col px-4 py-6 md:py-10">
         <Link to="/" className="mb-4 flex items-center gap-2">
-          <img src={kalifahLogo} alt="Kalifah.my" className="h-8 w-auto md:h-9" />
+          <KalifahLogo className="h-8 md:h-9" textClassName="text-xl md:text-2xl" />
         </Link>
 
         {loading && (
