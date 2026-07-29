@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { HARGA_ASAL, PAKEJ_LIST, DARJAH_LIST } from "@/lib/curriculum";
 import { supabase } from "@/integrations/supabase/client";
-import kalifahLogo from "@/assets/kalifah-logo.svg";
+import { KalifahLogo } from "@/components/KalifahLogo";
 
 export const Route = createFileRoute("/harga")({
   head: () => ({
@@ -128,7 +128,7 @@ function HargaPage() {
       <header className="border-b border-border/60 bg-background/85 backdrop-blur">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
           <Link to="/" className="flex items-center gap-2">
-          <img src={kalifahLogo} alt="Kalifah.my" className="h-8 w-auto md:h-9" />
+          <KalifahLogo className="h-8 md:h-9" textClassName="text-xl md:text-2xl" />
           </Link>
           <Link to="/" className="inline-flex items-center gap-2 text-sm font-bold text-muted-foreground hover:text-foreground">
             <ArrowLeft className="h-4 w-4" /> Kembali
