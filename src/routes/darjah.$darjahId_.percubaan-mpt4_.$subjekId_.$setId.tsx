@@ -610,7 +610,7 @@ function SoalanCard({
             style={{
               lineHeight: "28px",
               backgroundImage:
-                "repeating-linear-gradient(to bottom, transparent 0px, transparent 27px, hsl(var(--border)) 27px, hsl(var(--border)) 28px)",
+                "repeating-linear-gradient(to bottom, transparent 0px, transparent 27px, var(--border) 27px, var(--border) 28px)",
               backgroundAttachment: "local",
             }}
             className="w-full rounded-md border border-border/60 bg-card px-4 py-3 text-sm text-foreground focus:border-primary focus:outline-none"
@@ -627,7 +627,7 @@ function SoalanCard({
               style={{
                 lineHeight: "28px",
                 backgroundImage:
-                  "repeating-linear-gradient(to bottom, transparent 0px, transparent 27px, hsl(var(--border)) 27px, hsl(var(--border)) 28px)",
+                  "repeating-linear-gradient(to bottom, transparent 0px, transparent 27px, var(--border) 27px, var(--border) 28px)",
                 backgroundAttachment: "local",
               }}
               className="w-full rounded-md border border-border/60 bg-card px-4 py-3 text-sm text-foreground focus:border-primary focus:outline-none"
