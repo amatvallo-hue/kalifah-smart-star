@@ -84,6 +84,7 @@ function LandingHeader() {
           <div className="flex flex-col items-center">
             <Link
               to="/daftar"
+              search={{}}
               className="rounded-full px-5 py-2.5 font-display text-sm font-extrabold text-white shadow-soft"
               style={{ backgroundColor: HIJAU }}
             >
@@ -150,6 +151,7 @@ function Hero() {
           <div className="mt-7 flex w-full flex-col gap-3 sm:flex-row">
             <Link
               to="/daftar"
+              search={{}}
               className="flex w-full items-center justify-center gap-2 rounded-full px-6 py-3.5 font-display text-base font-extrabold text-white shadow-soft transition hover:-translate-y-0.5 sm:flex-1"
               style={{ backgroundColor: HIJAU }}
             >
@@ -589,6 +591,7 @@ function Harga() {
               <div className="mt-6 flex flex-col items-center">
                 <Link
                   to="/daftar"
+                  search={{}}
                   className="block w-full rounded-full px-5 py-3 text-center font-display text-sm font-extrabold shadow-soft transition hover:opacity-90"
                   style={{
                     backgroundColor: popular ? EMAS : HIJAU,
@@ -728,7 +731,7 @@ function Footer() {
             <li><a href="#harga" className="text-muted-foreground hover:text-foreground">Harga</a></li>
             <li><a href="#faq" className="text-muted-foreground hover:text-foreground">FAQ</a></li>
             <li><Link to="/login" className="text-muted-foreground hover:text-foreground">Log Masuk</Link></li>
-            <li><Link to="/daftar" className="text-muted-foreground hover:text-foreground">Daftar</Link></li>
+            <li><Link to="/daftar" search={{}} className="text-muted-foreground hover:text-foreground">Daftar</Link></li>
           </ul>
         </div>
         <div>

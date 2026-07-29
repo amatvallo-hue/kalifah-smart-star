@@ -97,7 +97,7 @@ function LoginPage() {
 
         <p className="text-center text-sm text-muted-foreground">
           Belum ada akaun?{" "}
-          <Link to="/daftar" className="font-extrabold text-primary hover:underline">
+          <Link to="/daftar" search={{}} className="font-extrabold text-primary hover:underline">
             Daftar di sini
           </Link>
         </p>
