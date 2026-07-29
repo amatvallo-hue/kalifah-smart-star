@@ -41,7 +41,7 @@ interface KaliCadangan {
 }
 
 interface Soalan {
-  id: number;
+  id: string;
   soalan: string;
   pilihan: string[];
   jawapan: number;
@@ -49,6 +49,10 @@ interface Soalan {
   gambar?: string | null;
   svg_type?: string | null;
   svg_params?: any;
+  rangsangan_teks?: string | null;
+  rangsangan_gambar_id?: string | null;
+  rangsangan_svg_type?: string | null;
+  rangsangan_svg_params?: any;
 }
 
 const TIER_BADGE: Record<string, { label: string; bg: string; fg: string }> = {
