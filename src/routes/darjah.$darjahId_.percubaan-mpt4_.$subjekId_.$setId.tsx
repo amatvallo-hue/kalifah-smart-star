@@ -563,7 +563,7 @@ function SoalanCard({
 
       <div className="mt-4">
         {isMcq && (
-          <div className="grid gap-2 sm:grid-cols-2">
+          <div className="flex flex-col gap-3 pl-1 sm:pl-4">
             {(["a", "b", "c", "d"] as const).map((k) => {
               const opt = soalan[`pilihan_${k}` as const];
               if (opt == null) return null;
@@ -574,18 +574,16 @@ function SoalanCard({
                   key={k}
                   type="button"
                   onClick={() => onChange(huruf)}
-                  className={`flex items-start gap-3 rounded-2xl border-2 p-3 text-left text-sm transition ${
-                    selected
-                      ? "border-primary bg-primary/10 text-foreground"
-                      : "border-border/60 bg-card hover:border-primary/40"
-                  }`}
+                  aria-pressed={selected}
+                  className="flex w-full items-start gap-3 py-1 text-left text-sm text-foreground transition hover:text-primary"
                 >
-                  <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full font-display text-sm font-extrabold ${
-                    selected ? "bg-primary text-primary-foreground" : "bg-secondary text-foreground"
-                  }`}>
-                    {huruf}
-                  </span>
-                  <span className="pt-1 whitespace-pre-wrap">{opt}</span>
+                  <span
+                    className={`mt-0.5 h-4 w-4 shrink-0 rounded-full border-2 transition ${
+                      selected ? "border-primary bg-primary" : "border-muted-foreground/50 bg-transparent"
+                    }`}
+                  />
+                  <span className="shrink-0 font-display font-extrabold">{huruf}</span>
+                  <span className="whitespace-pre-wrap">{opt}</span>
                 </button>
               );
             })}
@@ -599,7 +597,7 @@ function SoalanCard({
             onChange={(e) => onChange(e.target.value.slice(0, 5))}
             maxLength={5}
             placeholder={isEnglish ? "Answer" : "Jawapan"}
-            className="w-32 rounded-xl border-2 border-border/60 bg-card px-4 py-2.5 text-center font-display text-lg font-extrabold uppercase tracking-widest text-foreground focus:border-primary focus:outline-none"
+            className="w-32 border-0 border-b-2 border-border/60 bg-transparent px-2 py-2 text-center font-display text-lg font-extrabold uppercase tracking-widest text-foreground focus:border-primary focus:outline-none"
           />
         )}
 
@@ -609,7 +607,13 @@ function SoalanCard({
             onChange={(e) => onChange(e.target.value)}
             rows={3}
             placeholder={isEnglish ? "Write your answer..." : "Tulis jawapan anda..."}
-            className="w-full rounded-2xl border-2 border-border/60 bg-card px-4 py-3 text-sm leading-relaxed text-foreground focus:border-primary focus:outline-none"
+            style={{
+              lineHeight: "28px",
+              backgroundImage:
+                "repeating-linear-gradient(to bottom, transparent 0px, transparent 27px, hsl(var(--border)) 27px, hsl(var(--border)) 28px)",
+              backgroundAttachment: "local",
+            }}
+            className="w-full rounded-md border border-border/60 bg-card px-4 py-3 text-sm text-foreground focus:border-primary focus:outline-none"
           />
         )}
 
@@ -620,8 +624,15 @@ function SoalanCard({
               onChange={(e) => onChange(e.target.value)}
               rows={10}
               placeholder={isEnglish ? "Write your essay / long answer here..." : "Tulis karangan / jawapan panjang anda di sini..."}
-              className="w-full rounded-2xl border-2 border-border/60 bg-card px-4 py-3 text-sm leading-relaxed text-foreground focus:border-primary focus:outline-none"
+              style={{
+                lineHeight: "28px",
+                backgroundImage:
+                  "repeating-linear-gradient(to bottom, transparent 0px, transparent 27px, hsl(var(--border)) 27px, hsl(var(--border)) 28px)",
+                backgroundAttachment: "local",
+              }}
+              className="w-full rounded-md border border-border/60 bg-card px-4 py-3 text-sm text-foreground focus:border-primary focus:outline-none"
             />
+
             <div className="mt-1 text-right text-[11px] font-bold text-muted-foreground">
               {countWords(value)} {isEnglish ? "words" : "patah kata"}
             </div>
