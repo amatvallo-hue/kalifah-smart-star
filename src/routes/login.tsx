@@ -3,6 +3,7 @@ import { useState, type FormEvent } from "react";
 import { LogIn, Mail, Lock, Sparkles, User } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { CHILD_EMAIL_DOMAIN, normalizeUsername } from "@/lib/child-auth";
+import kalifahLogo from "@/assets/kalifah-logo.svg";
 
 export const Route = createFileRoute("/login")({
   head: () => ({
@@ -121,12 +122,7 @@ export function AuthShell({
 
       <div className="relative mx-auto flex min-h-screen max-w-md flex-col items-center justify-center px-4 py-10">
         <Link to="/" className="mb-6 flex items-center gap-2">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-primary text-primary-foreground shadow-soft">
-            <span className="font-display text-2xl font-extrabold">ك</span>
-          </div>
-          <span className="font-display text-3xl font-extrabold tracking-tight text-foreground">
-            Kalifah<span className="text-primary">.my</span>
-          </span>
+          <img src={kalifahLogo} alt="Kalifah.my" className="h-10 w-auto md:h-12" />
         </Link>
 
         <div className="w-full rounded-3xl bg-card p-7 shadow-card md:p-8">
