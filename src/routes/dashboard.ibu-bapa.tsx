@@ -18,6 +18,7 @@ import {
   KeyRound,
   Trophy,
   User,
+  Sparkles,
 } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -1057,6 +1058,11 @@ function ParentDashboard() {
                       </div>
                     </Seksyen>
 
+                    {/* KALI INSIGHT */}
+                    <Seksyen tajuk="KALI Insight" ikon={<Sparkles className="h-5 w-5" />}>
+                      <KaliInsightCard childUserId={anakAktif.child_user_id} namaAnak={anakAktif.nama} />
+                    </Seksyen>
+
                     {/* PERCUBAAN MPT4 — Darjah 4 sahaja */}
                     {Number(anakAktif.darjah) === 4 && (
                       <Seksyen tajuk="Percubaan MPT4 (Darjah 4)" ikon={<Target className="h-5 w-5" />}>
@@ -1677,6 +1683,87 @@ function FormTambahAnak({ onAdded }: { onAdded: () => void }) {
       {err && <p className="mt-2 text-xs text-destructive">{err}</p>}
       {ok && <p className="mt-2 rounded-xl bg-primary/10 p-2 text-xs font-bold text-primary">{ok}</p>}
     </form>
+  );
+}
+
+function KaliInsightCard({
+  childUserId,
+  namaAnak,
+}: {
+  childUserId: string;
+  namaAnak: string;
+}) {
+  const [insight, setInsight] = useState<{ micro_skill_nama: string; sebab: string } | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  useEffect(() => {
+    let mounted = true;
+
+    async function load() {
+      if (!mounted) return;
+      setLoading(true);
+      setError(false);
+      try {
+        const { data, error: rpcError } = await supabase.rpc("kali_next_best_question", {
+          p_student_id: childUserId,
+        });
+        if (rpcError) throw rpcError;
+        const row = (Array.isArray(data) ? data[0] : data) as
+          | { micro_skill_nama?: string; sebab?: string }
+          | undefined;
+        if (mounted) {
+          setInsight(row && row.micro_skill_nama ? (row as { micro_skill_nama: string; sebab: string }) : null);
+        }
+      } catch (e) {
+        console.error("[KaliInsightCard] RPC error:", e);
+        if (mounted) setError(true);
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    }
+
+    void load();
+    return () => {
+      mounted = false;
+    };
+  }, [childUserId]);
+
+  return (
+    <div
+      className="rounded-2xl p-5 shadow-card"
+      style={{
+        background: `linear-gradient(135deg, ${HIJAU}10 0%, #FFFDF5 60%, ${EMAS}12 100%)`,
+        border: `2px solid ${HIJAU}40`,
+      }}
+    >
+      <div className="flex items-center gap-3">
+        <div
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-lg text-white shadow-soft"
+          style={{ background: `linear-gradient(135deg, ${HIJAU}, #2AAE72)` }}
+        >
+          <Sparkles className="h-5 w-5" />
+        </div>
+        <p className="text-[11px] font-extrabold uppercase tracking-wide" style={{ color: HIJAU }}>
+          🧠 KALI sedang fokuskan...
+        </p>
+      </div>
+
+      {loading ? (
+        <p className="mt-3 text-sm text-muted-foreground">Memuatkan insight KALI...</p>
+      ) : error ? (
+        <p className="mt-3 text-sm text-muted-foreground">Insight KALI belum tersedia buat masa ini.</p>
+      ) : insight ? (
+        <>
+          <p className="mt-2 font-display text-xl font-extrabold text-foreground">{insight.micro_skill_nama}</p>
+          <p className="mt-1 text-sm text-muted-foreground">{insight.sebab}</p>
+        </>
+      ) : (
+        <p className="mt-3 text-sm text-muted-foreground">
+          KALI baru mula kenali {namaAnak} — teruskan guna Kuiz atau Latih Tubi untuk dapatkan insight yang lebih tepat!
+        </p>
+      )}
+    </div>
   );
 }
 
