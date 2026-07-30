@@ -1058,6 +1058,11 @@ function ParentDashboard() {
                       </div>
                     </Seksyen>
 
+                    {/* KALI INSIGHT */}
+                    <Seksyen tajuk="KALI Insight" ikon={<Sparkles className="h-5 w-5" />}>
+                      <KaliInsightCard childUserId={anakAktif.child_user_id} namaAnak={anakAktif.nama} />
+                    </Seksyen>
+
                     {/* PERCUBAAN MPT4 — Darjah 4 sahaja */}
                     {Number(anakAktif.darjah) === 4 && (
                       <Seksyen tajuk="Percubaan MPT4 (Darjah 4)" ikon={<Target className="h-5 w-5" />}>
