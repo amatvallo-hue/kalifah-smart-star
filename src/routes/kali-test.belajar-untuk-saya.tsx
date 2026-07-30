@@ -268,7 +268,7 @@ function KaliBelajarUntukSayaPage() {
       <SiteHeader stars={mata} onLogout={handleLogout} />
       <main className="container mx-auto max-w-3xl px-4 py-8">
         <Link
-          to="/"
+          to="/pilih-darjah"
           className="inline-flex items-center gap-2 text-sm font-bold transition hover:opacity-80"
           style={{ color: HIJAU }}
         >
@@ -329,7 +329,7 @@ function KaliBelajarUntukSayaPage() {
             </div>
             <div className="mt-6 flex justify-center">
               <Link
-                to="/"
+                to="/pilih-darjah"
                 className="rounded-full px-6 py-3 font-display font-extrabold text-white shadow-soft transition hover:opacity-90"
                 style={{ backgroundColor: HIJAU }}
               >
@@ -382,7 +382,7 @@ function KaliBelajarUntukSayaPage() {
                 </p>
                 <div className="mt-6 flex justify-center">
                   <Link
-                    to="/"
+                    to="/pilih-darjah"
                     className="rounded-full px-6 py-3 font-display font-extrabold text-white shadow-soft transition hover:opacity-90"
                     style={{ backgroundColor: HIJAU }}
                   >
