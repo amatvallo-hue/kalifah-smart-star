@@ -12,11 +12,10 @@ import { renderSoalanSvg } from "@/lib/render-soalan-svg";
 export const Route = createFileRoute("/kali-test/belajar-untuk-saya")({
   head: () => ({
     meta: [
-      { title: "KALI — Belajar Untuk Saya (Ujian) | Kalifah.my" },
-      { name: "robots", content: "noindex" },
+      { title: "KALI — Belajar Untuk Saya | Kalifah.my" },
       {
         name: "description",
-        content: "Halaman ujian dalaman untuk sistem cadangan soalan adaptif KALI.",
+        content: "Halaman rasmi untuk sistem cadangan soalan adaptif KALI.",
       },
     ],
   }),
@@ -55,12 +54,6 @@ interface Soalan {
   rangsangan_svg_params?: any;
 }
 
-const TIER_BADGE: Record<string, { label: string; bg: string; fg: string }> = {
-  RED: { label: "🔴 RED", bg: "#fee2e2", fg: "#991b1b" },
-  YELLOW: { label: "🟡 YELLOW", bg: "#fef3c7", fg: "#92400e" },
-  GREEN: { label: "🟢 GREEN", bg: "#dcfce7", fg: "#166534" },
-  BLUE: { label: "🔵 BLUE", bg: "#dbeafe", fg: "#1e40af" },
-};
 
 function letterToIdx(l: string): number {
   return ({ A: 0, B: 1, C: 2, D: 3 } as Record<string, number>)[String(l).toUpperCase()] ?? 0;
@@ -270,13 +263,6 @@ function KaliBelajarUntukSayaPage() {
     }, 1500);
   };
 
-  const tierInfo =
-    (cadangan && TIER_BADGE[String(cadangan.tier).toUpperCase()]) ?? {
-      label: cadangan?.tier ?? "—",
-      bg: "#e5e7eb",
-      fg: "#374151",
-    };
-
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader stars={mata} onLogout={handleLogout} />
@@ -302,9 +288,6 @@ function KaliBelajarUntukSayaPage() {
             style={{ backgroundColor: EMAS, color: "#1a1a1a" }}
           >
             Belajar Untuk Saya
-          </span>
-          <span className="rounded-full bg-secondary px-4 py-1.5 font-display text-xs font-extrabold text-foreground shadow-soft">
-            Mod Ujian
           </span>
         </div>
 
@@ -409,21 +392,9 @@ function KaliBelajarUntukSayaPage() {
               </div>
             ) : (
               <div className="mt-6 rounded-3xl bg-card p-6 shadow-card md:p-8">
-                {/* Debug badge (mod ujian sahaja) */}
-                <div className="mb-4 border-b border-dashed border-border pb-3">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span
-                      className="rounded-full px-3 py-1 text-xs font-extrabold"
-                      style={{ backgroundColor: tierInfo.bg, color: tierInfo.fg }}
-                    >
-                      {tierInfo.label}
-                    </span>
-                    <span className="rounded-full bg-secondary px-3 py-1 text-xs font-bold text-foreground">
-                      {cadangan.micro_skill_kod} · {cadangan.micro_skill_nama}
-                    </span>
-                  </div>
-                  <p className="mt-2 text-xs text-muted-foreground">{cadangan.sebab}</p>
-                </div>
+                <p className="mb-4 text-sm font-medium text-primary">
+                  ✨ KALI pilih soalan ni khas untuk kamu!
+                </p>
 
                 {soalan.svg_type && (
                   <div className="mx-auto mb-4 flex justify-center">
