@@ -12,11 +12,10 @@ import { renderSoalanSvg } from "@/lib/render-soalan-svg";
 export const Route = createFileRoute("/kali-test/belajar-untuk-saya")({
   head: () => ({
     meta: [
-      { title: "KALI — Belajar Untuk Saya (Ujian) | Kalifah.my" },
-      { name: "robots", content: "noindex" },
+      { title: "KALI — Belajar Untuk Saya | Kalifah.my" },
       {
         name: "description",
-        content: "Halaman ujian dalaman untuk sistem cadangan soalan adaptif KALI.",
+        content: "Halaman rasmi untuk sistem cadangan soalan adaptif KALI.",
       },
     ],
   }),
@@ -55,12 +54,6 @@ interface Soalan {
   rangsangan_svg_params?: any;
 }
 
-const TIER_BADGE: Record<string, { label: string; bg: string; fg: string }> = {
-  RED: { label: "🔴 RED", bg: "#fee2e2", fg: "#991b1b" },
-  YELLOW: { label: "🟡 YELLOW", bg: "#fef3c7", fg: "#92400e" },
-  GREEN: { label: "🟢 GREEN", bg: "#dcfce7", fg: "#166534" },
-  BLUE: { label: "🔵 BLUE", bg: "#dbeafe", fg: "#1e40af" },
-};
 
 function letterToIdx(l: string): number {
   return ({ A: 0, B: 1, C: 2, D: 3 } as Record<string, number>)[String(l).toUpperCase()] ?? 0;
