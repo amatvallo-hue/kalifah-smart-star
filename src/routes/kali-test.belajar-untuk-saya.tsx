@@ -263,13 +263,6 @@ function KaliBelajarUntukSayaPage() {
     }, 1500);
   };
 
-  const tierInfo =
-    (cadangan && TIER_BADGE[String(cadangan.tier).toUpperCase()]) ?? {
-      label: cadangan?.tier ?? "—",
-      bg: "#e5e7eb",
-      fg: "#374151",
-    };
-
   return (
     <div className="min-h-screen bg-background">
       <SiteHeader stars={mata} onLogout={handleLogout} />
@@ -295,9 +288,6 @@ function KaliBelajarUntukSayaPage() {
             style={{ backgroundColor: EMAS, color: "#1a1a1a" }}
           >
             Belajar Untuk Saya
-          </span>
-          <span className="rounded-full bg-secondary px-4 py-1.5 font-display text-xs font-extrabold text-foreground shadow-soft">
-            Mod Ujian
           </span>
         </div>
 
@@ -402,21 +392,9 @@ function KaliBelajarUntukSayaPage() {
               </div>
             ) : (
               <div className="mt-6 rounded-3xl bg-card p-6 shadow-card md:p-8">
-                {/* Debug badge (mod ujian sahaja) */}
-                <div className="mb-4 border-b border-dashed border-border pb-3">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span
-                      className="rounded-full px-3 py-1 text-xs font-extrabold"
-                      style={{ backgroundColor: tierInfo.bg, color: tierInfo.fg }}
-                    >
-                      {tierInfo.label}
-                    </span>
-                    <span className="rounded-full bg-secondary px-3 py-1 text-xs font-bold text-foreground">
-                      {cadangan.micro_skill_kod} · {cadangan.micro_skill_nama}
-                    </span>
-                  </div>
-                  <p className="mt-2 text-xs text-muted-foreground">{cadangan.sebab}</p>
-                </div>
+                <p className="mb-4 text-sm font-medium text-primary">
+                  ✨ KALI pilih soalan ni khas untuk kamu!
+                </p>
 
                 {soalan.svg_type && (
                   <div className="mx-auto mb-4 flex justify-center">
