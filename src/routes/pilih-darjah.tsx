@@ -567,7 +567,7 @@ function DarjahCard({
 
 function TambahAnakCTA() {
   return (
-    <Link to="/dashboard/ibu-bapa" search={{ tambahAnak: 1 }} className="group">
+    <Link to="/dashboard/ibu-bapa" search={{ tambahAnak: "1" }} className="group">
       <div className="relative flex h-full flex-col justify-between gap-4 overflow-hidden rounded-3xl bg-gradient-to-br from-primary to-primary-glow p-6 text-primary-foreground shadow-card transition group-hover:-translate-y-1 group-hover:shadow-soft">
         <div className="absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/15 blur-2xl" />
         <div className="absolute -left-6 bottom-0 h-20 w-20 rounded-full bg-white/10 blur-xl" />
