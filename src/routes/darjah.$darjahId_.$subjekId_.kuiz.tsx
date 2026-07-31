@@ -5,6 +5,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { StarReward } from "@/components/StarReward";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
+import { usePoints } from "@/hooks/use-points";
 import { getDarjah, getSubjek } from "@/lib/curriculum";
 import { downloadSijil } from "@/lib/sijil";
 import { getQuiz, getQuizSet2, type QuizQuestion } from "@/lib/quiz-bank";
