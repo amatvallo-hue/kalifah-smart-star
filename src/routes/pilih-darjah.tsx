@@ -346,6 +346,7 @@ function DarjahDashboard() {
           </div>
 
           <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {!isChild && darjahAkses.length === 0 && <TambahAnakCTA />}
             <PraKalifahCard />
             {DARJAH_LIST.map((d, i) => {
               const hasAccess = darjahAkses.includes(Number(d.id));
