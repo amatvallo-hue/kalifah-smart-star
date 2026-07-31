@@ -56,6 +56,8 @@ function DarjahDashboard() {
   const [darjahMurid, setDarjahMurid] = useState<string | null>(null);
   const [statsMap, setStatsMap] = useState<Record<number, DarjahStats>>({});
   const [minggu, setMinggu] = useState<MingguStats | null>(null);
+  const [pakejOpen, setPakejOpen] = useState(false);
+
 
   const subjekList = useMemo(() => subjekListUntukRole(profile?.role), [profile?.role]);
   const darjahAkses = useMemo(() => profile?.darjah_akses ?? [], [profile?.darjah_akses]);
