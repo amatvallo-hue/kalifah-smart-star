@@ -6,7 +6,7 @@ import { AuthShell, Field } from "./login";
 
 const STEPS = [
   { num: 1, label: "Daftar Akaun" },
-  { num: 2, label: "Pilih Darjah & Bayar" },
+  { num: 2, label: "Cuba Percuma Dulu" },
   { num: 3, label: "Cipta Akaun Anak" },
   { num: 4, label: "Mula Belajar" },
 ];
@@ -48,7 +48,7 @@ function StepProgress({ active }: { active: number }) {
         })}
       </div>
       <p className="mt-4 text-center text-xs font-medium text-muted-foreground">
-        Selepas daftar, anda akan memilih darjah dan membuat pembayaran.
+        Selepas daftar, anak boleh terus cuba percuma sebelum apa-apa bayaran.
       </p>
     </div>
   );

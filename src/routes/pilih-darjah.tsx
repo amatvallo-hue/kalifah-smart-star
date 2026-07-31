@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { Lock, Sparkles, Star, LogOut, ArrowRight, Trophy, BookOpen, FileText, Target, TrendingUp, CalendarDays } from "lucide-react";
+import { Lock, Sparkles, Star, LogOut, ArrowRight, Trophy, BookOpen, FileText, Target, TrendingUp, CalendarDays, UserPlus } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
@@ -346,6 +346,7 @@ function DarjahDashboard() {
           </div>
 
           <div className="mt-5 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {!isChild && darjahAkses.length === 0 && <TambahAnakCTA />}
             <PraKalifahCard />
             {DARJAH_LIST.map((d, i) => {
               const hasAccess = darjahAkses.includes(Number(d.id));
@@ -560,6 +561,35 @@ function DarjahCard({
   return (
     <Link to="/darjah/$darjahId" params={{ darjahId: darjah.id }} className="group">
       {inner}
+    </Link>
+  );
+}
+
+function TambahAnakCTA() {
+  return (
+    <Link to="/dashboard/ibu-bapa" search={{ tambahAnak: 1 }} className="group">
+      <div className="relative flex h-full flex-col justify-between gap-4 overflow-hidden rounded-3xl bg-gradient-to-br from-primary to-primary-glow p-6 text-primary-foreground shadow-card transition group-hover:-translate-y-1 group-hover:shadow-soft">
+        <div className="absolute -right-6 -top-6 h-28 w-28 rounded-full bg-white/15 blur-2xl" />
+        <div className="absolute -left-6 bottom-0 h-20 w-20 rounded-full bg-white/10 blur-xl" />
+
+        <div className="relative inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-white/20 shadow-soft">
+          <UserPlus className="h-7 w-7 text-white" />
+        </div>
+
+        <div className="relative">
+          <h3 className="font-display text-xl font-extrabold leading-tight text-white">
+            Tambah Akaun Anak — Percuma
+          </h3>
+          <p className="mt-1.5 text-sm font-medium text-white/90">
+            Anak boleh terus cuba nota & latihan asas percuma selepas akaun anak ditambah. Tiada kad kredit diperlukan.
+          </p>
+        </div>
+
+        <span className="relative inline-flex w-full items-center justify-center gap-2 rounded-full bg-white px-5 py-2.5 font-display text-sm font-extrabold text-primary shadow-soft transition group-hover:translate-x-0.5">
+          Tambah Anak Sekarang
+          <ArrowRight className="h-4 w-4" />
+        </span>
+      </div>
     </Link>
   );
 }
