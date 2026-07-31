@@ -247,13 +247,16 @@ function DarjahDashboard() {
                   <ArrowRight className="h-4 w-4" />
                 </Link>
               )}
-              <Link
-                to="/harga"
+              <button
+                type="button"
+                onClick={() => setPakejOpen(true)}
                 className="inline-flex items-center gap-1.5 rounded-full bg-card/80 px-3 py-1.5 font-display text-xs font-bold text-foreground/80 shadow-soft transition hover:text-primary"
               >
                 <Star className="h-3.5 w-3.5" />
                 Pakej
-              </Link>
+              </button>
+              {pakejOpen && <PakejModal onClose={() => setPakejOpen(false)} />}
+
               <button
                 onClick={handleLogout}
                 className="inline-flex items-center gap-1.5 rounded-full bg-card/80 px-3 py-1.5 font-display text-xs font-bold text-muted-foreground shadow-soft transition hover:text-destructive"
