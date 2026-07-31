@@ -581,7 +581,7 @@ function TambahAnakCTA() {
             Tambah Akaun Anak — Percuma
           </h3>
           <p className="mt-1.5 text-sm font-medium text-white/90">
-            Anak boleh terus cuba nota & latihan asas percuma selepas akaun anak ditambah. Tiada kad kredit diperlukan.
+            Untuk Darjah 4, anak boleh terus cuba Set Percubaan MPT4 secara percuma selepas akaun anak ditambah — tiada kad kredit diperlukan.
           </p>
         </div>
 
