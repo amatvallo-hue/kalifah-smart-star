@@ -1050,7 +1050,7 @@ function ParentDashboard() {
                     </Seksyen>
 
                     {/* KALI INSIGHT */}
-                    <Seksyen tajuk="KALI Insight" ikon={<Sparkles className="h-5 w-5" />}>
+                    <Seksyen tajuk="Cadangan KALI Hari Ini" ikon={<Sparkles className="h-5 w-5" />}>
                       <KaliInsightCard childUserId={anakAktif.child_user_id} namaAnak={anakAktif.nama} />
                     </Seksyen>
 
@@ -1684,7 +1684,12 @@ function KaliInsightCard({
   childUserId: string;
   namaAnak: string;
 }) {
-  const [insight, setInsight] = useState<{ micro_skill_nama: string; sebab: string } | null>(null);
+  const [insight, setInsight] = useState<{
+    micro_skill_nama: string;
+    sebab: string;
+    tindakan: string;
+    confidence_level: string | null;
+  } | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
@@ -1701,10 +1706,19 @@ function KaliInsightCard({
         });
         if (rpcError) throw rpcError;
         const row = (Array.isArray(data) ? data[0] : data) as
-          | { micro_skill_nama?: string; sebab?: string }
+          | { micro_skill_nama?: string; sebab?: string; tindakan?: string; confidence_level?: string | null }
           | undefined;
         if (mounted) {
-          setInsight(row && row.micro_skill_nama ? (row as { micro_skill_nama: string; sebab: string }) : null);
+          setInsight(
+            row && row.micro_skill_nama
+              ? {
+                  micro_skill_nama: row.micro_skill_nama,
+                  sebab: row.sebab ?? "",
+                  tindakan: row.tindakan ?? "",
+                  confidence_level: row.confidence_level ?? null,
+                }
+              : null,
+          );
         }
       } catch (e) {
         console.error("[KaliInsightCard] RPC error:", e);
@@ -1720,6 +1734,13 @@ function KaliInsightCard({
     };
   }, [childUserId]);
 
+  const badge =
+    insight?.confidence_level === "HIGH"
+      ? { teks: "🟢 Keyakinan Tinggi", bg: "#1B8A5A15", fg: "#1B8A5A" }
+      : insight?.confidence_level === "MEDIUM"
+        ? { teks: "🟡 Sedang Dipelajari", bg: "#F5A62320", fg: "#B87500" }
+        : { teks: "🔵 Data Masih Terhad", bg: "#3B82F615", fg: "#2563EB" };
+
   return (
     <div
       className="rounded-2xl p-5 shadow-card"
@@ -1728,30 +1749,55 @@ function KaliInsightCard({
         border: `2px solid ${HIJAU}40`,
       }}
     >
-      <div className="flex items-center gap-3">
+      <div className="flex items-center justify-between gap-3">
         <div
           className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-lg text-white shadow-soft"
           style={{ background: `linear-gradient(135deg, ${HIJAU}, #2AAE72)` }}
         >
           <Sparkles className="h-5 w-5" />
         </div>
-        <p className="text-[11px] font-extrabold uppercase tracking-wide" style={{ color: HIJAU }}>
-          🧠 KALI sedang fokuskan...
-        </p>
+        {!loading && !error && insight && (
+          <span
+            className="rounded-full px-2.5 py-1 text-[11px] font-bold"
+            style={{ backgroundColor: badge.bg, color: badge.fg }}
+          >
+            {badge.teks}
+          </span>
+        )}
       </div>
 
       {loading ? (
         <p className="mt-3 text-sm text-muted-foreground">Memuatkan insight KALI...</p>
       ) : error ? (
-        <p className="mt-3 text-sm text-muted-foreground">Insight KALI belum tersedia buat masa ini.</p>
+        <p className="mt-3 text-sm text-muted-foreground">
+          Cadangan KALI belum dapat dijana buat masa ini — cuba semak semula sebentar lagi.
+        </p>
       ) : insight ? (
         <>
+          <p className="mt-3 text-[10px] font-extrabold uppercase tracking-wide text-muted-foreground">Fokus</p>
           <p className="mt-2 font-display text-xl font-extrabold text-foreground">{insight.micro_skill_nama}</p>
+
+          <hr className="my-3 border-t" style={{ borderColor: `${HIJAU}20` }} />
+
+          <p className="text-[10px] font-extrabold uppercase tracking-wide text-muted-foreground">Kenapa</p>
           <p className="mt-1 text-sm text-muted-foreground">{insight.sebab}</p>
+
+          <hr className="my-3 border-t" style={{ borderColor: `${HIJAU}20` }} />
+
+          <p className="text-[10px] font-extrabold uppercase tracking-wide text-muted-foreground">
+            Apa KALI akan buat
+          </p>
+          <p className="mt-1 text-sm text-muted-foreground">{insight.tindakan}</p>
+
+          <p className="mt-3 text-[11px] italic text-muted-foreground/70">
+            Cadangan ini dijana berdasarkan jawapan sebenar {namaAnak} dan dikemas kini secara automatik setiap kali dia
+            buat latihan.
+          </p>
         </>
       ) : (
         <p className="mt-3 text-sm text-muted-foreground">
-          KALI baru mula kenali {namaAnak} — teruskan guna Kuiz atau Latih Tubi untuk dapatkan insight yang lebih tepat!
+          KALI sedang mula mengenali corak pembelajaran {namaAnak} — teruskan guna Kuiz atau Latih Tubi supaya cadangan
+          akan jadi lebih tepat!
         </p>
       )}
     </div>
