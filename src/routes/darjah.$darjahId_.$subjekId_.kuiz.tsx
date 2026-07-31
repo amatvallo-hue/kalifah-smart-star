@@ -405,7 +405,7 @@ function KuizPage() {
   if (!soalanList || soalanList.length === 0) {
     return (
       <div className="min-h-screen bg-background">
-        <SiteHeader stars={42} onLogout={handleLogout} />
+        <SiteHeader stars={mata} onLogout={handleLogout} />
         <main className="container mx-auto max-w-2xl px-4 py-12 text-center">
           <Link
             to="/darjah/$darjahId/$subjekId"
