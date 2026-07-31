@@ -209,6 +209,7 @@ function KuizPage() {
   const { darjahId, subjekId } = useParams({ from: "/darjah/$darjahId_/$subjekId_/kuiz" });
   const { user, loading } = useAuth();
   const award = useAward();
+  const mata = usePoints();
   const darjah = getDarjah(darjahId) ?? { id: darjahId, label: `Darjah ${darjahId}`, locked: false };
   const subjek = getSubjek(subjekId) ?? { id: subjekId, title: subjekId.charAt(0).toUpperCase() + subjekId.slice(1) };
   const isEnglish = subjekId === "bahasa-inggeris";
