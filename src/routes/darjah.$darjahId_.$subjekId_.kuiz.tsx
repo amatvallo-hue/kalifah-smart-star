@@ -350,7 +350,7 @@ function KuizPage() {
   if (isBMTopik || isMatematikTopik || isSainsTopik || isPITopik || isBITopik) {
     return (
       <div className="min-h-screen bg-background">
-        <SiteHeader stars={42} onLogout={handleLogout} />
+        <SiteHeader stars={mata} onLogout={handleLogout} />
         <KuizBMTopik
           darjahId={darjahId}
           darjahLabel={darjah.label}
