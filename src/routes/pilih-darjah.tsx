@@ -1,12 +1,12 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { Lock, Sparkles, Star, LogOut, ArrowRight, Trophy, BookOpen, FileText, Target, TrendingUp, CalendarDays, UserPlus } from "lucide-react";
+import { Lock, Sparkles, Star, LogOut, ArrowRight, Trophy, BookOpen, FileText, Target, TrendingUp, CalendarDays, UserPlus, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { usePoints } from "@/hooks/use-points";
 import { useProfile } from "@/hooks/use-profile";
-import { DARJAH_LIST, subjekListUntukRole, type Darjah } from "@/lib/curriculum";
+import { DARJAH_LIST, subjekListUntukRole, type Darjah, PAKEJ_LIST } from "@/lib/curriculum";
 import { CHILD_EMAIL_DOMAIN } from "@/lib/child-auth";
 
 export const Route = createFileRoute("/pilih-darjah")({
