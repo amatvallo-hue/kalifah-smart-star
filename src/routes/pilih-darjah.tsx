@@ -1,12 +1,12 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { Lock, Sparkles, Star, LogOut, ArrowRight, Trophy, BookOpen, FileText, Target, TrendingUp, CalendarDays, UserPlus } from "lucide-react";
+import { Lock, Sparkles, Star, LogOut, ArrowRight, Trophy, BookOpen, FileText, Target, TrendingUp, CalendarDays, UserPlus, X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { usePoints } from "@/hooks/use-points";
 import { useProfile } from "@/hooks/use-profile";
-import { DARJAH_LIST, subjekListUntukRole, type Darjah } from "@/lib/curriculum";
+import { DARJAH_LIST, subjekListUntukRole, type Darjah, PAKEJ_LIST } from "@/lib/curriculum";
 import { CHILD_EMAIL_DOMAIN } from "@/lib/child-auth";
 
 export const Route = createFileRoute("/pilih-darjah")({
@@ -47,6 +47,60 @@ function toKLDate(isoStr: string): string {
 }
 
 
+function PakejModal({ onClose }: { onClose: () => void }) {
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/50 p-4"
+      onClick={onClose}
+    >
+      <div
+        className="max-h-[85vh] w-full max-w-md overflow-y-auto rounded-3xl bg-card p-6 shadow-card"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-start justify-between gap-3">
+          <h2 className="font-display text-xl font-extrabold text-foreground">Pakej Langganan</h2>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Tutup"
+            className="rounded-full p-1.5 text-muted-foreground transition hover:bg-muted hover:text-foreground"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+
+        <div className="mt-4 space-y-3">
+          {PAKEJ_LIST.map((p) => (
+            <div
+              key={p.id}
+              className={`rounded-2xl border p-4 ${p.popular ? "border-primary bg-primary/5" : "border-border/60 bg-background"}`}
+            >
+              <div className="flex items-baseline justify-between gap-2">
+                <span className="font-display text-base font-extrabold text-foreground">{p.nama}</span>
+                <span className="font-display text-lg font-extrabold text-primary">
+                  RM{p.jumlahBayar}
+                  <span className="text-xs font-bold text-muted-foreground">
+                    {p.id === "perDarjah" ? "/darjah/tahun" : "/tahun"}
+                  </span>
+                </span>
+              </div>
+              <p className="mt-1 text-sm text-muted-foreground">{p.deskripsi}</p>
+            </div>
+          ))}
+        </div>
+
+        <Link
+          to="/harga"
+          className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-primary px-6 py-3 font-display text-sm font-extrabold text-primary-foreground shadow-soft"
+        >
+          Lihat Penuh &amp; Langgan
+        </Link>
+      </div>
+    </div>
+  );
+}
+
+
 function DarjahDashboard() {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
@@ -56,6 +110,8 @@ function DarjahDashboard() {
   const [darjahMurid, setDarjahMurid] = useState<string | null>(null);
   const [statsMap, setStatsMap] = useState<Record<number, DarjahStats>>({});
   const [minggu, setMinggu] = useState<MingguStats | null>(null);
+  const [pakejOpen, setPakejOpen] = useState(false);
+
 
   const subjekList = useMemo(() => subjekListUntukRole(profile?.role), [profile?.role]);
   const darjahAkses = useMemo(() => profile?.darjah_akses ?? [], [profile?.darjah_akses]);
@@ -247,13 +303,16 @@ function DarjahDashboard() {
                   <ArrowRight className="h-4 w-4" />
                 </Link>
               )}
-              <Link
-                to="/harga"
+              <button
+                type="button"
+                onClick={() => setPakejOpen(true)}
                 className="inline-flex items-center gap-1.5 rounded-full bg-card/80 px-3 py-1.5 font-display text-xs font-bold text-foreground/80 shadow-soft transition hover:text-primary"
               >
                 <Star className="h-3.5 w-3.5" />
                 Pakej
-              </Link>
+              </button>
+              {pakejOpen && <PakejModal onClose={() => setPakejOpen(false)} />}
+
               <button
                 onClick={handleLogout}
                 className="inline-flex items-center gap-1.5 rounded-full bg-card/80 px-3 py-1.5 font-display text-xs font-bold text-muted-foreground shadow-soft transition hover:text-destructive"
