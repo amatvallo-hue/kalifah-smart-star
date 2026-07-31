@@ -1015,28 +1015,19 @@ function ParentDashboard() {
                     {/* ALERT: Anak tidak aktif */}
                     {hariSejakAktif > 3 && (
                       <div
-                        className="mt-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl p-4 shadow-soft"
+                        className="mt-6 flex items-center gap-3 rounded-2xl p-4 shadow-soft"
                         style={{ background: "#FFF4E5", border: "2px solid #FDBA74" }}
                       >
-                        <div className="flex items-start gap-3">
-                          <span className="text-2xl">⚠️</span>
-                          <div>
-                            <p className="font-display text-sm font-extrabold" style={{ color: "#9A3412" }}>
-                              {anakAktif.nama} belum log masuk{" "}
-                              {Number.isFinite(hariSejakAktif) ? `sejak ${hariSejakAktif} hari lalu` : "buat masa ini"}
-                            </p>
-                            <p className="mt-0.5 text-xs" style={{ color: "#9A3412" }}>
-                              Beri sedikit galakan supaya anak teruskan pembelajaran.
-                            </p>
-                          </div>
+                        <span className="text-2xl">⚠️</span>
+                        <div className="flex-1">
+                          <p className="font-display text-sm font-extrabold" style={{ color: "#9A3412" }}>
+                            {anakAktif.nama} belum log masuk{" "}
+                            {Number.isFinite(hariSejakAktif) ? `sejak ${hariSejakAktif} hari lalu` : "buat masa ini"}
+                          </p>
+                          <p className="mt-0.5 text-xs" style={{ color: "#9A3412" }}>
+                            Beri sedikit galakan supaya anak teruskan pembelajaran.
+                          </p>
                         </div>
-                        <button
-                          onClick={() => toast.success("Peringatan dihantar kepada anak.")}
-                          className="inline-flex items-center gap-1.5 rounded-full px-4 py-2 font-display text-xs font-extrabold text-white shadow-soft"
-                          style={{ background: STAT_OREN }}
-                        >
-                          Hantar Peringatan
-                        </button>
                       </div>
                     )}
 
