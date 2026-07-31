@@ -5,6 +5,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { StarReward } from "@/components/StarReward";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
+import { usePoints } from "@/hooks/use-points";
 import { getDarjah, getSubjek } from "@/lib/curriculum";
 import { downloadSijil } from "@/lib/sijil";
 import { getQuiz, getQuizSet2, type QuizQuestion } from "@/lib/quiz-bank";
@@ -208,6 +209,7 @@ function KuizPage() {
   const { darjahId, subjekId } = useParams({ from: "/darjah/$darjahId_/$subjekId_/kuiz" });
   const { user, loading } = useAuth();
   const award = useAward();
+  const mata = usePoints();
   const darjah = getDarjah(darjahId) ?? { id: darjahId, label: `Darjah ${darjahId}`, locked: false };
   const subjek = getSubjek(subjekId) ?? { id: subjekId, title: subjekId.charAt(0).toUpperCase() + subjekId.slice(1) };
   const isEnglish = subjekId === "bahasa-inggeris";
@@ -348,7 +350,7 @@ function KuizPage() {
   if (isBMTopik || isMatematikTopik || isSainsTopik || isPITopik || isBITopik) {
     return (
       <div className="min-h-screen bg-background">
-        <SiteHeader stars={42} onLogout={handleLogout} />
+        <SiteHeader stars={mata} onLogout={handleLogout} />
         <KuizBMTopik
           darjahId={darjahId}
           darjahLabel={darjah.label}
@@ -364,7 +366,7 @@ function KuizPage() {
   if (showPicker && selectedSet === null) {
     return (
       <div className="min-h-screen bg-background">
-        <SiteHeader stars={42} onLogout={handleLogout} />
+        <SiteHeader stars={mata} onLogout={handleLogout} />
         <main className="container mx-auto max-w-2xl px-4 py-12">
           <Link
             to="/darjah/$darjahId/$subjekId"
@@ -403,7 +405,7 @@ function KuizPage() {
   if (!soalanList || soalanList.length === 0) {
     return (
       <div className="min-h-screen bg-background">
-        <SiteHeader stars={42} onLogout={handleLogout} />
+        <SiteHeader stars={mata} onLogout={handleLogout} />
         <main className="container mx-auto max-w-2xl px-4 py-12 text-center">
           <Link
             to="/darjah/$darjahId/$subjekId"
@@ -469,7 +471,7 @@ function KuizPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <SiteHeader stars={42} onLogout={handleLogout} />
+      <SiteHeader stars={mata} onLogout={handleLogout} />
       <main className="container mx-auto max-w-3xl px-4 py-8">
         <Link
           to="/darjah/$darjahId/$subjekId"
