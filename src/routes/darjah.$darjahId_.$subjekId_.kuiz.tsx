@@ -471,7 +471,7 @@ function KuizPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <SiteHeader stars={42} onLogout={handleLogout} />
+      <SiteHeader stars={mata} onLogout={handleLogout} />
       <main className="container mx-auto max-w-3xl px-4 py-8">
         <Link
           to="/darjah/$darjahId/$subjekId"
