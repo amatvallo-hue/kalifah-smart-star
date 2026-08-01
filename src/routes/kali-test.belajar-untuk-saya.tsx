@@ -484,7 +484,20 @@ function KaliBelajarUntukSayaPage() {
                 </div>
               </div>
             ) : (
+              <>
+              {skillUpdateMsg && (
+                <div
+                  className="mt-6 rounded-2xl p-4"
+                  style={{ backgroundColor: `${EMAS}15`, border: `2px solid ${EMAS}` }}
+                >
+                  <p className="font-display text-sm font-extrabold" style={{ color: EMAS }}>
+                    🧠 KALI Update
+                  </p>
+                  <p className="mt-1 text-sm text-muted-foreground">{skillUpdateMsg}</p>
+                </div>
+              )}
               <div className="mt-6 rounded-3xl bg-card p-6 shadow-card md:p-8">
+
                 {soalan.svg_type && (
                   <div className="mx-auto mb-4 flex justify-center">
                     {renderSoalanSvg(soalan.svg_type, soalan.svg_params)}
