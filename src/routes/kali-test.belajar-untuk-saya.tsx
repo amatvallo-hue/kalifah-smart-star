@@ -85,9 +85,33 @@ function KaliBelajarUntukSayaPage() {
   const [mulaSoalan, setMulaSoalan] = useState(() => Date.now());
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  const [showWelcome, setShowWelcome] = useState(false);
+  const [welcomeChecked, setWelcomeChecked] = useState(false);
+  const prevSkillRef = useRef<{ id: string; nama: string } | null>(null);
+  const [skillUpdateMsg, setSkillUpdateMsg] = useState<string | null>(null);
+  const [riwayatSkill, setRiwayatSkill] = useState<
+    { micro_skill_id: string; micro_skill_nama: string; betul: boolean }[]
+  >([]);
+
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
   }, [loading, user, navigate]);
+
+  useEffect(() => {
+    if (!user) return;
+    let seen: string | null = null;
+    try {
+      seen = localStorage.getItem("kali_welcome_seen_" + user.id);
+    } catch {
+      seen = "1";
+    }
+    if (!seen) {
+      setShowWelcome(true);
+      setFetching(false);
+    }
+    setWelcomeChecked(true);
+  }, [user]);
+
 
   const muatSoalanSeterusnya = useCallback(async () => {
     if (!user) return;
@@ -159,6 +183,18 @@ function KaliBelajarUntukSayaPage() {
       }
 
       setCadangan(row);
+      const prevSkill = prevSkillRef.current;
+      if (prevSkill && prevSkill.id !== row.micro_skill_id) {
+        setSkillUpdateMsg(
+          row.tier === "RED"
+            ? `Nampaknya ${prevSkill.nama} masih agak mencabar. Mari kita cuba beberapa soalan lagi dengan cara yang berbeza.`
+            : `Anda sudah menunjukkan peningkatan dalam ${prevSkill.nama}. Sekarang mari kita fokus kepada ${row.micro_skill_nama}.`
+        );
+      } else {
+        setSkillUpdateMsg(null);
+      }
+      prevSkillRef.current = { id: row.micro_skill_id, nama: row.micro_skill_nama };
+
       setSoalan({
         id: String((q as any).id),
         soalan: (q as any).soalan,
@@ -194,8 +230,9 @@ function KaliBelajarUntukSayaPage() {
   }, [user]);
 
   useEffect(() => {
-    if (user) void muatSoalanSeterusnya();
-  }, [user, muatSoalanSeterusnya]);
+    if (user && welcomeChecked && !showWelcome) void muatSoalanSeterusnya();
+  }, [user, welcomeChecked, showWelcome, muatSoalanSeterusnya]);
+
 
   useEffect(() => {
     return () => {
@@ -237,6 +274,17 @@ function KaliBelajarUntukSayaPage() {
       masaSoalanSaat,
     });
 
+    setRiwayatSkill((prev) => [
+      ...prev,
+      {
+        micro_skill_id: cadangan.micro_skill_id,
+        micro_skill_nama: cadangan.micro_skill_nama,
+        betul: isBetul,
+      },
+    ]);
+
+
+
     if (isBetul) {
       setBetul((b) => b + 1);
       setMataSesi((m) => m + 1);
@@ -263,7 +311,17 @@ function KaliBelajarUntukSayaPage() {
     }, 1500);
   };
 
+  const skillMap = new Map<string, { nama: string; semuaBetul: boolean }>();
+  for (const r of riwayatSkill) {
+    const sedia = skillMap.get(r.micro_skill_id);
+    if (sedia) sedia.semuaBetul = sedia.semuaBetul && r.betul;
+    else skillMap.set(r.micro_skill_id, { nama: r.micro_skill_nama, semuaBetul: r.betul });
+  }
+  const menguasai = [...skillMap.values()].filter((s) => s.semuaBetul).map((s) => s.nama);
+  const diperkukuh = [...skillMap.values()].filter((s) => !s.semuaBetul).map((s) => s.nama);
+
   return (
+
     <div className="min-h-screen bg-background">
       <SiteHeader stars={mata} onLogout={handleLogout} />
       <main className="container mx-auto max-w-3xl px-4 py-8">
@@ -330,7 +388,38 @@ function KaliBelajarUntukSayaPage() {
                 </p>
               </div>
             </div>
+
+            {(menguasai.length > 0 || diperkukuh.length > 0) && (
+              <div className="mt-6 space-y-4 text-center">
+                {menguasai.length > 0 && (
+                  <div>
+                    <p className="font-display text-sm font-extrabold" style={{ color: HIJAU }}>
+                      ✅ Menguasai
+                    </p>
+                    <p className="mt-1 text-sm text-muted-foreground">{menguasai.join(", ")}</p>
+                  </div>
+                )}
+                {diperkukuh.length > 0 && (
+                  <div>
+                    <p className="font-display text-sm font-extrabold" style={{ color: EMAS }}>
+                      🎯 Sedang Diperkukuh
+                    </p>
+                    <p className="mt-1 text-sm text-muted-foreground">{diperkukuh.join(", ")}</p>
+                  </div>
+                )}
+                <div>
+                  <p className="font-display text-sm font-extrabold text-foreground">➡️ Cadangan KALI</p>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    {diperkukuh.length > 0
+                      ? `Teruskan satu lagi sesi esok untuk meningkatkan penguasaan ${diperkukuh[0]}.`
+                      : "Hebat! Teruskan sesi esok untuk kekalkan penguasaan anda."}
+                  </p>
+                </div>
+              </div>
+            )}
+
             <div className="mt-6 flex justify-center">
+
               <Link
                 to="/pilih-darjah"
                 className="rounded-full px-6 py-3 font-display font-extrabold text-white shadow-soft transition hover:opacity-90"
@@ -371,7 +460,38 @@ function KaliBelajarUntukSayaPage() {
               </div>
             </div>
 
-            {errMsg ? (
+            {showWelcome ? (
+              <div className="mt-6 rounded-3xl bg-card p-8 text-center shadow-card">
+                <h1 className="font-display text-2xl font-extrabold" style={{ color: HIJAU }}>
+                  👋 Selamat datang ke Belajar Bersama KALI.
+                </h1>
+                <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-muted-foreground">
+                  Di sini, KALI akan menjadi pembimbing pembelajaran anda. KALI akan melihat kemahiran
+                  yang telah anda kuasai, mengenal pasti bahagian yang masih perlu dipertingkatkan, dan
+                  memilih soalan yang paling sesuai untuk membantu anda belajar dengan lebih berkesan.
+                </p>
+                <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">
+                  Anda hanya perlu fokus menjawab. Biar KALI merancang perjalanan pembelajaran anda.
+                </p>
+                <div className="mt-6 flex justify-center">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      try {
+                        localStorage.setItem("kali_welcome_seen_" + user.id, "1");
+                      } catch {
+                        /* abaikan */
+                      }
+                      setShowWelcome(false);
+                    }}
+                    className="rounded-full px-6 py-3 font-display font-extrabold text-white shadow-soft transition hover:opacity-90"
+                    style={{ backgroundColor: HIJAU }}
+                  >
+                    Mula Belajar
+                  </button>
+                </div>
+              </div>
+            ) : errMsg ? (
               <div className="mt-6 rounded-3xl border-2 border-destructive/40 bg-destructive/10 p-6 text-center">
                 <p className="font-display text-lg font-extrabold text-destructive">Ralat</p>
                 <p className="mt-1 text-sm text-muted-foreground">{errMsg}</p>
@@ -379,6 +499,7 @@ function KaliBelajarUntukSayaPage() {
             ) : fetching ? (
               <p className="mt-10 text-center text-muted-foreground">Memuatkan soalan...</p>
             ) : habisCadangan || !soalan || !cadangan ? (
+
               <div className="mt-6 rounded-3xl bg-card p-8 text-center shadow-card">
                 <p className="font-display text-xl font-extrabold" style={{ color: HIJAU }}>
                   Tiada cadangan buat masa ini — cuba lagi kemudian!
@@ -394,7 +515,20 @@ function KaliBelajarUntukSayaPage() {
                 </div>
               </div>
             ) : (
+              <>
+              {skillUpdateMsg && (
+                <div
+                  className="mt-6 rounded-2xl p-4"
+                  style={{ backgroundColor: `${EMAS}15`, border: `2px solid ${EMAS}` }}
+                >
+                  <p className="font-display text-sm font-extrabold" style={{ color: EMAS }}>
+                    🧠 KALI Update
+                  </p>
+                  <p className="mt-1 text-sm text-muted-foreground">{skillUpdateMsg}</p>
+                </div>
+              )}
               <div className="mt-6 rounded-3xl bg-card p-6 shadow-card md:p-8">
+
                 {soalan.svg_type && (
                   <div className="mx-auto mb-4 flex justify-center">
                     {renderSoalanSvg(soalan.svg_type, soalan.svg_params)}
@@ -506,6 +640,8 @@ function KaliBelajarUntukSayaPage() {
                   </div>
                 )}
               </div>
+              </>
+
             )}
           </>
         )}
