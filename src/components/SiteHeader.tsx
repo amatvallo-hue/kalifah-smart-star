@@ -74,7 +74,7 @@ export function SiteHeader({
           activeProps={{ className: "bg-secondary text-primary" }}
           onClick={() => setOpen(false)}
         >
-          🧠 Belajar Untuk Saya
+          🧠 Belajar Bersama KALI
         </Link>
       )}
       {userName && !isChild && (
