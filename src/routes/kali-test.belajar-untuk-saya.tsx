@@ -85,9 +85,33 @@ function KaliBelajarUntukSayaPage() {
   const [mulaSoalan, setMulaSoalan] = useState(() => Date.now());
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  const [showWelcome, setShowWelcome] = useState(false);
+  const [welcomeChecked, setWelcomeChecked] = useState(false);
+  const prevSkillRef = useRef<{ id: string; nama: string } | null>(null);
+  const [skillUpdateMsg, setSkillUpdateMsg] = useState<string | null>(null);
+  const [riwayatSkill, setRiwayatSkill] = useState<
+    { micro_skill_id: string; micro_skill_nama: string; betul: boolean }[]
+  >([]);
+
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
   }, [loading, user, navigate]);
+
+  useEffect(() => {
+    if (!user) return;
+    let seen: string | null = null;
+    try {
+      seen = localStorage.getItem("kali_welcome_seen_" + user.id);
+    } catch {
+      seen = "1";
+    }
+    if (!seen) {
+      setShowWelcome(true);
+      setFetching(false);
+    }
+    setWelcomeChecked(true);
+  }, [user]);
+
 
   const muatSoalanSeterusnya = useCallback(async () => {
     if (!user) return;
