@@ -1774,20 +1774,31 @@ function KaliInsightCard({
         </p>
       ) : insight ? (
         <>
-          <p className="mt-3 text-[10px] font-extrabold uppercase tracking-wide text-muted-foreground">Fokus</p>
+          <p className="mt-3 text-[10px] font-extrabold uppercase tracking-wide text-muted-foreground">Fokus Semasa</p>
           <p className="mt-2 font-display text-xl font-extrabold text-foreground">{insight.micro_skill_nama}</p>
 
           <hr className="my-3 border-t" style={{ borderColor: `${HIJAU}20` }} />
 
-          <p className="text-[10px] font-extrabold uppercase tracking-wide text-muted-foreground">Kenapa</p>
-          <p className="mt-1 text-sm text-muted-foreground">{insight.sebab}</p>
+          <p className="text-[10px] font-extrabold uppercase tracking-wide text-muted-foreground">
+            KALI Sedang Bantu Kerana
+          </p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            KALI sedang membantu {namaAnak} meningkatkan kemahiran {insight.micro_skill_nama} kerana prestasi terkini
+            menunjukkan kemahiran ini masih memerlukan lebih banyak latihan.
+          </p>
 
           <hr className="my-3 border-t" style={{ borderColor: `${HIJAU}20` }} />
 
-          <p className="text-[10px] font-extrabold uppercase tracking-wide text-muted-foreground">
-            Apa KALI akan buat
+          <p className="text-[10px] font-extrabold uppercase tracking-wide text-muted-foreground">Cadangan KALI</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Galakkan {namaAnak} melengkapkan satu lagi sesi Belajar Bersama KALI hari ini.{" "}
+            <Link
+              to="/kali-test/belajar-untuk-saya"
+              className="inline-flex items-center gap-1 font-bold text-primary hover:underline"
+            >
+              Buka Belajar Bersama KALI →
+            </Link>
           </p>
-          <p className="mt-1 text-sm text-muted-foreground">{insight.tindakan}</p>
 
           <p className="mt-3 text-[11px] italic text-muted-foreground/70">
             Cadangan ini dijana berdasarkan jawapan sebenar {namaAnak} dan dikemas kini secara automatik setiap kali dia
