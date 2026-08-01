@@ -183,6 +183,18 @@ function KaliBelajarUntukSayaPage() {
       }
 
       setCadangan(row);
+      const prevSkill = prevSkillRef.current;
+      if (prevSkill && prevSkill.id !== row.micro_skill_id) {
+        setSkillUpdateMsg(
+          row.tier === "RED"
+            ? `Nampaknya ${prevSkill.nama} masih agak mencabar. Mari kita cuba beberapa soalan lagi dengan cara yang berbeza.`
+            : `Anda sudah menunjukkan peningkatan dalam ${prevSkill.nama}. Sekarang mari kita fokus kepada ${row.micro_skill_nama}.`
+        );
+      } else {
+        setSkillUpdateMsg(null);
+      }
+      prevSkillRef.current = { id: row.micro_skill_id, nama: row.micro_skill_nama };
+
       setSoalan({
         id: String((q as any).id),
         soalan: (q as any).soalan,
