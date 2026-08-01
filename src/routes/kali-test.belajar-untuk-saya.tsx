@@ -311,7 +311,17 @@ function KaliBelajarUntukSayaPage() {
     }, 1500);
   };
 
+  const skillMap = new Map<string, { nama: string; semuaBetul: boolean }>();
+  for (const r of riwayatSkill) {
+    const sedia = skillMap.get(r.micro_skill_id);
+    if (sedia) sedia.semuaBetul = sedia.semuaBetul && r.betul;
+    else skillMap.set(r.micro_skill_id, { nama: r.micro_skill_nama, semuaBetul: r.betul });
+  }
+  const menguasai = [...skillMap.values()].filter((s) => s.semuaBetul).map((s) => s.nama);
+  const diperkukuh = [...skillMap.values()].filter((s) => !s.semuaBetul).map((s) => s.nama);
+
   return (
+
     <div className="min-h-screen bg-background">
       <SiteHeader stars={mata} onLogout={handleLogout} />
       <main className="container mx-auto max-w-3xl px-4 py-8">
