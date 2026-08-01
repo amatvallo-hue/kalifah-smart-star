@@ -230,8 +230,9 @@ function KaliBelajarUntukSayaPage() {
   }, [user]);
 
   useEffect(() => {
-    if (user) void muatSoalanSeterusnya();
-  }, [user, muatSoalanSeterusnya]);
+    if (user && welcomeChecked && !showWelcome) void muatSoalanSeterusnya();
+  }, [user, welcomeChecked, showWelcome, muatSoalanSeterusnya]);
+
 
   useEffect(() => {
     return () => {
