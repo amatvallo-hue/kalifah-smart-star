@@ -12,10 +12,10 @@ import { renderSoalanSvg } from "@/lib/render-soalan-svg";
 export const Route = createFileRoute("/kali-test/belajar-untuk-saya")({
   head: () => ({
     meta: [
-      { title: "KALI — Belajar Untuk Saya | Kalifah.my" },
+      { title: "Belajar Bersama KALI | Kalifah.my" },
       {
         name: "description",
-        content: "Halaman rasmi untuk sistem cadangan soalan adaptif KALI.",
+        content: "KALI membimbing pembelajaran anak dengan memilih soalan yang paling sesuai berdasarkan prestasi semasa.",
       },
     ],
   }),
@@ -287,9 +287,12 @@ function KaliBelajarUntukSayaPage() {
             className="rounded-full px-4 py-1.5 font-display text-xs font-extrabold shadow-soft"
             style={{ backgroundColor: EMAS, color: "#1a1a1a" }}
           >
-            Belajar Untuk Saya
+            Belajar Bersama KALI
           </span>
         </div>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Biarkan KALI membimbing pembelajaran anda dengan memilih soalan yang paling sesuai berdasarkan prestasi semasa.
+        </p>
 
         {selesai ? (
           <div className="mt-8 rounded-3xl bg-card p-8 text-center shadow-card">
@@ -345,10 +348,10 @@ function KaliBelajarUntukSayaPage() {
                 style={{ backgroundColor: `${HIJAU}15`, border: `2px solid ${HIJAU}` }}
               >
                 <p className="text-[10px] font-bold uppercase tracking-wide" style={{ color: HIJAU }}>
-                  Dijawab
+                  📚 Soalan
                 </p>
                 <p className="font-display text-2xl font-extrabold" style={{ color: HIJAU }}>
-                  {jawab}/{JUMLAH_SOALAN_SESI}
+                  {jawab} daripada {JUMLAH_SOALAN_SESI}
                 </p>
               </div>
               <div
@@ -392,10 +395,6 @@ function KaliBelajarUntukSayaPage() {
               </div>
             ) : (
               <div className="mt-6 rounded-3xl bg-card p-6 shadow-card md:p-8">
-                <p className="mb-4 text-sm font-medium text-primary">
-                  ✨ KALI pilih soalan ni khas untuk kamu!
-                </p>
-
                 {soalan.svg_type && (
                   <div className="mx-auto mb-4 flex justify-center">
                     {renderSoalanSvg(soalan.svg_type, soalan.svg_params)}
