@@ -274,6 +274,17 @@ function KaliBelajarUntukSayaPage() {
       masaSoalanSaat,
     });
 
+    setRiwayatSkill((prev) => [
+      ...prev,
+      {
+        micro_skill_id: cadangan.micro_skill_id,
+        micro_skill_nama: cadangan.micro_skill_nama,
+        betul: isBetul,
+      },
+    ]);
+
+
+
     if (isBetul) {
       setBetul((b) => b + 1);
       setMataSesi((m) => m + 1);
