@@ -388,7 +388,38 @@ function KaliBelajarUntukSayaPage() {
                 </p>
               </div>
             </div>
+
+            {(menguasai.length > 0 || diperkukuh.length > 0) && (
+              <div className="mt-6 space-y-4 text-center">
+                {menguasai.length > 0 && (
+                  <div>
+                    <p className="font-display text-sm font-extrabold" style={{ color: HIJAU }}>
+                      ✅ Menguasai
+                    </p>
+                    <p className="mt-1 text-sm text-muted-foreground">{menguasai.join(", ")}</p>
+                  </div>
+                )}
+                {diperkukuh.length > 0 && (
+                  <div>
+                    <p className="font-display text-sm font-extrabold" style={{ color: EMAS }}>
+                      🎯 Sedang Diperkukuh
+                    </p>
+                    <p className="mt-1 text-sm text-muted-foreground">{diperkukuh.join(", ")}</p>
+                  </div>
+                )}
+                <div>
+                  <p className="font-display text-sm font-extrabold text-foreground">➡️ Cadangan KALI</p>
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    {diperkukuh.length > 0
+                      ? `Teruskan satu lagi sesi esok untuk meningkatkan penguasaan ${diperkukuh[0]}.`
+                      : "Hebat! Teruskan sesi esok untuk kekalkan penguasaan anda."}
+                  </p>
+                </div>
+              </div>
+            )}
+
             <div className="mt-6 flex justify-center">
+
               <Link
                 to="/pilih-darjah"
                 className="rounded-full px-6 py-3 font-display font-extrabold text-white shadow-soft transition hover:opacity-90"
