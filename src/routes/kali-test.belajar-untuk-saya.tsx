@@ -609,6 +609,8 @@ function KaliBelajarUntukSayaPage() {
                   </div>
                 )}
               </div>
+              </>
+
             )}
           </>
         )}
