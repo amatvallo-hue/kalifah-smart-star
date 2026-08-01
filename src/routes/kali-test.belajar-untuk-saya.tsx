@@ -429,7 +429,38 @@ function KaliBelajarUntukSayaPage() {
               </div>
             </div>
 
-            {errMsg ? (
+            {showWelcome ? (
+              <div className="mt-6 rounded-3xl bg-card p-8 text-center shadow-card">
+                <h1 className="font-display text-2xl font-extrabold" style={{ color: HIJAU }}>
+                  👋 Selamat datang ke Belajar Bersama KALI.
+                </h1>
+                <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-muted-foreground">
+                  Di sini, KALI akan menjadi pembimbing pembelajaran anda. KALI akan melihat kemahiran
+                  yang telah anda kuasai, mengenal pasti bahagian yang masih perlu dipertingkatkan, dan
+                  memilih soalan yang paling sesuai untuk membantu anda belajar dengan lebih berkesan.
+                </p>
+                <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">
+                  Anda hanya perlu fokus menjawab. Biar KALI merancang perjalanan pembelajaran anda.
+                </p>
+                <div className="mt-6 flex justify-center">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      try {
+                        localStorage.setItem("kali_welcome_seen_" + user.id, "1");
+                      } catch {
+                        /* abaikan */
+                      }
+                      setShowWelcome(false);
+                    }}
+                    className="rounded-full px-6 py-3 font-display font-extrabold text-white shadow-soft transition hover:opacity-90"
+                    style={{ backgroundColor: HIJAU }}
+                  >
+                    Mula Belajar
+                  </button>
+                </div>
+              </div>
+            ) : errMsg ? (
               <div className="mt-6 rounded-3xl border-2 border-destructive/40 bg-destructive/10 p-6 text-center">
                 <p className="font-display text-lg font-extrabold text-destructive">Ralat</p>
                 <p className="mt-1 text-sm text-muted-foreground">{errMsg}</p>
@@ -437,6 +468,7 @@ function KaliBelajarUntukSayaPage() {
             ) : fetching ? (
               <p className="mt-10 text-center text-muted-foreground">Memuatkan soalan...</p>
             ) : habisCadangan || !soalan || !cadangan ? (
+
               <div className="mt-6 rounded-3xl bg-card p-8 text-center shadow-card">
                 <p className="font-display text-xl font-extrabold" style={{ color: HIJAU }}>
                   Tiada cadangan buat masa ini — cuba lagi kemudian!
