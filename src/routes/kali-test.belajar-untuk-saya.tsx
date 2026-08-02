@@ -44,6 +44,7 @@ interface NotaBantuan {
   istilah: { term: string; def: string }[];
   formula: string[];
   tips: string[];
+  gambar_url: string[];
   micro_skill_nama: string;
 }
 
