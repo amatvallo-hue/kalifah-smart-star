@@ -697,6 +697,117 @@ function KaliBelajarUntukSayaPage() {
           </>
         )}
       </main>
+
+      <Dialog open={notaOpen} onOpenChange={setNotaOpen}>
+        <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-lg">
+          {notaMod === "tawar" ? (
+            <>
+              <DialogHeader>
+                <DialogTitle className="font-display text-xl font-extrabold" style={{ color: HIJAU }}>
+                  KALI perasan ni agak mencabar 🤔
+                </DialogTitle>
+                <DialogDescription className="text-sm">
+                  Nampaknya <strong>{nota?.micro_skill_nama}</strong> ni agak sukar buat masa ini. Nak
+                  baca nota ringkas dulu sebelum sambung, atau nak terus cuba soalan lagi?
+                </DialogDescription>
+              </DialogHeader>
+              <div className="mt-2 flex flex-col gap-2 sm:flex-row">
+                <button
+                  onClick={() => setNotaMod("baca")}
+                  className="flex-1 rounded-full px-5 py-3 text-sm font-bold text-white"
+                  style={{ backgroundColor: HIJAU }}
+                >
+                  📖 Baca Nota Dulu
+                </button>
+                <button
+                  onClick={() => setNotaOpen(false)}
+                  className="flex-1 rounded-full px-5 py-3 text-sm font-bold"
+                  style={{ backgroundColor: `${EMAS}25`, border: `2px solid ${EMAS}`, color: "#7a5200" }}
+                >
+                  ✏️ Teruskan Jawab Soalan
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              <DialogHeader>
+                <DialogTitle className="font-display text-xl font-extrabold" style={{ color: HIJAU }}>
+                  📖 {nota?.nota_topik ?? "Nota Ringkas"}
+                </DialogTitle>
+                <DialogDescription className="text-sm">
+                  Nota ringkas untuk {nota?.micro_skill_nama}.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4 text-sm">
+                {nota?.konsep && nota.konsep.length > 0 && (
+                  <div>
+                    <p className="font-display text-xs font-extrabold uppercase tracking-wide" style={{ color: HIJAU }}>
+                      Konsep
+                    </p>
+                    <ul className="mt-1 list-disc space-y-1 pl-5 text-muted-foreground">
+                      {nota.konsep.map((k, i) => (
+                        <li key={i}>{k}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {nota?.istilah && nota.istilah.length > 0 && (
+                  <div>
+                    <p className="font-display text-xs font-extrabold uppercase tracking-wide" style={{ color: HIJAU }}>
+                      Istilah
+                    </p>
+                    <ul className="mt-1 space-y-1 pl-1 text-muted-foreground">
+                      {nota.istilah.map((t, i) => (
+                        <li key={i}>
+                          <strong className="text-foreground">{t.term}</strong>: {t.def}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {nota?.formula && nota.formula.length > 0 && (
+                  <div>
+                    <p className="font-display text-xs font-extrabold uppercase tracking-wide" style={{ color: HIJAU }}>
+                      Formula
+                    </p>
+                    <ul className="mt-1 space-y-1">
+                      {nota.formula.map((f, i) => (
+                        <li
+                          key={i}
+                          className="rounded-xl px-3 py-2 font-medium"
+                          style={{ backgroundColor: `${HIJAU}12` }}
+                        >
+                          {f}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {nota?.tips && nota.tips.length > 0 && (
+                  <div>
+                    <p className="font-display text-xs font-extrabold uppercase tracking-wide" style={{ color: EMAS }}>
+                      Tips
+                    </p>
+                    <ul className="mt-1 list-disc space-y-1 pl-5 text-muted-foreground">
+                      {nota.tips.map((t, i) => (
+                        <li key={i}>{t}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+              <button
+                onClick={() => setNotaOpen(false)}
+                className="mt-4 w-full rounded-full px-5 py-3 text-sm font-bold text-white"
+                style={{ backgroundColor: HIJAU }}
+              >
+                Faham, saya nak cuba soalan
+              </button>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
+
   );
 }
