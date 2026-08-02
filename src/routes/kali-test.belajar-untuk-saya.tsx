@@ -29,6 +29,17 @@ const JUMLAH_SOALAN_SESI = 10;
 
 type Tier = "RED" | "YELLOW" | "GREEN" | "BLUE" | string;
 
+interface NotaBantuan {
+  nota_topik: string | null;
+  nota_bahasa: string | null;
+  konsep: string[];
+  istilah: { term: string; def: string }[];
+  formula: string[];
+  tips: string[];
+  micro_skill_nama: string;
+}
+
+
 interface KaliCadangan {
   micro_skill_id: string;
   micro_skill_kod: string;
