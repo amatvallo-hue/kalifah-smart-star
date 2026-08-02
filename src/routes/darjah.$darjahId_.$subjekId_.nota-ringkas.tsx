@@ -25,6 +25,7 @@ type NotaRow = {
   istilah: Istilah[] | null;
   formula: string[] | null;
   tips: string[] | null;
+  gambar_url: string[] | null;
 };
 
 const HIJAU = "#1B8A5A";
@@ -212,6 +213,20 @@ function NotaRingkasPage() {
 
             {selected && (
               <div className="mt-6 grid gap-5">
+                {selected.gambar_url && selected.gambar_url.length > 0 && (
+                  <div className="flex flex-wrap gap-3">
+                    {selected.gambar_url.map((url, i) => (
+                      <img
+                        key={i}
+                        src={url}
+                        alt={`Gambar nota ${i + 1}`}
+                        className="max-h-64 rounded-2xl object-contain shadow-soft"
+                        style={{ border: "2px solid #E8F5EE" }}
+                        loading="lazy"
+                      />
+                    ))}
+                  </div>
+                )}
                 <SectionList
                   title={isEnglish ? "What We Learn" : "Apa yang kita pelajari"}
                   icon="📚"
