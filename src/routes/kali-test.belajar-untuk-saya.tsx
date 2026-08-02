@@ -44,6 +44,7 @@ interface NotaBantuan {
   istilah: { term: string; def: string }[];
   formula: string[];
   tips: string[];
+  gambar_url: string[];
   micro_skill_nama: string;
 }
 
@@ -242,6 +243,7 @@ function KaliBelajarUntukSayaPage() {
               })),
               formula: asArr(nRow.formula).map((x) => String(x)),
               tips: asArr(nRow.tips).map((x) => String(x)),
+              gambar_url: asArr(nRow.gambar_url).map((x) => String(x)),
               micro_skill_nama: row.micro_skill_nama,
             });
             setNotaMod("tawar");
@@ -747,6 +749,19 @@ function KaliBelajarUntukSayaPage() {
                 </DialogDescription>
               </DialogHeader>
               <div className="space-y-4 text-sm">
+                {nota?.gambar_url && nota.gambar_url.length > 0 && (
+                  <div className="flex flex-wrap gap-3">
+                    {nota.gambar_url.map((url, i) => (
+                      <img
+                        key={i}
+                        src={url}
+                        alt={`Gambar nota ${i + 1}`}
+                        className="max-h-64 rounded-2xl object-contain"
+                        loading="lazy"
+                      />
+                    ))}
+                  </div>
+                )}
                 {nota?.konsep && nota.konsep.length > 0 && (
                   <div>
                     <p className="font-display text-xs font-extrabold uppercase tracking-wide" style={{ color: HIJAU }}>
