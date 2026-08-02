@@ -213,6 +213,39 @@ function KaliBelajarUntukSayaPage() {
       }
       prevSkillRef.current = { id: row.micro_skill_id, nama: row.micro_skill_nama };
 
+      // Tawar nota bantuan bila skill mencabar (sekali sahaja per skill per sesi)
+      if (row.tier === "RED" && !notaDitawarRef.current.has(row.micro_skill_id)) {
+        notaDitawarRef.current.add(row.micro_skill_id);
+        try {
+          const { data: nData } = await supabase.rpc("kali_cari_nota_untuk_skill", {
+            p_micro_skill_id: row.micro_skill_id,
+            p_student_id: user.id,
+          } as any);
+          const nRow: any = Array.isArray(nData) ? nData[0] : nData;
+          if (nRow?.nota_ditemui === true) {
+            const asArr = (v: any): any[] => (Array.isArray(v) ? v : []);
+            setNota({
+              nota_topik: nRow.nota_topik ?? null,
+              nota_bahasa: nRow.nota_bahasa ?? null,
+              konsep: asArr(nRow.konsep).map((x) => String(x)),
+              istilah: asArr(nRow.istilah).map((x) => ({
+                term: String(x?.term ?? ""),
+                def: String(x?.def ?? ""),
+              })),
+              formula: asArr(nRow.formula).map((x) => String(x)),
+              tips: asArr(nRow.tips).map((x) => String(x)),
+              micro_skill_nama: row.micro_skill_nama,
+            });
+            setNotaMod("tawar");
+            setNotaOpen(true);
+          }
+        } catch (e) {
+          console.error("KALI nota bantuan gagal:", e);
+        }
+      }
+
+
+
       setSoalan({
         id: String((q as any).id),
         soalan: (q as any).soalan,
