@@ -93,6 +93,13 @@ function KaliBelajarUntukSayaPage() {
     { micro_skill_id: string; micro_skill_nama: string; betul: boolean }[]
   >([]);
 
+  // Popup nota bantuan bila KALI detect skill mencabar (tier RED)
+  const notaDitawarRef = useRef<Set<string>>(new Set());
+  const [notaOpen, setNotaOpen] = useState(false);
+  const [notaMod, setNotaMod] = useState<"tawar" | "baca">("tawar");
+  const [nota, setNota] = useState<NotaBantuan | null>(null);
+
+
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
   }, [loading, user, navigate]);
