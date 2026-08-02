@@ -2,6 +2,14 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ArrowLeft, Check, X } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { usePoints } from "@/hooks/use-points";
@@ -28,6 +36,17 @@ const EMAS = "#F5A623";
 const JUMLAH_SOALAN_SESI = 10;
 
 type Tier = "RED" | "YELLOW" | "GREEN" | "BLUE" | string;
+
+interface NotaBantuan {
+  nota_topik: string | null;
+  nota_bahasa: string | null;
+  konsep: string[];
+  istilah: { term: string; def: string }[];
+  formula: string[];
+  tips: string[];
+  micro_skill_nama: string;
+}
+
 
 interface KaliCadangan {
   micro_skill_id: string;
@@ -92,6 +111,13 @@ function KaliBelajarUntukSayaPage() {
   const [riwayatSkill, setRiwayatSkill] = useState<
     { micro_skill_id: string; micro_skill_nama: string; betul: boolean }[]
   >([]);
+
+  // Popup nota bantuan bila KALI detect skill mencabar (tier RED)
+  const notaDitawarRef = useRef<Set<string>>(new Set());
+  const [notaOpen, setNotaOpen] = useState(false);
+  const [notaMod, setNotaMod] = useState<"tawar" | "baca">("tawar");
+  const [nota, setNota] = useState<NotaBantuan | null>(null);
+
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
@@ -194,6 +220,39 @@ function KaliBelajarUntukSayaPage() {
         setSkillUpdateMsg(null);
       }
       prevSkillRef.current = { id: row.micro_skill_id, nama: row.micro_skill_nama };
+
+      // Tawar nota bantuan bila skill mencabar (sekali sahaja per skill per sesi)
+      if (row.tier === "RED" && !notaDitawarRef.current.has(row.micro_skill_id)) {
+        notaDitawarRef.current.add(row.micro_skill_id);
+        try {
+          const { data: nData } = await supabase.rpc("kali_cari_nota_untuk_skill", {
+            p_micro_skill_id: row.micro_skill_id,
+            p_student_id: user.id,
+          } as any);
+          const nRow: any = Array.isArray(nData) ? nData[0] : nData;
+          if (nRow?.nota_ditemui === true) {
+            const asArr = (v: any): any[] => (Array.isArray(v) ? v : []);
+            setNota({
+              nota_topik: nRow.nota_topik ?? null,
+              nota_bahasa: nRow.nota_bahasa ?? null,
+              konsep: asArr(nRow.konsep).map((x) => String(x)),
+              istilah: asArr(nRow.istilah).map((x) => ({
+                term: String(x?.term ?? ""),
+                def: String(x?.def ?? ""),
+              })),
+              formula: asArr(nRow.formula).map((x) => String(x)),
+              tips: asArr(nRow.tips).map((x) => String(x)),
+              micro_skill_nama: row.micro_skill_nama,
+            });
+            setNotaMod("tawar");
+            setNotaOpen(true);
+          }
+        } catch (e) {
+          console.error("KALI nota bantuan gagal:", e);
+        }
+      }
+
+
 
       setSoalan({
         id: String((q as any).id),
@@ -646,6 +705,117 @@ function KaliBelajarUntukSayaPage() {
           </>
         )}
       </main>
+
+      <Dialog open={notaOpen} onOpenChange={setNotaOpen}>
+        <DialogContent className="max-h-[85vh] overflow-y-auto sm:max-w-lg">
+          {notaMod === "tawar" ? (
+            <>
+              <DialogHeader>
+                <DialogTitle className="font-display text-xl font-extrabold" style={{ color: HIJAU }}>
+                  KALI perasan ni agak mencabar 🤔
+                </DialogTitle>
+                <DialogDescription className="text-sm">
+                  Nampaknya <strong>{nota?.micro_skill_nama}</strong> ni agak sukar buat masa ini. Nak
+                  baca nota ringkas dulu sebelum sambung, atau nak terus cuba soalan lagi?
+                </DialogDescription>
+              </DialogHeader>
+              <div className="mt-2 flex flex-col gap-2 sm:flex-row">
+                <button
+                  onClick={() => setNotaMod("baca")}
+                  className="flex-1 rounded-full px-5 py-3 text-sm font-bold text-white"
+                  style={{ backgroundColor: HIJAU }}
+                >
+                  📖 Baca Nota Dulu
+                </button>
+                <button
+                  onClick={() => setNotaOpen(false)}
+                  className="flex-1 rounded-full px-5 py-3 text-sm font-bold"
+                  style={{ backgroundColor: `${EMAS}25`, border: `2px solid ${EMAS}`, color: "#7a5200" }}
+                >
+                  ✏️ Teruskan Jawab Soalan
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              <DialogHeader>
+                <DialogTitle className="font-display text-xl font-extrabold" style={{ color: HIJAU }}>
+                  📖 {nota?.nota_topik ?? "Nota Ringkas"}
+                </DialogTitle>
+                <DialogDescription className="text-sm">
+                  Nota ringkas untuk {nota?.micro_skill_nama}.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4 text-sm">
+                {nota?.konsep && nota.konsep.length > 0 && (
+                  <div>
+                    <p className="font-display text-xs font-extrabold uppercase tracking-wide" style={{ color: HIJAU }}>
+                      Konsep
+                    </p>
+                    <ul className="mt-1 list-disc space-y-1 pl-5 text-muted-foreground">
+                      {nota.konsep.map((k, i) => (
+                        <li key={i}>{k}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {nota?.istilah && nota.istilah.length > 0 && (
+                  <div>
+                    <p className="font-display text-xs font-extrabold uppercase tracking-wide" style={{ color: HIJAU }}>
+                      Istilah
+                    </p>
+                    <ul className="mt-1 space-y-1 pl-1 text-muted-foreground">
+                      {nota.istilah.map((t, i) => (
+                        <li key={i}>
+                          <strong className="text-foreground">{t.term}</strong>: {t.def}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {nota?.formula && nota.formula.length > 0 && (
+                  <div>
+                    <p className="font-display text-xs font-extrabold uppercase tracking-wide" style={{ color: HIJAU }}>
+                      Formula
+                    </p>
+                    <ul className="mt-1 space-y-1">
+                      {nota.formula.map((f, i) => (
+                        <li
+                          key={i}
+                          className="rounded-xl px-3 py-2 font-medium"
+                          style={{ backgroundColor: `${HIJAU}12` }}
+                        >
+                          {f}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+                {nota?.tips && nota.tips.length > 0 && (
+                  <div>
+                    <p className="font-display text-xs font-extrabold uppercase tracking-wide" style={{ color: EMAS }}>
+                      Tips
+                    </p>
+                    <ul className="mt-1 list-disc space-y-1 pl-5 text-muted-foreground">
+                      {nota.tips.map((t, i) => (
+                        <li key={i}>{t}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+              <button
+                onClick={() => setNotaOpen(false)}
+                className="mt-4 w-full rounded-full px-5 py-3 text-sm font-bold text-white"
+                style={{ backgroundColor: HIJAU }}
+              >
+                Faham, saya nak cuba soalan
+              </button>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
+
   );
 }
