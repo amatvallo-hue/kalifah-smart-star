@@ -749,6 +749,19 @@ function KaliBelajarUntukSayaPage() {
                 </DialogDescription>
               </DialogHeader>
               <div className="space-y-4 text-sm">
+                {nota?.gambar_url && nota.gambar_url.length > 0 && (
+                  <div className="flex flex-wrap gap-3">
+                    {nota.gambar_url.map((url, i) => (
+                      <img
+                        key={i}
+                        src={url}
+                        alt={`Gambar nota ${i + 1}`}
+                        className="max-h-64 rounded-2xl object-contain"
+                        loading="lazy"
+                      />
+                    ))}
+                  </div>
+                )}
                 {nota?.konsep && nota.konsep.length > 0 && (
                   <div>
                     <p className="font-display text-xs font-extrabold uppercase tracking-wide" style={{ color: HIJAU }}>
