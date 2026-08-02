@@ -243,6 +243,7 @@ function KaliBelajarUntukSayaPage() {
               })),
               formula: asArr(nRow.formula).map((x) => String(x)),
               tips: asArr(nRow.tips).map((x) => String(x)),
+              gambar_url: asArr(nRow.gambar_url).map((x) => String(x)),
               micro_skill_nama: row.micro_skill_nama,
             });
             setNotaMod("tawar");
