@@ -9,105 +9,60 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as UjianPercumaRouteImport } from './routes/ujian-percuma'
-import { Route as ResetPasswordRouteImport } from './routes/reset-password'
-import { Route as PraKalifahRouteImport } from './routes/pra-kalifah'
-import { Route as PilihDarjahRouteImport } from './routes/pilih-darjah'
-import { Route as LupaPasswordRouteImport } from './routes/lupa-password'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as LatihanRouteImport } from './routes/latihan'
-import { Route as HargaRouteImport } from './routes/harga'
-import { Route as DaftarRouteImport } from './routes/daftar'
-import { Route as CikguAffiliateRouteImport } from './routes/cikgu-affiliate'
-import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as PreviewNamaRouteImport } from './routes/preview.nama'
-import { Route as PreviewDarjahIdRouteImport } from './routes/preview.$darjahId'
-import { Route as PraKalifahBidangRouteImport } from './routes/pra-kalifah_.$bidang'
-import { Route as KaliTestBelajarUntukSayaRouteImport } from './routes/kali-test.belajar-untuk-saya'
-import { Route as DashboardProgressRouteImport } from './routes/dashboard.progress'
-import { Route as DashboardIbuBapaRouteImport } from './routes/dashboard.ibu-bapa'
-import { Route as DarjahDarjahIdRouteImport } from './routes/darjah.$darjahId'
-import { Route as BayaranSelesaiRouteImport } from './routes/bayaran.selesai'
-import { Route as ApiTemporaryUnlockRouteImport } from './routes/api.temporary-unlock'
-import { Route as ApiDebugEnvRouteImport } from './routes/api.debug-env'
-import { Route as ApiConfirmPaymentRouteImport } from './routes/api.confirm-payment'
-import { Route as ApiCheckoutRouteImport } from './routes/api.checkout'
-import { Route as AffiliateSyaratRouteImport } from './routes/affiliate.syarat'
-import { Route as AffiliateDashboardRouteImport } from './routes/affiliate.dashboard'
-import { Route as AffiliateDaftarRouteImport } from './routes/affiliate.daftar'
-import { Route as AdminTelegramRouteImport } from './routes/admin_.telegram'
-import { Route as AdminChallengeRouteImport } from './routes/admin_.challenge'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as CikguAffiliateRouteImport } from './routes/cikgu-affiliate'
+import { Route as DaftarRouteImport } from './routes/daftar'
+import { Route as HargaRouteImport } from './routes/harga'
+import { Route as LatihanRouteImport } from './routes/latihan'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as LupaPasswordRouteImport } from './routes/lupa-password'
+import { Route as PilihDarjahRouteImport } from './routes/pilih-darjah'
+import { Route as PraKalifahRouteImport } from './routes/pra-kalifah'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as UjianPercumaRouteImport } from './routes/ujian-percuma'
 import { Route as AdminAffiliatesRouteImport } from './routes/admin_.affiliates'
-import { Route as UjianPercumaSoalanSessionIdRouteImport } from './routes/ujian-percuma_.soalan.$sessionId'
-import { Route as UjianPercumaKeputusanReportTokenRouteImport } from './routes/ujian-percuma_.keputusan.$reportToken'
-import { Route as PreviewDarjahIdScoreRouteImport } from './routes/preview.$darjahId_.score'
-import { Route as DarjahDarjahIdPercubaanMpt4RouteImport } from './routes/darjah.$darjahId_.percubaan-mpt4'
-import { Route as DarjahDarjahIdSubjekIdRouteImport } from './routes/darjah.$darjahId_.$subjekId'
-import { Route as AdminAffiliatesDashboardRouteImport } from './routes/admin_.affiliates_.dashboard'
+import { Route as AdminChallengeRouteImport } from './routes/admin_.challenge'
+import { Route as AdminTelegramRouteImport } from './routes/admin_.telegram'
+import { Route as AffiliateDaftarRouteImport } from './routes/affiliate.daftar'
+import { Route as AffiliateDashboardRouteImport } from './routes/affiliate.dashboard'
+import { Route as AffiliateSyaratRouteImport } from './routes/affiliate.syarat'
+import { Route as ApiCheckoutRouteImport } from './routes/api.checkout'
+import { Route as ApiConfirmPaymentRouteImport } from './routes/api.confirm-payment'
+import { Route as ApiDebugEnvRouteImport } from './routes/api.debug-env'
+import { Route as ApiTemporaryUnlockRouteImport } from './routes/api.temporary-unlock'
+import { Route as BayaranSelesaiRouteImport } from './routes/bayaran.selesai'
+import { Route as DarjahDarjahIdRouteImport } from './routes/darjah.$darjahId'
+import { Route as DashboardIbuBapaRouteImport } from './routes/dashboard.ibu-bapa'
+import { Route as DashboardProgressRouteImport } from './routes/dashboard.progress'
+import { Route as KaliTestBelajarUntukSayaRouteImport } from './routes/kali-test.belajar-untuk-saya'
+import { Route as PraKalifahBidangRouteImport } from './routes/pra-kalifah_.$bidang'
+import { Route as PreviewDarjahIdRouteImport } from './routes/preview.$darjahId'
+import { Route as PreviewNamaRouteImport } from './routes/preview.nama'
 import { Route as AdminAffiliatesIdRouteImport } from './routes/admin_.affiliates_.$id'
-import { Route as DarjahDarjahIdPercubaanMpt4SubjekIdRouteImport } from './routes/darjah.$darjahId_.percubaan-mpt4_.$subjekId'
-import { Route as DarjahDarjahIdSubjekIdNotaRingkasRouteImport } from './routes/darjah.$darjahId_.$subjekId_.nota-ringkas'
-import { Route as DarjahDarjahIdSubjekIdMendengarRouteImport } from './routes/darjah.$darjahId_.$subjekId_.mendengar'
-import { Route as DarjahDarjahIdSubjekIdLatihanBerpanduPreviewRouteImport } from './routes/darjah.$darjahId_.$subjekId_.latihan-berpandu-preview'
-import { Route as DarjahDarjahIdSubjekIdLatihanRouteImport } from './routes/darjah.$darjahId_.$subjekId_.latihan'
-import { Route as DarjahDarjahIdSubjekIdLatihTubiRouteImport } from './routes/darjah.$darjahId_.$subjekId_.latih-tubi'
-import { Route as DarjahDarjahIdSubjekIdKuizRouteImport } from './routes/darjah.$darjahId_.$subjekId_.kuiz'
-import { Route as DarjahDarjahIdSubjekIdIsiKosongRouteImport } from './routes/darjah.$darjahId_.$subjekId_.isi-kosong'
-import { Route as DarjahDarjahIdSubjekIdGameRouteImport } from './routes/darjah.$darjahId_.$subjekId_.game'
-import { Route as DarjahDarjahIdSubjekIdBergambarRajahRouteImport } from './routes/darjah.$darjahId_.$subjekId_.bergambar-rajah'
+import { Route as AdminAffiliatesDashboardRouteImport } from './routes/admin_.affiliates_.dashboard'
+import { Route as DarjahDarjahIdSubjekIdRouteImport } from './routes/darjah.$darjahId_.$subjekId'
+import { Route as DarjahDarjahIdPercubaanMpt4RouteImport } from './routes/darjah.$darjahId_.percubaan-mpt4'
+import { Route as PreviewDarjahIdScoreRouteImport } from './routes/preview.$darjahId_.score'
+import { Route as UjianPercumaKeputusanReportTokenRouteImport } from './routes/ujian-percuma_.keputusan.$reportToken'
+import { Route as UjianPercumaSoalanSessionIdRouteImport } from './routes/ujian-percuma_.soalan.$sessionId'
 import { Route as ApiPublicToyyibpayCallbackRouteImport } from './routes/api.public.toyyibpay.callback'
+import { Route as DarjahDarjahIdSubjekIdBergambarRajahRouteImport } from './routes/darjah.$darjahId_.$subjekId_.bergambar-rajah'
+import { Route as DarjahDarjahIdSubjekIdGameRouteImport } from './routes/darjah.$darjahId_.$subjekId_.game'
+import { Route as DarjahDarjahIdSubjekIdIsiKosongRouteImport } from './routes/darjah.$darjahId_.$subjekId_.isi-kosong'
+import { Route as DarjahDarjahIdSubjekIdKuizRouteImport } from './routes/darjah.$darjahId_.$subjekId_.kuiz'
+import { Route as DarjahDarjahIdSubjekIdLatihTubiRouteImport } from './routes/darjah.$darjahId_.$subjekId_.latih-tubi'
+import { Route as DarjahDarjahIdSubjekIdLatihanRouteImport } from './routes/darjah.$darjahId_.$subjekId_.latihan'
+import { Route as DarjahDarjahIdSubjekIdLatihanBerpanduPreviewRouteImport } from './routes/darjah.$darjahId_.$subjekId_.latihan-berpandu-preview'
+import { Route as DarjahDarjahIdSubjekIdMendengarRouteImport } from './routes/darjah.$darjahId_.$subjekId_.mendengar'
+import { Route as DarjahDarjahIdSubjekIdNotaRingkasRouteImport } from './routes/darjah.$darjahId_.$subjekId_.nota-ringkas'
+import { Route as DarjahDarjahIdPercubaanMpt4SubjekIdRouteImport } from './routes/darjah.$darjahId_.percubaan-mpt4_.$subjekId'
 import { Route as DarjahDarjahIdPercubaanMpt4SubjekIdSetIdRouteImport } from './routes/darjah.$darjahId_.percubaan-mpt4_.$subjekId_.$setId'
 import { Route as DarjahDarjahIdPercubaanMpt4SubjekIdSetIdKeputusanRouteImport } from './routes/darjah.$darjahId_.percubaan-mpt4_.$subjekId_.$setId_.keputusan'
 
-const UjianPercumaRoute = UjianPercumaRouteImport.update({
-  id: '/ujian-percuma',
-  path: '/ujian-percuma',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ResetPasswordRoute = ResetPasswordRouteImport.update({
-  id: '/reset-password',
-  path: '/reset-password',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PraKalifahRoute = PraKalifahRouteImport.update({
-  id: '/pra-kalifah',
-  path: '/pra-kalifah',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PilihDarjahRoute = PilihDarjahRouteImport.update({
-  id: '/pilih-darjah',
-  path: '/pilih-darjah',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LupaPasswordRoute = LupaPasswordRouteImport.update({
-  id: '/lupa-password',
-  path: '/lupa-password',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LatihanRoute = LatihanRouteImport.update({
-  id: '/latihan',
-  path: '/latihan',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const HargaRoute = HargaRouteImport.update({
-  id: '/harga',
-  path: '/harga',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DaftarRoute = DaftarRouteImport.update({
-  id: '/daftar',
-  path: '/daftar',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const CikguAffiliateRoute = CikguAffiliateRouteImport.update({
-  id: '/cikgu-affiliate',
-  path: '/cikgu-affiliate',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminRoute = AdminRouteImport.update({
@@ -115,24 +70,124 @@ const AdminRoute = AdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const CikguAffiliateRoute = CikguAffiliateRouteImport.update({
+  id: '/cikgu-affiliate',
+  path: '/cikgu-affiliate',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PreviewNamaRoute = PreviewNamaRouteImport.update({
-  id: '/preview/nama',
-  path: '/preview/nama',
+const DaftarRoute = DaftarRouteImport.update({
+  id: '/daftar',
+  path: '/daftar',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PreviewDarjahIdRoute = PreviewDarjahIdRouteImport.update({
-  id: '/preview/$darjahId',
-  path: '/preview/$darjahId',
+const HargaRoute = HargaRouteImport.update({
+  id: '/harga',
+  path: '/harga',
   getParentRoute: () => rootRouteImport,
 } as any)
-const PraKalifahBidangRoute = PraKalifahBidangRouteImport.update({
-  id: '/pra-kalifah_/$bidang',
-  path: '/pra-kalifah/$bidang',
+const LatihanRoute = LatihanRouteImport.update({
+  id: '/latihan',
+  path: '/latihan',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LupaPasswordRoute = LupaPasswordRouteImport.update({
+  id: '/lupa-password',
+  path: '/lupa-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PilihDarjahRoute = PilihDarjahRouteImport.update({
+  id: '/pilih-darjah',
+  path: '/pilih-darjah',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PraKalifahRoute = PraKalifahRouteImport.update({
+  id: '/pra-kalifah',
+  path: '/pra-kalifah',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UjianPercumaRoute = UjianPercumaRouteImport.update({
+  id: '/ujian-percuma',
+  path: '/ujian-percuma',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminAffiliatesRoute = AdminAffiliatesRouteImport.update({
+  id: '/admin_/affiliates',
+  path: '/admin/affiliates',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminChallengeRoute = AdminChallengeRouteImport.update({
+  id: '/admin_/challenge',
+  path: '/admin/challenge',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminTelegramRoute = AdminTelegramRouteImport.update({
+  id: '/admin_/telegram',
+  path: '/admin/telegram',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AffiliateDaftarRoute = AffiliateDaftarRouteImport.update({
+  id: '/affiliate/daftar',
+  path: '/affiliate/daftar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AffiliateDashboardRoute = AffiliateDashboardRouteImport.update({
+  id: '/affiliate/dashboard',
+  path: '/affiliate/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AffiliateSyaratRoute = AffiliateSyaratRouteImport.update({
+  id: '/affiliate/syarat',
+  path: '/affiliate/syarat',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiCheckoutRoute = ApiCheckoutRouteImport.update({
+  id: '/api/checkout',
+  path: '/api/checkout',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiConfirmPaymentRoute = ApiConfirmPaymentRouteImport.update({
+  id: '/api/confirm-payment',
+  path: '/api/confirm-payment',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiDebugEnvRoute = ApiDebugEnvRouteImport.update({
+  id: '/api/debug-env',
+  path: '/api/debug-env',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiTemporaryUnlockRoute = ApiTemporaryUnlockRouteImport.update({
+  id: '/api/temporary-unlock',
+  path: '/api/temporary-unlock',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BayaranSelesaiRoute = BayaranSelesaiRouteImport.update({
+  id: '/bayaran/selesai',
+  path: '/bayaran/selesai',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DarjahDarjahIdRoute = DarjahDarjahIdRouteImport.update({
+  id: '/darjah/$darjahId',
+  path: '/darjah/$darjahId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardIbuBapaRoute = DashboardIbuBapaRouteImport.update({
+  id: '/dashboard/ibu-bapa',
+  path: '/dashboard/ibu-bapa',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardProgressRoute = DashboardProgressRouteImport.update({
+  id: '/dashboard/progress',
+  path: '/dashboard/progress',
   getParentRoute: () => rootRouteImport,
 } as any)
 const KaliTestBelajarUntukSayaRoute =
@@ -141,102 +196,24 @@ const KaliTestBelajarUntukSayaRoute =
     path: '/kali-test/belajar-untuk-saya',
     getParentRoute: () => rootRouteImport,
   } as any)
-const DashboardProgressRoute = DashboardProgressRouteImport.update({
-  id: '/dashboard/progress',
-  path: '/dashboard/progress',
+const PraKalifahBidangRoute = PraKalifahBidangRouteImport.update({
+  id: '/pra-kalifah_/$bidang',
+  path: '/pra-kalifah/$bidang',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DashboardIbuBapaRoute = DashboardIbuBapaRouteImport.update({
-  id: '/dashboard/ibu-bapa',
-  path: '/dashboard/ibu-bapa',
+const PreviewDarjahIdRoute = PreviewDarjahIdRouteImport.update({
+  id: '/preview/$darjahId',
+  path: '/preview/$darjahId',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DarjahDarjahIdRoute = DarjahDarjahIdRouteImport.update({
-  id: '/darjah/$darjahId',
-  path: '/darjah/$darjahId',
+const PreviewNamaRoute = PreviewNamaRouteImport.update({
+  id: '/preview/nama',
+  path: '/preview/nama',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BayaranSelesaiRoute = BayaranSelesaiRouteImport.update({
-  id: '/bayaran/selesai',
-  path: '/bayaran/selesai',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiTemporaryUnlockRoute = ApiTemporaryUnlockRouteImport.update({
-  id: '/api/temporary-unlock',
-  path: '/api/temporary-unlock',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiDebugEnvRoute = ApiDebugEnvRouteImport.update({
-  id: '/api/debug-env',
-  path: '/api/debug-env',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiConfirmPaymentRoute = ApiConfirmPaymentRouteImport.update({
-  id: '/api/confirm-payment',
-  path: '/api/confirm-payment',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiCheckoutRoute = ApiCheckoutRouteImport.update({
-  id: '/api/checkout',
-  path: '/api/checkout',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AffiliateSyaratRoute = AffiliateSyaratRouteImport.update({
-  id: '/affiliate/syarat',
-  path: '/affiliate/syarat',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AffiliateDashboardRoute = AffiliateDashboardRouteImport.update({
-  id: '/affiliate/dashboard',
-  path: '/affiliate/dashboard',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AffiliateDaftarRoute = AffiliateDaftarRouteImport.update({
-  id: '/affiliate/daftar',
-  path: '/affiliate/daftar',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminTelegramRoute = AdminTelegramRouteImport.update({
-  id: '/admin_/telegram',
-  path: '/admin/telegram',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminChallengeRoute = AdminChallengeRouteImport.update({
-  id: '/admin_/challenge',
-  path: '/admin/challenge',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const AdminAffiliatesRoute = AdminAffiliatesRouteImport.update({
-  id: '/admin_/affiliates',
-  path: '/admin/affiliates',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const UjianPercumaSoalanSessionIdRoute =
-  UjianPercumaSoalanSessionIdRouteImport.update({
-    id: '/ujian-percuma_/soalan/$sessionId',
-    path: '/ujian-percuma/soalan/$sessionId',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const UjianPercumaKeputusanReportTokenRoute =
-  UjianPercumaKeputusanReportTokenRouteImport.update({
-    id: '/ujian-percuma_/keputusan/$reportToken',
-    path: '/ujian-percuma/keputusan/$reportToken',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const PreviewDarjahIdScoreRoute = PreviewDarjahIdScoreRouteImport.update({
-  id: '/preview/$darjahId_/score',
-  path: '/preview/$darjahId/score',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DarjahDarjahIdPercubaanMpt4Route =
-  DarjahDarjahIdPercubaanMpt4RouteImport.update({
-    id: '/darjah/$darjahId_/percubaan-mpt4',
-    path: '/darjah/$darjahId/percubaan-mpt4',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const DarjahDarjahIdSubjekIdRoute = DarjahDarjahIdSubjekIdRouteImport.update({
-  id: '/darjah/$darjahId_/$subjekId',
-  path: '/darjah/$darjahId/$subjekId',
+const AdminAffiliatesIdRoute = AdminAffiliatesIdRouteImport.update({
+  id: '/admin_/affiliates_/$id',
+  path: '/admin/affiliates/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminAffiliatesDashboardRoute =
@@ -245,63 +222,38 @@ const AdminAffiliatesDashboardRoute =
     path: '/admin/affiliates/dashboard',
     getParentRoute: () => rootRouteImport,
   } as any)
-const AdminAffiliatesIdRoute = AdminAffiliatesIdRouteImport.update({
-  id: '/admin_/affiliates_/$id',
-  path: '/admin/affiliates/$id',
+const DarjahDarjahIdSubjekIdRoute = DarjahDarjahIdSubjekIdRouteImport.update({
+  id: '/darjah/$darjahId_/$subjekId',
+  path: '/darjah/$darjahId/$subjekId',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DarjahDarjahIdPercubaanMpt4SubjekIdRoute =
-  DarjahDarjahIdPercubaanMpt4SubjekIdRouteImport.update({
-    id: '/darjah/$darjahId_/percubaan-mpt4_/$subjekId',
-    path: '/darjah/$darjahId/percubaan-mpt4/$subjekId',
+const DarjahDarjahIdPercubaanMpt4Route =
+  DarjahDarjahIdPercubaanMpt4RouteImport.update({
+    id: '/darjah/$darjahId_/percubaan-mpt4',
+    path: '/darjah/$darjahId/percubaan-mpt4',
     getParentRoute: () => rootRouteImport,
   } as any)
-const DarjahDarjahIdSubjekIdNotaRingkasRoute =
-  DarjahDarjahIdSubjekIdNotaRingkasRouteImport.update({
-    id: '/darjah/$darjahId_/$subjekId_/nota-ringkas',
-    path: '/darjah/$darjahId/$subjekId/nota-ringkas',
+const PreviewDarjahIdScoreRoute = PreviewDarjahIdScoreRouteImport.update({
+  id: '/preview/$darjahId_/score',
+  path: '/preview/$darjahId/score',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UjianPercumaKeputusanReportTokenRoute =
+  UjianPercumaKeputusanReportTokenRouteImport.update({
+    id: '/ujian-percuma_/keputusan/$reportToken',
+    path: '/ujian-percuma/keputusan/$reportToken',
     getParentRoute: () => rootRouteImport,
   } as any)
-const DarjahDarjahIdSubjekIdMendengarRoute =
-  DarjahDarjahIdSubjekIdMendengarRouteImport.update({
-    id: '/darjah/$darjahId_/$subjekId_/mendengar',
-    path: '/darjah/$darjahId/$subjekId/mendengar',
+const UjianPercumaSoalanSessionIdRoute =
+  UjianPercumaSoalanSessionIdRouteImport.update({
+    id: '/ujian-percuma_/soalan/$sessionId',
+    path: '/ujian-percuma/soalan/$sessionId',
     getParentRoute: () => rootRouteImport,
   } as any)
-const DarjahDarjahIdSubjekIdLatihanBerpanduPreviewRoute =
-  DarjahDarjahIdSubjekIdLatihanBerpanduPreviewRouteImport.update({
-    id: '/darjah/$darjahId_/$subjekId_/latihan-berpandu-preview',
-    path: '/darjah/$darjahId/$subjekId/latihan-berpandu-preview',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const DarjahDarjahIdSubjekIdLatihanRoute =
-  DarjahDarjahIdSubjekIdLatihanRouteImport.update({
-    id: '/darjah/$darjahId_/$subjekId_/latihan',
-    path: '/darjah/$darjahId/$subjekId/latihan',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const DarjahDarjahIdSubjekIdLatihTubiRoute =
-  DarjahDarjahIdSubjekIdLatihTubiRouteImport.update({
-    id: '/darjah/$darjahId_/$subjekId_/latih-tubi',
-    path: '/darjah/$darjahId/$subjekId/latih-tubi',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const DarjahDarjahIdSubjekIdKuizRoute =
-  DarjahDarjahIdSubjekIdKuizRouteImport.update({
-    id: '/darjah/$darjahId_/$subjekId_/kuiz',
-    path: '/darjah/$darjahId/$subjekId/kuiz',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const DarjahDarjahIdSubjekIdIsiKosongRoute =
-  DarjahDarjahIdSubjekIdIsiKosongRouteImport.update({
-    id: '/darjah/$darjahId_/$subjekId_/isi-kosong',
-    path: '/darjah/$darjahId/$subjekId/isi-kosong',
-    getParentRoute: () => rootRouteImport,
-  } as any)
-const DarjahDarjahIdSubjekIdGameRoute =
-  DarjahDarjahIdSubjekIdGameRouteImport.update({
-    id: '/darjah/$darjahId_/$subjekId_/game',
-    path: '/darjah/$darjahId/$subjekId/game',
+const ApiPublicToyyibpayCallbackRoute =
+  ApiPublicToyyibpayCallbackRouteImport.update({
+    id: '/api/public/toyyibpay/callback',
+    path: '/api/public/toyyibpay/callback',
     getParentRoute: () => rootRouteImport,
   } as any)
 const DarjahDarjahIdSubjekIdBergambarRajahRoute =
@@ -310,10 +262,58 @@ const DarjahDarjahIdSubjekIdBergambarRajahRoute =
     path: '/darjah/$darjahId/$subjekId/bergambar-rajah',
     getParentRoute: () => rootRouteImport,
   } as any)
-const ApiPublicToyyibpayCallbackRoute =
-  ApiPublicToyyibpayCallbackRouteImport.update({
-    id: '/api/public/toyyibpay/callback',
-    path: '/api/public/toyyibpay/callback',
+const DarjahDarjahIdSubjekIdGameRoute =
+  DarjahDarjahIdSubjekIdGameRouteImport.update({
+    id: '/darjah/$darjahId_/$subjekId_/game',
+    path: '/darjah/$darjahId/$subjekId/game',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const DarjahDarjahIdSubjekIdIsiKosongRoute =
+  DarjahDarjahIdSubjekIdIsiKosongRouteImport.update({
+    id: '/darjah/$darjahId_/$subjekId_/isi-kosong',
+    path: '/darjah/$darjahId/$subjekId/isi-kosong',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const DarjahDarjahIdSubjekIdKuizRoute =
+  DarjahDarjahIdSubjekIdKuizRouteImport.update({
+    id: '/darjah/$darjahId_/$subjekId_/kuiz',
+    path: '/darjah/$darjahId/$subjekId/kuiz',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const DarjahDarjahIdSubjekIdLatihTubiRoute =
+  DarjahDarjahIdSubjekIdLatihTubiRouteImport.update({
+    id: '/darjah/$darjahId_/$subjekId_/latih-tubi',
+    path: '/darjah/$darjahId/$subjekId/latih-tubi',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const DarjahDarjahIdSubjekIdLatihanRoute =
+  DarjahDarjahIdSubjekIdLatihanRouteImport.update({
+    id: '/darjah/$darjahId_/$subjekId_/latihan',
+    path: '/darjah/$darjahId/$subjekId/latihan',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const DarjahDarjahIdSubjekIdLatihanBerpanduPreviewRoute =
+  DarjahDarjahIdSubjekIdLatihanBerpanduPreviewRouteImport.update({
+    id: '/darjah/$darjahId_/$subjekId_/latihan-berpandu-preview',
+    path: '/darjah/$darjahId/$subjekId/latihan-berpandu-preview',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const DarjahDarjahIdSubjekIdMendengarRoute =
+  DarjahDarjahIdSubjekIdMendengarRouteImport.update({
+    id: '/darjah/$darjahId_/$subjekId_/mendengar',
+    path: '/darjah/$darjahId/$subjekId/mendengar',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const DarjahDarjahIdSubjekIdNotaRingkasRoute =
+  DarjahDarjahIdSubjekIdNotaRingkasRouteImport.update({
+    id: '/darjah/$darjahId_/$subjekId_/nota-ringkas',
+    path: '/darjah/$darjahId/$subjekId/nota-ringkas',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+const DarjahDarjahIdPercubaanMpt4SubjekIdRoute =
+  DarjahDarjahIdPercubaanMpt4SubjekIdRouteImport.update({
+    id: '/darjah/$darjahId_/percubaan-mpt4_/$subjekId',
+    path: '/darjah/$darjahId/percubaan-mpt4/$subjekId',
     getParentRoute: () => rootRouteImport,
   } as any)
 const DarjahDarjahIdPercubaanMpt4SubjekIdSetIdRoute =
@@ -700,74 +700,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/ujian-percuma': {
-      id: '/ujian-percuma'
-      path: '/ujian-percuma'
-      fullPath: '/ujian-percuma'
-      preLoaderRoute: typeof UjianPercumaRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/reset-password': {
-      id: '/reset-password'
-      path: '/reset-password'
-      fullPath: '/reset-password'
-      preLoaderRoute: typeof ResetPasswordRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/pra-kalifah': {
-      id: '/pra-kalifah'
-      path: '/pra-kalifah'
-      fullPath: '/pra-kalifah'
-      preLoaderRoute: typeof PraKalifahRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/pilih-darjah': {
-      id: '/pilih-darjah'
-      path: '/pilih-darjah'
-      fullPath: '/pilih-darjah'
-      preLoaderRoute: typeof PilihDarjahRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/lupa-password': {
-      id: '/lupa-password'
-      path: '/lupa-password'
-      fullPath: '/lupa-password'
-      preLoaderRoute: typeof LupaPasswordRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/latihan': {
-      id: '/latihan'
-      path: '/latihan'
-      fullPath: '/latihan'
-      preLoaderRoute: typeof LatihanRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/harga': {
-      id: '/harga'
-      path: '/harga'
-      fullPath: '/harga'
-      preLoaderRoute: typeof HargaRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/daftar': {
-      id: '/daftar'
-      path: '/daftar'
-      fullPath: '/daftar'
-      preLoaderRoute: typeof DaftarRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/cikgu-affiliate': {
-      id: '/cikgu-affiliate'
-      path: '/cikgu-affiliate'
-      fullPath: '/cikgu-affiliate'
-      preLoaderRoute: typeof CikguAffiliateRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -777,130 +714,74 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/cikgu-affiliate': {
+      id: '/cikgu-affiliate'
+      path: '/cikgu-affiliate'
+      fullPath: '/cikgu-affiliate'
+      preLoaderRoute: typeof CikguAffiliateRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/preview/nama': {
-      id: '/preview/nama'
-      path: '/preview/nama'
-      fullPath: '/preview/nama'
-      preLoaderRoute: typeof PreviewNamaRouteImport
+    '/daftar': {
+      id: '/daftar'
+      path: '/daftar'
+      fullPath: '/daftar'
+      preLoaderRoute: typeof DaftarRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/preview/$darjahId': {
-      id: '/preview/$darjahId'
-      path: '/preview/$darjahId'
-      fullPath: '/preview/$darjahId'
-      preLoaderRoute: typeof PreviewDarjahIdRouteImport
+    '/harga': {
+      id: '/harga'
+      path: '/harga'
+      fullPath: '/harga'
+      preLoaderRoute: typeof HargaRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/pra-kalifah_/$bidang': {
-      id: '/pra-kalifah_/$bidang'
-      path: '/pra-kalifah/$bidang'
-      fullPath: '/pra-kalifah/$bidang'
-      preLoaderRoute: typeof PraKalifahBidangRouteImport
+    '/latihan': {
+      id: '/latihan'
+      path: '/latihan'
+      fullPath: '/latihan'
+      preLoaderRoute: typeof LatihanRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/kali-test/belajar-untuk-saya': {
-      id: '/kali-test/belajar-untuk-saya'
-      path: '/kali-test/belajar-untuk-saya'
-      fullPath: '/kali-test/belajar-untuk-saya'
-      preLoaderRoute: typeof KaliTestBelajarUntukSayaRouteImport
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/dashboard/progress': {
-      id: '/dashboard/progress'
-      path: '/dashboard/progress'
-      fullPath: '/dashboard/progress'
-      preLoaderRoute: typeof DashboardProgressRouteImport
+    '/lupa-password': {
+      id: '/lupa-password'
+      path: '/lupa-password'
+      fullPath: '/lupa-password'
+      preLoaderRoute: typeof LupaPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/dashboard/ibu-bapa': {
-      id: '/dashboard/ibu-bapa'
-      path: '/dashboard/ibu-bapa'
-      fullPath: '/dashboard/ibu-bapa'
-      preLoaderRoute: typeof DashboardIbuBapaRouteImport
+    '/pilih-darjah': {
+      id: '/pilih-darjah'
+      path: '/pilih-darjah'
+      fullPath: '/pilih-darjah'
+      preLoaderRoute: typeof PilihDarjahRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/darjah/$darjahId': {
-      id: '/darjah/$darjahId'
-      path: '/darjah/$darjahId'
-      fullPath: '/darjah/$darjahId'
-      preLoaderRoute: typeof DarjahDarjahIdRouteImport
+    '/pra-kalifah': {
+      id: '/pra-kalifah'
+      path: '/pra-kalifah'
+      fullPath: '/pra-kalifah'
+      preLoaderRoute: typeof PraKalifahRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/bayaran/selesai': {
-      id: '/bayaran/selesai'
-      path: '/bayaran/selesai'
-      fullPath: '/bayaran/selesai'
-      preLoaderRoute: typeof BayaranSelesaiRouteImport
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/temporary-unlock': {
-      id: '/api/temporary-unlock'
-      path: '/api/temporary-unlock'
-      fullPath: '/api/temporary-unlock'
-      preLoaderRoute: typeof ApiTemporaryUnlockRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/debug-env': {
-      id: '/api/debug-env'
-      path: '/api/debug-env'
-      fullPath: '/api/debug-env'
-      preLoaderRoute: typeof ApiDebugEnvRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/confirm-payment': {
-      id: '/api/confirm-payment'
-      path: '/api/confirm-payment'
-      fullPath: '/api/confirm-payment'
-      preLoaderRoute: typeof ApiConfirmPaymentRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/checkout': {
-      id: '/api/checkout'
-      path: '/api/checkout'
-      fullPath: '/api/checkout'
-      preLoaderRoute: typeof ApiCheckoutRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/affiliate/syarat': {
-      id: '/affiliate/syarat'
-      path: '/affiliate/syarat'
-      fullPath: '/affiliate/syarat'
-      preLoaderRoute: typeof AffiliateSyaratRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/affiliate/dashboard': {
-      id: '/affiliate/dashboard'
-      path: '/affiliate/dashboard'
-      fullPath: '/affiliate/dashboard'
-      preLoaderRoute: typeof AffiliateDashboardRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/affiliate/daftar': {
-      id: '/affiliate/daftar'
-      path: '/affiliate/daftar'
-      fullPath: '/affiliate/daftar'
-      preLoaderRoute: typeof AffiliateDaftarRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin_/telegram': {
-      id: '/admin_/telegram'
-      path: '/admin/telegram'
-      fullPath: '/admin/telegram'
-      preLoaderRoute: typeof AdminTelegramRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/admin_/challenge': {
-      id: '/admin_/challenge'
-      path: '/admin/challenge'
-      fullPath: '/admin/challenge'
-      preLoaderRoute: typeof AdminChallengeRouteImport
+    '/ujian-percuma': {
+      id: '/ujian-percuma'
+      path: '/ujian-percuma'
+      fullPath: '/ujian-percuma'
+      preLoaderRoute: typeof UjianPercumaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin_/affiliates': {
@@ -910,46 +791,123 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAffiliatesRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/ujian-percuma_/soalan/$sessionId': {
-      id: '/ujian-percuma_/soalan/$sessionId'
-      path: '/ujian-percuma/soalan/$sessionId'
-      fullPath: '/ujian-percuma/soalan/$sessionId'
-      preLoaderRoute: typeof UjianPercumaSoalanSessionIdRouteImport
+    '/admin_/challenge': {
+      id: '/admin_/challenge'
+      path: '/admin/challenge'
+      fullPath: '/admin/challenge'
+      preLoaderRoute: typeof AdminChallengeRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/ujian-percuma_/keputusan/$reportToken': {
-      id: '/ujian-percuma_/keputusan/$reportToken'
-      path: '/ujian-percuma/keputusan/$reportToken'
-      fullPath: '/ujian-percuma/keputusan/$reportToken'
-      preLoaderRoute: typeof UjianPercumaKeputusanReportTokenRouteImport
+    '/admin_/telegram': {
+      id: '/admin_/telegram'
+      path: '/admin/telegram'
+      fullPath: '/admin/telegram'
+      preLoaderRoute: typeof AdminTelegramRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/preview/$darjahId_/score': {
-      id: '/preview/$darjahId_/score'
-      path: '/preview/$darjahId/score'
-      fullPath: '/preview/$darjahId/score'
-      preLoaderRoute: typeof PreviewDarjahIdScoreRouteImport
+    '/affiliate/daftar': {
+      id: '/affiliate/daftar'
+      path: '/affiliate/daftar'
+      fullPath: '/affiliate/daftar'
+      preLoaderRoute: typeof AffiliateDaftarRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/darjah/$darjahId_/percubaan-mpt4': {
-      id: '/darjah/$darjahId_/percubaan-mpt4'
-      path: '/darjah/$darjahId/percubaan-mpt4'
-      fullPath: '/darjah/$darjahId/percubaan-mpt4'
-      preLoaderRoute: typeof DarjahDarjahIdPercubaanMpt4RouteImport
+    '/affiliate/dashboard': {
+      id: '/affiliate/dashboard'
+      path: '/affiliate/dashboard'
+      fullPath: '/affiliate/dashboard'
+      preLoaderRoute: typeof AffiliateDashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/darjah/$darjahId_/$subjekId': {
-      id: '/darjah/$darjahId_/$subjekId'
-      path: '/darjah/$darjahId/$subjekId'
-      fullPath: '/darjah/$darjahId/$subjekId'
-      preLoaderRoute: typeof DarjahDarjahIdSubjekIdRouteImport
+    '/affiliate/syarat': {
+      id: '/affiliate/syarat'
+      path: '/affiliate/syarat'
+      fullPath: '/affiliate/syarat'
+      preLoaderRoute: typeof AffiliateSyaratRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/admin_/affiliates_/dashboard': {
-      id: '/admin_/affiliates_/dashboard'
-      path: '/admin/affiliates/dashboard'
-      fullPath: '/admin/affiliates/dashboard'
-      preLoaderRoute: typeof AdminAffiliatesDashboardRouteImport
+    '/api/checkout': {
+      id: '/api/checkout'
+      path: '/api/checkout'
+      fullPath: '/api/checkout'
+      preLoaderRoute: typeof ApiCheckoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/confirm-payment': {
+      id: '/api/confirm-payment'
+      path: '/api/confirm-payment'
+      fullPath: '/api/confirm-payment'
+      preLoaderRoute: typeof ApiConfirmPaymentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/debug-env': {
+      id: '/api/debug-env'
+      path: '/api/debug-env'
+      fullPath: '/api/debug-env'
+      preLoaderRoute: typeof ApiDebugEnvRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/temporary-unlock': {
+      id: '/api/temporary-unlock'
+      path: '/api/temporary-unlock'
+      fullPath: '/api/temporary-unlock'
+      preLoaderRoute: typeof ApiTemporaryUnlockRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bayaran/selesai': {
+      id: '/bayaran/selesai'
+      path: '/bayaran/selesai'
+      fullPath: '/bayaran/selesai'
+      preLoaderRoute: typeof BayaranSelesaiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/darjah/$darjahId': {
+      id: '/darjah/$darjahId'
+      path: '/darjah/$darjahId'
+      fullPath: '/darjah/$darjahId'
+      preLoaderRoute: typeof DarjahDarjahIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/ibu-bapa': {
+      id: '/dashboard/ibu-bapa'
+      path: '/dashboard/ibu-bapa'
+      fullPath: '/dashboard/ibu-bapa'
+      preLoaderRoute: typeof DashboardIbuBapaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard/progress': {
+      id: '/dashboard/progress'
+      path: '/dashboard/progress'
+      fullPath: '/dashboard/progress'
+      preLoaderRoute: typeof DashboardProgressRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/kali-test/belajar-untuk-saya': {
+      id: '/kali-test/belajar-untuk-saya'
+      path: '/kali-test/belajar-untuk-saya'
+      fullPath: '/kali-test/belajar-untuk-saya'
+      preLoaderRoute: typeof KaliTestBelajarUntukSayaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pra-kalifah_/$bidang': {
+      id: '/pra-kalifah_/$bidang'
+      path: '/pra-kalifah/$bidang'
+      fullPath: '/pra-kalifah/$bidang'
+      preLoaderRoute: typeof PraKalifahBidangRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/preview/$darjahId': {
+      id: '/preview/$darjahId'
+      path: '/preview/$darjahId'
+      fullPath: '/preview/$darjahId'
+      preLoaderRoute: typeof PreviewDarjahIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/preview/nama': {
+      id: '/preview/nama'
+      path: '/preview/nama'
+      fullPath: '/preview/nama'
+      preLoaderRoute: typeof PreviewNamaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin_/affiliates_/$id': {
@@ -959,67 +917,53 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAffiliatesIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/darjah/$darjahId_/percubaan-mpt4_/$subjekId': {
-      id: '/darjah/$darjahId_/percubaan-mpt4_/$subjekId'
-      path: '/darjah/$darjahId/percubaan-mpt4/$subjekId'
-      fullPath: '/darjah/$darjahId/percubaan-mpt4/$subjekId'
-      preLoaderRoute: typeof DarjahDarjahIdPercubaanMpt4SubjekIdRouteImport
+    '/admin_/affiliates_/dashboard': {
+      id: '/admin_/affiliates_/dashboard'
+      path: '/admin/affiliates/dashboard'
+      fullPath: '/admin/affiliates/dashboard'
+      preLoaderRoute: typeof AdminAffiliatesDashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/darjah/$darjahId_/$subjekId_/nota-ringkas': {
-      id: '/darjah/$darjahId_/$subjekId_/nota-ringkas'
-      path: '/darjah/$darjahId/$subjekId/nota-ringkas'
-      fullPath: '/darjah/$darjahId/$subjekId/nota-ringkas'
-      preLoaderRoute: typeof DarjahDarjahIdSubjekIdNotaRingkasRouteImport
+    '/darjah/$darjahId_/$subjekId': {
+      id: '/darjah/$darjahId_/$subjekId'
+      path: '/darjah/$darjahId/$subjekId'
+      fullPath: '/darjah/$darjahId/$subjekId'
+      preLoaderRoute: typeof DarjahDarjahIdSubjekIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/darjah/$darjahId_/$subjekId_/mendengar': {
-      id: '/darjah/$darjahId_/$subjekId_/mendengar'
-      path: '/darjah/$darjahId/$subjekId/mendengar'
-      fullPath: '/darjah/$darjahId/$subjekId/mendengar'
-      preLoaderRoute: typeof DarjahDarjahIdSubjekIdMendengarRouteImport
+    '/darjah/$darjahId_/percubaan-mpt4': {
+      id: '/darjah/$darjahId_/percubaan-mpt4'
+      path: '/darjah/$darjahId/percubaan-mpt4'
+      fullPath: '/darjah/$darjahId/percubaan-mpt4'
+      preLoaderRoute: typeof DarjahDarjahIdPercubaanMpt4RouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/darjah/$darjahId_/$subjekId_/latihan-berpandu-preview': {
-      id: '/darjah/$darjahId_/$subjekId_/latihan-berpandu-preview'
-      path: '/darjah/$darjahId/$subjekId/latihan-berpandu-preview'
-      fullPath: '/darjah/$darjahId/$subjekId/latihan-berpandu-preview'
-      preLoaderRoute: typeof DarjahDarjahIdSubjekIdLatihanBerpanduPreviewRouteImport
+    '/preview/$darjahId_/score': {
+      id: '/preview/$darjahId_/score'
+      path: '/preview/$darjahId/score'
+      fullPath: '/preview/$darjahId/score'
+      preLoaderRoute: typeof PreviewDarjahIdScoreRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/darjah/$darjahId_/$subjekId_/latihan': {
-      id: '/darjah/$darjahId_/$subjekId_/latihan'
-      path: '/darjah/$darjahId/$subjekId/latihan'
-      fullPath: '/darjah/$darjahId/$subjekId/latihan'
-      preLoaderRoute: typeof DarjahDarjahIdSubjekIdLatihanRouteImport
+    '/ujian-percuma_/keputusan/$reportToken': {
+      id: '/ujian-percuma_/keputusan/$reportToken'
+      path: '/ujian-percuma/keputusan/$reportToken'
+      fullPath: '/ujian-percuma/keputusan/$reportToken'
+      preLoaderRoute: typeof UjianPercumaKeputusanReportTokenRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/darjah/$darjahId_/$subjekId_/latih-tubi': {
-      id: '/darjah/$darjahId_/$subjekId_/latih-tubi'
-      path: '/darjah/$darjahId/$subjekId/latih-tubi'
-      fullPath: '/darjah/$darjahId/$subjekId/latih-tubi'
-      preLoaderRoute: typeof DarjahDarjahIdSubjekIdLatihTubiRouteImport
+    '/ujian-percuma_/soalan/$sessionId': {
+      id: '/ujian-percuma_/soalan/$sessionId'
+      path: '/ujian-percuma/soalan/$sessionId'
+      fullPath: '/ujian-percuma/soalan/$sessionId'
+      preLoaderRoute: typeof UjianPercumaSoalanSessionIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/darjah/$darjahId_/$subjekId_/kuiz': {
-      id: '/darjah/$darjahId_/$subjekId_/kuiz'
-      path: '/darjah/$darjahId/$subjekId/kuiz'
-      fullPath: '/darjah/$darjahId/$subjekId/kuiz'
-      preLoaderRoute: typeof DarjahDarjahIdSubjekIdKuizRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/darjah/$darjahId_/$subjekId_/isi-kosong': {
-      id: '/darjah/$darjahId_/$subjekId_/isi-kosong'
-      path: '/darjah/$darjahId/$subjekId/isi-kosong'
-      fullPath: '/darjah/$darjahId/$subjekId/isi-kosong'
-      preLoaderRoute: typeof DarjahDarjahIdSubjekIdIsiKosongRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/darjah/$darjahId_/$subjekId_/game': {
-      id: '/darjah/$darjahId_/$subjekId_/game'
-      path: '/darjah/$darjahId/$subjekId/game'
-      fullPath: '/darjah/$darjahId/$subjekId/game'
-      preLoaderRoute: typeof DarjahDarjahIdSubjekIdGameRouteImport
+    '/api/public/toyyibpay/callback': {
+      id: '/api/public/toyyibpay/callback'
+      path: '/api/public/toyyibpay/callback'
+      fullPath: '/api/public/toyyibpay/callback'
+      preLoaderRoute: typeof ApiPublicToyyibpayCallbackRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/darjah/$darjahId_/$subjekId_/bergambar-rajah': {
@@ -1029,11 +973,67 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DarjahDarjahIdSubjekIdBergambarRajahRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/public/toyyibpay/callback': {
-      id: '/api/public/toyyibpay/callback'
-      path: '/api/public/toyyibpay/callback'
-      fullPath: '/api/public/toyyibpay/callback'
-      preLoaderRoute: typeof ApiPublicToyyibpayCallbackRouteImport
+    '/darjah/$darjahId_/$subjekId_/game': {
+      id: '/darjah/$darjahId_/$subjekId_/game'
+      path: '/darjah/$darjahId/$subjekId/game'
+      fullPath: '/darjah/$darjahId/$subjekId/game'
+      preLoaderRoute: typeof DarjahDarjahIdSubjekIdGameRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/darjah/$darjahId_/$subjekId_/isi-kosong': {
+      id: '/darjah/$darjahId_/$subjekId_/isi-kosong'
+      path: '/darjah/$darjahId/$subjekId/isi-kosong'
+      fullPath: '/darjah/$darjahId/$subjekId/isi-kosong'
+      preLoaderRoute: typeof DarjahDarjahIdSubjekIdIsiKosongRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/darjah/$darjahId_/$subjekId_/kuiz': {
+      id: '/darjah/$darjahId_/$subjekId_/kuiz'
+      path: '/darjah/$darjahId/$subjekId/kuiz'
+      fullPath: '/darjah/$darjahId/$subjekId/kuiz'
+      preLoaderRoute: typeof DarjahDarjahIdSubjekIdKuizRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/darjah/$darjahId_/$subjekId_/latih-tubi': {
+      id: '/darjah/$darjahId_/$subjekId_/latih-tubi'
+      path: '/darjah/$darjahId/$subjekId/latih-tubi'
+      fullPath: '/darjah/$darjahId/$subjekId/latih-tubi'
+      preLoaderRoute: typeof DarjahDarjahIdSubjekIdLatihTubiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/darjah/$darjahId_/$subjekId_/latihan': {
+      id: '/darjah/$darjahId_/$subjekId_/latihan'
+      path: '/darjah/$darjahId/$subjekId/latihan'
+      fullPath: '/darjah/$darjahId/$subjekId/latihan'
+      preLoaderRoute: typeof DarjahDarjahIdSubjekIdLatihanRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/darjah/$darjahId_/$subjekId_/latihan-berpandu-preview': {
+      id: '/darjah/$darjahId_/$subjekId_/latihan-berpandu-preview'
+      path: '/darjah/$darjahId/$subjekId/latihan-berpandu-preview'
+      fullPath: '/darjah/$darjahId/$subjekId/latihan-berpandu-preview'
+      preLoaderRoute: typeof DarjahDarjahIdSubjekIdLatihanBerpanduPreviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/darjah/$darjahId_/$subjekId_/mendengar': {
+      id: '/darjah/$darjahId_/$subjekId_/mendengar'
+      path: '/darjah/$darjahId/$subjekId/mendengar'
+      fullPath: '/darjah/$darjahId/$subjekId/mendengar'
+      preLoaderRoute: typeof DarjahDarjahIdSubjekIdMendengarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/darjah/$darjahId_/$subjekId_/nota-ringkas': {
+      id: '/darjah/$darjahId_/$subjekId_/nota-ringkas'
+      path: '/darjah/$darjahId/$subjekId/nota-ringkas'
+      fullPath: '/darjah/$darjahId/$subjekId/nota-ringkas'
+      preLoaderRoute: typeof DarjahDarjahIdSubjekIdNotaRingkasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/darjah/$darjahId_/percubaan-mpt4_/$subjekId': {
+      id: '/darjah/$darjahId_/percubaan-mpt4_/$subjekId'
+      path: '/darjah/$darjahId/percubaan-mpt4/$subjekId'
+      fullPath: '/darjah/$darjahId/percubaan-mpt4/$subjekId'
+      preLoaderRoute: typeof DarjahDarjahIdPercubaanMpt4SubjekIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/darjah/$darjahId_/percubaan-mpt4_/$subjekId_/$setId': {
@@ -1114,13 +1114,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
