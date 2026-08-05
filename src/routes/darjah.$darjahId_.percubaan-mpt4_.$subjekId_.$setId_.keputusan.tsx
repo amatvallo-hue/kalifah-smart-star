@@ -470,6 +470,10 @@ function KeputusanPage() {
             onCubaLagi={handleCubaLagi}
             retrying={retrying}
             isFreeTrialUser={isFreeTrialUser}
+            hasAccess={hasAccess}
+            pelan={pelan}
+            pelanLoading={pelanLoading}
+            subjekId={subjekId}
           />
         )}
       </main>
