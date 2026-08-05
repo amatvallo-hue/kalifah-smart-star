@@ -114,6 +114,20 @@ export async function ciptaAkaunAnak(
     return { ok: false, mesej: insertErr?.message ?? "Gagal simpan profil anak." };
   }
 
+  const darjahNumEvt = Number(darjah);
+  try {
+    void supabase
+      .from("analytics_events")
+      .insert({
+        event_name: "tambah_anak",
+        user_id: parentId,
+        metadata: { child_id: (row as { id: string }).id, darjah: darjahNumEvt },
+      })
+      .then(() => {}, () => {});
+  } catch {
+    /* analytics tidak boleh ganggu flow */
+  }
+
   // 5) Set darjah_akses pada profile anak — HANYA mirror akses yang
   //    parent sudah bayar. Jangan invent akses baharu (elak bypass bayaran).
   const darjahNum = Number(darjah);

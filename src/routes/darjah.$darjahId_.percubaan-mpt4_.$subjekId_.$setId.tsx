@@ -129,8 +129,21 @@ function PercubaanMpt4JawabPage() {
     if (keputusan && typeof window !== "undefined") {
       window.sessionStorage.setItem(`kalifah_mpt4_orientasi_${keputusan.id}`, "1");
     }
+    void supabase
+      .from("analytics_events")
+      .insert({
+        event_name: "mpt4_mula",
+        user_id: user?.id ?? null,
+        metadata: {
+          set_id: setId,
+          subjek: subjekId,
+          darjah: darjahId,
+          keputusan_id: keputusan?.id ?? null,
+        },
+      })
+      .then(() => {}, () => {});
     setOrientasiDone(true);
-  }, [keputusan]);
+  }, [keputusan, user?.id, setId, subjekId, darjahId]);
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
@@ -321,6 +334,19 @@ function PercubaanMpt4JawabPage() {
       .from("mpt4_keputusan")
       .update({ jawapan, status: "submitted", submitted_at: new Date().toISOString() })
       .eq("id", keputusan.id);
+    void supabase
+      .from("analytics_events")
+      .insert({
+        event_name: "mpt4_tamat",
+        user_id: user?.id ?? null,
+        metadata: {
+          set_id: setId,
+          subjek: subjekId,
+          darjah: darjahId,
+          keputusan_id: keputusan.id,
+        },
+      })
+      .then(() => {}, () => {});
     setSubmitting(false);
     navigate({
       to: "/darjah/$darjahId/percubaan-mpt4/$subjekId/$setId/keputusan",
