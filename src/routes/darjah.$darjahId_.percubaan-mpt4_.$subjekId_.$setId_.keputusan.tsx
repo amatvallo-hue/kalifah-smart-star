@@ -28,6 +28,20 @@ export const Route = createFileRoute(
 
 type KaedahPenskoran = "dikotomus" | "analitikal" | "holistik";
 
+interface PelanHari {
+  hari: number;
+  topik: string;
+  jenis_aktiviti: string;
+  tajuk: string;
+}
+
+interface PelanKali {
+  topik_lemah: string[];
+  mesej_kali: string;
+  hari: PelanHari[];
+  subjek_slug: string;
+}
+
 interface Mpt4Set {
   id: string;
   nombor_set: number;
