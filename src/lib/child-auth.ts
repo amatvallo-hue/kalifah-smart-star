@@ -63,13 +63,23 @@ export async function ciptaAkaunAnak(
   const parentId = parentSess.session?.user?.id;
   if (!parentId) return { ok: false, mesej: "Anda perlu log masuk sebagai ibu bapa." };
 
-  // 2) Pastikan username belum digunakan
-  const { data: wujud } = await supabase
-    .from("child_profiles" as never)
-    .select("id")
-    .eq("username", uname)
-    .maybeSingle();
-  if (wujud) return { ok: false, mesej: "Username ini sudah digunakan." };
+  // 2) Jana username unik (cuba beberapa kali kalau clash)
+  let uname = "";
+  for (let cuba = 0; cuba < 6; cuba++) {
+    const calon = janaUsernameDari(nama);
+    if (!isValidUsername(calon)) continue;
+    const { data: wujud } = await supabase
+      .from("child_profiles" as never)
+      .select("id")
+      .eq("username", calon)
+      .maybeSingle();
+    if (!wujud) {
+      uname = calon;
+      break;
+    }
+  }
+  if (!uname) return { ok: false, mesej: "Gagal menjana username unik. Sila cuba lagi." };
+
 
   // 3) Cipta akaun auth pada klien sekunder (supaya sesi parent tak terganti)
   const secondary = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
