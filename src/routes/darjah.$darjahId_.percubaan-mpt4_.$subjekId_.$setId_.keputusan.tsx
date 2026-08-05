@@ -659,14 +659,14 @@ function TrialUpsell({
           Ini baru satu set percuma 🎁
         </h3>
         <p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
-          Buka semua set Percubaan MPT4 dan semua subjek untuk latihan penuh.
+          Hanya <span className="font-extrabold text-foreground">RM49/tahun</span> untuk buka Darjah {darjahId} sepenuhnya — semua set Percubaan MPT4, Latih Tubi, Nota, Kuiz &amp; Game.
         </p>
-        <Link
-          to="/harga"
+        <a
+          href={`/harga?pakej=satu&darjah=${darjahId}`}
           className="mt-5 inline-flex items-center gap-2 rounded-full bg-gradient-primary px-6 py-3 font-display text-sm font-extrabold text-primary-foreground shadow-soft transition hover:translate-y-[-1px]"
         >
-          🔓 Unlock Semua Set MPT4 &amp; Subjek Lain
-        </Link>
+          🔓 Buka Darjah {darjahId} Sekarang — RM49/tahun
+        </a>
         <div className="mt-3">
           <a
             href="https://t.me/KalifahAssistantbot"
