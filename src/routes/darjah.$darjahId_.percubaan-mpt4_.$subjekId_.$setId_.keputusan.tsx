@@ -9,6 +9,12 @@ import { usePoints } from "@/hooks/use-points";
 import { useProfile } from "@/hooks/use-profile";
 import { getDarjah, getSubjek, TONE_GRADIENT } from "@/lib/curriculum";
 import { SrtbReview, gradeSrtb, type LangkahBertingkat } from "@/lib/mpt4-srtb";
+import { laluanCheckout } from "@/lib/child-auth";
+
+async function handleLangganKlik(darjahId: string) {
+  const url = await laluanCheckout(darjahId);
+  window.location.href = url;
+}
 
 export const Route = createFileRoute(
   "/darjah/$darjahId_/percubaan-mpt4_/$subjekId_/$setId_/keputusan",
