@@ -299,7 +299,7 @@ function DaftarMpt4Page() {
         </div>
         <p className="flex items-center justify-center gap-1.5 text-center text-xs font-semibold text-muted-foreground">
           <Star className="h-3.5 w-3.5 text-amber-500" />
-          Ribuan soalan KSSR dianalisis oleh KALI
+          346 ibu bapa dah daftar di Kalifah.my
         </p>
         <Field icon={User} label="Nama Penuh Ibu/Bapa" type="text" value={name} onChange={setName} placeholder="Ali bin Abu" autoComplete="name" />
         <Field icon={Mail} label="Email" type="email" value={email} onChange={setEmail} placeholder="contoh@email.com" autoComplete="email" />
