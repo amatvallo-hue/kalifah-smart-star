@@ -588,13 +588,25 @@ function ResultView({
 function TrialUpsell({
   soalanList,
   esei,
+  perBahagian,
 }: {
   soalanList: Mpt4Soalan[];
   esei: Record<string, EseiPenilaianItem>;
+  perBahagian: Record<string, { markah_diperoleh: number; markah_penuh: number }>;
 }) {
   const markahPenuhPerSoalan = new Map(soalanList.map((s) => [s.id, s.markah]));
   const kuasai: string[] = [];
   const tingkat: string[] = [];
+
+  const bahagianEntries = Object.entries(perBahagian);
+  for (const [bahagian, b] of bahagianEntries) {
+    if (!b || !b.markah_penuh) continue;
+    const pct = Math.round((b.markah_diperoleh / b.markah_penuh) * 100);
+    const label = `Bahagian ${bahagian} — ${pct}% (${b.markah_diperoleh}/${b.markah_penuh})`;
+    if (pct >= 70) kuasai.push(label);
+    else tingkat.push(label);
+  }
+
   for (const [soalanId, item] of Object.entries(esei)) {
     const penuh = markahPenuhPerSoalan.get(soalanId);
     if (penuh == null) continue;
@@ -607,11 +619,13 @@ function TrialUpsell({
   }
   const kuasaiTop = kuasai.slice(0, 3);
   const tingkatTop = tingkat.slice(0, 3);
+  const adaData = bahagianEntries.length > 0 || kuasai.length > 0 || tingkat.length > 0;
 
   return (
     <div className="flex flex-col gap-6">
-      {(kuasaiTop.length > 0 || tingkatTop.length > 0) && (
+      {adaData && (
         <div className="grid gap-4 md:grid-cols-2">
+
           <div className="rounded-3xl border border-border/60 bg-card p-5 shadow-card">
             <h3 className="font-display text-lg font-extrabold text-emerald-600">✅ Yang Dikuasai</h3>
             <ul className="mt-3 flex flex-col gap-2 text-sm text-muted-foreground">
