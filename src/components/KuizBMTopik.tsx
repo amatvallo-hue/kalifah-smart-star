@@ -114,6 +114,7 @@ interface Props {
 
 export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subjekKod = "BM", showBahasaToggle = false }: Props) {
   const darjahNum = Number(darjahId);
+  const examPaperStyle = darjahId === "6" && subjekId === "bahasa-melayu";
   const { user } = useAuth();
   const award = useAward();
   const profileName =
@@ -614,7 +615,7 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
   return (
     <main className="container mx-auto max-w-3xl px-4 py-8">
       {backLink}
-      {headerChips}
+      {!examPaperStyle && headerChips}
 
       <div className="mt-5 flex items-center justify-between">
         <span className="font-display text-sm font-extrabold text-muted-foreground">
@@ -637,6 +638,103 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
         />
       </div>
 
+      {examPaperStyle && (
+        <div className="mt-6 rounded-lg border border-border/60 bg-card p-6 md:p-10">
+          {/* Letterhead */}
+          <div className="text-center">
+            <div className="text-xs font-extrabold uppercase tracking-widest text-muted-foreground">KALIFAH.MY</div>
+            <h1 className="mt-2 font-display text-2xl font-extrabold text-foreground">Kuiz — Bahasa Melayu</h1>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Darjah 6 · Topik: {topik} · Soalan {i + 1}/{soalanList.length}
+            </p>
+            <div className="my-4 border-b border-border/60" />
+          </div>
+
+          <p className="text-base leading-relaxed text-foreground whitespace-pre-wrap">
+            <span className="font-display font-extrabold">{i + 1}.</span> {soalan.soalan}
+          </p>
+
+          {renderSoalanSvg(soalan.svg_type, soalan.svg_params)}
+
+          <div className="mt-4 flex flex-col gap-3 pl-1 sm:pl-4">
+            {soalan.pilihan.map((p, idx) => {
+              const isPilih = pilih === idx;
+              const showBetul = pilih !== null && idx === soalan.jawapan;
+              const showSalah = isPilih && idx !== soalan.jawapan;
+              return (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => handlePilih(idx)}
+                  disabled={pilih !== null}
+                  aria-pressed={isPilih}
+                  className={`flex w-full items-start gap-3 rounded-md border px-3 py-2 text-left text-sm text-foreground transition ${
+                    showBetul
+                      ? "border-success text-success"
+                      : showSalah
+                        ? "border-destructive text-destructive"
+                        : pilih !== null
+                          ? "border-transparent text-muted-foreground"
+                          : "border-transparent hover:border-border/60 hover:text-primary"
+                  }`}
+                >
+                  <span
+                    className={`mt-0.5 h-4 w-4 shrink-0 rounded-full border-2 transition ${
+                      isPilih ? "border-primary bg-primary" : "border-muted-foreground/50 bg-transparent"
+                    }`}
+                  />
+                  <span className="shrink-0 font-display font-extrabold">{String.fromCharCode(65 + idx)}</span>
+                  <span className="whitespace-pre-wrap">{p}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          {pilih !== null && (
+            <div
+              className={`mt-5 flex items-start gap-3 rounded-md border p-3 ${
+                betul ? "border-success text-success" : "border-destructive text-destructive"
+              }`}
+            >
+              <Sparkles className="mt-0.5 h-4 w-4 shrink-0" />
+              <div className="text-sm font-bold">{betul ? tr.betul : tr.salah}</div>
+            </div>
+          )}
+
+          {pilih !== null && (() => {
+            const fbMap: Record<number, string | null | undefined> = {
+              0: soalan.feedback_a,
+              1: soalan.feedback_b,
+              2: soalan.feedback_c,
+              3: soalan.feedback_d,
+            };
+            const fb = fbMap[pilih];
+            const isBetulPilih = pilih === soalan.jawapan;
+            if (!fb || fb.trim().length === 0) return null;
+            return (
+              <div
+                className={`mt-3 flex items-start gap-3 rounded-md border p-3 ${
+                  isBetulPilih ? "border-success/60" : "border-border"
+                }`}
+              >
+                <Lightbulb className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
+                <p className="text-sm text-foreground">{fb}</p>
+              </div>
+            );
+          })()}
+
+          <button
+            onClick={seterusnya}
+            disabled={pilih === null}
+            className="mt-6 w-full rounded-md px-6 py-4 font-display text-lg font-extrabold text-white shadow-soft transition hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
+            style={{ backgroundColor: HIJAU }}
+          >
+            {i + 1 >= soalanList.length ? tr.lihatKeputusan : tr.seterusnya}
+          </button>
+        </div>
+      )}
+
+      {!examPaperStyle && (
       <div className="mt-6 rounded-3xl bg-card p-6 shadow-card md:p-8">
         <h1 className="font-display text-2xl font-extrabold leading-snug text-foreground md:text-3xl">
           {soalan.soalan}
@@ -729,6 +827,7 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
           {i + 1 >= soalanList.length ? tr.lihatKeputusan : tr.seterusnya}
         </button>
       </div>
+      )}
     </main>
   );
 }
