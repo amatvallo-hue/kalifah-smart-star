@@ -1568,9 +1568,8 @@ function ResetPasswordModal({
 }
 
 function FormTambahAnak({ onAdded }: { onAdded: () => void }) {
+  const navigate = useNavigate();
   const [nama, setNama] = useState("");
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
   const [darjah, setDarjah] = useState("1");
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
@@ -1584,24 +1583,76 @@ function FormTambahAnak({ onAdded }: { onAdded: () => void }) {
     if (previewDarjah) setDarjah(previewDarjah);
   }, []);
 
-  const unameLive = normalizeUsername(username);
-
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     if (!nama.trim()) return;
     setLoading(true);
     setErr(null);
     setOk(null);
-    const res = await ciptaAkaunAnak(nama, username, password, darjah);
-    setLoading(false);
+    const res = await ciptaAkaunAnak(nama, darjah);
     if (!res.ok) {
+      setLoading(false);
       setErr(res.mesej ?? "Gagal mencipta akaun anak.");
       return;
     }
-    setOk(`Akaun ${nama} berjaya dicipta! Anak boleh log masuk dengan username: ${unameLive}`);
+
+    if (res.session) {
+      // Simpan sesi parent supaya boleh kembali kemudian
+      try {
+        const { data: cur } = await supabase.auth.getSession();
+        if (cur.session && typeof window !== "undefined") {
+          window.sessionStorage.setItem(
+            PARENT_SESSION_BACKUP_KEY,
+            JSON.stringify({
+              access_token: cur.session.access_token,
+              refresh_token: cur.session.refresh_token,
+            }),
+          );
+        }
+      } catch {
+        /* abaikan */
+      }
+
+      const { error: setErrSession } = await supabase.auth.setSession(res.session);
+      if (!setErrSession) {
+        onAdded();
+        if (darjah === "4") {
+          let setId: string | null = null;
+          try {
+            const { data } = await supabase
+              .from("mpt4_set")
+              .select("id")
+              .eq("subjek", "Matematik")
+              .eq("is_trial", true)
+              .limit(1)
+              .maybeSingle();
+            setId = (data as { id: string } | null)?.id ?? null;
+          } catch {
+            setId = null;
+          }
+          if (setId) {
+            navigate({
+              to: "/darjah/$darjahId/percubaan-mpt4/$subjekId/$setId",
+              params: { darjahId: "4", subjekId: "matematik", setId },
+            });
+          } else {
+            navigate({
+              to: "/darjah/$darjahId/percubaan-mpt4/$subjekId",
+              params: { darjahId: "4", subjekId: "matematik" },
+            });
+          }
+        } else {
+          navigate({ to: "/darjah/$darjahId", params: { darjahId: darjah } });
+        }
+        return;
+      }
+    }
+
+    setLoading(false);
+    setOk(
+      `Akaun ${nama} berjaya dicipta! Anak boleh log masuk dengan username: ${res.username ?? "-"}`,
+    );
     setNama("");
-    setUsername("");
-    setPassword("");
     onAdded();
   }
 
@@ -1609,7 +1660,7 @@ function FormTambahAnak({ onAdded }: { onAdded: () => void }) {
     <form onSubmit={submit} className="mt-4 rounded-2xl bg-card p-5 shadow-card" style={{ border: `2px solid ${HIJAU}33` }}>
       <h3 className="font-display text-lg font-extrabold text-foreground">Cipta Akaun Anak</h3>
       <p className="mt-1 text-xs text-muted-foreground">
-        Anak akan log masuk dengan <b>username & password</b> sahaja — tiada emel diperlukan.
+        Kami akan cipta akaun anak automatik — tiada emel, username atau password perlu diisi.
       </p>
       <div className="mt-4 grid gap-3 sm:grid-cols-2">
         <label className="block">
@@ -1635,34 +1686,8 @@ function FormTambahAnak({ onAdded }: { onAdded: () => void }) {
             ))}
           </select>
         </label>
-        <label className="block">
-          <span className="mb-1 block text-xs font-extrabold text-foreground">Username</span>
-          <input
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            placeholder="cth: aisyah123"
-            className="w-full rounded-xl border-2 border-border px-4 py-2.5 font-display text-sm"
-            required
-            minLength={3}
-            maxLength={30}
-          />
-          {username && unameLive !== username && (
-            <span className="mt-1 block text-[10px] text-muted-foreground">Akan disimpan sebagai: <b>{unameLive}</b></span>
-          )}
-        </label>
-        <label className="block">
-          <span className="mb-1 block text-xs font-extrabold text-foreground">Password</span>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Minimum 6 aksara"
-            className="w-full rounded-xl border-2 border-border px-4 py-2.5 font-display text-sm"
-            required
-            minLength={6}
-          />
-        </label>
       </div>
+
       <button
         type="submit"
         disabled={loading}
