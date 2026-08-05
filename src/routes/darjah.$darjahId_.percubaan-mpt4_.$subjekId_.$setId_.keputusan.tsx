@@ -28,19 +28,75 @@ export const Route = createFileRoute(
 
 type KaedahPenskoran = "dikotomus" | "analitikal" | "holistik";
 
+interface TopikLemah {
+  topik: string;
+  jumlah_soalan: number;
+  jumlah_salah: number;
+}
+
 interface PelanHari {
   hari: number;
   topik: string;
-  jenis_aktiviti: string;
-  tajuk: string;
+  nota_ringkas: boolean;
+  bil_latihan: number;
+  bil_kuiz: number;
+  anggaran_minit: number;
+  jumlah_soalan_topik: number | null;
+  jumlah_salah_topik: number | null;
 }
 
 interface PelanKali {
-  topik_lemah: string[];
-  mesej_kali: string;
-  hari: PelanHari[];
+  versi: number;
+  subjek: string;
   subjek_slug: string;
+  topik_lemah: TopikLemah[];
+  mesej_kali: string;
+  pesanan_kali: string;
+  hari: PelanHari[];
+  dijana_at: string;
 }
+
+function PelanHariContent({ h }: { h: PelanHari }) {
+  const adaKenapa = h.jumlah_soalan_topik != null && h.jumlah_salah_topik != null;
+  return (
+    <div className="min-w-0 flex-1">
+      <p className="font-display text-sm font-extrabold text-foreground">
+        📍 Hari {h.hari} — Topik: {h.topik}
+      </p>
+      {adaKenapa && (
+        <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
+          <span className="font-bold text-foreground">Kenapa?</span> Daripada {h.jumlah_soalan_topik} soalan,
+          anak anda salah {h.jumlah_salah_topik} soalan berkaitan {h.topik}.
+        </p>
+      )}
+      <p className="mt-2 text-xs font-bold text-foreground">Hari ini, KALI cadangkan:</p>
+      <ul className="mt-1 flex flex-col gap-0.5 text-xs font-bold text-muted-foreground">
+        {h.nota_ringkas && <li>✓ Nota ringkas</li>}
+        <li>✓ {h.bil_latihan} latihan</li>
+        <li>✓ {h.bil_kuiz} kuiz</li>
+      </ul>
+      <p className="mt-2 text-xs font-bold text-primary">Anggaran siap: {h.anggaran_minit} minit</p>
+    </div>
+  );
+}
+
+function PesananKaliCard({ pesanan }: { pesanan: string }) {
+  return (
+    <div className="rounded-3xl border border-border/60 border-l-4 border-l-primary bg-card p-5 shadow-card md:p-6">
+      <div className="flex items-start gap-3">
+        <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-lg">
+          🤖
+        </span>
+        <div className="min-w-0">
+          <h3 className="font-display text-base font-extrabold text-foreground">Pesanan daripada KALI</h3>
+          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{pesanan}</p>
+          <p className="mt-3 font-display text-sm font-extrabold text-primary">— KALI</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 
 interface Mpt4Set {
   id: string;
