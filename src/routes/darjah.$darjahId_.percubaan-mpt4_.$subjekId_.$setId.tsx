@@ -114,6 +114,23 @@ function PercubaanMpt4JawabPage() {
   const [elapsed, setElapsed] = useState(0);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [orientasiDone, setOrientasiDone] = useState(false);
+
+  // Orientasi dipapar setiap kali attempt baharu (satu kali per keputusan.id)
+  useEffect(() => {
+    if (!keputusan) return;
+    if (typeof window === "undefined") return;
+    setOrientasiDone(
+      window.sessionStorage.getItem(`kalifah_mpt4_orientasi_${keputusan.id}`) === "1",
+    );
+  }, [keputusan]);
+
+  const mulaSekarang = useCallback(() => {
+    if (keputusan && typeof window !== "undefined") {
+      window.sessionStorage.setItem(`kalifah_mpt4_orientasi_${keputusan.id}`, "1");
+    }
+    setOrientasiDone(true);
+  }, [keputusan]);
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
