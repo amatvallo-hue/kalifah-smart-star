@@ -695,34 +695,32 @@ function ResultView({
 
       {/* Pelan penuh untuk pengguna berbayar */}
       {hasAccess && !isFreeTrialUser && pelan && pelan.hari.length > 0 && (
-        <div className="rounded-3xl border-2 border-primary/30 bg-card p-5 shadow-card md:p-6">
-          <h3 className="font-display text-xl font-extrabold text-foreground">
-            🤖 Pelan belajar KALI 14 hari
-          </h3>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Ikut pelan ini setiap hari untuk tutup kelemahan yang dikesan.
-          </p>
-          <div className="mt-4 flex flex-col gap-2">
-            {pelan.hari.map((h) => (
-              <Link
-                key={h.hari}
-                to="/darjah/$darjahId/$subjekId/latih-tubi"
-                params={{ darjahId, subjekId: pelan.subjek_slug || subjekId }}
-                className="flex flex-wrap items-center gap-3 rounded-2xl border border-border/60 bg-background/50 px-4 py-3 transition hover:border-primary/50"
-              >
-                <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary font-display text-xs font-extrabold text-primary-foreground">
-                  {h.hari}
-                </span>
-                <span className="min-w-0 flex-1">
-                  <span className="block text-sm font-extrabold text-foreground">{h.tajuk}</span>
-                  <span className="block text-xs font-bold text-muted-foreground">
-                    {h.topik} · {h.jenis_aktiviti}
+        <>
+          <div className="rounded-3xl border-2 border-primary/30 bg-card p-5 shadow-card md:p-6">
+            <h3 className="font-display text-xl font-extrabold text-foreground">
+              🤖 Pelan Pintar KALI™
+            </h3>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Ikut pelan ini setiap hari untuk tutup kelemahan yang dikesan.
+            </p>
+            <div className="mt-4 flex flex-col gap-2">
+              {pelan.hari.map((h) => (
+                <Link
+                  key={h.hari}
+                  to="/darjah/$darjahId/$subjekId/latih-tubi"
+                  params={{ darjahId, subjekId: pelan.subjek_slug || subjekId }}
+                  className="flex items-start gap-3 rounded-2xl border border-border/60 bg-background/50 px-4 py-3 transition hover:border-primary/50"
+                >
+                  <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary font-display text-xs font-extrabold text-primary-foreground">
+                    {h.hari}
                   </span>
-                </span>
-              </Link>
-            ))}
+                  <PelanHariContent h={h} />
+                </Link>
+              ))}
+            </div>
           </div>
-        </div>
+          {pelan.pesanan_kali && <PesananKaliCard pesanan={pelan.pesanan_kali} />}
+        </>
       )}
 
       {isFreeTrialUser && (
