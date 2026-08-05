@@ -18,37 +18,68 @@ const SUPABASE_URL = "https://pgpkqbdyxoejwvubluqq.supabase.co";
 const SUPABASE_ANON_KEY =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBncGtxYmR5eG9land2dWJsdXFxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1NjcyMjAsImV4cCI6MjA5NjE0MzIyMH0.dWoxARe5MfuHuCtMn53z50Kxh_-UjnqGnh8XREzPUUo";
 
+export const PARENT_SESSION_BACKUP_KEY = "kalifah_parent_session_backup";
+
+function janaPassword(): string {
+  const chars = "abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let out = "";
+  for (let i = 0; i < 12; i++) out += chars[Math.floor(Math.random() * chars.length)];
+  // pastikan ada huruf + nombor
+  return out + "a7";
+}
+
+function janaUsernameDari(nama: string): string {
+  const base = normalizeUsername(nama).slice(0, 20) || "anak";
+  const digit = String(Math.floor(1000 + Math.random() * 9000));
+  return `${base}${digit}`.slice(0, 30);
+}
+
 /**
  * Cipta akaun anak (signup) tanpa mengganggu sesi ibu bapa.
- * Guna instance Supabase sekunder dengan `persistSession: false` supaya
- * sesi ibu bapa di tetingkap utama kekal aktif.
+ * Username & password dijana automatik. Kalau signup memulangkan session,
+ * ia dipulangkan supaya caller boleh auto-login anak pada client utama.
  */
 export async function ciptaAkaunAnak(
   nama: string,
-  username: string,
-  password: string,
   darjah: string,
-): Promise<{ ok: boolean; mesej?: string; childId?: string; userId?: string }> {
-  const uname = normalizeUsername(username);
-  if (!isValidUsername(uname)) {
-    return { ok: false, mesej: "Username mesti 3–30 aksara (huruf kecil, nombor, titik, garis bawah)." };
+): Promise<{
+  ok: boolean;
+  mesej?: string;
+  childId?: string;
+  userId?: string;
+  username?: string;
+  generatedPassword?: string;
+  session?: { access_token: string; refresh_token: string } | null;
+  needsManualLogin?: boolean;
+}> {
+  if (!nama.trim()) {
+    return { ok: false, mesej: "Sila isi nama anak." };
   }
-  if (password.length < 6) {
-    return { ok: false, mesej: "Password mesti sekurang-kurangnya 6 aksara." };
-  }
+  const password = janaPassword();
+
 
   // 1) Dapatkan parent user id dari sesi semasa
   const { data: parentSess } = await supabase.auth.getSession();
   const parentId = parentSess.session?.user?.id;
   if (!parentId) return { ok: false, mesej: "Anda perlu log masuk sebagai ibu bapa." };
 
-  // 2) Pastikan username belum digunakan
-  const { data: wujud } = await supabase
-    .from("child_profiles" as never)
-    .select("id")
-    .eq("username", uname)
-    .maybeSingle();
-  if (wujud) return { ok: false, mesej: "Username ini sudah digunakan." };
+  // 2) Jana username unik (cuba beberapa kali kalau clash)
+  let uname = "";
+  for (let cuba = 0; cuba < 6; cuba++) {
+    const calon = janaUsernameDari(nama);
+    if (!isValidUsername(calon)) continue;
+    const { data: wujud } = await supabase
+      .from("child_profiles" as never)
+      .select("id")
+      .eq("username", calon)
+      .maybeSingle();
+    if (!wujud) {
+      uname = calon;
+      break;
+    }
+  }
+  if (!uname) return { ok: false, mesej: "Gagal menjana username unik. Sila cuba lagi." };
+
 
   // 3) Cipta akaun auth pada klien sekunder (supaya sesi parent tak terganti)
   const secondary = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
@@ -113,16 +144,76 @@ export async function ciptaAkaunAnak(
     }
   }
 
+  // 6) Ambil session anak (kalau ada) sebelum bersihkan klien sekunder
+  const childSession = signup.session
+    ? {
+        access_token: signup.session.access_token,
+        refresh_token: signup.session.refresh_token,
+      }
+    : null;
 
-  // 6) Sign out klien sekunder (bersihkan)
   await secondary.auth.signOut();
 
-  return { ok: true, childId: (row as { id: string }).id, userId: childUserId };
+  return {
+    ok: true,
+    childId: (row as { id: string }).id,
+    userId: childUserId,
+    username: uname,
+    generatedPassword: password,
+    session: childSession,
+    needsManualLogin: !childSession,
+  };
 }
+
+/**
+ * Tukar semula sesi aktif kepada sesi ibu bapa yang disimpan sebelum
+ * auto-login anak. Pulangkan true kalau berjaya.
+ */
+export async function switchBackToParent(): Promise<boolean> {
+  if (typeof window === "undefined") return false;
+  const raw = window.sessionStorage.getItem(PARENT_SESSION_BACKUP_KEY);
+  if (!raw) return false;
+  try {
+    const tokens = JSON.parse(raw) as { access_token?: string; refresh_token?: string };
+    if (!tokens.access_token || !tokens.refresh_token) {
+      window.sessionStorage.removeItem(PARENT_SESSION_BACKUP_KEY);
+      return false;
+    }
+    const { error } = await supabase.auth.setSession({
+      access_token: tokens.access_token,
+      refresh_token: tokens.refresh_token,
+    });
+    window.sessionStorage.removeItem(PARENT_SESSION_BACKUP_KEY);
+    return !error;
+  } catch {
+    window.sessionStorage.removeItem(PARENT_SESSION_BACKUP_KEY);
+    return false;
+  }
+}
+
 
 function janaKod(): string {
   const huruf = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
   let out = "";
   for (let i = 0; i < 6; i++) out += huruf[Math.floor(Math.random() * huruf.length)];
   return out;
+}
+
+/**
+ * Sebelum ke /harga: kalau sesi semasa adalah akaun anak, cuba tukar semula
+ * kepada sesi ibu bapa. Pulangkan URL yang patut dilawati.
+ */
+export async function laluanCheckout(darjahId: string): Promise<string> {
+  const hargaUrl = `/harga?pakej=satu&darjah=${darjahId}`;
+  const { data } = await supabase.auth.getSession();
+  const email = data.session?.user?.email ?? "";
+  if (!email.includes(CHILD_EMAIL_DOMAIN)) return hargaUrl;
+
+  const berjaya = await switchBackToParent();
+  if (berjaya) return hargaUrl;
+
+  if (typeof window !== "undefined") {
+    window.sessionStorage.setItem("kalifah_redirect_selepas_login", hargaUrl);
+  }
+  return `/login?mesej=${encodeURIComponent("Sila log masuk sebagai ibu bapa untuk langgan")}&redirect=${encodeURIComponent(hargaUrl)}`;
 }

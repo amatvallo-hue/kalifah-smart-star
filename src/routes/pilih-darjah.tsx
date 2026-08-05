@@ -8,6 +8,12 @@ import { usePoints } from "@/hooks/use-points";
 import { useProfile } from "@/hooks/use-profile";
 import { DARJAH_LIST, subjekListUntukRole, type Darjah, PAKEJ_LIST } from "@/lib/curriculum";
 import { CHILD_EMAIL_DOMAIN } from "@/lib/child-auth";
+import { laluanCheckout } from "@/lib/child-auth";
+
+async function pergiKeHarga(darjahId: string) {
+  const url = await laluanCheckout(darjahId);
+  window.location.href = url;
+}
 
 export const Route = createFileRoute("/pilih-darjah")({
   head: () => ({
@@ -89,12 +95,13 @@ function PakejModal({ onClose }: { onClose: () => void }) {
           ))}
         </div>
 
-        <Link
-          to="/harga"
+        <button
+          type="button"
+          onClick={() => void pergiKeHarga("1")}
           className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-primary px-6 py-3 font-display text-sm font-extrabold text-primary-foreground shadow-soft"
         >
           Lihat Penuh &amp; Langgan
-        </Link>
+        </button>
       </div>
     </div>
   );
@@ -605,9 +612,9 @@ function DarjahCard({
   if (isCurrent && !hasAccess) {
     // Darjah murid tetapi belum dibayar — bawa ke pakej.
     return (
-      <Link to="/harga" className="group">
+      <button type="button" onClick={() => void pergiKeHarga(darjah.id)} className="group cursor-pointer text-left">
         {inner}
-      </Link>
+      </button>
     );
   }
   if (!hasAccess) {
