@@ -28,19 +28,75 @@ export const Route = createFileRoute(
 
 type KaedahPenskoran = "dikotomus" | "analitikal" | "holistik";
 
+interface TopikLemah {
+  topik: string;
+  jumlah_soalan: number;
+  jumlah_salah: number;
+}
+
 interface PelanHari {
   hari: number;
   topik: string;
-  jenis_aktiviti: string;
-  tajuk: string;
+  nota_ringkas: boolean;
+  bil_latihan: number;
+  bil_kuiz: number;
+  anggaran_minit: number;
+  jumlah_soalan_topik: number | null;
+  jumlah_salah_topik: number | null;
 }
 
 interface PelanKali {
-  topik_lemah: string[];
-  mesej_kali: string;
-  hari: PelanHari[];
+  versi: number;
+  subjek: string;
   subjek_slug: string;
+  topik_lemah: TopikLemah[];
+  mesej_kali: string;
+  pesanan_kali: string;
+  hari: PelanHari[];
+  dijana_at: string;
 }
+
+function PelanHariContent({ h }: { h: PelanHari }) {
+  const adaKenapa = h.jumlah_soalan_topik != null && h.jumlah_salah_topik != null;
+  return (
+    <div className="min-w-0 flex-1">
+      <p className="font-display text-sm font-extrabold text-foreground">
+        📍 Hari {h.hari} — Topik: {h.topik}
+      </p>
+      {adaKenapa && (
+        <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
+          <span className="font-bold text-foreground">Kenapa?</span> Daripada {h.jumlah_soalan_topik} soalan,
+          anak anda salah {h.jumlah_salah_topik} soalan berkaitan {h.topik}.
+        </p>
+      )}
+      <p className="mt-2 text-xs font-bold text-foreground">Hari ini, KALI cadangkan:</p>
+      <ul className="mt-1 flex flex-col gap-0.5 text-xs font-bold text-muted-foreground">
+        {h.nota_ringkas && <li>✓ Nota ringkas</li>}
+        <li>✓ {h.bil_latihan} latihan</li>
+        <li>✓ {h.bil_kuiz} kuiz</li>
+      </ul>
+      <p className="mt-2 text-xs font-bold text-primary">Anggaran siap: {h.anggaran_minit} minit</p>
+    </div>
+  );
+}
+
+function PesananKaliCard({ pesanan }: { pesanan: string }) {
+  return (
+    <div className="rounded-3xl border border-border/60 border-l-4 border-l-primary bg-card p-5 shadow-card md:p-6">
+      <div className="flex items-start gap-3">
+        <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-lg">
+          🤖
+        </span>
+        <div className="min-w-0">
+          <h3 className="font-display text-base font-extrabold text-foreground">Pesanan daripada KALI</h3>
+          <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{pesanan}</p>
+          <p className="mt-3 font-display text-sm font-extrabold text-primary">— KALI</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 
 interface Mpt4Set {
   id: string;
@@ -613,7 +669,7 @@ function ResultView({
           </h3>
           <ul className="mt-3 flex flex-col gap-1.5 text-sm font-bold text-amber-900 dark:text-amber-100">
             {pelan.topik_lemah.map((t, i) => (
-              <li key={i}>• {t}</li>
+              <li key={i}>• {t.topik}</li>
             ))}
           </ul>
           {pelan.mesej_kali && (
@@ -639,34 +695,32 @@ function ResultView({
 
       {/* Pelan penuh untuk pengguna berbayar */}
       {hasAccess && !isFreeTrialUser && pelan && pelan.hari.length > 0 && (
-        <div className="rounded-3xl border-2 border-primary/30 bg-card p-5 shadow-card md:p-6">
-          <h3 className="font-display text-xl font-extrabold text-foreground">
-            🤖 Pelan belajar KALI 14 hari
-          </h3>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Ikut pelan ini setiap hari untuk tutup kelemahan yang dikesan.
-          </p>
-          <div className="mt-4 flex flex-col gap-2">
-            {pelan.hari.map((h) => (
-              <Link
-                key={h.hari}
-                to="/darjah/$darjahId/$subjekId/latih-tubi"
-                params={{ darjahId, subjekId: pelan.subjek_slug || subjekId }}
-                className="flex flex-wrap items-center gap-3 rounded-2xl border border-border/60 bg-background/50 px-4 py-3 transition hover:border-primary/50"
-              >
-                <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary font-display text-xs font-extrabold text-primary-foreground">
-                  {h.hari}
-                </span>
-                <span className="min-w-0 flex-1">
-                  <span className="block text-sm font-extrabold text-foreground">{h.tajuk}</span>
-                  <span className="block text-xs font-bold text-muted-foreground">
-                    {h.topik} · {h.jenis_aktiviti}
+        <>
+          <div className="rounded-3xl border-2 border-primary/30 bg-card p-5 shadow-card md:p-6">
+            <h3 className="font-display text-xl font-extrabold text-foreground">
+              🤖 Pelan Pintar KALI™
+            </h3>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Ikut pelan ini setiap hari untuk tutup kelemahan yang dikesan.
+            </p>
+            <div className="mt-4 flex flex-col gap-2">
+              {pelan.hari.map((h) => (
+                <Link
+                  key={h.hari}
+                  to="/darjah/$darjahId/$subjekId/latih-tubi"
+                  params={{ darjahId, subjekId: pelan.subjek_slug || subjekId }}
+                  className="flex items-start gap-3 rounded-2xl border border-border/60 bg-background/50 px-4 py-3 transition hover:border-primary/50"
+                >
+                  <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary font-display text-xs font-extrabold text-primary-foreground">
+                    {h.hari}
                   </span>
-                </span>
-              </Link>
-            ))}
+                  <PelanHariContent h={h} />
+                </Link>
+              ))}
+            </div>
           </div>
-        </div>
+          {pelan.pesanan_kali && <PesananKaliCard pesanan={pelan.pesanan_kali} />}
+        </>
       )}
 
       {isFreeTrialUser && (
@@ -809,25 +863,25 @@ function TrialUpsell({
       )}
 
       {pelan && pelan.hari.length > 0 && (
+        <>
         <div className="rounded-3xl border-2 border-primary/30 bg-card p-5 shadow-card md:p-6">
           <h3 className="font-display text-xl font-extrabold text-foreground">
-            🤖 KALI dah sediakan pelan belajar 14 hari untukmu
+            🤖 Pelan Pintar KALI™
           </h3>
+          <p className="mt-1 text-sm text-muted-foreground">
+            KALI telah menyediakan Pelan Pintar KALI™ yang lengkap sehingga Hari ke-14. Sepanjang 14 hari,
+            anak akan belajar mengikut kelemahan yang ditemui semasa MPT4.
+          </p>
           <div className="mt-4 flex flex-col gap-2">
             {pelan.hari.slice(0, 1).map((h) => (
               <div
                 key={h.hari}
-                className="flex flex-wrap items-center gap-3 rounded-2xl border border-primary/40 bg-primary/5 px-4 py-3"
+                className="flex items-start gap-3 rounded-2xl border border-primary/40 bg-primary/5 px-4 py-3"
               >
                 <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary font-display text-xs font-extrabold text-primary-foreground">
                   {h.hari}
                 </span>
-                <span className="min-w-0 flex-1">
-                  <span className="block text-sm font-extrabold text-foreground">{h.tajuk}</span>
-                  <span className="block text-xs font-bold text-muted-foreground">
-                    {h.topik} · {h.jenis_aktiviti}
-                  </span>
-                </span>
+                <PelanHariContent h={h} />
               </div>
             ))}
 
@@ -836,28 +890,25 @@ function TrialUpsell({
                 {pelan.hari.slice(1).map((h) => (
                   <div
                     key={h.hari}
-                    className="flex items-center gap-3 rounded-2xl border border-border/60 bg-background/50 px-4 py-3"
+                    className="flex items-start gap-3 rounded-2xl border border-border/60 bg-background/50 px-4 py-3"
                   >
                     <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-secondary font-display text-xs font-extrabold text-foreground">
                       {h.hari}
                     </span>
-                    <span className="min-w-0 flex-1">
-                      <span className="block truncate text-sm font-extrabold text-foreground">{h.tajuk}</span>
-                      <span className="block truncate text-xs font-bold text-muted-foreground">
-                        {h.topik} · {h.jenis_aktiviti}
-                      </span>
-                    </span>
+                    <PelanHariContent h={h} />
                   </div>
                 ))}
               </div>
               <div className="absolute inset-0 flex items-center justify-center">
-                <span className="rounded-full bg-card px-4 py-2 font-display text-sm font-extrabold text-foreground shadow-soft">
-                  🔒 Buka untuk lihat pelan penuh
+                <span className="rounded-full bg-card px-4 py-2 text-center font-display text-sm font-extrabold text-foreground shadow-soft">
+                  🔒 Hari 2–14 tersedia untuk ahli Premium
                 </span>
               </div>
             </div>
           </div>
         </div>
+        {pelan.pesanan_kali && <PesananKaliCard pesanan={pelan.pesanan_kali} />}
+        </>
       )}
 
       <div className="rounded-3xl border-2 border-primary/40 bg-gradient-hero p-6 text-center shadow-card md:p-8">
@@ -866,9 +917,10 @@ function TrialUpsell({
         </h3>
         <p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
           {pelan && pelan.hari.length > 0
-            ? <>Buka pelan belajar KALI 14 hari penuh + semua set Percubaan MPT4, Latih Tubi, Nota, Kuiz &amp; Game untuk Darjah {darjahId} — hanya <span className="font-extrabold text-foreground">RM49/tahun</span>.</>
+            ? <>Teruskan Pelan Pintar KALI™ sehingga Hari ke-14 + semua set Percubaan MPT4, Latih Tubi, Nota, Kuiz &amp; Game untuk Darjah {darjahId} — hanya <span className="font-extrabold text-foreground">RM49/tahun</span>.</>
             : <>Hanya <span className="font-extrabold text-foreground">RM49/tahun</span> untuk buka Darjah {darjahId} sepenuhnya — semua set Percubaan MPT4, Latih Tubi, Nota, Kuiz &amp; Game.</>}
         </p>
+
         <button
           type="button"
           onClick={() => void handleLangganKlik(darjahId)}
