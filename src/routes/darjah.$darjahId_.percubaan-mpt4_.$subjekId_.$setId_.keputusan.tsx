@@ -571,6 +571,59 @@ function ResultView({
         </div>
       </div>
 
+      {/* Tahap kesediaan peperiksaan */}
+      <div className="rounded-3xl border border-border/60 bg-card p-5 shadow-card md:p-6">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h3 className="font-display text-lg font-extrabold text-foreground">
+            🎯 Tahap Kesediaan Peperiksaan {peratus}%
+          </h3>
+          <span
+            className={`rounded-full px-4 py-1.5 font-display text-xs font-extrabold ${
+              peratus >= 80
+                ? "bg-emerald-100 text-emerald-700"
+                : peratus >= 50
+                ? "bg-amber-100 text-amber-700"
+                : "bg-rose-100 text-rose-700"
+            }`}
+          >
+            {peratus >= 80 ? "🟢 Bersedia" : peratus >= 50 ? "🟡 Sederhana" : "🔴 Belum bersedia"}
+          </span>
+        </div>
+        <div className="mt-3 h-3 overflow-hidden rounded-full bg-secondary">
+          <div
+            className={`h-full bg-gradient-to-r ${bandClass}`}
+            style={{ width: `${Math.min(100, peratus)}%` }}
+          />
+        </div>
+      </div>
+
+      {/* Amaran KALI */}
+      {pelanLoading && !pelan && (
+        <div className="animate-pulse rounded-3xl border border-border/60 bg-card p-5 shadow-card">
+          <div className="h-4 w-1/3 rounded-full bg-secondary" />
+          <div className="mt-3 h-3 w-2/3 rounded-full bg-secondary" />
+          <div className="mt-2 h-3 w-1/2 rounded-full bg-secondary" />
+        </div>
+      )}
+
+      {pelan && pelan.topik_lemah.length > 0 && (
+        <div className="rounded-3xl border border-amber-300 bg-amber-50 p-5 shadow-card dark:border-amber-800/40 dark:bg-amber-950/20 md:p-6">
+          <h3 className="font-display text-lg font-extrabold text-amber-800 dark:text-amber-200">
+            ⚠️ Anak masih belum menguasai:
+          </h3>
+          <ul className="mt-3 flex flex-col gap-1.5 text-sm font-bold text-amber-900 dark:text-amber-100">
+            {pelan.topik_lemah.map((t, i) => (
+              <li key={i}>• {t}</li>
+            ))}
+          </ul>
+          {pelan.mesej_kali && (
+            <p className="mt-4 text-sm leading-relaxed text-amber-900/90 dark:text-amber-100/90">
+              🤖 {pelan.mesej_kali}
+            </p>
+          )}
+        </div>
+      )}
+
       {!isFreeTrialUser && (
         <div className="flex flex-wrap gap-3">
           <button
@@ -584,7 +637,48 @@ function ResultView({
         </div>
       )}
 
-      {isFreeTrialUser && <TrialUpsell darjahId={darjahId} soalanList={soalanList} esei={esei} perBahagian={perBahagian} />}
+      {/* Pelan penuh untuk pengguna berbayar */}
+      {hasAccess && !isFreeTrialUser && pelan && pelan.hari.length > 0 && (
+        <div className="rounded-3xl border-2 border-primary/30 bg-card p-5 shadow-card md:p-6">
+          <h3 className="font-display text-xl font-extrabold text-foreground">
+            🤖 Pelan belajar KALI 14 hari
+          </h3>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Ikut pelan ini setiap hari untuk tutup kelemahan yang dikesan.
+          </p>
+          <div className="mt-4 flex flex-col gap-2">
+            {pelan.hari.map((h) => (
+              <Link
+                key={h.hari}
+                to="/darjah/$darjahId/$subjekId/latih-tubi"
+                params={{ darjahId, subjekId: pelan.subjek_slug || subjekId }}
+                className="flex flex-wrap items-center gap-3 rounded-2xl border border-border/60 bg-background/50 px-4 py-3 transition hover:border-primary/50"
+              >
+                <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary font-display text-xs font-extrabold text-primary-foreground">
+                  {h.hari}
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block text-sm font-extrabold text-foreground">{h.tajuk}</span>
+                  <span className="block text-xs font-bold text-muted-foreground">
+                    {h.topik} · {h.jenis_aktiviti}
+                  </span>
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {isFreeTrialUser && (
+        <TrialUpsell
+          darjahId={darjahId}
+          soalanList={soalanList}
+          esei={esei}
+          perBahagian={perBahagian}
+          pelan={pelan}
+        />
+      )}
+
 
       {/* Pecahan bahagian */}
       <div className="rounded-3xl border border-border/60 bg-card p-5 shadow-card md:p-6">
