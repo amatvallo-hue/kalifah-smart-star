@@ -745,11 +745,13 @@ function TrialUpsell({
   soalanList,
   esei,
   perBahagian,
+  pelan,
 }: {
   darjahId: string;
   soalanList: Mpt4Soalan[];
   esei: Record<string, EseiPenilaianItem>;
   perBahagian: Record<string, { markah_diperoleh: number; markah_penuh: number }>;
+  pelan: PelanKali | null;
 }) {
   const markahPenuhPerSoalan = new Map(soalanList.map((s) => [s.id, s.markah]));
   const kuasai: string[] = [];
