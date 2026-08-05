@@ -144,12 +144,53 @@ export async function ciptaAkaunAnak(
     }
   }
 
+  // 6) Ambil session anak (kalau ada) sebelum bersihkan klien sekunder
+  const childSession = signup.session
+    ? {
+        access_token: signup.session.access_token,
+        refresh_token: signup.session.refresh_token,
+      }
+    : null;
 
-  // 6) Sign out klien sekunder (bersihkan)
   await secondary.auth.signOut();
 
-  return { ok: true, childId: (row as { id: string }).id, userId: childUserId };
+  return {
+    ok: true,
+    childId: (row as { id: string }).id,
+    userId: childUserId,
+    username: uname,
+    generatedPassword: password,
+    session: childSession,
+    needsManualLogin: !childSession,
+  };
 }
+
+/**
+ * Tukar semula sesi aktif kepada sesi ibu bapa yang disimpan sebelum
+ * auto-login anak. Pulangkan true kalau berjaya.
+ */
+export async function switchBackToParent(): Promise<boolean> {
+  if (typeof window === "undefined") return false;
+  const raw = window.sessionStorage.getItem(PARENT_SESSION_BACKUP_KEY);
+  if (!raw) return false;
+  try {
+    const tokens = JSON.parse(raw) as { access_token?: string; refresh_token?: string };
+    if (!tokens.access_token || !tokens.refresh_token) {
+      window.sessionStorage.removeItem(PARENT_SESSION_BACKUP_KEY);
+      return false;
+    }
+    const { error } = await supabase.auth.setSession({
+      access_token: tokens.access_token,
+      refresh_token: tokens.refresh_token,
+    });
+    window.sessionStorage.removeItem(PARENT_SESSION_BACKUP_KEY);
+    return !error;
+  } catch {
+    window.sessionStorage.removeItem(PARENT_SESSION_BACKUP_KEY);
+    return false;
+  }
+}
+
 
 function janaKod(): string {
   const huruf = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
