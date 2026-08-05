@@ -198,3 +198,22 @@ function janaKod(): string {
   for (let i = 0; i < 6; i++) out += huruf[Math.floor(Math.random() * huruf.length)];
   return out;
 }
+
+/**
+ * Sebelum ke /harga: kalau sesi semasa adalah akaun anak, cuba tukar semula
+ * kepada sesi ibu bapa. Pulangkan URL yang patut dilawati.
+ */
+export async function laluanCheckout(darjahId: string): Promise<string> {
+  const hargaUrl = `/harga?pakej=satu&darjah=${darjahId}`;
+  const { data } = await supabase.auth.getSession();
+  const email = data.session?.user?.email ?? "";
+  if (!email.includes(CHILD_EMAIL_DOMAIN)) return hargaUrl;
+
+  const berjaya = await switchBackToParent();
+  if (berjaya) return hargaUrl;
+
+  if (typeof window !== "undefined") {
+    window.sessionStorage.setItem("kalifah_redirect_selepas_login", hargaUrl);
+  }
+  return `/login?mesej=${encodeURIComponent("Sila log masuk sebagai ibu bapa untuk langgan")}&redirect=${encodeURIComponent(hargaUrl)}`;
+}
