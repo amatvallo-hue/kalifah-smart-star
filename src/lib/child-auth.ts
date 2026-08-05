@@ -18,24 +18,45 @@ const SUPABASE_URL = "https://pgpkqbdyxoejwvubluqq.supabase.co";
 const SUPABASE_ANON_KEY =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBncGtxYmR5eG9land2dWJsdXFxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1NjcyMjAsImV4cCI6MjA5NjE0MzIyMH0.dWoxARe5MfuHuCtMn53z50Kxh_-UjnqGnh8XREzPUUo";
 
+export const PARENT_SESSION_BACKUP_KEY = "kalifah_parent_session_backup";
+
+function janaPassword(): string {
+  const chars = "abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  let out = "";
+  for (let i = 0; i < 12; i++) out += chars[Math.floor(Math.random() * chars.length)];
+  // pastikan ada huruf + nombor
+  return out + "a7";
+}
+
+function janaUsernameDari(nama: string): string {
+  const base = normalizeUsername(nama).slice(0, 20) || "anak";
+  const digit = String(Math.floor(1000 + Math.random() * 9000));
+  return `${base}${digit}`.slice(0, 30);
+}
+
 /**
  * Cipta akaun anak (signup) tanpa mengganggu sesi ibu bapa.
- * Guna instance Supabase sekunder dengan `persistSession: false` supaya
- * sesi ibu bapa di tetingkap utama kekal aktif.
+ * Username & password dijana automatik. Kalau signup memulangkan session,
+ * ia dipulangkan supaya caller boleh auto-login anak pada client utama.
  */
 export async function ciptaAkaunAnak(
   nama: string,
-  username: string,
-  password: string,
   darjah: string,
-): Promise<{ ok: boolean; mesej?: string; childId?: string; userId?: string }> {
-  const uname = normalizeUsername(username);
-  if (!isValidUsername(uname)) {
-    return { ok: false, mesej: "Username mesti 3–30 aksara (huruf kecil, nombor, titik, garis bawah)." };
+): Promise<{
+  ok: boolean;
+  mesej?: string;
+  childId?: string;
+  userId?: string;
+  username?: string;
+  generatedPassword?: string;
+  session?: { access_token: string; refresh_token: string } | null;
+  needsManualLogin?: boolean;
+}> {
+  if (!nama.trim()) {
+    return { ok: false, mesej: "Sila isi nama anak." };
   }
-  if (password.length < 6) {
-    return { ok: false, mesej: "Password mesti sekurang-kurangnya 6 aksara." };
-  }
+  const password = janaPassword();
+
 
   // 1) Dapatkan parent user id dari sesi semasa
   const { data: parentSess } = await supabase.auth.getSession();
