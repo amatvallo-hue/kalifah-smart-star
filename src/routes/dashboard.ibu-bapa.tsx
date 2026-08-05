@@ -35,7 +35,7 @@ import { SUBJEK_LIST as ALL_SUBJEK, DARJAH_LIST } from "@/lib/curriculum";
 // Ibu bapa tidak boleh nampak Jawi
 const SUBJEK_LIST = ALL_SUBJEK.filter((s) => s.id !== "jawi");
 import { padamAnak, senaraikanAnak, type ChildProfile } from "@/lib/parent";
-import { ciptaAkaunAnak, normalizeUsername, CHILD_EMAIL_DOMAIN } from "@/lib/child-auth";
+import { ciptaAkaunAnak, CHILD_EMAIL_DOMAIN, PARENT_SESSION_BACKUP_KEY } from "@/lib/child-auth";
 import { senaraikanSijilAnak, type SijilRow } from "@/lib/sijil-rekod";
 import { downloadSijil } from "@/lib/sijil";
 
