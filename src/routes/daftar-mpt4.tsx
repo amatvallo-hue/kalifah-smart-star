@@ -323,7 +323,7 @@ function DaftarMpt4Page() {
           className="flex w-full items-center justify-center gap-2 rounded-full bg-gradient-primary px-6 py-3 font-display text-base font-extrabold text-primary-foreground shadow-soft transition hover:-translate-y-0.5 hover:shadow-gold disabled:opacity-60"
         >
           <UserPlus className="h-5 w-5" />
-          {loading ? "Sedang mendaftar..." : "Mula Percubaan MPT4 Percuma"}
+          {loading ? "Sedang mendaftar..." : "Dapatkan Laporan KALI Percuma"}
         </button>
 
         <p className="text-center text-xs text-muted-foreground">
