@@ -589,10 +589,12 @@ function ResultView({
 }
 
 function TrialUpsell({
+  darjahId,
   soalanList,
   esei,
   perBahagian,
 }: {
+  darjahId: string;
   soalanList: Mpt4Soalan[];
   esei: Record<string, EseiPenilaianItem>;
   perBahagian: Record<string, { markah_diperoleh: number; markah_penuh: number }>;
