@@ -669,7 +669,7 @@ function ResultView({
           </h3>
           <ul className="mt-3 flex flex-col gap-1.5 text-sm font-bold text-amber-900 dark:text-amber-100">
             {pelan.topik_lemah.map((t, i) => (
-              <li key={i}>• {t}</li>
+              <li key={i}>• {t.topik}</li>
             ))}
           </ul>
           {pelan.mesej_kali && (
