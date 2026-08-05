@@ -808,12 +808,66 @@ function TrialUpsell({
         </div>
       )}
 
+      {pelan && pelan.hari.length > 0 && (
+        <div className="rounded-3xl border-2 border-primary/30 bg-card p-5 shadow-card md:p-6">
+          <h3 className="font-display text-xl font-extrabold text-foreground">
+            🤖 KALI dah sediakan pelan belajar 14 hari untukmu
+          </h3>
+          <div className="mt-4 flex flex-col gap-2">
+            {pelan.hari.slice(0, 1).map((h) => (
+              <div
+                key={h.hari}
+                className="flex flex-wrap items-center gap-3 rounded-2xl border border-primary/40 bg-primary/5 px-4 py-3"
+              >
+                <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary font-display text-xs font-extrabold text-primary-foreground">
+                  {h.hari}
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block text-sm font-extrabold text-foreground">{h.tajuk}</span>
+                  <span className="block text-xs font-bold text-muted-foreground">
+                    {h.topik} · {h.jenis_aktiviti}
+                  </span>
+                </span>
+              </div>
+            ))}
+
+            <div className="relative">
+              <div className="pointer-events-none flex select-none flex-col gap-2 opacity-40 blur-[2px]">
+                {pelan.hari.slice(1).map((h) => (
+                  <div
+                    key={h.hari}
+                    className="flex items-center gap-3 rounded-2xl border border-border/60 bg-background/50 px-4 py-3"
+                  >
+                    <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-secondary font-display text-xs font-extrabold text-foreground">
+                      {h.hari}
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate text-sm font-extrabold text-foreground">{h.tajuk}</span>
+                      <span className="block truncate text-xs font-bold text-muted-foreground">
+                        {h.topik} · {h.jenis_aktiviti}
+                      </span>
+                    </span>
+                  </div>
+                ))}
+              </div>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="rounded-full bg-card px-4 py-2 font-display text-sm font-extrabold text-foreground shadow-soft">
+                  🔒 Buka untuk lihat pelan penuh
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="rounded-3xl border-2 border-primary/40 bg-gradient-hero p-6 text-center shadow-card md:p-8">
         <h3 className="font-display text-2xl font-extrabold text-foreground">
           Ini baru satu set percuma 🎁
         </h3>
         <p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
-          Hanya <span className="font-extrabold text-foreground">RM49/tahun</span> untuk buka Darjah {darjahId} sepenuhnya — semua set Percubaan MPT4, Latih Tubi, Nota, Kuiz &amp; Game.
+          {pelan && pelan.hari.length > 0
+            ? <>Buka pelan belajar KALI 14 hari penuh + semua set Percubaan MPT4, Latih Tubi, Nota, Kuiz &amp; Game untuk Darjah {darjahId} — hanya <span className="font-extrabold text-foreground">RM49/tahun</span>.</>
+            : <>Hanya <span className="font-extrabold text-foreground">RM49/tahun</span> untuk buka Darjah {darjahId} sepenuhnya — semua set Percubaan MPT4, Latih Tubi, Nota, Kuiz &amp; Game.</>}
         </p>
         <button
           type="button"
