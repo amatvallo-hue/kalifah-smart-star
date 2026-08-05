@@ -493,6 +493,10 @@ function ResultView({
   onCubaLagi,
   retrying,
   isFreeTrialUser,
+  hasAccess,
+  pelan,
+  pelanLoading,
+  subjekId,
 }: {
   darjahId: string;
   keputusan: Mpt4Keputusan;
@@ -505,6 +509,10 @@ function ResultView({
   onCubaLagi: () => void;
   retrying: boolean;
   isFreeTrialUser: boolean;
+  hasAccess: boolean;
+  pelan: PelanKali | null;
+  pelanLoading: boolean;
+  subjekId: string;
 }) {
   const markahKeseluruhan = keputusan.markah_keseluruhan ?? 0;
   const markahPenuh = keputusan.markah_penuh ?? setInfo.jumlah_markah ?? 0;
