@@ -204,7 +204,7 @@ function DaftarMpt4Page() {
     }
 
     if (data.session) {
-      navigate({ to: "/darjah/$darjahId_/percubaan-mpt4", params: { darjahId: "4" } });
+      navigate({ to: "/darjah/$darjahId/percubaan-mpt4", params: { darjahId: "4" } });
     } else {
       setInfo("Akaun dicipta. Sila semak emel anda untuk pengesahan, kemudian log masuk.");
       setLoading(false);
