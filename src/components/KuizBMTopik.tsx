@@ -708,7 +708,7 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
               2: soalan.feedback_c,
               3: soalan.feedback_d,
             };
-            const fb = fbMap[pilih];
+            const fb = fbMap[pilih] || soalan.penjelasan;
             const isBetulPilih = pilih === soalan.jawapan;
             if (!fb || fb.trim().length === 0) return null;
             return (
@@ -799,7 +799,7 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
             2: soalan.feedback_c,
             3: soalan.feedback_d,
           };
-          const fb = fbMap[pilih];
+          const fb = fbMap[pilih] || soalan.penjelasan;
           const isBetulPilih = pilih === soalan.jawapan;
           return (
             <>
