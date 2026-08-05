@@ -23,6 +23,7 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as UjianPercumaRouteImport } from './routes/ujian-percuma'
 import { Route as AdminAffiliatesRouteImport } from './routes/admin_.affiliates'
 import { Route as AdminChallengeRouteImport } from './routes/admin_.challenge'
+import { Route as AdminFunnelRouteImport } from './routes/admin_.funnel'
 import { Route as AdminTelegramRouteImport } from './routes/admin_.telegram'
 import { Route as AffiliateDaftarRouteImport } from './routes/affiliate.daftar'
 import { Route as AffiliateDashboardRouteImport } from './routes/affiliate.dashboard'
@@ -129,6 +130,11 @@ const AdminAffiliatesRoute = AdminAffiliatesRouteImport.update({
 const AdminChallengeRoute = AdminChallengeRouteImport.update({
   id: '/admin_/challenge',
   path: '/admin/challenge',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminFunnelRoute = AdminFunnelRouteImport.update({
+  id: '/admin_/funnel',
+  path: '/admin/funnel',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminTelegramRoute = AdminTelegramRouteImport.update({
@@ -351,6 +357,7 @@ export interface FileRoutesByFullPath {
   '/ujian-percuma': typeof UjianPercumaRoute
   '/admin/affiliates': typeof AdminAffiliatesRoute
   '/admin/challenge': typeof AdminChallengeRoute
+  '/admin/funnel': typeof AdminFunnelRoute
   '/admin/telegram': typeof AdminTelegramRoute
   '/affiliate/daftar': typeof AffiliateDaftarRoute
   '/affiliate/dashboard': typeof AffiliateDashboardRoute
@@ -404,6 +411,7 @@ export interface FileRoutesByTo {
   '/ujian-percuma': typeof UjianPercumaRoute
   '/admin/affiliates': typeof AdminAffiliatesRoute
   '/admin/challenge': typeof AdminChallengeRoute
+  '/admin/funnel': typeof AdminFunnelRoute
   '/admin/telegram': typeof AdminTelegramRoute
   '/affiliate/daftar': typeof AffiliateDaftarRoute
   '/affiliate/dashboard': typeof AffiliateDashboardRoute
@@ -458,6 +466,7 @@ export interface FileRoutesById {
   '/ujian-percuma': typeof UjianPercumaRoute
   '/admin_/affiliates': typeof AdminAffiliatesRoute
   '/admin_/challenge': typeof AdminChallengeRoute
+  '/admin_/funnel': typeof AdminFunnelRoute
   '/admin_/telegram': typeof AdminTelegramRoute
   '/affiliate/daftar': typeof AffiliateDaftarRoute
   '/affiliate/dashboard': typeof AffiliateDashboardRoute
@@ -513,6 +522,7 @@ export interface FileRouteTypes {
     | '/ujian-percuma'
     | '/admin/affiliates'
     | '/admin/challenge'
+    | '/admin/funnel'
     | '/admin/telegram'
     | '/affiliate/daftar'
     | '/affiliate/dashboard'
@@ -566,6 +576,7 @@ export interface FileRouteTypes {
     | '/ujian-percuma'
     | '/admin/affiliates'
     | '/admin/challenge'
+    | '/admin/funnel'
     | '/admin/telegram'
     | '/affiliate/daftar'
     | '/affiliate/dashboard'
@@ -619,6 +630,7 @@ export interface FileRouteTypes {
     | '/ujian-percuma'
     | '/admin_/affiliates'
     | '/admin_/challenge'
+    | '/admin_/funnel'
     | '/admin_/telegram'
     | '/affiliate/daftar'
     | '/affiliate/dashboard'
@@ -673,6 +685,7 @@ export interface RootRouteChildren {
   UjianPercumaRoute: typeof UjianPercumaRoute
   AdminAffiliatesRoute: typeof AdminAffiliatesRoute
   AdminChallengeRoute: typeof AdminChallengeRoute
+  AdminFunnelRoute: typeof AdminFunnelRoute
   AdminTelegramRoute: typeof AdminTelegramRoute
   AffiliateDaftarRoute: typeof AffiliateDaftarRoute
   AffiliateDashboardRoute: typeof AffiliateDashboardRoute
@@ -810,6 +823,13 @@ declare module '@tanstack/react-router' {
       path: '/admin/challenge'
       fullPath: '/admin/challenge'
       preLoaderRoute: typeof AdminChallengeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin_/funnel': {
+      id: '/admin_/funnel'
+      path: '/admin/funnel'
+      fullPath: '/admin/funnel'
+      preLoaderRoute: typeof AdminFunnelRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin_/telegram': {
@@ -1089,6 +1109,7 @@ const rootRouteChildren: RootRouteChildren = {
   UjianPercumaRoute: UjianPercumaRoute,
   AdminAffiliatesRoute: AdminAffiliatesRoute,
   AdminChallengeRoute: AdminChallengeRoute,
+  AdminFunnelRoute: AdminFunnelRoute,
   AdminTelegramRoute: AdminTelegramRoute,
   AffiliateDaftarRoute: AffiliateDaftarRoute,
   AffiliateDashboardRoute: AffiliateDashboardRoute,
