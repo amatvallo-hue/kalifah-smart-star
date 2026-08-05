@@ -171,6 +171,7 @@ function DaftarMpt4Page() {
 
     const redirectTo =
       typeof window !== "undefined" ? `${window.location.origin}${SELEPAS_DAFTAR}` : undefined;
+    const cleanPhone = phone.replace(/\D/g, "");
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -179,6 +180,7 @@ function DaftarMpt4Page() {
           name,
           full_name: name,
           display_name: name,
+          ...(cleanPhone ? { no_telefon: cleanPhone, phone: cleanPhone } : {}),
           ...(affiliateId ? { affiliate_id: affiliateId, ref_code: resolvedRefCode } : {}),
           ...attribution,
         },
@@ -190,6 +192,16 @@ function DaftarMpt4Page() {
       setLoading(false);
       return;
     }
+
+    // Kalau session terus wujud, simpan no telefon ke profiles (fire-and-forget)
+    if (cleanPhone && data.session && data.user) {
+      void supabase
+        .from("profiles")
+        .upsert({ id: data.user.id, no_telefon: cleanPhone }, { onConflict: "id" })
+        .then(() => {}, () => {});
+    }
+
+
 
     const isNewAccount = !!data.user?.identities && data.user.identities.length > 0;
     const normalizedEmail = email.toLowerCase().trim();
