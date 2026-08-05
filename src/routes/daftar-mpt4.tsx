@@ -1,14 +1,25 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState, type FormEvent } from "react";
-import { UserPlus, User, Mail, Lock } from "lucide-react";
+import {
+  UserPlus,
+  User,
+  Mail,
+  Lock,
+  Phone,
+  Clock,
+  BarChart2,
+  AlertTriangle,
+  Check,
+  Star,
+} from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { AuthShell, Field } from "./login";
 
 const STEPS = [
   { num: 1, label: "Daftar Akaun" },
-  { num: 2, label: "Percubaan MPT4 Percuma" },
-  { num: 3, label: "Cipta Akaun Anak" },
-  { num: 4, label: "Laporan KALI" },
+  { num: 2, label: "Nama Anak" },
+  { num: 3, label: "Jawab MPT4" },
+  { num: 4, label: "Pelan Pintar KALI™" },
 ];
 
 function StepProgress({ active }: { active: number }) {
