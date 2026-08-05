@@ -6,9 +6,9 @@ import { AuthShell, Field } from "./login";
 
 const STEPS = [
   { num: 1, label: "Daftar Akaun" },
-  { num: 2, label: "Cuba Percuma Dulu" },
+  { num: 2, label: "Percubaan MPT4 Percuma" },
   { num: 3, label: "Cipta Akaun Anak" },
-  { num: 4, label: "Mula Belajar" },
+  { num: 4, label: "Laporan KALI" },
 ];
 
 function StepProgress({ active }: { active: number }) {
@@ -48,24 +48,38 @@ function StepProgress({ active }: { active: number }) {
         })}
       </div>
       <p className="mt-4 text-center text-xs font-medium text-muted-foreground">
-        Selepas daftar, anak boleh terus cuba percuma sebelum apa-apa bayaran.
+        Selepas daftar, anak terus boleh duduk Percubaan MPT4 PERCUMA — tiada bayaran.
       </p>
     </div>
   );
 }
 
-export const Route = createFileRoute("/daftar")({
+const SELEPAS_DAFTAR = "/darjah/4/percubaan-mpt4";
+
+export const Route = createFileRoute("/daftar-mpt4")({
   validateSearch: (search: Record<string, unknown>) => ({
     ref: typeof search.ref === "string" ? search.ref : undefined,
   }),
   head: () => ({
     meta: [
-      { title: "Daftar Akaun — Kalifah.my" },
-      { name: "description", content: "Daftar akaun baru untuk Kalifah.my." },
+      { title: "Cuba PERCUMA Percubaan MPT4 — Kalifah.my" },
+      {
+        name: "description",
+        content:
+          "Daftar percuma dan biar anak anda duduk Percubaan MPT4 Darjah 4 — lengkap dengan laporan kelemahan KALI sebelum anda melanggan.",
+      },
+      { property: "og:title", content: "Cuba PERCUMA Percubaan MPT4 — Kalifah.my" },
+      {
+        property: "og:description",
+        content:
+          "Peperiksaan percubaan MPT4 percuma + laporan kelemahan KALI untuk anak anda. Daftar dalam 1 minit.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   ssr: false,
-  component: DaftarPage,
+  component: DaftarMpt4Page,
 });
 
 function sanitizeRef(value: string | null | undefined): string | null {
@@ -74,7 +88,7 @@ function sanitizeRef(value: string | null | undefined): string | null {
   return /^[A-Z0-9_-]+$/.test(cleaned) ? cleaned : null;
 }
 
-function DaftarPage() {
+function DaftarMpt4Page() {
   const navigate = useNavigate();
   const { ref } = Route.useSearch();
   const [name, setName] = useState("");
@@ -83,7 +97,6 @@ function DaftarPage() {
   const [error, setError] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-
 
   // Persist ?ref= so it survives email-confirmation round trips
   useEffect(() => {
@@ -99,7 +112,6 @@ function DaftarPage() {
       await supabase.rpc("increment_affiliate_klik_by_ref", { p_ref: clean });
     })();
   }, [ref]);
-
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
@@ -123,7 +135,9 @@ function DaftarPage() {
         .maybeSingle();
       if (aff) {
         affiliateId = (aff as { id: string }).id;
-        resolvedRefCode = (aff as { ref_code: string; custom_ref_code: string | null }).custom_ref_code ?? (aff as { ref_code: string }).ref_code;
+        resolvedRefCode =
+          (aff as { ref_code: string; custom_ref_code: string | null }).custom_ref_code ??
+          (aff as { ref_code: string }).ref_code;
       }
     }
 
@@ -144,7 +158,7 @@ function DaftarPage() {
     }
 
     const redirectTo =
-      typeof window !== "undefined" ? `${window.location.origin}/pilih-darjah` : undefined;
+      typeof window !== "undefined" ? `${window.location.origin}${SELEPAS_DAFTAR}` : undefined;
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -165,8 +179,6 @@ function DaftarPage() {
       return;
     }
 
-    // Hanya track conversion untuk akaun baru betul-betul (Supabase returns identities:[]
-    // untuk emel yang dah wujud/confirmed) dan pastikan emel yang sama tak fire dua kali.
     const isNewAccount = !!data.user?.identities && data.user.identities.length > 0;
     const normalizedEmail = email.toLowerCase().trim();
     const signupTrackedKey = `signup_tracked_${normalizedEmail}`;
@@ -186,14 +198,13 @@ function DaftarPage() {
         .insert({
           event_name: "signup",
           user_id: data.user?.id ?? null,
-          metadata: { method: "email", landing_page: "daftar" },
+          metadata: { method: "email", landing_page: "daftar-mpt4" },
         })
         .then(() => {}, () => {});
     }
 
-
     if (data.session) {
-      navigate({ to: "/pilih-darjah" });
+      navigate({ to: "/darjah/$darjahId/percubaan-mpt4", params: { darjahId: "4" } });
     } else {
       setInfo("Akaun dicipta. Sila semak emel anda untuk pengesahan, kemudian log masuk.");
       setLoading(false);
@@ -201,15 +212,18 @@ function DaftarPage() {
   }
 
   return (
-    <AuthShell title="Daftar Akaun Ibu Bapa" subtitle="Cipta akaun untuk memantau prestasi dan kemajuan anak anda.">
+    <AuthShell
+      title="Cuba PERCUMA Percubaan MPT4 Sekarang"
+      subtitle="Daftar 1 minit — anak anda terus dapat peperiksaan percubaan MPT4 percuma serta laporan kelemahan KALI sebelum anda putuskan untuk melanggan."
+    >
       <StepProgress active={1} />
       <form onSubmit={onSubmit} className="space-y-4">
         <div className="flex w-full flex-wrap items-center justify-center gap-x-3 gap-y-1 rounded-full bg-green-50 px-4 py-2.5 text-xs font-bold text-green-700">
-          <span className="inline-flex items-center gap-1">✓ Cuba percuma</span>
+          <span className="inline-flex items-center gap-1">✓ Percubaan MPT4 percuma</span>
           <span className="text-green-400">·</span>
-          <span className="inline-flex items-center gap-1">✓ RM49/tahun sahaja</span>
+          <span className="inline-flex items-center gap-1">✓ Laporan kelemahan KALI</span>
           <span className="text-green-400">·</span>
-          <span className="inline-flex items-center gap-1">✓ Bayar selepas daftar</span>
+          <span className="inline-flex items-center gap-1">✓ Tiada kad kredit</span>
         </div>
         <Field icon={User} label="Nama Penuh Ibu/Bapa" type="text" value={name} onChange={setName} placeholder="Ali bin Abu" autoComplete="name" />
         <Field icon={Mail} label="Email" type="email" value={email} onChange={setEmail} placeholder="contoh@email.com" autoComplete="email" />
@@ -232,11 +246,11 @@ function DaftarPage() {
           className="flex w-full items-center justify-center gap-2 rounded-full bg-gradient-primary px-6 py-3 font-display text-base font-extrabold text-primary-foreground shadow-soft transition hover:-translate-y-0.5 hover:shadow-gold disabled:opacity-60"
         >
           <UserPlus className="h-5 w-5" />
-          {loading ? "Sedang mendaftar..." : "Daftar Akaun"}
+          {loading ? "Sedang mendaftar..." : "Mula Percubaan MPT4 Percuma"}
         </button>
 
         <p className="text-center text-xs text-muted-foreground">
-          Tiada caj tersembunyi. Batalkan bila-bila masa.
+          Percuma sepenuhnya untuk percubaan pertama. Tiada caj tersembunyi.
         </p>
         <p className="text-center text-sm text-muted-foreground">
           Sudah ada akaun?{" "}
