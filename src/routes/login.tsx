@@ -38,6 +38,15 @@ function LoginPage() {
       setLoading(false);
       return;
     }
+    const redirect =
+      typeof window !== "undefined"
+        ? window.sessionStorage.getItem("kalifah_redirect_selepas_login")
+        : null;
+    if (redirect && redirect.startsWith("/")) {
+      window.sessionStorage.removeItem("kalifah_redirect_selepas_login");
+      window.location.href = redirect;
+      return;
+    }
     navigate({ to: mode === "child" ? "/pilih-darjah" : "/dashboard/ibu-bapa" });
   }
 
