@@ -515,7 +515,7 @@ function PercubaanMpt4JawabPage() {
       </main>
 
       {/* Sticky submit bar */}
-      {soalanList && soalanList.length > 0 && (
+      {soalanList && soalanList.length > 0 && orientasiDone && (
         <div className="fixed inset-x-0 bottom-0 z-30 border-t border-border/60 bg-card/95 shadow-card backdrop-blur">
           <div className="container mx-auto flex flex-wrap items-center justify-between gap-3 px-4 py-3">
             <div className="text-sm font-bold text-muted-foreground">
