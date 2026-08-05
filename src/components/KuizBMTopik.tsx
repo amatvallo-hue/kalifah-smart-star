@@ -114,6 +114,7 @@ interface Props {
 
 export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subjekKod = "BM", showBahasaToggle = false }: Props) {
   const darjahNum = Number(darjahId);
+  const examPaperStyle = darjahId === "6" && subjekId === "bahasa-melayu";
   const { user } = useAuth();
   const award = useAward();
   const profileName =
