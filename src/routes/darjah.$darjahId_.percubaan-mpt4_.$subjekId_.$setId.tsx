@@ -114,6 +114,23 @@ function PercubaanMpt4JawabPage() {
   const [elapsed, setElapsed] = useState(0);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [orientasiDone, setOrientasiDone] = useState(false);
+
+  // Orientasi dipapar setiap kali attempt baharu (satu kali per keputusan.id)
+  useEffect(() => {
+    if (!keputusan) return;
+    if (typeof window === "undefined") return;
+    setOrientasiDone(
+      window.sessionStorage.getItem(`kalifah_mpt4_orientasi_${keputusan.id}`) === "1",
+    );
+  }, [keputusan]);
+
+  const mulaSekarang = useCallback(() => {
+    if (keputusan && typeof window !== "undefined") {
+      window.sessionStorage.setItem(`kalifah_mpt4_orientasi_${keputusan.id}`, "1");
+    }
+    setOrientasiDone(true);
+  }, [keputusan]);
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
@@ -413,7 +430,39 @@ function PercubaanMpt4JawabPage() {
           </div>
         )}
 
-        {soalanList !== null && soalanList.length > 0 && (
+        {soalanList !== null && soalanList.length > 0 && !orientasiDone && (
+          <div className="mx-auto mt-6 max-w-lg rounded-3xl border-2 border-primary/30 bg-gradient-hero p-6 shadow-card md:p-8">
+            <h1 className="font-display text-2xl font-extrabold text-foreground">
+              🎯 {isEnglish ? "MPT4 Trial Exam" : "Percubaan MPT4"}
+            </h1>
+            <p className="mt-1 text-sm font-bold text-muted-foreground">
+              {setInfo?.tajuk || (setInfo ? `Set ${setInfo.nombor_set}` : "")} · {subjek.title}
+            </p>
+            <ul className="mt-5 flex flex-col gap-3 text-sm font-bold text-foreground">
+              <li>✅ {soalanList.length} {isEnglish ? "questions" : "soalan"}</li>
+              <li>
+                ⏱️ ±{setInfo?.tempoh_minit ?? Math.max(5, soalanList.length * 2)}{" "}
+                {isEnglish ? "minutes" : "minit"}
+                {setInfo?.jumlah_markah != null && (
+                  <span className="font-medium text-muted-foreground">
+                    {" "}· {setInfo.jumlah_markah} {isEnglish ? "marks" : "markah"}
+                  </span>
+                )}
+              </li>
+              <li>📊 {isEnglish ? "Get a weakness report by topic" : "Dapat laporan kelemahan mengikut topik"}</li>
+              <li>🤖 {isEnglish ? "KALI will suggest what to study next" : "KALI akan cadangkan apa yang perlu dipelajari"}</li>
+            </ul>
+            <button
+              type="button"
+              onClick={mulaSekarang}
+              className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-primary px-6 py-3 font-display text-sm font-extrabold text-primary-foreground shadow-soft transition hover:translate-y-[-1px]"
+            >
+              {isEnglish ? "Start Now →" : "Mula Sekarang →"}
+            </button>
+          </div>
+        )}
+
+        {soalanList !== null && soalanList.length > 0 && orientasiDone && (
           <div className="mt-6 rounded-lg border border-border/60 bg-card p-6 md:p-10">
             {/* Letterhead */}
             <div className="text-center">
@@ -466,7 +515,7 @@ function PercubaanMpt4JawabPage() {
       </main>
 
       {/* Sticky submit bar */}
-      {soalanList && soalanList.length > 0 && (
+      {soalanList && soalanList.length > 0 && orientasiDone && (
         <div className="fixed inset-x-0 bottom-0 z-30 border-t border-border/60 bg-card/95 shadow-card backdrop-blur">
           <div className="container mx-auto flex flex-wrap items-center justify-between gap-3 px-4 py-3">
             <div className="text-sm font-bold text-muted-foreground">

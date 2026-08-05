@@ -28,6 +28,20 @@ export const Route = createFileRoute(
 
 type KaedahPenskoran = "dikotomus" | "analitikal" | "holistik";
 
+interface PelanHari {
+  hari: number;
+  topik: string;
+  jenis_aktiviti: string;
+  tajuk: string;
+}
+
+interface PelanKali {
+  topik_lemah: string[];
+  mesej_kali: string;
+  hari: PelanHari[];
+  subjek_slug: string;
+}
+
 interface Mpt4Set {
   id: string;
   nombor_set: number;
@@ -121,6 +135,32 @@ function KeputusanPage() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [openBahagian, setOpenBahagian] = useState<Record<string, boolean>>({});
   const [retrying, setRetrying] = useState(false);
+  const [pelan, setPelan] = useState<PelanKali | null>(null);
+  const [pelanLoading, setPelanLoading] = useState(false);
+
+  // Pelan belajar KALI 14 hari — degrade gracefully kalau gagal
+  useEffect(() => {
+    if (phase !== "done" || !keputusan) return;
+    let cancelled = false;
+    setPelanLoading(true);
+    (async () => {
+      try {
+        const { data, error } = await supabase.functions.invoke("mpt4-jana-pelan-kali", {
+          body: { keputusan_id: keputusan.id },
+        });
+        if (cancelled) return;
+        const res = data as { ok?: boolean; pelan?: PelanKali } | null;
+        if (!error && res?.ok && res.pelan) setPelan(res.pelan);
+      } catch (e) {
+        console.error("mpt4-jana-pelan-kali failed", e);
+      } finally {
+        if (!cancelled) setPelanLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [phase, keputusan?.id]);
 
   async function handleCubaLagi() {
     if (!user || !setId) return;
@@ -430,6 +470,10 @@ function KeputusanPage() {
             onCubaLagi={handleCubaLagi}
             retrying={retrying}
             isFreeTrialUser={isFreeTrialUser}
+            hasAccess={hasAccess}
+            pelan={pelan}
+            pelanLoading={pelanLoading}
+            subjekId={subjekId}
           />
         )}
       </main>
@@ -449,6 +493,10 @@ function ResultView({
   onCubaLagi,
   retrying,
   isFreeTrialUser,
+  hasAccess,
+  pelan,
+  pelanLoading,
+  subjekId,
 }: {
   darjahId: string;
   keputusan: Mpt4Keputusan;
@@ -461,6 +509,10 @@ function ResultView({
   onCubaLagi: () => void;
   retrying: boolean;
   isFreeTrialUser: boolean;
+  hasAccess: boolean;
+  pelan: PelanKali | null;
+  pelanLoading: boolean;
+  subjekId: string;
 }) {
   const markahKeseluruhan = keputusan.markah_keseluruhan ?? 0;
   const markahPenuh = keputusan.markah_penuh ?? setInfo.jumlah_markah ?? 0;
@@ -519,6 +571,59 @@ function ResultView({
         </div>
       </div>
 
+      {/* Tahap kesediaan peperiksaan */}
+      <div className="rounded-3xl border border-border/60 bg-card p-5 shadow-card md:p-6">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h3 className="font-display text-lg font-extrabold text-foreground">
+            🎯 Tahap Kesediaan Peperiksaan {peratus}%
+          </h3>
+          <span
+            className={`rounded-full px-4 py-1.5 font-display text-xs font-extrabold ${
+              peratus >= 80
+                ? "bg-emerald-100 text-emerald-700"
+                : peratus >= 50
+                ? "bg-amber-100 text-amber-700"
+                : "bg-rose-100 text-rose-700"
+            }`}
+          >
+            {peratus >= 80 ? "🟢 Bersedia" : peratus >= 50 ? "🟡 Sederhana" : "🔴 Belum bersedia"}
+          </span>
+        </div>
+        <div className="mt-3 h-3 overflow-hidden rounded-full bg-secondary">
+          <div
+            className={`h-full bg-gradient-to-r ${bandClass}`}
+            style={{ width: `${Math.min(100, peratus)}%` }}
+          />
+        </div>
+      </div>
+
+      {/* Amaran KALI */}
+      {pelanLoading && !pelan && (
+        <div className="animate-pulse rounded-3xl border border-border/60 bg-card p-5 shadow-card">
+          <div className="h-4 w-1/3 rounded-full bg-secondary" />
+          <div className="mt-3 h-3 w-2/3 rounded-full bg-secondary" />
+          <div className="mt-2 h-3 w-1/2 rounded-full bg-secondary" />
+        </div>
+      )}
+
+      {pelan && pelan.topik_lemah.length > 0 && (
+        <div className="rounded-3xl border border-amber-300 bg-amber-50 p-5 shadow-card dark:border-amber-800/40 dark:bg-amber-950/20 md:p-6">
+          <h3 className="font-display text-lg font-extrabold text-amber-800 dark:text-amber-200">
+            ⚠️ Anak masih belum menguasai:
+          </h3>
+          <ul className="mt-3 flex flex-col gap-1.5 text-sm font-bold text-amber-900 dark:text-amber-100">
+            {pelan.topik_lemah.map((t, i) => (
+              <li key={i}>• {t}</li>
+            ))}
+          </ul>
+          {pelan.mesej_kali && (
+            <p className="mt-4 text-sm leading-relaxed text-amber-900/90 dark:text-amber-100/90">
+              🤖 {pelan.mesej_kali}
+            </p>
+          )}
+        </div>
+      )}
+
       {!isFreeTrialUser && (
         <div className="flex flex-wrap gap-3">
           <button
@@ -532,7 +637,48 @@ function ResultView({
         </div>
       )}
 
-      {isFreeTrialUser && <TrialUpsell darjahId={darjahId} soalanList={soalanList} esei={esei} perBahagian={perBahagian} />}
+      {/* Pelan penuh untuk pengguna berbayar */}
+      {hasAccess && !isFreeTrialUser && pelan && pelan.hari.length > 0 && (
+        <div className="rounded-3xl border-2 border-primary/30 bg-card p-5 shadow-card md:p-6">
+          <h3 className="font-display text-xl font-extrabold text-foreground">
+            🤖 Pelan belajar KALI 14 hari
+          </h3>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Ikut pelan ini setiap hari untuk tutup kelemahan yang dikesan.
+          </p>
+          <div className="mt-4 flex flex-col gap-2">
+            {pelan.hari.map((h) => (
+              <Link
+                key={h.hari}
+                to="/darjah/$darjahId/$subjekId/latih-tubi"
+                params={{ darjahId, subjekId: pelan.subjek_slug || subjekId }}
+                className="flex flex-wrap items-center gap-3 rounded-2xl border border-border/60 bg-background/50 px-4 py-3 transition hover:border-primary/50"
+              >
+                <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary font-display text-xs font-extrabold text-primary-foreground">
+                  {h.hari}
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block text-sm font-extrabold text-foreground">{h.tajuk}</span>
+                  <span className="block text-xs font-bold text-muted-foreground">
+                    {h.topik} · {h.jenis_aktiviti}
+                  </span>
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {isFreeTrialUser && (
+        <TrialUpsell
+          darjahId={darjahId}
+          soalanList={soalanList}
+          esei={esei}
+          perBahagian={perBahagian}
+          pelan={pelan}
+        />
+      )}
+
 
       {/* Pecahan bahagian */}
       <div className="rounded-3xl border border-border/60 bg-card p-5 shadow-card md:p-6">
@@ -599,11 +745,13 @@ function TrialUpsell({
   soalanList,
   esei,
   perBahagian,
+  pelan,
 }: {
   darjahId: string;
   soalanList: Mpt4Soalan[];
   esei: Record<string, EseiPenilaianItem>;
   perBahagian: Record<string, { markah_diperoleh: number; markah_penuh: number }>;
+  pelan: PelanKali | null;
 }) {
   const markahPenuhPerSoalan = new Map(soalanList.map((s) => [s.id, s.markah]));
   const kuasai: string[] = [];
@@ -660,12 +808,66 @@ function TrialUpsell({
         </div>
       )}
 
+      {pelan && pelan.hari.length > 0 && (
+        <div className="rounded-3xl border-2 border-primary/30 bg-card p-5 shadow-card md:p-6">
+          <h3 className="font-display text-xl font-extrabold text-foreground">
+            🤖 KALI dah sediakan pelan belajar 14 hari untukmu
+          </h3>
+          <div className="mt-4 flex flex-col gap-2">
+            {pelan.hari.slice(0, 1).map((h) => (
+              <div
+                key={h.hari}
+                className="flex flex-wrap items-center gap-3 rounded-2xl border border-primary/40 bg-primary/5 px-4 py-3"
+              >
+                <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary font-display text-xs font-extrabold text-primary-foreground">
+                  {h.hari}
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="block text-sm font-extrabold text-foreground">{h.tajuk}</span>
+                  <span className="block text-xs font-bold text-muted-foreground">
+                    {h.topik} · {h.jenis_aktiviti}
+                  </span>
+                </span>
+              </div>
+            ))}
+
+            <div className="relative">
+              <div className="pointer-events-none flex select-none flex-col gap-2 opacity-40 blur-[2px]">
+                {pelan.hari.slice(1).map((h) => (
+                  <div
+                    key={h.hari}
+                    className="flex items-center gap-3 rounded-2xl border border-border/60 bg-background/50 px-4 py-3"
+                  >
+                    <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-secondary font-display text-xs font-extrabold text-foreground">
+                      {h.hari}
+                    </span>
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate text-sm font-extrabold text-foreground">{h.tajuk}</span>
+                      <span className="block truncate text-xs font-bold text-muted-foreground">
+                        {h.topik} · {h.jenis_aktiviti}
+                      </span>
+                    </span>
+                  </div>
+                ))}
+              </div>
+              <div className="absolute inset-0 flex items-center justify-center">
+                <span className="rounded-full bg-card px-4 py-2 font-display text-sm font-extrabold text-foreground shadow-soft">
+                  🔒 Buka untuk lihat pelan penuh
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="rounded-3xl border-2 border-primary/40 bg-gradient-hero p-6 text-center shadow-card md:p-8">
         <h3 className="font-display text-2xl font-extrabold text-foreground">
           Ini baru satu set percuma 🎁
         </h3>
         <p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
-          Hanya <span className="font-extrabold text-foreground">RM49/tahun</span> untuk buka Darjah {darjahId} sepenuhnya — semua set Percubaan MPT4, Latih Tubi, Nota, Kuiz &amp; Game.
+          {pelan && pelan.hari.length > 0
+            ? <>Buka pelan belajar KALI 14 hari penuh + semua set Percubaan MPT4, Latih Tubi, Nota, Kuiz &amp; Game untuk Darjah {darjahId} — hanya <span className="font-extrabold text-foreground">RM49/tahun</span>.</>
+            : <>Hanya <span className="font-extrabold text-foreground">RM49/tahun</span> untuk buka Darjah {darjahId} sepenuhnya — semua set Percubaan MPT4, Latih Tubi, Nota, Kuiz &amp; Game.</>}
         </p>
         <button
           type="button"
