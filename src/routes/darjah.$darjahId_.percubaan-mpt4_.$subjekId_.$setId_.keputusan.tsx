@@ -746,6 +746,7 @@ function ResultView({
                   key={h.hari}
                   to="/darjah/$darjahId/$subjekId/latih-tubi"
                   params={{ darjahId, subjekId: pelan.subjek_slug || subjekId }}
+                  search={{ topik: undefined }}
                   className="flex items-start gap-3 rounded-2xl border border-border/60 bg-background/50 px-4 py-3 transition hover:border-primary/50"
                 >
                   <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary font-display text-xs font-extrabold text-primary-foreground">
