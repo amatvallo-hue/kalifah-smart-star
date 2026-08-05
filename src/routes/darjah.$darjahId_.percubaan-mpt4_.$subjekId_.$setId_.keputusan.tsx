@@ -523,7 +523,7 @@ function ResultView({
         </div>
       )}
 
-      {isFreeTrialUser && <TrialUpsell soalanList={soalanList} esei={esei} />}
+      {isFreeTrialUser && <TrialUpsell soalanList={soalanList} esei={esei} perBahagian={perBahagian} />}
 
       {/* Pecahan bahagian */}
       <div className="rounded-3xl border border-border/60 bg-card p-5 shadow-card md:p-6">
