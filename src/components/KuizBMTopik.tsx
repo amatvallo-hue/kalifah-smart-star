@@ -615,7 +615,7 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
   return (
     <main className="container mx-auto max-w-3xl px-4 py-8">
       {backLink}
-      {headerChips}
+      {!examPaperStyle && headerChips}
 
       <div className="mt-5 flex items-center justify-between">
         <span className="font-display text-sm font-extrabold text-muted-foreground">
