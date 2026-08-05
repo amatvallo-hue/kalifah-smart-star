@@ -432,6 +432,7 @@ function KeputusanPage() {
 }
 
 function ResultView({
+  darjahId,
   keputusan,
   soalanList,
   setInfo,
@@ -443,6 +444,7 @@ function ResultView({
   retrying,
   isFreeTrialUser,
 }: {
+  darjahId: string;
   keputusan: Mpt4Keputusan;
   soalanList: Mpt4Soalan[];
   setInfo: Mpt4Set;
