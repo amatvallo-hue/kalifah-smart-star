@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as CikguAffiliateRouteImport } from './routes/cikgu-affiliate'
 import { Route as DaftarRouteImport } from './routes/daftar'
+import { Route as DaftarMpt4RouteImport } from './routes/daftar-mpt4'
 import { Route as HargaRouteImport } from './routes/harga'
 import { Route as LatihanRouteImport } from './routes/latihan'
 import { Route as LoginRouteImport } from './routes/login'
@@ -80,6 +81,11 @@ const CikguAffiliateRoute = CikguAffiliateRouteImport.update({
 const DaftarRoute = DaftarRouteImport.update({
   id: '/daftar',
   path: '/daftar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DaftarMpt4Route = DaftarMpt4RouteImport.update({
+  id: '/daftar-mpt4',
+  path: '/daftar-mpt4',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HargaRoute = HargaRouteImport.update({
@@ -347,6 +353,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRoute
   '/cikgu-affiliate': typeof CikguAffiliateRoute
   '/daftar': typeof DaftarRoute
+  '/daftar-mpt4': typeof DaftarMpt4Route
   '/harga': typeof HargaRoute
   '/latihan': typeof LatihanRoute
   '/login': typeof LoginRoute
@@ -401,6 +408,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminRoute
   '/cikgu-affiliate': typeof CikguAffiliateRoute
   '/daftar': typeof DaftarRoute
+  '/daftar-mpt4': typeof DaftarMpt4Route
   '/harga': typeof HargaRoute
   '/latihan': typeof LatihanRoute
   '/login': typeof LoginRoute
@@ -456,6 +464,7 @@ export interface FileRoutesById {
   '/admin': typeof AdminRoute
   '/cikgu-affiliate': typeof CikguAffiliateRoute
   '/daftar': typeof DaftarRoute
+  '/daftar-mpt4': typeof DaftarMpt4Route
   '/harga': typeof HargaRoute
   '/latihan': typeof LatihanRoute
   '/login': typeof LoginRoute
@@ -512,6 +521,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/cikgu-affiliate'
     | '/daftar'
+    | '/daftar-mpt4'
     | '/harga'
     | '/latihan'
     | '/login'
@@ -566,6 +576,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/cikgu-affiliate'
     | '/daftar'
+    | '/daftar-mpt4'
     | '/harga'
     | '/latihan'
     | '/login'
@@ -620,6 +631,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/cikgu-affiliate'
     | '/daftar'
+    | '/daftar-mpt4'
     | '/harga'
     | '/latihan'
     | '/login'
@@ -675,6 +687,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRoute
   CikguAffiliateRoute: typeof CikguAffiliateRoute
   DaftarRoute: typeof DaftarRoute
+  DaftarMpt4Route: typeof DaftarMpt4Route
   HargaRoute: typeof HargaRoute
   LatihanRoute: typeof LatihanRoute
   LoginRoute: typeof LoginRoute
@@ -753,6 +766,13 @@ declare module '@tanstack/react-router' {
       path: '/daftar'
       fullPath: '/daftar'
       preLoaderRoute: typeof DaftarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/daftar-mpt4': {
+      id: '/daftar-mpt4'
+      path: '/daftar-mpt4'
+      fullPath: '/daftar-mpt4'
+      preLoaderRoute: typeof DaftarMpt4RouteImport
       parentRoute: typeof rootRouteImport
     }
     '/harga': {
@@ -1099,6 +1119,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRoute,
   CikguAffiliateRoute: CikguAffiliateRoute,
   DaftarRoute: DaftarRoute,
+  DaftarMpt4Route: DaftarMpt4Route,
   HargaRoute: HargaRoute,
   LatihanRoute: LatihanRoute,
   LoginRoute: LoginRoute,
