@@ -334,7 +334,7 @@ function KuizPage() {
   // Kuiz mengikut topik dari Supabase: BM Darjah 1-5, Matematik Darjah 2-6, Sains Darjah 2-6
   const isBMTopik =
     subjekId === "bahasa-melayu" &&
-    (darjahId === "1" || darjahId === "2" || darjahId === "3" || darjahId === "4" || darjahId === "5");
+    (darjahId === "1" || darjahId === "2" || darjahId === "3" || darjahId === "4" || darjahId === "5" || darjahId === "6");
   const isMatematikTopik =
     subjekId === "matematik" &&
     (darjahId === "1" || darjahId === "2" || darjahId === "3" || darjahId === "4" || darjahId === "5" || darjahId === "6");
