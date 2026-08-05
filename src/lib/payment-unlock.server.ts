@@ -177,6 +177,27 @@ export async function verifyAndUnlock(input: UnlockInput): Promise<UnlockResult>
     log(id, "5/6 pesanan ditanda paid");
   }
 
+  try {
+    void supa
+      .from("analytics_events")
+      .insert({
+        event_name: "payment_success",
+        user_id: pesanan.user_id,
+        metadata: {
+          order_id: pesanan.id,
+          pakej: pesanan.pakej,
+          amount_sen: pesanan.amount_sen,
+          darjah_akses: merged,
+        },
+      })
+      .then(
+        () => {},
+        (e: unknown) => warn(id, "6/6 gagal log analytics event", { e: String(e) }),
+      );
+  } catch (e) {
+    warn(id, "6/6 gagal log analytics event", { e: String(e) });
+  }
+
   log(id, "6/6 selesai", { merged });
   return {
     ok: true,

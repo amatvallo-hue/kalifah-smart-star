@@ -11,7 +11,22 @@ import { getDarjah, getSubjek, TONE_GRADIENT } from "@/lib/curriculum";
 import { SrtbReview, gradeSrtb, type LangkahBertingkat } from "@/lib/mpt4-srtb";
 import { laluanCheckout } from "@/lib/child-auth";
 
-async function handleLangganKlik(darjahId: string) {
+async function handleLangganKlik(
+  darjahId: string,
+  meta?: { userId?: string | null; keputusanId?: string | null; subjek?: string | null },
+) {
+  try {
+    void supabase
+      .from("analytics_events")
+      .insert({
+        event_name: "plan_unlock_clicked",
+        user_id: meta?.userId ?? null,
+        metadata: { keputusan_id: meta?.keputusanId ?? null, subjek: meta?.subjek ?? null },
+      })
+      .then(() => {}, () => {});
+  } catch {
+    /* analytics tak boleh block checkout */
+  }
   const url = await laluanCheckout(darjahId);
   window.location.href = url;
 }
@@ -206,7 +221,29 @@ function KeputusanPage() {
         });
         if (cancelled) return;
         const res = data as { ok?: boolean; pelan?: PelanKali } | null;
-        if (!error && res?.ok && res.pelan) setPelan(res.pelan);
+        if (!error && res?.ok && res.pelan) {
+          setPelan(res.pelan);
+          try {
+            const key = `kalifah_plan_day1_viewed_${keputusan.id}`;
+            if (
+              res.pelan.hari.length > 0 &&
+              typeof window !== "undefined" &&
+              window.sessionStorage.getItem(key) !== "1"
+            ) {
+              window.sessionStorage.setItem(key, "1");
+              void supabase
+                .from("analytics_events")
+                .insert({
+                  event_name: "plan_day1_viewed",
+                  user_id: user?.id ?? null,
+                  metadata: { keputusan_id: keputusan.id, subjek: res.pelan.subjek },
+                })
+                .then(() => {}, () => {});
+            }
+          } catch {
+            /* abaikan */
+          }
+        }
       } catch (e) {
         console.error("mpt4-jana-pelan-kali failed", e);
       } finally {
@@ -216,7 +253,7 @@ function KeputusanPage() {
     return () => {
       cancelled = true;
     };
-  }, [phase, keputusan?.id]);
+  }, [phase, keputusan?.id, user?.id]);
 
   async function handleCubaLagi() {
     if (!user || !setId) return;
@@ -730,6 +767,8 @@ function ResultView({
           esei={esei}
           perBahagian={perBahagian}
           pelan={pelan}
+          keputusanId={keputusan.id}
+          userId={keputusan.user_id ?? null}
         />
       )}
 
@@ -800,12 +839,16 @@ function TrialUpsell({
   esei,
   perBahagian,
   pelan,
+  keputusanId,
+  userId,
 }: {
   darjahId: string;
   soalanList: Mpt4Soalan[];
   esei: Record<string, EseiPenilaianItem>;
   perBahagian: Record<string, { markah_diperoleh: number; markah_penuh: number }>;
   pelan: PelanKali | null;
+  keputusanId: string;
+  userId: string | null;
 }) {
   const markahPenuhPerSoalan = new Map(soalanList.map((s) => [s.id, s.markah]));
   const kuasai: string[] = [];
@@ -923,7 +966,13 @@ function TrialUpsell({
 
         <button
           type="button"
-          onClick={() => void handleLangganKlik(darjahId)}
+          onClick={() =>
+            void handleLangganKlik(darjahId, {
+              userId,
+              keputusanId,
+              subjek: pelan?.subjek ?? null,
+            })
+          }
           className="mt-5 inline-flex items-center gap-2 rounded-full bg-gradient-primary px-6 py-3 font-display text-sm font-extrabold text-primary-foreground shadow-soft transition hover:translate-y-[-1px]"
         >
           🔓 Buka Darjah {darjahId} Sekarang — RM49/tahun

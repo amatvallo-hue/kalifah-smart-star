@@ -181,6 +181,14 @@ function DaftarPage() {
       if (typeof (window as any).fbq === "function") {
         (window as any).fbq("track", "CompleteRegistration");
       }
+      void supabase
+        .from("analytics_events")
+        .insert({
+          event_name: "signup",
+          user_id: data.user?.id ?? null,
+          metadata: { method: "email" },
+        })
+        .then(() => {}, () => {});
     }
 
 
