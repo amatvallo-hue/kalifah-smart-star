@@ -114,7 +114,7 @@ interface Props {
 
 export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subjekKod = "BM", showBahasaToggle = false }: Props) {
   const darjahNum = Number(darjahId);
-  const examPaperStyle = darjahId === "6" && subjekId === "bahasa-melayu";
+  const examPaperStyle = darjahId === "6";
   const { user } = useAuth();
   const award = useAward();
   const profileName =
@@ -643,7 +643,7 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
           {/* Letterhead */}
           <div className="text-center">
             <div className="text-xs font-extrabold uppercase tracking-widest text-muted-foreground">KALIFAH.MY</div>
-            <h1 className="mt-2 font-display text-2xl font-extrabold text-foreground">Kuiz — Bahasa Melayu</h1>
+            <h1 className="mt-2 font-display text-2xl font-extrabold text-foreground">Kuiz — {subjekTitle}</h1>
             <p className="mt-1 text-sm text-muted-foreground">
               Darjah 6 · Topik: {topik} · Soalan {i + 1}/{soalanList.length}
             </p>
