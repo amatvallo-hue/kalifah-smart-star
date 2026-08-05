@@ -1,14 +1,25 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState, type FormEvent } from "react";
-import { UserPlus, User, Mail, Lock } from "lucide-react";
+import {
+  UserPlus,
+  User,
+  Mail,
+  Lock,
+  Phone,
+  Clock,
+  BarChart2,
+  AlertTriangle,
+  Check,
+  Star,
+} from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { AuthShell, Field } from "./login";
 
 const STEPS = [
   { num: 1, label: "Daftar Akaun" },
-  { num: 2, label: "Percubaan MPT4 Percuma" },
-  { num: 3, label: "Cipta Akaun Anak" },
-  { num: 4, label: "Laporan KALI" },
+  { num: 2, label: "Nama Anak" },
+  { num: 3, label: "Jawab MPT4" },
+  { num: 4, label: "Pelan Pintar KALI™" },
 ];
 
 function StepProgress({ active }: { active: number }) {
@@ -93,6 +104,7 @@ function DaftarMpt4Page() {
   const { ref } = Route.useSearch();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
@@ -159,6 +171,7 @@ function DaftarMpt4Page() {
 
     const redirectTo =
       typeof window !== "undefined" ? `${window.location.origin}${SELEPAS_DAFTAR}` : undefined;
+    const cleanPhone = phone.replace(/\D/g, "");
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -167,6 +180,7 @@ function DaftarMpt4Page() {
           name,
           full_name: name,
           display_name: name,
+          ...(cleanPhone ? { no_telefon: cleanPhone, phone: cleanPhone } : {}),
           ...(affiliateId ? { affiliate_id: affiliateId, ref_code: resolvedRefCode } : {}),
           ...attribution,
         },
@@ -178,6 +192,16 @@ function DaftarMpt4Page() {
       setLoading(false);
       return;
     }
+
+    // Kalau session terus wujud, simpan no telefon ke profiles (fire-and-forget)
+    if (cleanPhone && data.session && data.user) {
+      void supabase
+        .from("profiles")
+        .upsert({ id: data.user.id, no_telefon: cleanPhone }, { onConflict: "id" })
+        .then(() => {}, () => {});
+    }
+
+
 
     const isNewAccount = !!data.user?.identities && data.user.identities.length > 0;
     const normalizedEmail = email.toLowerCase().trim();
@@ -213,20 +237,73 @@ function DaftarMpt4Page() {
 
   return (
     <AuthShell
-      title="Cuba PERCUMA Percubaan MPT4 Sekarang"
-      subtitle="Daftar 1 minit — anak anda terus dapat peperiksaan percubaan MPT4 percuma serta laporan kelemahan KALI sebelum anda putuskan untuk melanggan."
+      title="Ketahui Kelemahan Anak Sebelum Peperiksaan"
+      subtitle="Daftar dalam 1 minit. Anak anda terus boleh menjawab Percubaan MPT4, dan KALI akan menyediakan laporan kelemahan serta Pelan Pintar KALI™ berdasarkan jawapan sebenar mereka."
     >
+      <div className="mt-3 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs font-bold text-muted-foreground">
+        <span className="inline-flex items-center gap-1">
+          <Clock className="h-3.5 w-3.5" /> ~15 minit
+        </span>
+        <span className="inline-flex items-center gap-1">
+          <BarChart2 className="h-3.5 w-3.5" /> Laporan terus
+        </span>
+      </div>
+
       <StepProgress active={1} />
+
+      <div className="mb-5 rounded-2xl border border-border bg-muted/50 p-4">
+        <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">
+          Contoh laporan KALI
+        </p>
+        <div className="mt-2 flex items-center justify-between">
+          <span className="font-display text-sm font-bold text-foreground">Tahap Kesediaan</span>
+          <span className="font-display text-3xl font-extrabold text-amber-500">72%</span>
+        </div>
+        <ul className="mt-3 space-y-1.5">
+          {["Pecahan", "Perpuluhan", "Operasi Bahagi"].map((t) => (
+            <li key={t} className="flex items-center gap-2 text-sm font-medium text-foreground">
+              <AlertTriangle className="h-4 w-4 shrink-0 text-amber-500" />
+              {t}
+            </li>
+          ))}
+        </ul>
+        <div className="my-3 h-px w-full bg-border" />
+        <p className="text-xs font-bold text-foreground">Pelan Pintar KALI™</p>
+      </div>
+
+      <div className="mb-5 rounded-2xl border border-border bg-background p-4">
+        <p className="font-display text-sm font-extrabold text-foreground">
+          Apa yang anda akan dapat
+        </p>
+        <ul className="mt-2 space-y-1.5">
+          {[
+            "Percubaan MPT4",
+            "Analisis kelemahan mengikut topik",
+            "Pelan Pintar KALI™ Hari Pertama",
+          ].map((t) => (
+            <li key={t} className="flex items-center gap-2 text-sm font-medium text-foreground">
+              <Check className="h-4 w-4 shrink-0 text-green-600" />
+              {t}
+            </li>
+          ))}
+        </ul>
+      </div>
+
       <form onSubmit={onSubmit} className="space-y-4">
         <div className="flex w-full flex-wrap items-center justify-center gap-x-3 gap-y-1 rounded-full bg-green-50 px-4 py-2.5 text-xs font-bold text-green-700">
           <span className="inline-flex items-center gap-1">✓ Percubaan MPT4 percuma</span>
           <span className="text-green-400">·</span>
           <span className="inline-flex items-center gap-1">✓ Laporan kelemahan KALI</span>
           <span className="text-green-400">·</span>
-          <span className="inline-flex items-center gap-1">✓ Tiada kad kredit</span>
+          <span className="inline-flex items-center gap-1">✓ Tiada bayaran diperlukan</span>
         </div>
+        <p className="flex items-center justify-center gap-1.5 text-center text-xs font-semibold text-muted-foreground">
+          <Star className="h-3.5 w-3.5 text-amber-500" />
+          Ribuan soalan KSSR dianalisis oleh KALI
+        </p>
         <Field icon={User} label="Nama Penuh Ibu/Bapa" type="text" value={name} onChange={setName} placeholder="Ali bin Abu" autoComplete="name" />
         <Field icon={Mail} label="Email" type="email" value={email} onChange={setEmail} placeholder="contoh@email.com" autoComplete="email" />
+        <Field icon={Phone} label="No. WhatsApp (pilihan)" type="tel" value={phone} onChange={setPhone} placeholder="cth: 0123456789" autoComplete="tel" />
         <Field icon={Lock} label="Kata Laluan" type="password" value={password} onChange={setPassword} placeholder="Minimum 6 aksara" autoComplete="new-password" />
 
         {error && (
@@ -246,7 +323,7 @@ function DaftarMpt4Page() {
           className="flex w-full items-center justify-center gap-2 rounded-full bg-gradient-primary px-6 py-3 font-display text-base font-extrabold text-primary-foreground shadow-soft transition hover:-translate-y-0.5 hover:shadow-gold disabled:opacity-60"
         >
           <UserPlus className="h-5 w-5" />
-          {loading ? "Sedang mendaftar..." : "Mula Percubaan MPT4 Percuma"}
+          {loading ? "Sedang mendaftar..." : "Dapatkan Laporan KALI Percuma"}
         </button>
 
         <p className="text-center text-xs text-muted-foreground">
