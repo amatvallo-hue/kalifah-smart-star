@@ -121,6 +121,32 @@ function KeputusanPage() {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [openBahagian, setOpenBahagian] = useState<Record<string, boolean>>({});
   const [retrying, setRetrying] = useState(false);
+  const [pelan, setPelan] = useState<PelanKali | null>(null);
+  const [pelanLoading, setPelanLoading] = useState(false);
+
+  // Pelan belajar KALI 14 hari — degrade gracefully kalau gagal
+  useEffect(() => {
+    if (phase !== "done" || !keputusan) return;
+    let cancelled = false;
+    setPelanLoading(true);
+    (async () => {
+      try {
+        const { data, error } = await supabase.functions.invoke("mpt4-jana-pelan-kali", {
+          body: { keputusan_id: keputusan.id },
+        });
+        if (cancelled) return;
+        const res = data as { ok?: boolean; pelan?: PelanKali } | null;
+        if (!error && res?.ok && res.pelan) setPelan(res.pelan);
+      } catch (e) {
+        console.error("mpt4-jana-pelan-kali failed", e);
+      } finally {
+        if (!cancelled) setPelanLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [phase, keputusan?.id]);
 
   async function handleCubaLagi() {
     if (!user || !setId) return;
