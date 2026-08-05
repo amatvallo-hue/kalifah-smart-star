@@ -827,6 +827,7 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
           {i + 1 >= soalanList.length ? tr.lihatKeputusan : tr.seterusnya}
         </button>
       </div>
+      )}
     </main>
   );
 }
