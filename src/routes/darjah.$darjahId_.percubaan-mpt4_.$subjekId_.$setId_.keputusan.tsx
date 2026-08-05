@@ -413,6 +413,7 @@ function KeputusanPage() {
 
         {phase === "done" && keputusan && soalanList && setInfo && (
           <ResultView
+            darjahId={darjahId}
             keputusan={keputusan}
             soalanList={soalanList}
             setInfo={setInfo}
