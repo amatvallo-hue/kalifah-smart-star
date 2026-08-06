@@ -8,7 +8,7 @@ import { useProfile } from "@/hooks/use-profile";
 import { subjekListUntukRole } from "@/lib/curriculum";
 
 import { sertaiDenganKod } from "@/lib/parent";
-import { CHILD_EMAIL_DOMAIN } from "@/lib/child-auth";
+import { CHILD_EMAIL_DOMAIN, shouldSkipChildGuard } from "@/lib/child-auth";
 import { downloadSijil, shareSijil, type SijilInput } from "@/lib/sijil";
 import { usePoints } from "@/hooks/use-points";
 
@@ -141,6 +141,7 @@ function ProgressDashboard() {
 
 
   useEffect(() => {
+    if (shouldSkipChildGuard()) return;
     if (!loading && !user) navigate({ to: "/login" });
   }, [loading, user, navigate]);
 

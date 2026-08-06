@@ -12,6 +12,7 @@ import { getQuiz, getQuizSet2, type QuizQuestion } from "@/lib/quiz-bank";
 import { simpanProgress, rekodJawapan } from "@/lib/progress";
 import { KuizBMTopik } from "@/components/KuizBMTopik";
 import { useAward } from "@/hooks/use-award";
+import { shouldSkipChildGuard } from "@/lib/child-auth";
 
 export const Route = createFileRoute("/darjah/$darjahId_/$subjekId_/kuiz")({
   head: () => ({ meta: [{ title: "Kuiz — Kalifah.my" }] }),
@@ -287,6 +288,7 @@ function KuizPage() {
   const [mulaSoalan, setMulaSoalan] = useState(() => Date.now());
 
   useEffect(() => {
+    if (shouldSkipChildGuard()) return;
     if (!loading && !user) navigate({ to: "/login" });
   }, [loading, user, navigate]);
 

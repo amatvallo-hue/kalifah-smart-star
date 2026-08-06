@@ -16,6 +16,7 @@ import { usePoints } from "@/hooks/use-points";
 import { rekodJawapan } from "@/lib/progress";
 import { tambahMata } from "@/lib/tambah-mata";
 import { renderSoalanSvg } from "@/lib/render-soalan-svg";
+import { shouldSkipChildGuard } from "@/lib/child-auth";
 
 export const Route = createFileRoute("/kali-test/belajar-untuk-saya")({
   head: () => ({
@@ -121,6 +122,7 @@ function KaliBelajarUntukSayaPage() {
 
 
   useEffect(() => {
+    if (shouldSkipChildGuard()) return;
     if (!loading && !user) navigate({ to: "/login" });
   }, [loading, user, navigate]);
 

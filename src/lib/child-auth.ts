@@ -19,6 +19,30 @@ const SUPABASE_ANON_KEY =
   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBncGtxYmR5eG9land2dWJsdXFxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1NjcyMjAsImV4cCI6MjA5NjE0MzIyMH0.dWoxARe5MfuHuCtMn53z50Kxh_-UjnqGnh8XREzPUUo";
 
 export const PARENT_SESSION_BACKUP_KEY = "kalifah_parent_session_backup";
+const SKIP_CHILD_GUARD_KEY = "kalifah_skip_child_guard";
+const SKIP_GUARD_WINDOW_MS = 8000;
+
+export function markSkipChildGuard() {
+  if (typeof window === "undefined") return;
+  window.sessionStorage.setItem(SKIP_CHILD_GUARD_KEY, String(Date.now()));
+}
+
+export function shouldSkipChildGuard(): boolean {
+  if (typeof window === "undefined") return false;
+  const raw = window.sessionStorage.getItem(SKIP_CHILD_GUARD_KEY);
+  if (!raw) return false;
+  const ts = Number(raw);
+  if (!Number.isFinite(ts) || Date.now() - ts > SKIP_GUARD_WINDOW_MS) {
+    window.sessionStorage.removeItem(SKIP_CHILD_GUARD_KEY);
+    return false;
+  }
+  return true;
+}
+
+export function clearSkipChildGuard() {
+  if (typeof window === "undefined") return;
+  window.sessionStorage.removeItem(SKIP_CHILD_GUARD_KEY);
+}
 
 function janaPassword(): string {
   const chars = "abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789";

@@ -7,8 +7,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { usePoints } from "@/hooks/use-points";
 import { useProfile } from "@/hooks/use-profile";
 import { DARJAH_LIST, subjekListUntukRole, type Darjah, PAKEJ_LIST } from "@/lib/curriculum";
-import { CHILD_EMAIL_DOMAIN } from "@/lib/child-auth";
-import { laluanCheckout } from "@/lib/child-auth";
+import { CHILD_EMAIL_DOMAIN, laluanCheckout, shouldSkipChildGuard } from "@/lib/child-auth";
 
 async function pergiKeHarga(darjahId: string) {
   const url = await laluanCheckout(darjahId);
@@ -125,6 +124,7 @@ function DarjahDashboard() {
   const darjahAksesKey = darjahAkses.join(",");
 
   useEffect(() => {
+    if (shouldSkipChildGuard()) return;
     if (!loading && !user) navigate({ to: "/login" });
   }, [loading, user, navigate]);
 

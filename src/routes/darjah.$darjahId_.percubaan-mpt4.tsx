@@ -7,6 +7,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { usePoints } from "@/hooks/use-points";
 import { useProfile } from "@/hooks/use-profile";
 import { getDarjah, SUBJEK_LIST, TONE_GRADIENT } from "@/lib/curriculum";
+import { shouldSkipChildGuard } from "@/lib/child-auth";
 
 export const Route = createFileRoute("/darjah/$darjahId_/percubaan-mpt4")({
   head: () => ({
@@ -31,6 +32,7 @@ function PercubaanMpt4SubjekPage() {
   const [trialChecked, setTrialChecked] = useState(false);
 
   useEffect(() => {
+    if (shouldSkipChildGuard()) return;
     if (!loading && !user) navigate({ to: "/login" });
   }, [loading, user, navigate]);
 

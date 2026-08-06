@@ -9,7 +9,7 @@ import { usePoints } from "@/hooks/use-points";
 import { useProfile } from "@/hooks/use-profile";
 import { getDarjah, getSubjek, TONE_GRADIENT } from "@/lib/curriculum";
 import { SrtbReview, gradeSrtb, type LangkahBertingkat } from "@/lib/mpt4-srtb";
-import { laluanCheckout } from "@/lib/child-auth";
+import { laluanCheckout, shouldSkipChildGuard } from "@/lib/child-auth";
 
 async function handleLangganKlik(
   darjahId: string,
@@ -274,6 +274,7 @@ function KeputusanPage() {
   }
 
   useEffect(() => {
+    if (shouldSkipChildGuard()) return;
     if (!loading && !user) navigate({ to: "/login" });
   }, [loading, user, navigate]);
 

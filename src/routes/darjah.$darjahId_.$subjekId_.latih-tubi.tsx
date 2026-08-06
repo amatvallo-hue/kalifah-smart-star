@@ -35,6 +35,7 @@ import { UjianLitmus } from "@/components/svg/UjianLitmus";
 import { MesinRingkas } from "@/components/svg/MesinRingkas";
 import { WangMalaysia } from "@/components/svg/WangMalaysia";
 import { KiraObjek } from "@/components/svg/KiraObjek";
+import { shouldSkipChildGuard } from "@/lib/child-auth";
 
 function renderSoalanSvg(svg_type?: string | null, svg_params?: any) {
   if (!svg_type) return null;
@@ -154,6 +155,7 @@ function LatihTubiPage() {
   const [topikListLoading, setTopikListLoading] = useState(false);
 
   useEffect(() => {
+    if (shouldSkipChildGuard()) return;
     if (!loading && !user) navigate({ to: "/login" });
   }, [loading, user, navigate]);
 

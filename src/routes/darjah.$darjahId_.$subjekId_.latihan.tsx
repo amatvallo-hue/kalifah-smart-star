@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { getDarjah, getSubjek } from "@/lib/curriculum";
 import { simpanProgress, rekodJawapan } from "@/lib/progress";
+import { shouldSkipChildGuard } from "@/lib/child-auth";
 
 export const Route = createFileRoute("/darjah/$darjahId_/$subjekId_/latihan")({
   head: () => ({ meta: [{ title: "Latihan Bertulis — Kalifah.my" }] }),
@@ -509,6 +510,7 @@ function LatihanSubjekPage() {
   const [mulaSoalan, setMulaSoalan] = useState(() => Date.now());
 
   useEffect(() => {
+    if (shouldSkipChildGuard()) return;
     if (!loading && !user) navigate({ to: "/login" });
   }, [loading, user, navigate]);
 

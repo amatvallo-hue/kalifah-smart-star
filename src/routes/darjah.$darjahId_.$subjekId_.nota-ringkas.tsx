@@ -7,6 +7,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { getDarjah, getSubjek } from "@/lib/curriculum";
 import { simpanProgress } from "@/lib/progress";
 import { useAward } from "@/hooks/use-award";
+import { shouldSkipChildGuard } from "@/lib/child-auth";
 
 export const Route = createFileRoute("/darjah/$darjahId_/$subjekId_/nota-ringkas")({
   head: () => ({ meta: [{ title: "Nota Ringkas — Kalifah.my" }] }),
@@ -47,6 +48,7 @@ function NotaRingkasPage() {
   const [progressLogged, setProgressLogged] = useState(false);
 
   useEffect(() => {
+    if (shouldSkipChildGuard()) return;
     if (!loading && !user) navigate({ to: "/login" });
   }, [loading, user, navigate]);
 
