@@ -1622,6 +1622,12 @@ function FormTambahAnak({ onAdded }: { onAdded: () => void }) {
         /* abaikan */
       }
 
+      // Elak guard useEffect redirect ke /dashboard/progress bila sesi
+      // bertukar ke akaun anak — navigate() di bawah yang tentukan destinasi.
+      if (typeof window !== "undefined") {
+        window.sessionStorage.setItem(SKIP_CHILD_GUARD_KEY, "1");
+      }
+
       const { error: setErrSession } = await supabase.auth.setSession(res.session);
       if (!setErrSession) {
         onAdded();
@@ -1655,7 +1661,13 @@ function FormTambahAnak({ onAdded }: { onAdded: () => void }) {
         }
         return;
       }
+
+      // setSession gagal — buang flag supaya guard kekal berfungsi.
+      if (typeof window !== "undefined") {
+        window.sessionStorage.removeItem(SKIP_CHILD_GUARD_KEY);
+      }
     }
+
 
     setLoading(false);
     setOk(
