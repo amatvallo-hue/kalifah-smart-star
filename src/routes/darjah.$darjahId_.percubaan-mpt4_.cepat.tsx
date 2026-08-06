@@ -417,7 +417,7 @@ function SkrinKeputusan({
     <section className="mt-4 flex flex-col gap-6">
       <div className="rounded-3xl border border-border/60 bg-gradient-hero p-6 text-center shadow-card">
         <span className="inline-flex items-center gap-1 rounded-full bg-card px-3 py-1 font-display text-[10px] font-extrabold uppercase tracking-wide text-muted-foreground shadow-soft">
-          Anggaran, 5 soalan
+          Anggaran, {jumlah} soalan
         </span>
         <p className="mt-3 font-display text-5xl font-extrabold text-foreground">
           {skor}/{jumlah}
