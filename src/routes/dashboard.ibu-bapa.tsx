@@ -611,8 +611,16 @@ function ParentDashboard() {
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
-    else if (!loading && isChild) navigate({ to: "/dashboard/progress" });
+    else if (!loading && isChild) {
+      // Selepas parent tambah anak, submit() akan navigate sendiri.
+      if (typeof window !== "undefined" && window.sessionStorage.getItem(SKIP_CHILD_GUARD_KEY)) {
+        window.sessionStorage.removeItem(SKIP_CHILD_GUARD_KEY);
+        return;
+      }
+      navigate({ to: "/dashboard/progress" });
+    }
   }, [loading, user, isChild, navigate]);
+
 
   useEffect(() => {
     if (!user) return;
