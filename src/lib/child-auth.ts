@@ -190,7 +190,9 @@ export async function ciptaAkaunAnak(
       }
     : null;
 
-  await secondary.auth.signOut();
+  // scope: "local" — hanya bersihkan state client sekunder.
+  // Global signOut akan revoke refresh token sesi anak yang baru kita capture.
+  await secondary.auth.signOut({ scope: "local" });
 
   return {
     ok: true,
