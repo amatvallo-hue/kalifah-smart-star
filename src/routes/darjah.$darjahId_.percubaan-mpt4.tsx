@@ -8,6 +8,7 @@ import { usePoints } from "@/hooks/use-points";
 import { useProfile } from "@/hooks/use-profile";
 import { getDarjah, SUBJEK_LIST, TONE_GRADIENT } from "@/lib/curriculum";
 import { shouldSkipChildGuard } from "@/lib/child-auth";
+import { modPenuhDipilih, resetModPenuh, tandaModPenuh } from "@/lib/mpt4-gate";
 import { SambungTelegram } from "@/components/SambungTelegram";
 
 export const Route = createFileRoute("/darjah/$darjahId_/percubaan-mpt4")({
