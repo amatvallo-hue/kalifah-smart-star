@@ -8,6 +8,7 @@ import { getDarjah, getSubjek } from "@/lib/curriculum";
 import { simpanProgress, rekodJawapan } from "@/lib/progress";
 import { tambahMata } from "@/lib/tambah-mata";
 import { usePoints } from "@/hooks/use-points";
+import { shouldSkipChildGuard } from "@/lib/child-auth";
 
 export const Route = createFileRoute("/darjah/$darjahId_/$subjekId_/mendengar")({
   head: () => ({ meta: [{ title: "Latihan Mendengar — Kalifah.my" }] }),
@@ -65,6 +66,7 @@ function MendengarPage() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
+    if (shouldSkipChildGuard()) return;
     if (!loading && !user) navigate({ to: "/login" });
   }, [loading, user, navigate]);
 

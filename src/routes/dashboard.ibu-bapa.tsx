@@ -35,7 +35,14 @@ import { SUBJEK_LIST as ALL_SUBJEK, DARJAH_LIST } from "@/lib/curriculum";
 // Ibu bapa tidak boleh nampak Jawi
 const SUBJEK_LIST = ALL_SUBJEK.filter((s) => s.id !== "jawi");
 import { padamAnak, senaraikanAnak, type ChildProfile } from "@/lib/parent";
-import { ciptaAkaunAnak, CHILD_EMAIL_DOMAIN, PARENT_SESSION_BACKUP_KEY } from "@/lib/child-auth";
+import {
+  ciptaAkaunAnak,
+  CHILD_EMAIL_DOMAIN,
+  PARENT_SESSION_BACKUP_KEY,
+  markSkipChildGuard,
+  shouldSkipChildGuard,
+  clearSkipChildGuard,
+} from "@/lib/child-auth";
 import { senaraikanSijilAnak, type SijilRow } from "@/lib/sijil-rekod";
 import { downloadSijil } from "@/lib/sijil";
 
@@ -56,7 +63,6 @@ const STAT_BIRU = "#3B82F6";
 const STAT_OREN = "#FB923C";
 const STAT_EMAS = "#F5B82E";
 const AKTIF_ANAK_KEY = "kalifah_ibubapa_aktif_anak";
-const SKIP_CHILD_GUARD_KEY = "kalifah_skip_child_guard";
 
 interface ProgressRow {
   id: string;
@@ -611,13 +617,9 @@ function ParentDashboard() {
   }, [tambahAnak]);
 
   useEffect(() => {
+    if (shouldSkipChildGuard()) return;
     if (!loading && !user) navigate({ to: "/login" });
     else if (!loading && isChild) {
-      // Selepas parent tambah anak, submit() akan navigate sendiri.
-      if (typeof window !== "undefined" && window.sessionStorage.getItem(SKIP_CHILD_GUARD_KEY)) {
-        window.sessionStorage.removeItem(SKIP_CHILD_GUARD_KEY);
-        return;
-      }
       navigate({ to: "/dashboard/progress" });
     }
   }, [loading, user, isChild, navigate]);
@@ -1624,9 +1626,7 @@ function FormTambahAnak({ onAdded }: { onAdded: () => void }) {
 
       // Elak guard useEffect redirect ke /dashboard/progress bila sesi
       // bertukar ke akaun anak — navigate() di bawah yang tentukan destinasi.
-      if (typeof window !== "undefined") {
-        window.sessionStorage.setItem(SKIP_CHILD_GUARD_KEY, "1");
-      }
+      markSkipChildGuard();
 
       const { error: setErrSession } = await supabase.auth.setSession(res.session);
       if (!setErrSession) {
@@ -1663,9 +1663,7 @@ function FormTambahAnak({ onAdded }: { onAdded: () => void }) {
       }
 
       // setSession gagal — buang flag supaya guard kekal berfungsi.
-      if (typeof window !== "undefined") {
-        window.sessionStorage.removeItem(SKIP_CHILD_GUARD_KEY);
-      }
+      clearSkipChildGuard();
     }
 
 

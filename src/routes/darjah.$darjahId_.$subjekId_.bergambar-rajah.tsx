@@ -9,6 +9,7 @@ import { getDarjah, getSubjek } from "@/lib/curriculum";
 import { simpanProgress, rekodJawapan } from "@/lib/progress";
 import { tambahMata } from "@/lib/tambah-mata";
 import { renderSoalanSvg } from "@/lib/render-soalan-svg";
+import { shouldSkipChildGuard } from "@/lib/child-auth";
 
 export const Route = createFileRoute("/darjah/$darjahId_/$subjekId_/bergambar-rajah")({
   head: () => ({ meta: [{ title: "Soalan Bergambar Rajah — Kalifah.my" }] }),
@@ -157,6 +158,7 @@ function BergambarRajahPage() {
         : subjekId;
 
   useEffect(() => {
+    if (shouldSkipChildGuard()) return;
     if (!loading && !user) navigate({ to: "/login" });
   }, [loading, user, navigate]);
 

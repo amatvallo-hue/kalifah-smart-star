@@ -15,6 +15,7 @@ import { getDarjah, getSubjek } from "@/lib/curriculum";
 import { simpanProgress } from "@/lib/progress";
 import { getQuiz, getQuizSet2 } from "@/lib/quiz-bank";
 import { useAward } from "@/hooks/use-award";
+import { shouldSkipChildGuard } from "@/lib/child-auth";
 
 export const Route = createFileRoute("/darjah/$darjahId_/$subjekId_/game")({
   head: () => ({ meta: [{ title: "Quiz Race — Kalifah.my" }] }),
@@ -591,6 +592,7 @@ function GameSubjekPage() {
   const [mode, setMode] = useState<"race" | "cari" | "betul" | "padan" | "susun" | "matik" | "matik-neon">(hasRace ? "race" : "betul");
 
   useEffect(() => {
+    if (shouldSkipChildGuard()) return;
     if (!loading && !user) navigate({ to: "/login" });
   }, [loading, user, navigate]);
 

@@ -9,6 +9,7 @@ import { simpanProgress, rekodJawapan } from "@/lib/progress";
 import { tambahMata } from "@/lib/tambah-mata";
 import { usePoints } from "@/hooks/use-points";
 import { gradeAnswer, type SoalanIsiKosong as SoalanGrade } from "@/lib/gradeIsiKosong";
+import { shouldSkipChildGuard } from "@/lib/child-auth";
 
 export const Route = createFileRoute("/darjah/$darjahId_/$subjekId_/isi-kosong")({
   head: () => ({ meta: [{ title: "Isi Tempat Kosong — Kalifah.my" }] }),
@@ -98,6 +99,7 @@ function IsiKosongPage() {
   const [mulaSoalan, setMulaSoalan] = useState(() => Date.now());
 
   useEffect(() => {
+    if (shouldSkipChildGuard()) return;
     if (!loading && !user) navigate({ to: "/login" });
   }, [loading, user, navigate]);
 

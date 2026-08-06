@@ -9,6 +9,7 @@ import { usePoints } from "@/hooks/use-points";
 import { useProfile } from "@/hooks/use-profile";
 import { getDarjah, getSubjek, TONE_GRADIENT } from "@/lib/curriculum";
 import { SrtbBlock, type LangkahBertingkat } from "@/lib/mpt4-srtb";
+import { shouldSkipChildGuard } from "@/lib/child-auth";
 
 export const Route = createFileRoute("/darjah/$darjahId_/percubaan-mpt4_/$subjekId_/$setId")({
   head: () => ({
@@ -146,6 +147,7 @@ function PercubaanMpt4JawabPage() {
   }, [keputusan, user?.id, setId, subjekId, darjahId]);
 
   useEffect(() => {
+    if (shouldSkipChildGuard()) return;
     if (!loading && !user) navigate({ to: "/login" });
   }, [loading, user, navigate]);
 

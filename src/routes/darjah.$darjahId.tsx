@@ -8,6 +8,7 @@ import { useStreak } from "@/hooks/use-streak";
 import { usePoints } from "@/hooks/use-points";
 import { useProfile } from "@/hooks/use-profile";
 import { subjekListUntukRole, getDarjah, TONE_GRADIENT } from "@/lib/curriculum";
+import { shouldSkipChildGuard } from "@/lib/child-auth";
 
 export const Route = createFileRoute("/darjah/$darjahId")({
   head: () => ({
@@ -29,6 +30,7 @@ function SubjekPage() {
   const [adaTrial, setAdaTrial] = useState(false);
 
   useEffect(() => {
+    if (shouldSkipChildGuard()) return;
     if (!loading && !user) navigate({ to: "/login" });
   }, [loading, user, navigate]);
 

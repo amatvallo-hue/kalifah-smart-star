@@ -7,6 +7,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { usePoints } from "@/hooks/use-points";
 import { useProfile } from "@/hooks/use-profile";
 import { getDarjah, getSubjek } from "@/lib/curriculum";
+import { shouldSkipChildGuard } from "@/lib/child-auth";
 
 export const Route = createFileRoute("/darjah/$darjahId_/$subjekId")({
   head: () => ({
@@ -75,6 +76,7 @@ function AktivitiPage() {
 
 
   useEffect(() => {
+    if (shouldSkipChildGuard()) return;
     if (!loading && !user) navigate({ to: "/login" });
   }, [loading, user, navigate]);
 
