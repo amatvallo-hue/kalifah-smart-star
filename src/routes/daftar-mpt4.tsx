@@ -221,8 +221,8 @@ function DaftarMpt4Page() {
         .from("analytics_events")
         .insert({
           event_name: "signup",
-          user_id: data.user?.id ?? null,
-          metadata: { method: "email", landing_page: "daftar-mpt4" },
+          user_id: null,
+          metadata: { method: "email", landing_page: "daftar-mpt4", auth_user_id: data.user?.id ?? null },
         })
         .then(() => {}, () => {});
     }

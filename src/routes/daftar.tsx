@@ -185,8 +185,8 @@ function DaftarPage() {
         .from("analytics_events")
         .insert({
           event_name: "signup",
-          user_id: data.user?.id ?? null,
-          metadata: { method: "email", landing_page: "daftar" },
+          user_id: null,
+          metadata: { method: "email", landing_page: "daftar", auth_user_id: data.user?.id ?? null },
         })
         .then(() => {}, () => {});
     }
