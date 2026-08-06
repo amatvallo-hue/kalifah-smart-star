@@ -1632,30 +1632,11 @@ function FormTambahAnak({ onAdded }: { onAdded: () => void }) {
       if (!setErrSession) {
         onAdded();
         if (darjah === "4") {
-          let setId: string | null = null;
-          try {
-            const { data } = await supabase
-              .from("mpt4_set")
-              .select("id")
-              .eq("subjek", "Matematik")
-              .eq("is_trial", true)
-              .limit(1)
-              .maybeSingle();
-            setId = (data as { id: string } | null)?.id ?? null;
-          } catch {
-            setId = null;
-          }
-          if (setId) {
-            navigate({
-              to: "/darjah/$darjahId/percubaan-mpt4/$subjekId/$setId",
-              params: { darjahId: "4", subjekId: "matematik", setId },
-            });
-          } else {
-            navigate({
-              to: "/darjah/$darjahId/percubaan-mpt4/$subjekId",
-              params: { darjahId: "4", subjekId: "matematik" },
-            });
-          }
+          // Mula dari skrin permulaan/pilihan MPT4 (bukan terus ke soalan)
+          navigate({
+            to: "/darjah/$darjahId/percubaan-mpt4",
+            params: { darjahId: "4" },
+          });
         } else {
           navigate({ to: "/darjah/$darjahId", params: { darjahId: darjah } });
         }

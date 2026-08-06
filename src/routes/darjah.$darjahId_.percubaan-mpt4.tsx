@@ -8,6 +8,7 @@ import { usePoints } from "@/hooks/use-points";
 import { useProfile } from "@/hooks/use-profile";
 import { getDarjah, SUBJEK_LIST, TONE_GRADIENT } from "@/lib/curriculum";
 import { shouldSkipChildGuard } from "@/lib/child-auth";
+import { SambungTelegram } from "@/components/SambungTelegram";
 
 export const Route = createFileRoute("/darjah/$darjahId_/percubaan-mpt4")({
   head: () => ({
@@ -30,6 +31,9 @@ function PercubaanMpt4SubjekPage() {
 
   const [pilihanMod, setPilihanMod] = useState<"cepat" | "penuh" | null>(null);
   const [adaTrial, setAdaTrial] = useState(false);
+  const [parentId, setParentId] = useState<string | null>(null);
+  const [tgLinked, setTgLinked] = useState<boolean | null>(null);
+  const [langkauTg, setLangkauTg] = useState(false);
   const [trialChecked, setTrialChecked] = useState(false);
 
   useEffect(() => {
@@ -54,6 +58,32 @@ function PercubaanMpt4SubjekPage() {
       cancelled = true;
     };
   }, []);
+
+  // Semak status sambungan Telegram bagi parent kepada akaun semasa
+  useEffect(() => {
+    if (!user) return;
+    let cancelled = false;
+    (async () => {
+      const { data: kanak } = await supabase
+        .from("child_profiles" as never)
+        .select("parent_id")
+        .eq("child_user_id", user.id)
+        .maybeSingle();
+      const pid = (kanak as { parent_id: string } | null)?.parent_id ?? user.id;
+      const { data: prof } = await supabase
+        .from("profiles")
+        .select("telegram_chat_id")
+        .eq("id", pid)
+        .maybeSingle();
+      if (cancelled) return;
+      const chatId = (prof as { telegram_chat_id: number | null } | null)?.telegram_chat_id;
+      setParentId(pid);
+      setTgLinked(chatId !== null && chatId !== undefined);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [user]);
 
   async function handleLogout() {
     await supabase.auth.signOut();
@@ -87,6 +117,26 @@ function PercubaanMpt4SubjekPage() {
     );
   }
 
+
+  // Gate: sambung Telegram dahulu (Darjah 4, sebelum skrin pilihan)
+  if (
+    Number(darjah.id) === 4 &&
+    pilihanMod !== "penuh" &&
+    !langkauTg &&
+    tgLinked === false &&
+    parentId
+  ) {
+    return (
+      <div className="min-h-screen bg-background">
+        <SiteHeader stars={mata} userName={studentName} onLogout={handleLogout} />
+        <SambungTelegram
+          parentId={parentId}
+          onLinked={() => setTgLinked(true)}
+          onSkip={() => setLangkauTg(true)}
+        />
+      </div>
+    );
+  }
 
   // Skrin pilihan mod — Darjah 4 sahaja, sebelum orientasi 50-soalan
   if (Number(darjah.id) === 4 && pilihanMod !== "penuh") {
