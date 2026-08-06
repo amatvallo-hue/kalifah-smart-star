@@ -182,17 +182,15 @@ export async function ciptaAkaunAnak(
     }
   }
 
-  // 6) Ambil session anak (kalau ada) sebelum bersihkan klien sekunder
+  // 6) Ambil session anak (kalau ada). Klien sekunder dicipta dengan
+  // persistSession: false, jadi tiada state tersimpan untuk dibersihkan.
+  // Jangan panggil signOut() kerana ia akan revoke refresh token sesi anak.
   const childSession = signup.session
     ? {
         access_token: signup.session.access_token,
         refresh_token: signup.session.refresh_token,
       }
     : null;
-
-  // scope: "local" — hanya bersihkan state client sekunder.
-  // Global signOut akan revoke refresh token sesi anak yang baru kita capture.
-  await secondary.auth.signOut({ scope: "local" });
 
   return {
     ok: true,
