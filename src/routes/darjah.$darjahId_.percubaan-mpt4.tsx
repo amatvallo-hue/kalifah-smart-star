@@ -37,10 +37,17 @@ function PercubaanMpt4SubjekPage() {
   const [langkauTg, setLangkauTg] = useState(false);
   const [trialChecked, setTrialChecked] = useState(false);
 
+  // Setiap kali skrin permulaan dibuka semula, buang tanda "mod penuh" supaya
+  // pengguna wajib lalui gate Telegram + skrin pilihan 5/50 sekali lagi.
+  useEffect(() => {
+    if (Number(darjahId) === 4) resetModPenuh();
+  }, [darjahId]);
+
   useEffect(() => {
     if (shouldSkipChildGuard()) return;
     if (!loading && !user) navigate({ to: "/login" });
   }, [loading, user, navigate]);
+
 
   // Free-trial: does at least one is_trial set exist?
   useEffect(() => {
