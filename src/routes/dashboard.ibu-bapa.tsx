@@ -1607,6 +1607,13 @@ function FormTambahAnak({ onAdded }: { onAdded: () => void }) {
       return;
     }
 
+    window.alert(JSON.stringify({
+      hasSession: !!res.session,
+      hasAccessToken: !!res.session?.access_token,
+      hasRefreshToken: !!res.session?.refresh_token,
+      needsManualLogin: res.needsManualLogin,
+    }, null, 2));
+
     if (res.session) {
       // Simpan sesi parent supaya boleh kembali kemudian
       try {
