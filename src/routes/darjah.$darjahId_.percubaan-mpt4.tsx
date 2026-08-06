@@ -189,7 +189,10 @@ function PercubaanMpt4SubjekPage() {
 
             <button
               type="button"
-              onClick={() => setPilihanMod("penuh")}
+              onClick={() => {
+                tandaModPenuh();
+                setPilihanMod("penuh");
+              }}
               className="group flex flex-col gap-3 rounded-3xl border border-border/60 bg-card p-6 text-left shadow-card transition hover:-translate-y-1 hover:shadow-soft"
             >
               <span className="text-4xl">📝</span>
