@@ -28,6 +28,7 @@ function PercubaanMpt4SubjekPage() {
   const mata = usePoints();
   const studentName = user?.user_metadata?.name as string | undefined;
 
+  const [pilihanMod, setPilihanMod] = useState<"cepat" | "penuh" | null>(null);
   const [adaTrial, setAdaTrial] = useState(false);
   const [trialChecked, setTrialChecked] = useState(false);
 
@@ -86,6 +87,65 @@ function PercubaanMpt4SubjekPage() {
     );
   }
 
+
+  // Skrin pilihan mod — Darjah 4 sahaja, sebelum orientasi 50-soalan
+  if (Number(darjah.id) === 4 && pilihanMod !== "penuh") {
+    return (
+      <div className="min-h-screen bg-background">
+        <SiteHeader stars={mata} userName={studentName} onLogout={handleLogout} />
+        <main className="container mx-auto max-w-3xl px-4 py-8">
+          <Link
+            to="/darjah/$darjahId"
+            params={{ darjahId }}
+            className="inline-flex items-center gap-2 text-sm font-bold text-muted-foreground hover:text-primary"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Kembali ke Subjek
+          </Link>
+
+          <section className="mt-4 rounded-[2rem] bg-gradient-hero p-6 shadow-card md:p-10">
+            <span className="rounded-full bg-card px-4 py-1.5 font-display text-xs font-bold text-primary shadow-soft">
+              {darjah.label}
+            </span>
+            <h1 className="mt-3 font-display text-3xl font-extrabold text-foreground md:text-4xl">
+              Pilih <span className="text-primary">Cara Mula</span>
+            </h1>
+            <p className="mt-2 max-w-lg text-muted-foreground">
+              Nak anggaran pantas dulu, atau terus buat percubaan penuh macam exam sebenar?
+            </p>
+          </section>
+
+          <section className="mt-8 grid gap-5 sm:grid-cols-2">
+            <Link
+              to="/darjah/$darjahId/percubaan-mpt4/cepat"
+              params={{ darjahId }}
+              className="group flex flex-col gap-3 rounded-3xl border-2 border-primary/40 bg-card p-6 shadow-card transition hover:-translate-y-1 hover:shadow-soft"
+            >
+              <span className="text-4xl">⚡</span>
+              <h2 className="font-display text-xl font-extrabold text-foreground">5 Soalan Cepat</h2>
+              <p className="text-sm text-muted-foreground">
+                ~2 minit — anggaran pantas merentas 4 subjek.
+              </p>
+              <span className="mt-1 font-display text-sm font-extrabold text-primary">Mula sekarang →</span>
+            </Link>
+
+            <button
+              type="button"
+              onClick={() => setPilihanMod("penuh")}
+              className="group flex flex-col gap-3 rounded-3xl border border-border/60 bg-card p-6 text-left shadow-card transition hover:-translate-y-1 hover:shadow-soft"
+            >
+              <span className="text-4xl">📝</span>
+              <h2 className="font-display text-xl font-extrabold text-foreground">50 Soalan Penuh</h2>
+              <p className="text-sm text-muted-foreground">
+                Macam exam sebenar — keputusan lebih tepat &amp; pelan belajar penuh.
+              </p>
+              <span className="mt-1 font-display text-sm font-extrabold text-primary">Pilih subjek →</span>
+            </button>
+          </section>
+        </main>
+      </div>
+    );
+  }
 
   const subjekMpt4 = SUBJEK_LIST.filter((s) => (MPT4_SUBJEK_IDS as readonly string[]).includes(s.id));
 
