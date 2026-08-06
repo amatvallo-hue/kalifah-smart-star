@@ -10,6 +10,7 @@ import { useProfile } from "@/hooks/use-profile";
 import { getDarjah, getSubjek, TONE_GRADIENT } from "@/lib/curriculum";
 import { SrtbBlock, type LangkahBertingkat } from "@/lib/mpt4-srtb";
 import { shouldSkipChildGuard } from "@/lib/child-auth";
+import { perluKembaliKeGate } from "@/lib/mpt4-gate";
 
 export const Route = createFileRoute("/darjah/$darjahId_/percubaan-mpt4_/$subjekId_/$setId")({
   head: () => ({
@@ -150,6 +151,14 @@ function PercubaanMpt4JawabPage() {
     if (shouldSkipChildGuard()) return;
     if (!loading && !user) navigate({ to: "/login" });
   }, [loading, user, navigate]);
+
+  // Gate: Darjah 4 mesti lalui skrin permulaan (Sambung Telegram + pilihan 5/50)
+  useEffect(() => {
+    if (!perluKembaliKeGate(darjahId)) return;
+    navigate({ to: "/darjah/$darjahId/percubaan-mpt4", params: { darjahId }, replace: true });
+  }, [darjahId, navigate]);
+
+
 
   // Fetch set + soalan
   useEffect(() => {

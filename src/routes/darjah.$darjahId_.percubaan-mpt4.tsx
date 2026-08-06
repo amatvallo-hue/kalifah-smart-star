@@ -8,6 +8,7 @@ import { usePoints } from "@/hooks/use-points";
 import { useProfile } from "@/hooks/use-profile";
 import { getDarjah, SUBJEK_LIST, TONE_GRADIENT } from "@/lib/curriculum";
 import { shouldSkipChildGuard } from "@/lib/child-auth";
+import { resetModPenuh, tandaModPenuh } from "@/lib/mpt4-gate";
 import { SambungTelegram } from "@/components/SambungTelegram";
 
 export const Route = createFileRoute("/darjah/$darjahId_/percubaan-mpt4")({
@@ -36,10 +37,17 @@ function PercubaanMpt4SubjekPage() {
   const [langkauTg, setLangkauTg] = useState(false);
   const [trialChecked, setTrialChecked] = useState(false);
 
+  // Setiap kali skrin permulaan dibuka semula, buang tanda "mod penuh" supaya
+  // pengguna wajib lalui gate Telegram + skrin pilihan 5/50 sekali lagi.
+  useEffect(() => {
+    if (Number(darjahId) === 4) resetModPenuh();
+  }, [darjahId]);
+
   useEffect(() => {
     if (shouldSkipChildGuard()) return;
     if (!loading && !user) navigate({ to: "/login" });
   }, [loading, user, navigate]);
+
 
   // Free-trial: does at least one is_trial set exist?
   useEffect(() => {
@@ -181,7 +189,10 @@ function PercubaanMpt4SubjekPage() {
 
             <button
               type="button"
-              onClick={() => setPilihanMod("penuh")}
+              onClick={() => {
+                tandaModPenuh();
+                setPilihanMod("penuh");
+              }}
               className="group flex flex-col gap-3 rounded-3xl border border-border/60 bg-card p-6 text-left shadow-card transition hover:-translate-y-1 hover:shadow-soft"
             >
               <span className="text-4xl">📝</span>
