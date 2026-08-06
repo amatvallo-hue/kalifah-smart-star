@@ -42,13 +42,6 @@ const SUBJEK_LABEL: Record<string, string> = {
 
 const SUBJEK_URUTAN = ["BM", "Bahasa Inggeris", "MT", "SC"] as const;
 
-const SUBJEK_SLUG: Record<string, string> = {
-  BM: "bahasa-melayu",
-  "Bahasa Inggeris": "bahasa-inggeris",
-  MT: "matematik",
-  SC: "sains",
-};
-
 interface SoalanCepat {
   id: string;
   subjek: string;
@@ -485,14 +478,11 @@ function SkrinKeputusan({
         <Link
           to="/darjah/$darjahId/percubaan-mpt4"
           params={{ darjahId }}
-          search={{ penuh: 1 }}
           className="text-sm font-bold text-muted-foreground underline-offset-4 hover:text-primary hover:underline"
         >
           Atau buat MPT4 penuh (50 soalan) untuk keputusan lebih tepat
         </Link>
       </div>
-
-      <p className="text-center text-xs text-muted-foreground">Sesi: {sesiId.slice(0, 8)}</p>
 
       <div className="text-center">
         <Link
@@ -500,7 +490,7 @@ function SkrinKeputusan({
           params={{ darjahId }}
           className="text-sm font-bold text-muted-foreground underline-offset-4 hover:text-primary hover:underline"
         >
-          Kembali ke {SUBJEK_SLUG.BM ? "senarai subjek" : "senarai subjek"}
+          Kembali ke senarai subjek
         </Link>
       </div>
     </section>
