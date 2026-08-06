@@ -1607,6 +1607,13 @@ function FormTambahAnak({ onAdded }: { onAdded: () => void }) {
       return;
     }
 
+    window.alert(JSON.stringify({
+      hasSession: !!res.session,
+      hasAccessToken: !!res.session?.access_token,
+      hasRefreshToken: !!res.session?.refresh_token,
+      needsManualLogin: res.needsManualLogin,
+    }, null, 2));
+
     if (res.session) {
       // Simpan sesi parent supaya boleh kembali kemudian
       try {
@@ -1629,6 +1636,9 @@ function FormTambahAnak({ onAdded }: { onAdded: () => void }) {
       markSkipChildGuard();
 
       const { error: setErrSession } = await supabase.auth.setSession(res.session);
+      window.alert(JSON.stringify({
+        setErrSession: setErrSession ? { message: setErrSession.message, status: (setErrSession as any).status } : null,
+      }, null, 2));
       if (!setErrSession) {
         onAdded();
         if (darjah === "4") {
