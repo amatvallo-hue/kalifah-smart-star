@@ -1636,6 +1636,9 @@ function FormTambahAnak({ onAdded }: { onAdded: () => void }) {
       markSkipChildGuard();
 
       const { error: setErrSession } = await supabase.auth.setSession(res.session);
+      window.alert(JSON.stringify({
+        setErrSession: setErrSession ? { message: setErrSession.message, status: (setErrSession as any).status } : null,
+      }, null, 2));
       if (!setErrSession) {
         onAdded();
         if (darjah === "4") {
