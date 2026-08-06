@@ -8,6 +8,7 @@ import { usePoints } from "@/hooks/use-points";
 import { useProfile } from "@/hooks/use-profile";
 import { getDarjah, getSubjek, TONE_GRADIENT } from "@/lib/curriculum";
 import { shouldSkipChildGuard } from "@/lib/child-auth";
+import { perluKembaliKeGate } from "@/lib/mpt4-gate";
 
 export const Route = createFileRoute("/darjah/$darjahId_/percubaan-mpt4_/$subjekId")({
   head: () => ({
