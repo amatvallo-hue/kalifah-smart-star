@@ -56,6 +56,7 @@ const STAT_BIRU = "#3B82F6";
 const STAT_OREN = "#FB923C";
 const STAT_EMAS = "#F5B82E";
 const AKTIF_ANAK_KEY = "kalifah_ibubapa_aktif_anak";
+const SKIP_CHILD_GUARD_KEY = "kalifah_skip_child_guard";
 
 interface ProgressRow {
   id: string;
