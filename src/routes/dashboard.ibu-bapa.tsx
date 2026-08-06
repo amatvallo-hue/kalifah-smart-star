@@ -56,6 +56,7 @@ const STAT_BIRU = "#3B82F6";
 const STAT_OREN = "#FB923C";
 const STAT_EMAS = "#F5B82E";
 const AKTIF_ANAK_KEY = "kalifah_ibubapa_aktif_anak";
+const SKIP_CHILD_GUARD_KEY = "kalifah_skip_child_guard";
 
 interface ProgressRow {
   id: string;
@@ -611,8 +612,16 @@ function ParentDashboard() {
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/login" });
-    else if (!loading && isChild) navigate({ to: "/dashboard/progress" });
+    else if (!loading && isChild) {
+      // Selepas parent tambah anak, submit() akan navigate sendiri.
+      if (typeof window !== "undefined" && window.sessionStorage.getItem(SKIP_CHILD_GUARD_KEY)) {
+        window.sessionStorage.removeItem(SKIP_CHILD_GUARD_KEY);
+        return;
+      }
+      navigate({ to: "/dashboard/progress" });
+    }
   }, [loading, user, isChild, navigate]);
+
 
   useEffect(() => {
     if (!user) return;
@@ -1613,6 +1622,12 @@ function FormTambahAnak({ onAdded }: { onAdded: () => void }) {
         /* abaikan */
       }
 
+      // Elak guard useEffect redirect ke /dashboard/progress bila sesi
+      // bertukar ke akaun anak — navigate() di bawah yang tentukan destinasi.
+      if (typeof window !== "undefined") {
+        window.sessionStorage.setItem(SKIP_CHILD_GUARD_KEY, "1");
+      }
+
       const { error: setErrSession } = await supabase.auth.setSession(res.session);
       if (!setErrSession) {
         onAdded();
@@ -1646,7 +1661,13 @@ function FormTambahAnak({ onAdded }: { onAdded: () => void }) {
         }
         return;
       }
+
+      // setSession gagal — buang flag supaya guard kekal berfungsi.
+      if (typeof window !== "undefined") {
+        window.sessionStorage.removeItem(SKIP_CHILD_GUARD_KEY);
+      }
     }
+
 
     setLoading(false);
     setOk(
