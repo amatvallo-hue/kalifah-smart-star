@@ -63,6 +63,13 @@ function PercubaanMpt4SetPage() {
     if (!loading && !user) navigate({ to: "/login" });
   }, [loading, user, navigate]);
 
+  // Gate: Darjah 4 mesti lalui skrin permulaan (Sambung Telegram + pilihan 5/50)
+  useEffect(() => {
+    if (!perluKembaliKeGate(darjahId)) return;
+    navigate({ to: "/darjah/$darjahId/percubaan-mpt4", params: { darjahId }, replace: true });
+  }, [darjahId, navigate]);
+
+
   const subjekLabel = SLUG_TO_LABEL[subjekId];
 
   useEffect(() => {
