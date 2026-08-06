@@ -109,22 +109,11 @@ function AssessmentCepatPage() {
   }, [loading, user, navigate]);
 
   // Tarik 5 soalan: 1 BM, 1 BI, 1 SC, 2 MT — semua tanpa gambar/svg
+  // 4 query berasingan (parallel) supaya tiada subjek hilang akibat row-limit PostgREST
   useEffect(() => {
     let cancelled = false;
     (async () => {
-      const { data, error } = await supabase
-        .from("kuiz_soalan")
-        .select("id, subjek, topik, soalan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan")
-        .eq("darjah", 4)
-        .in("subjek", [...SUBJEK_URUTAN])
-        .is("gambar", null)
-        .is("svg_type", null);
-      if (cancelled) return;
-      if (error) {
-        setRalat(error.message);
-        return;
-      }
-      const rows = (data ?? []) as unknown as {
+      type Row = {
         id: string | number;
         subjek: string;
         topik: string | null;
@@ -134,30 +123,58 @@ function AssessmentCepatPage() {
         pilihan_c: string | null;
         pilihan_d: string | null;
         jawapan: string | null;
-      }[];
-
-      const bersih: SoalanCepat[] = rows
-        .filter((r) => r.soalan && r.pilihan_a && r.pilihan_b && r.pilihan_c && r.pilihan_d && r.jawapan)
-        .map((r) => ({
-          id: String(r.id),
-          subjek: r.subjek,
-          topik: r.topik ?? null,
-          soalan: r.soalan,
-          pilihan: [
-            { huruf: "A", teks: r.pilihan_a as string },
-            { huruf: "B", teks: r.pilihan_b as string },
-            { huruf: "C", teks: r.pilihan_c as string },
-            { huruf: "D", teks: r.pilihan_d as string },
-          ],
-          jawapan: String(r.jawapan).trim().toUpperCase().slice(0, 1),
-        }));
+      };
 
       const kuota: Record<string, number> = { BM: 1, "Bahasa Inggeris": 1, MT: 2, SC: 1 };
+
+      const hasil = await Promise.all(
+        SUBJEK_URUTAN.map(async (subjek) => {
+          const mula = Math.floor(Math.random() * 200);
+          const { data, error } = await supabase
+            .from("kuiz_soalan")
+            .select("id, subjek, topik, soalan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan")
+            .eq("darjah", 4)
+            .eq("subjek", subjek)
+            .is("gambar", null)
+            .is("svg_type", null)
+            .range(mula, mula + 39);
+          if (error || !data || data.length === 0) {
+            // fallback: mungkin offset melebihi jumlah baris subjek ini
+            const { data: data2 } = await supabase
+              .from("kuiz_soalan")
+              .select("id, subjek, topik, soalan, pilihan_a, pilihan_b, pilihan_c, pilihan_d, jawapan")
+              .eq("darjah", 4)
+              .eq("subjek", subjek)
+              .is("gambar", null)
+              .is("svg_type", null)
+              .limit(40);
+            return (data2 ?? []) as unknown as Row[];
+          }
+          return data as unknown as Row[];
+        }),
+      );
+      if (cancelled) return;
+
       const dipilih: SoalanCepat[] = [];
-      for (const subjek of SUBJEK_URUTAN) {
-        const calon = shuffle(bersih.filter((s) => s.subjek === subjek));
-        dipilih.push(...calon.slice(0, kuota[subjek] ?? 1));
-      }
+      hasil.forEach((rows, i) => {
+        const subjek = SUBJEK_URUTAN[i];
+        const bersih: SoalanCepat[] = rows
+          .filter((r) => r.soalan && r.pilihan_a && r.pilihan_b && r.pilihan_c && r.pilihan_d && r.jawapan)
+          .map((r) => ({
+            id: String(r.id),
+            subjek: r.subjek,
+            topik: r.topik ?? null,
+            soalan: r.soalan,
+            pilihan: [
+              { huruf: "A", teks: r.pilihan_a as string },
+              { huruf: "B", teks: r.pilihan_b as string },
+              { huruf: "C", teks: r.pilihan_c as string },
+              { huruf: "D", teks: r.pilihan_d as string },
+            ],
+            jawapan: String(r.jawapan).trim().toUpperCase().slice(0, 1),
+          }));
+        dipilih.push(...shuffle(bersih).slice(0, kuota[subjek] ?? 1));
+      });
 
       if (dipilih.length === 0) {
         setRalat("Tiada soalan sesuai buat masa ini. Sila cuba lagi nanti.");
@@ -170,6 +187,7 @@ function AssessmentCepatPage() {
       cancelled = true;
     };
   }, []);
+
 
   // Event: mula
   useEffect(() => {
