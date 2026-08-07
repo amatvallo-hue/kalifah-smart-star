@@ -1680,7 +1680,6 @@ function FormTambahAnak({ onAdded }: { onAdded: () => void }) {
     });
     setLoading(false);
     setNama("");
-    onAdded();
   }
 
 
