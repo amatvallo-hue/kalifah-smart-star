@@ -1585,6 +1585,68 @@ function FormTambahAnak({ onAdded }: { onAdded: () => void }) {
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [ok, setOk] = useState<string | null>(null);
+  const [kredensialAnak, setKredensialAnak] = useState<{
+    nama: string;
+    darjah: string;
+    username: string;
+    password: string;
+    session: { access_token: string; refresh_token: string } | null;
+  } | null>(null);
+  const [copied, setCopied] = useState(false);
+
+  async function salinKredensial() {
+    if (!kredensialAnak) return;
+    try {
+      await navigator.clipboard.writeText(
+        `Username: ${kredensialAnak.username}\nPassword: ${kredensialAnak.password}`,
+      );
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      /* abaikan */
+    }
+  }
+
+  async function teruskan() {
+    if (!kredensialAnak) return;
+    const k = kredensialAnak;
+    if (!k.session) {
+      setKredensialAnak(null);
+      return;
+    }
+    // Simpan sesi parent supaya boleh kembali kemudian
+    try {
+      const { data: cur } = await supabase.auth.getSession();
+      if (cur.session && typeof window !== "undefined") {
+        window.sessionStorage.setItem(
+          PARENT_SESSION_BACKUP_KEY,
+          JSON.stringify({
+            access_token: cur.session.access_token,
+            refresh_token: cur.session.refresh_token,
+          }),
+        );
+      }
+    } catch {
+      /* abaikan */
+    }
+
+    markSkipChildGuard();
+
+    const { error: setErrSession } = await supabase.auth.setSession(k.session);
+    if (setErrSession) {
+      clearSkipChildGuard();
+      setKredensialAnak(null);
+      setErr("Gagal log masuk akaun anak. Sila log masuk manual.");
+      return;
+    }
+    setKredensialAnak(null);
+    if (k.darjah === "4") {
+      navigate({ to: "/darjah/$darjahId/percubaan-mpt4", params: { darjahId: "4" } });
+    } else {
+      navigate({ to: "/darjah/$darjahId", params: { darjahId: k.darjah } });
+    }
+  }
+
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -1607,57 +1669,54 @@ function FormTambahAnak({ onAdded }: { onAdded: () => void }) {
       return;
     }
 
-    if (res.session) {
-      // Simpan sesi parent supaya boleh kembali kemudian
-      try {
-        const { data: cur } = await supabase.auth.getSession();
-        if (cur.session && typeof window !== "undefined") {
-          window.sessionStorage.setItem(
-            PARENT_SESSION_BACKUP_KEY,
-            JSON.stringify({
-              access_token: cur.session.access_token,
-              refresh_token: cur.session.refresh_token,
-            }),
-          );
-        }
-      } catch {
-        /* abaikan */
-      }
-
-      // Elak guard useEffect redirect ke /dashboard/progress bila sesi
-      // bertukar ke akaun anak — navigate() di bawah yang tentukan destinasi.
-      markSkipChildGuard();
-
-      const { error: setErrSession } = await supabase.auth.setSession(res.session);
-      if (!setErrSession) {
-        onAdded();
-        if (darjah === "4") {
-          // Mula dari skrin permulaan/pilihan MPT4 (bukan terus ke soalan)
-          navigate({
-            to: "/darjah/$darjahId/percubaan-mpt4",
-            params: { darjahId: "4" },
-          });
-        } else {
-          navigate({ to: "/darjah/$darjahId", params: { darjahId: darjah } });
-        }
-        return;
-      }
-
-      // setSession gagal — buang flag supaya guard kekal berfungsi.
-      clearSkipChildGuard();
-    }
-
-
+    setKredensialAnak({
+      nama: nama.trim(),
+      darjah,
+      username: res.username ?? "-",
+      password: res.generatedPassword ?? "-",
+      session: res.session ?? null,
+    });
     setLoading(false);
-    setOk(
-      `Akaun ${nama} berjaya dicipta! Anak boleh log masuk dengan username: ${res.username ?? "-"}`,
-    );
     setNama("");
     onAdded();
   }
 
+
   return (
+    <>
+    {kredensialAnak && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
+        <div className="w-full max-w-md rounded-3xl bg-card p-6 shadow-card">
+          <h3 className="font-display text-xl font-extrabold text-foreground">
+            Akaun {kredensialAnak.nama} berjaya dicipta! 🎉
+          </h3>
+          <p className="mt-2 text-xs font-bold text-destructive">
+            Simpan maklumat ni — anak akan perlukan untuk log masuk semula di peranti/hari lain.
+          </p>
+          <div className="mt-4 rounded-2xl bg-muted p-4 font-mono text-sm text-foreground">
+            <div>Username: {kredensialAnak.username}</div>
+            <div>Password: {kredensialAnak.password}</div>
+          </div>
+          <button
+            type="button"
+            onClick={salinKredensial}
+            className="mt-3 w-full rounded-full bg-muted px-4 py-2.5 font-display text-sm font-extrabold text-foreground"
+          >
+            {copied ? "Disalin!" : "📋 Salin Kredensial"}
+          </button>
+          <button
+            type="button"
+            onClick={teruskan}
+            className="mt-2 w-full rounded-full px-4 py-2.5 font-display text-sm font-extrabold text-white shadow-soft"
+            style={{ backgroundColor: HIJAU }}
+          >
+            {kredensialAnak.session ? "Teruskan ke Aktiviti Pertama →" : "Faham, Tutup"}
+          </button>
+        </div>
+      </div>
+    )}
     <form onSubmit={submit} className="mt-4 rounded-2xl bg-card p-5 shadow-card" style={{ border: `2px solid ${HIJAU}33` }}>
+
       <h3 className="font-display text-lg font-extrabold text-foreground">Cipta Akaun Anak</h3>
       <p className="mt-1 text-xs text-muted-foreground">
         Kami akan cipta akaun anak automatik — tiada emel, username atau password perlu diisi.
@@ -1699,7 +1758,9 @@ function FormTambahAnak({ onAdded }: { onAdded: () => void }) {
       {err && <p className="mt-2 text-xs text-destructive">{err}</p>}
       {ok && <p className="mt-2 rounded-xl bg-primary/10 p-2 text-xs font-bold text-primary">{ok}</p>}
     </form>
+    </>
   );
+
 }
 
 function KaliInsightCard({
