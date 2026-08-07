@@ -1758,7 +1758,9 @@ function FormTambahAnak({ onAdded }: { onAdded: () => void }) {
       {err && <p className="mt-2 text-xs text-destructive">{err}</p>}
       {ok && <p className="mt-2 rounded-xl bg-primary/10 p-2 text-xs font-bold text-primary">{ok}</p>}
     </form>
+    </>
   );
+
 }
 
 function KaliInsightCard({
