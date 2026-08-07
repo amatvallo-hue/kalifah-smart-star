@@ -67,3 +67,44 @@ export async function awardKuizStar({
   }
   return !!data;
 }
+
+/**
+ * KALI (Belajar Bersama KALI) sahaja: bagi 1 star, tapi HANYA sekali seumur hidup untuk
+ * setiap soalan unik (anti-farm — sama macam awardKuizStar).
+ * Guna RPC award_kali_star() di Supabase supaya dedup berlaku secara atomic di server.
+ * Return true kalau star diberi, false kalau soalan ni dah pernah bagi star sebelum ni.
+ */
+export async function awardKaliStar({
+  soalanRef,
+  darjah,
+  subjek,
+}: {
+  soalanRef: string;
+  darjah: string;
+  subjek: string;
+}): Promise<boolean> {
+  const { data, error } = await supabase.rpc("award_kali_star", {
+    p_soalan_ref: soalanRef,
+    p_darjah: darjah,
+    p_subjek: subjek,
+  });
+  if (error) {
+    console.error("awardKaliStar gagal:", error);
+    return false;
+  }
+  return !!data;
+}
+
+/**
+ * Bonus +5 star bila pelajar habiskan 1 sesi penuh Belajar Bersama KALI (10 soalan).
+ * Guna RPC award_kali_sesi_bonus() — dihadkan max 1x sehari per pelajar (server-side).
+ * Return true kalau bonus diberi, false kalau dah dapat bonus sesi KALI hari ni.
+ */
+export async function awardKaliSesiBonus(): Promise<boolean> {
+  const { data, error } = await supabase.rpc("award_kali_sesi_bonus");
+  if (error) {
+    console.error("awardKaliSesiBonus gagal:", error);
+    return false;
+  }
+  return !!data;
+}
