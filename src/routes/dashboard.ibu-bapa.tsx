@@ -1612,6 +1612,7 @@ function FormTambahAnak({ onAdded }: { onAdded: () => void }) {
     const k = kredensialAnak;
     if (!k.session) {
       setKredensialAnak(null);
+      onAdded();
       return;
     }
     // Simpan sesi parent supaya boleh kembali kemudian
@@ -1640,6 +1641,7 @@ function FormTambahAnak({ onAdded }: { onAdded: () => void }) {
       return;
     }
     setKredensialAnak(null);
+    onAdded();
     if (k.darjah === "4") {
       navigate({ to: "/darjah/$darjahId/percubaan-mpt4", params: { darjahId: "4" } });
     } else {
@@ -1678,7 +1680,6 @@ function FormTambahAnak({ onAdded }: { onAdded: () => void }) {
     });
     setLoading(false);
     setNama("");
-    onAdded();
   }
 
 
