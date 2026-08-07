@@ -1585,6 +1585,68 @@ function FormTambahAnak({ onAdded }: { onAdded: () => void }) {
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [ok, setOk] = useState<string | null>(null);
+  const [kredensialAnak, setKredensialAnak] = useState<{
+    nama: string;
+    darjah: string;
+    username: string;
+    password: string;
+    session: { access_token: string; refresh_token: string } | null;
+  } | null>(null);
+  const [copied, setCopied] = useState(false);
+
+  async function salinKredensial() {
+    if (!kredensialAnak) return;
+    try {
+      await navigator.clipboard.writeText(
+        `Username: ${kredensialAnak.username}\nPassword: ${kredensialAnak.password}`,
+      );
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      /* abaikan */
+    }
+  }
+
+  async function teruskan() {
+    if (!kredensialAnak) return;
+    const k = kredensialAnak;
+    if (!k.session) {
+      setKredensialAnak(null);
+      return;
+    }
+    // Simpan sesi parent supaya boleh kembali kemudian
+    try {
+      const { data: cur } = await supabase.auth.getSession();
+      if (cur.session && typeof window !== "undefined") {
+        window.sessionStorage.setItem(
+          PARENT_SESSION_BACKUP_KEY,
+          JSON.stringify({
+            access_token: cur.session.access_token,
+            refresh_token: cur.session.refresh_token,
+          }),
+        );
+      }
+    } catch {
+      /* abaikan */
+    }
+
+    markSkipChildGuard();
+
+    const { error: setErrSession } = await supabase.auth.setSession(k.session);
+    if (setErrSession) {
+      clearSkipChildGuard();
+      setKredensialAnak(null);
+      setErr("Gagal log masuk akaun anak. Sila log masuk manual.");
+      return;
+    }
+    setKredensialAnak(null);
+    if (k.darjah === "4") {
+      navigate({ to: "/darjah/$darjahId/percubaan-mpt4", params: { darjahId: "4" } });
+    } else {
+      navigate({ to: "/darjah/$darjahId", params: { darjahId: k.darjah } });
+    }
+  }
+
 
   useEffect(() => {
     if (typeof window === "undefined") return;
