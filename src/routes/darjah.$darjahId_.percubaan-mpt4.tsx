@@ -34,7 +34,7 @@ function PercubaanMpt4SubjekPage() {
   const [adaTrial, setAdaTrial] = useState(false);
   const [parentId, setParentId] = useState<string | null>(null);
   const [tgLinked, setTgLinked] = useState<boolean | null>(null);
-  const [langkauTg, setLangkauTg] = useState(false);
+  
   const [trialChecked, setTrialChecked] = useState(false);
 
   // Setiap kali skrin permulaan dibuka semula, buang tanda "mod penuh" supaya
@@ -139,7 +139,6 @@ function PercubaanMpt4SubjekPage() {
   if (
     Number(darjah.id) === 4 &&
     pilihanMod !== "penuh" &&
-    !langkauTg &&
     tgLinked === false &&
     parentId
   ) {
@@ -149,7 +148,6 @@ function PercubaanMpt4SubjekPage() {
         <SambungTelegram
           parentId={parentId}
           onLinked={() => setTgLinked(true)}
-          onSkip={() => setLangkauTg(true)}
         />
       </div>
     );

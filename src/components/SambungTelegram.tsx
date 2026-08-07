@@ -11,11 +11,9 @@ const BOT = "kalifahassistantbot";
 export function SambungTelegram({
   parentId,
   onLinked,
-  onSkip,
 }: {
   parentId: string;
   onLinked: () => void;
-  onSkip: () => void;
 }) {
   const [menunggu, setMenunggu] = useState(false);
   const onLinkedRef = useRef(onLinked);
@@ -76,14 +74,6 @@ export function SambungTelegram({
             Menunggu sambungan... Tekan “Start” dalam Telegram.
           </p>
         ) : null}
-
-        <button
-          type="button"
-          onClick={onSkip}
-          className="mt-6 text-xs font-medium text-muted-foreground underline underline-offset-4 hover:text-foreground"
-        >
-          Langkau buat masa ini
-        </button>
       </div>
     </main>
   );
