@@ -14,7 +14,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { usePoints } from "@/hooks/use-points";
 import { rekodJawapan } from "@/lib/progress";
-import { tambahMata } from "@/lib/tambah-mata";
+import { awardKaliStar, awardKaliSesiBonus } from "@/lib/tambah-mata";
 import { renderSoalanSvg } from "@/lib/render-soalan-svg";
 import { shouldSkipChildGuard } from "@/lib/child-auth";
 
@@ -105,6 +105,7 @@ function KaliBelajarUntukSayaPage() {
   );
   const [mulaSoalan, setMulaSoalan] = useState(() => Date.now());
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const sesiBonusAwardedRef = useRef(false);
 
   const [showWelcome, setShowWelcome] = useState(false);
   const [welcomeChecked, setWelcomeChecked] = useState(false);
@@ -351,10 +352,8 @@ function KaliBelajarUntukSayaPage() {
     if (isBetul) {
       setBetul((b) => b + 1);
       setMataSesi((m) => m + 1);
-      void tambahMata({
-        userId: user.id,
-        mata: 1,
-        sumber: "kali-belajar-untuk-saya",
+      void awardKaliStar({
+        soalanRef: String(soalan.id),
         darjah: "0",
         subjek: cadangan.micro_skill_kod,
       });
@@ -368,6 +367,10 @@ function KaliBelajarUntukSayaPage() {
     timerRef.current = setTimeout(() => {
       if (jumlahBaru >= JUMLAH_SOALAN_SESI) {
         setSelesai(true);
+        if (!sesiBonusAwardedRef.current) {
+          sesiBonusAwardedRef.current = true;
+          void awardKaliSesiBonus();
+        }
       } else {
         void muatSoalanSeterusnya();
       }
