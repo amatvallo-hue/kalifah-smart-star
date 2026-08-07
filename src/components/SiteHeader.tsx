@@ -69,6 +69,16 @@ export function SiteHeader({
       )}
       {userName && isChild && (
         <Link
+          to="/kedai-hadiah"
+          className="rounded-full px-4 py-2 font-display text-sm font-bold text-muted-foreground transition hover:bg-secondary hover:text-foreground"
+          activeProps={{ className: "bg-secondary text-primary" }}
+          onClick={() => setOpen(false)}
+        >
+          🎁 Kedai Hadiah
+        </Link>
+      )}
+      {userName && isChild && (
+        <Link
           to="/kali-test/belajar-untuk-saya"
           className="rounded-full px-4 py-2 font-display text-sm font-bold text-muted-foreground transition hover:bg-secondary hover:text-foreground"
           activeProps={{ className: "bg-secondary text-primary" }}
@@ -185,9 +195,12 @@ export function SiteHeader({
                   <li className="flex justify-between gap-2"><span>Latih Tubi</span><span className="font-bold">1 ⭐ / soalan betul</span></li>
                   <li className="flex justify-between gap-2"><span>Game</span><span className="font-bold">1 ⭐ / jawapan betul</span></li>
                 </ul>
-                <p className="mt-3 rounded-xl bg-secondary px-3 py-2 text-xs font-bold text-primary">
-                  Kumpul mata untuk reward istimewa! 🎁
-                </p>
+                <Link
+                  to="/kedai-hadiah"
+                  className="mt-3 flex items-center justify-center gap-1.5 rounded-xl bg-secondary px-3 py-2 text-xs font-bold text-primary transition hover:bg-secondary/80"
+                >
+                  🎁 Tebus Hadiah Sekarang
+                </Link>
               </PopoverContent>
             </Popover>
           )}
