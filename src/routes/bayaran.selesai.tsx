@@ -72,6 +72,14 @@ function BayaranSelesai() {
                   currency: "MYR",
                 });
               }
+              void supabase
+                .from("analytics_events")
+                .insert({
+                  event_name: "payment_success",
+                  user_id: null,
+                  metadata: { order_id: trackId, amount_sen: amountSen, source: "bayaran.selesai" },
+                })
+                .then(() => {}, () => {});
             }
           } else {
             const tempRes = await fetch("/api/temporary-unlock", {
