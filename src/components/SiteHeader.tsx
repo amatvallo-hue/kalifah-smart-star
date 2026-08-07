@@ -194,6 +194,8 @@ export function SiteHeader({
                   <li className="flex justify-between gap-2"><span>Kuiz</span><span className="font-bold">1 ⭐ / soalan betul</span></li>
                   <li className="flex justify-between gap-2"><span>Latih Tubi</span><span className="font-bold">1 ⭐ / soalan betul</span></li>
                   <li className="flex justify-between gap-2"><span>Game</span><span className="font-bold">1 ⭐ / jawapan betul</span></li>
+                  <li className="flex justify-between gap-2"><span>🧠 Belajar Bersama KALI</span><span className="font-bold">1 ⭐ / soalan betul</span></li>
+                  <li className="flex justify-between gap-2 text-muted-foreground"><span className="pl-4">↳ Habiskan 1 sesi (10 soalan)</span><span className="font-bold text-foreground">+5 ⭐ bonus</span></li>
                 </ul>
                 <Link
                   to="/kedai-hadiah"
