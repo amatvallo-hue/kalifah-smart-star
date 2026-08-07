@@ -15,6 +15,7 @@ import { Route as CikguAffiliateRouteImport } from './routes/cikgu-affiliate'
 import { Route as DaftarRouteImport } from './routes/daftar'
 import { Route as DaftarMpt4RouteImport } from './routes/daftar-mpt4'
 import { Route as HargaRouteImport } from './routes/harga'
+import { Route as KedaiHadiahRouteImport } from './routes/kedai-hadiah'
 import { Route as LatihanRouteImport } from './routes/latihan'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LupaPasswordRouteImport } from './routes/lupa-password'
@@ -25,6 +26,7 @@ import { Route as UjianPercumaRouteImport } from './routes/ujian-percuma'
 import { Route as AdminAffiliatesRouteImport } from './routes/admin_.affiliates'
 import { Route as AdminChallengeRouteImport } from './routes/admin_.challenge'
 import { Route as AdminFunnelRouteImport } from './routes/admin_.funnel'
+import { Route as AdminHadiahRouteImport } from './routes/admin_.hadiah'
 import { Route as AdminTelegramRouteImport } from './routes/admin_.telegram'
 import { Route as AffiliateDaftarRouteImport } from './routes/affiliate.daftar'
 import { Route as AffiliateDashboardRouteImport } from './routes/affiliate.dashboard'
@@ -94,6 +96,11 @@ const HargaRoute = HargaRouteImport.update({
   path: '/harga',
   getParentRoute: () => rootRouteImport,
 } as any)
+const KedaiHadiahRoute = KedaiHadiahRouteImport.update({
+  id: '/kedai-hadiah',
+  path: '/kedai-hadiah',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LatihanRoute = LatihanRouteImport.update({
   id: '/latihan',
   path: '/latihan',
@@ -142,6 +149,11 @@ const AdminChallengeRoute = AdminChallengeRouteImport.update({
 const AdminFunnelRoute = AdminFunnelRouteImport.update({
   id: '/admin_/funnel',
   path: '/admin/funnel',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminHadiahRoute = AdminHadiahRouteImport.update({
+  id: '/admin_/hadiah',
+  path: '/admin/hadiah',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminTelegramRoute = AdminTelegramRouteImport.update({
@@ -362,6 +374,7 @@ export interface FileRoutesByFullPath {
   '/daftar': typeof DaftarRoute
   '/daftar-mpt4': typeof DaftarMpt4Route
   '/harga': typeof HargaRoute
+  '/kedai-hadiah': typeof KedaiHadiahRoute
   '/latihan': typeof LatihanRoute
   '/login': typeof LoginRoute
   '/lupa-password': typeof LupaPasswordRoute
@@ -372,6 +385,7 @@ export interface FileRoutesByFullPath {
   '/admin/affiliates': typeof AdminAffiliatesRoute
   '/admin/challenge': typeof AdminChallengeRoute
   '/admin/funnel': typeof AdminFunnelRoute
+  '/admin/hadiah': typeof AdminHadiahRoute
   '/admin/telegram': typeof AdminTelegramRoute
   '/affiliate/daftar': typeof AffiliateDaftarRoute
   '/affiliate/dashboard': typeof AffiliateDashboardRoute
@@ -418,6 +432,7 @@ export interface FileRoutesByTo {
   '/daftar': typeof DaftarRoute
   '/daftar-mpt4': typeof DaftarMpt4Route
   '/harga': typeof HargaRoute
+  '/kedai-hadiah': typeof KedaiHadiahRoute
   '/latihan': typeof LatihanRoute
   '/login': typeof LoginRoute
   '/lupa-password': typeof LupaPasswordRoute
@@ -428,6 +443,7 @@ export interface FileRoutesByTo {
   '/admin/affiliates': typeof AdminAffiliatesRoute
   '/admin/challenge': typeof AdminChallengeRoute
   '/admin/funnel': typeof AdminFunnelRoute
+  '/admin/hadiah': typeof AdminHadiahRoute
   '/admin/telegram': typeof AdminTelegramRoute
   '/affiliate/daftar': typeof AffiliateDaftarRoute
   '/affiliate/dashboard': typeof AffiliateDashboardRoute
@@ -475,6 +491,7 @@ export interface FileRoutesById {
   '/daftar': typeof DaftarRoute
   '/daftar-mpt4': typeof DaftarMpt4Route
   '/harga': typeof HargaRoute
+  '/kedai-hadiah': typeof KedaiHadiahRoute
   '/latihan': typeof LatihanRoute
   '/login': typeof LoginRoute
   '/lupa-password': typeof LupaPasswordRoute
@@ -485,6 +502,7 @@ export interface FileRoutesById {
   '/admin_/affiliates': typeof AdminAffiliatesRoute
   '/admin_/challenge': typeof AdminChallengeRoute
   '/admin_/funnel': typeof AdminFunnelRoute
+  '/admin_/hadiah': typeof AdminHadiahRoute
   '/admin_/telegram': typeof AdminTelegramRoute
   '/affiliate/daftar': typeof AffiliateDaftarRoute
   '/affiliate/dashboard': typeof AffiliateDashboardRoute
@@ -533,6 +551,7 @@ export interface FileRouteTypes {
     | '/daftar'
     | '/daftar-mpt4'
     | '/harga'
+    | '/kedai-hadiah'
     | '/latihan'
     | '/login'
     | '/lupa-password'
@@ -543,6 +562,7 @@ export interface FileRouteTypes {
     | '/admin/affiliates'
     | '/admin/challenge'
     | '/admin/funnel'
+    | '/admin/hadiah'
     | '/admin/telegram'
     | '/affiliate/daftar'
     | '/affiliate/dashboard'
@@ -589,6 +609,7 @@ export interface FileRouteTypes {
     | '/daftar'
     | '/daftar-mpt4'
     | '/harga'
+    | '/kedai-hadiah'
     | '/latihan'
     | '/login'
     | '/lupa-password'
@@ -599,6 +620,7 @@ export interface FileRouteTypes {
     | '/admin/affiliates'
     | '/admin/challenge'
     | '/admin/funnel'
+    | '/admin/hadiah'
     | '/admin/telegram'
     | '/affiliate/daftar'
     | '/affiliate/dashboard'
@@ -645,6 +667,7 @@ export interface FileRouteTypes {
     | '/daftar'
     | '/daftar-mpt4'
     | '/harga'
+    | '/kedai-hadiah'
     | '/latihan'
     | '/login'
     | '/lupa-password'
@@ -655,6 +678,7 @@ export interface FileRouteTypes {
     | '/admin_/affiliates'
     | '/admin_/challenge'
     | '/admin_/funnel'
+    | '/admin_/hadiah'
     | '/admin_/telegram'
     | '/affiliate/daftar'
     | '/affiliate/dashboard'
@@ -702,6 +726,7 @@ export interface RootRouteChildren {
   DaftarRoute: typeof DaftarRoute
   DaftarMpt4Route: typeof DaftarMpt4Route
   HargaRoute: typeof HargaRoute
+  KedaiHadiahRoute: typeof KedaiHadiahRoute
   LatihanRoute: typeof LatihanRoute
   LoginRoute: typeof LoginRoute
   LupaPasswordRoute: typeof LupaPasswordRoute
@@ -712,6 +737,7 @@ export interface RootRouteChildren {
   AdminAffiliatesRoute: typeof AdminAffiliatesRoute
   AdminChallengeRoute: typeof AdminChallengeRoute
   AdminFunnelRoute: typeof AdminFunnelRoute
+  AdminHadiahRoute: typeof AdminHadiahRoute
   AdminTelegramRoute: typeof AdminTelegramRoute
   AffiliateDaftarRoute: typeof AffiliateDaftarRoute
   AffiliateDashboardRoute: typeof AffiliateDashboardRoute
@@ -796,6 +822,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HargaRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/kedai-hadiah': {
+      id: '/kedai-hadiah'
+      path: '/kedai-hadiah'
+      fullPath: '/kedai-hadiah'
+      preLoaderRoute: typeof KedaiHadiahRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/latihan': {
       id: '/latihan'
       path: '/latihan'
@@ -864,6 +897,13 @@ declare module '@tanstack/react-router' {
       path: '/admin/funnel'
       fullPath: '/admin/funnel'
       preLoaderRoute: typeof AdminFunnelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin_/hadiah': {
+      id: '/admin_/hadiah'
+      path: '/admin/hadiah'
+      fullPath: '/admin/hadiah'
+      preLoaderRoute: typeof AdminHadiahRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin_/telegram': {
@@ -1142,6 +1182,7 @@ const rootRouteChildren: RootRouteChildren = {
   DaftarRoute: DaftarRoute,
   DaftarMpt4Route: DaftarMpt4Route,
   HargaRoute: HargaRoute,
+  KedaiHadiahRoute: KedaiHadiahRoute,
   LatihanRoute: LatihanRoute,
   LoginRoute: LoginRoute,
   LupaPasswordRoute: LupaPasswordRoute,
@@ -1152,6 +1193,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminAffiliatesRoute: AdminAffiliatesRoute,
   AdminChallengeRoute: AdminChallengeRoute,
   AdminFunnelRoute: AdminFunnelRoute,
+  AdminHadiahRoute: AdminHadiahRoute,
   AdminTelegramRoute: AdminTelegramRoute,
   AffiliateDaftarRoute: AffiliateDaftarRoute,
   AffiliateDashboardRoute: AffiliateDashboardRoute,
