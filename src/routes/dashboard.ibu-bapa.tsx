@@ -1683,7 +1683,40 @@ function FormTambahAnak({ onAdded }: { onAdded: () => void }) {
 
 
   return (
+    <>
+    {kredensialAnak && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
+        <div className="w-full max-w-md rounded-3xl bg-card p-6 shadow-card">
+          <h3 className="font-display text-xl font-extrabold text-foreground">
+            Akaun {kredensialAnak.nama} berjaya dicipta! 🎉
+          </h3>
+          <p className="mt-2 text-xs font-bold text-destructive">
+            Simpan maklumat ni — anak akan perlukan untuk log masuk semula di peranti/hari lain.
+          </p>
+          <div className="mt-4 rounded-2xl bg-muted p-4 font-mono text-sm text-foreground">
+            <div>Username: {kredensialAnak.username}</div>
+            <div>Password: {kredensialAnak.password}</div>
+          </div>
+          <button
+            type="button"
+            onClick={salinKredensial}
+            className="mt-3 w-full rounded-full bg-muted px-4 py-2.5 font-display text-sm font-extrabold text-foreground"
+          >
+            {copied ? "Disalin!" : "📋 Salin Kredensial"}
+          </button>
+          <button
+            type="button"
+            onClick={teruskan}
+            className="mt-2 w-full rounded-full px-4 py-2.5 font-display text-sm font-extrabold text-white shadow-soft"
+            style={{ backgroundColor: HIJAU }}
+          >
+            {kredensialAnak.session ? "Teruskan ke Aktiviti Pertama →" : "Faham, Tutup"}
+          </button>
+        </div>
+      </div>
+    )}
     <form onSubmit={submit} className="mt-4 rounded-2xl bg-card p-5 shadow-card" style={{ border: `2px solid ${HIJAU}33` }}>
+
       <h3 className="font-display text-lg font-extrabold text-foreground">Cipta Akaun Anak</h3>
       <p className="mt-1 text-xs text-muted-foreground">
         Kami akan cipta akaun anak automatik — tiada emel, username atau password perlu diisi.
