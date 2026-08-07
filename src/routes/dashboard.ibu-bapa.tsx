@@ -1669,54 +1669,18 @@ function FormTambahAnak({ onAdded }: { onAdded: () => void }) {
       return;
     }
 
-    if (res.session) {
-      // Simpan sesi parent supaya boleh kembali kemudian
-      try {
-        const { data: cur } = await supabase.auth.getSession();
-        if (cur.session && typeof window !== "undefined") {
-          window.sessionStorage.setItem(
-            PARENT_SESSION_BACKUP_KEY,
-            JSON.stringify({
-              access_token: cur.session.access_token,
-              refresh_token: cur.session.refresh_token,
-            }),
-          );
-        }
-      } catch {
-        /* abaikan */
-      }
-
-      // Elak guard useEffect redirect ke /dashboard/progress bila sesi
-      // bertukar ke akaun anak — navigate() di bawah yang tentukan destinasi.
-      markSkipChildGuard();
-
-      const { error: setErrSession } = await supabase.auth.setSession(res.session);
-      if (!setErrSession) {
-        onAdded();
-        if (darjah === "4") {
-          // Mula dari skrin permulaan/pilihan MPT4 (bukan terus ke soalan)
-          navigate({
-            to: "/darjah/$darjahId/percubaan-mpt4",
-            params: { darjahId: "4" },
-          });
-        } else {
-          navigate({ to: "/darjah/$darjahId", params: { darjahId: darjah } });
-        }
-        return;
-      }
-
-      // setSession gagal — buang flag supaya guard kekal berfungsi.
-      clearSkipChildGuard();
-    }
-
-
+    setKredensialAnak({
+      nama: nama.trim(),
+      darjah,
+      username: res.username ?? "-",
+      password: res.generatedPassword ?? "-",
+      session: res.session ?? null,
+    });
     setLoading(false);
-    setOk(
-      `Akaun ${nama} berjaya dicipta! Anak boleh log masuk dengan username: ${res.username ?? "-"}`,
-    );
     setNama("");
     onAdded();
   }
+
 
   return (
     <form onSubmit={submit} className="mt-4 rounded-2xl bg-card p-5 shadow-card" style={{ border: `2px solid ${HIJAU}33` }}>
