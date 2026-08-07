@@ -6,7 +6,7 @@ import { simpanProgress, rekodJawapan } from "@/lib/progress";
 import { downloadSijil } from "@/lib/sijil";
 import { simpanRekodSijil } from "@/lib/sijil-rekod";
 import { useAuth } from "@/hooks/use-auth";
-import { useAward } from "@/hooks/use-award";
+import { awardKuizStar } from "@/lib/tambah-mata";
 import { JamAnalog } from "@/components/svg/JamAnalog";
 import { Bentuk2D } from "@/components/svg/Bentuk2D";
 import { Bentuk3D } from "@/components/svg/Bentuk3D";
@@ -116,7 +116,7 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
   const darjahNum = Number(darjahId);
   const examPaperStyle = darjahId === "5" || darjahId === "6";
   const { user } = useAuth();
-  const award = useAward();
+  
   const profileName =
     (user?.user_metadata?.name as string | undefined) ||
     (user?.user_metadata?.full_name as string | undefined) ||
@@ -329,7 +329,7 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
     });
     if (isBetul) {
       setSkor((s) => s + 1);
-      award({ sumber: "kuiz", darjah: darjahId, subjek: subjekId });
+      awardKuizStar({ soalanRef: soalanList[i].id, darjah: darjahId, subjek: subjekId });
     }
   }
 

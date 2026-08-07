@@ -40,3 +40,30 @@ export async function tambahMata({
       .insert({ user_id: userId, jumlah_mata: mata });
   }
 }
+
+/**
+ * Kuiz sahaja: bagi 1 star, tapi HANYA sekali seumur hidup untuk setiap soalan unik
+ * (anti-farm — "Cuba Lagi" replay tak bagi star berulang untuk soalan yang sama).
+ * Guna RPC award_kuiz_star() di Supabase supaya dedup berlaku secara atomic di server.
+ * Return true kalau star diberi, false kalau soalan ni dah pernah bagi star sebelum ni.
+ */
+export async function awardKuizStar({
+  soalanRef,
+  darjah,
+  subjek,
+}: {
+  soalanRef: string;
+  darjah: string;
+  subjek: string;
+}): Promise<boolean> {
+  const { data, error } = await supabase.rpc("award_kuiz_star", {
+    p_soalan_ref: soalanRef,
+    p_darjah: darjah,
+    p_subjek: subjek,
+  });
+  if (error) {
+    console.error("awardKuizStar gagal:", error);
+    return false;
+  }
+  return !!data;
+}
