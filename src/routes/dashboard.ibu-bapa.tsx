@@ -1703,7 +1703,7 @@ function FormTambahAnak({ onAdded }: { onAdded: () => void }) {
             onClick={salinKredensial}
             className="mt-3 w-full rounded-full bg-muted px-4 py-2.5 font-display text-sm font-extrabold text-foreground"
           >
-            {copied ? "Disalin!" : "📋 Salin Kredensial"}
+            {copied ? "Disalin!" : "📋 Salin Password"}
           </button>
           <button
             type="button"
