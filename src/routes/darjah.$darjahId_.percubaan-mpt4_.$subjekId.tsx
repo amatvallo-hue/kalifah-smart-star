@@ -111,7 +111,8 @@ function PercubaanMpt4SetPage() {
   const darjahAkses = profile?.darjah_akses ?? [];
   const hasAccess = darjah ? darjahAkses.includes(Number(darjah.id)) : false;
   const bolehLihat =
-    hasAccess || (!!darjah && Number(darjah.id) === 4 && subjekLabel === "Matematik");
+    hasAccess ||
+    (!!darjah && Number(darjah.id) === 4 && (subjekLabel === "Matematik" || subjekLabel === "Bahasa Melayu"));
 
   if (!darjah || !subjek || !subjekLabel || !bolehLihat) {
     return (

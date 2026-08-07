@@ -249,7 +249,7 @@ function PercubaanMpt4SubjekPage() {
 
         <section className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {subjekMpt4.map((s) => {
-            const terkunci = !hasAccess && s.id !== "matematik";
+            const terkunci = !hasAccess && s.id !== "matematik" && s.id !== "bahasa-melayu";
             const inner = (
               <>
                 <div className="flex flex-col items-center gap-1">
