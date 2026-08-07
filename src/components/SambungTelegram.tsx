@@ -11,11 +11,9 @@ const BOT = "kalifahassistantbot";
 export function SambungTelegram({
   parentId,
   onLinked,
-  onSkip,
 }: {
   parentId: string;
   onLinked: () => void;
-  onSkip: () => void;
 }) {
   const [menunggu, setMenunggu] = useState(false);
   const onLinkedRef = useRef(onLinked);
