@@ -98,7 +98,16 @@ function PercubaanMpt4SubjekPage() {
     navigate({ to: "/login" });
   }
 
-  if (loading || !user || profileLoading || !trialChecked) {
+  const perluTungguSemakanTelegram =
+    !!darjah && Number(darjah.id) === 4 && tgLinked === null;
+
+  if (
+    loading ||
+    !user ||
+    profileLoading ||
+    !trialChecked ||
+    perluTungguSemakanTelegram
+  ) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-background">
         <p className="text-muted-foreground">Memuatkan...</p>
