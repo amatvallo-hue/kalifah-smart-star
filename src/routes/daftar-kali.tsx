@@ -192,6 +192,7 @@ function DaftarKaliPage() {
     const redirectTo =
       typeof window !== "undefined" ? `${window.location.origin}${SELEPAS_DAFTAR}` : undefined;
     const cleanPhone = phone.replace(/\D/g, "");
+    const normalizedEmail = email.toLowerCase().trim();
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -213,15 +214,27 @@ function DaftarKaliPage() {
       return;
     }
 
-    if (cleanPhone && data.session && data.user) {
+    if (data.session && data.user) {
       void supabase
-        .from("profiles")
-        .upsert({ id: data.user.id, no_telefon: cleanPhone }, { onConflict: "id" })
+        .from("child_profiles")
+        .insert({
+          parent_id: data.user.id,
+          child_user_id: data.user.id,
+          nama: name,
+          darjah: 1,
+          username: normalizedEmail,
+        })
         .then(() => {}, () => {});
+
+      if (cleanPhone) {
+        void supabase
+          .from("profiles")
+          .upsert({ id: data.user.id, no_telefon: cleanPhone }, { onConflict: "id" })
+          .then(() => {}, () => {});
+      }
     }
 
     const isNewAccount = !!data.user?.identities && data.user.identities.length > 0;
-    const normalizedEmail = email.toLowerCase().trim();
     const signupTrackedKey = `signup_tracked_${normalizedEmail}`;
     const alreadyTracked =
       typeof window !== "undefined" && window.localStorage.getItem(signupTrackedKey) === "1";
