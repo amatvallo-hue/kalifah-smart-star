@@ -525,11 +525,11 @@ function KaliBelajarUntukSayaPage() {
           void awardKaliSesiBonus();
         }
         if (diagnosticMode && childProfileId) {
-          const skillMapBaru = new Map<string, { nama: string; semuaBetul: boolean; sebab: string }>();
+          const skillMapBaru = new Map<string, { id: string; nama: string; semuaBetul: boolean }>();
           for (const r of riwayatBaru) {
             const sedia = skillMapBaru.get(r.micro_skill_id);
             if (sedia) sedia.semuaBetul = sedia.semuaBetul && r.betul;
-            else skillMapBaru.set(r.micro_skill_id, { nama: r.micro_skill_nama, semuaBetul: r.betul, sebab: r.sebab });
+            else skillMapBaru.set(r.micro_skill_id, { id: r.micro_skill_id, nama: r.micro_skill_nama, semuaBetul: r.betul });
           }
           const semuaSkill = [...skillMapBaru.values()];
           const menguasaiBaru = semuaSkill.filter((s) => s.semuaBetul);
@@ -544,20 +544,19 @@ function KaliBelajarUntukSayaPage() {
           };
           setDiagResult(hasil);
           void supabase
-            .from("child_profiles")
-            .update({
-              kali_diagnostic_completed_at: new Date().toISOString(),
-              kali_diagnostic_betul: hasil.betul,
-              kali_diagnostic_jumlah_menguasai: hasil.jumlahMenguasai,
-              kali_diagnostic_jumlah_diperkukuh: hasil.jumlahDiperkukuh,
-              kali_diagnostic_bocor_nama: hasil.bocorNama,
-              kali_diagnostic_bocor_gejala: hasil.bocorGejala,
-            })
-            .eq("id", childProfileId)
-            .then(
-              () => {},
-              () => {}
-            );
+            .rpc("simpan_kali_diagnostic_hasil", {
+              p_betul: hasil.betul,
+              p_jumlah_menguasai: hasil.jumlahMenguasai,
+              p_jumlah_diperkukuh: hasil.jumlahDiperkukuh,
+              p_bocor_skill_id: bocor?.id ?? null,
+              p_bocor_nama: hasil.bocorNama,
+              p_bocor_gejala: hasil.bocorGejala,
+            } as any)
+            .then(({ data, error }: any) => {
+              if (error || data !== true) {
+                console.error("simpan_kali_diagnostic_hasil gagal:", error);
+              }
+            });
         }
       } else {
         void muatSoalanSeterusnya();
