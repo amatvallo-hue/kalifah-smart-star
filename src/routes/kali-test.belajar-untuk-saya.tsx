@@ -299,6 +299,7 @@ function KaliBelajarUntukSayaPage() {
     try {
       const { data, error } = await supabase.rpc("kali_next_best_question", {
         p_student_id: user.id,
+        p_darjah: Number(childDarjah),
       });
       if (error) throw error;
 
@@ -441,7 +442,7 @@ function KaliBelajarUntukSayaPage() {
     } finally {
       setFetching(false);
     }
-  }, [user, diagnosticMode]);
+  }, [user, diagnosticMode, childDarjah]);
 
   useEffect(() => {
     if (user && welcomeChecked && !showWelcome && diagStatusChecked && !diagAlreadyDone) {
