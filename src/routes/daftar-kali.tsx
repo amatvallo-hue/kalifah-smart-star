@@ -11,12 +11,14 @@ import {
   Check,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { SambungTelegram } from "@/components/SambungTelegram";
 import { AuthShell, Field } from "./login";
 
 const STEPS = [
   { num: 1, label: "Daftar Akaun" },
-  { num: 2, label: "Sesi Diagnostic KALI" },
-  { num: 3, label: "Cadangan KALI Hari Ini" },
+  { num: 2, label: "Sambung Telegram" },
+  { num: 3, label: "Sesi Diagnostic KALI" },
+  { num: 4, label: "Cadangan KALI Hari Ini" },
 ];
 
 function StepProgress({ active }: { active: number }) {
@@ -109,6 +111,8 @@ function DaftarKaliPage() {
   const [error, setError] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [showTelegram, setShowTelegram] = useState(false);
+  const [parentId, setParentId] = useState<string | null>(null);
 
   // Persist ?ref= so it survives email-confirmation round trips
   useEffect(() => {
@@ -261,12 +265,23 @@ function DaftarKaliPage() {
         .then(() => {}, () => {});
     }
 
-    if (data.session) {
-      navigate({ to: "/kali-test/belajar-untuk-saya" });
+    if (data.session && data.user) {
+      setParentId(data.user.id);
+      setShowTelegram(true);
+      setLoading(false);
     } else {
       setInfo("Akaun dicipta. Sila semak emel anda untuk pengesahan, kemudian log masuk.");
       setLoading(false);
     }
+  }
+
+  if (showTelegram && parentId) {
+    return (
+      <SambungTelegram
+        parentId={parentId}
+        onLinked={() => navigate({ to: "/kali-test/belajar-untuk-saya" })}
+      />
+    );
   }
 
   return (
