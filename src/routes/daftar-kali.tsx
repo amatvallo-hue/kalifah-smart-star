@@ -219,7 +219,7 @@ function DaftarKaliPage() {
     }
 
     if (data.session && data.user) {
-      void supabase
+      const { error: childError } = await supabase
         .from("child_profiles")
         .insert({
           parent_id: data.user.id,
@@ -227,8 +227,10 @@ function DaftarKaliPage() {
           nama: name,
           darjah: 1,
           username: normalizedEmail,
-        })
-        .then(() => {}, () => {});
+        });
+      if (childError) {
+        console.error("Gagal insert child_profiles:", childError);
+      }
 
       if (cleanPhone) {
         void supabase
