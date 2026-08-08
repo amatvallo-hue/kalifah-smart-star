@@ -121,11 +121,64 @@ function DaftarKaliPage() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
+  const [namaAnak, setNamaAnak] = useState("");
+  const [darjah, setDarjah] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [showTelegram, setShowTelegram] = useState(false);
   const [parentId, setParentId] = useState<string | null>(null);
+  const [sedangCiptaAnak, setSedangCiptaAnak] = useState(false);
+  const [ralatAnak, setRalatAnak] = useState<string | null>(null);
+  const [kredensialAnak, setKredensialAnak] = useState<
+    { username: string; password: string } | null
+  >(null);
+
+  // Selepas Telegram disambung (masih dalam sesi PARENT): cipta akaun anak,
+  // backup sesi parent, kemudian tukar ke sesi anak dan mula diagnostic.
+  async function selepasTelegram() {
+    if (sedangCiptaAnak) return;
+    setRalatAnak(null);
+    setSedangCiptaAnak(true);
+    try {
+      const result = await ciptaAkaunAnak(namaAnak, String(darjah ?? 1));
+      if (!result.ok) {
+        console.error("ciptaAkaunAnak gagal:", result.mesej);
+        setRalatAnak(result.mesej ?? "Gagal cipta akaun anak.");
+        return;
+      }
+      if (result.session) {
+        const { data: parentSess } = await supabase.auth.getSession();
+        if (parentSess.session && typeof window !== "undefined") {
+          window.sessionStorage.setItem(
+            PARENT_SESSION_BACKUP_KEY,
+            JSON.stringify({
+              access_token: parentSess.session.access_token,
+              refresh_token: parentSess.session.refresh_token,
+            }),
+          );
+        }
+        await supabase.auth.setSession({
+          access_token: result.session.access_token,
+          refresh_token: result.session.refresh_token,
+        });
+        navigate({ to: "/kali-test/belajar-untuk-saya" });
+        return;
+      }
+      if (result.needsManualLogin) {
+        setKredensialAnak({
+          username: result.username ?? "",
+          password: result.generatedPassword ?? "",
+        });
+      }
+    } catch (e) {
+      console.error("selepasTelegram gagal:", e);
+      setRalatAnak("Ralat rangkaian semasa cipta akaun anak.");
+    } finally {
+      setSedangCiptaAnak(false);
+    }
+  }
+
 
   // Persist ?ref= so it survives email-confirmation round trips
   useEffect(() => {
