@@ -42,6 +42,7 @@ import {
   markSkipChildGuard,
   shouldSkipChildGuard,
   clearSkipChildGuard,
+  laluanCheckout,
 } from "@/lib/child-auth";
 import { senaraikanSijilAnak, type SijilRow } from "@/lib/sijil-rekod";
 import { downloadSijil } from "@/lib/sijil";
