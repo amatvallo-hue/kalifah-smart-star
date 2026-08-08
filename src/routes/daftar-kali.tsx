@@ -11,12 +11,14 @@ import {
   Check,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { SambungTelegram } from "@/components/SambungTelegram";
 import { AuthShell, Field } from "./login";
 
 const STEPS = [
   { num: 1, label: "Daftar Akaun" },
-  { num: 2, label: "Sesi Diagnostic KALI" },
-  { num: 3, label: "Cadangan KALI Hari Ini" },
+  { num: 2, label: "Sambung Telegram" },
+  { num: 3, label: "Sesi Diagnostic KALI" },
+  { num: 4, label: "Cadangan KALI Hari Ini" },
 ];
 
 function StepProgress({ active }: { active: number }) {
