@@ -111,6 +111,8 @@ function DaftarKaliPage() {
   const [error, setError] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [showTelegram, setShowTelegram] = useState(false);
+  const [parentId, setParentId] = useState<string | null>(null);
 
   // Persist ?ref= so it survives email-confirmation round trips
   useEffect(() => {
@@ -263,12 +265,23 @@ function DaftarKaliPage() {
         .then(() => {}, () => {});
     }
 
-    if (data.session) {
-      navigate({ to: "/kali-test/belajar-untuk-saya" });
+    if (data.session && data.user) {
+      setParentId(data.user.id);
+      setShowTelegram(true);
+      setLoading(false);
     } else {
       setInfo("Akaun dicipta. Sila semak emel anda untuk pengesahan, kemudian log masuk.");
       setLoading(false);
     }
+  }
+
+  if (showTelegram && parentId) {
+    return (
+      <SambungTelegram
+        parentId={parentId}
+        onLinked={() => navigate({ to: "/kali-test/belajar-untuk-saya" })}
+      />
+    );
   }
 
   return (
