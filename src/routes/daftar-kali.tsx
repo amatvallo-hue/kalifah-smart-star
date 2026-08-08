@@ -290,14 +290,80 @@ function DaftarKaliPage() {
     }
   }
 
-  if (showTelegram && parentId) {
+  if (kredensialAnak) {
     return (
-      <SambungTelegram
-        parentId={parentId}
-        onLinked={() => navigate({ to: "/kali-test/belajar-untuk-saya" })}
-      />
+      <main className="container mx-auto max-w-xl px-4 py-10">
+        <section className="rounded-[2rem] border border-border bg-background p-6 shadow-card">
+          <h1 className="font-display text-2xl font-extrabold text-foreground">
+            Akaun anak dah siap
+          </h1>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Simpan maklumat log masuk ini dan berikan kepada anak anda. Anak boleh log masuk di
+            halaman log masuk untuk mula Sesi Diagnostic KALI.
+          </p>
+          <div className="mt-4 space-y-3">
+            {[
+              { label: "Username", value: kredensialAnak.username },
+              { label: "Password", value: kredensialAnak.password },
+            ].map((row) => (
+              <div
+                key={row.label}
+                className="flex items-center justify-between gap-3 rounded-2xl border border-border bg-muted/40 px-4 py-3"
+              >
+                <div>
+                  <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">
+                    {row.label}
+                  </p>
+                  <p className="font-display text-lg font-extrabold text-foreground">{row.value}</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => void navigator.clipboard?.writeText(row.value)}
+                  className="inline-flex items-center gap-1 rounded-full border border-border px-3 py-2 text-xs font-bold text-foreground hover:bg-muted"
+                >
+                  <Copy className="h-3.5 w-3.5" /> Salin
+                </button>
+              </div>
+            ))}
+          </div>
+          <Link
+            to="/login"
+            className="mt-6 flex w-full items-center justify-center rounded-full bg-gradient-primary px-6 py-3 font-display text-base font-extrabold text-primary-foreground shadow-soft"
+          >
+            Pergi ke Log Masuk
+          </Link>
+        </section>
+      </main>
     );
   }
+
+  if (showTelegram && parentId) {
+    return (
+      <div>
+        <SambungTelegram parentId={parentId} onLinked={() => void selepasTelegram()} />
+        {sedangCiptaAnak ? (
+          <p className="mt-4 animate-pulse text-center font-display text-sm font-bold text-primary">
+            Menyediakan akaun anak...
+          </p>
+        ) : null}
+        {ralatAnak ? (
+          <div className="container mx-auto mt-4 max-w-xl px-4">
+            <div className="rounded-2xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm font-bold text-destructive">
+              {ralatAnak} — Sila cuba lagi.
+            </div>
+            <button
+              type="button"
+              onClick={() => void selepasTelegram()}
+              className="mt-3 w-full rounded-full bg-gradient-primary px-6 py-3 font-display text-base font-extrabold text-primary-foreground shadow-soft"
+            >
+              Cuba cipta akaun anak semula
+            </button>
+          </div>
+        ) : null}
+      </div>
+    );
+  }
+
 
   return (
     <AuthShell
