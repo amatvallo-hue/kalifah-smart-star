@@ -9,10 +9,23 @@ import {
   Clock,
   BarChart2,
   Check,
+  Copy,
+  GraduationCap,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { SambungTelegram } from "@/components/SambungTelegram";
+import { ciptaAkaunAnak, PARENT_SESSION_BACKUP_KEY } from "@/lib/child-auth";
 import { AuthShell, Field } from "./login";
+
+const DARJAH_OPTIONS = [
+  { num: 1, color: "#F4C542" },
+  { num: 2, color: "#F28C28" },
+  { num: 3, color: "#2E9F5B" },
+  { num: 4, color: "#3B82F6" },
+  { num: 5, color: "#8B5CF6" },
+  { num: 6, color: "#EF4444" },
+] as const;
+
 
 const STEPS = [
   { num: 1, label: "Daftar Akaun" },
