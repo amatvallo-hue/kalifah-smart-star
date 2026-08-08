@@ -1084,9 +1084,21 @@ function ParentDashboard() {
                       </div>
                     </Seksyen>
 
-                    {/* KALI INSIGHT */}
+                    {/* KALI INSIGHT — penuh untuk anak berbayar, teaser state-language untuk anak percuma */}
                     <Seksyen tajuk="Cadangan KALI Hari Ini" ikon={<Sparkles className="h-5 w-5" />}>
-                      <KaliInsightCard childUserId={anakAktif.child_user_id} namaAnak={anakAktif.nama} />
+                      {anakPaid === null ? (
+                        <div className="rounded-2xl p-5 shadow-card">
+                          <p className="text-sm text-muted-foreground">Memuatkan cadangan KALI...</p>
+                        </div>
+                      ) : anakPaid ? (
+                        <KaliInsightCard childUserId={anakAktif.child_user_id} namaAnak={anakAktif.nama} />
+                      ) : (
+                        <KaliUpdateCard
+                          childProfileId={anakAktif.id}
+                          childDarjah={anakAktif.darjah}
+                          namaAnak={anakAktif.nama}
+                        />
+                      )}
                     </Seksyen>
 
                     {/* PERCUBAAN MPT4 — Darjah 4 sahaja */}
