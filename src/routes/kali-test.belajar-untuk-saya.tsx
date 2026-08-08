@@ -16,7 +16,7 @@ import { usePoints } from "@/hooks/use-points";
 import { rekodJawapan } from "@/lib/progress";
 import { awardKaliStar, awardKaliSesiBonus } from "@/lib/tambah-mata";
 import { renderSoalanSvg } from "@/lib/render-soalan-svg";
-import { shouldSkipChildGuard } from "@/lib/child-auth";
+import { shouldSkipChildGuard, laluanCheckout } from "@/lib/child-auth";
 
 export const Route = createFileRoute("/kali-test/belajar-untuk-saya")({
   head: () => ({
@@ -75,9 +75,102 @@ interface Soalan {
   rangsangan_svg_params?: any;
 }
 
+interface DiagnosticHasil {
+  betul: number;
+  jumlahMenguasai: number;
+  jumlahDiperkukuh: number;
+  bocorNama: string | null;
+  bocorGejala: string | null;
+}
 
 function letterToIdx(l: string): number {
   return ({ A: 0, B: 1, C: 2, D: 3 } as Record<string, number>)[String(l).toUpperCase()] ?? 0;
+}
+
+function KaliTeaseScreen({
+  hasil,
+  onBukaAnalisis,
+}: {
+  hasil: DiagnosticHasil;
+  onBukaAnalisis: () => void;
+}) {
+  const bakiDiperkukuh = Math.max(0, hasil.jumlahDiperkukuh - (hasil.bocorNama ? 1 : 0));
+  return (
+    <div className="mt-8 rounded-3xl bg-card p-8 text-center shadow-card">
+      <h1 className="font-display text-2xl font-extrabold" style={{ color: HIJAU }}>
+        KALI dah selesai menilai sesi pertama anak anda
+      </h1>
+      <p className="mt-4 font-display text-4xl font-extrabold" style={{ color: HIJAU }}>
+        {hasil.betul}/{JUMLAH_SOALAN_SESI} betul
+      </p>
+
+      <div className="mt-6 grid grid-cols-1 gap-3 text-left sm:grid-cols-2">
+        <div
+          className="rounded-2xl p-4"
+          style={{ backgroundColor: `${HIJAU}15`, border: `2px solid ${HIJAU}` }}
+        >
+          <p className="text-sm font-bold" style={{ color: HIJAU }}>
+            🟢 {hasil.jumlahMenguasai} kemahiran dikuasai dengan baik
+          </p>
+        </div>
+        <div className="rounded-2xl border-2 border-destructive/40 bg-destructive/10 p-4">
+          <p className="text-sm font-bold text-destructive">
+            🔴 {hasil.jumlahDiperkukuh} kemahiran memerlukan perhatian
+          </p>
+        </div>
+      </div>
+
+      <p className="mt-6 text-left font-display text-sm font-extrabold text-foreground">
+        KALI mengesan:
+      </p>
+
+      {hasil.bocorNama && (
+        <div
+          className="mt-2 rounded-2xl border-2 p-4 text-left"
+          style={{ borderColor: "#f59e0b", backgroundColor: "#fffbeb" }}
+        >
+          <p className="text-sm font-extrabold" style={{ color: "#92400e" }}>
+            ⚠️ {hasil.bocorNama}
+          </p>
+          {hasil.bocorGejala && (
+            <p className="mt-1 text-sm" style={{ color: "#92400e" }}>
+              {hasil.bocorGejala}
+            </p>
+          )}
+        </div>
+      )}
+
+      {bakiDiperkukuh > 0 && (
+        <div className="mt-3 rounded-2xl border-2 border-border bg-secondary/40 p-4 text-left">
+          <p className="text-sm font-bold text-muted-foreground">
+            🔒 {bakiDiperkukuh} lagi kemahiran memerlukan perhatian
+          </p>
+          <p className="mt-1 text-xs text-muted-foreground">Buka analisis KALI untuk melihatnya.</p>
+        </div>
+      )}
+
+      <p className="mt-8 font-display text-lg font-extrabold text-foreground">
+        KALI sudah menyediakan langkah seterusnya untuk anak anda
+      </p>
+      <div className="mt-3 space-y-2 text-left text-sm text-muted-foreground">
+        <p>🔒 Kenapa kesilapan ini berlaku</p>
+        <p>🔒 Kemahiran mana perlu diperbaiki dahulu</p>
+        <p>🔒 Latihan yang KALI cadangkan</p>
+        <p>🔒 Pelan pembelajaran seterusnya</p>
+      </div>
+
+      <div className="mt-8 flex justify-center">
+        <button
+          type="button"
+          onClick={onBukaAnalisis}
+          className="rounded-full px-8 py-4 font-display font-extrabold text-white shadow-soft transition hover:opacity-90"
+          style={{ backgroundColor: HIJAU }}
+        >
+          Buka Analisis & Belajar Bersama KALI
+        </button>
+      </div>
+    </div>
+  );
 }
 
 function KaliBelajarUntukSayaPage() {
@@ -112,7 +205,7 @@ function KaliBelajarUntukSayaPage() {
   const prevSkillRef = useRef<{ id: string; nama: string } | null>(null);
   const [skillUpdateMsg, setSkillUpdateMsg] = useState<string | null>(null);
   const [riwayatSkill, setRiwayatSkill] = useState<
-    { micro_skill_id: string; micro_skill_nama: string; betul: boolean }[]
+    { micro_skill_id: string; micro_skill_nama: string; betul: boolean; sebab: string }[]
   >([]);
 
   // Popup nota bantuan bila KALI detect skill mencabar (tier RED)
@@ -121,6 +214,15 @@ function KaliBelajarUntukSayaPage() {
   const [notaMod, setNotaMod] = useState<"tawar" | "baca">("tawar");
   const [nota, setNota] = useState<NotaBantuan | null>(null);
 
+  // KALI Diagnostic V1 — mod percuma (belum bayar darjah) dihadkan kepada
+  // 1 sesi 10 soalan sahaja, tease terkunci selepas itu. Lihat memory
+  // "keputusan_tease_kali_diagnostic_v1" untuk rasional penuh.
+  const [diagnosticMode, setDiagnosticMode] = useState(false);
+  const [childProfileId, setChildProfileId] = useState<number | null>(null);
+  const [childDarjah, setChildDarjah] = useState<string>("1");
+  const [diagStatusChecked, setDiagStatusChecked] = useState(false);
+  const [diagAlreadyDone, setDiagAlreadyDone] = useState(false);
+  const [diagResult, setDiagResult] = useState<DiagnosticHasil | null>(null);
 
   useEffect(() => {
     if (shouldSkipChildGuard()) return;
@@ -142,6 +244,52 @@ function KaliBelajarUntukSayaPage() {
     setWelcomeChecked(true);
   }, [user]);
 
+  // Semak status bayaran (darjah_akses) + sama ada sesi diagnostic percuma
+  // dah pernah dibuat untuk anak ni. Guna profiles.darjah_akses ANAK sendiri
+  // (bukan parent) — ia dah mirror akses sebenar sejak ciptaAkaunAnak().
+  useEffect(() => {
+    if (!user) return;
+    (async () => {
+      const [{ data: prof }, { data: cp }] = await Promise.all([
+        supabase.from("profiles").select("darjah_akses").eq("id", user.id).maybeSingle(),
+        supabase
+          .from("child_profiles")
+          .select(
+            "id, darjah, kali_diagnostic_completed_at, kali_diagnostic_betul, kali_diagnostic_jumlah_menguasai, kali_diagnostic_jumlah_diperkukuh, kali_diagnostic_bocor_nama, kali_diagnostic_bocor_gejala"
+          )
+          .eq("child_user_id", user.id)
+          .maybeSingle(),
+      ]);
+      const akses = (prof as { darjah_akses: unknown } | null)?.darjah_akses;
+      const paid = Array.isArray(akses) && akses.length > 0;
+      setDiagnosticMode(!paid);
+      if (cp) {
+        const cpRow = cp as {
+          id: number;
+          darjah: string | number;
+          kali_diagnostic_completed_at: string | null;
+          kali_diagnostic_betul: number | null;
+          kali_diagnostic_jumlah_menguasai: number | null;
+          kali_diagnostic_jumlah_diperkukuh: number | null;
+          kali_diagnostic_bocor_nama: string | null;
+          kali_diagnostic_bocor_gejala: string | null;
+        };
+        setChildProfileId(cpRow.id ?? null);
+        setChildDarjah(String(cpRow.darjah ?? "1"));
+        if (!paid && cpRow.kali_diagnostic_completed_at) {
+          setDiagAlreadyDone(true);
+          setDiagResult({
+            betul: cpRow.kali_diagnostic_betul ?? 0,
+            jumlahMenguasai: cpRow.kali_diagnostic_jumlah_menguasai ?? 0,
+            jumlahDiperkukuh: cpRow.kali_diagnostic_jumlah_diperkukuh ?? 0,
+            bocorNama: cpRow.kali_diagnostic_bocor_nama ?? null,
+            bocorGejala: cpRow.kali_diagnostic_bocor_gejala ?? null,
+          });
+        }
+      }
+      setDiagStatusChecked(true);
+    })();
+  }, [user]);
 
   const muatSoalanSeterusnya = useCallback(async () => {
     if (!user) return;
@@ -214,7 +362,7 @@ function KaliBelajarUntukSayaPage() {
 
       setCadangan(row);
       const prevSkill = prevSkillRef.current;
-      if (prevSkill && prevSkill.id !== row.micro_skill_id) {
+      if (!diagnosticMode && prevSkill && prevSkill.id !== row.micro_skill_id) {
         setSkillUpdateMsg(
           row.tier === "RED"
             ? `Nampaknya ${prevSkill.nama} masih agak mencabar. Mari kita cuba beberapa soalan lagi dengan cara yang berbeza.`
@@ -226,7 +374,9 @@ function KaliBelajarUntukSayaPage() {
       prevSkillRef.current = { id: row.micro_skill_id, nama: row.micro_skill_nama };
 
       // Tawar nota bantuan bila skill mencabar (sekali sahaja per skill per sesi)
-      if (row.tier === "RED" && !notaDitawarRef.current.has(row.micro_skill_id)) {
+      // TIADA dalam mod diagnostic percuma — remediation content ni sebahagian
+      // daripada nilai berbayar, jangan bocor sebelum parent langgan.
+      if (!diagnosticMode && row.tier === "RED" && !notaDitawarRef.current.has(row.micro_skill_id)) {
         notaDitawarRef.current.add(row.micro_skill_id);
         try {
           const { data: nData } = await supabase.rpc("kali_cari_nota_untuk_skill", {
@@ -291,11 +441,13 @@ function KaliBelajarUntukSayaPage() {
     } finally {
       setFetching(false);
     }
-  }, [user]);
+  }, [user, diagnosticMode]);
 
   useEffect(() => {
-    if (user && welcomeChecked && !showWelcome) void muatSoalanSeterusnya();
-  }, [user, welcomeChecked, showWelcome, muatSoalanSeterusnya]);
+    if (user && welcomeChecked && !showWelcome && diagStatusChecked && !diagAlreadyDone) {
+      void muatSoalanSeterusnya();
+    }
+  }, [user, welcomeChecked, showWelcome, diagStatusChecked, diagAlreadyDone, muatSoalanSeterusnya]);
 
 
   useEffect(() => {
@@ -338,17 +490,18 @@ function KaliBelajarUntukSayaPage() {
       masaSoalanSaat,
     });
 
-    setRiwayatSkill((prev) => [
-      ...prev,
+    const riwayatBaru = [
+      ...riwayatSkill,
       {
         micro_skill_id: cadangan.micro_skill_id,
         micro_skill_nama: cadangan.micro_skill_nama,
         betul: isBetul,
+        sebab: cadangan.sebab,
       },
-    ]);
+    ];
+    setRiwayatSkill(riwayatBaru);
 
-
-
+    const betulBaru = isBetul ? betul + 1 : betul;
     if (isBetul) {
       setBetul((b) => b + 1);
       setMataSesi((m) => m + 1);
@@ -371,10 +524,50 @@ function KaliBelajarUntukSayaPage() {
           sesiBonusAwardedRef.current = true;
           void awardKaliSesiBonus();
         }
+        if (diagnosticMode && childProfileId) {
+          const skillMapBaru = new Map<string, { nama: string; semuaBetul: boolean; sebab: string }>();
+          for (const r of riwayatBaru) {
+            const sedia = skillMapBaru.get(r.micro_skill_id);
+            if (sedia) sedia.semuaBetul = sedia.semuaBetul && r.betul;
+            else skillMapBaru.set(r.micro_skill_id, { nama: r.micro_skill_nama, semuaBetul: r.betul, sebab: r.sebab });
+          }
+          const semuaSkill = [...skillMapBaru.values()];
+          const menguasaiBaru = semuaSkill.filter((s) => s.semuaBetul);
+          const diperkukuhBaru = semuaSkill.filter((s) => !s.semuaBetul);
+          const bocor = diperkukuhBaru[0] ?? null;
+          const hasil: DiagnosticHasil = {
+            betul: betulBaru,
+            jumlahMenguasai: menguasaiBaru.length,
+            jumlahDiperkukuh: diperkukuhBaru.length,
+            bocorNama: bocor?.nama ?? null,
+            bocorGejala: bocor?.sebab ?? null,
+          };
+          setDiagResult(hasil);
+          void supabase
+            .from("child_profiles")
+            .update({
+              kali_diagnostic_completed_at: new Date().toISOString(),
+              kali_diagnostic_betul: hasil.betul,
+              kali_diagnostic_jumlah_menguasai: hasil.jumlahMenguasai,
+              kali_diagnostic_jumlah_diperkukuh: hasil.jumlahDiperkukuh,
+              kali_diagnostic_bocor_nama: hasil.bocorNama,
+              kali_diagnostic_bocor_gejala: hasil.bocorGejala,
+            })
+            .eq("id", childProfileId)
+            .then(
+              () => {},
+              () => {}
+            );
+        }
       } else {
         void muatSoalanSeterusnya();
       }
     }, 1500);
+  };
+
+  const handleBukaAnalisis = async () => {
+    const url = await laluanCheckout(childDarjah);
+    if (typeof window !== "undefined") window.location.href = url;
   };
 
   const skillMap = new Map<string, { nama: string; semuaBetul: boolean }>();
@@ -418,7 +611,12 @@ function KaliBelajarUntukSayaPage() {
           Biarkan KALI membimbing pembelajaran anda dengan memilih soalan yang paling sesuai berdasarkan prestasi semasa.
         </p>
 
-        {selesai ? (
+        {diagAlreadyDone && diagResult ? (
+          <KaliTeaseScreen hasil={diagResult} onBukaAnalisis={handleBukaAnalisis} />
+        ) : selesai ? (
+          diagnosticMode && diagResult ? (
+            <KaliTeaseScreen hasil={diagResult} onBukaAnalisis={handleBukaAnalisis} />
+          ) : (
           <div className="mt-8 rounded-3xl bg-card p-8 text-center shadow-card">
             <h1 className="font-display text-3xl font-extrabold" style={{ color: HIJAU }}>
               Sesi Selesai! 🎉
@@ -495,6 +693,7 @@ function KaliBelajarUntukSayaPage() {
               </Link>
             </div>
           </div>
+          )
         ) : (
           <>
             <div className="mt-5 grid grid-cols-3 gap-3">
