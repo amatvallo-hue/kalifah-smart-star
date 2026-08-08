@@ -9,10 +9,23 @@ import {
   Clock,
   BarChart2,
   Check,
+  Copy,
+  GraduationCap,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { SambungTelegram } from "@/components/SambungTelegram";
+import { ciptaAkaunAnak, PARENT_SESSION_BACKUP_KEY } from "@/lib/child-auth";
 import { AuthShell, Field } from "./login";
+
+const DARJAH_OPTIONS = [
+  { num: 1, color: "#F4C542" },
+  { num: 2, color: "#F28C28" },
+  { num: 3, color: "#2E9F5B" },
+  { num: 4, color: "#3B82F6" },
+  { num: 5, color: "#8B5CF6" },
+  { num: 6, color: "#EF4444" },
+] as const;
+
 
 const STEPS = [
   { num: 1, label: "Daftar Akaun" },
@@ -108,11 +121,64 @@ function DaftarKaliPage() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
+  const [namaAnak, setNamaAnak] = useState("");
+  const [darjah, setDarjah] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [showTelegram, setShowTelegram] = useState(false);
   const [parentId, setParentId] = useState<string | null>(null);
+  const [sedangCiptaAnak, setSedangCiptaAnak] = useState(false);
+  const [ralatAnak, setRalatAnak] = useState<string | null>(null);
+  const [kredensialAnak, setKredensialAnak] = useState<
+    { username: string; password: string } | null
+  >(null);
+
+  // Selepas Telegram disambung (masih dalam sesi PARENT): cipta akaun anak,
+  // backup sesi parent, kemudian tukar ke sesi anak dan mula diagnostic.
+  async function selepasTelegram() {
+    if (sedangCiptaAnak) return;
+    setRalatAnak(null);
+    setSedangCiptaAnak(true);
+    try {
+      const result = await ciptaAkaunAnak(namaAnak, String(darjah ?? 1));
+      if (!result.ok) {
+        console.error("ciptaAkaunAnak gagal:", result.mesej);
+        setRalatAnak(result.mesej ?? "Gagal cipta akaun anak.");
+        return;
+      }
+      if (result.session) {
+        const { data: parentSess } = await supabase.auth.getSession();
+        if (parentSess.session && typeof window !== "undefined") {
+          window.sessionStorage.setItem(
+            PARENT_SESSION_BACKUP_KEY,
+            JSON.stringify({
+              access_token: parentSess.session.access_token,
+              refresh_token: parentSess.session.refresh_token,
+            }),
+          );
+        }
+        await supabase.auth.setSession({
+          access_token: result.session.access_token,
+          refresh_token: result.session.refresh_token,
+        });
+        navigate({ to: "/kali-test/belajar-untuk-saya" });
+        return;
+      }
+      if (result.needsManualLogin) {
+        setKredensialAnak({
+          username: result.username ?? "",
+          password: result.generatedPassword ?? "",
+        });
+      }
+    } catch (e) {
+      console.error("selepasTelegram gagal:", e);
+      setRalatAnak("Ralat rangkaian semasa cipta akaun anak.");
+    } finally {
+      setSedangCiptaAnak(false);
+    }
+  }
+
 
   // Persist ?ref= so it survives email-confirmation round trips
   useEffect(() => {
@@ -153,7 +219,16 @@ function DaftarKaliPage() {
     e.preventDefault();
     setError(null);
     setInfo(null);
+    if (!namaAnak.trim()) {
+      setError("Sila isi nama anak.");
+      return;
+    }
+    if (!darjah) {
+      setError("Sila pilih darjah anak.");
+      return;
+    }
     setLoading(true);
+
 
     const storedRef =
       typeof window !== "undefined"
@@ -218,27 +293,13 @@ function DaftarKaliPage() {
       return;
     }
 
-    if (data.session && data.user) {
-      const { error: childError } = await supabase
-        .from("child_profiles")
-        .insert({
-          parent_id: data.user.id,
-          child_user_id: data.user.id,
-          nama: name,
-          darjah: 1,
-          username: normalizedEmail,
-        });
-      if (childError) {
-        console.error("Gagal insert child_profiles:", childError);
-      }
-
-      if (cleanPhone) {
-        void supabase
-          .from("profiles")
-          .upsert({ id: data.user.id, no_telefon: cleanPhone }, { onConflict: "id" })
-          .then(() => {}, () => {});
-      }
+    if (data.session && data.user && cleanPhone) {
+      void supabase
+        .from("profiles")
+        .upsert({ id: data.user.id, no_telefon: cleanPhone }, { onConflict: "id" })
+        .then(() => {}, () => {});
     }
+
 
     const isNewAccount = !!data.user?.identities && data.user.identities.length > 0;
     const signupTrackedKey = `signup_tracked_${normalizedEmail}`;
@@ -277,14 +338,80 @@ function DaftarKaliPage() {
     }
   }
 
-  if (showTelegram && parentId) {
+  if (kredensialAnak) {
     return (
-      <SambungTelegram
-        parentId={parentId}
-        onLinked={() => navigate({ to: "/kali-test/belajar-untuk-saya" })}
-      />
+      <main className="container mx-auto max-w-xl px-4 py-10">
+        <section className="rounded-[2rem] border border-border bg-background p-6 shadow-card">
+          <h1 className="font-display text-2xl font-extrabold text-foreground">
+            Akaun anak dah siap
+          </h1>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Simpan maklumat log masuk ini dan berikan kepada anak anda. Anak boleh log masuk di
+            halaman log masuk untuk mula Sesi Diagnostic KALI.
+          </p>
+          <div className="mt-4 space-y-3">
+            {[
+              { label: "Username", value: kredensialAnak.username },
+              { label: "Password", value: kredensialAnak.password },
+            ].map((row) => (
+              <div
+                key={row.label}
+                className="flex items-center justify-between gap-3 rounded-2xl border border-border bg-muted/40 px-4 py-3"
+              >
+                <div>
+                  <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">
+                    {row.label}
+                  </p>
+                  <p className="font-display text-lg font-extrabold text-foreground">{row.value}</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => void navigator.clipboard?.writeText(row.value)}
+                  className="inline-flex items-center gap-1 rounded-full border border-border px-3 py-2 text-xs font-bold text-foreground hover:bg-muted"
+                >
+                  <Copy className="h-3.5 w-3.5" /> Salin
+                </button>
+              </div>
+            ))}
+          </div>
+          <Link
+            to="/login"
+            className="mt-6 flex w-full items-center justify-center rounded-full bg-gradient-primary px-6 py-3 font-display text-base font-extrabold text-primary-foreground shadow-soft"
+          >
+            Pergi ke Log Masuk
+          </Link>
+        </section>
+      </main>
     );
   }
+
+  if (showTelegram && parentId) {
+    return (
+      <div>
+        <SambungTelegram parentId={parentId} onLinked={() => void selepasTelegram()} />
+        {sedangCiptaAnak ? (
+          <p className="mt-4 animate-pulse text-center font-display text-sm font-bold text-primary">
+            Menyediakan akaun anak...
+          </p>
+        ) : null}
+        {ralatAnak ? (
+          <div className="container mx-auto mt-4 max-w-xl px-4">
+            <div className="rounded-2xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm font-bold text-destructive">
+              {ralatAnak} — Sila cuba lagi.
+            </div>
+            <button
+              type="button"
+              onClick={() => void selepasTelegram()}
+              className="mt-3 w-full rounded-full bg-gradient-primary px-6 py-3 font-display text-base font-extrabold text-primary-foreground shadow-soft"
+            >
+              Cuba cipta akaun anak semula
+            </button>
+          </div>
+        ) : null}
+      </div>
+    );
+  }
+
 
   return (
     <AuthShell
@@ -354,6 +481,37 @@ function DaftarKaliPage() {
         <Field icon={Mail} label="Email" type="email" value={email} onChange={setEmail} placeholder="contoh@email.com" autoComplete="email" />
         <Field icon={Phone} label="No. WhatsApp (pilihan)" type="tel" value={phone} onChange={setPhone} placeholder="cth: 0123456789" autoComplete="tel" />
         <Field icon={Lock} label="Kata Laluan" type="password" value={password} onChange={setPassword} placeholder="Minimum 6 aksara" autoComplete="new-password" />
+        <Field icon={GraduationCap} label="Nama Anak" type="text" value={namaAnak} onChange={setNamaAnak} placeholder="cth: Aisyah" autoComplete="off" />
+
+        <div>
+          <p className="mb-2 font-display text-sm font-extrabold text-foreground">Darjah Anak</p>
+          <div className="grid grid-cols-3 gap-2">
+            {DARJAH_OPTIONS.map((d) => {
+              const selected = darjah === d.num;
+              return (
+                <button
+                  type="button"
+                  key={d.num}
+                  onClick={() => setDarjah(d.num)}
+                  className={`flex flex-col items-center gap-1 rounded-2xl border-2 px-2 py-3 font-display text-sm font-extrabold transition ${
+                    selected
+                      ? "text-white shadow-soft -translate-y-0.5"
+                      : "border-border bg-background text-foreground hover:-translate-y-0.5"
+                  }`}
+                  style={selected ? { backgroundColor: d.color, borderColor: d.color } : undefined}
+                >
+                  <span className="text-lg">D{d.num}</span>
+                  <span
+                    className={`text-[10px] font-bold ${selected ? "text-white/90" : "text-muted-foreground"}`}
+                  >
+                    Darjah {d.num}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
 
         {error && (
           <div className="rounded-2xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm font-bold text-destructive">
