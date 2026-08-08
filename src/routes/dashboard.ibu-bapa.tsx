@@ -647,6 +647,29 @@ function ParentDashboard() {
   const anakAktif = anakList.find((a) => a.id === aktifId) ?? null;
   const anakUserId = anakAktif?.child_user_id ?? null;
 
+  // Status bayaran anak aktif (untuk pilih antara KaliInsightCard penuh vs KaliUpdateCard percuma)
+  const [anakPaid, setAnakPaid] = useState<boolean | null>(null);
+  useEffect(() => {
+    if (!anakUserId) {
+      setAnakPaid(null);
+      return;
+    }
+    let mounted = true;
+    supabase
+      .from("profiles")
+      .select("darjah_akses")
+      .eq("id", anakUserId)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (!mounted) return;
+        const akses = data?.darjah_akses;
+        setAnakPaid(Array.isArray(akses) && akses.length > 0);
+      });
+    return () => {
+      mounted = false;
+    };
+  }, [anakUserId]);
+
   async function fetchAnakData(uid: string, showSpinner = true) {
     if (showSpinner) setFetching(true);
     const [
