@@ -540,7 +540,7 @@ function KaliBelajarUntukSayaPage() {
             jumlahMenguasai: menguasaiBaru.length,
             jumlahDiperkukuh: diperkukuhBaru.length,
             bocorNama: bocor?.nama ?? null,
-            bocorGejala: bocor?.sebab ?? null,
+            bocorGejala: bocor ? "Anak masih tersilap dalam beberapa soalan berkaitan kemahiran ini." : null,
           };
           setDiagResult(hasil);
           void supabase
