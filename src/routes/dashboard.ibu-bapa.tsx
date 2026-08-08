@@ -42,6 +42,7 @@ import {
   markSkipChildGuard,
   shouldSkipChildGuard,
   clearSkipChildGuard,
+  laluanCheckout,
 } from "@/lib/child-auth";
 import { senaraikanSijilAnak, type SijilRow } from "@/lib/sijil-rekod";
 import { downloadSijil } from "@/lib/sijil";
@@ -646,6 +647,29 @@ function ParentDashboard() {
   const anakAktif = anakList.find((a) => a.id === aktifId) ?? null;
   const anakUserId = anakAktif?.child_user_id ?? null;
 
+  // Status bayaran anak aktif (untuk pilih antara KaliInsightCard penuh vs KaliUpdateCard percuma)
+  const [anakPaid, setAnakPaid] = useState<boolean | null>(null);
+  useEffect(() => {
+    if (!anakUserId) {
+      setAnakPaid(null);
+      return;
+    }
+    let mounted = true;
+    supabase
+      .from("profiles")
+      .select("darjah_akses")
+      .eq("id", anakUserId)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (!mounted) return;
+        const akses = data?.darjah_akses;
+        setAnakPaid(Array.isArray(akses) && akses.length > 0);
+      });
+    return () => {
+      mounted = false;
+    };
+  }, [anakUserId]);
+
   async function fetchAnakData(uid: string, showSpinner = true) {
     if (showSpinner) setFetching(true);
     const [
@@ -1060,9 +1084,21 @@ function ParentDashboard() {
                       </div>
                     </Seksyen>
 
-                    {/* KALI INSIGHT */}
+                    {/* KALI INSIGHT — penuh untuk anak berbayar, teaser state-language untuk anak percuma */}
                     <Seksyen tajuk="Cadangan KALI Hari Ini" ikon={<Sparkles className="h-5 w-5" />}>
-                      <KaliInsightCard childUserId={anakAktif.child_user_id} namaAnak={anakAktif.nama} />
+                      {anakPaid === null ? (
+                        <div className="rounded-2xl p-5 shadow-card">
+                          <p className="text-sm text-muted-foreground">Memuatkan cadangan KALI...</p>
+                        </div>
+                      ) : anakPaid ? (
+                        <KaliInsightCard childUserId={anakAktif.child_user_id} namaAnak={anakAktif.nama} />
+                      ) : (
+                        <KaliUpdateCard
+                          childProfileId={anakAktif.id}
+                          childDarjah={anakAktif.darjah}
+                          namaAnak={anakAktif.nama}
+                        />
+                      )}
                     </Seksyen>
 
                     {/* PERCUBAAN MPT4 — Darjah 4 sahaja */}
@@ -1898,6 +1934,149 @@ function KaliInsightCard({
           akan jadi lebih tepat!
         </p>
       )}
+    </div>
+  );
+}
+
+function KaliUpdateCard({
+  childProfileId,
+  childDarjah,
+  namaAnak,
+}: {
+  childProfileId: string;
+  childDarjah: string;
+  namaAnak: string;
+}) {
+  const [status, setStatus] = useState<"loading" | "belum" | "selesai">("loading");
+  const [hasil, setHasil] = useState<{
+    betul: number;
+    jumlahMenguasai: number;
+    jumlahDiperkukuh: number;
+    bocorNama: string | null;
+    bocorGejala: string | null;
+  } | null>(null);
+
+  useEffect(() => {
+    let mounted = true;
+    supabase
+      .from("child_profiles")
+      .select(
+        "kali_diagnostic_completed_at, kali_diagnostic_betul, kali_diagnostic_jumlah_menguasai, kali_diagnostic_jumlah_diperkukuh, kali_diagnostic_bocor_nama, kali_diagnostic_bocor_gejala",
+      )
+      .eq("id", childProfileId)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (!mounted) return;
+        if (data?.kali_diagnostic_completed_at) {
+          setHasil({
+            betul: data.kali_diagnostic_betul ?? 0,
+            jumlahMenguasai: data.kali_diagnostic_jumlah_menguasai ?? 0,
+            jumlahDiperkukuh: data.kali_diagnostic_jumlah_diperkukuh ?? 0,
+            bocorNama: data.kali_diagnostic_bocor_nama ?? null,
+            bocorGejala: data.kali_diagnostic_bocor_gejala ?? null,
+          });
+          setStatus("selesai");
+        } else {
+          setStatus("belum");
+        }
+      });
+    return () => {
+      mounted = false;
+    };
+  }, [childProfileId]);
+
+  async function bukaAnalisis() {
+    const url = await laluanCheckout(childDarjah);
+    if (typeof window !== "undefined") window.location.href = url;
+  }
+
+  const cardStyle: React.CSSProperties = {
+    background: `linear-gradient(135deg, ${HIJAU}10 0%, #FFFDF5 60%, ${EMAS}12 100%)`,
+    border: `2px solid ${HIJAU}40`,
+  };
+
+  if (status === "loading") {
+    return (
+      <div className="rounded-2xl p-5 shadow-card" style={cardStyle}>
+        <p className="text-sm text-muted-foreground">Memuatkan status KALI...</p>
+      </div>
+    );
+  }
+
+  if (status === "belum") {
+    return (
+      <div className="rounded-2xl p-5 shadow-card" style={cardStyle}>
+        <div className="flex items-center gap-3">
+          <div
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-lg text-white shadow-soft"
+            style={{ background: `linear-gradient(135deg, ${HIJAU}, #2AAE72)` }}
+          >
+            <Sparkles className="h-5 w-5" />
+          </div>
+          <p className="font-display text-lg font-extrabold text-foreground">KALI baru mula kenal {namaAnak}</p>
+        </div>
+        <p className="mt-3 text-sm text-muted-foreground">
+          {namaAnak} belum cuba sesi pertama dengan KALI. Sesi pertama percuma — KALI akan mula belajar cara{" "}
+          {namaAnak} berfikir dan di mana dia perlukan bantuan.
+        </p>
+        <Link
+          to="/kali-test/belajar-untuk-saya"
+          className="mt-4 inline-flex items-center gap-1 font-bold text-primary hover:underline"
+        >
+          Mula Sesi Pertama Percuma →
+        </Link>
+      </div>
+    );
+  }
+
+  const bakiDiperkukuh = hasil ? Math.max(0, hasil.jumlahDiperkukuh - (hasil.bocorNama ? 1 : 0)) : 0;
+
+  return (
+    <div className="rounded-2xl p-5 shadow-card" style={cardStyle}>
+      <div className="flex items-center gap-3">
+        <div
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-lg text-white shadow-soft"
+          style={{ background: `linear-gradient(135deg, ${HIJAU}, #2AAE72)` }}
+        >
+          <Sparkles className="h-5 w-5" />
+        </div>
+        <p className="font-display text-lg font-extrabold text-foreground">
+          KALI dah kenal {namaAnak} dengan lebih jelas
+        </p>
+      </div>
+
+      {hasil && (
+        <p className="mt-3 text-sm text-muted-foreground">
+          {namaAnak} jawab {hasil.betul}/10 betul dalam sesi pertama — 🟢 {hasil.jumlahMenguasai} kemahiran dikuasai,
+          🔴 {hasil.jumlahDiperkukuh} kemahiran perlu diperkukuh.
+        </p>
+      )}
+
+      {hasil?.bocorNama && (
+        <>
+          <hr className="my-3 border-t" style={{ borderColor: `${HIJAU}20` }} />
+          <p className="text-[10px] font-extrabold uppercase tracking-wide text-muted-foreground">KALI Mengesan</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            <span className="font-bold text-foreground">{hasil.bocorNama}</span>
+            {hasil.bocorGejala ? ` — ${hasil.bocorGejala}` : ""}
+          </p>
+        </>
+      )}
+
+      <hr className="my-3 border-t" style={{ borderColor: `${HIJAU}20` }} />
+      <p className="text-sm text-muted-foreground">
+        🔒 Sebab kesilapan, kemahiran mana diutamakan, latihan yang dicadangkan, dan pelan pembelajaran seterusnya
+        tersedia dalam Belajar Bersama KALI penuh
+        {bakiDiperkukuh > 0 ? ` (termasuk ${bakiDiperkukuh} kemahiran lain yang belum dibuka)` : ""}.
+      </p>
+
+      <button
+        onClick={bukaAnalisis}
+        className="mt-4 rounded-full px-5 py-2.5 font-display text-sm font-extrabold text-white shadow-soft"
+        style={{ background: `linear-gradient(135deg, ${HIJAU}, #2AAE72)` }}
+      >
+        Buka Analisis Penuh & Belajar Bersama KALI
+      </button>
     </div>
   );
 }
