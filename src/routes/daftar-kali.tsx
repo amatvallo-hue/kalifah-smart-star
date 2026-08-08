@@ -219,7 +219,16 @@ function DaftarKaliPage() {
     e.preventDefault();
     setError(null);
     setInfo(null);
+    if (!namaAnak.trim()) {
+      setError("Sila isi nama anak.");
+      return;
+    }
+    if (!darjah) {
+      setError("Sila pilih darjah anak.");
+      return;
+    }
     setLoading(true);
+
 
     const storedRef =
       typeof window !== "undefined"
@@ -472,6 +481,37 @@ function DaftarKaliPage() {
         <Field icon={Mail} label="Email" type="email" value={email} onChange={setEmail} placeholder="contoh@email.com" autoComplete="email" />
         <Field icon={Phone} label="No. WhatsApp (pilihan)" type="tel" value={phone} onChange={setPhone} placeholder="cth: 0123456789" autoComplete="tel" />
         <Field icon={Lock} label="Kata Laluan" type="password" value={password} onChange={setPassword} placeholder="Minimum 6 aksara" autoComplete="new-password" />
+        <Field icon={GraduationCap} label="Nama Anak" type="text" value={namaAnak} onChange={setNamaAnak} placeholder="cth: Aisyah" autoComplete="off" />
+
+        <div>
+          <p className="mb-2 font-display text-sm font-extrabold text-foreground">Darjah Anak</p>
+          <div className="grid grid-cols-3 gap-2">
+            {DARJAH_OPTIONS.map((d) => {
+              const selected = darjah === d.num;
+              return (
+                <button
+                  type="button"
+                  key={d.num}
+                  onClick={() => setDarjah(d.num)}
+                  className={`flex flex-col items-center gap-1 rounded-2xl border-2 px-2 py-3 font-display text-sm font-extrabold transition ${
+                    selected
+                      ? "text-white shadow-soft -translate-y-0.5"
+                      : "border-border bg-background text-foreground hover:-translate-y-0.5"
+                  }`}
+                  style={selected ? { backgroundColor: d.color, borderColor: d.color } : undefined}
+                >
+                  <span className="text-lg">D{d.num}</span>
+                  <span
+                    className={`text-[10px] font-bold ${selected ? "text-white/90" : "text-muted-foreground"}`}
+                  >
+                    Darjah {d.num}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
 
         {error && (
           <div className="rounded-2xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm font-bold text-destructive">
