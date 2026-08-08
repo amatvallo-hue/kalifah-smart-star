@@ -231,27 +231,13 @@ function DaftarKaliPage() {
       return;
     }
 
-    if (data.session && data.user) {
-      const { error: childError } = await supabase
-        .from("child_profiles")
-        .insert({
-          parent_id: data.user.id,
-          child_user_id: data.user.id,
-          nama: name,
-          darjah: 1,
-          username: normalizedEmail,
-        });
-      if (childError) {
-        console.error("Gagal insert child_profiles:", childError);
-      }
-
-      if (cleanPhone) {
-        void supabase
-          .from("profiles")
-          .upsert({ id: data.user.id, no_telefon: cleanPhone }, { onConflict: "id" })
-          .then(() => {}, () => {});
-      }
+    if (data.session && data.user && cleanPhone) {
+      void supabase
+        .from("profiles")
+        .upsert({ id: data.user.id, no_telefon: cleanPhone }, { onConflict: "id" })
+        .then(() => {}, () => {});
     }
+
 
     const isNewAccount = !!data.user?.identities && data.user.identities.length > 0;
     const signupTrackedKey = `signup_tracked_${normalizedEmail}`;
