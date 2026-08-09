@@ -711,6 +711,10 @@ function SoalanCard({
             onChange={(e) => onChange(e.target.value.slice(0, 5))}
             maxLength={5}
             placeholder={isEnglish ? "Answer" : "Jawapan"}
+            autoComplete="off"
+            autoCorrect="off"
+            autoCapitalize="characters"
+            spellCheck={false}
             className="w-32 border-0 border-b-2 border-border/60 bg-transparent px-2 py-2 text-center font-display text-lg font-extrabold uppercase tracking-widest text-foreground focus:border-primary focus:outline-none"
           />
         )}
