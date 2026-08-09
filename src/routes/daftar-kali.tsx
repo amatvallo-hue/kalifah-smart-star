@@ -131,11 +131,11 @@ function DaftarKaliPage() {
   const [sedangCiptaAnak, setSedangCiptaAnak] = useState(false);
   const [ralatAnak, setRalatAnak] = useState<string | null>(null);
   const [kredensialAnak, setKredensialAnak] = useState<
-    { username: string; password: string } | null
+    { username: string; password: string; session: { access_token: string; refresh_token: string } | null } | null
   >(null);
 
-  // Selepas Telegram disambung (masih dalam sesi PARENT): cipta akaun anak,
-  // backup sesi parent, kemudian tukar ke sesi anak dan mula diagnostic.
+  // Selepas Telegram disambung (masih dalam sesi PARENT): cipta akaun anak
+  // dan paparkan kredensial. Parent mesti klik "Teruskan" untuk tukar sesi.
   async function selepasTelegram() {
     if (sedangCiptaAnak) return;
     setRalatAnak(null);
@@ -147,36 +147,42 @@ function DaftarKaliPage() {
         setRalatAnak(result.mesej ?? "Gagal cipta akaun anak.");
         return;
       }
-      if (result.session) {
-        const { data: parentSess } = await supabase.auth.getSession();
-        if (parentSess.session && typeof window !== "undefined") {
-          window.sessionStorage.setItem(
-            PARENT_SESSION_BACKUP_KEY,
-            JSON.stringify({
-              access_token: parentSess.session.access_token,
-              refresh_token: parentSess.session.refresh_token,
-            }),
-          );
-        }
-        await supabase.auth.setSession({
-          access_token: result.session.access_token,
-          refresh_token: result.session.refresh_token,
-        });
-        navigate({ to: "/kali-test/belajar-untuk-saya" });
-        return;
-      }
-      if (result.needsManualLogin) {
-        setKredensialAnak({
-          username: result.username ?? "",
-          password: result.generatedPassword ?? "",
-        });
-      }
+      setKredensialAnak({
+        username: result.username ?? "",
+        password: result.generatedPassword ?? "",
+        session: result.session
+          ? {
+              access_token: result.session.access_token,
+              refresh_token: result.session.refresh_token,
+            }
+          : null,
+      });
     } catch (e) {
       console.error("selepasTelegram gagal:", e);
       setRalatAnak("Ralat rangkaian semasa cipta akaun anak.");
     } finally {
       setSedangCiptaAnak(false);
     }
+  }
+
+  // Parent sahkan kredensial dah disimpan, kemudian tukar ke sesi anak.
+  async function teruskanKeKali() {
+    if (!kredensialAnak?.session) return;
+    const { data: parentSess } = await supabase.auth.getSession();
+    if (parentSess.session && typeof window !== "undefined") {
+      window.sessionStorage.setItem(
+        PARENT_SESSION_BACKUP_KEY,
+        JSON.stringify({
+          access_token: parentSess.session.access_token,
+          refresh_token: parentSess.session.refresh_token,
+        }),
+      );
+    }
+    await supabase.auth.setSession({
+      access_token: kredensialAnak.session.access_token,
+      refresh_token: kredensialAnak.session.refresh_token,
+    });
+    navigate({ to: "/kali-test/belajar-untuk-saya" });
   }
 
 
@@ -346,8 +352,8 @@ function DaftarKaliPage() {
             Akaun anak dah siap
           </h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            Simpan maklumat log masuk ini dan berikan kepada anak anda. Anak boleh log masuk di
-            halaman log masuk untuk mula Sesi Diagnostic KALI.
+            Simpan maklumat log masuk ini — anak akan perlukan untuk log masuk semula di peranti
+            atau hari lain.
           </p>
           <div className="mt-4 space-y-3">
             {[
@@ -374,12 +380,22 @@ function DaftarKaliPage() {
               </div>
             ))}
           </div>
-          <Link
-            to="/login"
-            className="mt-6 flex w-full items-center justify-center rounded-full bg-gradient-primary px-6 py-3 font-display text-base font-extrabold text-primary-foreground shadow-soft"
-          >
-            Pergi ke Log Masuk
-          </Link>
+          {kredensialAnak.session ? (
+            <button
+              type="button"
+              onClick={() => void teruskanKeKali()}
+              className="mt-6 flex w-full items-center justify-center rounded-full bg-gradient-primary px-6 py-3 font-display text-base font-extrabold text-primary-foreground shadow-soft"
+            >
+              Teruskan ke Sesi Diagnostic KALI →
+            </button>
+          ) : (
+            <Link
+              to="/login"
+              className="mt-6 flex w-full items-center justify-center rounded-full bg-gradient-primary px-6 py-3 font-display text-base font-extrabold text-primary-foreground shadow-soft"
+            >
+              Pergi ke Log Masuk
+            </Link>
+          )}
         </section>
       </main>
     );
