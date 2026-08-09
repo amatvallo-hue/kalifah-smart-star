@@ -131,7 +131,7 @@ function DaftarKaliPage() {
   const [sedangCiptaAnak, setSedangCiptaAnak] = useState(false);
   const [ralatAnak, setRalatAnak] = useState<string | null>(null);
   const [kredensialAnak, setKredensialAnak] = useState<
-    { username: string; password: string } | null
+    { username: string; password: string; session: { access_token: string; refresh_token: string } | null } | null
   >(null);
 
   // Selepas Telegram disambung (masih dalam sesi PARENT): cipta akaun anak,
