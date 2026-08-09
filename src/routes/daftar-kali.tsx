@@ -134,8 +134,8 @@ function DaftarKaliPage() {
     { username: string; password: string; session: { access_token: string; refresh_token: string } | null } | null
   >(null);
 
-  // Selepas Telegram disambung (masih dalam sesi PARENT): cipta akaun anak,
-  // backup sesi parent, kemudian tukar ke sesi anak dan mula diagnostic.
+  // Selepas Telegram disambung (masih dalam sesi PARENT): cipta akaun anak
+  // dan paparkan kredensial. Parent mesti klik "Teruskan" untuk tukar sesi.
   async function selepasTelegram() {
     if (sedangCiptaAnak) return;
     setRalatAnak(null);
@@ -147,36 +147,42 @@ function DaftarKaliPage() {
         setRalatAnak(result.mesej ?? "Gagal cipta akaun anak.");
         return;
       }
-      if (result.session) {
-        const { data: parentSess } = await supabase.auth.getSession();
-        if (parentSess.session && typeof window !== "undefined") {
-          window.sessionStorage.setItem(
-            PARENT_SESSION_BACKUP_KEY,
-            JSON.stringify({
-              access_token: parentSess.session.access_token,
-              refresh_token: parentSess.session.refresh_token,
-            }),
-          );
-        }
-        await supabase.auth.setSession({
-          access_token: result.session.access_token,
-          refresh_token: result.session.refresh_token,
-        });
-        navigate({ to: "/kali-test/belajar-untuk-saya" });
-        return;
-      }
-      if (result.needsManualLogin) {
-        setKredensialAnak({
-          username: result.username ?? "",
-          password: result.generatedPassword ?? "",
-        });
-      }
+      setKredensialAnak({
+        username: result.username ?? "",
+        password: result.generatedPassword ?? "",
+        session: result.session
+          ? {
+              access_token: result.session.access_token,
+              refresh_token: result.session.refresh_token,
+            }
+          : null,
+      });
     } catch (e) {
       console.error("selepasTelegram gagal:", e);
       setRalatAnak("Ralat rangkaian semasa cipta akaun anak.");
     } finally {
       setSedangCiptaAnak(false);
     }
+  }
+
+  // Parent sahkan kredensial dah disimpan, kemudian tukar ke sesi anak.
+  async function teruskanKeKali() {
+    if (!kredensialAnak?.session) return;
+    const { data: parentSess } = await supabase.auth.getSession();
+    if (parentSess.session && typeof window !== "undefined") {
+      window.sessionStorage.setItem(
+        PARENT_SESSION_BACKUP_KEY,
+        JSON.stringify({
+          access_token: parentSess.session.access_token,
+          refresh_token: parentSess.session.refresh_token,
+        }),
+      );
+    }
+    await supabase.auth.setSession({
+      access_token: kredensialAnak.session.access_token,
+      refresh_token: kredensialAnak.session.refresh_token,
+    });
+    navigate({ to: "/kali-test/belajar-untuk-saya" });
   }
 
 
