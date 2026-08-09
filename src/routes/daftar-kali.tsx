@@ -352,8 +352,8 @@ function DaftarKaliPage() {
             Akaun anak dah siap
           </h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            Simpan maklumat log masuk ini dan berikan kepada anak anda. Anak boleh log masuk di
-            halaman log masuk untuk mula Sesi Diagnostic KALI.
+            Simpan maklumat log masuk ini — anak akan perlukan untuk log masuk semula di peranti
+            atau hari lain.
           </p>
           <div className="mt-4 space-y-3">
             {[
@@ -380,12 +380,22 @@ function DaftarKaliPage() {
               </div>
             ))}
           </div>
-          <Link
-            to="/login"
-            className="mt-6 flex w-full items-center justify-center rounded-full bg-gradient-primary px-6 py-3 font-display text-base font-extrabold text-primary-foreground shadow-soft"
-          >
-            Pergi ke Log Masuk
-          </Link>
+          {kredensialAnak.session ? (
+            <button
+              type="button"
+              onClick={() => void teruskanKeKali()}
+              className="mt-6 flex w-full items-center justify-center rounded-full bg-gradient-primary px-6 py-3 font-display text-base font-extrabold text-primary-foreground shadow-soft"
+            >
+              Teruskan ke Sesi Diagnostic KALI →
+            </button>
+          ) : (
+            <Link
+              to="/login"
+              className="mt-6 flex w-full items-center justify-center rounded-full bg-gradient-primary px-6 py-3 font-display text-base font-extrabold text-primary-foreground shadow-soft"
+            >
+              Pergi ke Log Masuk
+            </Link>
+          )}
         </section>
       </main>
     );
