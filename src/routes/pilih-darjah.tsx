@@ -351,6 +351,12 @@ function DarjahDashboard() {
           </div>
         </section>
 
+        {isChild && kaliCadangan && (
+          <KaliHeroCadangan cadangan={kaliCadangan} firstName={firstName} />
+        )}
+
+
+
         {isChild && (
           <>
             {/* Progress Minggu Ini */}
