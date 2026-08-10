@@ -259,6 +259,21 @@ function DaftarKaliPage() {
             }
           : null,
       });
+
+      // Hantar magic-link sesi anak ke Telegram parent (sesi PARENT masih aktif)
+      if (result.userId) {
+        setTelegramLinkStatus("sending");
+        try {
+          const { data: fnData, error: fnError } = await supabase.functions.invoke(
+            "kali-kirim-link-anak",
+            { body: { child_user_id: result.userId } },
+          );
+          const ok = !fnError && (fnData as { success?: boolean } | null)?.success === true;
+          setTelegramLinkStatus(ok ? "sent" : "gagal");
+        } catch {
+          setTelegramLinkStatus("gagal");
+        }
+      }
     } catch (e) {
       console.error("selepasTelegram gagal:", e);
       setRalatAnak("Ralat rangkaian semasa cipta akaun anak.");
