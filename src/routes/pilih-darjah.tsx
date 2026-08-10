@@ -246,7 +246,13 @@ function KaliHeroCadangan({
       </h2>
       <p className="mt-1 text-sm text-muted-foreground">{subteks}</p>
 
-      <div className="mt-3 flex flex-col rounded-3xl border border-border/60 bg-card p-6 shadow-card md:flex-row">
+      <div
+        className="mt-3 flex flex-col rounded-3xl border p-6 shadow-card md:flex-row"
+        style={{
+          background: "linear-gradient(135deg, #ECF9F2 0%, #F7FCF9 55%, #FFF9E8 100%)",
+          borderColor: "#CDEBDD",
+        }}
+      >
         <div className="min-w-0 flex-1">
           <div className="flex items-start gap-3">
             <KaliMascotFace tier={tier} />
@@ -293,7 +299,13 @@ function KaliHeroCadangan({
           </div>
         </div>
 
-        <div className="mt-5 w-full border-t border-border/60 pt-5 md:ml-5 md:mt-0 md:w-56 md:border-l md:border-t-0 md:pl-5 md:pt-0">
+        <div
+          className="mt-5 w-full border-t pt-5 md:ml-5 md:mt-0 md:w-56 md:border-l md:border-t-0 md:pl-5 md:pt-0"
+          style={{
+            backgroundColor: "rgba(255, 255, 255, 0.65)",
+            borderColor: "#CDEBDD",
+          }}
+        >
           {cadangan.mastery_score != null ? (
             <div className="space-y-4">
               <div>
