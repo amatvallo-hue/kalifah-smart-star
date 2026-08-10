@@ -102,7 +102,7 @@ function StepProgress({ active }: { active: number }) {
         })}
       </div>
       <p className="mt-4 text-center text-xs font-medium text-muted-foreground">
-        Selepas daftar, anak terus mula Sesi Diagnostic KALI PERCUMA — tiada bayaran.
+        Cuba sendiri cara KALI berfungsi. Selepas itu, anak anda boleh buat Sesi Diagnostic KALI secara PERCUMA.
       </p>
     </div>
   );
@@ -675,8 +675,8 @@ function DaftarKaliPage() {
               Nak tengok macam mana KALI berfungsi?
             </h1>
             <p className="mt-3 text-sm text-muted-foreground">
-              Sebelum anak anda mula, cuba sendiri {demoSoalan.length} soalan ni — nampak macam
-              mana KALI mengesan corak jawapan.
+              Sebelum anak anda mula, cuba sendiri {demoSoalan.length} soalan ini — lihat bagaimana
+              KALI membaca corak jawapan anda.
             </p>
             <button
               type="button"
