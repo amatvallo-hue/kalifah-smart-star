@@ -1091,7 +1091,7 @@ function ParentDashboard() {
                           <p className="text-sm text-muted-foreground">Memuatkan cadangan KALI...</p>
                         </div>
                       ) : anakPaid ? (
-                        <KaliInsightCard childUserId={anakAktif.child_user_id} namaAnak={anakAktif.nama} />
+                        <KaliInsightCard childUserId={anakAktif.child_user_id} namaAnak={anakAktif.nama} darjahAnak={anakAktif.darjah} />
                       ) : (
                         <KaliUpdateCard
                           childProfileId={anakAktif.id}
