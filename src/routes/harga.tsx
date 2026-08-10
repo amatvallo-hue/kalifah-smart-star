@@ -206,7 +206,7 @@ function HargaPage() {
           <>
             <div className="mx-auto max-w-2xl text-center">
               <span
-                className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 font-display text-xs font-extrabold text-white shadow-soft"
+                className="inline-flex items-center gap-2 whitespace-nowrap rounded-full px-4 py-1.5 font-display text-xs font-extrabold text-white shadow-soft"
                 style={{ backgroundColor: HIJAU }}
               >
                 🎉 KALI Dah Bersedia
