@@ -167,6 +167,8 @@ function DaftarKaliPage() {
   const [telegramLinkStatus, setTelegramLinkStatus] = useState<
     "sending" | "sent" | "gagal" | null
   >(null);
+  const [childUserId, setChildUserId] = useState<string | null>(null);
+  const [waStatus, setWaStatus] = useState<"idle" | "sending" | "gagal">("idle");
   const [demoSoalan, setDemoSoalan] = useState<DemoSoalan[]>([]);
   const [demoIndex, setDemoIndex] = useState(0);
   const [demoJawapanTerkumpul, setDemoJawapanTerkumpul] = useState<
