@@ -29,9 +29,10 @@ export const Route = createFileRoute("/kali-test/belajar-untuk-saya")({
     ],
   }),
   ssr: false,
-  validateSearch: (search: Record<string, unknown>) => ({
-    src: typeof search.src === "string" ? search.src : undefined,
-  }),
+  validateSearch: (search: Record<string, unknown>) => {
+    const src = typeof search.src === "string" ? search.src : undefined;
+    return src ? { src } : {};
+  },
   component: KaliBelajarUntukSayaPage,
 });
 
