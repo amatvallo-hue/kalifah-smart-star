@@ -216,7 +216,7 @@ function KaliHeroCadangan({
 
   const bukti = isRedYellow
     ? adaAttempts
-      ? `KALI mendapati ${(total as number) - (betul as number)} daripada ${total} soalan ${nama} masih perlukan latihan. KALI akan mulakan dengan latihan pengukuhan.`
+      ? `KALI mendapati kemahiran ini masih perlukan latihan. KALI akan mulakan dengan 10 soalan pengukuhan.`
       : `${firstName} masih memerlukan lebih latihan untuk kemahiran ini.`
     : tier === "GREEN"
       ? `${firstName} dah kuasai kemahiran ini sebelum ini (tahap penguasaan ${cadangan.mastery_score}%), tapi sudah agak lama tak diulang.`
@@ -243,49 +243,91 @@ function KaliHeroCadangan({
       </h2>
       <p className="mt-1 text-sm text-muted-foreground">{subteks}</p>
 
-      <div className="mt-3 rounded-3xl border border-border/60 bg-card p-6 shadow-card">
-        <div className="flex items-start gap-3">
-          <KaliMascotFace tier={tier} />
-          <div className="min-w-0 flex-1">
-            <span className="inline-block rounded-2xl border border-primary/20 bg-primary/10 px-3 py-1.5 text-xs font-bold text-primary">
-              {bubble}
+      <div className="mt-3 flex flex-col rounded-3xl border border-border/60 bg-card p-6 shadow-card md:flex-row">
+        <div className="min-w-0 flex-1">
+          <div className="flex items-start gap-3">
+            <KaliMascotFace tier={tier} />
+            <div className="min-w-0 flex-1">
+              <span className="inline-block rounded-2xl border border-primary/20 bg-primary/10 px-3 py-1.5 text-xs font-bold text-primary">
+                {bubble}
+              </span>
+              <p className="mt-3 font-display text-sm font-bold text-primary">
+                {cadangan.micro_skill_subjek} — {nama}
+              </p>
+              <p className="mt-1 font-medium text-foreground">{bukti}</p>
+            </div>
+          </div>
+
+          <div className="mt-4 flex flex-wrap items-center gap-3 text-xs font-bold text-muted-foreground">
+            <span className="inline-flex items-center gap-1.5">
+              <FileText className="h-3.5 w-3.5" /> 10 soalan
             </span>
-            <p className="mt-3 font-display text-sm font-bold text-primary">
-              {cadangan.micro_skill_subjek} — {nama}
-            </p>
-            <p className="mt-1 font-medium text-foreground">{bukti}</p>
+            <span>·</span>
+            <span className="inline-flex items-center gap-1.5">
+              <Clock className="h-3.5 w-3.5" /> ±5 minit
+            </span>
+            <span>·</span>
+            <span className="inline-flex items-center gap-1.5">
+              <Star className="h-3.5 w-3.5" /> hingga +15 bintang
+            </span>
+          </div>
+
+          <div className="mt-4 flex flex-wrap items-center gap-3">
+            <Link
+              to="/kali-test/belajar-untuk-saya"
+              className="inline-flex items-center gap-2 rounded-full bg-gradient-primary px-6 py-3 font-display text-sm font-extrabold text-primary-foreground shadow-soft transition hover:opacity-90"
+            >
+              Mula Belajar Bersama KALI
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+            <button
+              type="button"
+              onClick={() => setDialogOpen(true)}
+              className="text-xs font-bold text-muted-foreground hover:underline"
+            >
+              Kenapa KALI pilih latihan ini?
+            </button>
           </div>
         </div>
 
-        <div className="mt-4 flex flex-wrap items-center gap-3 text-xs font-bold text-muted-foreground">
-          <span className="inline-flex items-center gap-1.5">
-            <FileText className="h-3.5 w-3.5" /> 10 soalan
-          </span>
-          <span>·</span>
-          <span className="inline-flex items-center gap-1.5">
-            <Clock className="h-3.5 w-3.5" /> ±5 minit
-          </span>
-          <span>·</span>
-          <span className="inline-flex items-center gap-1.5">
-            <Star className="h-3.5 w-3.5" /> hingga +15 bintang
-          </span>
-        </div>
-
-        <div className="mt-4 flex flex-wrap items-center gap-3">
-          <Link
-            to="/kali-test/belajar-untuk-saya"
-            className="inline-flex items-center gap-2 rounded-full bg-gradient-primary px-6 py-3 font-display text-sm font-extrabold text-primary-foreground shadow-soft transition hover:opacity-90"
-          >
-            Mula Belajar Bersama KALI
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-          <button
-            type="button"
-            onClick={() => setDialogOpen(true)}
-            className="text-xs font-bold text-muted-foreground hover:underline"
-          >
-            Kenapa KALI pilih latihan ini?
-          </button>
+        <div className="mt-5 w-full border-t border-border/60 pt-5 md:ml-5 md:mt-0 md:w-56 md:border-l md:border-t-0 md:pl-5 md:pt-0">
+          {cadangan.mastery_score != null ? (
+            <div className="space-y-4">
+              <div>
+                <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">
+                  Penguasaan Semasa
+                </p>
+                <p className="mt-0.5 font-display text-2xl font-extrabold text-foreground">
+                  {cadangan.mastery_score}%
+                </p>
+                <p className="text-xs font-bold text-muted-foreground">
+                  {cadangan.mastery_score >= 70
+                    ? "Baik"
+                    : cadangan.mastery_score >= 40
+                      ? "Perlu diperkukuhkan"
+                      : "Perlu latihan lebih"}
+                </p>
+              </div>
+              <div>
+                <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">
+                  Fokus Hari Ini
+                </p>
+                <p className="mt-0.5 text-sm font-bold text-foreground">{nama}</p>
+              </div>
+              <div>
+                <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">
+                  Selepas Sesi
+                </p>
+                <p className="mt-0.5 text-sm font-medium text-muted-foreground">
+                  KALI akan menilai semula
+                </p>
+              </div>
+            </div>
+          ) : (
+            <p className="text-sm font-medium text-muted-foreground">
+              Kemahiran baharu — belum ada rekod
+            </p>
+          )}
         </div>
       </div>
 
@@ -525,53 +567,79 @@ function DarjahDashboard() {
       <SiteHeader stars={mata} userName={firstName} onLogout={handleLogout} />
 
       <main className="container mx-auto px-4 py-6">
-        {/* Hero — padat */}
-        <section className="relative overflow-hidden rounded-2xl bg-gradient-hero px-5 py-4 shadow-card md:px-7 md:py-5">
-          <div className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-primary/15 blur-3xl" />
-          <div className="relative flex flex-wrap items-center justify-between gap-3">
-            <div className="min-w-0">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-card px-3 py-1 font-display text-[11px] font-bold text-primary shadow-soft">
-                <Sparkles className="h-3 w-3" />
-                Assalamualaikum
-              </span>
-              <h1 className="mt-1.5 font-display text-2xl font-extrabold leading-tight text-foreground md:text-3xl">
-                Selamat datang, <span className="text-primary">{firstName}</span>! 🌟
-              </h1>
-              <p className="mt-0.5 text-sm text-muted-foreground">
-                {isChild ? "Sedia sambung belajar hari ni?" : "Pantau pembelajaran anak anda di sini."}
-              </p>
-            </div>
-            <div className="flex flex-wrap items-center gap-2">
-              {isChild && darjahMurid && (
-                <Link
-                  to="/darjah/$darjahId"
-                  params={{ darjahId: darjahMurid }}
-                  className="inline-flex items-center gap-2 rounded-full bg-gradient-primary px-5 py-2.5 font-display text-sm font-extrabold text-primary-foreground shadow-soft transition hover:opacity-90"
-                >
-                  Sambung Belajar
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
-              )}
+        {isChild && kaliCadangan ? (
+          <div className="flex flex-wrap items-center justify-between gap-2 py-1">
+            <p className="text-sm font-bold text-muted-foreground">
+              Assalamualaikum, <span className="text-foreground">{firstName}</span>
+            </p>
+            <div className="flex items-center gap-2">
               <button
                 type="button"
                 onClick={() => setPakejOpen(true)}
-                className="inline-flex items-center gap-1.5 rounded-full bg-card/80 px-3 py-1.5 font-display text-xs font-bold text-foreground/80 shadow-soft transition hover:text-primary"
+                className="inline-flex items-center gap-1.5 rounded-full bg-muted px-3 py-1.5 font-display text-xs font-bold text-foreground/80 transition hover:text-primary"
               >
                 <Star className="h-3.5 w-3.5" />
                 Pakej
               </button>
               {pakejOpen && <PakejModal onClose={() => setPakejOpen(false)} />}
-
               <button
                 onClick={handleLogout}
-                className="inline-flex items-center gap-1.5 rounded-full bg-card/80 px-3 py-1.5 font-display text-xs font-bold text-muted-foreground shadow-soft transition hover:text-destructive"
+                className="inline-flex items-center gap-1.5 rounded-full bg-muted px-3 py-1.5 font-display text-xs font-bold text-muted-foreground transition hover:text-destructive"
               >
                 <LogOut className="h-3.5 w-3.5" />
                 Log Keluar
               </button>
             </div>
           </div>
-        </section>
+        ) : (
+          /* Hero — padat */
+          <section className="relative overflow-hidden rounded-2xl bg-gradient-hero px-5 py-4 shadow-card md:px-7 md:py-5">
+            <div className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-primary/15 blur-3xl" />
+            <div className="relative flex flex-wrap items-center justify-between gap-3">
+              <div className="min-w-0">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-card px-3 py-1 font-display text-[11px] font-bold text-primary shadow-soft">
+                  <Sparkles className="h-3 w-3" />
+                  Assalamualaikum
+                </span>
+                <h1 className="mt-1.5 font-display text-2xl font-extrabold leading-tight text-foreground md:text-3xl">
+                  Selamat datang, <span className="text-primary">{firstName}</span>! 🌟
+                </h1>
+                <p className="mt-0.5 text-sm text-muted-foreground">
+                  {isChild ? "Sedia sambung belajar hari ni?" : "Pantau pembelajaran anak anda di sini."}
+                </p>
+              </div>
+              <div className="flex flex-wrap items-center gap-2">
+                {isChild && darjahMurid && (
+                  <Link
+                    to="/darjah/$darjahId"
+                    params={{ darjahId: darjahMurid }}
+                    className="inline-flex items-center gap-2 rounded-full bg-gradient-primary px-5 py-2.5 font-display text-sm font-extrabold text-primary-foreground shadow-soft transition hover:opacity-90"
+                  >
+                    Sambung Belajar
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+                )}
+                <button
+                  type="button"
+                  onClick={() => setPakejOpen(true)}
+                  className="inline-flex items-center gap-1.5 rounded-full bg-card/80 px-3 py-1.5 font-display text-xs font-bold text-foreground/80 shadow-soft transition hover:text-primary"
+                >
+                  <Star className="h-3.5 w-3.5" />
+                  Pakej
+                </button>
+                {pakejOpen && <PakejModal onClose={() => setPakejOpen(false)} />}
+
+                <button
+                  onClick={handleLogout}
+                  className="inline-flex items-center gap-1.5 rounded-full bg-card/80 px-3 py-1.5 font-display text-xs font-bold text-muted-foreground shadow-soft transition hover:text-destructive"
+                >
+                  <LogOut className="h-3.5 w-3.5" />
+                  Log Keluar
+                </button>
+              </div>
+            </div>
+          </section>
+        )}
 
         {isChild && kaliCadangan && (
           <KaliHeroCadangan cadangan={kaliCadangan} firstName={firstName} />
