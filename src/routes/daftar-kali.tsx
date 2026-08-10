@@ -511,48 +511,109 @@ function DaftarKaliPage() {
     );
   }
 
+  if (demoLoading) {
+    return (
+      <main className="container mx-auto max-w-xl px-4 py-10">
+        <StepProgress active={2} />
+        <section className="rounded-[2rem] border border-border bg-background p-10 text-center shadow-card">
+          <div className="mx-auto h-12 w-12 animate-pulse rounded-full bg-primary/20" />
+          <p className="mt-5 font-display text-lg font-extrabold text-foreground">
+            🧠 KALI sedang membaca corak jawapan anda...
+          </p>
+        </section>
+      </main>
+    );
+  }
+
   if (showDemoResult && demoResult) {
-    const skillUnik = Array.from(new Set(demoResult.skill_salah.filter(Boolean)));
+    const skills = demoResult.skills ?? [];
+    const hijau = skills.filter((s) => s.tier === "HIJAU");
+    const kuning = skills.filter((s) => s.tier === "KUNING");
+    const merah = skills.filter((s) => s.tier === "MERAH");
+    const peratus =
+      demoResult.total_count > 0
+        ? Math.round((demoResult.betul_count / demoResult.total_count) * 100)
+        : 0;
+
+    const KumpulanSkill = ({
+      tajuk,
+      senarai,
+      warna,
+    }: {
+      tajuk: string;
+      senarai: DemoSkill[];
+      warna: string;
+    }) =>
+      senarai.length === 0 ? null : (
+        <div className="mt-5">
+          <p className={`text-sm font-extrabold ${warna}`}>{tajuk}</p>
+          <ul className="mt-2 space-y-2">
+            {senarai.map((s) => (
+              <li
+                key={s.micro_skill_id}
+                className="rounded-2xl border border-border bg-muted/40 px-4 py-3"
+              >
+                <p className="text-sm font-semibold text-foreground">{s.micro_skill_nama}</p>
+                <p className="text-xs text-muted-foreground">
+                  {s.tier === "HIJAU" ? "✓ " : ""}
+                  {s.betul}/{s.total} {s.tier === "HIJAU" ? "jawapan tepat" : "tepat"}
+                </p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      );
+
     return (
       <main className="container mx-auto max-w-xl px-4 py-10">
         <StepProgress active={2} />
         <section className="rounded-[2rem] border border-border bg-background p-6 shadow-card">
-          <h1 className="font-display text-2xl font-extrabold text-foreground">
-            KALI dah selesai menganalisis jawapan anda.
-          </h1>
-          <p className="mt-3 text-center font-display text-5xl font-extrabold text-primary">
-            {demoResult.betul_count}/{demoResult.total_count} betul
+          <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+            Analisis KALI
           </p>
-          <ul className="mt-5 space-y-2">
-            <li className="text-sm font-medium text-foreground">
-              🟢 {demoResult.betul_count} jawapan tepat
-            </li>
-            <li className="text-sm font-medium text-foreground">
-              🟠 {skillUnik.length} kemahiran perlu perhatian
-            </li>
-            {skillUnik.length > 0 ? (
-              <li className="text-sm font-medium text-foreground">
-                🔴 KALI mengesan anda mungkin keliru dalam &ldquo;{skillUnik[0]}&rdquo;
-              </li>
-            ) : (
-              <li className="text-sm font-medium text-foreground">
-                ✨ Semua jawapan tepat — KALI tak mengesan sebarang corak kelemahan.
-              </li>
-            )}
-          </ul>
-          <p className="mt-4 text-xs text-muted-foreground">
-            Ini demonstrasi macam mana KALI menganalisis corak jawapan — bukan keputusan sebenar
-            anak anda.
+          <h1 className="mt-2 font-display text-2xl font-extrabold text-foreground">Skor Demo</h1>
+          <p className="mt-1 font-display text-4xl font-extrabold text-primary">
+            {demoResult.betul_count} / {demoResult.total_count} betul · {peratus}%
           </p>
-          <div className="mt-6 rounded-2xl border border-border bg-muted/40 p-4">
-            <p className="font-display text-base font-extrabold text-foreground">
-              Nampak bagaimana KALI berfungsi?
-            </p>
-            <p className="mt-1 text-sm text-muted-foreground">Tadi anda sendiri mencuba KALI.</p>
-            <p className="text-sm text-muted-foreground">
-              Sekarang biarkan KALI mengenali tahap sebenar anak anda.
+          <p className="mt-2 text-sm text-muted-foreground">
+            KALI nampak sesuatu daripada jawapan anda.
+          </p>
+
+          <KumpulanSkill
+            tajuk="🟢 Dikuasai dalam demo ini"
+            senarai={hijau}
+            warna="text-primary"
+          />
+          <KumpulanSkill tajuk="🟠 Perlu perhatian" senarai={kuning} warna="text-amber-600" />
+          <KumpulanSkill
+            tajuk="🔴 Kesilapan paling ketara"
+            senarai={merah}
+            warna="text-destructive"
+          />
+
+          <div className="mt-6 rounded-2xl border border-border bg-primary/5 p-4">
+            <p className="text-sm font-extrabold text-foreground">🔍 Apa yang KALI perasan?</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {demoResult.insight_text ??
+                "Jawapan anda menunjukkan penguasaan yang baik merentasi kemahiran yang diuji dalam demo ini."}
             </p>
           </div>
+
+          <div className="mt-3 rounded-2xl border border-border bg-muted/40 p-4">
+            <p className="text-sm font-extrabold text-foreground">🎯 Kalau ini anak anda...</p>
+            <p className="mt-1 text-sm text-muted-foreground">{demoResult.next_text}</p>
+          </div>
+
+          <div className="mt-6 border-t border-border pt-5">
+            <p className="text-sm text-muted-foreground">
+              Itu baru {demoResult.total_count} jawapan anda.
+            </p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Sekarang bayangkan apa yang KALI boleh pelajari tentang anak anda apabila dia belajar
+              bersama KALI secara berterusan.
+            </p>
+          </div>
+
           <button
             type="button"
             onClick={() => {
