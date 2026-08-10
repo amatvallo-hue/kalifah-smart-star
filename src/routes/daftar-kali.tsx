@@ -185,17 +185,23 @@ function DaftarKaliPage() {
       if (demoIndex + 1 < demoSoalan.length) {
         setDemoIndex((i) => i + 1);
       } else {
+        setDemoLoading(true);
         void hantarDemo(terkumpul);
       }
     }, 1200);
   }
 
   async function hantarDemo(terkumpul: { soalan_id: string; jawapan: string }[]) {
-    const { data, error: rpcError } = await supabase.rpc("kali_score_demo_soalan", {
+    const mula = Date.now();
+    const { data, error: rpcError } = await supabase.rpc("kali_score_demo_soalan_v2", {
       p_jawapan: terkumpul,
     });
-    const row = (Array.isArray(data) ? data[0] : data) as DemoResult | null;
+    const row = data as DemoResult | null;
+    // pastikan transisi kelihatan sekurang-kurangnya 1.4s
+    const baki = Math.max(0, 1400 - (Date.now() - mula));
+    await new Promise((r) => setTimeout(r, baki));
     if (rpcError || !row) {
+      setDemoLoading(false);
       setShowDemo(false);
       setShowTelegram(true);
       return;
@@ -203,9 +209,12 @@ function DaftarKaliPage() {
     const hasil: DemoResult = {
       betul_count: Number(row.betul_count ?? 0),
       total_count: Number(row.total_count ?? terkumpul.length),
-      skill_salah: Array.isArray(row.skill_salah) ? row.skill_salah : [],
+      skills: Array.isArray(row.skills) ? row.skills : [],
+      insight_text: row.insight_text ?? null,
+      next_text: row.next_text ?? "",
     };
     setDemoResult(hasil);
+    setDemoLoading(false);
     setShowDemoResult(true);
     void supabase
       .from("analytics_events")
