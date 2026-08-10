@@ -216,11 +216,12 @@ function KaliHeroCadangan({
 
   const bukti = isRedYellow
     ? adaAttempts
-      ? `KALI mendapati kemahiran ini masih perlukan latihan. KALI akan mulakan dengan 10 soalan pengukuhan.`
-      : `${firstName} masih memerlukan lebih latihan untuk kemahiran ini.`
+      ? `Berdasarkan jawapan ${firstName} sebelum ini, KALI mendapati topik ini masih perlu diperkukuhkan. KALI dah memilih 10 soalan untuk sesi hari ini.`
+      : `${firstName} masih memerlukan lebih latihan untuk topik ini.`
     : tier === "GREEN"
       ? `${firstName} dah kuasai kemahiran ini sebelum ini (tahap penguasaan ${cadangan.mastery_score}%), tapi sudah agak lama tak diulang.`
       : `Kemahiran baharu — ${firstName} belum cuba ni lagi. KALI akan mula dengan asas dahulu.`;
+
 
 
   const bubble =
@@ -304,9 +305,10 @@ function KaliHeroCadangan({
                   {cadangan.mastery_score >= 70
                     ? "Baik"
                     : cadangan.mastery_score >= 40
-                      ? "Perlu diperkukuhkan"
+                      ? "Sedang diperkukuhkan"
                       : "Perlu latihan lebih"}
                 </p>
+
               </div>
               <div>
                 <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">
