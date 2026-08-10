@@ -246,7 +246,13 @@ function KaliHeroCadangan({
       </h2>
       <p className="mt-1 text-sm text-muted-foreground">{subteks}</p>
 
-      <div className="mt-3 flex flex-col rounded-3xl border border-border/60 bg-card p-6 shadow-card md:flex-row">
+      <div
+        className="mt-3 flex flex-col rounded-3xl border p-6 shadow-card md:flex-row"
+        style={{
+          background: "linear-gradient(135deg, #ECF9F2 0%, #F7FCF9 55%, #FFF9E8 100%)",
+          borderColor: "#CDEBDD",
+        }}
+      >
         <div className="min-w-0 flex-1">
           <div className="flex items-start gap-3">
             <KaliMascotFace tier={tier} />
