@@ -28,7 +28,9 @@ function HargaPage() {
   const [pickerInitial, setPickerInitial] = useState<number[]>([]);
   const [loading, setLoading] = useState<PakejId | null>(null);
   const [fastpath, setFastpath] = useState<{ nama: string; darjah: number } | null>(null);
+  const [showFamilyPakej, setShowFamilyPakej] = useState(false);
   const autoRan = useRef(false);
+
 
   async function mulaBayar(pakej: PakejId, darjah: number[]) {
     console.log("[harga] mulaBayar dipanggil", { pakej, darjah });
@@ -144,111 +146,115 @@ function HargaPage() {
       </header>
 
       <main className="container mx-auto px-4 py-12">
-        {fastpath && (
-          <div className="mx-auto mb-8 max-w-2xl text-center">
-            <span
-              className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 font-display text-xs font-extrabold text-white shadow-soft"
-              style={{ backgroundColor: HIJAU }}
-            >
-              🎉 KALI Dah Bersedia
-            </span>
-            <h2 className="mt-3 font-display text-2xl font-extrabold text-foreground md:text-3xl">
-              Teruskan dengan KALI untuk {fastpath.nama}
-            </h2>
-            <span
-              className="mt-3 inline-flex items-center gap-1 rounded-full bg-card px-4 py-1.5 font-display text-xs font-extrabold shadow-soft"
-              style={{ color: EMAS }}
-            >
-              Darjah {fastpath.darjah}
-            </span>
-            <p className="mt-3 text-sm text-muted-foreground md:text-base">
-              KALI akan mula mengenali tahap sebenar {fastpath.nama} dan memilih pembelajaran berdasarkan kemahiran yang perlu dikuasainya.
-            </p>
-          </div>
-        )}
-        <div className="text-center">
-          <span
-            className="inline-flex items-center gap-2 rounded-full bg-card px-4 py-1.5 font-display text-xs font-bold shadow-soft"
-            style={{ color: HIJAU }}
-          >
-            <Star className="h-3.5 w-3.5" /> Harga 1 Tahun Penuh
-          </span>
-          <span className="mt-2 inline-flex items-center gap-1 rounded-full bg-amber-100 px-3 py-1 text-xs font-extrabold text-amber-700">
-            🚀 Harga Beta
-          </span>
-          <h1 className="mt-3 font-display text-4xl font-extrabold text-foreground md:text-5xl">
-            {fastpath ? `Pilih pelan untuk ${fastpath.nama}` : "Pilih Pakej Anda"}
-          </h1>
-          <p className="mt-3 text-base text-muted-foreground">
-            Harga asal: <span className="line-through">RM{HARGA_ASAL}/darjah</span> — kini jauh lebih murah!
-          </p>
-        </div>
-
-        <div className="mt-10 grid gap-6 md:grid-cols-3">
-          {PAKEJ_LIST.map((p) => {
-            const popular = !!p.popular;
-            const isLoading = loading === p.id;
-            return (
-              <div
-                key={p.id}
-                className={`relative rounded-[2rem] bg-card p-7 shadow-card ${popular ? "md:scale-105" : ""}`}
-                style={{ border: popular ? `3px solid ${EMAS}` : `2px solid ${HIJAU}22` }}
+        {fastpath ? (
+          <>
+            <div className="mx-auto max-w-2xl text-center">
+              <span
+                className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 font-display text-xs font-extrabold text-white shadow-soft"
+                style={{ backgroundColor: HIJAU }}
               >
-                {popular && (
-                  <div
-                    className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full px-4 py-1 font-display text-[10px] font-extrabold uppercase tracking-wider text-white shadow-soft"
-                    style={{ backgroundColor: EMAS }}
-                  >
-                    ⭐ Paling Popular
-                  </div>
-                )}
-                <h3 className="font-display text-xl font-extrabold text-foreground">{p.nama}</h3>
-                <div className="mt-3">
-                  <p className="text-sm text-muted-foreground line-through">
-                    RM{p.id === "bundle" ? HARGA_ASAL * 6 : HARGA_ASAL}{p.id === "perDarjah" ? "/darjah" : ""}
-                  </p>
-                  <p className="mt-1 font-display text-5xl font-extrabold" style={{ color: popular ? "#7a5300" : HIJAU }}>
-                    RM{p.jumlahBayar}
-                    <span className="text-base font-bold text-muted-foreground">
-                      {p.id === "perDarjah" ? "/darjah" : ""}/tahun
-                    </span>
-                  </p>
-                  {p.jimat && (
-                    <p className="mt-1 text-sm font-extrabold" style={{ color: EMAS }}>
-                      Jimat RM{p.jimat}!
-                    </p>
-                  )}
-                </div>
-                <p className="mt-3 text-sm text-muted-foreground">{p.deskripsi}</p>
-                <ul className="mt-5 space-y-2 text-sm text-foreground">
-                  <li className="flex gap-2"><Check className="h-4 w-4 shrink-0" style={{ color: HIJAU }} /> Akses penuh nota, latih tubi, kuiz, game</li>
-                  <li className="flex gap-2"><Check className="h-4 w-4 shrink-0" style={{ color: HIJAU }} /> Dashboard ibu bapa</li>
-                  <li className="flex gap-2"><Check className="h-4 w-4 shrink-0" style={{ color: HIJAU }} /> Sijil automatik PDF</li>
-                  <li className="flex gap-2"><Check className="h-4 w-4 shrink-0" style={{ color: HIJAU }} /> Streak & lencana</li>
-                  {p.id === "bundle" && <li className="flex gap-2"><Check className="h-4 w-4 shrink-0" style={{ color: HIJAU }} /> Untuk semua anak (D1–D6)</li>}
-                </ul>
-                <button
-                  type="button"
-                  onClick={() =>
-                    fastpath && p.id === "satu"
-                      ? void mulaBayar("satu", [fastpath.darjah])
-                      : handleKlik(p.id as PakejId)
-                  }
-                  disabled={isLoading}
-                  className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full px-5 py-3 font-display text-sm font-extrabold text-white shadow-soft disabled:opacity-60"
-                  style={{ backgroundColor: popular ? EMAS : HIJAU }}
+                🎉 KALI Dah Bersedia
+              </span>
+              <h1 className="mt-3 font-display text-3xl font-extrabold text-foreground md:text-4xl">
+                Aktifkan KALI untuk {fastpath.nama}
+              </h1>
+              <span
+                className="mt-3 inline-flex items-center gap-1 rounded-full bg-card px-4 py-1.5 font-display text-xs font-extrabold shadow-soft"
+                style={{ color: EMAS }}
+              >
+                Darjah {fastpath.darjah}
+              </span>
+              <p className="mt-3 text-sm text-muted-foreground md:text-base">
+                KALI akan mula mengenali tahap sebenar {fastpath.nama} dan menyesuaikan pembelajaran
+                berdasarkan kemahiran yang perlu diperkukuhkan.
+              </p>
+            </div>
+
+            {(() => {
+              const satu = PAKEJ_LIST.find((p) => p.id === "satu")!;
+              const isLoading = loading === "satu";
+              return (
+                <div
+                  className="mx-auto mt-10 w-full max-w-[420px] rounded-[2rem] bg-card p-8 shadow-card md:p-9"
+                  style={{ border: `2px solid ${HIJAU}22` }}
                 >
-                  {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
-                  {isLoading
-                    ? "Memproses…"
-                    : fastpath && p.id === "satu"
-                      ? `Bayar Sekarang untuk ${fastpath.nama}`
-                      : "Bayar Sekarang"}
-                </button>
+                  <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+                    Akses 1 Tahun · Darjah {fastpath.darjah}
+                  </p>
+                  <h2 className="mt-2 font-display text-2xl font-extrabold text-foreground">
+                    Akses Penuh Darjah {fastpath.darjah}
+                  </h2>
+                  <div className="mt-4">
+                    <p className="text-sm text-muted-foreground line-through">RM{HARGA_ASAL}</p>
+                    <p className="mt-1 font-display text-5xl font-extrabold" style={{ color: HIJAU }}>
+                      RM{satu.jumlahBayar}
+                      <span className="text-base font-bold text-muted-foreground">/tahun</span>
+                    </p>
+                  </div>
+                  <ul className="mt-6 space-y-2 text-sm text-foreground">
+                    <li className="flex gap-2"><Check className="h-4 w-4 shrink-0" style={{ color: HIJAU }} /> Belajar Bersama KALI</li>
+                    <li className="flex gap-2"><Check className="h-4 w-4 shrink-0" style={{ color: HIJAU }} /> Analisis kemahiran {fastpath.nama}</li>
+                    <li className="flex gap-2"><Check className="h-4 w-4 shrink-0" style={{ color: HIJAU }} /> Latihan mengikut tahap</li>
+                    <li className="flex gap-2"><Check className="h-4 w-4 shrink-0" style={{ color: HIJAU }} /> Akses semua aktiviti Darjah {fastpath.darjah}</li>
+                  </ul>
+                  <button
+                    type="button"
+                    onClick={() => void mulaBayar("satu", [fastpath.darjah])}
+                    disabled={isLoading}
+                    className="mt-7 inline-flex w-full items-center justify-center gap-2 rounded-full px-5 py-3.5 font-display text-sm font-extrabold text-white shadow-soft disabled:opacity-60"
+                    style={{ backgroundColor: HIJAU }}
+                  >
+                    {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
+                    {isLoading
+                      ? "Memproses…"
+                      : `Aktifkan KALI untuk ${fastpath.nama} — RM${satu.jumlahBayar}`}
+                  </button>
+                </div>
+              );
+            })()}
+
+            <div className="mt-6 text-center">
+              <button
+                type="button"
+                onClick={() => setShowFamilyPakej((v) => !v)}
+                className="text-sm font-bold text-muted-foreground underline underline-offset-4 hover:text-foreground"
+              >
+                Ada lebih daripada seorang anak? Lihat pakej keluarga →
+              </button>
+            </div>
+
+            {showFamilyPakej && (
+              <div className="mt-8 grid gap-6 md:grid-cols-2">
+                {PAKEJ_LIST.filter((p) => p.id !== "satu").map((p) => renderPakejCard(p))}
               </div>
-            );
-          })}
-        </div>
+            )}
+          </>
+        ) : (
+          <>
+            <div className="text-center">
+              <span
+                className="inline-flex items-center gap-2 rounded-full bg-card px-4 py-1.5 font-display text-xs font-bold shadow-soft"
+                style={{ color: HIJAU }}
+              >
+                <Star className="h-3.5 w-3.5" /> Harga 1 Tahun Penuh
+              </span>
+              <span className="mt-2 inline-flex items-center gap-1 rounded-full bg-amber-100 px-3 py-1 text-xs font-extrabold text-amber-700">
+                🚀 Harga Beta
+              </span>
+              <h1 className="mt-3 font-display text-4xl font-extrabold text-foreground md:text-5xl">
+                Pilih Pakej Anda
+              </h1>
+              <p className="mt-3 text-base text-muted-foreground">
+                Harga asal: <span className="line-through">RM{HARGA_ASAL}/darjah</span> — kini jauh lebih murah!
+              </p>
+            </div>
+
+            <div className="mt-10 grid gap-6 md:grid-cols-3">
+              {PAKEJ_LIST.map((p) => renderPakejCard(p))}
+            </div>
+          </>
+        )}
+
 
         <div className="mt-12 rounded-3xl bg-muted/40 p-6 text-center">
           <p className="font-display text-sm font-extrabold text-foreground">
