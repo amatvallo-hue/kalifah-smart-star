@@ -567,53 +567,79 @@ function DarjahDashboard() {
       <SiteHeader stars={mata} userName={firstName} onLogout={handleLogout} />
 
       <main className="container mx-auto px-4 py-6">
-        {/* Hero — padat */}
-        <section className="relative overflow-hidden rounded-2xl bg-gradient-hero px-5 py-4 shadow-card md:px-7 md:py-5">
-          <div className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-primary/15 blur-3xl" />
-          <div className="relative flex flex-wrap items-center justify-between gap-3">
-            <div className="min-w-0">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-card px-3 py-1 font-display text-[11px] font-bold text-primary shadow-soft">
-                <Sparkles className="h-3 w-3" />
-                Assalamualaikum
-              </span>
-              <h1 className="mt-1.5 font-display text-2xl font-extrabold leading-tight text-foreground md:text-3xl">
-                Selamat datang, <span className="text-primary">{firstName}</span>! 🌟
-              </h1>
-              <p className="mt-0.5 text-sm text-muted-foreground">
-                {isChild ? "Sedia sambung belajar hari ni?" : "Pantau pembelajaran anak anda di sini."}
-              </p>
-            </div>
-            <div className="flex flex-wrap items-center gap-2">
-              {isChild && darjahMurid && (
-                <Link
-                  to="/darjah/$darjahId"
-                  params={{ darjahId: darjahMurid }}
-                  className="inline-flex items-center gap-2 rounded-full bg-gradient-primary px-5 py-2.5 font-display text-sm font-extrabold text-primary-foreground shadow-soft transition hover:opacity-90"
-                >
-                  Sambung Belajar
-                  <ArrowRight className="h-4 w-4" />
-                </Link>
-              )}
+        {isChild && kaliCadangan ? (
+          <div className="flex flex-wrap items-center justify-between gap-2 py-1">
+            <p className="text-sm font-bold text-muted-foreground">
+              Assalamualaikum, <span className="text-foreground">{firstName}</span>
+            </p>
+            <div className="flex items-center gap-2">
               <button
                 type="button"
                 onClick={() => setPakejOpen(true)}
-                className="inline-flex items-center gap-1.5 rounded-full bg-card/80 px-3 py-1.5 font-display text-xs font-bold text-foreground/80 shadow-soft transition hover:text-primary"
+                className="inline-flex items-center gap-1.5 rounded-full bg-muted px-3 py-1.5 font-display text-xs font-bold text-foreground/80 transition hover:text-primary"
               >
                 <Star className="h-3.5 w-3.5" />
                 Pakej
               </button>
               {pakejOpen && <PakejModal onClose={() => setPakejOpen(false)} />}
-
               <button
                 onClick={handleLogout}
-                className="inline-flex items-center gap-1.5 rounded-full bg-card/80 px-3 py-1.5 font-display text-xs font-bold text-muted-foreground shadow-soft transition hover:text-destructive"
+                className="inline-flex items-center gap-1.5 rounded-full bg-muted px-3 py-1.5 font-display text-xs font-bold text-muted-foreground transition hover:text-destructive"
               >
                 <LogOut className="h-3.5 w-3.5" />
                 Log Keluar
               </button>
             </div>
           </div>
-        </section>
+        ) : (
+          /* Hero — padat */
+          <section className="relative overflow-hidden rounded-2xl bg-gradient-hero px-5 py-4 shadow-card md:px-7 md:py-5">
+            <div className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-primary/15 blur-3xl" />
+            <div className="relative flex flex-wrap items-center justify-between gap-3">
+              <div className="min-w-0">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-card px-3 py-1 font-display text-[11px] font-bold text-primary shadow-soft">
+                  <Sparkles className="h-3 w-3" />
+                  Assalamualaikum
+                </span>
+                <h1 className="mt-1.5 font-display text-2xl font-extrabold leading-tight text-foreground md:text-3xl">
+                  Selamat datang, <span className="text-primary">{firstName}</span>! 🌟
+                </h1>
+                <p className="mt-0.5 text-sm text-muted-foreground">
+                  {isChild ? "Sedia sambung belajar hari ni?" : "Pantau pembelajaran anak anda di sini."}
+                </p>
+              </div>
+              <div className="flex flex-wrap items-center gap-2">
+                {isChild && darjahMurid && (
+                  <Link
+                    to="/darjah/$darjahId"
+                    params={{ darjahId: darjahMurid }}
+                    className="inline-flex items-center gap-2 rounded-full bg-gradient-primary px-5 py-2.5 font-display text-sm font-extrabold text-primary-foreground shadow-soft transition hover:opacity-90"
+                  >
+                    Sambung Belajar
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+                )}
+                <button
+                  type="button"
+                  onClick={() => setPakejOpen(true)}
+                  className="inline-flex items-center gap-1.5 rounded-full bg-card/80 px-3 py-1.5 font-display text-xs font-bold text-foreground/80 shadow-soft transition hover:text-primary"
+                >
+                  <Star className="h-3.5 w-3.5" />
+                  Pakej
+                </button>
+                {pakejOpen && <PakejModal onClose={() => setPakejOpen(false)} />}
+
+                <button
+                  onClick={handleLogout}
+                  className="inline-flex items-center gap-1.5 rounded-full bg-card/80 px-3 py-1.5 font-display text-xs font-bold text-muted-foreground shadow-soft transition hover:text-destructive"
+                >
+                  <LogOut className="h-3.5 w-3.5" />
+                  Log Keluar
+                </button>
+              </div>
+            </div>
+          </section>
+        )}
 
         {isChild && kaliCadangan && (
           <KaliHeroCadangan cadangan={kaliCadangan} firstName={firstName} />
