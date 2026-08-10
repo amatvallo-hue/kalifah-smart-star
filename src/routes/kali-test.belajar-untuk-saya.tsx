@@ -466,6 +466,22 @@ function KaliBelajarUntukSayaPage() {
       });
       setHabisCadangan(false);
       setMulaSoalan(Date.now());
+      if (diagnosticMode && !diagStartedTrackedRef.current && user) {
+        diagStartedTrackedRef.current = true;
+        void supabase
+          .from("analytics_events")
+          .insert({
+            event_name: "diagnostic_started",
+            user_id: null,
+            metadata: {
+              landing_page: "daftar-kali",
+              auth_user_id: null,
+              child_user_id: user.id,
+              source: "same_device",
+            },
+          })
+          .then(() => {}, () => {});
+      }
     } catch (e: any) {
       console.error("KALI next question gagal:", e);
       setErrMsg(e?.message ?? "Ralat tidak diketahui");
