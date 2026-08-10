@@ -1091,7 +1091,7 @@ function ParentDashboard() {
                           <p className="text-sm text-muted-foreground">Memuatkan cadangan KALI...</p>
                         </div>
                       ) : anakPaid ? (
-                        <KaliInsightCard childUserId={anakAktif.child_user_id} namaAnak={anakAktif.nama} />
+                        <KaliInsightCard childUserId={anakAktif.child_user_id} namaAnak={anakAktif.nama} darjahAnak={anakAktif.darjah} />
                       ) : (
                         <KaliUpdateCard
                           childProfileId={anakAktif.id}
@@ -1803,15 +1803,20 @@ function FormTambahAnak({ onAdded }: { onAdded: () => void }) {
 function KaliInsightCard({
   childUserId,
   namaAnak,
+  darjahAnak,
 }: {
   childUserId: string;
   namaAnak: string;
+  darjahAnak?: string | null;
 }) {
   const [insight, setInsight] = useState<{
     micro_skill_nama: string;
     sebab: string;
     tindakan: string;
     confidence_level: string | null;
+    mastery_score: number | null;
+    total_attempts: number | null;
+    correct_attempts: number | null;
   } | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
@@ -1824,12 +1829,30 @@ function KaliInsightCard({
       setLoading(true);
       setError(false);
       try {
+        let darjah = darjahAnak ? Number(darjahAnak) : NaN;
+        if (!Number.isFinite(darjah) || darjah <= 0) {
+          const { data: prof } = await supabase
+            .from("child_profiles")
+            .select("darjah")
+            .eq("child_user_id", childUserId)
+            .maybeSingle();
+          darjah = Number((prof as { darjah?: string | number } | null)?.darjah);
+        }
         const { data, error: rpcError } = await supabase.rpc("kali_next_best_question", {
           p_student_id: childUserId,
-        });
+          ...(Number.isFinite(darjah) && darjah > 0 ? { p_darjah: Number(darjah) } : {}),
+        } as never);
         if (rpcError) throw rpcError;
         const row = (Array.isArray(data) ? data[0] : data) as
-          | { micro_skill_nama?: string; sebab?: string; tindakan?: string; confidence_level?: string | null }
+          | {
+              micro_skill_nama?: string;
+              sebab?: string;
+              tindakan?: string;
+              confidence_level?: string | null;
+              mastery_score?: number | null;
+              total_attempts?: number | null;
+              correct_attempts?: number | null;
+            }
           | undefined;
         if (mounted) {
           setInsight(
@@ -1839,6 +1862,9 @@ function KaliInsightCard({
                   sebab: row.sebab ?? "",
                   tindakan: row.tindakan ?? "",
                   confidence_level: row.confidence_level ?? null,
+                  mastery_score: row.mastery_score ?? null,
+                  total_attempts: row.total_attempts ?? null,
+                  correct_attempts: row.correct_attempts ?? null,
                 }
               : null,
           );
@@ -1855,7 +1881,7 @@ function KaliInsightCard({
     return () => {
       mounted = false;
     };
-  }, [childUserId]);
+  }, [childUserId, darjahAnak]);
 
   const badge =
     insight?.confidence_level === "HIGH"
@@ -1906,8 +1932,18 @@ function KaliInsightCard({
             KALI Sedang Bantu Kerana
           </p>
           <p className="mt-1 text-sm text-muted-foreground">
-            KALI sedang membantu {namaAnak} meningkatkan kemahiran {insight.micro_skill_nama} kerana prestasi terkini
-            menunjukkan kemahiran ini masih memerlukan lebih banyak latihan.
+            {insight.total_attempts != null && insight.correct_attempts != null ? (
+              <>
+                {namaAnak} menjawab salah {insight.total_attempts - insight.correct_attempts} daripada{" "}
+                {insight.total_attempts} soalan berkaitan {insight.micro_skill_nama}.
+                {insight.mastery_score != null ? ` Tahap penguasaan semasa: ${insight.mastery_score}%.` : ""}
+              </>
+            ) : (
+              <>
+                KALI sedang membantu {namaAnak} meningkatkan kemahiran {insight.micro_skill_nama} kerana prestasi
+                terkini menunjukkan kemahiran ini masih memerlukan lebih banyak latihan.
+              </>
+            )}
           </p>
 
           <hr className="my-3 border-t" style={{ borderColor: `${HIJAU}20` }} />
