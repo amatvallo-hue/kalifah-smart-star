@@ -435,9 +435,8 @@ function DaftarKaliPage() {
 
     if (data.session && data.user) {
       setParentId(data.user.id);
-      const { data: demoData } = await supabase.rpc("kali_get_demo_soalan", {
+      const { data: demoData } = await supabase.rpc("kali_get_demo_soalan_v2", {
         p_darjah: darjah,
-        p_limit: 8,
       });
       const soalanDemo = (Array.isArray(demoData) ? demoData : []) as DemoSoalan[];
       if (soalanDemo.length > 0) {
