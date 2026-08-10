@@ -29,6 +29,9 @@ export const Route = createFileRoute("/kali-test/belajar-untuk-saya")({
     ],
   }),
   ssr: false,
+  validateSearch: (search: Record<string, unknown>) => ({
+    src: typeof search.src === "string" ? search.src : undefined,
+  }),
   component: KaliBelajarUntukSayaPage,
 });
 
@@ -175,6 +178,7 @@ function KaliTeaseScreen({
 
 function KaliBelajarUntukSayaPage() {
   const navigate = useNavigate();
+  const search = Route.useSearch();
   const { user, loading } = useAuth();
   const mata = usePoints();
 
@@ -199,6 +203,8 @@ function KaliBelajarUntukSayaPage() {
   const [mulaSoalan, setMulaSoalan] = useState(() => Date.now());
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const sesiBonusAwardedRef = useRef(false);
+  const diagStartedTrackedRef = useRef(false);
+
 
   const [showWelcome, setShowWelcome] = useState(false);
   const [welcomeChecked, setWelcomeChecked] = useState(false);
@@ -228,6 +234,30 @@ function KaliBelajarUntukSayaPage() {
     if (shouldSkipChildGuard()) return;
     if (!loading && !user) navigate({ to: "/login" });
   }, [loading, user, navigate]);
+
+  // Funnel: link diagnostic diklik dari Telegram/WhatsApp
+  useEffect(() => {
+    const src = search.src;
+    if (!user) return;
+    if (src !== "telegram" && src !== "whatsapp") return;
+    if (typeof window === "undefined") return;
+    if (window.sessionStorage.getItem("kali_link_clicked_tracked") === "1") return;
+    window.sessionStorage.setItem("kali_link_clicked_tracked", "1");
+    void supabase
+      .from("analytics_events")
+      .insert({
+        event_name: "diagnostic_link_clicked",
+        user_id: null,
+        metadata: {
+          landing_page: "daftar-kali",
+          auth_user_id: null,
+          child_user_id: user.id,
+          source: src,
+        },
+      })
+      .then(() => {}, () => {});
+  }, [user, search.src]);
+
 
   useEffect(() => {
     if (!user) return;
@@ -436,6 +466,22 @@ function KaliBelajarUntukSayaPage() {
       });
       setHabisCadangan(false);
       setMulaSoalan(Date.now());
+      if (diagnosticMode && !diagStartedTrackedRef.current && user) {
+        diagStartedTrackedRef.current = true;
+        void supabase
+          .from("analytics_events")
+          .insert({
+            event_name: "diagnostic_started",
+            user_id: null,
+            metadata: {
+              landing_page: "daftar-kali",
+              auth_user_id: null,
+              child_user_id: user.id,
+              source: "same_device",
+            },
+          })
+          .then(() => {}, () => {});
+      }
     } catch (e: any) {
       console.error("KALI next question gagal:", e);
       setErrMsg(e?.message ?? "Ralat tidak diketahui");

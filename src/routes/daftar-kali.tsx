@@ -167,6 +167,8 @@ function DaftarKaliPage() {
   const [telegramLinkStatus, setTelegramLinkStatus] = useState<
     "sending" | "sent" | "gagal" | null
   >(null);
+  const [childUserId, setChildUserId] = useState<string | null>(null);
+  const [waStatus, setWaStatus] = useState<"idle" | "sending" | "gagal">("idle");
   const [demoSoalan, setDemoSoalan] = useState<DemoSoalan[]>([]);
   const [demoIndex, setDemoIndex] = useState(0);
   const [demoJawapanTerkumpul, setDemoJawapanTerkumpul] = useState<
@@ -249,6 +251,7 @@ function DaftarKaliPage() {
         setRalatAnak(result.mesej ?? "Gagal cipta akaun anak.");
         return;
       }
+      setChildUserId(result.userId ?? null);
       setKredensialAnak({
         username: result.username ?? "",
         password: result.generatedPassword ?? "",
@@ -299,7 +302,45 @@ function DaftarKaliPage() {
       access_token: kredensialAnak.session.access_token,
       refresh_token: kredensialAnak.session.refresh_token,
     });
+    const meta = {
+      landing_page: "daftar-kali",
+      auth_user_id: parentId,
+      child_user_id: childUserId,
+      source: "same_device",
+    };
+    void supabase
+      .from("analytics_events")
+      .insert([
+        { event_name: "diagnostic_link_sent", user_id: null, metadata: meta },
+        { event_name: "diagnostic_link_clicked", user_id: null, metadata: meta },
+      ])
+      .then(() => {}, () => {});
     navigate({ to: "/kali-test/belajar-untuk-saya" });
+  }
+
+  // Hantar link sesi anak melalui WhatsApp (magic-link dijana oleh edge function).
+  async function hantarLinkWhatsApp() {
+    if (!childUserId) return;
+    setWaStatus("sending");
+    try {
+      const { data, error: fnError } = await supabase.functions.invoke("kali-kirim-link-anak", {
+        body: { child_user_id: childUserId, channel: "whatsapp" },
+      });
+      const res = data as { success?: boolean; link?: string } | null;
+      if (fnError || !res?.success || !res.link) {
+        console.error("hantarLinkWhatsApp gagal:", fnError);
+        setWaStatus("gagal");
+        return;
+      }
+      const mesej = `Sesi KALI untuk ${namaAnak} dah sedia 🧠\nTekan link ini untuk mula. Tak perlu login.\n${res.link}`;
+      setWaStatus("idle");
+      if (typeof window !== "undefined") {
+        window.open(`https://wa.me/?text=${encodeURIComponent(mesej)}`, "_blank");
+      }
+    } catch (e) {
+      console.error("hantarLinkWhatsApp ralat:", e);
+      setWaStatus("gagal");
+    }
   }
 
   // Laluan pantas: parent terus ke pelan & harga (akaun anak dicipta di belakang).
@@ -313,6 +354,7 @@ function DaftarKaliPage() {
             "kali_fastpath_anak",
             JSON.stringify({
               nama: namaAnak,
+              child_user_id: result.userId ?? "",
               session: {
                 access_token: result.session.access_token,
                 refresh_token: result.session.refresh_token,
@@ -521,6 +563,23 @@ function DaftarKaliPage() {
                 tekan link tu — terus mula, tak perlu log masuk.
               </p>
             </div>
+          ) : null}
+          {childUserId ? (
+            <>
+              <button
+                type="button"
+                disabled={waStatus === "sending"}
+                onClick={() => void hantarLinkWhatsApp()}
+                className="mt-4 flex w-full items-center justify-center rounded-full border-2 border-primary px-6 py-3 font-display text-base font-extrabold text-primary hover:bg-primary/5 disabled:opacity-60"
+              >
+                {waStatus === "sending" ? "Menyediakan link…" : "📱 Hantar link KALI melalui WhatsApp"}
+              </button>
+              {waStatus === "gagal" ? (
+                <p className="mt-2 text-xs text-destructive">
+                  Gagal menyediakan link WhatsApp. Sila cuba lagi.
+                </p>
+              ) : null}
+            </>
           ) : null}
           <p className="mt-5 text-sm font-bold text-foreground">
             Atau mula sekarang di peranti ini:
