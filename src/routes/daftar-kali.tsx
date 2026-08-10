@@ -164,6 +164,9 @@ function DaftarKaliPage() {
   const [kredensialAnak, setKredensialAnak] = useState<
     { username: string; password: string; session: { access_token: string; refresh_token: string } | null } | null
   >(null);
+  const [telegramLinkStatus, setTelegramLinkStatus] = useState<
+    "sending" | "sent" | "gagal" | null
+  >(null);
   const [demoSoalan, setDemoSoalan] = useState<DemoSoalan[]>([]);
   const [demoIndex, setDemoIndex] = useState(0);
   const [demoJawapanTerkumpul, setDemoJawapanTerkumpul] = useState<
@@ -256,6 +259,21 @@ function DaftarKaliPage() {
             }
           : null,
       });
+
+      // Hantar magic-link sesi anak ke Telegram parent (sesi PARENT masih aktif)
+      if (result.userId) {
+        setTelegramLinkStatus("sending");
+        try {
+          const { data: fnData, error: fnError } = await supabase.functions.invoke(
+            "kali-kirim-link-anak",
+            { body: { child_user_id: result.userId } },
+          );
+          const ok = !fnError && (fnData as { success?: boolean } | null)?.success === true;
+          setTelegramLinkStatus(ok ? "sent" : "gagal");
+        } catch {
+          setTelegramLinkStatus("gagal");
+        }
+      }
     } catch (e) {
       console.error("selepasTelegram gagal:", e);
       setRalatAnak("Ralat rangkaian semasa cipta akaun anak.");
@@ -460,11 +478,29 @@ function DaftarKaliPage() {
           <h1 className="font-display text-2xl font-extrabold text-foreground">
             Akaun anak dah siap
           </h1>
-          <p className="mt-2 text-sm text-muted-foreground">
+          {telegramLinkStatus === "sending" ? (
+            <p className="mt-3 text-xs text-muted-foreground">Menghantar link ke Telegram...</p>
+          ) : null}
+          {telegramLinkStatus === "sent" ? (
+            <div className="mt-4 rounded-2xl border border-primary/30 bg-primary/5 p-4">
+              <p className="font-display text-base font-extrabold text-foreground">
+                📲 Link sesi KALI untuk {namaAnak} sudah dihantar ke Telegram anda!
+              </p>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Bila {namaAnak} dah bersedia (walaupun esok atau lain hari), buka Telegram dan
+                tekan link tu — terus mula, tak perlu log masuk.
+              </p>
+            </div>
+          ) : null}
+          <p className="mt-5 text-sm font-bold text-foreground">
+            Atau mula sekarang di peranti ini:
+          </p>
+          <p className="mt-1 text-sm text-muted-foreground">
             Simpan maklumat log masuk ini — anak akan perlukan untuk log masuk semula di peranti
             atau hari lain.
           </p>
           <div className="mt-4 space-y-3">
+
             {[
               { label: "Username", value: kredensialAnak.username },
               { label: "Password", value: kredensialAnak.password },
