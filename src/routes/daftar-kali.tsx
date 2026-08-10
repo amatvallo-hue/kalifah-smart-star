@@ -174,6 +174,7 @@ function DaftarKaliPage() {
   const [showDemo, setShowDemo] = useState(false);
   const [showDemoResult, setShowDemoResult] = useState(false);
   const [demoMula, setDemoMula] = useState(false);
+  const [demoLoading, setDemoLoading] = useState(false);
 
   function pilihDemo(huruf: string, soalanId: string) {
     if (demoPilih) return;
