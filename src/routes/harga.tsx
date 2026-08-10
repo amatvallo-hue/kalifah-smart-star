@@ -131,6 +131,62 @@ function HargaPage() {
     setPickerFor(pakej);
   }, []);
 
+  function renderPakejCard(p: (typeof PAKEJ_LIST)[number]) {
+    const popular = !!p.popular;
+    const isLoading = loading === p.id;
+    return (
+      <div
+        key={p.id}
+        className={`relative rounded-[2rem] bg-card p-7 shadow-card ${popular ? "md:scale-105" : ""}`}
+        style={{ border: popular ? `3px solid ${EMAS}` : `2px solid ${HIJAU}22` }}
+      >
+        {popular && (
+          <div
+            className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full px-4 py-1 font-display text-[10px] font-extrabold uppercase tracking-wider text-white shadow-soft"
+            style={{ backgroundColor: EMAS }}
+          >
+            ⭐ Paling Popular
+          </div>
+        )}
+        <h3 className="font-display text-xl font-extrabold text-foreground">{p.nama}</h3>
+        <div className="mt-3">
+          <p className="text-sm text-muted-foreground line-through">
+            RM{p.id === "bundle" ? HARGA_ASAL * 6 : HARGA_ASAL}{p.id === "perDarjah" ? "/darjah" : ""}
+          </p>
+          <p className="mt-1 font-display text-5xl font-extrabold" style={{ color: popular ? "#7a5300" : HIJAU }}>
+            RM{p.jumlahBayar}
+            <span className="text-base font-bold text-muted-foreground">
+              {p.id === "perDarjah" ? "/darjah" : ""}/tahun
+            </span>
+          </p>
+          {p.jimat && (
+            <p className="mt-1 text-sm font-extrabold" style={{ color: EMAS }}>
+              Jimat RM{p.jimat}!
+            </p>
+          )}
+        </div>
+        <p className="mt-3 text-sm text-muted-foreground">{p.deskripsi}</p>
+        <ul className="mt-5 space-y-2 text-sm text-foreground">
+          <li className="flex gap-2"><Check className="h-4 w-4 shrink-0" style={{ color: HIJAU }} /> Akses penuh nota, latih tubi, kuiz, game</li>
+          <li className="flex gap-2"><Check className="h-4 w-4 shrink-0" style={{ color: HIJAU }} /> Dashboard ibu bapa</li>
+          <li className="flex gap-2"><Check className="h-4 w-4 shrink-0" style={{ color: HIJAU }} /> Sijil automatik PDF</li>
+          <li className="flex gap-2"><Check className="h-4 w-4 shrink-0" style={{ color: HIJAU }} /> Streak & lencana</li>
+          {p.id === "bundle" && <li className="flex gap-2"><Check className="h-4 w-4 shrink-0" style={{ color: HIJAU }} /> Untuk semua anak (D1–D6)</li>}
+        </ul>
+        <button
+          type="button"
+          onClick={() => handleKlik(p.id as PakejId)}
+          disabled={isLoading}
+          className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full px-5 py-3 font-display text-sm font-extrabold text-white shadow-soft disabled:opacity-60"
+          style={{ backgroundColor: popular ? EMAS : HIJAU }}
+        >
+          {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
+          {isLoading ? "Memproses…" : "Bayar Sekarang"}
+        </button>
+      </div>
+    );
+  }
+
 
   return (
     <div className="min-h-screen bg-background">
