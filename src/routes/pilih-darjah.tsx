@@ -245,7 +245,7 @@ function KaliHeroCadangan({
 
       <div className="mt-3 rounded-3xl border border-border/60 bg-card p-6 shadow-card">
         <div className="flex items-start gap-3">
-          <KaliMascotFace />
+          <KaliMascotFace tier={tier} />
           <div className="min-w-0 flex-1">
             <span className="inline-block rounded-2xl border border-primary/20 bg-primary/10 px-3 py-1.5 text-xs font-bold text-primary">
               {bubble}
