@@ -47,10 +47,21 @@ type DemoSoalan = {
   micro_skill_id: string | null;
 };
 
+type DemoSkill = {
+  micro_skill_id: string;
+  micro_skill_nama: string;
+  betul: number;
+  total: number;
+  ratio: number;
+  tier: "HIJAU" | "KUNING" | "MERAH";
+};
+
 type DemoResult = {
   betul_count: number;
   total_count: number;
-  skill_salah: string[];
+  skills: DemoSkill[];
+  insight_text: string | null;
+  next_text: string;
 };
 
 
