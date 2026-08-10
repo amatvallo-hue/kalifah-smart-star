@@ -564,6 +564,23 @@ function DaftarKaliPage() {
               </p>
             </div>
           ) : null}
+          {childUserId ? (
+            <>
+              <button
+                type="button"
+                disabled={waStatus === "sending"}
+                onClick={() => void hantarLinkWhatsApp()}
+                className="mt-4 flex w-full items-center justify-center rounded-full border-2 border-primary px-6 py-3 font-display text-base font-extrabold text-primary hover:bg-primary/5 disabled:opacity-60"
+              >
+                {waStatus === "sending" ? "Menyediakan link…" : "📱 Hantar link KALI melalui WhatsApp"}
+              </button>
+              {waStatus === "gagal" ? (
+                <p className="mt-2 text-xs text-destructive">
+                  Gagal menyediakan link WhatsApp. Sila cuba lagi.
+                </p>
+              ) : null}
+            </>
+          ) : null}
           <p className="mt-5 text-sm font-bold text-foreground">
             Atau mula sekarang di peranti ini:
           </p>
