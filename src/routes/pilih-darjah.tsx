@@ -209,17 +209,19 @@ function KaliHeroCadangan({
       : `${firstName}, KALI dah sediakan sesuatu yang baharu untuk kamu!`;
 
   const subteks = isRedYellow
-    ? `Berdasarkan jawapan sebelum ini, KALI memilih latihan ${nama} yang sesuai untuk ${firstName}.`
+    ? `KALI telah memilih latihan ${nama} yang sesuai untuk sesi ${firstName} hari ini.`
     : tier === "GREEN"
       ? `${firstName} dah lama tak sentuh kemahiran ni — KALI nak pastikan ia kekal diingati.`
       : `KALI akan mulakan dengan kemahiran yang sesuai untuk tahap ${firstName} sekarang.`;
+
+  const displayMastery = cadangan.mastery_score != null ? Math.round(cadangan.mastery_score) : null;
 
   const bukti = isRedYellow
     ? adaAttempts
       ? `Berdasarkan jawapan ${firstName} sebelum ini, KALI mendapati topik ini masih perlu diperkukuhkan. KALI dah memilih 10 soalan untuk sesi hari ini.`
       : `${firstName} masih memerlukan lebih latihan untuk topik ini.`
     : tier === "GREEN"
-      ? `${firstName} dah kuasai kemahiran ini sebelum ini (tahap penguasaan ${cadangan.mastery_score}%), tapi sudah agak lama tak diulang.`
+      ? `${firstName} dah kuasai kemahiran ini sebelum ini (tahap penguasaan ${displayMastery}%), tapi sudah agak lama tak diulang.`
       : `Kemahiran baharu — ${firstName} belum cuba ni lagi. KALI akan mula dengan asas dahulu.`;
 
 
@@ -299,7 +301,7 @@ function KaliHeroCadangan({
                   Penguasaan Semasa
                 </p>
                 <p className="mt-0.5 font-display text-2xl font-extrabold text-foreground">
-                  {cadangan.mastery_score}%
+                  {displayMastery}%
                 </p>
                 <p className="text-xs font-bold text-muted-foreground">
                   {cadangan.mastery_score >= 70
@@ -345,9 +347,9 @@ function KaliHeroCadangan({
                 daripada {total} soalan {nama}.
               </li>
             )}
-            {cadangan.mastery_score != null && (
+            {displayMastery != null && (
               <li>
-                Penguasaan semasa {firstName} ialah {cadangan.mastery_score}%.
+                Penguasaan semasa {firstName} ialah {displayMastery}%.
               </li>
             )}
             {cadangan.unlocks_skill_nama && (
