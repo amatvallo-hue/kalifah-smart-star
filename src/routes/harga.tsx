@@ -144,6 +144,28 @@ function HargaPage() {
       </header>
 
       <main className="container mx-auto px-4 py-12">
+        {fastpath && (
+          <div className="mx-auto mb-8 max-w-2xl text-center">
+            <span
+              className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 font-display text-xs font-extrabold text-white shadow-soft"
+              style={{ backgroundColor: HIJAU }}
+            >
+              🎉 KALI Dah Bersedia
+            </span>
+            <h2 className="mt-3 font-display text-2xl font-extrabold text-foreground md:text-3xl">
+              Teruskan dengan KALI untuk {fastpath.nama}
+            </h2>
+            <span
+              className="mt-3 inline-flex items-center gap-1 rounded-full bg-card px-4 py-1.5 font-display text-xs font-extrabold shadow-soft"
+              style={{ color: EMAS }}
+            >
+              Darjah {fastpath.darjah}
+            </span>
+            <p className="mt-3 text-sm text-muted-foreground md:text-base">
+              KALI akan mula mengenali tahap sebenar {fastpath.nama} dan memilih pembelajaran berdasarkan kemahiran yang perlu dikuasainya.
+            </p>
+          </div>
+        )}
         <div className="text-center">
           <span
             className="inline-flex items-center gap-2 rounded-full bg-card px-4 py-1.5 font-display text-xs font-bold shadow-soft"
@@ -155,7 +177,7 @@ function HargaPage() {
             🚀 Harga Beta
           </span>
           <h1 className="mt-3 font-display text-4xl font-extrabold text-foreground md:text-5xl">
-            Pilih Pakej Anda
+            {fastpath ? `Pilih pelan untuk ${fastpath.nama}` : "Pilih Pakej Anda"}
           </h1>
           <p className="mt-3 text-base text-muted-foreground">
             Harga asal: <span className="line-through">RM{HARGA_ASAL}/darjah</span> — kini jauh lebih murah!
