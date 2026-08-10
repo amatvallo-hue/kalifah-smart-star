@@ -164,6 +164,9 @@ function DaftarKaliPage() {
   const [kredensialAnak, setKredensialAnak] = useState<
     { username: string; password: string; session: { access_token: string; refresh_token: string } | null } | null
   >(null);
+  const [telegramLinkStatus, setTelegramLinkStatus] = useState<
+    "sending" | "sent" | "gagal" | null
+  >(null);
   const [demoSoalan, setDemoSoalan] = useState<DemoSoalan[]>([]);
   const [demoIndex, setDemoIndex] = useState(0);
   const [demoJawapanTerkumpul, setDemoJawapanTerkumpul] = useState<
