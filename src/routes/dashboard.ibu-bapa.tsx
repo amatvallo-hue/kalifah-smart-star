@@ -1932,8 +1932,18 @@ function KaliInsightCard({
             KALI Sedang Bantu Kerana
           </p>
           <p className="mt-1 text-sm text-muted-foreground">
-            KALI sedang membantu {namaAnak} meningkatkan kemahiran {insight.micro_skill_nama} kerana prestasi terkini
-            menunjukkan kemahiran ini masih memerlukan lebih banyak latihan.
+            {insight.total_attempts != null && insight.correct_attempts != null ? (
+              <>
+                {namaAnak} menjawab salah {insight.total_attempts - insight.correct_attempts} daripada{" "}
+                {insight.total_attempts} soalan berkaitan {insight.micro_skill_nama}.
+                {insight.mastery_score != null ? ` Tahap penguasaan semasa: ${insight.mastery_score}%.` : ""}
+              </>
+            ) : (
+              <>
+                KALI sedang membantu {namaAnak} meningkatkan kemahiran {insight.micro_skill_nama} kerana prestasi
+                terkini menunjukkan kemahiran ini masih memerlukan lebih banyak latihan.
+              </>
+            )}
           </p>
 
           <hr className="my-3 border-t" style={{ borderColor: `${HIJAU}20` }} />
