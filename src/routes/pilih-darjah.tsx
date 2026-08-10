@@ -300,10 +300,11 @@ function KaliHeroCadangan({
         </div>
 
         <div
-          className="mt-5 w-full border-t pt-5 md:ml-5 md:mt-0 md:w-56 md:border-l md:border-t-0 md:pl-5 md:pt-0"
+          className="mt-5 w-full md:ml-5 md:mt-0 md:w-56 md:self-center md:my-2"
           style={{
-            backgroundColor: "rgba(255, 255, 255, 0.65)",
-            borderColor: "#CDEBDD",
+            backgroundColor: "rgba(255, 255, 255, 0.55)",
+            borderRadius: "16px",
+            padding: "20px 24px",
           }}
         >
           {cadangan.mastery_score != null ? (
