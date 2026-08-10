@@ -178,6 +178,7 @@ function KaliTeaseScreen({
 
 function KaliBelajarUntukSayaPage() {
   const navigate = useNavigate();
+  const search = Route.useSearch();
   const { user, loading } = useAuth();
   const mata = usePoints();
 
