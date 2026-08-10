@@ -203,24 +203,25 @@ function KaliHeroCadangan({
   const isRedYellow = tier === "RED" || tier === "YELLOW";
 
   const tajuk = isRedYellow
-    ? `${firstName}, KALI dah jumpa apa yang perlu kamu kuatkan hari ini!`
+    ? `${firstName}, KALI dah tahu apa yang perlu kamu kuatkan!`
     : tier === "GREEN"
       ? `${firstName}, masa untuk ulang kaji sikit!`
       : `${firstName}, KALI dah sediakan sesuatu yang baharu untuk kamu!`;
 
   const subteks = isRedYellow
-    ? `Berdasarkan jawapan ${firstName} sebelum ini, KALI memilih latihan yang paling sesuai untuk membantu ${firstName} menguasai ${nama}.`
+    ? `Berdasarkan jawapan sebelum ini, KALI memilih latihan ${nama} yang sesuai untuk ${firstName}.`
     : tier === "GREEN"
       ? `${firstName} dah lama tak sentuh kemahiran ni — KALI nak pastikan ia kekal diingati.`
       : `KALI akan mulakan dengan kemahiran yang sesuai untuk tahap ${firstName} sekarang.`;
 
   const bukti = isRedYellow
     ? adaAttempts
-      ? `${firstName} tersalah ${(total as number) - (betul as number)} daripada ${total} soalan berkaitan kemahiran ini. KALI akan mulakan dengan latihan pengukuhan.`
+      ? `KALI mendapati ${(total as number) - (betul as number)} daripada ${total} soalan ${nama} masih perlukan latihan. KALI akan mulakan dengan latihan pengukuhan.`
       : `${firstName} masih memerlukan lebih latihan untuk kemahiran ini.`
     : tier === "GREEN"
       ? `${firstName} dah kuasai kemahiran ini sebelum ini (tahap penguasaan ${cadangan.mastery_score}%), tapi sudah agak lama tak diulang.`
       : `Kemahiran baharu — ${firstName} belum cuba ni lagi. KALI akan mula dengan asas dahulu.`;
+
 
   const bubble =
     tier === "RED"
