@@ -115,8 +115,14 @@ function HargaPage() {
       .map((s) => Number(s.trim()))
       .filter((n) => Number.isFinite(n) && validIds.has(n));
 
+    const nama = (params.get("nama") ?? "").trim().slice(0, 60);
+
     if (pakej === "bundle") {
       void mulaBayar("bundle", [1, 2, 3, 4, 5, 6]);
+      return;
+    }
+    if (pakej === "satu" && nama && darjah.length === 1) {
+      setFastpath({ nama, darjah: darjah[0] });
       return;
     }
     setPickerInitial(darjah);
