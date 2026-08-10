@@ -126,27 +126,66 @@ type KaliCadangan = {
   unlocks_skill_nama: string | null;
 };
 
-function KaliMascotFace() {
+function KaliMascotFace({ tier }: { tier?: string }) {
+  const eyeR = tier === "BLUE" ? 6.5 : 5;
+  const pupilR = tier === "BLUE" ? 3 : 2.2;
+  const mulut =
+    tier === "BLUE"
+      ? "M21 39c4 7 18 7 22 0Z"
+      : tier === "RED"
+        ? "M23 42c3 3 15 3 18 0"
+        : tier === "GREEN"
+          ? "M20 40c4 6 20 6 24 0"
+          : "M22 41c3.5 4.5 16.5 4.5 20 0";
+  const mulutFilled = tier === "BLUE";
   return (
-    <svg viewBox="0 0 64 64" className="h-14 w-14 shrink-0 md:h-16 md:w-16" aria-hidden="true">
+    <svg viewBox="0 0 64 64" className="h-20 w-20 shrink-0 md:h-24 md:w-24" aria-hidden="true">
       <path
         d="M32 4c15 0 26 10 26 25 0 17-11 31-26 31S6 46 6 29C6 14 17 4 32 4Z"
         fill="hsl(var(--primary))"
       />
-      <circle cx="24" cy="28" r="5" fill="#fff" />
-      <circle cx="42" cy="28" r="5" fill="#fff" />
-      <circle cx="24" cy="29" r="2.2" fill="hsl(var(--primary))" />
-      <circle cx="42" cy="29" r="2.2" fill="hsl(var(--primary))" />
+      {tier === "GREEN" ? (
+        <>
+          <path
+            d="M19 30c2.5-4 7.5-4 10 0"
+            stroke="#fff"
+            strokeWidth="3"
+            strokeLinecap="round"
+            fill="none"
+          />
+          <path
+            d="M37 30c2.5-4 7.5-4 10 0"
+            stroke="#fff"
+            strokeWidth="3"
+            strokeLinecap="round"
+            fill="none"
+          />
+        </>
+      ) : (
+        <>
+          <circle cx="24" cy="28" r={eyeR} fill="#fff" />
+          <circle cx="42" cy="28" r={eyeR} fill="#fff" />
+          <circle cx="24" cy="29" r={pupilR} fill="hsl(var(--primary))" />
+          <circle cx="42" cy="29" r={pupilR} fill="hsl(var(--primary))" />
+        </>
+      )}
+      {tier === "RED" && (
+        <>
+          <path d="M18 19l10 3" stroke="#fff" strokeWidth="2.6" strokeLinecap="round" />
+          <path d="M46 19l-10 3" stroke="#fff" strokeWidth="2.6" strokeLinecap="round" />
+        </>
+      )}
       <path
-        d="M22 41c3.5 4.5 16.5 4.5 20 0"
+        d={mulut}
         stroke="#fff"
         strokeWidth="3.5"
         strokeLinecap="round"
-        fill="none"
+        fill={mulutFilled ? "#fff" : "none"}
       />
     </svg>
   );
 }
+
 
 function KaliHeroCadangan({
   cadangan,
@@ -164,24 +203,25 @@ function KaliHeroCadangan({
   const isRedYellow = tier === "RED" || tier === "YELLOW";
 
   const tajuk = isRedYellow
-    ? `${firstName}, KALI dah jumpa apa yang perlu kamu kuatkan hari ini!`
+    ? `${firstName}, KALI dah tahu apa yang perlu kamu kuatkan!`
     : tier === "GREEN"
       ? `${firstName}, masa untuk ulang kaji sikit!`
       : `${firstName}, KALI dah sediakan sesuatu yang baharu untuk kamu!`;
 
   const subteks = isRedYellow
-    ? `Berdasarkan jawapan ${firstName} sebelum ini, KALI memilih latihan yang paling sesuai untuk membantu ${firstName} menguasai ${nama}.`
+    ? `Berdasarkan jawapan sebelum ini, KALI memilih latihan ${nama} yang sesuai untuk ${firstName}.`
     : tier === "GREEN"
       ? `${firstName} dah lama tak sentuh kemahiran ni — KALI nak pastikan ia kekal diingati.`
       : `KALI akan mulakan dengan kemahiran yang sesuai untuk tahap ${firstName} sekarang.`;
 
   const bukti = isRedYellow
     ? adaAttempts
-      ? `${firstName} tersalah ${(total as number) - (betul as number)} daripada ${total} soalan berkaitan kemahiran ini. KALI akan mulakan dengan latihan pengukuhan.`
+      ? `KALI mendapati ${(total as number) - (betul as number)} daripada ${total} soalan ${nama} masih perlukan latihan. KALI akan mulakan dengan latihan pengukuhan.`
       : `${firstName} masih memerlukan lebih latihan untuk kemahiran ini.`
     : tier === "GREEN"
       ? `${firstName} dah kuasai kemahiran ini sebelum ini (tahap penguasaan ${cadangan.mastery_score}%), tapi sudah agak lama tak diulang.`
       : `Kemahiran baharu — ${firstName} belum cuba ni lagi. KALI akan mula dengan asas dahulu.`;
+
 
   const bubble =
     tier === "RED"
@@ -205,7 +245,7 @@ function KaliHeroCadangan({
 
       <div className="mt-3 rounded-3xl border border-border/60 bg-card p-6 shadow-card">
         <div className="flex items-start gap-3">
-          <KaliMascotFace />
+          <KaliMascotFace tier={tier} />
           <div className="min-w-0 flex-1">
             <span className="inline-block rounded-2xl border border-primary/20 bg-primary/10 px-3 py-1.5 text-xs font-bold text-primary">
               {bubble}
@@ -244,7 +284,7 @@ function KaliHeroCadangan({
             onClick={() => setDialogOpen(true)}
             className="text-xs font-bold text-muted-foreground hover:underline"
           >
-            Kenapa KALI pilih ini?
+            Kenapa KALI pilih latihan ini?
           </button>
         </div>
       </div>
@@ -257,23 +297,31 @@ function KaliHeroCadangan({
           <ul className="list-disc space-y-2 pl-5 text-sm">
             {adaAttempts && (
               <li>
-                {firstName} menjawab salah {(total as number) - (betul as number)} daripada {total}{" "}
-                soalan {nama}.
+                {firstName} masih perlukan latihan untuk {(total as number) - (betul as number)}{" "}
+                daripada {total} soalan {nama}.
               </li>
             )}
             {cadangan.mastery_score != null && (
-              <li>Tahap penguasaan semasa: {cadangan.mastery_score}%.</li>
+              <li>
+                Penguasaan semasa {firstName} ialah {cadangan.mastery_score}%.
+              </li>
             )}
             {cadangan.unlocks_skill_nama && (
               <li>
-                Kemahiran ini diperlukan sebelum belajar &quot;{cadangan.unlocks_skill_nama}&quot;.
+                {nama} perlu dikuasai sebelum {firstName} belajar &quot;
+                {cadangan.unlocks_skill_nama}&quot;.
               </li>
             )}
             {tier === "BLUE" && (
               <li>Prasyarat (jika ada) untuk kemahiran ini sudah dikuasai {firstName}.</li>
             )}
-            <li>KALI memilih soalan yang belum pernah {firstName} jawab.</li>
+            <li>KALI memilih soalan baharu yang belum pernah {firstName} jawab.</li>
+            <li>
+              Selepas latihan ini, KALI akan semak semula perkembangan {firstName} dan menentukan
+              latihan seterusnya.
+            </li>
           </ul>
+
         </DialogContent>
       </Dialog>
     </section>
