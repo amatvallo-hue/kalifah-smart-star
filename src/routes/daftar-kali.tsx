@@ -315,7 +315,7 @@ function DaftarKaliPage() {
         { event_name: "diagnostic_link_clicked", user_id: null, metadata: meta },
       ])
       .then(() => {}, () => {});
-    navigate({ to: "/kali-test/belajar-untuk-saya" });
+    navigate({ to: "/kali-test/belajar-untuk-saya", search: { src: "same_device" } });
   }
 
   // Hantar link sesi anak melalui WhatsApp (magic-link dijana oleh edge function).
