@@ -29,10 +29,30 @@ const DARJAH_OPTIONS = [
 
 const STEPS = [
   { num: 1, label: "Daftar Akaun" },
-  { num: 2, label: "Sambung Telegram" },
-  { num: 3, label: "Sesi Diagnostic KALI" },
-  { num: 4, label: "Cadangan KALI Hari Ini" },
+  { num: 2, label: "Demo KALI" },
+  { num: 3, label: "Sambung Telegram" },
+  { num: 4, label: "Sesi Diagnostic KALI" },
+  { num: 5, label: "Cadangan KALI Hari Ini" },
 ];
+
+type DemoSoalan = {
+  soalan_id: string;
+  subjek: string | null;
+  soalan: string;
+  pilihan_a: string | null;
+  pilihan_b: string | null;
+  pilihan_c: string | null;
+  pilihan_d: string | null;
+  micro_skill_nama: string | null;
+  micro_skill_id: string | null;
+};
+
+type DemoResult = {
+  betul_count: number;
+  total_count: number;
+  skill_salah: string[];
+};
+
 
 function StepProgress({ active }: { active: number }) {
   return (
