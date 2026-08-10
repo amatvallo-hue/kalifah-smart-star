@@ -126,65 +126,6 @@ type KaliCadangan = {
   unlocks_skill_nama: string | null;
 };
 
-function KaliMascotFace({ tier }: { tier?: string }) {
-  const eyeR = tier === "BLUE" ? 6.5 : 5;
-  const pupilR = tier === "BLUE" ? 3 : 2.2;
-  const mulut =
-    tier === "BLUE"
-      ? "M21 39c4 7 18 7 22 0Z"
-      : tier === "RED"
-        ? "M23 42c3 3 15 3 18 0"
-        : tier === "GREEN"
-          ? "M20 40c4 6 20 6 24 0"
-          : "M22 41c3.5 4.5 16.5 4.5 20 0";
-  const mulutFilled = tier === "BLUE";
-  return (
-    <svg viewBox="0 0 64 64" className="h-20 w-20 shrink-0 md:h-24 md:w-24" aria-hidden="true">
-      <path
-        d="M32 4c15 0 26 10 26 25 0 17-11 31-26 31S6 46 6 29C6 14 17 4 32 4Z"
-        fill="hsl(var(--primary))"
-      />
-      {tier === "GREEN" ? (
-        <>
-          <path
-            d="M19 30c2.5-4 7.5-4 10 0"
-            stroke="#fff"
-            strokeWidth="3"
-            strokeLinecap="round"
-            fill="none"
-          />
-          <path
-            d="M37 30c2.5-4 7.5-4 10 0"
-            stroke="#fff"
-            strokeWidth="3"
-            strokeLinecap="round"
-            fill="none"
-          />
-        </>
-      ) : (
-        <>
-          <circle cx="24" cy="28" r={eyeR} fill="#fff" />
-          <circle cx="42" cy="28" r={eyeR} fill="#fff" />
-          <circle cx="24" cy="29" r={pupilR} fill="hsl(var(--primary))" />
-          <circle cx="42" cy="29" r={pupilR} fill="hsl(var(--primary))" />
-        </>
-      )}
-      {tier === "RED" && (
-        <>
-          <path d="M18 19l10 3" stroke="#fff" strokeWidth="2.6" strokeLinecap="round" />
-          <path d="M46 19l-10 3" stroke="#fff" strokeWidth="2.6" strokeLinecap="round" />
-        </>
-      )}
-      <path
-        d={mulut}
-        stroke="#fff"
-        strokeWidth="3.5"
-        strokeLinecap="round"
-        fill={mulutFilled ? "#fff" : "none"}
-      />
-    </svg>
-  );
-}
 
 
 function KaliHeroCadangan({
@@ -255,7 +196,11 @@ function KaliHeroCadangan({
       >
         <div className="min-w-0 flex-1">
           <div className="flex items-start gap-3">
-            <KaliMascotFace tier={tier} />
+            <img
+              src="https://pgpkqbdyxoejwvubluqq.supabase.co/storage/v1/object/public/kali-imej/KALI2.png"
+              alt="Maskot KALI"
+              className="h-20 w-20 shrink-0 object-contain md:h-24 md:w-24"
+            />
             <div className="min-w-0 flex-1">
               <span className="inline-block rounded-2xl border border-primary/20 bg-primary/10 px-3 py-1.5 text-xs font-bold text-primary">
                 {bubble}
