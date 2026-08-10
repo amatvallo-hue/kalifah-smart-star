@@ -1,5 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { Lock, Sparkles, Star, LogOut, ArrowRight, Trophy, BookOpen, FileText, Target, TrendingUp, CalendarDays, UserPlus, X } from "lucide-react";
+import { Lock, Sparkles, Star, LogOut, ArrowRight, Trophy, BookOpen, FileText, Target, TrendingUp, CalendarDays, UserPlus, X, Clock } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useEffect, useMemo, useState } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
@@ -107,7 +108,180 @@ function PakejModal({ onClose }: { onClose: () => void }) {
 }
 
 
+type KaliCadangan = {
+  micro_skill_id: string;
+  micro_skill_kod: string;
+  micro_skill_nama: string;
+  micro_skill_subjek: string;
+  tier: "RED" | "YELLOW" | "GREEN" | "BLUE";
+  sebab: string | null;
+  tindakan: string | null;
+  confidence_level: string | null;
+  question_source_table: string | null;
+  question_source_id: string | null;
+  mastery_score: number | null;
+  total_attempts: number | null;
+  correct_attempts: number | null;
+  last_practiced_at: string | null;
+  unlocks_skill_nama: string | null;
+};
+
+function KaliMascotFace() {
+  return (
+    <svg viewBox="0 0 64 64" className="h-14 w-14 shrink-0 md:h-16 md:w-16" aria-hidden="true">
+      <path
+        d="M32 4c15 0 26 10 26 25 0 17-11 31-26 31S6 46 6 29C6 14 17 4 32 4Z"
+        fill="hsl(var(--primary))"
+      />
+      <circle cx="24" cy="28" r="5" fill="#fff" />
+      <circle cx="42" cy="28" r="5" fill="#fff" />
+      <circle cx="24" cy="29" r="2.2" fill="hsl(var(--primary))" />
+      <circle cx="42" cy="29" r="2.2" fill="hsl(var(--primary))" />
+      <path
+        d="M22 41c3.5 4.5 16.5 4.5 20 0"
+        stroke="#fff"
+        strokeWidth="3.5"
+        strokeLinecap="round"
+        fill="none"
+      />
+    </svg>
+  );
+}
+
+function KaliHeroCadangan({
+  cadangan,
+  firstName,
+}: {
+  cadangan: KaliCadangan;
+  firstName: string;
+}) {
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const tier = cadangan.tier;
+  const nama = cadangan.micro_skill_nama;
+  const total = cadangan.total_attempts;
+  const betul = cadangan.correct_attempts;
+  const adaAttempts = total != null && betul != null;
+  const isRedYellow = tier === "RED" || tier === "YELLOW";
+
+  const tajuk = isRedYellow
+    ? `${firstName}, KALI dah jumpa apa yang perlu kamu kuatkan hari ini!`
+    : tier === "GREEN"
+      ? `${firstName}, masa untuk ulang kaji sikit!`
+      : `${firstName}, KALI dah sediakan sesuatu yang baharu untuk kamu!`;
+
+  const subteks = isRedYellow
+    ? `Berdasarkan jawapan ${firstName} sebelum ini, KALI memilih latihan yang paling sesuai untuk membantu ${firstName} menguasai ${nama}.`
+    : tier === "GREEN"
+      ? `${firstName} dah lama tak sentuh kemahiran ni — KALI nak pastikan ia kekal diingati.`
+      : `KALI akan mulakan dengan kemahiran yang sesuai untuk tahap ${firstName} sekarang.`;
+
+  const bukti = isRedYellow
+    ? adaAttempts
+      ? `${firstName} tersalah ${(total as number) - (betul as number)} daripada ${total} soalan berkaitan kemahiran ini. KALI akan mulakan dengan latihan pengukuhan.`
+      : `${firstName} masih memerlukan lebih latihan untuk kemahiran ini.`
+    : tier === "GREEN"
+      ? `${firstName} dah kuasai kemahiran ini sebelum ini (tahap penguasaan ${cadangan.mastery_score}%), tapi sudah agak lama tak diulang.`
+      : `Kemahiran baharu — ${firstName} belum cuba ni lagi. KALI akan mula dengan asas dahulu.`;
+
+  const bubble =
+    tier === "RED"
+      ? `Jom kita kuatkan ${nama}! 💪`
+      : tier === "YELLOW"
+        ? `Sikit lagi je, ${firstName}!`
+        : tier === "GREEN"
+          ? "Jom ulang kaji sekejap!"
+          : "Ada benda baharu nak kita explore!";
+
+  return (
+    <section className="mt-6">
+      <span className="inline-flex items-center gap-1.5 rounded-full bg-gradient-primary px-3 py-1 font-display text-[11px] font-bold text-primary-foreground shadow-soft">
+        <Sparkles className="h-3 w-3" />
+        CADANGAN KALI HARI INI
+      </span>
+      <h2 className="mt-2 font-display text-xl font-extrabold leading-tight text-foreground md:text-2xl">
+        {tajuk}
+      </h2>
+      <p className="mt-1 text-sm text-muted-foreground">{subteks}</p>
+
+      <div className="mt-3 rounded-3xl border border-border/60 bg-card p-6 shadow-card">
+        <div className="flex items-start gap-3">
+          <KaliMascotFace />
+          <div className="min-w-0 flex-1">
+            <span className="inline-block rounded-2xl border border-primary/20 bg-primary/10 px-3 py-1.5 text-xs font-bold text-primary">
+              {bubble}
+            </span>
+            <p className="mt-3 font-display text-sm font-bold text-primary">
+              {cadangan.micro_skill_subjek} — {nama}
+            </p>
+            <p className="mt-1 font-medium text-foreground">{bukti}</p>
+          </div>
+        </div>
+
+        <div className="mt-4 flex flex-wrap items-center gap-3 text-xs font-bold text-muted-foreground">
+          <span className="inline-flex items-center gap-1.5">
+            <FileText className="h-3.5 w-3.5" /> 10 soalan
+          </span>
+          <span>·</span>
+          <span className="inline-flex items-center gap-1.5">
+            <Clock className="h-3.5 w-3.5" /> ±5 minit
+          </span>
+          <span>·</span>
+          <span className="inline-flex items-center gap-1.5">
+            <Star className="h-3.5 w-3.5" /> hingga +15 bintang
+          </span>
+        </div>
+
+        <div className="mt-4 flex flex-wrap items-center gap-3">
+          <Link
+            to="/kali-test/belajar-untuk-saya"
+            className="inline-flex items-center gap-2 rounded-full bg-gradient-primary px-6 py-3 font-display text-sm font-extrabold text-primary-foreground shadow-soft transition hover:opacity-90"
+          >
+            Mula Belajar Bersama KALI
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+          <button
+            type="button"
+            onClick={() => setDialogOpen(true)}
+            className="text-xs font-bold text-muted-foreground hover:underline"
+          >
+            Kenapa KALI pilih ini?
+          </button>
+        </div>
+      </div>
+
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Kenapa KALI pilih latihan ini?</DialogTitle>
+          </DialogHeader>
+          <ul className="list-disc space-y-2 pl-5 text-sm">
+            {adaAttempts && (
+              <li>
+                {firstName} menjawab salah {(total as number) - (betul as number)} daripada {total}{" "}
+                soalan {nama}.
+              </li>
+            )}
+            {cadangan.mastery_score != null && (
+              <li>Tahap penguasaan semasa: {cadangan.mastery_score}%.</li>
+            )}
+            {cadangan.unlocks_skill_nama && (
+              <li>
+                Kemahiran ini diperlukan sebelum belajar &quot;{cadangan.unlocks_skill_nama}&quot;.
+              </li>
+            )}
+            {tier === "BLUE" && (
+              <li>Prasyarat (jika ada) untuk kemahiran ini sudah dikuasai {firstName}.</li>
+            )}
+            <li>KALI memilih soalan yang belum pernah {firstName} jawab.</li>
+          </ul>
+        </DialogContent>
+      </Dialog>
+    </section>
+  );
+}
+
 function DarjahDashboard() {
+
   const navigate = useNavigate();
   const { user, loading } = useAuth();
   const { profile, loading: profileLoading } = useProfile();
@@ -243,6 +417,26 @@ function DarjahDashboard() {
     return () => { cancelled = true; };
   }, [user]);
 
+  // Cadangan KALI hari ini (akaun anak sahaja)
+  const [kaliCadangan, setKaliCadangan] = useState<KaliCadangan | null>(null);
+  useEffect(() => {
+    if (!user || !darjahMurid) return;
+    if (!user.email?.includes(CHILD_EMAIL_DOMAIN)) return;
+    let cancelled = false;
+    (async () => {
+      const { data, error } = await supabase.rpc("kali_next_best_question" as never, {
+        p_student_id: user.id,
+        p_darjah: Number(darjahMurid),
+      } as never);
+      if (cancelled || error) return;
+      const rows = (data ?? []) as unknown as KaliCadangan[];
+      if (rows.length > 0) setKaliCadangan(rows[0]);
+    })();
+    return () => { cancelled = true; };
+  }, [user, darjahMurid]);
+
+
+
 
 
 
@@ -330,6 +524,12 @@ function DarjahDashboard() {
             </div>
           </div>
         </section>
+
+        {isChild && kaliCadangan && (
+          <KaliHeroCadangan cadangan={kaliCadangan} firstName={firstName} />
+        )}
+
+
 
         {isChild && (
           <>
