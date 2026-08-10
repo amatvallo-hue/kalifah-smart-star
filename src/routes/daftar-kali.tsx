@@ -414,8 +414,19 @@ function DaftarKaliPage() {
 
     if (data.session && data.user) {
       setParentId(data.user.id);
-      setShowTelegram(true);
+      const { data: demoData } = await supabase.rpc("kali_get_demo_soalan", {
+        p_darjah: darjah,
+        p_limit: 8,
+      });
+      const soalanDemo = (Array.isArray(demoData) ? demoData : []) as DemoSoalan[];
+      if (soalanDemo.length > 0) {
+        setDemoSoalan(soalanDemo);
+        setShowDemo(true);
+      } else {
+        setShowTelegram(true);
+      }
       setLoading(false);
+
     } else {
       setInfo("Akaun dicipta. Sila semak emel anda untuk pengesahan, kemudian log masuk.");
       setLoading(false);
