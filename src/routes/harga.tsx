@@ -27,6 +27,7 @@ function HargaPage() {
   const [pickerFor, setPickerFor] = useState<PakejId | null>(null);
   const [pickerInitial, setPickerInitial] = useState<number[]>([]);
   const [loading, setLoading] = useState<PakejId | null>(null);
+  const [fastpath, setFastpath] = useState<{ nama: string; darjah: number } | null>(null);
   const autoRan = useRef(false);
 
   async function mulaBayar(pakej: PakejId, darjah: number[]) {
@@ -95,7 +96,7 @@ function HargaPage() {
     console.log("[harga] Bayar Sekarang diklik", { pakej });
     if (pakej === "bundle") return mulaBayar("bundle", [1, 2, 3, 4, 5, 6]);
     console.log("[harga] buka pemilih darjah", { pakej });
-    setPickerInitial([]);
+    setPickerInitial(fastpath ? [fastpath.darjah] : []);
     setPickerFor(pakej);
   }
 
@@ -114,8 +115,14 @@ function HargaPage() {
       .map((s) => Number(s.trim()))
       .filter((n) => Number.isFinite(n) && validIds.has(n));
 
+    const nama = (params.get("nama") ?? "").trim().slice(0, 60);
+
     if (pakej === "bundle") {
       void mulaBayar("bundle", [1, 2, 3, 4, 5, 6]);
+      return;
+    }
+    if (pakej === "satu" && nama && darjah.length === 1) {
+      setFastpath({ nama, darjah: darjah[0] });
       return;
     }
     setPickerInitial(darjah);
@@ -137,6 +144,28 @@ function HargaPage() {
       </header>
 
       <main className="container mx-auto px-4 py-12">
+        {fastpath && (
+          <div className="mx-auto mb-8 max-w-2xl text-center">
+            <span
+              className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 font-display text-xs font-extrabold text-white shadow-soft"
+              style={{ backgroundColor: HIJAU }}
+            >
+              🎉 KALI Dah Bersedia
+            </span>
+            <h2 className="mt-3 font-display text-2xl font-extrabold text-foreground md:text-3xl">
+              Teruskan dengan KALI untuk {fastpath.nama}
+            </h2>
+            <span
+              className="mt-3 inline-flex items-center gap-1 rounded-full bg-card px-4 py-1.5 font-display text-xs font-extrabold shadow-soft"
+              style={{ color: EMAS }}
+            >
+              Darjah {fastpath.darjah}
+            </span>
+            <p className="mt-3 text-sm text-muted-foreground md:text-base">
+              KALI akan mula mengenali tahap sebenar {fastpath.nama} dan memilih pembelajaran berdasarkan kemahiran yang perlu dikuasainya.
+            </p>
+          </div>
+        )}
         <div className="text-center">
           <span
             className="inline-flex items-center gap-2 rounded-full bg-card px-4 py-1.5 font-display text-xs font-bold shadow-soft"
@@ -148,7 +177,7 @@ function HargaPage() {
             🚀 Harga Beta
           </span>
           <h1 className="mt-3 font-display text-4xl font-extrabold text-foreground md:text-5xl">
-            Pilih Pakej Anda
+            {fastpath ? `Pilih pelan untuk ${fastpath.nama}` : "Pilih Pakej Anda"}
           </h1>
           <p className="mt-3 text-base text-muted-foreground">
             Harga asal: <span className="line-through">RM{HARGA_ASAL}/darjah</span> — kini jauh lebih murah!
@@ -200,13 +229,21 @@ function HargaPage() {
                 </ul>
                 <button
                   type="button"
-                  onClick={() => handleKlik(p.id as PakejId)}
+                  onClick={() =>
+                    fastpath && p.id === "satu"
+                      ? void mulaBayar("satu", [fastpath.darjah])
+                      : handleKlik(p.id as PakejId)
+                  }
                   disabled={isLoading}
                   className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full px-5 py-3 font-display text-sm font-extrabold text-white shadow-soft disabled:opacity-60"
                   style={{ backgroundColor: popular ? EMAS : HIJAU }}
                 >
                   {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
-                  {isLoading ? "Memproses…" : "Bayar Sekarang"}
+                  {isLoading
+                    ? "Memproses…"
+                    : fastpath && p.id === "satu"
+                      ? `Bayar Sekarang untuk ${fastpath.nama}`
+                      : "Bayar Sekarang"}
                 </button>
               </div>
             );

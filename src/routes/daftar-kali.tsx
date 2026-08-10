@@ -370,7 +370,7 @@ function DaftarKaliPage() {
     } catch (e) {
       console.error("pilihLaluanPantas ralat:", e);
     }
-    navigate({ to: "/harga", search: { pakej: "satu", darjah: d } });
+    navigate({ to: "/harga", search: { pakej: "satu", darjah: d, nama: namaAnak } });
   }
 
 
