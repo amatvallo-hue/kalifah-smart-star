@@ -68,6 +68,7 @@ function FastpathPaid({ data }: { data: FastpathAnak }) {
           }),
         );
       }
+      const parentUserId = parentSess.session?.user?.id ?? null;
       const { error } = await supabase.auth.setSession({
         access_token: data.session.access_token,
         refresh_token: data.session.refresh_token,
@@ -78,6 +79,19 @@ function FastpathPaid({ data }: { data: FastpathAnak }) {
         return;
       }
       if (typeof window !== "undefined") window.sessionStorage.removeItem(FASTPATH_KEY);
+      const meta = {
+        landing_page: "daftar-kali",
+        auth_user_id: parentUserId,
+        child_user_id: data.child_user_id ?? null,
+        source: "same_device",
+      };
+      void supabase
+        .from("analytics_events")
+        .insert([
+          { event_name: "diagnostic_link_sent", user_id: null, metadata: meta },
+          { event_name: "diagnostic_link_clicked", user_id: null, metadata: meta },
+        ])
+        .then(() => {}, () => {});
       navigate({ to: "/kali-test/belajar-untuk-saya" });
     } catch (e) {
       console.error("[bayaran.selesai] fastpath ralat", e);
