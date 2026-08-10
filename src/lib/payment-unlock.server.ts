@@ -161,6 +161,15 @@ export async function verifyAndUnlock(input: UnlockInput): Promise<UnlockResult>
   }
   log(id, "4/6 upsert profile berjaya");
 
+  // Mirror unlock onto each child's own profiles.darjah_akses row, consistent
+  // with the ToyyibPay callback and confirm-payment trigger paths.
+  const { error: syncErr } = await supa.rpc("sync_akaun_anak_ikut_parent", {
+    p_parent_id: pesanan.user_id,
+  });
+  if (syncErr) {
+    warn(id, "4/6 sync_akaun_anak_ikut_parent gagal (parent tetap unlocked)", { syncErr });
+  }
+
   log(id, "5/6 tandakan pesanan paid");
   const { error: updErr } = await supa
     .from("pesanan")
