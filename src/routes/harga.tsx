@@ -229,13 +229,21 @@ function HargaPage() {
                 </ul>
                 <button
                   type="button"
-                  onClick={() => handleKlik(p.id as PakejId)}
+                  onClick={() =>
+                    fastpath && p.id === "satu"
+                      ? void mulaBayar("satu", [fastpath.darjah])
+                      : handleKlik(p.id as PakejId)
+                  }
                   disabled={isLoading}
                   className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full px-5 py-3 font-display text-sm font-extrabold text-white shadow-soft disabled:opacity-60"
                   style={{ backgroundColor: popular ? EMAS : HIJAU }}
                 >
                   {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
-                  {isLoading ? "Memproses…" : "Bayar Sekarang"}
+                  {isLoading
+                    ? "Memproses…"
+                    : fastpath && p.id === "satu"
+                      ? `Bayar Sekarang untuk ${fastpath.nama}`
+                      : "Bayar Sekarang"}
                 </button>
               </div>
             );
