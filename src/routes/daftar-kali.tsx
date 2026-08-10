@@ -251,6 +251,7 @@ function DaftarKaliPage() {
         setRalatAnak(result.mesej ?? "Gagal cipta akaun anak.");
         return;
       }
+      setChildUserId(result.userId ?? null);
       setKredensialAnak({
         username: result.username ?? "",
         password: result.generatedPassword ?? "",
