@@ -284,7 +284,7 @@ function KaliHeroCadangan({
             onClick={() => setDialogOpen(true)}
             className="text-xs font-bold text-muted-foreground hover:underline"
           >
-            Kenapa KALI pilih ini?
+            Kenapa KALI pilih latihan ini?
           </button>
         </div>
       </div>
@@ -297,23 +297,31 @@ function KaliHeroCadangan({
           <ul className="list-disc space-y-2 pl-5 text-sm">
             {adaAttempts && (
               <li>
-                {firstName} menjawab salah {(total as number) - (betul as number)} daripada {total}{" "}
-                soalan {nama}.
+                {firstName} masih perlukan latihan untuk {(total as number) - (betul as number)}{" "}
+                daripada {total} soalan {nama}.
               </li>
             )}
             {cadangan.mastery_score != null && (
-              <li>Tahap penguasaan semasa: {cadangan.mastery_score}%.</li>
+              <li>
+                Penguasaan semasa {firstName} ialah {cadangan.mastery_score}%.
+              </li>
             )}
             {cadangan.unlocks_skill_nama && (
               <li>
-                Kemahiran ini diperlukan sebelum belajar &quot;{cadangan.unlocks_skill_nama}&quot;.
+                {nama} perlu dikuasai sebelum {firstName} belajar &quot;
+                {cadangan.unlocks_skill_nama}&quot;.
               </li>
             )}
             {tier === "BLUE" && (
               <li>Prasyarat (jika ada) untuk kemahiran ini sudah dikuasai {firstName}.</li>
             )}
-            <li>KALI memilih soalan yang belum pernah {firstName} jawab.</li>
+            <li>KALI memilih soalan baharu yang belum pernah {firstName} jawab.</li>
+            <li>
+              Selepas latihan ini, KALI akan semak semula perkembangan {firstName} dan menentukan
+              latihan seterusnya.
+            </li>
           </ul>
+
         </DialogContent>
       </Dialog>
     </section>
