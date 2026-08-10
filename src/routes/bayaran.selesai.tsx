@@ -119,6 +119,10 @@ function BayaranSelesai() {
     };
   }, [search.order, search.status_id, search.billcode]);
 
+  if (state === "paid" && fastpath) {
+    return <FastpathPaid data={fastpath} />;
+  }
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="w-full max-w-md rounded-3xl bg-card p-8 text-center shadow-card">
