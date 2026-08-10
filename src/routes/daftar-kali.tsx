@@ -660,6 +660,16 @@ function DaftarKaliPage() {
           >
             Cuba KALI Dengan Anak Saya →
           </button>
+
+          <div className="mt-3 text-center">
+            <button
+              type="button"
+              onClick={() => void pilihLaluanPantas()}
+              className="text-sm font-bold text-muted-foreground underline underline-offset-2 hover:text-foreground"
+            >
+              Dah yakin dengan KALI? Lihat pelan &amp; harga →
+            </button>
+          </div>
         </section>
       </main>
     );
