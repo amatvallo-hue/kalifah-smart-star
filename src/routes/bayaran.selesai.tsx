@@ -1,7 +1,8 @@
-import { createFileRoute, Link, useSearch } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate, useSearch } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { CheckCircle2, Loader2, XCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { PARENT_SESSION_BACKUP_KEY } from "@/lib/child-auth";
 
 interface Search {
   order?: string;
@@ -19,9 +20,142 @@ export const Route = createFileRoute("/bayaran/selesai")({
   component: BayaranSelesai,
 });
 
+interface FastpathAnak {
+  nama: string;
+  session: { access_token: string; refresh_token: string };
+  username?: string;
+  password?: string;
+}
+
+const FASTPATH_KEY = "kali_fastpath_anak";
+
+function bacaFastpath(): FastpathAnak | null {
+  if (typeof window === "undefined") return null;
+  try {
+    const raw = window.sessionStorage.getItem(FASTPATH_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as FastpathAnak;
+    if (
+      parsed?.nama &&
+      parsed?.session?.access_token &&
+      parsed?.session?.refresh_token
+    ) {
+      return parsed;
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+function FastpathPaid({ data }: { data: FastpathAnak }) {
+  const navigate = useNavigate();
+  const [gagal, setGagal] = useState(false);
+  const [sedang, setSedang] = useState(false);
+  const [disalin, setDisalin] = useState<"username" | "password" | null>(null);
+
+  async function mulakan() {
+    setSedang(true);
+    try {
+      const { data: parentSess } = await supabase.auth.getSession();
+      if (parentSess.session && typeof window !== "undefined") {
+        window.sessionStorage.setItem(
+          PARENT_SESSION_BACKUP_KEY,
+          JSON.stringify({
+            access_token: parentSess.session.access_token,
+            refresh_token: parentSess.session.refresh_token,
+          }),
+        );
+      }
+      const { error } = await supabase.auth.setSession({
+        access_token: data.session.access_token,
+        refresh_token: data.session.refresh_token,
+      });
+      if (error) {
+        console.error("[bayaran.selesai] setSession gagal", error);
+        setGagal(true);
+        return;
+      }
+      if (typeof window !== "undefined") window.sessionStorage.removeItem(FASTPATH_KEY);
+      navigate({ to: "/kali-test/belajar-untuk-saya" });
+    } catch (e) {
+      console.error("[bayaran.selesai] fastpath ralat", e);
+      setGagal(true);
+    } finally {
+      setSedang(false);
+    }
+  }
+
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-background px-4">
+      <div className="w-full max-w-md rounded-3xl bg-card p-8 text-center shadow-card">
+        <h1 className="font-display text-2xl font-extrabold">🎉 KALI dah sedia untuk {data.nama}</h1>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Langkah seterusnya: biarkan {data.nama} buat diagnostic pertamanya.
+        </p>
+
+        {!gagal ? (
+          <button
+            type="button"
+            disabled={sedang}
+            onClick={() => void mulakan()}
+            className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-primary px-6 py-3 font-display font-extrabold text-primary-foreground shadow-soft disabled:opacity-60"
+          >
+            {sedang && <Loader2 className="h-4 w-4 animate-spin" />}
+            Mulakan KALI untuk {data.nama} →
+          </button>
+        ) : (
+          <div className="mt-6 text-left">
+            <p className="text-sm text-muted-foreground">
+              Sesi automatik tamat tempoh. Sila log masuk dengan maklumat akaun {data.nama}:
+            </p>
+            <div className="mt-3 space-y-2 rounded-2xl bg-muted/50 p-4">
+              {(
+                [
+                  ["username", "Username", data.username ?? ""],
+                  ["password", "Password", data.password ?? ""],
+                ] as const
+              ).map(([key, label, value]) => (
+                <div key={key} className="flex items-center justify-between gap-3">
+                  <div>
+                    <p className="text-xs font-bold text-muted-foreground">{label}</p>
+                    <p className="font-display text-base font-extrabold">{value}</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      void navigator.clipboard.writeText(value);
+                      setDisalin(key);
+                    }}
+                    className="rounded-full bg-card px-3 py-1.5 text-xs font-bold shadow-soft"
+                  >
+                    {disalin === key ? "Disalin!" : "Salin"}
+                  </button>
+                </div>
+              ))}
+            </div>
+            <Link
+              to="/login"
+              className="mt-5 inline-flex w-full items-center justify-center rounded-full bg-gradient-primary px-6 py-3 font-display font-extrabold text-primary-foreground shadow-soft"
+            >
+              Log Masuk Akaun Anak
+            </Link>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function BayaranSelesai() {
   const search = useSearch({ from: "/bayaran/selesai" });
   const [state, setState] = useState<"loading" | "paid" | "pending" | "failed">("loading");
+  const [fastpath, setFastpath] = useState<FastpathAnak | null>(null);
+
+  useEffect(() => {
+    setFastpath(bacaFastpath());
+  }, []);
+
 
   useEffect(() => {
     if (!search.order && !search.billcode) {
@@ -118,6 +252,10 @@ function BayaranSelesai() {
       cancelled = true;
     };
   }, [search.order, search.status_id, search.billcode]);
+
+  if (state === "paid" && fastpath) {
+    return <FastpathPaid data={fastpath} />;
+  }
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">

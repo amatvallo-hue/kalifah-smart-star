@@ -302,6 +302,36 @@ function DaftarKaliPage() {
     navigate({ to: "/kali-test/belajar-untuk-saya" });
   }
 
+  // Laluan pantas: parent terus ke pelan & harga (akaun anak dicipta di belakang).
+  async function pilihLaluanPantas() {
+    const d = String(darjah ?? 1);
+    try {
+      if (namaAnak.trim() && darjah) {
+        const result = await ciptaAkaunAnak(namaAnak, d);
+        if (result.ok && result.session && typeof window !== "undefined") {
+          window.sessionStorage.setItem(
+            "kali_fastpath_anak",
+            JSON.stringify({
+              nama: namaAnak,
+              session: {
+                access_token: result.session.access_token,
+                refresh_token: result.session.refresh_token,
+              },
+              username: result.username ?? "",
+              password: result.generatedPassword ?? "",
+            }),
+          );
+        } else if (!result.ok) {
+          console.error("pilihLaluanPantas: ciptaAkaunAnak gagal:", result.mesej);
+        }
+      }
+    } catch (e) {
+      console.error("pilihLaluanPantas ralat:", e);
+    }
+    navigate({ to: "/harga", search: { pakej: "satu", darjah: d } });
+  }
+
+
 
   // Persist ?ref= so it survives email-confirmation round trips
   useEffect(() => {
@@ -660,6 +690,16 @@ function DaftarKaliPage() {
           >
             Cuba KALI Dengan Anak Saya →
           </button>
+
+          <div className="mt-3 text-center">
+            <button
+              type="button"
+              onClick={() => void pilihLaluanPantas()}
+              className="text-sm font-bold text-muted-foreground underline underline-offset-2 hover:text-foreground"
+            >
+              Dah yakin dengan KALI? Lihat pelan &amp; harga →
+            </button>
+          </div>
         </section>
       </main>
     );
