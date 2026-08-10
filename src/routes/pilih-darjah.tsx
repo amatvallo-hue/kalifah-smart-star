@@ -299,7 +299,13 @@ function KaliHeroCadangan({
           </div>
         </div>
 
-        <div className="mt-5 w-full border-t border-border/60 pt-5 md:ml-5 md:mt-0 md:w-56 md:border-l md:border-t-0 md:pl-5 md:pt-0">
+        <div
+          className="mt-5 w-full border-t pt-5 md:ml-5 md:mt-0 md:w-56 md:border-l md:border-t-0 md:pl-5 md:pt-0"
+          style={{
+            backgroundColor: "rgba(255, 255, 255, 0.65)",
+            borderColor: "#CDEBDD",
+          }}
+        >
           {cadangan.mastery_score != null ? (
             <div className="space-y-4">
               <div>
