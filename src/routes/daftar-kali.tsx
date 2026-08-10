@@ -29,10 +29,30 @@ const DARJAH_OPTIONS = [
 
 const STEPS = [
   { num: 1, label: "Daftar Akaun" },
-  { num: 2, label: "Sambung Telegram" },
-  { num: 3, label: "Sesi Diagnostic KALI" },
-  { num: 4, label: "Cadangan KALI Hari Ini" },
+  { num: 2, label: "Demo KALI" },
+  { num: 3, label: "Sambung Telegram" },
+  { num: 4, label: "Sesi Diagnostic KALI" },
+  { num: 5, label: "Cadangan KALI Hari Ini" },
 ];
+
+type DemoSoalan = {
+  soalan_id: string;
+  subjek: string | null;
+  soalan: string;
+  pilihan_a: string | null;
+  pilihan_b: string | null;
+  pilihan_c: string | null;
+  pilihan_d: string | null;
+  micro_skill_nama: string | null;
+  micro_skill_id: string | null;
+};
+
+type DemoResult = {
+  betul_count: number;
+  total_count: number;
+  skill_salah: string[];
+};
+
 
 function StepProgress({ active }: { active: number }) {
   return (
@@ -133,6 +153,64 @@ function DaftarKaliPage() {
   const [kredensialAnak, setKredensialAnak] = useState<
     { username: string; password: string; session: { access_token: string; refresh_token: string } | null } | null
   >(null);
+  const [demoSoalan, setDemoSoalan] = useState<DemoSoalan[]>([]);
+  const [demoIndex, setDemoIndex] = useState(0);
+  const [demoJawapanTerkumpul, setDemoJawapanTerkumpul] = useState<
+    { soalan_id: string; jawapan: string }[]
+  >([]);
+  const [demoPilih, setDemoPilih] = useState<string | null>(null);
+  const [demoResult, setDemoResult] = useState<DemoResult | null>(null);
+  const [showDemo, setShowDemo] = useState(false);
+  const [showDemoResult, setShowDemoResult] = useState(false);
+  const [demoMula, setDemoMula] = useState(false);
+
+  function pilihDemo(huruf: string, soalanId: string) {
+    if (demoPilih) return;
+    setDemoPilih(huruf);
+    const terkumpul = [...demoJawapanTerkumpul, { soalan_id: soalanId, jawapan: huruf }];
+    setDemoJawapanTerkumpul(terkumpul);
+    setTimeout(() => {
+      setDemoPilih(null);
+      if (demoIndex + 1 < demoSoalan.length) {
+        setDemoIndex((i) => i + 1);
+      } else {
+        void hantarDemo(terkumpul);
+      }
+    }, 1200);
+  }
+
+  async function hantarDemo(terkumpul: { soalan_id: string; jawapan: string }[]) {
+    const { data, error: rpcError } = await supabase.rpc("kali_score_demo_soalan", {
+      p_jawapan: terkumpul,
+    });
+    const row = (Array.isArray(data) ? data[0] : data) as DemoResult | null;
+    if (rpcError || !row) {
+      setShowDemo(false);
+      setShowTelegram(true);
+      return;
+    }
+    const hasil: DemoResult = {
+      betul_count: Number(row.betul_count ?? 0),
+      total_count: Number(row.total_count ?? terkumpul.length),
+      skill_salah: Array.isArray(row.skill_salah) ? row.skill_salah : [],
+    };
+    setDemoResult(hasil);
+    setShowDemoResult(true);
+    void supabase
+      .from("analytics_events")
+      .insert({
+        event_name: "parent_demo_completed",
+        user_id: null,
+        metadata: {
+          landing_page: "daftar-kali",
+          auth_user_id: parentId,
+          betul_count: hasil.betul_count,
+          total_count: hasil.total_count,
+        },
+      })
+      .then(() => {}, () => {});
+  }
+
 
   // Selepas Telegram disambung (masih dalam sesi PARENT): cipta akaun anak
   // dan paparkan kredensial. Parent mesti klik "Teruskan" untuk tukar sesi.
@@ -336,8 +414,19 @@ function DaftarKaliPage() {
 
     if (data.session && data.user) {
       setParentId(data.user.id);
-      setShowTelegram(true);
+      const { data: demoData } = await supabase.rpc("kali_get_demo_soalan", {
+        p_darjah: darjah,
+        p_limit: 8,
+      });
+      const soalanDemo = (Array.isArray(demoData) ? demoData : []) as DemoSoalan[];
+      if (soalanDemo.length > 0) {
+        setDemoSoalan(soalanDemo);
+        setShowDemo(true);
+      } else {
+        setShowTelegram(true);
+      }
       setLoading(false);
+
     } else {
       setInfo("Akaun dicipta. Sila semak emel anda untuk pengesahan, kemudian log masuk.");
       setLoading(false);
@@ -401,10 +490,142 @@ function DaftarKaliPage() {
     );
   }
 
+  if (showDemoResult && demoResult) {
+    const skillUnik = Array.from(new Set(demoResult.skill_salah.filter(Boolean)));
+    return (
+      <main className="container mx-auto max-w-xl px-4 py-10">
+        <StepProgress active={2} />
+        <section className="rounded-[2rem] border border-border bg-background p-6 shadow-card">
+          <h1 className="font-display text-2xl font-extrabold text-foreground">
+            KALI dah selesai menganalisis jawapan anda.
+          </h1>
+          <p className="mt-3 text-center font-display text-5xl font-extrabold text-primary">
+            {demoResult.betul_count}/{demoResult.total_count} betul
+          </p>
+          <ul className="mt-5 space-y-2">
+            <li className="text-sm font-medium text-foreground">
+              🟢 {demoResult.betul_count} jawapan tepat
+            </li>
+            <li className="text-sm font-medium text-foreground">
+              🟠 {skillUnik.length} kemahiran perlu perhatian
+            </li>
+            {skillUnik.length > 0 ? (
+              <li className="text-sm font-medium text-foreground">
+                🔴 KALI mengesan anda mungkin keliru dalam &ldquo;{skillUnik[0]}&rdquo;
+              </li>
+            ) : (
+              <li className="text-sm font-medium text-foreground">
+                ✨ Semua jawapan tepat — KALI tak mengesan sebarang corak kelemahan.
+              </li>
+            )}
+          </ul>
+          <p className="mt-4 text-xs text-muted-foreground">
+            Ini demonstrasi macam mana KALI menganalisis corak jawapan — bukan keputusan sebenar
+            anak anda.
+          </p>
+          <div className="mt-6 rounded-2xl border border-border bg-muted/40 p-4">
+            <p className="font-display text-base font-extrabold text-foreground">
+              Nampak bagaimana KALI berfungsi?
+            </p>
+            <p className="mt-1 text-sm text-muted-foreground">Tadi anda sendiri mencuba KALI.</p>
+            <p className="text-sm text-muted-foreground">
+              Sekarang biarkan KALI mengenali tahap sebenar anak anda.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => {
+              setShowDemo(false);
+              setShowDemoResult(false);
+              setShowTelegram(true);
+            }}
+            className="mt-6 flex w-full items-center justify-center rounded-full bg-gradient-primary px-6 py-3 font-display text-base font-extrabold text-primary-foreground shadow-soft"
+          >
+            Cuba KALI Dengan Anak Saya →
+          </button>
+        </section>
+      </main>
+    );
+  }
+
+  if (showDemo && demoSoalan.length > 0) {
+    if (!demoMula) {
+      return (
+        <main className="container mx-auto max-w-xl px-4 py-10">
+          <StepProgress active={2} />
+          <section className="rounded-[2rem] border border-border bg-background p-6 text-center shadow-card">
+            <h1 className="font-display text-2xl font-extrabold text-foreground">
+              Nak tengok macam mana KALI berfungsi?
+            </h1>
+            <p className="mt-3 text-sm text-muted-foreground">
+              Sebelum anak anda mula, cuba sendiri {demoSoalan.length} soalan ni — nampak macam
+              mana KALI mengesan corak jawapan.
+            </p>
+            <button
+              type="button"
+              onClick={() => setDemoMula(true)}
+              className="mt-6 flex w-full items-center justify-center rounded-full bg-gradient-primary px-6 py-3 font-display text-base font-extrabold text-primary-foreground shadow-soft"
+            >
+              Mula Demo KALI →
+            </button>
+          </section>
+        </main>
+      );
+    }
+
+    const soalan = demoSoalan[Math.min(demoIndex, demoSoalan.length - 1)];
+    const pilihan = [
+      { huruf: "A", teks: soalan.pilihan_a },
+      { huruf: "B", teks: soalan.pilihan_b },
+      { huruf: "C", teks: soalan.pilihan_c },
+      { huruf: "D", teks: soalan.pilihan_d },
+    ].filter((p) => p.teks != null && String(p.teks).trim() !== "");
+
+    return (
+      <main className="container mx-auto max-w-xl px-4 py-10">
+        <StepProgress active={2} />
+        <section className="rounded-[2rem] border border-border bg-background p-6 shadow-card">
+          <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">
+            Soalan {demoIndex + 1} daripada {demoSoalan.length}
+            {soalan.subjek ? ` · ${soalan.subjek}` : ""}
+          </p>
+          <h1 className="mt-3 whitespace-pre-line font-display text-lg font-extrabold text-foreground">
+            {soalan.soalan}
+          </h1>
+          <div className="mt-5 space-y-2">
+            {pilihan.map((p) => {
+              const dipilih = demoPilih === p.huruf;
+              return (
+                <button
+                  key={p.huruf}
+                  type="button"
+                  disabled={!!demoPilih}
+                  onClick={() => pilihDemo(p.huruf, soalan.soalan_id)}
+                  className={`flex w-full items-start gap-3 rounded-2xl border-2 px-4 py-3 text-left text-sm font-bold transition disabled:opacity-70 ${
+                    dipilih
+                      ? "border-primary bg-primary/10 text-primary"
+                      : "border-border bg-background text-foreground hover:border-primary/50"
+                  }`}
+                >
+                  <span className="font-display">{p.huruf}.</span>
+                  <span className="whitespace-pre-line font-medium">{p.teks}</span>
+                </button>
+              );
+            })}
+          </div>
+        </section>
+      </main>
+    );
+  }
+
   if (showTelegram && parentId) {
     return (
       <div>
+        <div className="container mx-auto max-w-xl px-4">
+          <StepProgress active={3} />
+        </div>
         <SambungTelegram parentId={parentId} onLinked={() => void selepasTelegram()} />
+
         {sedangCiptaAnak ? (
           <p className="mt-4 animate-pulse text-center font-display text-sm font-bold text-primary">
             Menyediakan akaun anak...
