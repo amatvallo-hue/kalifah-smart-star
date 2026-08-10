@@ -621,7 +621,7 @@ function DaftarKaliPage() {
           />
           <KumpulanSkill tajuk="🟠 Perlu perhatian" senarai={kuning} warna="text-amber-600" />
           <KumpulanSkill
-            tajuk="🔴 Kesilapan paling ketara"
+            tajuk="🔴 Perlu diperkukuhkan"
             senarai={merah}
             warna="text-destructive"
           />
