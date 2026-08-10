@@ -80,8 +80,7 @@ export function SiteHeader({
       {userName && isChild && (
         <Link
           to="/kali-test/belajar-untuk-saya"
-          className="rounded-full px-4 py-2 font-display text-sm font-bold text-muted-foreground transition hover:bg-secondary hover:text-foreground"
-          activeProps={{ className: "bg-secondary text-primary" }}
+          className="rounded-full bg-gradient-primary px-4 py-2 font-display text-sm font-extrabold text-primary-foreground shadow-soft transition hover:opacity-90"
           onClick={() => setOpen(false)}
         >
           🧠 Belajar Bersama KALI
