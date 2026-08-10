@@ -153,6 +153,64 @@ function DaftarKaliPage() {
   const [kredensialAnak, setKredensialAnak] = useState<
     { username: string; password: string; session: { access_token: string; refresh_token: string } | null } | null
   >(null);
+  const [demoSoalan, setDemoSoalan] = useState<DemoSoalan[]>([]);
+  const [demoIndex, setDemoIndex] = useState(0);
+  const [demoJawapanTerkumpul, setDemoJawapanTerkumpul] = useState<
+    { soalan_id: string; jawapan: string }[]
+  >([]);
+  const [demoPilih, setDemoPilih] = useState<string | null>(null);
+  const [demoResult, setDemoResult] = useState<DemoResult | null>(null);
+  const [showDemo, setShowDemo] = useState(false);
+  const [showDemoResult, setShowDemoResult] = useState(false);
+  const [demoMula, setDemoMula] = useState(false);
+
+  function pilihDemo(huruf: string, soalanId: string) {
+    if (demoPilih) return;
+    setDemoPilih(huruf);
+    const terkumpul = [...demoJawapanTerkumpul, { soalan_id: soalanId, jawapan: huruf }];
+    setDemoJawapanTerkumpul(terkumpul);
+    setTimeout(() => {
+      setDemoPilih(null);
+      if (demoIndex + 1 < demoSoalan.length) {
+        setDemoIndex((i) => i + 1);
+      } else {
+        void hantarDemo(terkumpul);
+      }
+    }, 1200);
+  }
+
+  async function hantarDemo(terkumpul: { soalan_id: string; jawapan: string }[]) {
+    const { data, error: rpcError } = await supabase.rpc("kali_score_demo_soalan", {
+      p_jawapan: terkumpul,
+    });
+    const row = (Array.isArray(data) ? data[0] : data) as DemoResult | null;
+    if (rpcError || !row) {
+      setShowDemo(false);
+      setShowTelegram(true);
+      return;
+    }
+    const hasil: DemoResult = {
+      betul_count: Number(row.betul_count ?? 0),
+      total_count: Number(row.total_count ?? terkumpul.length),
+      skill_salah: Array.isArray(row.skill_salah) ? row.skill_salah : [],
+    };
+    setDemoResult(hasil);
+    setShowDemoResult(true);
+    void supabase
+      .from("analytics_events")
+      .insert({
+        event_name: "parent_demo_completed",
+        user_id: null,
+        metadata: {
+          landing_page: "daftar-kali",
+          auth_user_id: parentId,
+          betul_count: hasil.betul_count,
+          total_count: hasil.total_count,
+        },
+      })
+      .then(() => {}, () => {});
+  }
+
 
   // Selepas Telegram disambung (masih dalam sesi PARENT): cipta akaun anak
   // dan paparkan kredensial. Parent mesti klik "Teruskan" untuk tukar sesi.
