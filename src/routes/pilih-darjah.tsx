@@ -243,6 +243,26 @@ function DarjahDashboard() {
     return () => { cancelled = true; };
   }, [user]);
 
+  // Cadangan KALI hari ini (akaun anak sahaja)
+  const [kaliCadangan, setKaliCadangan] = useState<KaliCadangan | null>(null);
+  useEffect(() => {
+    if (!user || !darjahMurid) return;
+    if (!user.email?.includes(CHILD_EMAIL_DOMAIN)) return;
+    let cancelled = false;
+    (async () => {
+      const { data, error } = await supabase.rpc("kali_next_best_question" as never, {
+        p_student_id: user.id,
+        p_darjah: Number(darjahMurid),
+      } as never);
+      if (cancelled || error) return;
+      const rows = (data ?? []) as unknown as KaliCadangan[];
+      if (rows.length > 0) setKaliCadangan(rows[0]);
+    })();
+    return () => { cancelled = true; };
+  }, [user, darjahMurid]);
+
+
+
 
 
 
