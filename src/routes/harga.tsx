@@ -96,7 +96,7 @@ function HargaPage() {
     console.log("[harga] Bayar Sekarang diklik", { pakej });
     if (pakej === "bundle") return mulaBayar("bundle", [1, 2, 3, 4, 5, 6]);
     console.log("[harga] buka pemilih darjah", { pakej });
-    setPickerInitial([]);
+    setPickerInitial(fastpath ? [fastpath.darjah] : []);
     setPickerFor(pakej);
   }
 
