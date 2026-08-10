@@ -29,9 +29,10 @@ export const Route = createFileRoute("/kali-test/belajar-untuk-saya")({
     ],
   }),
   ssr: false,
-  validateSearch: (search: Record<string, unknown>) => ({
-    src: typeof search.src === "string" ? search.src : undefined,
-  }),
+  validateSearch: (search: Record<string, unknown>) => {
+    const src = typeof search.src === "string" ? search.src : undefined;
+    return src ? { src } : {};
+  },
   component: KaliBelajarUntukSayaPage,
 });
 
@@ -204,6 +205,9 @@ function KaliBelajarUntukSayaPage() {
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const sesiBonusAwardedRef = useRef(false);
   const diagStartedTrackedRef = useRef(false);
+  const sourceRef = useRef<"telegram" | "whatsapp" | "same_device">(
+    (search.src === "telegram" || search.src === "whatsapp") ? search.src : "same_device"
+  );
 
 
   const [showWelcome, setShowWelcome] = useState(false);
@@ -477,7 +481,7 @@ function KaliBelajarUntukSayaPage() {
               landing_page: "daftar-kali",
               auth_user_id: null,
               child_user_id: user.id,
-              source: "same_device",
+              source: sourceRef.current,
             },
           })
           .then(() => {}, () => {});
@@ -598,6 +602,7 @@ function KaliBelajarUntukSayaPage() {
               p_bocor_skill_id: bocor?.id ?? null,
               p_bocor_nama: hasil.bocorNama,
               p_bocor_gejala: hasil.bocorGejala,
+              p_source: sourceRef.current,
             } as any)
             .then(({ data, error }: any) => {
               if (error || data !== true) {
