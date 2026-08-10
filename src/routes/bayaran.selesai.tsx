@@ -22,6 +22,7 @@ export const Route = createFileRoute("/bayaran/selesai")({
 
 interface FastpathAnak {
   nama: string;
+  child_user_id?: string;
   session: { access_token: string; refresh_token: string };
   username?: string;
   password?: string;
