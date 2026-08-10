@@ -235,6 +235,30 @@ function KaliBelajarUntukSayaPage() {
     if (!loading && !user) navigate({ to: "/login" });
   }, [loading, user, navigate]);
 
+  // Funnel: link diagnostic diklik dari Telegram/WhatsApp
+  useEffect(() => {
+    const src = search.src;
+    if (!user) return;
+    if (src !== "telegram" && src !== "whatsapp") return;
+    if (typeof window === "undefined") return;
+    if (window.sessionStorage.getItem("kali_link_clicked_tracked") === "1") return;
+    window.sessionStorage.setItem("kali_link_clicked_tracked", "1");
+    void supabase
+      .from("analytics_events")
+      .insert({
+        event_name: "diagnostic_link_clicked",
+        user_id: null,
+        metadata: {
+          landing_page: "daftar-kali",
+          auth_user_id: null,
+          child_user_id: user.id,
+          source: src,
+        },
+      })
+      .then(() => {}, () => {});
+  }, [user, search.src]);
+
+
   useEffect(() => {
     if (!user) return;
     let seen: string | null = null;
