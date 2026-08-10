@@ -202,6 +202,8 @@ function KaliBelajarUntukSayaPage() {
   const [mulaSoalan, setMulaSoalan] = useState(() => Date.now());
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const sesiBonusAwardedRef = useRef(false);
+  const diagStartedTrackedRef = useRef(false);
+
 
   const [showWelcome, setShowWelcome] = useState(false);
   const [welcomeChecked, setWelcomeChecked] = useState(false);
