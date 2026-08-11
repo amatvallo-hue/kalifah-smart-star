@@ -38,6 +38,7 @@ import { Route as ApiConfirmPaymentRouteImport } from './routes/api.confirm-paym
 import { Route as ApiDebugEnvRouteImport } from './routes/api.debug-env'
 import { Route as ApiTemporaryUnlockRouteImport } from './routes/api.temporary-unlock'
 import { Route as BayaranSelesaiRouteImport } from './routes/bayaran.selesai'
+import { Route as CubaKaliAktifkanRouteImport } from './routes/cuba-kali_.aktifkan'
 import { Route as CubaKaliDemoRouteImport } from './routes/cuba-kali_.demo'
 import { Route as DarjahDarjahIdRouteImport } from './routes/darjah.$darjahId'
 import { Route as DashboardIbuBapaRouteImport } from './routes/dashboard.ibu-bapa'
@@ -213,6 +214,11 @@ const ApiTemporaryUnlockRoute = ApiTemporaryUnlockRouteImport.update({
 const BayaranSelesaiRoute = BayaranSelesaiRouteImport.update({
   id: '/bayaran/selesai',
   path: '/bayaran/selesai',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CubaKaliAktifkanRoute = CubaKaliAktifkanRouteImport.update({
+  id: '/cuba-kali_/aktifkan',
+  path: '/cuba-kali/aktifkan',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CubaKaliDemoRoute = CubaKaliDemoRouteImport.update({
@@ -421,6 +427,7 @@ export interface FileRoutesByFullPath {
   '/api/debug-env': typeof ApiDebugEnvRoute
   '/api/temporary-unlock': typeof ApiTemporaryUnlockRoute
   '/bayaran/selesai': typeof BayaranSelesaiRoute
+  '/cuba-kali/aktifkan': typeof CubaKaliAktifkanRoute
   '/cuba-kali/demo': typeof CubaKaliDemoRoute
   '/darjah/$darjahId': typeof DarjahDarjahIdRoute
   '/dashboard/ibu-bapa': typeof DashboardIbuBapaRoute
@@ -483,6 +490,7 @@ export interface FileRoutesByTo {
   '/api/debug-env': typeof ApiDebugEnvRoute
   '/api/temporary-unlock': typeof ApiTemporaryUnlockRoute
   '/bayaran/selesai': typeof BayaranSelesaiRoute
+  '/cuba-kali/aktifkan': typeof CubaKaliAktifkanRoute
   '/cuba-kali/demo': typeof CubaKaliDemoRoute
   '/darjah/$darjahId': typeof DarjahDarjahIdRoute
   '/dashboard/ibu-bapa': typeof DashboardIbuBapaRoute
@@ -546,6 +554,7 @@ export interface FileRoutesById {
   '/api/debug-env': typeof ApiDebugEnvRoute
   '/api/temporary-unlock': typeof ApiTemporaryUnlockRoute
   '/bayaran/selesai': typeof BayaranSelesaiRoute
+  '/cuba-kali_/aktifkan': typeof CubaKaliAktifkanRoute
   '/cuba-kali_/demo': typeof CubaKaliDemoRoute
   '/darjah/$darjahId': typeof DarjahDarjahIdRoute
   '/dashboard/ibu-bapa': typeof DashboardIbuBapaRoute
@@ -610,6 +619,7 @@ export interface FileRouteTypes {
     | '/api/debug-env'
     | '/api/temporary-unlock'
     | '/bayaran/selesai'
+    | '/cuba-kali/aktifkan'
     | '/cuba-kali/demo'
     | '/darjah/$darjahId'
     | '/dashboard/ibu-bapa'
@@ -672,6 +682,7 @@ export interface FileRouteTypes {
     | '/api/debug-env'
     | '/api/temporary-unlock'
     | '/bayaran/selesai'
+    | '/cuba-kali/aktifkan'
     | '/cuba-kali/demo'
     | '/darjah/$darjahId'
     | '/dashboard/ibu-bapa'
@@ -734,6 +745,7 @@ export interface FileRouteTypes {
     | '/api/debug-env'
     | '/api/temporary-unlock'
     | '/bayaran/selesai'
+    | '/cuba-kali_/aktifkan'
     | '/cuba-kali_/demo'
     | '/darjah/$darjahId'
     | '/dashboard/ibu-bapa'
@@ -797,6 +809,7 @@ export interface RootRouteChildren {
   ApiDebugEnvRoute: typeof ApiDebugEnvRoute
   ApiTemporaryUnlockRoute: typeof ApiTemporaryUnlockRoute
   BayaranSelesaiRoute: typeof BayaranSelesaiRoute
+  CubaKaliAktifkanRoute: typeof CubaKaliAktifkanRoute
   CubaKaliDemoRoute: typeof CubaKaliDemoRoute
   DarjahDarjahIdRoute: typeof DarjahDarjahIdRoute
   DashboardIbuBapaRoute: typeof DashboardIbuBapaRoute
@@ -1033,6 +1046,13 @@ declare module '@tanstack/react-router' {
       path: '/bayaran/selesai'
       fullPath: '/bayaran/selesai'
       preLoaderRoute: typeof BayaranSelesaiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cuba-kali_/aktifkan': {
+      id: '/cuba-kali_/aktifkan'
+      path: '/cuba-kali/aktifkan'
+      fullPath: '/cuba-kali/aktifkan'
+      preLoaderRoute: typeof CubaKaliAktifkanRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/cuba-kali_/demo': {
@@ -1285,6 +1305,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiDebugEnvRoute: ApiDebugEnvRoute,
   ApiTemporaryUnlockRoute: ApiTemporaryUnlockRoute,
   BayaranSelesaiRoute: BayaranSelesaiRoute,
+  CubaKaliAktifkanRoute: CubaKaliAktifkanRoute,
   CubaKaliDemoRoute: CubaKaliDemoRoute,
   DarjahDarjahIdRoute: DarjahDarjahIdRoute,
   DashboardIbuBapaRoute: DashboardIbuBapaRoute,
@@ -1327,13 +1348,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
