@@ -577,10 +577,13 @@ function KaliBelajarUntukSayaPage() {
     }, 1500);
   };
 
-  const handleBukaAnalisis = async () => {
-    const url = await laluanCheckout(childDarjah);
-    if (typeof window !== "undefined") window.location.href = url;
+  const handleTunjukIbuBapa = async () => {
+    await switchBackToParent();
+    if (user) {
+      void navigate({ to: "/kali-test/laporan-anak", search: { child: user.id } });
+    }
   };
+
 
   const skillMap = new Map<string, { nama: string; semuaBetul: boolean }>();
   for (const r of riwayatSkill) {
