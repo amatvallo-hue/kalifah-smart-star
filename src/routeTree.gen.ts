@@ -38,6 +38,7 @@ import { Route as ApiConfirmPaymentRouteImport } from './routes/api.confirm-paym
 import { Route as ApiDebugEnvRouteImport } from './routes/api.debug-env'
 import { Route as ApiTemporaryUnlockRouteImport } from './routes/api.temporary-unlock'
 import { Route as BayaranSelesaiRouteImport } from './routes/bayaran.selesai'
+import { Route as CubaKaliDemoRouteImport } from './routes/cuba-kali.demo'
 import { Route as DarjahDarjahIdRouteImport } from './routes/darjah.$darjahId'
 import { Route as DashboardIbuBapaRouteImport } from './routes/dashboard.ibu-bapa'
 import { Route as DashboardProgressRouteImport } from './routes/dashboard.progress'
@@ -214,6 +215,11 @@ const BayaranSelesaiRoute = BayaranSelesaiRouteImport.update({
   path: '/bayaran/selesai',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CubaKaliDemoRoute = CubaKaliDemoRouteImport.update({
+  id: '/demo',
+  path: '/demo',
+  getParentRoute: () => CubaKaliRoute,
+} as any)
 const DarjahDarjahIdRoute = DarjahDarjahIdRouteImport.update({
   id: '/darjah/$darjahId',
   path: '/darjah/$darjahId',
@@ -389,7 +395,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/cikgu-affiliate': typeof CikguAffiliateRoute
-  '/cuba-kali': typeof CubaKaliRoute
+  '/cuba-kali': typeof CubaKaliRouteWithChildren
   '/daftar': typeof DaftarRoute
   '/daftar-kali': typeof DaftarKaliRoute
   '/daftar-mpt4': typeof DaftarMpt4Route
@@ -415,6 +421,7 @@ export interface FileRoutesByFullPath {
   '/api/debug-env': typeof ApiDebugEnvRoute
   '/api/temporary-unlock': typeof ApiTemporaryUnlockRoute
   '/bayaran/selesai': typeof BayaranSelesaiRoute
+  '/cuba-kali/demo': typeof CubaKaliDemoRoute
   '/darjah/$darjahId': typeof DarjahDarjahIdRoute
   '/dashboard/ibu-bapa': typeof DashboardIbuBapaRoute
   '/dashboard/progress': typeof DashboardProgressRoute
@@ -450,7 +457,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/cikgu-affiliate': typeof CikguAffiliateRoute
-  '/cuba-kali': typeof CubaKaliRoute
+  '/cuba-kali': typeof CubaKaliRouteWithChildren
   '/daftar': typeof DaftarRoute
   '/daftar-kali': typeof DaftarKaliRoute
   '/daftar-mpt4': typeof DaftarMpt4Route
@@ -476,6 +483,7 @@ export interface FileRoutesByTo {
   '/api/debug-env': typeof ApiDebugEnvRoute
   '/api/temporary-unlock': typeof ApiTemporaryUnlockRoute
   '/bayaran/selesai': typeof BayaranSelesaiRoute
+  '/cuba-kali/demo': typeof CubaKaliDemoRoute
   '/darjah/$darjahId': typeof DarjahDarjahIdRoute
   '/dashboard/ibu-bapa': typeof DashboardIbuBapaRoute
   '/dashboard/progress': typeof DashboardProgressRoute
@@ -512,7 +520,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/cikgu-affiliate': typeof CikguAffiliateRoute
-  '/cuba-kali': typeof CubaKaliRoute
+  '/cuba-kali': typeof CubaKaliRouteWithChildren
   '/daftar': typeof DaftarRoute
   '/daftar-kali': typeof DaftarKaliRoute
   '/daftar-mpt4': typeof DaftarMpt4Route
@@ -538,6 +546,7 @@ export interface FileRoutesById {
   '/api/debug-env': typeof ApiDebugEnvRoute
   '/api/temporary-unlock': typeof ApiTemporaryUnlockRoute
   '/bayaran/selesai': typeof BayaranSelesaiRoute
+  '/cuba-kali/demo': typeof CubaKaliDemoRoute
   '/darjah/$darjahId': typeof DarjahDarjahIdRoute
   '/dashboard/ibu-bapa': typeof DashboardIbuBapaRoute
   '/dashboard/progress': typeof DashboardProgressRoute
@@ -601,6 +610,7 @@ export interface FileRouteTypes {
     | '/api/debug-env'
     | '/api/temporary-unlock'
     | '/bayaran/selesai'
+    | '/cuba-kali/demo'
     | '/darjah/$darjahId'
     | '/dashboard/ibu-bapa'
     | '/dashboard/progress'
@@ -662,6 +672,7 @@ export interface FileRouteTypes {
     | '/api/debug-env'
     | '/api/temporary-unlock'
     | '/bayaran/selesai'
+    | '/cuba-kali/demo'
     | '/darjah/$darjahId'
     | '/dashboard/ibu-bapa'
     | '/dashboard/progress'
@@ -723,6 +734,7 @@ export interface FileRouteTypes {
     | '/api/debug-env'
     | '/api/temporary-unlock'
     | '/bayaran/selesai'
+    | '/cuba-kali/demo'
     | '/darjah/$darjahId'
     | '/dashboard/ibu-bapa'
     | '/dashboard/progress'
@@ -759,7 +771,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
   CikguAffiliateRoute: typeof CikguAffiliateRoute
-  CubaKaliRoute: typeof CubaKaliRoute
+  CubaKaliRoute: typeof CubaKaliRouteWithChildren
   DaftarRoute: typeof DaftarRoute
   DaftarKaliRoute: typeof DaftarKaliRoute
   DaftarMpt4Route: typeof DaftarMpt4Route
@@ -1022,6 +1034,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BayaranSelesaiRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/cuba-kali/demo': {
+      id: '/cuba-kali/demo'
+      path: '/demo'
+      fullPath: '/cuba-kali/demo'
+      preLoaderRoute: typeof CubaKaliDemoRouteImport
+      parentRoute: typeof CubaKaliRoute
+    }
     '/darjah/$darjahId': {
       id: '/darjah/$darjahId'
       path: '/darjah/$darjahId'
@@ -1235,11 +1254,23 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface CubaKaliRouteChildren {
+  CubaKaliDemoRoute: typeof CubaKaliDemoRoute
+}
+
+const CubaKaliRouteChildren: CubaKaliRouteChildren = {
+  CubaKaliDemoRoute: CubaKaliDemoRoute,
+}
+
+const CubaKaliRouteWithChildren = CubaKaliRoute._addFileChildren(
+  CubaKaliRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
   CikguAffiliateRoute: CikguAffiliateRoute,
-  CubaKaliRoute: CubaKaliRoute,
+  CubaKaliRoute: CubaKaliRouteWithChildren,
   DaftarRoute: DaftarRoute,
   DaftarKaliRoute: DaftarKaliRoute,
   DaftarMpt4Route: DaftarMpt4Route,
