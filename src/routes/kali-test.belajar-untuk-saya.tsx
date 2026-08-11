@@ -627,10 +627,18 @@ function KaliBelajarUntukSayaPage() {
         </p>
 
         {diagAlreadyDone && diagResult ? (
-          <KaliTeaseScreen hasil={diagResult} onBukaAnalisis={handleBukaAnalisis} />
+          <KaliCelebrationScreen
+            mataSesi={0}
+            bolehTunjuk={sourceRef.current === "same_device"}
+            onTunjuk={handleTunjukIbuBapa}
+          />
         ) : selesai ? (
           diagnosticMode && diagResult ? (
-            <KaliTeaseScreen hasil={diagResult} onBukaAnalisis={handleBukaAnalisis} />
+            <KaliCelebrationScreen
+              mataSesi={mataSesi}
+              bolehTunjuk={sourceRef.current === "same_device"}
+              onTunjuk={handleTunjukIbuBapa}
+            />
           ) : (
           <div className="mt-8 rounded-3xl bg-card p-8 text-center shadow-card">
             <h1 className="font-display text-3xl font-extrabold" style={{ color: HIJAU }}>
