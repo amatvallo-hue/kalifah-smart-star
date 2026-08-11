@@ -71,6 +71,7 @@ function AffiliateDashboardPage() {
   const [jualan, setJualan] = useState<Jualan[]>([]);
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
+  const [copiedCubaKali, setCopiedCubaKali] = useState(false);
   const [copiedCaption, setCopiedCaption] = useState<string | null>(null);
   const [challenge, setChallenge] = useState<Challenge | null>(null);
   const [jualanBulanIni, setJualanBulanIni] = useState<number>(0);
@@ -213,6 +214,13 @@ function AffiliateDashboardPage() {
     return `${origin}/daftar?ref=${aff.custom_ref_code ?? aff.ref_code}`;
   }, [aff]);
 
+  const cubaKaliLink = useMemo(() => {
+    if (!aff) return "";
+    const origin =
+      typeof window !== "undefined" ? window.location.origin : "https://kalifah.my";
+    return `${origin}/cuba-kali?ref=${aff.custom_ref_code ?? aff.ref_code}`;
+  }, [aff]);
+
   const baki = aff ? (aff.total_komisyen ?? 0) - (aff.total_dibayar ?? 0) : 0;
 
   async function copyLink() {
@@ -220,6 +228,16 @@ function AffiliateDashboardPage() {
       await navigator.clipboard.writeText(refLink);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
+    } catch {
+      /* ignore */
+    }
+  }
+
+  async function copyCubaKaliLink() {
+    try {
+      await navigator.clipboard.writeText(cubaKaliLink);
+      setCopiedCubaKali(true);
+      setTimeout(() => setCopiedCubaKali(false), 2000);
     } catch {
       /* ignore */
     }
@@ -479,6 +497,50 @@ function AffiliateDashboardPage() {
               >
                 Muat Turun QR
               </a>
+            </div>
+          </div>
+
+          {/* Link Cuba KALI */}
+          <div className="mt-5">
+            <div className="text-xs font-bold uppercase text-muted-foreground">
+              Link Cuba KALI (Percuma, Tanpa Daftar)
+            </div>
+            <p className="mt-1 text-xs text-muted-foreground">
+              /cuba-kali = demo percuma dulu, tanpa borang. /daftar = terus daftar akaun.
+            </p>
+            <div className="mt-2 flex flex-col gap-2 sm:flex-row sm:items-center">
+              <input
+                readOnly
+                value={cubaKaliLink}
+                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+              />
+              <button
+                type="button"
+                onClick={copyCubaKaliLink}
+                className="inline-flex items-center justify-center gap-1 rounded-md bg-primary px-4 py-2 text-sm font-bold text-primary-foreground hover:opacity-90"
+              >
+                <Copy className="h-4 w-4" />
+                {copiedCubaKali ? "Disalin" : "Salin Pautan"}
+              </button>
+            </div>
+            <div className="mt-3 flex flex-row items-center gap-3">
+              <img
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=96x96&data=${encodeURIComponent(cubaKaliLink)}`}
+                alt="QR Code Cuba KALI"
+                className="rounded-lg bg-white p-2"
+              />
+              <div className="flex flex-col gap-1">
+                <div className="text-xs font-bold uppercase text-muted-foreground">
+                  QR Code Cuba KALI
+                </div>
+                <a
+                  href={`https://api.qrserver.com/v1/create-qr-code/?size=96x96&data=${encodeURIComponent(cubaKaliLink)}`}
+                  download="qr-cuba-kali.png"
+                  className="inline-flex items-center justify-center gap-1 rounded-md border border-input bg-background px-3 py-1.5 text-xs font-bold text-foreground hover:bg-muted"
+                >
+                  Muat Turun QR
+                </a>
+              </div>
             </div>
           </div>
 
