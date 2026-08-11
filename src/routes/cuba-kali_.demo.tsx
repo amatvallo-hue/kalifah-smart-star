@@ -11,7 +11,7 @@ export const Route = createFileRoute("/cuba-kali_/demo")({
   }),
   ssr: false,
   validateSearch: (search: Record<string, unknown>) => ({
-    chat_id: typeof search.chat_id === "string" ? search.chat_id : undefined,
+    tg: typeof search.tg === "string" ? search.tg : undefined,
     sesi: typeof search.sesi === "string" ? search.sesi : undefined,
   }),
   component: CubaKaliDemoPage,
@@ -87,7 +87,7 @@ function PageShell({ children }: { children: ReactNode }) {
 }
 
 function CubaKaliDemoPage() {
-  const { chat_id, sesi } = Route.useSearch();
+  const { tg, sesi } = Route.useSearch();
 
   const [phase, setPhase] = useState<Phase>("loading");
   const [darjah, setDarjah] = useState<number | null>(null);
@@ -103,7 +103,7 @@ function CubaKaliDemoPage() {
   const [showBranchBNote, setShowBranchBNote] = useState(false);
 
   const startedTrackedRef = useRef(false);
-  const chatIdNum = chat_id ? Number(chat_id) : null;
+  const chatIdNum = tg ? Number(tg) : null;
 
   useEffect(() => {
     let cancelled = false;
