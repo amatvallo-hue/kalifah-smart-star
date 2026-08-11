@@ -101,6 +101,7 @@ function LaporanAnakPage() {
   const pautanDashboard = (
     <Link
       to="/dashboard/ibu-bapa"
+      search={{}}
       className="mt-6 inline-flex rounded-full px-6 py-3 font-display font-extrabold text-white shadow-soft transition hover:opacity-90"
       style={{ backgroundColor: HIJAU }}
     >
@@ -218,6 +219,7 @@ function LaporanAnakPage() {
           </p>
           <Link
             to="/dashboard/ibu-bapa"
+            search={{}}
             className="mt-4 inline-flex rounded-full px-8 py-4 font-display font-extrabold text-white shadow-soft transition hover:opacity-90"
             style={{ backgroundColor: HIJAU }}
           >

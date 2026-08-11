@@ -568,7 +568,9 @@ function KaliBelajarUntukSayaPage() {
             .then(({ data, error }: any) => {
               if (error || data !== true) {
                 console.error("simpan_kali_diagnostic_hasil gagal:", error);
+                return;
               }
+              void supabase.functions.invoke("kali-notify-laporan-siap", { body: {} }).then(() => {}, () => {});
             });
         }
       } else {
