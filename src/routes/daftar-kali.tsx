@@ -852,7 +852,7 @@ function DaftarKaliPage() {
         <div className="container mx-auto max-w-xl px-4">
           <StepProgress active={3} />
         </div>
-        <SambungTelegram parentId={parentId} onLinked={() => void selepasTelegram()} />
+        <SambungTelegram parentId={parentId} source="kali" onLinked={() => void selepasTelegram()} />
 
         {sedangCiptaAnak ? (
           <p className="mt-4 animate-pulse text-center font-display text-sm font-bold text-primary">
