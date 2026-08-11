@@ -21,11 +21,7 @@ export const Route = createFileRoute("/harga")({
 const HIJAU = "#1B8A5A";
 const EMAS = "#F5A623";
 
-// TODO: ganti dengan Sitekey SEBENAR (public, selamat di frontend) lepas
-// Amat cipta widget Turnstile mod "Invisible" di Cloudflare dashboard.
-// Sitekey test rasmi Cloudflare ni SENTIASA lulus -- untuk struktur/deploy
-// sahaja, BUKAN proteksi sebenar.
-const TURNSTILE_SITEKEY = "1x00000000000000000000AA";
+const TURNSTILE_SITEKEY = "0x4AAAAAAENJa5Q81aQK4TwU";
 
 type PakejId = "satu" | "perDarjah" | "bundle";
 
