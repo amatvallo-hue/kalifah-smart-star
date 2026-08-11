@@ -5,13 +5,18 @@ import { supabase } from "@/integrations/supabase/client";
 import { AuthShell, Field } from "./login";
 
 export const Route = createFileRoute("/lupa-password")({
+  validateSearch: (search: Record<string, unknown>) => {
+    const email = typeof search.email === "string" ? search.email : undefined;
+    return email ? { email } : {};
+  },
   head: () => ({ meta: [{ title: "Lupa Password — Kalifah.my" }] }),
   ssr: false,
   component: LupaPasswordPage,
 });
 
 function LupaPasswordPage() {
-  const [email, setEmail] = useState("");
+  const search = Route.useSearch();
+  const [email, setEmail] = useState(search.email ?? "");
   const [loading, setLoading] = useState(false);
   const [info, setInfo] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);

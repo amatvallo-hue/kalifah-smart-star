@@ -103,7 +103,11 @@ function LoginPage() {
 
         {mode === "parent" && (
           <p className="text-center text-xs">
-            <Link to="/lupa-password" className="font-bold text-muted-foreground hover:text-primary hover:underline">
+            <Link
+              to="/lupa-password"
+              search={identifier.trim() ? { email: identifier.trim() } : {}}
+              className="font-bold text-muted-foreground hover:text-primary hover:underline"
+            >
               Lupa password?
             </Link>
           </p>
