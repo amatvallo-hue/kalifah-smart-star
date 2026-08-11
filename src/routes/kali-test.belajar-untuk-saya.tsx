@@ -91,91 +91,52 @@ function letterToIdx(l: string): number {
   return ({ A: 0, B: 1, C: 2, D: 3 } as Record<string, number>)[String(l).toUpperCase()] ?? 0;
 }
 
-function KaliTeaseScreen({
-  hasil,
-  onBukaAnalisis,
+function KaliCelebrationScreen({
+  mataSesi,
+  bolehTunjuk,
+  onTunjuk,
 }: {
-  hasil: DiagnosticHasil;
-  onBukaAnalisis: () => void;
+  mataSesi: number;
+  bolehTunjuk: boolean;
+  onTunjuk: () => void;
 }) {
-  const bakiDiperkukuh = Math.max(0, hasil.jumlahDiperkukuh - (hasil.bocorNama ? 1 : 0));
   return (
     <div className="mt-8 rounded-3xl bg-card p-8 text-center shadow-card">
-      <h1 className="font-display text-2xl font-extrabold" style={{ color: HIJAU }}>
-        KALI dah selesai menilai sesi pertama anak anda
+      <h1 className="font-display text-3xl font-extrabold" style={{ color: HIJAU }}>
+        🎉 Selesai!
       </h1>
-      <p className="mt-4 font-display text-4xl font-extrabold" style={{ color: HIJAU }}>
-        {hasil.betul}/{JUMLAH_SOALAN_SESI} betul
+      <p className="mt-3 font-display text-lg font-extrabold text-foreground">
+        KALI dah kenal anda dengan lebih baik.
+      </p>
+      <p className="mt-2 text-sm text-muted-foreground">
+        KALI dah jumpa apa yang anda dah kuasai dan apa yang boleh diperkuatkan seterusnya.
+      </p>
+      <p className="mt-2 text-sm text-muted-foreground">
+        Laporan sudah dihantar kepada ibu/bapa.
       </p>
 
-      <div className="mt-6 grid grid-cols-1 gap-3 text-left sm:grid-cols-2">
-        <div
-          className="rounded-2xl p-4"
-          style={{ backgroundColor: `${HIJAU}15`, border: `2px solid ${HIJAU}` }}
-        >
-          <p className="text-sm font-bold" style={{ color: HIJAU }}>
-            🟢 {hasil.jumlahMenguasai} kemahiran dikuasai dengan baik
-          </p>
-        </div>
-        <div className="rounded-2xl border-2 border-destructive/40 bg-destructive/10 p-4">
-          <p className="text-sm font-bold text-destructive">
-            🔴 {hasil.jumlahDiperkukuh} kemahiran memerlukan perhatian
-          </p>
-        </div>
-      </div>
-
-      <p className="mt-6 text-left font-display text-sm font-extrabold text-foreground">
-        KALI mengesan:
-      </p>
-
-      {hasil.bocorNama && (
-        <div
-          className="mt-2 rounded-2xl border-2 p-4 text-left"
-          style={{ borderColor: "#f59e0b", backgroundColor: "#fffbeb" }}
-        >
-          <p className="text-sm font-extrabold" style={{ color: "#92400e" }}>
-            ⚠️ {hasil.bocorNama}
-          </p>
-          {hasil.bocorGejala && (
-            <p className="mt-1 text-sm" style={{ color: "#92400e" }}>
-              {hasil.bocorGejala}
-            </p>
-          )}
-        </div>
+      {mataSesi > 0 && (
+        <p className="mt-6 font-display text-2xl font-extrabold" style={{ color: EMAS }}>
+          ⭐ +{mataSesi} mata
+        </p>
       )}
 
-      {bakiDiperkukuh > 0 && (
-        <div className="mt-3 rounded-2xl border-2 border-border bg-secondary/40 p-4 text-left">
-          <p className="text-sm font-bold text-muted-foreground">
-            🔒 {bakiDiperkukuh} lagi kemahiran memerlukan perhatian
-          </p>
-          <p className="mt-1 text-xs text-muted-foreground">Buka analisis KALI untuk melihatnya.</p>
+      {bolehTunjuk && (
+        <div className="mt-8 flex justify-center">
+          <button
+            type="button"
+            onClick={onTunjuk}
+            className="rounded-full border-2 px-6 py-3 font-display text-sm font-extrabold transition hover:opacity-80"
+            style={{ borderColor: HIJAU, color: HIJAU }}
+          >
+            Tunjukkan kepada Ibu/Ayah →
+          </button>
         </div>
       )}
-
-      <p className="mt-8 font-display text-lg font-extrabold text-foreground">
-        KALI sudah menyediakan langkah seterusnya untuk anak anda
-      </p>
-      <div className="mt-3 space-y-2 text-left text-sm text-muted-foreground">
-        <p>🔒 Kenapa kesilapan ini berlaku</p>
-        <p>🔒 Kemahiran mana perlu diperbaiki dahulu</p>
-        <p>🔒 Latihan yang KALI cadangkan</p>
-        <p>🔒 Pelan pembelajaran seterusnya</p>
-      </div>
-
-      <div className="mt-8 flex justify-center">
-        <button
-          type="button"
-          onClick={onBukaAnalisis}
-          className="rounded-full px-8 py-4 font-display font-extrabold text-white shadow-soft transition hover:opacity-90"
-          style={{ backgroundColor: HIJAU }}
-        >
-          Buka Analisis & Belajar Bersama KALI
-        </button>
-      </div>
     </div>
   );
 }
+
 
 function KaliBelajarUntukSayaPage() {
   const navigate = useNavigate();
