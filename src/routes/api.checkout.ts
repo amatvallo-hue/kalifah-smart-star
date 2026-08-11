@@ -253,10 +253,12 @@ export const Route = createFileRoute("/api/checkout")({
               returnUrl,
               callbackUrl,
               customerName:
-                (user.user_metadata?.name as string | undefined) ??
-                user.email?.split("@")[0] ??
-                "Pelanggan",
-              customerEmail: customerEmailInput ?? user.email ?? "noreply@kalifah.my",
+                nonEmpty(
+                  user.user_metadata?.name as string | undefined,
+                  customerEmailInput?.split("@")[0],
+                  user.email?.split("@")[0],
+                ) ?? "Pelanggan",
+              customerEmail: nonEmpty(customerEmailInput, user.email) ?? "noreply@kalifah.my",
               customerPhone:
                 (user.user_metadata?.phone as string | undefined) ?? undefined,
             });
