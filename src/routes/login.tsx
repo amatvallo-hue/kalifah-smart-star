@@ -6,9 +6,10 @@ import { CHILD_EMAIL_DOMAIN, normalizeUsername } from "@/lib/child-auth";
 import { KalifahLogo } from "@/components/KalifahLogo";
 
 export const Route = createFileRoute("/login")({
-  validateSearch: (search: Record<string, unknown>) => ({
-    email: typeof search.email === "string" ? search.email : undefined,
-  }),
+  validateSearch: (search: Record<string, unknown>) => {
+    const email = typeof search.email === "string" ? search.email : undefined;
+    return email ? { email } : {};
+  },
   head: () => ({
     meta: [
       { title: "Log Masuk — Kalifah.my" },
