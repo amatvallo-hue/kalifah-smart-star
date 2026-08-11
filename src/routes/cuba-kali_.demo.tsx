@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -98,7 +98,6 @@ function CubaKaliDemoPage() {
   >([]);
   const [demoPilih, setDemoPilih] = useState<string | null>(null);
   const [demoResult, setDemoResult] = useState<DemoResult | null>(null);
-  const [showBranchBNote, setShowBranchBNote] = useState(false);
 
   const startedTrackedRef = useRef(false);
   const chatIdNum = tg ? Number(tg) : null;
@@ -331,18 +330,26 @@ function CubaKaliDemoPage() {
           </a>
 
           <div className="mt-3 text-center">
-            <button
-              type="button"
-              onClick={() => setShowBranchBNote(true)}
+            <Link
+              to="/daftar"
+              search={{ ref: undefined }}
+              onClick={() => {
+                void supabase
+                  .from("analytics_events")
+                  .insert({
+                    event_name: "cuba_kali_activate_now_clicked",
+                    user_id: null,
+                    metadata: { telegram_chat_id: chatIdNum, darjah },
+                  })
+                  .then(
+                    () => {},
+                    () => {},
+                  );
+              }}
               className="text-sm font-bold text-muted-foreground underline underline-offset-2 hover:text-foreground"
             >
               Dah yakin dengan KALI? Aktifkan untuk anak saya →
-            </button>
-            {showBranchBNote ? (
-              <p className="mt-2 text-xs text-muted-foreground">
-                Ciri ini akan tersedia tak lama lagi. Buat masa ini, cuba KALI dengan anak anda dahulu 😊
-              </p>
-            ) : null}
+            </Link>
           </div>
         </div>
       </PageShell>
