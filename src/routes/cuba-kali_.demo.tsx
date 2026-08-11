@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -330,9 +330,8 @@ function CubaKaliDemoPage() {
           </a>
 
           <div className="mt-3 text-center">
-            <Link
-              to="/daftar"
-              search={{ ref: undefined }}
+            <button
+              type="button"
               onClick={() => {
                 void supabase
                   .from("analytics_events")
@@ -345,11 +344,12 @@ function CubaKaliDemoPage() {
                     () => {},
                     () => {},
                   );
+                window.location.href = `/harga?pakej=satu&darjah=${darjah ?? 1}`;
               }}
               className="text-sm font-bold text-muted-foreground underline underline-offset-2 hover:text-foreground"
             >
               Dah yakin dengan KALI? Aktifkan untuk anak saya →
-            </Link>
+            </button>
           </div>
         </div>
       </PageShell>
