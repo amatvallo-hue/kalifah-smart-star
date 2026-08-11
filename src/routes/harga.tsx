@@ -1,7 +1,8 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { ArrowLeft, Check, Loader2, Star, X } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { toast } from "sonner";
+import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
 import { HARGA_ASAL, PAKEJ_LIST, DARJAH_LIST } from "@/lib/curriculum";
 import { supabase } from "@/integrations/supabase/client";
 import { KalifahLogo } from "@/components/KalifahLogo";
@@ -19,6 +20,12 @@ export const Route = createFileRoute("/harga")({
 
 const HIJAU = "#1B8A5A";
 const EMAS = "#F5A623";
+
+// TODO: ganti dengan Sitekey SEBENAR (public, selamat di frontend) lepas
+// Amat cipta widget Turnstile mod "Invisible" di Cloudflare dashboard.
+// Sitekey test rasmi Cloudflare ni SENTIASA lulus -- untuk struktur/deploy
+// sahaja, BUKAN proteksi sebenar.
+const TURNSTILE_SITEKEY = "1x00000000000000000000AA";
 
 type PakejId = "satu" | "perDarjah" | "bundle";
 
@@ -345,8 +352,10 @@ function HargaPage() {
         <EmailGateModal
           pending={emailGate}
           onClose={() => setEmailGate(null)}
-          onProceed={async (email) => {
-            const { error } = await supabase.auth.signInAnonymously();
+          onProceed={async (email, captchaToken) => {
+            const { error } = await supabase.auth.signInAnonymously(
+              captchaToken ? { options: { captchaToken } } : undefined,
+            );
             if (error) {
               toast.error("Gagal mula sesi. Sila cuba lagi.");
               return;
@@ -457,18 +466,24 @@ function EmailGateModal({
 }: {
   pending: { pakej: PakejId; darjah: number[] };
   onClose: () => void;
-  onProceed: (email: string) => void;
+  onProceed: (email: string, captchaToken?: string) => void;
 }) {
   const [email, setEmail] = useState("");
   const [checking, setChecking] = useState(false);
   const [existing, setExisting] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const turnstileRef = useRef<TurnstileInstance>(null);
 
-  async function submit(e: React.FormEvent) {
+  async function submit(e: FormEvent) {
     e.preventDefault();
     const trimmed = email.trim();
     if (!trimmed || !trimmed.includes("@")) {
       setErr("Sila masukkan emel yang sah.");
+      return;
+    }
+    if (!captchaToken) {
+      setErr("Sila tunggu sebentar dan cuba lagi.");
       return;
     }
     setErr(null);
@@ -483,7 +498,7 @@ function EmailGateModal({
       setExisting(true);
       return;
     }
-    onProceed(trimmed);
+    onProceed(trimmed, captchaToken);
   }
 
   const redirectBack = `/harga?pakej=${pending.pakej}&darjah=${pending.darjah.join(",")}`;
@@ -523,6 +538,14 @@ function EmailGateModal({
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="contoh@email.com"
                 className="w-full rounded-2xl border-2 border-border bg-background px-4 py-3 text-sm font-semibold text-foreground outline-none focus:border-primary"
+              />
+              <Turnstile
+                ref={turnstileRef}
+                siteKey={TURNSTILE_SITEKEY}
+                options={{ size: "invisible" }}
+                onSuccess={(token) => setCaptchaToken(token)}
+                onError={() => setCaptchaToken(null)}
+                onExpire={() => setCaptchaToken(null)}
               />
               {err ? <p className="text-sm font-semibold text-destructive">{err}</p> : null}
               <button
