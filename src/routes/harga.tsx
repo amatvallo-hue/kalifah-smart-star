@@ -501,7 +501,10 @@ function EmailGateModal({
               Emel ini sudah pernah digunakan di Kalifah.my. Log masuk untuk teruskan pembelian dan pastikan akses masuk ke akaun yang betul.
             </p>
             <a
-              href={`/login?redirect=${encodeURIComponent(redirectBack)}`}
+              href="/login"
+              onClick={() => {
+                window.sessionStorage.setItem("kalifah_redirect_selepas_login", redirectBack);
+              }}
               className="mt-5 inline-flex w-full items-center justify-center rounded-full bg-primary px-5 py-3 font-display text-sm font-extrabold text-primary-foreground shadow-soft"
             >
               Log Masuk &amp; Teruskan →
