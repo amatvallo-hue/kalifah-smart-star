@@ -201,6 +201,7 @@ function AdminAffiliateProfile() {
   const origin = typeof window !== "undefined" ? window.location.origin : "https://kalifah.my";
   const kod = aff?.custom_ref_code ?? aff?.ref_code ?? "";
   const refLink = `${origin}/daftar?ref=${kod}`;
+  const cubaKaliLink = `${origin}/cuba-kali?ref=${kod}`;
 
   const copy = async (key: string, text: string) => {
     try {

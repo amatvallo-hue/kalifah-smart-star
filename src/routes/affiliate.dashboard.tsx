@@ -71,6 +71,7 @@ function AffiliateDashboardPage() {
   const [jualan, setJualan] = useState<Jualan[]>([]);
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
+  const [copiedCubaKali, setCopiedCubaKali] = useState(false);
   const [copiedCaption, setCopiedCaption] = useState<string | null>(null);
   const [challenge, setChallenge] = useState<Challenge | null>(null);
   const [jualanBulanIni, setJualanBulanIni] = useState<number>(0);
@@ -213,6 +214,13 @@ function AffiliateDashboardPage() {
     return `${origin}/daftar?ref=${aff.custom_ref_code ?? aff.ref_code}`;
   }, [aff]);
 
+  const cubaKaliLink = useMemo(() => {
+    if (!aff) return "";
+    const origin =
+      typeof window !== "undefined" ? window.location.origin : "https://kalifah.my";
+    return `${origin}/cuba-kali?ref=${aff.custom_ref_code ?? aff.ref_code}`;
+  }, [aff]);
+
   const baki = aff ? (aff.total_komisyen ?? 0) - (aff.total_dibayar ?? 0) : 0;
 
   async function copyLink() {
@@ -220,6 +228,16 @@ function AffiliateDashboardPage() {
       await navigator.clipboard.writeText(refLink);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
+    } catch {
+      /* ignore */
+    }
+  }
+
+  async function copyCubaKaliLink() {
+    try {
+      await navigator.clipboard.writeText(cubaKaliLink);
+      setCopiedCubaKali(true);
+      setTimeout(() => setCopiedCubaKali(false), 2000);
     } catch {
       /* ignore */
     }
