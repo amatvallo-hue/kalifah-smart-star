@@ -16,7 +16,7 @@ import { usePoints } from "@/hooks/use-points";
 import { rekodJawapan } from "@/lib/progress";
 import { awardKaliStar, awardKaliSesiBonus } from "@/lib/tambah-mata";
 import { renderSoalanSvg } from "@/lib/render-soalan-svg";
-import { shouldSkipChildGuard, laluanCheckout } from "@/lib/child-auth";
+import { shouldSkipChildGuard, switchBackToParent } from "@/lib/child-auth";
 
 export const Route = createFileRoute("/kali-test/belajar-untuk-saya")({
   head: () => ({
