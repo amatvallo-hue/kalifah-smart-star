@@ -38,7 +38,19 @@ function sanitizeCampaign(value: string | null): string | null {
   return cleaned.length > 0 ? cleaned : null;
 }
 
-function buildTelegramLink(campaign: string | null): string {
+// Padanan sama macam sanitizeRef() di daftar.tsx/harga.tsx.
+function sanitizeRef(value: string | null): string | null {
+  if (!value) return null;
+  const cleaned = value.trim().toUpperCase().slice(0, 64);
+  return /^[A-Z0-9_-]+$/.test(cleaned) ? cleaned : null;
+}
+
+// Ref affiliate diutamakan drpd campaign dalam payload /start (Telegram
+// hadkan start param ~64 aksara) -- kali-telegram-bot v8 parse format
+// "cuba_kali_ref_{KOD}" ni. Rujuk memory kali_flow_b_cuba_kali_guest_arch
+// (gap: ref hilang merentas Telegram/device sebelum ni).
+function buildTelegramLink(campaign: string | null, ref: string | null): string {
+  if (ref) return `https://t.me/${BOT_USERNAME}?start=cuba_kali_ref_${ref.slice(0, 40)}`;
   const payload = campaign ? `cuba_kali_${campaign}` : "cuba_kali";
   return `https://t.me/${BOT_USERNAME}?start=${payload}`;
 }
@@ -50,7 +62,11 @@ function CubaKaliPage() {
     typeof window !== "undefined"
       ? sanitizeCampaign(new URLSearchParams(window.location.search).get("utm_campaign"))
       : null;
-  const telegramLink = buildTelegramLink(campaign);
+  const ref =
+    typeof window !== "undefined"
+      ? sanitizeRef(new URLSearchParams(window.location.search).get("ref"))
+      : null;
+  const telegramLink = buildTelegramLink(campaign, ref);
 
   useEffect(() => {
     if (typeof window === "undefined") return;

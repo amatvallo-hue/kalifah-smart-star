@@ -4,6 +4,12 @@ import { User, Mail, Lock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { AuthShell, Field } from "./login";
 
+function sanitizeRef(value: string | null | undefined): string | null {
+  if (!value) return null;
+  const cleaned = value.trim().toUpperCase().slice(0, 64);
+  return /^[A-Z0-9_-]+$/.test(cleaned) ? cleaned : null;
+}
+
 export const Route = createFileRoute("/cuba-kali_/aktifkan")({
   head: () => ({
     meta: [{ title: "Analisis KALI — Kalifah.my" }],
