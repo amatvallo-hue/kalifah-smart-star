@@ -340,6 +340,23 @@ function HargaPage() {
           onConfirm={(darjah) => mulaBayar(pickerFor, darjah)}
         />
       )}
+
+      {emailGate && (
+        <EmailGateModal
+          pending={emailGate}
+          onClose={() => setEmailGate(null)}
+          onProceed={async (email) => {
+            const { error } = await supabase.auth.signInAnonymously();
+            if (error) {
+              toast.error("Gagal mula sesi. Sila cuba lagi.");
+              return;
+            }
+            const p = emailGate;
+            setEmailGate(null);
+            if (p) await lakukanCheckout(p.pakej, p.darjah, email);
+          }}
+        />
+      )}
     </div>
   );
 }
