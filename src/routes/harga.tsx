@@ -498,7 +498,7 @@ function EmailGateModal({
       setExisting(true);
       return;
     }
-    onProceed(trimmed);
+    onProceed(trimmed, captchaToken);
   }
 
   const redirectBack = `/harga?pakej=${pending.pakej}&darjah=${pending.darjah.join(",")}`;
@@ -538,6 +538,14 @@ function EmailGateModal({
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="contoh@email.com"
                 className="w-full rounded-2xl border-2 border-border bg-background px-4 py-3 text-sm font-semibold text-foreground outline-none focus:border-primary"
+              />
+              <Turnstile
+                ref={turnstileRef}
+                siteKey={TURNSTILE_SITEKEY}
+                options={{ size: "invisible" }}
+                onSuccess={(token) => setCaptchaToken(token)}
+                onError={() => setCaptchaToken(null)}
+                onExpire={() => setCaptchaToken(null)}
               />
               {err ? <p className="text-sm font-semibold text-destructive">{err}</p> : null}
               <button
