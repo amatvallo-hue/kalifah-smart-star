@@ -34,6 +34,9 @@ export function SambungTelegram({
       const chatId = (data as { telegram_chat_id: number | null } | null)?.telegram_chat_id;
       if (chatId !== null && chatId !== undefined) {
         window.clearInterval(timer);
+        if (source === "kali") {
+          void supabase.functions.invoke("kali-telegram-welcome", { body: {} }).then(() => {}, () => {});
+        }
         onLinkedRef.current();
       }
     }, 3000);
@@ -45,8 +48,7 @@ export function SambungTelegram({
 
   function buka() {
     setMenunggu(true);
-    const payload = source === "kali" ? `hubung_${parentId}_kali` : `hubung_${parentId}`;
-    window.open(`https://t.me/${BOT}?start=${payload}`, "_blank", "noopener,noreferrer");
+    window.open(`https://t.me/${BOT}?start=hubung_${parentId}`, "_blank", "noopener,noreferrer");
   }
 
   return (
