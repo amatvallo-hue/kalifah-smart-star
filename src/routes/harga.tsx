@@ -34,7 +34,7 @@ function HargaPage() {
 
   async function mulaBayar(pakej: PakejId, darjah: number[]) {
     const { data: sess } = await supabase.auth.getSession();
-    if (!sess.session) {
+    if (!sess.session || sess.session.user.is_anonymous) {
       setEmailGate({ pakej, darjah });
       return;
     }
@@ -346,10 +346,13 @@ function HargaPage() {
           pending={emailGate}
           onClose={() => setEmailGate(null)}
           onProceed={async (email) => {
-            const { error } = await supabase.auth.signInAnonymously();
-            if (error) {
-              toast.error("Gagal mula sesi. Sila cuba lagi.");
-              return;
+            const { data: semasa } = await supabase.auth.getSession();
+            if (!semasa.session) {
+              const { error } = await supabase.auth.signInAnonymously();
+              if (error) {
+                toast.error("Gagal mula sesi. Sila cuba lagi.");
+                return;
+              }
             }
             const p = emailGate;
             setEmailGate(null);
