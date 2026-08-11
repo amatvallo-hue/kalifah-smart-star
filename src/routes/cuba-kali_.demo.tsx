@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 const BOT_USERNAME = "kalifahassistantbot";
 const LANJUT_LINK = `https://t.me/${BOT_USERNAME}?start=cuba_kali_lanjut`;
 
-export const Route = createFileRoute("/cuba-kali/demo")({
+export const Route = createFileRoute("/cuba-kali_/demo")({
   head: () => ({
     meta: [{ title: "Demo KALI — Kalifah.my" }],
   }),
