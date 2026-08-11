@@ -65,6 +65,13 @@ function jsonError(
   );
 }
 
+function nonEmpty(...values: (string | null | undefined)[]): string | undefined {
+  for (const v of values) {
+    if (typeof v === "string" && v.trim().length > 0) return v.trim();
+  }
+  return undefined;
+}
+
 // Canonical public origin for ToyyibPay callback/return URLs. Never derive
 // from the incoming request — a checkout started on a preview or non-primary
 // host would otherwise bake a dead callback URL into the bill and silently
@@ -246,10 +253,12 @@ export const Route = createFileRoute("/api/checkout")({
               returnUrl,
               callbackUrl,
               customerName:
-                (user.user_metadata?.name as string | undefined) ??
-                user.email?.split("@")[0] ??
-                "Pelanggan",
-              customerEmail: customerEmailInput ?? user.email ?? "noreply@kalifah.my",
+                nonEmpty(
+                  user.user_metadata?.name as string | undefined,
+                  customerEmailInput?.split("@")[0],
+                  user.email?.split("@")[0],
+                ) ?? "Pelanggan",
+              customerEmail: nonEmpty(customerEmailInput, user.email) ?? "noreply@kalifah.my",
               customerPhone:
                 (user.user_metadata?.phone as string | undefined) ?? undefined,
             });
