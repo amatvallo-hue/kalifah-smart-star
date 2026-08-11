@@ -484,7 +484,13 @@ function DaftarKaliPage() {
       },
     });
     if (error) {
-      setError(error.message);
+      const sudahWujud = /already registered|already exists/i.test(error.message);
+      if (sudahWujud) {
+        setInfo("Nampaknya anda dah ada akaun dengan emel ini.");
+        setShowLoginCTA(true);
+      } else {
+        setError(error.message);
+      }
       setLoading(false);
       return;
     }
