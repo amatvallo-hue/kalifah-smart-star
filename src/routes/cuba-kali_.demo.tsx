@@ -312,6 +312,15 @@ function CubaKaliDemoPage() {
             <p className="mt-1 text-sm text-muted-foreground">{demoResult.next_text}</p>
           </div>
 
+          <div className="mt-4 rounded-2xl border border-primary/30 bg-primary/5 p-4 text-center">
+            <p className="text-sm text-muted-foreground">
+              Ini baru 6 jawapan anda. KALI sudah dapat melihat di mana corak jawapan mula berubah.
+            </p>
+            <p className="mt-2 text-sm font-extrabold text-primary">
+              Sekarang persoalannya: apa pula yang KALI akan jumpa tentang anak anda?
+            </p>
+          </div>
+
           <a
             href={LANJUT_LINK}
             target="_blank"
