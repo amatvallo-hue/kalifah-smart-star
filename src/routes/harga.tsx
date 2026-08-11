@@ -30,10 +30,19 @@ function HargaPage() {
   const [fastpath, setFastpath] = useState<{ nama: string; darjah: number } | null>(null);
   const [showFamilyPakej, setShowFamilyPakej] = useState(false);
   const autoRan = useRef(false);
-
+  const [emailGate, setEmailGate] = useState<{ pakej: PakejId; darjah: number[] } | null>(null);
 
   async function mulaBayar(pakej: PakejId, darjah: number[]) {
-    console.log("[harga] mulaBayar dipanggil", { pakej, darjah });
+    const { data: sess } = await supabase.auth.getSession();
+    if (!sess.session) {
+      setEmailGate({ pakej, darjah });
+      return;
+    }
+    await lakukanCheckout(pakej, darjah);
+  }
+
+  async function lakukanCheckout(pakej: PakejId, darjah: number[], customerEmail?: string) {
+    console.log("[harga] lakukanCheckout dipanggil", { pakej, darjah, adaEmel: !!customerEmail });
     setLoading(pakej);
     try {
       const { data: sess } = await supabase.auth.getSession();
@@ -53,7 +62,7 @@ function HargaPage() {
           "Content-Type": "application/json",
           ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
-        body: JSON.stringify({ pakej, darjah, ref_code: refCode }),
+        body: JSON.stringify({ pakej, darjah, ref_code: refCode, customer_email: customerEmail }),
       });
       const data = (await res.json()) as {
         url?: string;
