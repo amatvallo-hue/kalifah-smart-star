@@ -45,7 +45,8 @@ export function SambungTelegram({
 
   function buka() {
     setMenunggu(true);
-    window.open(`https://t.me/${BOT}?start=hubung_${parentId}`, "_blank", "noopener,noreferrer");
+    const payload = source === "kali" ? `hubung_${parentId}_kali` : `hubung_${parentId}`;
+    window.open(`https://t.me/${BOT}?start=${payload}`, "_blank", "noopener,noreferrer");
   }
 
   return (
