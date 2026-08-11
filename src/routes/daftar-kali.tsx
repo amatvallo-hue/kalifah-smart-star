@@ -156,6 +156,7 @@ function DaftarKaliPage() {
   const [darjah, setDarjah] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [info, setInfo] = useState<string | null>(null);
+  const [showLoginCTA, setShowLoginCTA] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showTelegram, setShowTelegram] = useState(false);
   const [parentId, setParentId] = useState<string | null>(null);
@@ -537,8 +538,13 @@ function DaftarKaliPage() {
       }
       setLoading(false);
 
-    } else {
+    } else if (isNewAccount) {
       setInfo("Akaun dicipta. Sila semak emel anda untuk pengesahan, kemudian log masuk.");
+      setShowLoginCTA(false);
+      setLoading(false);
+    } else {
+      setInfo("Nampaknya anda dah ada akaun dengan emel ini.");
+      setShowLoginCTA(true);
       setLoading(false);
     }
   }
@@ -975,6 +981,15 @@ function DaftarKaliPage() {
           <div className="rounded-2xl border border-primary/30 bg-primary/10 px-4 py-3 text-sm font-bold text-primary">
             {info}
           </div>
+        )}
+        {showLoginCTA && (
+          <button
+            type="button"
+            onClick={() => navigate({ to: "/login", search: { email } })}
+            className="flex w-full items-center justify-center gap-2 rounded-full bg-gradient-primary px-6 py-3 font-display text-base font-extrabold text-primary-foreground shadow-soft transition hover:-translate-y-0.5 hover:shadow-gold"
+          >
+            Log Masuk →
+          </button>
         )}
 
         <button

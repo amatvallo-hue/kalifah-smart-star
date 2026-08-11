@@ -6,6 +6,10 @@ import { CHILD_EMAIL_DOMAIN, normalizeUsername } from "@/lib/child-auth";
 import { KalifahLogo } from "@/components/KalifahLogo";
 
 export const Route = createFileRoute("/login")({
+  validateSearch: (search: Record<string, unknown>) => {
+    const email = typeof search.email === "string" ? search.email : undefined;
+    return email ? { email } : {};
+  },
   head: () => ({
     meta: [
       { title: "Log Masuk — Kalifah.my" },
@@ -18,8 +22,9 @@ export const Route = createFileRoute("/login")({
 
 function LoginPage() {
   const navigate = useNavigate();
+  const search = Route.useSearch();
   const [mode, setMode] = useState<"parent" | "child">("parent");
-  const [identifier, setIdentifier] = useState("");
+  const [identifier, setIdentifier] = useState(search.email ?? "");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
