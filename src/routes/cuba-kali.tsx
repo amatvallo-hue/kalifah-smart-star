@@ -117,12 +117,12 @@ function CubaKaliPage() {
           </span>
 
           <h1 className="mt-4 font-display text-3xl font-extrabold leading-tight text-foreground md:text-4xl">
-            Cuba KALI. Tak perlu daftar.
+            Markah hanya beritahu berapa banyak yang salah.{" "}
+            <span className="text-primary">KALI cuba cari di mana anak mula tak faham.</span>
           </h1>
 
           <p className="mt-3 text-base text-muted-foreground">
-            Jawab 6 soalan ringkas dan lihat sendiri bagaimana KALI membaca corak jawapan anda —
-            bukan sekadar kira betul atau salah.
+            Cuba sendiri 6 soalan ringkas dan lihat sendiri di mana pemahaman anak mula terputus.
           </p>
 
           <a
@@ -132,11 +132,11 @@ function CubaKaliPage() {
             onClick={() => trackTelegramClick("hero")}
             className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-primary px-6 py-3.5 font-display text-base font-extrabold text-primary-foreground shadow-soft transition hover:-translate-y-0.5 hover:shadow-gold"
           >
-            Cuba KALI Percuma di Telegram →
+            Cuba KALI — Tengok Sendiri →
           </a>
 
           <p className="mt-3 text-xs font-bold text-muted-foreground">
-            ✓ Percuma &nbsp; ✓ Tak perlu kad &nbsp; ✓ Hanya beberapa minit
+            ✓ Percuma &nbsp; ✓ Tak perlu daftar &nbsp; ✓ Beberapa minit sahaja
           </p>
         </section>
 
@@ -207,7 +207,7 @@ function CubaKaliPage() {
             onClick={() => trackTelegramClick("how_it_works")}
             className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-primary px-6 py-3.5 font-display text-base font-extrabold text-primary-foreground shadow-soft transition hover:-translate-y-0.5 hover:shadow-gold"
           >
-            Cuba KALI Sekarang →
+            Cuba KALI — Tengok Sendiri →
           </a>
           <p className="mt-2 text-center text-xs text-muted-foreground">
             Anda akan dibawa ke Telegram untuk memulakan demo.

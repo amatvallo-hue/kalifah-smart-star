@@ -103,16 +103,13 @@ function KaliCelebrationScreen({
   return (
     <div className="mt-8 rounded-3xl bg-card p-8 text-center shadow-card">
       <h1 className="font-display text-3xl font-extrabold" style={{ color: HIJAU }}>
-        🎉 Selesai!
+        🎉 Sesi KALI selesai!
       </h1>
       <p className="mt-3 font-display text-lg font-extrabold text-foreground">
-        KALI dah kenal anda dengan lebih baik.
+        KALI dah jumpa sesuatu.
       </p>
       <p className="mt-2 text-sm text-muted-foreground">
-        KALI dah jumpa apa yang anda dah kuasai dan apa yang boleh diperkuatkan seterusnya.
-      </p>
-      <p className="mt-2 text-sm text-muted-foreground">
-        Laporan sudah dihantar kepada ibu/bapa.
+        Daripada jawapan tadi, KALI dah mula nampak bahagian yang dikuasai dan bahagian yang perlu diberi perhatian.
       </p>
 
       {mataSesi > 0 && (
@@ -121,17 +118,24 @@ function KaliCelebrationScreen({
         </p>
       )}
 
-      {bolehTunjuk && (
-        <div className="mt-8 flex justify-center">
-          <button
-            type="button"
-            onClick={onTunjuk}
-            className="rounded-full border-2 px-6 py-3 font-display text-sm font-extrabold transition hover:opacity-80"
-            style={{ borderColor: HIJAU, color: HIJAU }}
-          >
-            Tunjukkan kepada Ibu/Ayah →
-          </button>
+      {bolehTunjuk ? (
+        <div className="mt-8">
+          <p className="text-sm font-bold text-foreground">🧠 Analisis KALI sedang menunggu Ibu/Ayah.</p>
+          <div className="mt-4 flex justify-center">
+            <button
+              type="button"
+              onClick={onTunjuk}
+              className="rounded-full border-2 px-6 py-3 font-display text-sm font-extrabold transition hover:opacity-80"
+              style={{ borderColor: HIJAU, color: HIJAU }}
+            >
+              Tunjukkan Analisis kepada Ibu/Ayah →
+            </button>
+          </div>
         </div>
+      ) : (
+        <p className="mt-6 text-sm font-bold text-foreground">
+          📱 KALI dah hantar analisis kepada Ibu/Ayah di Telegram.
+        </p>
       )}
     </div>
   );
