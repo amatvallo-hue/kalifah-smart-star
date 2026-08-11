@@ -10,10 +10,6 @@ export const Route = createFileRoute("/cuba-kali_/demo")({
     meta: [{ title: "Demo KALI — Kalifah.my" }],
   }),
   ssr: false,
-  validateSearch: (search: Record<string, unknown>) => ({
-    tg: typeof search.tg === "string" ? search.tg : undefined,
-    sesi: typeof search.sesi === "string" ? search.sesi : undefined,
-  }),
   component: CubaKaliDemoPage,
 });
 
@@ -87,7 +83,9 @@ function PageShell({ children }: { children: ReactNode }) {
 }
 
 function CubaKaliDemoPage() {
-  const { tg, sesi } = Route.useSearch();
+  const searchParams = new URLSearchParams(window.location.search);
+  const tg = searchParams.get("tg") ?? undefined;
+  const sesi = searchParams.get("sesi") ?? undefined;
 
   const [phase, setPhase] = useState<Phase>("loading");
   const [darjah, setDarjah] = useState<number | null>(null);
