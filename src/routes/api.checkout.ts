@@ -11,6 +11,7 @@ type CheckoutBody = {
   pakej?: unknown;
   darjah?: unknown;
   ref_code?: unknown;
+  customer_email?: unknown;
 };
 
 function traceId() {
@@ -165,6 +166,11 @@ export const Route = createFileRoute("/api/checkout")({
               ? body.ref_code.trim().toUpperCase().slice(0, 64)
               : null;
 
+          const customerEmailInput =
+            typeof body.customer_email === "string" && body.customer_email.trim().length > 0
+              ? body.customer_email.trim().slice(0, 254)
+              : null;
+
           const {
             data: order,
             error: orderErr,
@@ -179,6 +185,7 @@ export const Route = createFileRoute("/api/checkout")({
               amount_sen: amountSen,
               status: "pending",
               ref_code: refCode,
+              customer_email: customerEmailInput,
             })
             .select("id, amount_sen, status, created_at")
             .single();
@@ -242,7 +249,7 @@ export const Route = createFileRoute("/api/checkout")({
                 (user.user_metadata?.name as string | undefined) ??
                 user.email?.split("@")[0] ??
                 "Pelanggan",
-              customerEmail: user.email ?? "noreply@kalifah.my",
+              customerEmail: customerEmailInput ?? user.email ?? "noreply@kalifah.my",
               customerPhone:
                 (user.user_metadata?.phone as string | undefined) ?? undefined,
             });

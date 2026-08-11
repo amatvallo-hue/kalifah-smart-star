@@ -30,10 +30,19 @@ function HargaPage() {
   const [fastpath, setFastpath] = useState<{ nama: string; darjah: number } | null>(null);
   const [showFamilyPakej, setShowFamilyPakej] = useState(false);
   const autoRan = useRef(false);
-
+  const [emailGate, setEmailGate] = useState<{ pakej: PakejId; darjah: number[] } | null>(null);
 
   async function mulaBayar(pakej: PakejId, darjah: number[]) {
-    console.log("[harga] mulaBayar dipanggil", { pakej, darjah });
+    const { data: sess } = await supabase.auth.getSession();
+    if (!sess.session) {
+      setEmailGate({ pakej, darjah });
+      return;
+    }
+    await lakukanCheckout(pakej, darjah);
+  }
+
+  async function lakukanCheckout(pakej: PakejId, darjah: number[], customerEmail?: string) {
+    console.log("[harga] lakukanCheckout dipanggil", { pakej, darjah, adaEmel: !!customerEmail });
     setLoading(pakej);
     try {
       const { data: sess } = await supabase.auth.getSession();
@@ -53,7 +62,7 @@ function HargaPage() {
           "Content-Type": "application/json",
           ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
-        body: JSON.stringify({ pakej, darjah, ref_code: refCode }),
+        body: JSON.stringify({ pakej, darjah, ref_code: refCode, customer_email: customerEmail }),
       });
       const data = (await res.json()) as {
         url?: string;
@@ -331,6 +340,23 @@ function HargaPage() {
           onConfirm={(darjah) => mulaBayar(pickerFor, darjah)}
         />
       )}
+
+      {emailGate && (
+        <EmailGateModal
+          pending={emailGate}
+          onClose={() => setEmailGate(null)}
+          onProceed={async (email) => {
+            const { error } = await supabase.auth.signInAnonymously();
+            if (error) {
+              toast.error("Gagal mula sesi. Sila cuba lagi.");
+              return;
+            }
+            const p = emailGate;
+            setEmailGate(null);
+            if (p) await lakukanCheckout(p.pakej, p.darjah, email);
+          }}
+        />
+      )}
     </div>
   );
 }
@@ -419,6 +445,94 @@ function DarjahPicker({
           {loading && <Loader2 className="h-4 w-4 animate-spin" />}
           {loading ? "Memproses…" : "Teruskan ke ToyyibPay"}
         </button>
+      </div>
+    </div>
+  );
+}
+
+function EmailGateModal({
+  pending,
+  onClose,
+  onProceed,
+}: {
+  pending: { pakej: PakejId; darjah: number[] };
+  onClose: () => void;
+  onProceed: (email: string) => void;
+}) {
+  const [email, setEmail] = useState("");
+  const [checking, setChecking] = useState(false);
+  const [existing, setExisting] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+
+  async function submit(e: React.FormEvent) {
+    e.preventDefault();
+    const trimmed = email.trim();
+    if (!trimmed || !trimmed.includes("@")) {
+      setErr("Sila masukkan emel yang sah.");
+      return;
+    }
+    setErr(null);
+    setChecking(true);
+    const { data, error } = await supabase.rpc("checkout_semak_emel_wujud", { p_email: trimmed });
+    setChecking(false);
+    if (error) {
+      setErr("Ralat menyemak emel. Sila cuba lagi.");
+      return;
+    }
+    if (data === true) {
+      setExisting(true);
+      return;
+    }
+    onProceed(trimmed);
+  }
+
+  const redirectBack = `/harga?pakej=${pending.pakej}&darjah=${pending.darjah.join(",")}`;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm" onClick={onClose}>
+      <div className="relative w-full max-w-md rounded-3xl bg-card p-7 shadow-card" onClick={(e) => e.stopPropagation()}>
+        <button onClick={onClose} aria-label="Tutup" className="absolute right-4 top-4 rounded-full p-2 text-muted-foreground hover:bg-muted">
+          <X className="h-5 w-5" />
+        </button>
+        {existing ? (
+          <>
+            <h3 className="font-display text-xl font-extrabold text-foreground">Emel ini dah pernah digunakan</h3>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Emel ini sudah pernah digunakan di Kalifah.my. Log masuk untuk teruskan pembelian dan pastikan akses masuk ke akaun yang betul.
+            </p>
+            <a
+              href={`/login?redirect=${encodeURIComponent(redirectBack)}`}
+              className="mt-5 inline-flex w-full items-center justify-center rounded-full bg-primary px-5 py-3 font-display text-sm font-extrabold text-primary-foreground shadow-soft"
+            >
+              Log Masuk &amp; Teruskan →
+            </a>
+          </>
+        ) : (
+          <>
+            <h3 className="font-display text-xl font-extrabold text-foreground">Emel untuk resit &amp; akses anda</h3>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Tak perlu daftar sekarang. Kami guna emel ini untuk resit dan simpan akses anda.
+            </p>
+            <form onSubmit={submit} className="mt-4 space-y-3">
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="contoh@email.com"
+                className="w-full rounded-2xl border-2 border-border bg-background px-4 py-3 text-sm font-semibold text-foreground outline-none focus:border-primary"
+              />
+              {err ? <p className="text-sm font-semibold text-destructive">{err}</p> : null}
+              <button
+                type="submit"
+                disabled={checking}
+                className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-primary px-5 py-3 font-display text-sm font-extrabold text-primary-foreground shadow-soft disabled:opacity-60"
+              >
+                {checking && <Loader2 className="h-4 w-4 animate-spin" />}
+                {checking ? "Menyemak…" : "Teruskan ke Bayaran →"}
+              </button>
+            </form>
+          </>
+        )}
       </div>
     </div>
   );
