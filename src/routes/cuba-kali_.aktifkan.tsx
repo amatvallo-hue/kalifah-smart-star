@@ -4,6 +4,12 @@ import { User, Mail, Lock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { AuthShell, Field } from "./login";
 
+function sanitizeRef(value: string | null | undefined): string | null {
+  if (!value) return null;
+  const cleaned = value.trim().toUpperCase().slice(0, 64);
+  return /^[A-Z0-9_-]+$/.test(cleaned) ? cleaned : null;
+}
+
 export const Route = createFileRoute("/cuba-kali_/aktifkan")({
   head: () => ({
     meta: [{ title: "Analisis KALI — Kalifah.my" }],
@@ -157,6 +163,16 @@ function AktifkanPage() {
     }
     paramsRef.current = { child, token, darjah };
 
+    // Simpan ref affiliate (kalau ada, dari link claim yang dijana
+    // kali-notify-laporan-siap) ke saluran localStorage sedia ada supaya
+    // /harga (redirect selepas claim) dapat kredit affiliate dgn betul,
+    // walaupun parent buka pautan Telegram ni pada device/browser lain
+    // dari landing asal. Rujuk memory kali_flow_b_cuba_kali_guest_arch.
+    const refFromLink = sanitizeRef(sp.get("ref"));
+    if (refFromLink && typeof window !== "undefined") {
+      window.localStorage.setItem("kalifah_ref", refFromLink);
+    }
+
     void (async () => {
       const [{ data: sessionData }, { data: laporanData }] = await Promise.all([
         supabase.auth.getSession(),
@@ -218,12 +234,40 @@ function AktifkanPage() {
     setMenghantar(true);
     setRalat(null);
 
-    const redirect = `${window.location.origin}/cuba-kali/aktifkan?child=${p.child}&token=${p.token}&darjah=${p.darjah}`;
+    // Sama pattern dgn daftar.tsx: lookup affiliate drpd ref tersimpan,
+    // tanam affiliate_id/ref_code ke user_metadata (saluran sandaran,
+    // kekal merentas device selagi guna akaun sama -- localStorage ialah
+    // saluran utama, dah ditetapkan di useEffect atas).
+    const storedRef =
+      typeof window !== "undefined" ? sanitizeRef(window.localStorage.getItem("kalifah_ref")) : null;
+    let affiliateId: string | null = null;
+    let resolvedRefCode: string | null = null;
+    if (storedRef) {
+      const { data: aff } = await supabase
+        .from("affiliates")
+        .select("id, ref_code, custom_ref_code")
+        .or(`ref_code.ilike.${storedRef},custom_ref_code.ilike.${storedRef}`)
+        .maybeSingle();
+      if (aff) {
+        affiliateId = (aff as { id: string }).id;
+        resolvedRefCode =
+          (aff as { ref_code: string; custom_ref_code: string | null }).custom_ref_code ??
+          (aff as { ref_code: string }).ref_code;
+      }
+    }
+
+    const redirect =
+      `${window.location.origin}/cuba-kali/aktifkan?child=${p.child}&token=${p.token}&darjah=${p.darjah}` +
+      (storedRef ? `&ref=${storedRef}` : "");
     const { data, error } = await supabase.auth.signUp({
       email: emel.trim(),
       password: kataLaluan,
       options: {
-        data: { name: nama.trim(), full_name: nama.trim() },
+        data: {
+          name: nama.trim(),
+          full_name: nama.trim(),
+          ...(affiliateId ? { affiliate_id: affiliateId, ref_code: resolvedRefCode } : {}),
+        },
         emailRedirectTo: redirect,
       },
     });
