@@ -6,7 +6,7 @@ import { AuthShell, Field } from "./login";
 
 export const Route = createFileRoute("/cuba-kali_/aktifkan")({
   head: () => ({
-    meta: [{ title: "Aktifkan Akaun — Kalifah.my" }],
+    meta: [{ title: "Analisis KALI — Kalifah.my" }],
   }),
   ssr: false,
   component: AktifkanPage,
@@ -28,7 +28,7 @@ function Kad({ children }: { children: ReactNode }) {
   return <div className="rounded-3xl bg-card p-7 shadow-card md:p-8">{children}</div>;
 }
 
-type Phase = "loading" | "invalid" | "form" | "claiming" | "success" | "error" | "semak-emel";
+type Phase = "loading" | "invalid" | "analisis" | "form" | "claiming" | "success" | "error" | "semak-emel";
 
 type LaporanPreview = {
   valid: boolean;
@@ -43,64 +43,90 @@ type LaporanPreview = {
   bocor_gejala?: string | null;
 };
 
-function LaporanCard({ laporan }: { laporan: LaporanPreview }) {
-  const namaAnak = laporan.nama || "anak anda";
+function AnalisisScreen({ laporan, onTeruskan }: { laporan: LaporanPreview; onTeruskan: () => void }) {
+  const nama = laporan.nama || "anak anda";
+  const adaBocor = !!laporan.bocor_nama;
   const adaCounts = laporan.jumlah_menguasai != null || laporan.jumlah_diperkukuh != null;
 
   return (
-    <div className="mb-6 space-y-4 rounded-2xl border border-border bg-muted/40 p-5">
-      <div>
-        <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">
-          🧠 Analisis KALI
+    <PageShell>
+      <Kad>
+        <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">🧠 Analisis KALI</p>
+        <h1 className="mt-1 font-display text-2xl font-extrabold text-foreground">
+          KALI dah mula mengenali {nama}
+        </h1>
+        <p className="mt-2 text-sm text-muted-foreground">
+          {adaBocor
+            ? `Daripada ${laporan.betul != null ? laporan.betul : "10"} jawapan pertama, KALI dah nampak satu perkara yang patut diberi perhatian.`
+            : `Daripada ${laporan.betul != null ? laporan.betul : "10"} jawapan pertama, KALI dah mula nampak corak jawapan ${nama}.`}
         </p>
-        <p className="mt-1 text-sm font-extrabold text-foreground">
-          KALI dah mula mengenali {namaAnak}
-        </p>
-        {laporan.betul != null ? (
-          <p className="mt-1 text-sm text-muted-foreground">
-            {laporan.betul} jawapan pertama {namaAnak} memberi beberapa petunjuk penting.
-          </p>
+
+        {adaCounts ? (
+          <div className="mt-5 flex flex-wrap gap-x-5 gap-y-1 text-sm font-bold">
+            {laporan.jumlah_menguasai != null ? (
+              <span className="text-primary">🟢 {laporan.jumlah_menguasai} kemahiran dikuasai</span>
+            ) : null}
+            {laporan.jumlah_diperkukuh != null ? (
+              <span className="text-destructive">🔴 {laporan.jumlah_diperkukuh} perlu diperkukuhkan</span>
+            ) : null}
+          </div>
         ) : null}
-      </div>
 
-      {adaCounts ? (
-        <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm font-bold">
-          {laporan.jumlah_menguasai != null ? (
-            <span className="text-primary">🟢 {laporan.jumlah_menguasai} dikuasai</span>
-          ) : null}
-          {laporan.jumlah_diperkukuh != null ? (
-            <span className="text-destructive">🔴 {laporan.jumlah_diperkukuh} perlu diperkukuhkan</span>
-          ) : null}
-        </div>
-      ) : null}
+        {adaBocor ? (
+          <div className="mt-5 rounded-2xl border border-border bg-muted/40 p-5">
+            <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">
+              🔍 KALI perasan {nama} masih belum konsisten dalam
+            </p>
+            <p className="mt-1 font-display text-lg font-extrabold text-foreground">{laporan.bocor_nama}</p>
+            {laporan.bocor_gejala ? (
+              <p className="mt-2 text-sm text-muted-foreground">{laporan.bocor_gejala}</p>
+            ) : null}
+          </div>
+        ) : null}
 
-      {laporan.bocor_nama ? (
-        <div className="rounded-xl border border-border bg-card p-4">
-          <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">
-            🔍 Antara yang KALI jumpa
+        {adaBocor ? (
+          <div className="mt-5">
+            <p className="text-sm font-bold text-foreground">
+              🌱 Kelemahan kecil lebih mudah diperbaiki bila kita tahu di mana ia bermula.
+            </p>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Sebab itu KALI tidak hanya melihat berapa banyak {nama} betul atau salah. KALI cuba mengenal pasti
+              bahagian yang patut diberi perhatian sekarang, sebelum bergerak kepada kemahiran seterusnya.
+            </p>
+          </div>
+        ) : null}
+
+        <div className="mt-5">
+          <p className="text-sm font-bold text-foreground">❤️ Di sinilah KALI akan bantu {nama}</p>
+          <p className="mt-2 text-sm text-muted-foreground">
+            KALI akan terus melihat jawapan {nama}, mengenal pasti kemahiran yang belum stabil, dan memilih
+            latihan seterusnya berdasarkan apa yang {nama} perlukan — bukan sekadar bagi soalan secara rawak.
           </p>
-          <p className="mt-1 text-sm font-extrabold text-foreground">{laporan.bocor_nama}</p>
-          {laporan.bocor_gejala ? (
-            <p className="mt-1 text-sm text-muted-foreground">{laporan.bocor_gejala}</p>
-          ) : null}
         </div>
-      ) : null}
 
-      <div className="rounded-xl border border-dashed border-border p-4">
-        <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">
-          🔒 KALI menemui beberapa perkara lagi
+        <p className="mt-4 text-sm text-muted-foreground">
+          {laporan.betul != null ? laporan.betul : "10"} soalan pertama ini baru permulaan. Semakin {nama} belajar
+          bersama KALI, semakin jelas gambaran tentang apa yang {nama} dah kuasai, apa yang masih menghalangnya,
+          dan apa yang patut dipelajari seterusnya.
         </p>
-        <ul className="mt-2 space-y-1 text-sm text-muted-foreground">
-          <li>• Kemahiran lain yang perlu diperkuatkan</li>
-          <li>• Apa yang patut {namaAnak} pelajari seterusnya</li>
-          <li>• Latihan yang sesuai berdasarkan tahap {namaAnak}</li>
-        </ul>
-      </div>
 
-      <p className="text-sm font-bold text-foreground">
-        Jangan berhenti setakat tahu {namaAnak} lemah di mana. Biarkan KALI bantu {namaAnak} perbaikinya.
-      </p>
-    </div>
+        <div className="mt-6 rounded-2xl border border-primary/30 bg-primary/5 p-5 text-center">
+          <p className="font-display text-base font-extrabold text-foreground">
+            Teruskan perjalanan {nama} bersama KALI
+          </p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            RM49 / tahun{laporan.darjah ? ` · Darjah ${laporan.darjah}` : ""}
+          </p>
+          <button
+            type="button"
+            onClick={onTeruskan}
+            className="mt-4 w-full rounded-2xl bg-primary px-5 py-3 font-display text-base font-extrabold text-primary-foreground shadow-card transition hover:opacity-90"
+          >
+            Aktifkan KALI untuk {nama} →
+          </button>
+        </div>
+      </Kad>
+    </PageShell>
   );
 }
 
@@ -112,6 +138,7 @@ function AktifkanPage() {
   const [kataLaluan, setKataLaluan] = useState("");
   const [menghantar, setMenghantar] = useState(false);
   const [laporan, setLaporan] = useState<LaporanPreview | null>(null);
+  const [adaSesi, setAdaSesi] = useState(false);
   const paramsRef = useRef<{ child: string; token: string; darjah: string } | null>(null);
   const dahJalan = useRef(false);
 
@@ -140,9 +167,16 @@ function AktifkanPage() {
       ]);
 
       const lap = laporanData as LaporanPreview | null;
-      if (lap?.valid) setLaporan(lap);
+      const punyaSesi = !!sessionData.session?.user;
+      setAdaSesi(punyaSesi);
 
-      if (sessionData.session?.user) {
+      if (lap?.valid && lap.diagnostic_completed) {
+        // Sentiasa tunjuk analisis dulu -- claim/redirect harga HANYA lepas
+        // parent tekan CTA sendiri, tak kira ada sesi aktif atau tidak.
+        setLaporan(lap);
+        setPhase("analisis");
+      } else if (punyaSesi) {
+        // Tiada laporan untuk ditunjuk (edge case) -- fallback ke claim terus.
         await buatClaim();
       } else {
         setPhase("form");
@@ -167,6 +201,14 @@ function AktifkanPage() {
     setTimeout(() => {
       window.location.href = `/harga?pakej=satu&darjah=${p.darjah || 1}`;
     }, 1200);
+  }
+
+  function handleTeruskan() {
+    if (adaSesi) {
+      void buatClaim();
+    } else {
+      setPhase("form");
+    }
   }
 
   async function handleDaftar(e: FormEvent) {
@@ -201,19 +243,21 @@ function AktifkanPage() {
     setPhase("semak-emel");
   }
 
+  if (phase === "analisis" && laporan) {
+    return <AnalisisScreen laporan={laporan} onTeruskan={handleTeruskan} />;
+  }
+
   if (phase === "form") {
     const namaAnak = laporan?.nama || "anak anda";
-    const adaLaporan = !!laporan?.diagnostic_completed;
     return (
       <AuthShell
-        title={adaLaporan ? `Aktifkan KALI untuk ${namaAnak} — RM49` : "Aktifkan Akaun KALI"}
+        title={laporan ? `Daftar untuk teruskan ${namaAnak}` : "Aktifkan Akaun KALI"}
         subtitle={
-          adaLaporan
-            ? `Daftar untuk teruskan dan bantu ${namaAnak} perbaiki bahagian yang KALI kesan.`
+          laporan
+            ? `Langkah terakhir sebelum ${namaAnak} teruskan bersama KALI.`
             : "Daftar untuk lihat analisis penuh anak anda dan teruskan dengan KALI."
         }
       >
-        {adaLaporan && laporan ? <LaporanCard laporan={laporan} /> : null}
         <form onSubmit={handleDaftar} className="space-y-4">
           <Field icon={User} label="Nama Ibu/Bapa" type="text" value={nama} onChange={setNama} placeholder="Nama penuh" autoComplete="name" />
           <Field icon={Mail} label="Emel" type="email" value={emel} onChange={setEmel} placeholder="contoh@email.com" autoComplete="email" />
@@ -224,7 +268,7 @@ function AktifkanPage() {
             disabled={menghantar}
             className="w-full rounded-2xl bg-primary px-5 py-3 font-display text-base font-extrabold text-primary-foreground shadow-card transition hover:opacity-90 disabled:opacity-60"
           >
-            {menghantar ? "Sedang mendaftar…" : adaLaporan ? `Aktifkan KALI untuk ${namaAnak} →` : "Daftar & Aktifkan →"}
+            {menghantar ? "Sedang mendaftar…" : "Daftar & Teruskan →"}
           </button>
         </form>
       </AuthShell>
