@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as CikguAffiliateRouteImport } from './routes/cikgu-affiliate'
+import { Route as CubaKaliRouteImport } from './routes/cuba-kali'
 import { Route as DaftarRouteImport } from './routes/daftar'
 import { Route as DaftarKaliRouteImport } from './routes/daftar-kali'
 import { Route as DaftarMpt4RouteImport } from './routes/daftar-mpt4'
@@ -81,6 +82,11 @@ const AdminRoute = AdminRouteImport.update({
 const CikguAffiliateRoute = CikguAffiliateRouteImport.update({
   id: '/cikgu-affiliate',
   path: '/cikgu-affiliate',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CubaKaliRoute = CubaKaliRouteImport.update({
+  id: '/cuba-kali',
+  path: '/cuba-kali',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DaftarRoute = DaftarRouteImport.update({
@@ -383,6 +389,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/cikgu-affiliate': typeof CikguAffiliateRoute
+  '/cuba-kali': typeof CubaKaliRoute
   '/daftar': typeof DaftarRoute
   '/daftar-kali': typeof DaftarKaliRoute
   '/daftar-mpt4': typeof DaftarMpt4Route
@@ -443,6 +450,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/cikgu-affiliate': typeof CikguAffiliateRoute
+  '/cuba-kali': typeof CubaKaliRoute
   '/daftar': typeof DaftarRoute
   '/daftar-kali': typeof DaftarKaliRoute
   '/daftar-mpt4': typeof DaftarMpt4Route
@@ -504,6 +512,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/cikgu-affiliate': typeof CikguAffiliateRoute
+  '/cuba-kali': typeof CubaKaliRoute
   '/daftar': typeof DaftarRoute
   '/daftar-kali': typeof DaftarKaliRoute
   '/daftar-mpt4': typeof DaftarMpt4Route
@@ -566,6 +575,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/cikgu-affiliate'
+    | '/cuba-kali'
     | '/daftar'
     | '/daftar-kali'
     | '/daftar-mpt4'
@@ -626,6 +636,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/cikgu-affiliate'
+    | '/cuba-kali'
     | '/daftar'
     | '/daftar-kali'
     | '/daftar-mpt4'
@@ -686,6 +697,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/cikgu-affiliate'
+    | '/cuba-kali'
     | '/daftar'
     | '/daftar-kali'
     | '/daftar-mpt4'
@@ -747,6 +759,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
   CikguAffiliateRoute: typeof CikguAffiliateRoute
+  CubaKaliRoute: typeof CubaKaliRoute
   DaftarRoute: typeof DaftarRoute
   DaftarKaliRoute: typeof DaftarKaliRoute
   DaftarMpt4Route: typeof DaftarMpt4Route
@@ -825,6 +838,13 @@ declare module '@tanstack/react-router' {
       path: '/cikgu-affiliate'
       fullPath: '/cikgu-affiliate'
       preLoaderRoute: typeof CikguAffiliateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cuba-kali': {
+      id: '/cuba-kali'
+      path: '/cuba-kali'
+      fullPath: '/cuba-kali'
+      preLoaderRoute: typeof CubaKaliRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/daftar': {
@@ -1219,6 +1239,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
   CikguAffiliateRoute: CikguAffiliateRoute,
+  CubaKaliRoute: CubaKaliRoute,
   DaftarRoute: DaftarRoute,
   DaftarKaliRoute: DaftarKaliRoute,
   DaftarMpt4Route: DaftarMpt4Route,
