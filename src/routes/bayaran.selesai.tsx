@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate, useSearch } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { CheckCircle2, Loader2, XCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { PARENT_SESSION_BACKUP_KEY } from "@/lib/child-auth";
@@ -162,14 +162,122 @@ function FastpathPaid({ data }: { data: FastpathAnak }) {
   );
 }
 
+function LengkapkanAkaunCard({ onDone }: { onDone: () => void }) {
+  const [phase, setPhase] = useState<"loading" | "form" | "conflict" | "error">("loading");
+  const [email, setEmail] = useState<string | null>(null);
+  const [password, setPassword] = useState("");
+  const [err, setErr] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
+  const ran = useRef(false);
+
+  useEffect(() => {
+    if (ran.current) return;
+    ran.current = true;
+    void (async () => {
+      const { data, error } = await supabase.functions.invoke("lengkapkan-akaun", { body: {} });
+      const result = data as { success?: boolean; email?: string; error?: string; message?: string } | null;
+      if (error || !result?.success) {
+        setErr(result?.message ?? "Gagal menyediakan akaun. Sila hubungi support@kalifah.my.");
+        setPhase(result?.error === "email_conflict" ? "conflict" : "error");
+        return;
+      }
+      setEmail(result.email ?? null);
+      setPhase("form");
+    })();
+  }, []);
+
+  async function submit(e: FormEvent) {
+    e.preventDefault();
+    if (password.length < 6) {
+      setErr("Kata laluan sekurang-kurangnya 6 aksara.");
+      return;
+    }
+    setErr(null);
+    setSaving(true);
+    const { error } = await supabase.auth.updateUser({ password });
+    setSaving(false);
+    if (error) {
+      setErr(error.message);
+      return;
+    }
+    onDone();
+  }
+
+  if (phase === "loading") {
+    return (
+      <>
+        <Loader2 className="mx-auto h-14 w-14 animate-spin text-primary" />
+        <h1 className="mt-4 font-display text-2xl font-extrabold">Menyediakan akaun anda…</h1>
+      </>
+    );
+  }
+
+  if (phase === "conflict" || phase === "error") {
+    return (
+      <>
+        <XCircle className="mx-auto h-14 w-14 text-destructive" />
+        <h1 className="mt-4 font-display text-2xl font-extrabold">Bayaran berjaya, tapi akaun belum lengkap</h1>
+        <p className="mt-2 text-sm text-muted-foreground">{err}</p>
+        <p className="mt-2 text-xs text-muted-foreground">Akses anda dah aktif — hubungi support@kalifah.my untuk bantuan.</p>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <CheckCircle2 className="mx-auto h-14 w-14 text-emerald-500" />
+      <h1 className="mt-4 font-display text-2xl font-extrabold">Bayaran berjaya! 🎉</h1>
+      <p className="mt-2 text-sm text-muted-foreground">
+        Akses anda dah aktif. Lengkapkan akaun supaya akses ini boleh digunakan semula pada mana-mana peranti.
+      </p>
+      <div className="mt-4 rounded-2xl bg-muted/50 px-4 py-3 text-left">
+        <p className="text-xs font-bold text-muted-foreground">Emel</p>
+        <p className="font-display text-base font-extrabold">{email}</p>
+      </div>
+      <form onSubmit={submit} className="mt-4 space-y-3 text-left">
+        <label className="block">
+          <span className="mb-1.5 block font-display text-sm font-bold text-foreground">Cipta Kata Laluan</span>
+          <input
+            type="password"
+            required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Minimum 6 aksara"
+            className="w-full rounded-2xl border-2 border-border bg-background px-4 py-3 text-sm font-semibold text-foreground outline-none focus:border-primary"
+          />
+        </label>
+        {err ? <p className="text-sm font-semibold text-destructive">{err}</p> : null}
+        <button
+          type="submit"
+          disabled={saving}
+          className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-primary px-6 py-3 font-display font-extrabold text-primary-foreground shadow-soft disabled:opacity-60"
+        >
+          {saving && <Loader2 className="h-4 w-4 animate-spin" />}
+          {saving ? "Menyimpan…" : "Simpan Akses Anda →"}
+        </button>
+      </form>
+    </>
+  );
+}
+
 function BayaranSelesai() {
   const search = useSearch({ from: "/bayaran/selesai" });
   const [state, setState] = useState<"loading" | "paid" | "pending" | "failed">("loading");
   const [fastpath, setFastpath] = useState<FastpathAnak | null>(null);
+  const [isAnon, setIsAnon] = useState<boolean | null>(null);
+  const [akaunLengkap, setAkaunLengkap] = useState(false);
 
   useEffect(() => {
     setFastpath(bacaFastpath());
   }, []);
+
+  useEffect(() => {
+    if (state !== "paid") return;
+    void (async () => {
+      const { data } = await supabase.auth.getUser();
+      setIsAnon(!!data.user?.is_anonymous);
+    })();
+  }, [state]);
 
 
   useEffect(() => {
@@ -282,7 +390,16 @@ function BayaranSelesai() {
             <p className="mt-2 text-sm text-muted-foreground">Sila tunggu sebentar.</p>
           </>
         )}
-        {state === "paid" && (
+        {state === "paid" && isAnon === true && !akaunLengkap && (
+          <LengkapkanAkaunCard onDone={() => setAkaunLengkap(true)} />
+        )}
+        {state === "paid" && isAnon === null && (
+          <>
+            <Loader2 className="mx-auto h-14 w-14 animate-spin text-primary" />
+            <h1 className="mt-4 font-display text-2xl font-extrabold">Mengesahkan akaun…</h1>
+          </>
+        )}
+        {state === "paid" && (isAnon === false || akaunLengkap) && (
           <>
             <CheckCircle2 className="mx-auto h-14 w-14 text-emerald-500" />
             <h1 className="mt-4 font-display text-2xl font-extrabold">Pembayaran berjaya!</h1>
