@@ -34,7 +34,7 @@ function HargaPage() {
 
   async function mulaBayar(pakej: PakejId, darjah: number[]) {
     const { data: sess } = await supabase.auth.getSession();
-    if (!sess.session) {
+    if (!sess.session || sess.session.user.is_anonymous) {
       setEmailGate({ pakej, darjah });
       return;
     }
