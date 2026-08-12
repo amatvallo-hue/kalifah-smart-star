@@ -789,8 +789,8 @@ function DarjahCard({
         </div>
         {hasAccess && isMpt4 && (
           <span
-            className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 font-display text-[10px] font-extrabold text-white shadow-soft"
-            style={{ background: "linear-gradient(135deg, #F5B82E, #E48A0A)" }}
+            className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 font-display text-[10px] font-extrabold shadow-soft"
+            style={{ backgroundColor: "#FFEEB3", color: "#013E37" }}
           >
             <Trophy className="h-3 w-3" />
             Percubaan MPT4
