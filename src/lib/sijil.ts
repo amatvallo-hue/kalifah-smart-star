@@ -38,9 +38,10 @@ async function loadLogoDataUrl(): Promise<string | null> {
 }
 
 function drawLogo(doc: any, dataUrl: string | null, cx: number, topY: number) {
-  // Logo lebar 60mm, ratio dijaga ~3:2 → tinggi ~20mm
+  // Kekalkan ratio sebenar logo (371:66) supaya tidak herot
   const w = 60;
-  const h = 20;
+  const h = (60 * 66) / 371; // ~10.7mm
+
   if (dataUrl) {
     try {
       doc.addImage(dataUrl, "PNG", cx - w / 2, topY, w, h);
@@ -93,7 +94,7 @@ export async function buildSijilPDF(input: SijilInput): Promise<Blob> {
   sudut.forEach(([x, y]) => doc.circle(x, y, 3, "F"));
 
   // ── Logo Kalifah.my (atas tengah)
-  drawLogo(doc, logo, W / 2, 18);
+  drawLogo(doc, logo, W / 2, 22);
   doc.setFont("helvetica", "normal");
   doc.setFontSize(9);
   doc.setTextColor("#666666");
@@ -200,7 +201,7 @@ function renderKuizCemerlang(
   sudut.forEach(([x, y]) => doc.circle(x, y, 3, "F"));
 
   // ── Logo Kalifah.my di atas
-  drawLogo(doc, logo, W / 2, 16);
+  drawLogo(doc, logo, W / 2, 24);
 
   // ── Trofi emas kecil sebelah tajuk (di tengah, atas tajuk)
   const cx = W / 2;
