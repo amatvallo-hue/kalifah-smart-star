@@ -379,6 +379,22 @@ function AktifkanPage() {
           </>
         ) : null}
 
+        {phase === "sudah-ada-akaun" ? (
+          <>
+            <h1 className="font-display text-2xl font-extrabold text-foreground">Anda dah ada akaun</h1>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Emel ini dah didaftarkan di Kalifah.my. Log masuk dulu untuk teruskan aktifkan KALI untuk {laporan?.nama || "anak anda"}.
+            </p>
+            <button
+              type="button"
+              onClick={pergiLogMasuk}
+              className="mt-5 flex w-full items-center justify-center rounded-2xl bg-primary px-5 py-3 font-display text-base font-extrabold text-primary-foreground shadow-card transition hover:opacity-90"
+            >
+              Log Masuk →
+            </button>
+          </>
+        ) : null}
+
         {phase === "semak-emel" ? (
           <>
             <h1 className="font-display text-2xl font-extrabold text-foreground">Akaun dicipta</h1>
