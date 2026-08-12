@@ -1817,6 +1817,17 @@ function KaliInsightCard({
   } | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  async function salinArahanKali() {
+    try {
+      await navigator.clipboard.writeText(
+        `📋 Minta ${namaAnak} log masuk sendiri → buka "Belajar Bersama KALI" untuk sesi ${insight?.micro_skill_nama ?? ""} hari ini.`,
+      );
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {}
+  }
 
   useEffect(() => {
     let mounted = true;
