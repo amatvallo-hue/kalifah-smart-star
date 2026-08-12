@@ -999,8 +999,8 @@ function PraKalifahCard() {
 
 function MingguStat({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
   return (
-    <div className="rounded-2xl border border-[#F5B82E]/40 bg-white/85 px-3.5 py-2 shadow-soft">
-      <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide text-[#8A5A00]">
+    <div className="rounded-2xl border border-brand-butter bg-white px-3.5 py-2 shadow-soft">
+      <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide text-brand-deep/70">
         {icon}
         {label}
       </div>
