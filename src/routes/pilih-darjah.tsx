@@ -212,7 +212,7 @@ function KaliHeroCadangan({
             </div>
           </div>
 
-          <div className="mt-4 flex flex-wrap items-center gap-3 text-xs font-bold text-muted-foreground">
+          <div className="mt-4 flex flex-wrap items-center gap-3 text-xs font-bold text-white/70">
             <span className="inline-flex items-center gap-1.5">
               <FileText className="h-3.5 w-3.5" /> 10 soalan
             </span>
@@ -229,7 +229,7 @@ function KaliHeroCadangan({
           <div className="mt-4 flex flex-wrap items-center gap-3">
             <Link
               to="/kali-test/belajar-untuk-saya"
-              className="inline-flex items-center gap-2 rounded-full bg-gradient-primary px-6 py-3 font-display text-sm font-extrabold text-primary-foreground shadow-soft transition hover:opacity-90"
+              className="inline-flex items-center gap-2 rounded-full bg-brand-butter px-6 py-3 font-display text-sm font-extrabold text-brand-butter-foreground shadow-soft transition hover:opacity-90"
             >
               Mula Belajar Bersama KALI
               <ArrowRight className="h-4 w-4" />
@@ -237,7 +237,7 @@ function KaliHeroCadangan({
             <button
               type="button"
               onClick={() => setDialogOpen(true)}
-              className="text-xs font-bold text-muted-foreground hover:underline"
+              className="text-xs font-bold text-white/70 hover:text-white hover:underline"
             >
               Kenapa KALI pilih latihan ini?
             </button>
