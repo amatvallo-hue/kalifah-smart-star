@@ -1817,6 +1817,17 @@ function KaliInsightCard({
   } | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  async function salinArahanKali() {
+    try {
+      await navigator.clipboard.writeText(
+        `📋 Minta ${namaAnak} log masuk sendiri → buka "Belajar Bersama KALI" untuk sesi ${insight?.micro_skill_nama ?? ""} hari ini.`,
+      );
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {}
+  }
 
   useEffect(() => {
     let mounted = true;
@@ -1882,25 +1893,25 @@ function KaliInsightCard({
 
   const badge =
     insight?.confidence_level === "HIGH"
-      ? { teks: "🟢 Keyakinan Tinggi", bg: "#1B8A5A15", fg: "#1B8A5A" }
+      ? { teks: "🟢 Keyakinan Tinggi", bg: "rgba(255,255,255,0.15)", fg: "#FFEEB3" }
       : insight?.confidence_level === "MEDIUM"
-        ? { teks: "🟡 Sedang Dipelajari", bg: "#F5A62320", fg: "#B87500" }
-        : { teks: "🔵 Data Masih Terhad", bg: "#3B82F615", fg: "#2563EB" };
+        ? { teks: "🟡 Sedang Dipelajari", bg: "rgba(255,255,255,0.15)", fg: "#FFEEB3" }
+        : { teks: "🔵 Data Masih Terhad", bg: "rgba(255,255,255,0.15)", fg: "#ffffff" };
 
   return (
     <div
       className="rounded-2xl border-2 p-5 shadow-card"
       style={{
-        background: "linear-gradient(135deg, #FFFCF0 0%, #FFFEFB 60%, #FFF8E5 100%)",
-        borderColor: "var(--brand-butter)",
+        backgroundColor: "#013E37",
+        borderColor: "#013E37",
       }}
     >
       <div className="flex items-center justify-between gap-3">
         <div
-          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-lg text-white shadow-soft"
-          style={{ background: `linear-gradient(135deg, ${HIJAU}, #2AAE72)` }}
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-lg shadow-soft"
+          style={{ backgroundColor: "#FFEEB3" }}
         >
-          <Sparkles className="h-5 w-5" />
+          <Sparkles className="h-5 w-5 text-brand-deep" />
         </div>
         {!loading && !error && insight && (
           <span
@@ -1913,22 +1924,22 @@ function KaliInsightCard({
       </div>
 
       {loading ? (
-        <p className="mt-3 text-sm text-muted-foreground">Memuatkan insight KALI...</p>
+        <p className="mt-3 text-sm text-white/70">Memuatkan insight KALI...</p>
       ) : error ? (
-        <p className="mt-3 text-sm text-muted-foreground">
+        <p className="mt-3 text-sm text-white/70">
           Cadangan KALI belum dapat dijana buat masa ini — cuba semak semula sebentar lagi.
         </p>
       ) : insight ? (
         <>
-          <p className="mt-3 text-[10px] font-extrabold uppercase tracking-wide text-muted-foreground">Fokus Semasa</p>
-          <p className="mt-2 font-display text-xl font-extrabold text-foreground">{insight.micro_skill_nama}</p>
+          <p className="mt-3 text-[10px] font-extrabold uppercase tracking-wide text-white/60">Fokus Semasa</p>
+          <p className="mt-2 font-display text-xl font-extrabold text-white">{insight.micro_skill_nama}</p>
 
-          <hr className="my-3 border-t" style={{ borderColor: `${HIJAU}20` }} />
+          <hr className="my-3 border-t" style={{ borderColor: "rgba(255,255,255,0.15)" }} />
 
-          <p className="text-[10px] font-extrabold uppercase tracking-wide text-muted-foreground">
+          <p className="text-[10px] font-extrabold uppercase tracking-wide text-white/60">
             KALI Sedang Bantu Kerana
           </p>
-          <p className="mt-1 text-sm text-muted-foreground">
+          <p className="mt-1 text-sm text-white/85">
             {insight.total_attempts != null && insight.correct_attempts != null ? (
               <>
                 {namaAnak} menjawab salah {insight.total_attempts - insight.correct_attempts} daripada{" "}
@@ -1943,26 +1954,28 @@ function KaliInsightCard({
             )}
           </p>
 
-          <hr className="my-3 border-t" style={{ borderColor: `${HIJAU}20` }} />
+          <hr className="my-3 border-t" style={{ borderColor: "rgba(255,255,255,0.15)" }} />
 
-          <p className="text-[10px] font-extrabold uppercase tracking-wide text-muted-foreground">Cadangan KALI</p>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Galakkan {namaAnak} melengkapkan satu lagi sesi Belajar Bersama KALI hari ini.{" "}
-            <Link
-              to="/kali-test/belajar-untuk-saya"
-              className="inline-flex items-center gap-1 font-bold text-primary hover:underline"
-            >
-              Buka Belajar Bersama KALI →
-            </Link>
+          <p className="text-[10px] font-extrabold uppercase tracking-wide text-white/60">Cadangan KALI</p>
+          <p className="mt-1 text-sm text-white/85">
+            Galakkan {namaAnak} melengkapkan satu lagi sesi Belajar Bersama KALI hari ini.
           </p>
+          <button
+            type="button"
+            onClick={salinArahanKali}
+            className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-brand-butter px-3.5 py-1.5 text-xs font-extrabold text-brand-butter-foreground shadow-soft transition hover:opacity-90"
+          >
+            <Copy className="h-3.5 w-3.5" />
+            {copied ? "Disalin!" : "Salin Arahan untuk Anak"}
+          </button>
 
-          <p className="mt-3 text-[11px] italic text-muted-foreground/70">
+          <p className="mt-3 text-[11px] italic text-white/50">
             Cadangan ini dijana berdasarkan jawapan sebenar {namaAnak} dan dikemas kini secara automatik setiap kali dia
             buat latihan.
           </p>
         </>
       ) : (
-        <p className="mt-3 text-sm text-muted-foreground">
+        <p className="mt-3 text-sm text-white/70">
           KALI sedang mula mengenali corak pembelajaran {namaAnak} — teruskan guna Kuiz atau Latih Tubi supaya cadangan
           akan jadi lebih tepat!
         </p>
@@ -1988,6 +2001,17 @@ function KaliUpdateCard({
     bocorNama: string | null;
     bocorGejala: string | null;
   } | null>(null);
+  const [copied, setCopied] = useState(false);
+
+  async function salinArahanMula() {
+    try {
+      await navigator.clipboard.writeText(
+        `📋 Minta ${namaAnak} log masuk sendiri untuk mula sesi pertama percuma dengan Belajar Bersama KALI.`,
+      );
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {}
+  }
 
   useEffect(() => {
     let mounted = true;
@@ -2024,14 +2048,14 @@ function KaliUpdateCard({
   }
 
   const cardStyle: React.CSSProperties = {
-    background: "linear-gradient(135deg, #FFFCF0 0%, #FFFEFB 60%, #FFF8E5 100%)",
-    borderColor: "var(--brand-butter)",
+    backgroundColor: "#013E37",
+    borderColor: "#013E37",
   };
 
   if (status === "loading") {
     return (
       <div className="rounded-2xl border-2 p-5 shadow-card" style={cardStyle}>
-        <p className="text-sm text-muted-foreground">Memuatkan status KALI...</p>
+        <p className="text-sm text-white/70">Memuatkan status KALI...</p>
       </div>
     );
   }
@@ -2041,23 +2065,25 @@ function KaliUpdateCard({
       <div className="rounded-2xl border-2 p-5 shadow-card" style={cardStyle}>
         <div className="flex items-center gap-3">
           <div
-            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-lg text-white shadow-soft"
-            style={{ background: `linear-gradient(135deg, ${HIJAU}, #2AAE72)` }}
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-lg shadow-soft"
+            style={{ backgroundColor: "#FFEEB3" }}
           >
-            <Sparkles className="h-5 w-5" />
+            <Sparkles className="h-5 w-5 text-brand-deep" />
           </div>
-          <p className="font-display text-lg font-extrabold text-foreground">KALI baru mula kenal {namaAnak}</p>
+          <p className="font-display text-lg font-extrabold text-white">KALI baru mula kenal {namaAnak}</p>
         </div>
-        <p className="mt-3 text-sm text-muted-foreground">
+        <p className="mt-3 text-sm text-white/85">
           {namaAnak} belum cuba sesi pertama dengan KALI. Sesi pertama percuma — KALI akan mula belajar cara{" "}
           {namaAnak} berfikir dan di mana dia perlukan bantuan.
         </p>
-        <Link
-          to="/kali-test/belajar-untuk-saya"
-          className="mt-4 inline-flex items-center gap-1 font-bold text-primary hover:underline"
+        <button
+          type="button"
+          onClick={salinArahanMula}
+          className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-brand-butter px-3.5 py-1.5 text-xs font-extrabold text-brand-butter-foreground shadow-soft transition hover:opacity-90"
         >
-          Mula Sesi Pertama Percuma →
-        </Link>
+          <Copy className="h-3.5 w-3.5" />
+          {copied ? "Disalin!" : "Salin Arahan untuk Anak"}
+        </button>
       </div>
     );
   }
@@ -2068,18 +2094,18 @@ function KaliUpdateCard({
     <div className="rounded-2xl border-2 p-5 shadow-card" style={cardStyle}>
       <div className="flex items-center gap-3">
         <div
-          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-lg text-white shadow-soft"
-          style={{ background: `linear-gradient(135deg, ${HIJAU}, #2AAE72)` }}
+          className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-lg shadow-soft"
+          style={{ backgroundColor: "#FFEEB3" }}
         >
-          <Sparkles className="h-5 w-5" />
+          <Sparkles className="h-5 w-5 text-brand-deep" />
         </div>
-        <p className="font-display text-lg font-extrabold text-foreground">
+        <p className="font-display text-lg font-extrabold text-white">
           KALI dah kenal {namaAnak} dengan lebih jelas
         </p>
       </div>
 
       {hasil && (
-        <p className="mt-3 text-sm text-muted-foreground">
+        <p className="mt-3 text-sm text-white/85">
           {namaAnak} jawab {hasil.betul}/10 betul dalam sesi pertama — 🟢 {hasil.jumlahMenguasai} kemahiran dikuasai,
           🔴 {hasil.jumlahDiperkukuh} kemahiran perlu diperkukuh.
         </p>
@@ -2087,17 +2113,17 @@ function KaliUpdateCard({
 
       {hasil?.bocorNama && (
         <>
-          <hr className="my-3 border-t" style={{ borderColor: `${HIJAU}20` }} />
-          <p className="text-[10px] font-extrabold uppercase tracking-wide text-muted-foreground">KALI Mengesan</p>
-          <p className="mt-1 text-sm text-muted-foreground">
-            <span className="font-bold text-foreground">{hasil.bocorNama}</span>
+          <hr className="my-3 border-t" style={{ borderColor: "rgba(255,255,255,0.15)" }} />
+          <p className="text-[10px] font-extrabold uppercase tracking-wide text-white/60">KALI Mengesan</p>
+          <p className="mt-1 text-sm text-white/85">
+            <span className="font-bold text-white">{hasil.bocorNama}</span>
             {hasil.bocorGejala ? ` — ${hasil.bocorGejala}` : ""}
           </p>
         </>
       )}
 
-      <hr className="my-3 border-t" style={{ borderColor: `${HIJAU}20` }} />
-      <p className="text-sm text-muted-foreground">
+      <hr className="my-3 border-t" style={{ borderColor: "rgba(255,255,255,0.15)" }} />
+      <p className="text-sm text-white/85">
         🔒 Sebab kesilapan, kemahiran mana diutamakan, latihan yang dicadangkan, dan pelan pembelajaran seterusnya
         tersedia dalam Belajar Bersama KALI penuh
         {bakiDiperkukuh > 0 ? ` (termasuk ${bakiDiperkukuh} kemahiran lain yang belum dibuka)` : ""}.
@@ -2105,8 +2131,7 @@ function KaliUpdateCard({
 
       <button
         onClick={bukaAnalisis}
-        className="mt-4 rounded-full px-5 py-2.5 font-display text-sm font-extrabold text-white shadow-soft"
-        style={{ background: `linear-gradient(135deg, ${HIJAU}, #2AAE72)` }}
+        className="mt-4 rounded-full bg-brand-butter px-5 py-2.5 font-display text-sm font-extrabold text-brand-butter-foreground shadow-soft transition hover:opacity-90"
       >
         Buka Analisis Penuh & Belajar Bersama KALI
       </button>
