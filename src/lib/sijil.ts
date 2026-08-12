@@ -38,9 +38,10 @@ async function loadLogoDataUrl(): Promise<string | null> {
 }
 
 function drawLogo(doc: any, dataUrl: string | null, cx: number, topY: number) {
-  // Logo lebar 60mm, ratio dijaga ~3:2 → tinggi ~20mm
+  // Kekalkan ratio sebenar logo (371:66) supaya tidak herot
   const w = 60;
-  const h = 20;
+  const h = (60 * 66) / 371; // ~10.7mm
+
   if (dataUrl) {
     try {
       doc.addImage(dataUrl, "PNG", cx - w / 2, topY, w, h);
