@@ -103,7 +103,7 @@ export async function buildSijilPDF(input: SijilInput): Promise<Blob> {
   const logo = await loadLogoDataUrl();
 
   if (input.jenis === "kuiz-cemerlang") {
-    return renderKuizCemerlang(doc, input, W, H, logo);
+    return await renderKuizCemerlang(doc, input, W, H, logo);
   }
 
   // ── Latar kertas
