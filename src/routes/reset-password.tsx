@@ -52,7 +52,18 @@ function ResetPasswordPage() {
       return;
     }
     setOk(true);
-    setTimeout(() => navigate({ to: "/dashboard/ibu-bapa", search: { tambahAnak: undefined } }), 1500);
+    const redirect =
+      typeof window !== "undefined"
+        ? window.sessionStorage.getItem("kalifah_redirect_selepas_login")
+        : null;
+    setTimeout(() => {
+      if (redirect && redirect.startsWith("/")) {
+        window.sessionStorage.removeItem("kalifah_redirect_selepas_login");
+        window.location.href = redirect;
+        return;
+      }
+      navigate({ to: "/dashboard/ibu-bapa", search: { tambahAnak: undefined } });
+    }, 1500);
   }
 
   if (ok) {
