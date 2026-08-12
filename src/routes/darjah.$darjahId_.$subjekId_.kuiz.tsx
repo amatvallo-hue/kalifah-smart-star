@@ -8,6 +8,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { usePoints } from "@/hooks/use-points";
 import { getDarjah, getSubjek } from "@/lib/curriculum";
 import { downloadSijil } from "@/lib/sijil";
+import { simpanRekodSijil } from "@/lib/sijil-rekod";
 import { getQuiz, getQuizSet2, type QuizQuestion } from "@/lib/quiz-bank";
 import { simpanProgress, rekodJawapan } from "@/lib/progress";
 import { KuizBMTopik } from "@/components/KuizBMTopik";
