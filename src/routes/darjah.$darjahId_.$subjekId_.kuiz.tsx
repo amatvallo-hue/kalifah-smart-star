@@ -464,6 +464,8 @@ function KuizPage() {
         soalanRef: `${darjahId}-${subjekId}-set${selectedSet ?? 1}-${i}`,
         darjah: darjahId,
         subjek: subjekId,
+      }).then((diberi) => {
+        if (diberi) setBintangDiperoleh((c) => c + 1);
       });
     }
   };
