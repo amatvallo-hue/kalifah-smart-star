@@ -65,7 +65,16 @@
   --gold: oklch(0.78 0.16 75);
   --gold-foreground: oklch(0.25 0.05 60);
 
-  --background: oklch(0.99 0.012 110);
+  --brand-deep: #013E37;
+  --brand-deep-foreground: #FFEEB3;
+  --brand-butter: #FFEEB3;
+  --brand-butter-foreground: #013E37;
+  --kali: var(--brand-deep);
+  --kali-foreground: var(--brand-butter);
+  --highlight: var(--brand-butter);
+  --highlight-foreground: var(--brand-deep);
+
+  --background: oklch(0.985 0.016 85);
   --foreground: oklch(0.22 0.04 160);
 
   --card: oklch(1 0 0);
