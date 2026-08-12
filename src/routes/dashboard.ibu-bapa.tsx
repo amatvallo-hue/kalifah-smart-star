@@ -2030,7 +2030,7 @@ function KaliUpdateCard({
 
   if (status === "loading") {
     return (
-      <div className="rounded-2xl p-5 shadow-card" style={cardStyle}>
+      <div className="rounded-2xl border-2 p-5 shadow-card" style={cardStyle}>
         <p className="text-sm text-muted-foreground">Memuatkan status KALI...</p>
       </div>
     );
@@ -2038,7 +2038,7 @@ function KaliUpdateCard({
 
   if (status === "belum") {
     return (
-      <div className="rounded-2xl p-5 shadow-card" style={cardStyle}>
+      <div className="rounded-2xl border-2 p-5 shadow-card" style={cardStyle}>
         <div className="flex items-center gap-3">
           <div
             className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-lg text-white shadow-soft"
@@ -2065,7 +2065,7 @@ function KaliUpdateCard({
   const bakiDiperkukuh = hasil ? Math.max(0, hasil.jumlahDiperkukuh - (hasil.bocorNama ? 1 : 0)) : 0;
 
   return (
-    <div className="rounded-2xl p-5 shadow-card" style={cardStyle}>
+    <div className="rounded-2xl border-2 p-5 shadow-card" style={cardStyle}>
       <div className="flex items-center gap-3">
         <div
           className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-lg text-white shadow-soft"
