@@ -14,7 +14,42 @@ export interface SijilInput {
   tarikh: string; // formatted MS-MY
   purata: number; // 0-100
   kodSijil: string; // unik
+  // Hanya untuk jenis "kuiz-cemerlang":
+  subjekTitle?: string;
+  topik?: string;
+  darjahLabel?: string;
+  subjekId?: string;
+  bintangDiperoleh?: number;
+  certificateUuid?: string;
 }
+
+export const SUBJEK_KOD: Record<string, string> = {
+  "bahasa-melayu": "BM",
+  matematik: "MT",
+  "bahasa-inggeris": "BI",
+  sains: "SC",
+  "pendidikan-islam": "PI",
+  jawi: "JW",
+};
+
+export function cosmeticCertId(
+  darjahLabel: string,
+  subjekId: string,
+  _tarikh: string,
+  uuid: string,
+): string {
+  const darjahNum = darjahLabel.match(/\d+/)?.[0] ?? darjahLabel;
+  const kod = SUBJEK_KOD[subjekId] ?? subjekId.slice(0, 2).toUpperCase();
+  const yy = new Date().getFullYear().toString().slice(-2);
+  const suffix = uuid.replace(/-/g, "").slice(-6).toUpperCase();
+  return `KLF-${yy}-D${darjahNum}-${kod}-${suffix}`;
+}
+
+/** Buang kod dalaman seperti "PH01 " di depan nama topik (paparan sahaja). */
+export function bersihkanTopik(topik: string): string {
+  return topik.replace(/^[A-Z]{1,4}\d{1,3}\s+/, "");
+}
+
 
 // Cache logo dataURL supaya tak fetch berulang kali
 let logoDataUrlCache: string | null = null;
@@ -68,7 +103,7 @@ export async function buildSijilPDF(input: SijilInput): Promise<Blob> {
   const logo = await loadLogoDataUrl();
 
   if (input.jenis === "kuiz-cemerlang") {
-    return renderKuizCemerlang(doc, input, W, H, logo);
+    return await renderKuizCemerlang(doc, input, W, H, logo);
   }
 
   // ── Latar kertas
@@ -171,119 +206,259 @@ export async function buildSijilPDF(input: SijilInput): Promise<Blob> {
   return doc.output("blob");
 }
 
-function renderKuizCemerlang(
+const DEEP = "#013E37";
+const BUTTER = "#FFEEB3";
+const GOLD = "#D4A017";
+const KERTAS = "#FFFBF0";
+
+async function buatQrDataUrl(url: string): Promise<string | null> {
+  try {
+    const QRCode = await import("qrcode");
+    return await QRCode.toDataURL(url, { margin: 1, width: 240 });
+  } catch (e) {
+    console.warn("Gagal jana QR sijil:", e);
+    return null;
+  }
+}
+
+function drawTrophyBadge(doc: any, cx: number, cy: number) {
+  // Cincin emas
+  doc.setFillColor("#FFF6DC");
+  doc.setDrawColor(GOLD);
+  doc.setLineWidth(1.4);
+  doc.circle(cx, cy, 13, "FD");
+
+  const { r, g, b } = hexToRgb(GOLD);
+  doc.setFillColor(r, g, b);
+  doc.setDrawColor(DEEP);
+  doc.setLineWidth(0.4);
+  // Cawan
+  doc.circle(cx, cy - 3, 5, "FD");
+  // Batang
+  doc.circle(cx, cy + 3.5, 1.6, "FD");
+  // Tapak
+  doc.ellipse(cx, cy + 7, 5, 1.7, "FD");
+  // Pemegang kiri & kanan
+  doc.setLineWidth(0.7);
+  doc.setDrawColor(GOLD);
+  doc.circle(cx - 6.2, cy - 3, 1.8, "S");
+  doc.circle(cx + 6.2, cy - 3, 1.8, "S");
+}
+
+function drawBookIcon(doc: any, x: number, y: number) {
+  doc.setFillColor(...(Object.values(hexToRgb(DEEP)) as [number, number, number]));
+  doc.roundedRect(x, y, 7, 8, 1, 1, "F");
+  doc.setDrawColor("#FFFFFF");
+  doc.setLineWidth(0.4);
+  doc.line(x + 3.5, y + 1, x + 3.5, y + 7);
+}
+
+function drawChatIcon(doc: any, x: number, y: number) {
+  const { r, g, b } = hexToRgb(GOLD);
+  doc.setFillColor(r, g, b);
+  doc.roundedRect(x, y, 8, 6, 1.5, 1.5, "F");
+  doc.triangle(x + 2, y + 6, x + 5, y + 6, x + 2.5, y + 8.5, "F");
+}
+
+async function renderKuizCemerlang(
   doc: any,
   input: SijilInput,
   W: number,
   H: number,
   logo: string | null,
-): Blob {
-  // ── Latar kertas
-  doc.setFillColor("#FFFDF7");
+): Promise<Blob> {
+  const subjekTitle = input.subjekTitle ?? "";
+  const topikBersih = bersihkanTopik(input.topik ?? "");
+  const darjahLabel = input.darjahLabel ?? "";
+  const darjahNum = darjahLabel.match(/\d+/)?.[0] ?? darjahLabel;
+  const bintang = input.bintangDiperoleh ?? 0;
+  const certId = input.certificateUuid
+    ? cosmeticCertId(darjahLabel, input.subjekId ?? subjekTitle, input.tarikh, input.certificateUuid)
+    : input.kodSijil;
+
+  // ── Latar kertas krim
+  doc.setFillColor(KERTAS);
   doc.rect(0, 0, W, H, "F");
 
-  // ── Bingkai berlapis (warna brand: hijau luar, emas dalam)
-  doc.setDrawColor(HIJAU);
-  doc.setLineWidth(2.5);
-  doc.rect(8, 8, W - 16, H - 16);
-  doc.setDrawColor(EMAS);
-  doc.setLineWidth(1);
-  doc.rect(12, 12, W - 24, H - 24);
+  // ── Bingkai: emas nipis di luar, hijau tua di dalam
+  doc.setDrawColor(GOLD);
+  doc.setLineWidth(0.8);
+  doc.rect(6, 6, W - 12, H - 12);
+  doc.setDrawColor(DEEP);
+  doc.setLineWidth(2);
+  doc.roundedRect(9, 9, W - 18, H - 18, 5, 5, "S");
 
-  // ── Hiasan sudut (emas)
-  const sudut: [number, number][] = [
-    [16, 16],
-    [W - 16, 16],
-    [16, H - 16],
-    [W - 16, H - 16],
-  ];
-  doc.setFillColor(EMAS);
-  sudut.forEach(([x, y]) => doc.circle(x, y, 3, "F"));
+  // ── Hiasan sudut emas
+  const { r: gr, g: gg, b: gb } = hexToRgb(GOLD);
+  doc.setFillColor(gr, gg, gb);
+  ([[15, 15], [W - 15, 15], [15, H - 15], [W - 15, H - 15]] as [number, number][]).forEach(
+    ([x, y]) => doc.circle(x, y, 2.2, "F"),
+  );
 
-  // ── Logo Kalifah.my di atas
-  drawLogo(doc, logo, W / 2, 24);
-
-  // ── Trofi emas kecil sebelah tajuk (di tengah, atas tajuk)
-  const cx = W / 2;
-  const { r, g, b } = hexToRgb(EMAS);
-  doc.setFillColor(r, g, b);
-  doc.setDrawColor(HIJAU_GELAP);
-  doc.setLineWidth(0.5);
-  doc.circle(cx, 48, 5, "FD");
-  doc.circle(cx, 55, 1.8, "FD");
-  doc.ellipse(cx, 59, 5, 1.8, "FD");
-
-  // ── Tajuk Sijil (hijau gelap — warna brand)
+  // ── Logo + tajuk
+  drawLogo(doc, logo, W / 2, 16);
   doc.setFont("helvetica", "bold");
-  doc.setTextColor(HIJAU_GELAP);
-  doc.setFontSize(38);
-  doc.text("SIJIL CEMERLANG", W / 2, 78, { align: "center" });
+  doc.setTextColor(DEEP);
+  doc.setFontSize(26);
+  doc.text("SIJIL CEMERLANG", W / 2, 37, { align: "center" });
 
-  // ── Subtajuk (emas)
+  // ── Band hero "100% SEMPURNA"
+  const bandX = 72;
+  const bandY = 43;
+  const bandW = 155;
+  const bandH = 29;
+  const { r: dr, g: dg, b: db } = hexToRgb(DEEP);
+  doc.setFillColor(dr, dg, db);
+  doc.roundedRect(bandX, bandY, bandW, bandH, 8, 8, "F");
+
+  doc.setTextColor(BUTTER);
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(15);
-  doc.setTextColor(EMAS);
-  doc.text("100% Jawapan Betul", W / 2, 87, { align: "center" });
+  doc.setFontSize(30);
+  doc.text("100%", bandX + 38, bandY + 19, { align: "center" });
 
-  // ── Garis pemisah emas
-  doc.setDrawColor(EMAS);
-  doc.setLineWidth(0.6);
-  doc.line(W / 2 - 40, 93, W / 2 + 40, 93);
+  doc.setFontSize(17);
+  doc.text("SEMPURNA!", bandX + 110, bandY + 13, { align: "center" });
 
-  // ── Diberikan kepada
+  doc.setFillColor(gr, gg, gb);
+  doc.roundedRect(bandX + 76, bandY + 17, 68, 8, 4, 4, "F");
+  doc.setTextColor(DEEP);
+  doc.setFontSize(8);
+  doc.text("SEMUA JAWAPAN BETUL", bandX + 110, bandY + 22.5, { align: "center" });
+
+  // ── Trofi
+  drawTrophyBadge(doc, 50, bandY + bandH / 2);
+
+  // ── Penghargaan + nama
   doc.setFont("helvetica", "normal");
-  doc.setFontSize(12);
-  doc.setTextColor("#555555");
-  doc.text("Diberikan dengan penuh penghargaan kepada", W / 2, 103, { align: "center" });
+  doc.setFontSize(10);
+  doc.setTextColor("#666666");
+  doc.text("Diberikan dengan penuh penghargaan kepada", W / 2, 84, { align: "center" });
 
-  // ── Nama murid (hijau brand)
   doc.setFont("times", "bolditalic");
-  doc.setFontSize(32);
-  doc.setTextColor(HIJAU);
-  doc.text(input.namaMurid, W / 2, 118, { align: "center" });
-
-  const namaTextWidth = Math.min(180, doc.getTextWidth(input.namaMurid) + 20);
-  doc.setDrawColor(EMAS);
+  doc.setFontSize(30);
+  doc.setTextColor(DEEP);
+  doc.text(input.namaMurid, W / 2, 97, { align: "center" });
+  const namaW = Math.min(180, doc.getTextWidth(input.namaMurid) + 20);
+  doc.setDrawColor(GOLD);
   doc.setLineWidth(0.5);
-  doc.line(W / 2 - namaTextWidth / 2, 123, W / 2 + namaTextWidth / 2, 123);
+  doc.line(W / 2 - namaW / 2, 101, W / 2 + namaW / 2, 101);
 
-  // ── Naratif
   doc.setFont("helvetica", "normal");
-  doc.setFontSize(12);
-  doc.setTextColor("#333333");
-  doc.text("Tahniah kerana menjawab SEMUA soalan dengan betul untuk", W / 2, 133, { align: "center" });
-
-  // ── Tajuk topik (hijau gelap)
+  doc.setFontSize(10);
+  doc.setTextColor("#444444");
+  doc.text("Tahniah kerana berjaya menjawab", W / 2, 110, { align: "center" });
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(20);
-  doc.setTextColor(HIJAU_GELAP);
-  doc.text(input.tajuk, W / 2, 144, { align: "center" });
+  doc.setFontSize(12);
+  doc.setTextColor(DEEP);
+  doc.text("SEMUA SOALAN DENGAN BETUL", W / 2, 117, { align: "center" });
 
-  // ── Kad markah & tarikh
-  const kadY = 156;
-  drawKad(doc, W / 2 - 70, kadY, 60, 20, "MARKAH", "100%", EMAS);
-  drawKad(doc, W / 2 + 10, kadY, 60, 20, "TARIKH", input.tarikh, HIJAU);
+  // ── Kad maklumat
+  const kadX = 28;
+  const kadY = 122;
+  const kadW = W - 56;
+  const kadH = 22;
+  doc.setFillColor("#FFF6D6");
+  doc.roundedRect(kadX, kadY, kadW, kadH, 4, 4, "F");
+  doc.setDrawColor("#EFDCA0");
+  doc.setLineWidth(0.5);
+  doc.roundedRect(kadX, kadY, kadW, kadH, 4, 4, "S");
 
-  // ── Tandatangan digital
-  doc.setFont("times", "italic");
-  doc.setFontSize(18);
-  doc.setTextColor(HIJAU_GELAP);
-  doc.text("Kalifah.my", W / 2, 187, { align: "center" });
-  doc.setDrawColor("#999999");
-  doc.setLineWidth(0.3);
-  doc.line(W / 2 - 30, 189, W / 2 + 30, 189);
+  drawBookIcon(doc, kadX + 8, kadY + 7);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(10);
+  doc.setTextColor(DEEP);
+  const barisSubjek = darjahNum ? `${subjekTitle} • DARJAH ${darjahNum}` : subjekTitle;
+  doc.text(barisSubjek, kadX + 19, kadY + 9);
   doc.setFont("helvetica", "normal");
   doc.setFontSize(9);
-  doc.setTextColor("#666666");
-  doc.text("Tandatangan Digital — Pasukan Kalifah.my", W / 2, 194, { align: "center" });
+  doc.setTextColor("#333333");
+  doc.text(doc.splitTextToSize(topikBersih, 150)[0] ?? "", kadX + 19, kadY + 16);
 
-  // ── Kod sijil
+  drawChatIcon(doc, kadX + kadW - 70, kadY + 6);
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(8);
+  doc.setTextColor("#666666");
+  doc.text("Tahap penguasaan yang", kadX + kadW - 58, kadY + 9);
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(11);
+  doc.setTextColor(GOLD);
+  doc.text("CEMERLANG!", kadX + kadW - 58, kadY + 16);
+
+  // ── Baris pencapaian
+  const rowY = 155;
+  const items: [string, string, string][] = [
+    ["🏅", "PERFECT SCORE AWARD", "Pencapaian Hebat!"],
+    ["⭐", `+${bintang} BINTANG`, "Ganjaran Diperoleh"],
+    ["📅", "TARIKH", input.tarikh],
+  ];
+  items.forEach(([, tajuk, sub], idx) => {
+    const x = 28 + idx * 58;
+    doc.setFillColor(gr, gg, gb);
+    doc.circle(x + 4, rowY, 4, "F");
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(8);
+    doc.setTextColor(DEEP);
+    doc.text(tajuk, x + 11, rowY - 1);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(7.5);
+    doc.setTextColor("#666666");
+    doc.text(sub, x + 11, rowY + 4);
+  });
+
+  // ── QR pengesahan
+  if (input.certificateUuid) {
+    const qr = await buatQrDataUrl(`https://kalifah.my/sijil/${input.certificateUuid}`);
+    if (qr) {
+      const qrX = 210;
+      const qrY = rowY - 12;
+      try {
+        doc.addImage(qr, "PNG", qrX, qrY, 23, 23);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(9);
+        doc.setTextColor(DEEP);
+        doc.text("Sahkan Sijil", qrX + 27, qrY + 9);
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(7);
+        doc.setTextColor("#666666");
+        doc.text(
+          doc.splitTextToSize("Imbas QR untuk sahkan keaslian sijil ini.", 32),
+          qrX + 27,
+          qrY + 14,
+        );
+      } catch (e) {
+        console.warn("Gagal lukis QR:", e);
+      }
+    }
+  }
+
+  // ── Bar footer hijau tua
+  const barX = 20;
+  const barY = 176;
+  const barW = W - 40;
+  const barH = 20;
+  doc.setFillColor(dr, dg, db);
+  doc.roundedRect(barX, barY, barW, barH, 6, 6, "F");
+
+  doc.setFont("times", "italic");
+  doc.setFontSize(16);
+  doc.setTextColor(BUTTER);
+  doc.text("Kalifah.my", barX + 12, barY + 10);
+  doc.setFont("helvetica", "normal");
   doc.setFontSize(7);
-  doc.setTextColor("#999999");
-  doc.text(`Kod Sijil: ${input.kodSijil}`, W - 16, H - 14, { align: "right" });
+  doc.setTextColor("#FFFFFF");
+  doc.text("Tandatangan Digital — Pasukan Kalifah.my", barX + 12, barY + 16);
+
+  doc.setFontSize(6.5);
+  doc.setTextColor("#CFE0D8");
+  doc.text("CERTIFICATE ID", barX + barW - 12, barY + 8, { align: "right" });
+  doc.setFont("courier", "bold");
+  doc.setFontSize(11);
+  doc.setTextColor(BUTTER);
+  doc.text(certId, barX + barW - 12, barY + 15.5, { align: "right" });
 
   return doc.output("blob");
 }
+
 
 function drawKad(
   doc: any,

@@ -136,6 +136,7 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
   const [pilih, setPilih] = useState<number | null>(null);
   const [skor, setSkor] = useState(0);
   const [selesai, setSelesai] = useState(false);
+  const [bintangDiperoleh, setBintangDiperoleh] = useState(0);
   const [mulaMasa, setMulaMasa] = useState(() => Date.now());
   const [sesiId] = useState(() => (typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`));
   const [mulaSoalan, setMulaSoalan] = useState(() => Date.now());
@@ -329,7 +330,9 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
     });
     if (isBetul) {
       setSkor((s) => s + 1);
-      awardKuizStar({ soalanRef: soalanList[i].id, darjah: darjahId, subjek: subjekId });
+      awardKuizStar({ soalanRef: soalanList[i].id, darjah: darjahId, subjek: subjekId }).then((diberi) => {
+        if (diberi) setBintangDiperoleh((c) => c + 1);
+      });
     }
   }
 
@@ -537,6 +540,12 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
                       tarikh,
                       purata: 100,
                       kodSijil,
+                      subjekTitle,
+                      topik,
+                      darjahLabel,
+                      subjekId,
+                      bintangDiperoleh,
+                      certificateUuid: rekod?.id,
                     },
                     `sijil-kuiz-${subjekId}-${darjahId}-${topik.replace(/\s+/g, "-")}.pdf`,
                   );
