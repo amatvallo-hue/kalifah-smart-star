@@ -210,6 +210,26 @@ function AdminTelegramPage() {
   const [topQBusy, setTopQBusy] = useState(false);
   const [topQRalat, setTopQRalat] = useState<string | null>(null);
 
+  // ---- KALI ----
+  const [kaliRows, setKaliRows] = useState<KaliSesiRow[]>([]);
+  const [kaliLoading, setKaliLoading] = useState(false);
+
+  const loadKali = async () => {
+    setKaliLoading(true);
+    const { data, error } = await supabase
+      .from("kali_bot_sesi")
+      .select(
+        "telegram_chat_id, step, darjah, source, ref_code, child_user_id, created_at, demo_completed_at",
+      )
+      .order("created_at", { ascending: false })
+      .limit(100);
+    if (error) console.error("[admin/telegram] KALI", error);
+    setKaliRows((data ?? []) as unknown as KaliSesiRow[]);
+    setKaliLoading(false);
+  };
+
+
+
   const loadTopQ = async () => {
     const { data } = await supabase
       .from("bot_top_questions_cache")
