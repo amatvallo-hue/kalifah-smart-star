@@ -34,7 +34,7 @@ function Kad({ children }: { children: ReactNode }) {
   return <div className="rounded-3xl bg-card p-7 shadow-card md:p-8">{children}</div>;
 }
 
-type Phase = "loading" | "invalid" | "analisis" | "form" | "claiming" | "success" | "error" | "semak-emel";
+type Phase = "loading" | "invalid" | "analisis" | "form" | "claiming" | "success" | "error" | "semak-emel" | "sudah-ada-akaun";
 
 type LaporanPreview = {
   valid: boolean;
