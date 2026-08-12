@@ -616,26 +616,26 @@ function DarjahDashboard() {
               <div
                 className="relative overflow-hidden rounded-3xl border-2 p-5 shadow-card md:p-6"
                 style={{
-                  borderColor: "#FBC02D",
+                  borderColor: "var(--brand-butter)",
                   background:
-                    "linear-gradient(135deg, #FFF8E1 0%, #FFFDF5 55%, #FFF3D1 100%)",
+                    "linear-gradient(135deg, #FFFCF0 0%, #FFFEFB 60%, #FFF8E5 100%)",
                 }}
               >
-                <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-[#F9A825]/15 blur-3xl" />
+                <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-brand-butter/25 blur-3xl" />
                 <div className="relative flex flex-wrap items-center justify-between gap-4">
                   <div className="flex items-center gap-4">
                     <div
                       className="flex h-14 w-14 items-center justify-center rounded-2xl text-white shadow-soft"
-                      style={{ background: "linear-gradient(135deg, #F5B82E, #E48A0A)" }}
+                      style={{ backgroundColor: "#013E37" }}
                     >
                       <CalendarDays className="h-7 w-7" />
                     </div>
                     <div>
-                      <div className="inline-flex items-center gap-1.5 rounded-full bg-white/80 px-2.5 py-0.5 font-display text-[10px] font-extrabold uppercase tracking-wide text-[#8A5A00] shadow-soft">
+                      <div className="inline-flex items-center gap-1.5 rounded-full bg-white/80 px-2.5 py-0.5 font-display text-[10px] font-extrabold uppercase tracking-wide text-brand-deep shadow-soft">
                         <TrendingUp className="h-3 w-3" />
                         7 Hari Terakhir
                       </div>
-                      <h2 className="mt-1 font-display text-xl font-extrabold text-foreground md:text-2xl">
+                      <h2 className="mt-1 font-display text-xl font-extrabold text-brand-deep md:text-2xl">
                         Progress Minggu Ini
                       </h2>
                     </div>
@@ -658,8 +658,7 @@ function DarjahDashboard() {
                     />
                     <Link
                       to="/dashboard/progress"
-                      className="inline-flex items-center gap-2 rounded-full px-4 py-2.5 font-display text-sm font-extrabold text-white shadow-soft transition hover:opacity-90"
-                      style={{ background: "linear-gradient(135deg, #F5B82E, #E48A0A)" }}
+                      className="inline-flex items-center gap-2 rounded-full bg-gradient-primary px-4 py-2.5 font-display text-sm font-extrabold text-primary-foreground shadow-soft transition hover:opacity-90"
                     >
                       Lihat Penuh
                       <ArrowRight className="h-4 w-4" />
@@ -667,7 +666,7 @@ function DarjahDashboard() {
                   </div>
                 </div>
                 {minggu && minggu.bilAktiviti === 0 && (
-                  <p className="relative mt-3 text-xs font-bold text-[#8A5A00]/80">
+                  <p className="relative mt-3 text-xs font-bold text-brand-deep/70">
                     Belum ada aktiviti minggu ini — jom mula belajar!
                   </p>
                 )}
