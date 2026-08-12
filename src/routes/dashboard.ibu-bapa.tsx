@@ -1268,10 +1268,10 @@ function ParentDashboard() {
                         </div>
                       ) : (
                         <div
-                          className="overflow-hidden rounded-2xl shadow-card"
+                          className="overflow-hidden rounded-2xl border-2 shadow-card"
                           style={{
-                            background: `linear-gradient(135deg, #FFF8E1 0%, #FFFDF5 100%)`,
-                            border: `2px solid ${EMAS}80`,
+                            background: "linear-gradient(135deg, #FFFCF0 0%, #FFFEFB 60%, #FFF8E5 100%)",
+                            borderColor: "var(--brand-butter)",
                           }}
                         >
                           {sijilList.map((sj, i) => {
