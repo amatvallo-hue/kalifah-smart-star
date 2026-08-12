@@ -14,7 +14,42 @@ export interface SijilInput {
   tarikh: string; // formatted MS-MY
   purata: number; // 0-100
   kodSijil: string; // unik
+  // Hanya untuk jenis "kuiz-cemerlang":
+  subjekTitle?: string;
+  topik?: string;
+  darjahLabel?: string;
+  subjekId?: string;
+  bintangDiperoleh?: number;
+  certificateUuid?: string;
 }
+
+export const SUBJEK_KOD: Record<string, string> = {
+  "bahasa-melayu": "BM",
+  matematik: "MT",
+  "bahasa-inggeris": "BI",
+  sains: "SC",
+  "pendidikan-islam": "PI",
+  jawi: "JW",
+};
+
+export function cosmeticCertId(
+  darjahLabel: string,
+  subjekId: string,
+  _tarikh: string,
+  uuid: string,
+): string {
+  const darjahNum = darjahLabel.match(/\d+/)?.[0] ?? darjahLabel;
+  const kod = SUBJEK_KOD[subjekId] ?? subjekId.slice(0, 2).toUpperCase();
+  const yy = new Date().getFullYear().toString().slice(-2);
+  const suffix = uuid.replace(/-/g, "").slice(-6).toUpperCase();
+  return `KLF-${yy}-D${darjahNum}-${kod}-${suffix}`;
+}
+
+/** Buang kod dalaman seperti "PH01 " di depan nama topik (paparan sahaja). */
+export function bersihkanTopik(topik: string): string {
+  return topik.replace(/^[A-Z]{1,4}\d{1,3}\s+/, "");
+}
+
 
 // Cache logo dataURL supaya tak fetch berulang kali
 let logoDataUrlCache: string | null = null;
