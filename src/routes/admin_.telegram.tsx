@@ -103,15 +103,35 @@ type TopQCache = {
   generated_by: string | null;
 };
 
-type TabKey = "overview" | "conversations" | "knowledge" | "moderation" | "settings";
+type TabKey = "overview" | "kali" | "conversations" | "knowledge" | "moderation" | "settings";
 
 const TABS: { key: TabKey; label: string }[] = [
   { key: "overview", label: "📊 Overview" },
+  { key: "kali", label: "🧠 KALI" },
   { key: "conversations", label: "💬 Conversations" },
   { key: "knowledge", label: "📚 Knowledge" },
   { key: "moderation", label: "🛡️ Moderation" },
   { key: "settings", label: "⚙️ Settings" },
 ];
+
+type KaliSesiRow = {
+  telegram_chat_id: number | string | null;
+  step: string | null;
+  darjah: number | null;
+  source: string | null;
+  ref_code: string | null;
+  child_user_id: string | null;
+  created_at: string;
+  demo_completed_at: string | null;
+};
+
+const KALI_STEP_STYLE: Record<string, string> = {
+  await_darjah: "border-border bg-muted text-muted-foreground",
+  demo_sent: "border-sky-500/40 bg-sky-500/10 text-sky-600 dark:text-sky-400",
+  await_nama_anak: "border-amber-500/40 bg-amber-500/10 text-amber-600 dark:text-amber-400",
+  closed: "border-emerald-500/40 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
+};
+
 
 const AI_TYPES = ["ai_dm", "ai_group"];
 
