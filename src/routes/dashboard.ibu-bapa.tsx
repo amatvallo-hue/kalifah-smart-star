@@ -1287,12 +1287,11 @@ function ParentDashboard() {
                               <div
                                 key={sj.id}
                                 className="flex flex-wrap items-center justify-between gap-3 p-4"
-                                style={{ borderTop: i === 0 ? "none" : `1px solid ${EMAS}33` }}
+                                style={{ borderTop: i === 0 ? "none" : "1px solid var(--brand-butter)" }}
                               >
                                 <div className="flex min-w-0 flex-1 items-center gap-3">
                                   <span
-                                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-white shadow-gold"
-                                    style={{ background: `linear-gradient(135deg, ${EMAS}, #E48A0A)` }}
+                                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-brand-butter text-brand-butter-foreground shadow-soft"
                                   >
                                     <Trophy className="h-5 w-5" />
                                   </span>
