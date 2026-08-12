@@ -178,11 +178,11 @@ function KaliHeroCadangan({
 
   return (
     <section className="mt-6">
-      <span className="inline-flex items-center gap-1.5 rounded-full bg-gradient-primary px-3 py-1 font-display text-[11px] font-bold text-primary-foreground shadow-soft">
+      <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-butter px-3 py-1 font-display text-[11px] font-bold text-brand-butter-foreground shadow-soft">
         <Sparkles className="h-3 w-3" />
         CADANGAN KALI HARI INI
       </span>
-      <h2 className="mt-2 font-display text-xl font-extrabold leading-tight text-foreground md:text-2xl">
+      <h2 className="mt-2 font-display text-xl font-extrabold leading-tight text-brand-deep md:text-2xl">
         {tajuk}
       </h2>
       <p className="mt-1 text-sm text-muted-foreground">{subteks}</p>
@@ -190,8 +190,8 @@ function KaliHeroCadangan({
       <div
         className="mt-3 flex flex-col rounded-3xl border p-6 shadow-card md:flex-row"
         style={{
-          background: "linear-gradient(135deg, #ECF9F2 0%, #F7FCF9 55%, #FFF9E8 100%)",
-          borderColor: "#CDEBDD",
+          backgroundColor: "#013E37",
+          borderColor: "#013E37",
         }}
       >
         <div className="min-w-0 flex-1">
