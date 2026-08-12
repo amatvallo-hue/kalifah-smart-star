@@ -283,6 +283,7 @@ function KuizPage() {
   const [pilih, setPilih] = useState<number | null>(null);
   const [skor, setSkor] = useState(0);
   const [selesai, setSelesai] = useState(false);
+  const [bintangDiperoleh, setBintangDiperoleh] = useState(0);
   const [mulaMasa] = useState(() => Date.now());
   const [sesiId] = useState(() => (typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`));
   const [mulaSoalan, setMulaSoalan] = useState(() => Date.now());
