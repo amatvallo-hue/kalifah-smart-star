@@ -697,7 +697,11 @@ function AdminTelegramPage() {
             <StatCard label="⚠️ Perlu Admin (hari ini)" value={String(perluAdminHariIni)} />
             <StatCard label="🚩 Spam Disekat (7 hari)" value={String(spamDisekat)} />
             <StatCard label="👍 Kualiti Jawapan % (7 hari)" value={kualitiPct} />
+            <StatCard label="🧠 Sesi KALI (7 hari)" value={String(kaliSesi7)} />
+            <StatCard label="✅ Kadar Siap Demo" value={kaliDemoPct} highlight />
+            <StatCard label="🔗 Link Anak Dihantar" value={String(kaliLinkAnak)} />
           </div>
+
 
           <section className="mt-8">
             <h2 className="mb-3 font-display text-lg font-extrabold">Pecahan Ikut Jenis Event</h2>
