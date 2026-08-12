@@ -2001,6 +2001,17 @@ function KaliUpdateCard({
     bocorNama: string | null;
     bocorGejala: string | null;
   } | null>(null);
+  const [copied, setCopied] = useState(false);
+
+  async function salinArahanMula() {
+    try {
+      await navigator.clipboard.writeText(
+        `📋 Minta ${namaAnak} log masuk sendiri untuk mula sesi pertama percuma dengan Belajar Bersama KALI.`,
+      );
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {}
+  }
 
   useEffect(() => {
     let mounted = true;
