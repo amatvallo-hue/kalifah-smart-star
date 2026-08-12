@@ -751,9 +751,9 @@ function DarjahCard({
 
   const currentCardStyle = isCurrent
     ? {
-        borderColor: "hsl(var(--primary))",
+        borderColor: "#013E37",
         background:
-          "linear-gradient(135deg, hsl(var(--primary) / 0.10) 0%, hsl(var(--card)) 55%)",
+          "linear-gradient(135deg, rgba(255,238,179,0.35) 0%, hsl(var(--card)) 55%)",
       }
     : undefined;
 
