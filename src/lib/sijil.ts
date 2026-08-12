@@ -201,7 +201,7 @@ function renderKuizCemerlang(
   sudut.forEach(([x, y]) => doc.circle(x, y, 3, "F"));
 
   // ── Logo Kalifah.my di atas
-  drawLogo(doc, logo, W / 2, 16);
+  drawLogo(doc, logo, W / 2, 24);
 
   // ── Trofi emas kecil sebelah tajuk (di tengah, atas tajuk)
   const cx = W / 2;
