@@ -273,6 +273,15 @@ function AktifkanPage() {
     });
 
     if (error) {
+      const sudahWujud = /already registered|already exists/i.test(error.message);
+```ts
+    if (error) {
+      const sudahWujud = /already registered|already exists/i.test(error.message);
+      if (sudahWujud) {
+        setMenghantar(false);
+        setPhase("sudah-ada-akaun");
+        return;
+      }
       setRalat(error.message);
       setMenghantar(false);
       return;
@@ -283,8 +292,24 @@ function AktifkanPage() {
       return;
     }
 
+    const isNewAccount = !!data.user?.identities && data.user.identities.length > 0;
+    if (!isNewAccount) {
+      setMenghantar(false);
+      setPhase("sudah-ada-akaun");
+      return;
+    }
+
     setMenghantar(false);
     setPhase("semak-emel");
+  }
+
+  function pergiLogMasuk() {
+    const p = paramsRef.current;
+    if (p && typeof window !== "undefined") {
+      const balik = `/cuba-kali/aktifkan?child=${p.child}&token=${p.token}&darjah=${p.darjah}`;
+      window.sessionStorage.setItem("kalifah_redirect_selepas_login", balik);
+    }
+    window.location.href = `/login?email=${encodeURIComponent(emel.trim())}`;
   }
 
   if (phase === "analisis" && laporan) {
