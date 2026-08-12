@@ -626,19 +626,36 @@ function KuizPage() {
               </Link>
               {skor === soalanList.length && soalanList.length > 0 && (
                 <button
-                  onClick={() =>
-                    downloadSijil(
+                  onClick={async () => {
+                    const nama = profileName ?? "Murid";
+                    const kodSijil = `KUIZ-${darjahId}-${subjekId}-${Date.now()}`;
+                    const rekod = await simpanRekodSijil({
+                      namaPelajar: nama,
+                      subjek: subjekId,
+                      topik: subjek.title,
+                      darjah: darjahId,
+                      kodSijil,
+                    });
+                    await downloadSijil(
                       {
                         jenis: "kuiz-cemerlang",
-                        namaMurid: profileName ?? "Murid",
+                        namaMurid: nama,
                         tajuk: `${subjek.title} — ${darjah.label}`,
-                        tarikh: new Date().toLocaleDateString("ms-MY"),
+                        tarikh: rekod?.tarikh
+                          ? new Date(rekod.tarikh + "T00:00:00").toLocaleDateString("ms-MY")
+                          : new Date().toLocaleDateString("ms-MY"),
                         purata: 100,
-                        kodSijil: `KUIZ-${darjahId}-${subjekId}-${Date.now()}`,
+                        kodSijil: rekod?.kod_sijil ?? kodSijil,
+                        subjekTitle: subjek.title,
+                        topik: subjek.title,
+                        darjahLabel: darjah.label,
+                        subjekId,
+                        bintangDiperoleh,
+                        certificateUuid: rekod?.id,
                       },
                       `sijil-kuiz-${subjekId}-${darjahId}.pdf`,
-                    )
-                  }
+                    );
+                  }}
                   className="rounded-full bg-gradient-gold px-6 py-3 font-display font-extrabold text-gold-foreground shadow-gold transition hover:-translate-y-0.5"
                 >
                   🏆 {isEnglish ? "Download Certificate" : "Muat Turun Sijil"}
