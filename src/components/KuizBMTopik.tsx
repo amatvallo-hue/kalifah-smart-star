@@ -329,7 +329,9 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
     });
     if (isBetul) {
       setSkor((s) => s + 1);
-      awardKuizStar({ soalanRef: soalanList[i].id, darjah: darjahId, subjek: subjekId });
+      awardKuizStar({ soalanRef: soalanList[i].id, darjah: darjahId, subjek: subjekId }).then((diberi) => {
+        if (diberi) setBintangDiperoleh((c) => c + 1);
+      });
     }
   }
 
