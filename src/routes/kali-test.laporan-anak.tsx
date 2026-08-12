@@ -160,7 +160,7 @@ function LaporanAnakPage() {
   return shell(
     <div className="rounded-3xl bg-card p-8 shadow-card">
       <div className="flex flex-wrap items-center gap-3">
-        <h1 className="font-display text-2xl font-extrabold" style={{ color: HIJAU }}>
+        <h1 className="font-display text-lg font-extrabold" style={{ color: HIJAU }}>
           🧠 Laporan KALI untuk {laporan.nama}
         </h1>
         <span
@@ -171,8 +171,18 @@ function LaporanAnakPage() {
         </span>
       </div>
 
-      <p className="mt-4 font-display text-4xl font-extrabold" style={{ color: HIJAU }}>
-        {laporan.betul}/10 betul
+      <h2
+        className="mt-4 font-display text-2xl font-extrabold leading-tight sm:text-3xl"
+        style={{ color: HIJAU }}
+      >
+        🧠 KALI dah jumpa titik yang perlu diberi perhatian
+      </h2>
+      <p className="mt-3 text-sm text-muted-foreground">
+        Daripada 10 jawapan pertama {laporan.nama}, KALI mengesan satu corak yang patut
+        diperkuatkan sebelum pembelajaran diteruskan.
+      </p>
+      <p className="mt-2 text-sm text-muted-foreground">
+        {laporan.betul} daripada 10 soalan dijawab betul
       </p>
 
       <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -194,7 +204,7 @@ function LaporanAnakPage() {
       {laporan.bocor_nama && (
         <div className="mt-6">
           <p className="font-display text-sm font-extrabold text-foreground">
-            🔍 Antara yang KALI perasan
+            🔴 KALI kesan kesukaran bermula di sini
           </p>
           <div
             className="mt-2 rounded-2xl border-2 p-4"
@@ -203,14 +213,30 @@ function LaporanAnakPage() {
             <p className="text-sm font-extrabold" style={{ color: "#92400e" }}>
               {laporan.bocor_nama}
             </p>
-            {laporan.bocor_gejala && (
-              <p className="mt-1 text-sm" style={{ color: "#92400e" }}>
-                {laporan.bocor_gejala}
-              </p>
-            )}
+            <p className="mt-1 text-sm" style={{ color: "#92400e" }}>
+              {laporan.nama} tersilap pada soalan berkaitan kemahiran ini.
+            </p>
+            <p className="mt-3 text-sm font-bold" style={{ color: "#92400e" }}>
+              Kenapa ini penting?
+            </p>
+            <p className="mt-1 text-sm" style={{ color: "#92400e" }}>
+              Kemahiran ini menjadi asas kepada pembelajaran seterusnya. Jika bahagian ini
+              belum kukuh, latihan yang lebih sukar mungkin tidak menyelesaikan punca sebenar.
+            </p>
           </div>
         </div>
       )}
+
+      <div className="mt-6">
+        <p className="font-display text-lg font-extrabold text-foreground">
+          💡 Apa yang KALI akan buat untuk {laporan.nama}
+        </p>
+        <p className="mt-2 text-sm text-muted-foreground">
+          KALI tidak akan terus beri soalan yang lebih susah. KALI akan kembali mengukuhkan
+          kemahiran yang dikesan lemah dahulu, kemudian melihat sama ada {laporan.nama} sudah
+          bersedia bergerak ke kemahiran seterusnya.
+        </p>
+      </div>
 
       {laporan.paid ? (
         <div className="mt-8 text-center">
@@ -228,14 +254,19 @@ function LaporanAnakPage() {
         </div>
       ) : (
         <div className="mt-8">
-          <p className="font-display text-lg font-extrabold text-foreground">
-            KALI menemui lebih banyak tentang pembelajaran {laporan.nama}
+          <p className="text-sm text-muted-foreground">
+            KALI baru mula mengenali {laporan.nama}. Daripada sesi pertama ini, KALI sudah
+            menemui satu bahagian yang memerlukan perhatian. Tetapi satu sesi belum cukup untuk
+            memahami keseluruhan corak pembelajaran {laporan.nama}.
+          </p>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Bila KALI terus belajar bersama {laporan.nama}, KALI akan mengetahui:
           </p>
           <div className="mt-3 space-y-2 text-sm text-muted-foreground">
-            <p>🔒 Kenapa kesilapan ini berlaku</p>
-            <p>🔒 Kemahiran mana perlu diperbaiki dahulu</p>
-            <p>🔒 Latihan yang KALI cadangkan</p>
-            <p>🔒 Pelan pembelajaran seterusnya</p>
+            <p>🔒 Di mana sebenarnya pemahaman {laporan.nama} mula terputus</p>
+            <p>🔒 Sama ada kelemahan datang daripada kemahiran asas sebelumnya</p>
+            <p>🔒 Apa yang {laporan.nama} patut belajar selepas ini</p>
+            <p>🔒 Bila {laporan.nama} sudah benar-benar bersedia untuk bergerak ke tahap seterusnya</p>
           </div>
           <div className="mt-8 flex justify-center">
             <button
@@ -253,9 +284,16 @@ function LaporanAnakPage() {
               className="rounded-full px-8 py-4 text-center font-display font-extrabold text-white shadow-soft transition hover:opacity-90"
               style={{ backgroundColor: HIJAU }}
             >
-              Aktifkan KALI untuk {laporan.nama} — RM49
+              <span className="block text-base">Teruskan KALI bersama {laporan.nama} →</span>
+              <span className="mt-1 block text-xs font-medium opacity-90">
+                RM49 / 1 tahun · Darjah {laporan.darjah}
+              </span>
             </button>
           </div>
+          <p className="mt-4 text-center text-xs text-muted-foreground">
+            KALI akan terus mengenali tahap {laporan.nama} dan memilih pembelajaran berdasarkan
+            apa yang {laporan.nama} perlukan.
+          </p>
         </div>
       )}
     </div>,
