@@ -1066,6 +1066,23 @@ function ParentDashboard() {
                       </div>
                     )}
 
+                    {/* KALI INSIGHT — penuh untuk anak berbayar, teaser state-language untuk anak percuma */}
+                    <Seksyen tajuk="Cadangan KALI Hari Ini" ikon={<Sparkles className="h-5 w-5" />}>
+                      {anakPaid === null ? (
+                        <div className="rounded-2xl p-5 shadow-card">
+                          <p className="text-sm text-muted-foreground">Memuatkan cadangan KALI...</p>
+                        </div>
+                      ) : anakPaid ? (
+                        <KaliInsightCard childUserId={anakAktif.child_user_id} namaAnak={anakAktif.nama} darjahAnak={anakAktif.darjah} />
+                      ) : (
+                        <KaliUpdateCard
+                          childProfileId={anakAktif.id}
+                          childDarjah={anakAktif.darjah}
+                          namaAnak={anakAktif.nama}
+                        />
+                      )}
+                    </Seksyen>
+
                     {/* HERO SUMMARY: Subjek Terkuat & Perlukan Perhatian */}
                     <Seksyen tajuk="Ringkasan Prestasi" ikon={<Trophy className="h-5 w-5" />}>
                       <div className="grid gap-3 md:grid-cols-2">
@@ -1082,23 +1099,6 @@ function ParentDashboard() {
                           namaAnak={anakAktif.nama}
                         />
                       </div>
-                    </Seksyen>
-
-                    {/* KALI INSIGHT — penuh untuk anak berbayar, teaser state-language untuk anak percuma */}
-                    <Seksyen tajuk="Cadangan KALI Hari Ini" ikon={<Sparkles className="h-5 w-5" />}>
-                      {anakPaid === null ? (
-                        <div className="rounded-2xl p-5 shadow-card">
-                          <p className="text-sm text-muted-foreground">Memuatkan cadangan KALI...</p>
-                        </div>
-                      ) : anakPaid ? (
-                        <KaliInsightCard childUserId={anakAktif.child_user_id} namaAnak={anakAktif.nama} darjahAnak={anakAktif.darjah} />
-                      ) : (
-                        <KaliUpdateCard
-                          childProfileId={anakAktif.id}
-                          childDarjah={anakAktif.darjah}
-                          namaAnak={anakAktif.nama}
-                        />
-                      )}
                     </Seksyen>
 
                     {/* PERCUBAAN MPT4 — Darjah 4 sahaja */}
