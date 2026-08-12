@@ -1889,10 +1889,10 @@ function KaliInsightCard({
 
   return (
     <div
-      className="rounded-2xl p-5 shadow-card"
+      className="rounded-2xl border-2 p-5 shadow-card"
       style={{
-        background: `linear-gradient(135deg, ${HIJAU}10 0%, #FFFDF5 60%, ${EMAS}12 100%)`,
-        border: `2px solid ${HIJAU}40`,
+        background: "linear-gradient(135deg, #FFFCF0 0%, #FFFEFB 60%, #FFF8E5 100%)",
+        borderColor: "var(--brand-butter)",
       }}
     >
       <div className="flex items-center justify-between gap-3">
@@ -2024,8 +2024,8 @@ function KaliUpdateCard({
   }
 
   const cardStyle: React.CSSProperties = {
-    background: `linear-gradient(135deg, ${HIJAU}10 0%, #FFFDF5 60%, ${EMAS}12 100%)`,
-    border: `2px solid ${HIJAU}40`,
+    background: "linear-gradient(135deg, #FFFCF0 0%, #FFFEFB 60%, #FFF8E5 100%)",
+    borderColor: "var(--brand-butter)",
   };
 
   if (status === "loading") {
@@ -2118,13 +2118,13 @@ function SeksyenMpt4({ keputusan }: { keputusan: Mpt4KeputusanRow[] }) {
   if (keputusan.length === 0) {
     return (
       <div
-        className="rounded-3xl p-6 text-center shadow-card"
+        className="rounded-3xl border-2 p-6 text-center shadow-card"
         style={{
-          background: `linear-gradient(135deg, ${HIJAU}10 0%, #FFFDF5 60%, ${EMAS}12 100%)`,
-          border: `2px solid ${HIJAU}33`,
+          background: "linear-gradient(135deg, #FFFCF0 0%, #FFFEFB 60%, #FFF8E5 100%)",
+          borderColor: "var(--brand-butter)",
         }}
       >
-        <Trophy className="mx-auto mb-2 h-8 w-8" style={{ color: EMAS }} />
+        <Trophy className="mx-auto mb-2 h-8 w-8 text-brand-deep" />
         <p className="font-display text-sm font-extrabold text-foreground">
           Belum ada keputusan Percubaan MPT4 lagi
         </p>
@@ -2137,10 +2137,10 @@ function SeksyenMpt4({ keputusan }: { keputusan: Mpt4KeputusanRow[] }) {
 
   return (
     <div
-      className="rounded-3xl p-4 shadow-card"
+      className="rounded-3xl border-2 p-4 shadow-card"
       style={{
-        background: `linear-gradient(135deg, ${HIJAU}10 0%, #FFFDF5 60%, ${EMAS}14 100%)`,
-        border: `2px solid ${HIJAU}40`,
+        background: "linear-gradient(135deg, #FFFCF0 0%, #FFFEFB 60%, #FFF8E5 100%)",
+        borderColor: "var(--brand-butter)",
       }}
     >
       <div className="grid gap-3 sm:grid-cols-2">
