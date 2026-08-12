@@ -607,6 +607,24 @@ function AdminTelegramPage() {
     [minggu],
   );
 
+  const kaliMinggu = useMemo(() => {
+    const cutoff = Date.now() - 7 * 24 * 60 * 60 * 1000;
+    return kaliRows.filter((r) => new Date(r.created_at).getTime() >= cutoff);
+  }, [kaliRows]);
+
+  const kaliSesi7 = kaliMinggu.length;
+  const kaliDemoPct = useMemo(() => {
+    if (kaliMinggu.length === 0) return "—";
+    const siap = kaliMinggu.filter((r) => r.demo_completed_at).length;
+    return `${Math.round((siap / kaliMinggu.length) * 100)}%`;
+  }, [kaliMinggu]);
+  const kaliLinkAnak = useMemo(
+    () => kaliMinggu.filter((r) => r.child_user_id).length,
+    [kaliMinggu],
+  );
+
+
+
   if (authLoading || checking) {
     return (
       <div className="min-h-screen bg-background">
