@@ -540,6 +540,12 @@ export function KuizBMTopik({ darjahId, darjahLabel, subjekId, subjekTitle, subj
                       tarikh,
                       purata: 100,
                       kodSijil,
+                      subjekTitle,
+                      topik,
+                      darjahLabel,
+                      subjekId,
+                      bintangDiperoleh,
+                      certificateUuid: rekod?.id,
                     },
                     `sijil-kuiz-${subjekId}-${darjahId}-${topik.replace(/\s+/g, "-")}.pdf`,
                   );
