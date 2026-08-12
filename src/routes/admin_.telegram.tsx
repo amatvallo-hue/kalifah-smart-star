@@ -784,6 +784,75 @@ function AdminTelegramPage() {
           </>
           )}
 
+          {tab === "kali" && (
+          <section className="mt-8">
+            <h2 className="mb-1 font-display text-lg font-extrabold">🧠 Sesi KALI (Bot)</h2>
+            <p className="mb-3 text-xs text-muted-foreground">
+              100 sesi terbaru dari <code>kali_bot_sesi</code>.
+            </p>
+            <div className="overflow-x-auto rounded-2xl border border-border bg-card shadow-soft">
+              {kaliLoading ? (
+                <div className="flex items-center justify-center p-10 text-muted-foreground">
+                  <Loader2 className="h-5 w-5 animate-spin" />
+                </div>
+              ) : kaliRows.length === 0 ? (
+                <div className="p-6 text-center text-muted-foreground">
+                  Belum ada sesi KALI direkod.
+                </div>
+              ) : (
+                <table className="w-full min-w-[960px] text-sm">
+                  <thead className="bg-muted/50 text-left text-xs font-bold uppercase text-muted-foreground">
+                    <tr>
+                      <th className="px-4 py-3">Chat ID</th>
+                      <th className="px-4 py-3">Status</th>
+                      <th className="px-4 py-3">Darjah</th>
+                      <th className="px-4 py-3">Sumber</th>
+                      <th className="px-4 py-3">Ref Affiliate</th>
+                      <th className="px-4 py-3">Demo Siap</th>
+                      <th className="px-4 py-3">Anak Dicipta</th>
+                      <th className="px-4 py-3">Tarikh</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {kaliRows.map((r, i) => (
+                      <tr
+                        key={`${String(r.telegram_chat_id)}-${r.created_at}-${i}`}
+                        className="border-t border-border align-top"
+                      >
+                        <td className="whitespace-nowrap px-4 py-3 font-mono text-xs">
+                          {r.telegram_chat_id === null ? "—" : String(r.telegram_chat_id)}
+                        </td>
+                        <td className="whitespace-nowrap px-4 py-3">
+                          <span
+                            className={`rounded-full border px-2 py-0.5 text-xs font-bold ${
+                              KALI_STEP_STYLE[r.step ?? ""] ??
+                              "border-border bg-muted text-muted-foreground"
+                            }`}
+                          >
+                            {r.step ?? "—"}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3 font-bold">{r.darjah ?? "—"}</td>
+                        <td className="px-4 py-3 text-muted-foreground">{potong(r.source, 24)}</td>
+                        <td className="px-4 py-3">{r.ref_code ?? "—"}</td>
+                        <td className="px-4 py-3 text-center">
+                          {r.demo_completed_at ? "✓" : ""}
+                        </td>
+                        <td className="px-4 py-3 text-center">{r.child_user_id ? "✓" : ""}</td>
+                        <td className="whitespace-nowrap px-4 py-3 text-muted-foreground">
+                          {formatMasa(r.created_at)}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+            </div>
+          </section>
+          )}
+
+
+
           {tab === "knowledge" && (
           <KnowledgeBaseSection
 
