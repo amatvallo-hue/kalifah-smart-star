@@ -761,19 +761,19 @@ function DarjahCard({
     <div
       className={`relative flex h-full flex-col justify-between gap-5 rounded-3xl bg-card p-6 shadow-card transition group-hover:-translate-y-1 group-hover:shadow-soft ${
         isCurrent
-          ? "border-[3px] ring-2 ring-primary/20"
+          ? "border-[3px] ring-2 ring-brand-deep/20"
           : "border border-border/60"
       } ${!hasAccess ? "opacity-80" : ""}`}
       style={currentCardStyle}
     >
       {isCurrent && (
-        <div className="absolute -top-3 left-5 inline-flex items-center gap-1.5 rounded-full bg-gradient-primary px-3 py-1 font-display text-[10px] font-extrabold uppercase tracking-wide text-primary-foreground shadow-soft">
+        <div className="absolute -top-3 left-5 inline-flex items-center gap-1.5 rounded-full bg-brand-deep px-3 py-1 font-display text-[10px] font-extrabold uppercase tracking-wide text-brand-butter shadow-soft">
           <Sparkles className="h-3 w-3" />
           Darjah Anda
         </div>
       )}
       {!hasAccess && (
-        <div className="absolute right-4 top-4 flex items-center gap-1.5 rounded-full bg-gold/90 px-3 py-1 font-display text-[10px] font-extrabold uppercase tracking-wide text-gold-foreground shadow-soft">
+        <div className="absolute right-4 top-4 flex items-center gap-1.5 rounded-full bg-brand-butter px-3 py-1 font-display text-[10px] font-extrabold uppercase tracking-wide text-brand-butter-foreground shadow-soft">
           <Lock className="h-3 w-3" />
           Naik Taraf
         </div>
