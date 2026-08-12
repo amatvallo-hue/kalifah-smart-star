@@ -48,6 +48,7 @@ import { Route as KaliTestLaporanAnakRouteImport } from './routes/kali-test.lapo
 import { Route as PraKalifahBidangRouteImport } from './routes/pra-kalifah_.$bidang'
 import { Route as PreviewDarjahIdRouteImport } from './routes/preview.$darjahId'
 import { Route as PreviewNamaRouteImport } from './routes/preview.nama'
+import { Route as SijilCertificateIdRouteImport } from './routes/sijil.$certificateId'
 import { Route as AdminAffiliatesIdRouteImport } from './routes/admin_.affiliates_.$id'
 import { Route as AdminAffiliatesDashboardRouteImport } from './routes/admin_.affiliates_.dashboard'
 import { Route as DarjahDarjahIdSubjekIdRouteImport } from './routes/darjah.$darjahId_.$subjekId'
@@ -267,6 +268,11 @@ const PreviewNamaRoute = PreviewNamaRouteImport.update({
   path: '/preview/nama',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SijilCertificateIdRoute = SijilCertificateIdRouteImport.update({
+  id: '/sijil/$certificateId',
+  path: '/sijil/$certificateId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminAffiliatesIdRoute = AdminAffiliatesIdRouteImport.update({
   id: '/admin_/affiliates_/$id',
   path: '/admin/affiliates/$id',
@@ -437,6 +443,7 @@ export interface FileRoutesByFullPath {
   '/pra-kalifah/$bidang': typeof PraKalifahBidangRoute
   '/preview/$darjahId': typeof PreviewDarjahIdRoute
   '/preview/nama': typeof PreviewNamaRoute
+  '/sijil/$certificateId': typeof SijilCertificateIdRoute
   '/admin/affiliates/$id': typeof AdminAffiliatesIdRoute
   '/admin/affiliates/dashboard': typeof AdminAffiliatesDashboardRoute
   '/darjah/$darjahId/$subjekId': typeof DarjahDarjahIdSubjekIdRoute
@@ -500,6 +507,7 @@ export interface FileRoutesByTo {
   '/pra-kalifah/$bidang': typeof PraKalifahBidangRoute
   '/preview/$darjahId': typeof PreviewDarjahIdRoute
   '/preview/nama': typeof PreviewNamaRoute
+  '/sijil/$certificateId': typeof SijilCertificateIdRoute
   '/admin/affiliates/$id': typeof AdminAffiliatesIdRoute
   '/admin/affiliates/dashboard': typeof AdminAffiliatesDashboardRoute
   '/darjah/$darjahId/$subjekId': typeof DarjahDarjahIdSubjekIdRoute
@@ -564,6 +572,7 @@ export interface FileRoutesById {
   '/pra-kalifah_/$bidang': typeof PraKalifahBidangRoute
   '/preview/$darjahId': typeof PreviewDarjahIdRoute
   '/preview/nama': typeof PreviewNamaRoute
+  '/sijil/$certificateId': typeof SijilCertificateIdRoute
   '/admin_/affiliates_/$id': typeof AdminAffiliatesIdRoute
   '/admin_/affiliates_/dashboard': typeof AdminAffiliatesDashboardRoute
   '/darjah/$darjahId_/$subjekId': typeof DarjahDarjahIdSubjekIdRoute
@@ -629,6 +638,7 @@ export interface FileRouteTypes {
     | '/pra-kalifah/$bidang'
     | '/preview/$darjahId'
     | '/preview/nama'
+    | '/sijil/$certificateId'
     | '/admin/affiliates/$id'
     | '/admin/affiliates/dashboard'
     | '/darjah/$darjahId/$subjekId'
@@ -692,6 +702,7 @@ export interface FileRouteTypes {
     | '/pra-kalifah/$bidang'
     | '/preview/$darjahId'
     | '/preview/nama'
+    | '/sijil/$certificateId'
     | '/admin/affiliates/$id'
     | '/admin/affiliates/dashboard'
     | '/darjah/$darjahId/$subjekId'
@@ -755,6 +766,7 @@ export interface FileRouteTypes {
     | '/pra-kalifah_/$bidang'
     | '/preview/$darjahId'
     | '/preview/nama'
+    | '/sijil/$certificateId'
     | '/admin_/affiliates_/$id'
     | '/admin_/affiliates_/dashboard'
     | '/darjah/$darjahId_/$subjekId'
@@ -819,6 +831,7 @@ export interface RootRouteChildren {
   PraKalifahBidangRoute: typeof PraKalifahBidangRoute
   PreviewDarjahIdRoute: typeof PreviewDarjahIdRoute
   PreviewNamaRoute: typeof PreviewNamaRoute
+  SijilCertificateIdRoute: typeof SijilCertificateIdRoute
   AdminAffiliatesIdRoute: typeof AdminAffiliatesIdRoute
   AdminAffiliatesDashboardRoute: typeof AdminAffiliatesDashboardRoute
   DarjahDarjahIdSubjekIdRoute: typeof DarjahDarjahIdSubjekIdRoute
@@ -1118,6 +1131,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PreviewNamaRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/sijil/$certificateId': {
+      id: '/sijil/$certificateId'
+      path: '/sijil/$certificateId'
+      fullPath: '/sijil/$certificateId'
+      preLoaderRoute: typeof SijilCertificateIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/admin_/affiliates_/$id': {
       id: '/admin_/affiliates_/$id'
       path: '/admin/affiliates/$id'
@@ -1315,6 +1335,7 @@ const rootRouteChildren: RootRouteChildren = {
   PraKalifahBidangRoute: PraKalifahBidangRoute,
   PreviewDarjahIdRoute: PreviewDarjahIdRoute,
   PreviewNamaRoute: PreviewNamaRoute,
+  SijilCertificateIdRoute: SijilCertificateIdRoute,
   AdminAffiliatesIdRoute: AdminAffiliatesIdRoute,
   AdminAffiliatesDashboardRoute: AdminAffiliatesDashboardRoute,
   DarjahDarjahIdSubjekIdRoute: DarjahDarjahIdSubjekIdRoute,
