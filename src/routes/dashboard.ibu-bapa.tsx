@@ -1243,8 +1243,7 @@ function ParentDashboard() {
                           {badges.map((b) => (
                             <div
                               key={b.id}
-                              className="flex items-center gap-2 rounded-full px-3.5 py-1.5 text-white shadow-gold"
-                              style={{ background: `linear-gradient(135deg, ${EMAS}, #E48A0A)` }}
+                              className="flex items-center gap-2 rounded-full bg-brand-butter px-3.5 py-1.5 text-brand-butter-foreground shadow-soft"
                             >
                               <span className="text-xl leading-none">{b.ikon}</span>
                               <span className="font-display text-xs font-extrabold">{b.nama}</span>
