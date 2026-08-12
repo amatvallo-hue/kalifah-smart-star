@@ -1141,17 +1141,16 @@ function ParentDashboard() {
                         {kemajuanSubjek.map((k) => (
                           <div
                             key={k.subjek.id}
-                            className="rounded-2xl p-4 shadow-card"
+                            className="rounded-2xl border-2 p-4 shadow-card"
                             style={{
-                              background: `linear-gradient(135deg, ${HIJAU}14 0%, #FFFDF5 60%, ${EMAS}12 100%)`,
-                              border: `2px solid ${HIJAU}40`,
+                              background: "linear-gradient(135deg, #FFFCF0 0%, #FFFEFB 60%, #FFF8E5 100%)",
+                              borderColor: "var(--brand-butter)",
                             }}
                           >
                             <div className="flex items-center justify-between gap-2">
                               <h3 className="font-display text-base font-extrabold text-foreground">{k.subjek.title}</h3>
                               <span
-                                className="rounded-full px-3 py-1 text-xs font-extrabold text-white shadow-gold"
-                                style={{ background: `linear-gradient(135deg, ${EMAS}, #E48A0A)` }}
+                                className="rounded-full bg-brand-butter px-3 py-1 text-xs font-extrabold text-brand-butter-foreground shadow-soft"
                               >
                                 Skor: {k.purata}%
                               </span>
@@ -1244,8 +1243,7 @@ function ParentDashboard() {
                           {badges.map((b) => (
                             <div
                               key={b.id}
-                              className="flex items-center gap-2 rounded-full px-3.5 py-1.5 text-white shadow-gold"
-                              style={{ background: `linear-gradient(135deg, ${EMAS}, #E48A0A)` }}
+                              className="flex items-center gap-2 rounded-full bg-brand-butter px-3.5 py-1.5 text-brand-butter-foreground shadow-soft"
                             >
                               <span className="text-xl leading-none">{b.ikon}</span>
                               <span className="font-display text-xs font-extrabold">{b.nama}</span>
@@ -1270,10 +1268,10 @@ function ParentDashboard() {
                         </div>
                       ) : (
                         <div
-                          className="overflow-hidden rounded-2xl shadow-card"
+                          className="overflow-hidden rounded-2xl border-2 shadow-card"
                           style={{
-                            background: `linear-gradient(135deg, #FFF8E1 0%, #FFFDF5 100%)`,
-                            border: `2px solid ${EMAS}80`,
+                            background: "linear-gradient(135deg, #FFFCF0 0%, #FFFEFB 60%, #FFF8E5 100%)",
+                            borderColor: "var(--brand-butter)",
                           }}
                         >
                           {sijilList.map((sj, i) => {
@@ -1289,12 +1287,11 @@ function ParentDashboard() {
                               <div
                                 key={sj.id}
                                 className="flex flex-wrap items-center justify-between gap-3 p-4"
-                                style={{ borderTop: i === 0 ? "none" : `1px solid ${EMAS}33` }}
+                                style={{ borderTop: i === 0 ? "none" : "1px solid var(--brand-butter)" }}
                               >
                                 <div className="flex min-w-0 flex-1 items-center gap-3">
                                   <span
-                                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-white shadow-gold"
-                                    style={{ background: `linear-gradient(135deg, ${EMAS}, #E48A0A)` }}
+                                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-brand-butter text-brand-butter-foreground shadow-soft"
                                   >
                                     <Trophy className="h-5 w-5" />
                                   </span>
@@ -1892,10 +1889,10 @@ function KaliInsightCard({
 
   return (
     <div
-      className="rounded-2xl p-5 shadow-card"
+      className="rounded-2xl border-2 p-5 shadow-card"
       style={{
-        background: `linear-gradient(135deg, ${HIJAU}10 0%, #FFFDF5 60%, ${EMAS}12 100%)`,
-        border: `2px solid ${HIJAU}40`,
+        background: "linear-gradient(135deg, #FFFCF0 0%, #FFFEFB 60%, #FFF8E5 100%)",
+        borderColor: "var(--brand-butter)",
       }}
     >
       <div className="flex items-center justify-between gap-3">
@@ -2027,13 +2024,13 @@ function KaliUpdateCard({
   }
 
   const cardStyle: React.CSSProperties = {
-    background: `linear-gradient(135deg, ${HIJAU}10 0%, #FFFDF5 60%, ${EMAS}12 100%)`,
-    border: `2px solid ${HIJAU}40`,
+    background: "linear-gradient(135deg, #FFFCF0 0%, #FFFEFB 60%, #FFF8E5 100%)",
+    borderColor: "var(--brand-butter)",
   };
 
   if (status === "loading") {
     return (
-      <div className="rounded-2xl p-5 shadow-card" style={cardStyle}>
+      <div className="rounded-2xl border-2 p-5 shadow-card" style={cardStyle}>
         <p className="text-sm text-muted-foreground">Memuatkan status KALI...</p>
       </div>
     );
@@ -2041,7 +2038,7 @@ function KaliUpdateCard({
 
   if (status === "belum") {
     return (
-      <div className="rounded-2xl p-5 shadow-card" style={cardStyle}>
+      <div className="rounded-2xl border-2 p-5 shadow-card" style={cardStyle}>
         <div className="flex items-center gap-3">
           <div
             className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-lg text-white shadow-soft"
@@ -2068,7 +2065,7 @@ function KaliUpdateCard({
   const bakiDiperkukuh = hasil ? Math.max(0, hasil.jumlahDiperkukuh - (hasil.bocorNama ? 1 : 0)) : 0;
 
   return (
-    <div className="rounded-2xl p-5 shadow-card" style={cardStyle}>
+    <div className="rounded-2xl border-2 p-5 shadow-card" style={cardStyle}>
       <div className="flex items-center gap-3">
         <div
           className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl text-lg text-white shadow-soft"
@@ -2121,13 +2118,13 @@ function SeksyenMpt4({ keputusan }: { keputusan: Mpt4KeputusanRow[] }) {
   if (keputusan.length === 0) {
     return (
       <div
-        className="rounded-3xl p-6 text-center shadow-card"
+        className="rounded-3xl border-2 p-6 text-center shadow-card"
         style={{
-          background: `linear-gradient(135deg, ${HIJAU}10 0%, #FFFDF5 60%, ${EMAS}12 100%)`,
-          border: `2px solid ${HIJAU}33`,
+          background: "linear-gradient(135deg, #FFFCF0 0%, #FFFEFB 60%, #FFF8E5 100%)",
+          borderColor: "var(--brand-butter)",
         }}
       >
-        <Trophy className="mx-auto mb-2 h-8 w-8" style={{ color: EMAS }} />
+        <Trophy className="mx-auto mb-2 h-8 w-8 text-brand-deep" />
         <p className="font-display text-sm font-extrabold text-foreground">
           Belum ada keputusan Percubaan MPT4 lagi
         </p>
@@ -2140,10 +2137,10 @@ function SeksyenMpt4({ keputusan }: { keputusan: Mpt4KeputusanRow[] }) {
 
   return (
     <div
-      className="rounded-3xl p-4 shadow-card"
+      className="rounded-3xl border-2 p-4 shadow-card"
       style={{
-        background: `linear-gradient(135deg, ${HIJAU}10 0%, #FFFDF5 60%, ${EMAS}14 100%)`,
-        border: `2px solid ${HIJAU}40`,
+        background: "linear-gradient(135deg, #FFFCF0 0%, #FFFEFB 60%, #FFF8E5 100%)",
+        borderColor: "var(--brand-butter)",
       }}
     >
       <div className="grid gap-3 sm:grid-cols-2">
