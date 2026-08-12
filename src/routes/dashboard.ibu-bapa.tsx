@@ -1141,17 +1141,16 @@ function ParentDashboard() {
                         {kemajuanSubjek.map((k) => (
                           <div
                             key={k.subjek.id}
-                            className="rounded-2xl p-4 shadow-card"
+                            className="rounded-2xl border-2 p-4 shadow-card"
                             style={{
-                              background: `linear-gradient(135deg, ${HIJAU}14 0%, #FFFDF5 60%, ${EMAS}12 100%)`,
-                              border: `2px solid ${HIJAU}40`,
+                              background: "linear-gradient(135deg, #FFFCF0 0%, #FFFEFB 60%, #FFF8E5 100%)",
+                              borderColor: "var(--brand-butter)",
                             }}
                           >
                             <div className="flex items-center justify-between gap-2">
                               <h3 className="font-display text-base font-extrabold text-foreground">{k.subjek.title}</h3>
                               <span
-                                className="rounded-full px-3 py-1 text-xs font-extrabold text-white shadow-gold"
-                                style={{ background: `linear-gradient(135deg, ${EMAS}, #E48A0A)` }}
+                                className="rounded-full bg-brand-butter px-3 py-1 text-xs font-extrabold text-brand-butter-foreground shadow-soft"
                               >
                                 Skor: {k.purata}%
                               </span>
