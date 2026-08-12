@@ -202,13 +202,13 @@ function KaliHeroCadangan({
               className="h-20 w-20 shrink-0 object-contain md:h-24 md:w-24"
             />
             <div className="min-w-0 flex-1">
-              <span className="inline-block rounded-2xl border border-primary/20 bg-primary/10 px-3 py-1.5 text-xs font-bold text-primary">
+              <span className="inline-block rounded-2xl border-0 bg-brand-butter px-3 py-1.5 text-xs font-bold text-brand-butter-foreground">
                 {bubble}
               </span>
-              <p className="mt-3 font-display text-sm font-bold text-primary">
+              <p className="mt-3 font-display text-sm font-bold text-brand-butter">
                 {cadangan.micro_skill_subjek} — {nama}
               </p>
-              <p className="mt-1 font-medium text-foreground">{bukti}</p>
+              <p className="mt-1 font-medium text-white/90">{bukti}</p>
             </div>
           </div>
 
