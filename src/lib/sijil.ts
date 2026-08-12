@@ -94,7 +94,7 @@ export async function buildSijilPDF(input: SijilInput): Promise<Blob> {
   sudut.forEach(([x, y]) => doc.circle(x, y, 3, "F"));
 
   // ── Logo Kalifah.my (atas tengah)
-  drawLogo(doc, logo, W / 2, 18);
+  drawLogo(doc, logo, W / 2, 22);
   doc.setFont("helvetica", "normal");
   doc.setFontSize(9);
   doc.setTextColor("#666666");
