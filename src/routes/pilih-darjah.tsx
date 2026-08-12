@@ -247,7 +247,7 @@ function KaliHeroCadangan({
         <div
           className="mt-5 w-full md:ml-5 md:mt-0 md:w-56 md:self-center md:my-2"
           style={{
-            backgroundColor: "rgba(255, 255, 255, 0.55)",
+            backgroundColor: "rgba(255, 255, 255, 0.12)",
             borderRadius: "16px",
             padding: "20px 24px",
           }}
@@ -255,13 +255,13 @@ function KaliHeroCadangan({
           {cadangan.mastery_score != null ? (
             <div className="space-y-4">
               <div>
-                <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">
+                <p className="text-[11px] font-bold uppercase tracking-wide text-white/60">
                   Penguasaan Semasa
                 </p>
-                <p className="mt-0.5 font-display text-2xl font-extrabold text-foreground">
+                <p className="mt-0.5 font-display text-2xl font-extrabold text-brand-butter">
                   {displayMastery}%
                 </p>
-                <p className="text-xs font-bold text-muted-foreground">
+                <p className="text-xs font-bold text-white/80">
                   {cadangan.mastery_score >= 70
                     ? "Baik"
                     : cadangan.mastery_score >= 40
@@ -271,22 +271,22 @@ function KaliHeroCadangan({
 
               </div>
               <div>
-                <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">
+                <p className="text-[11px] font-bold uppercase tracking-wide text-white/60">
                   Fokus Hari Ini
                 </p>
-                <p className="mt-0.5 text-sm font-bold text-foreground">{nama}</p>
+                <p className="mt-0.5 text-sm font-bold text-white">{nama}</p>
               </div>
               <div>
-                <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">
+                <p className="text-[11px] font-bold uppercase tracking-wide text-white/60">
                   Selepas Sesi
                 </p>
-                <p className="mt-0.5 text-sm font-medium text-muted-foreground">
+                <p className="mt-0.5 text-sm font-medium text-white/70">
                   KALI akan menilai semula
                 </p>
               </div>
             </div>
           ) : (
-            <p className="text-sm font-medium text-muted-foreground">
+            <p className="text-sm font-medium text-white/80">
               Kemahiran baharu — belum ada rekod
             </p>
           )}
