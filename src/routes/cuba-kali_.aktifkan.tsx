@@ -274,9 +274,6 @@ function AktifkanPage() {
 
     if (error) {
       const sudahWujud = /already registered|already exists/i.test(error.message);
-```ts
-    if (error) {
-      const sudahWujud = /already registered|already exists/i.test(error.message);
       if (sudahWujud) {
         setMenghantar(false);
         setPhase("sudah-ada-akaun");
