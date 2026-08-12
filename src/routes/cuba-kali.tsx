@@ -133,12 +133,13 @@ function CubaKaliPage() {
           </span>
 
           <h1 className="mt-4 font-display text-3xl font-extrabold leading-tight text-foreground md:text-4xl">
-            Markah hanya beritahu berapa banyak yang salah.{" "}
-            <span className="text-primary">KALI cuba cari di mana anak mula tak faham.</span>
+            Anak selalu salah soalan…{" "}
+            <span className="text-primary">tapi kita tahu tak dia mula tak faham dari mana?</span>
           </h1>
 
           <p className="mt-3 text-base text-muted-foreground">
-            Cuba sendiri 6 soalan ringkas dan lihat sendiri di mana pemahaman anak mula terputus.
+            Kadang-kadang masalahnya bukan pada soalan yang dia salah hari ini. Ada kemahiran asas
+            sebelumnya yang belum betul-betul kukuh. KALI cuba mencarinya.
           </p>
 
           <a
@@ -148,72 +149,93 @@ function CubaKaliPage() {
             onClick={() => trackTelegramClick("hero")}
             className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-primary px-6 py-3.5 font-display text-base font-extrabold text-primary-foreground shadow-soft transition hover:-translate-y-0.5 hover:shadow-gold"
           >
-            Cuba KALI — Tengok Sendiri →
+            🧠 Cuba 6 Soalan — Biar KALI Cari
           </a>
 
           <p className="mt-3 text-xs font-bold text-muted-foreground">
-            ✓ Percuma &nbsp; ✓ Tak perlu daftar &nbsp; ✓ Beberapa minit sahaja
+            ✓ Percuma &nbsp; ✓ Tak perlu daftar &nbsp; ✓ ±2 minit
           </p>
         </section>
 
-        {/* TEASER */}
+        {/* PROOF: contoh rantaian kemahiran */}
         <section className="mt-10 rounded-3xl bg-card p-6 shadow-card">
-          <p className="text-sm font-bold text-foreground">KALI bukan sekadar tengok markah.</p>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Dua orang mungkin dapat markah yang sama, tetapi bahagian yang mereka belum kuasai
-            boleh berbeza. KALI melihat kemahiran di sebalik setiap jawapan untuk memahami di mana
-            kesukaran mula berlaku.
+          <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">
+            Contoh: Anak Dapat 6/10 Matematik
           </p>
 
-          <div className="mt-4 rounded-2xl border border-border bg-muted/40 p-4">
-            <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">
-              🧠 Contoh apa yang KALI boleh perasan
-            </p>
-            <ul className="mt-2 space-y-1.5">
-              <li className="text-sm font-medium text-foreground">🟢 Kemahiran asas dikuasai</li>
-              <li className="text-sm font-medium text-foreground">
-                🟠 Ada bahagian yang belum konsisten
-              </li>
-              <li className="text-sm font-medium text-foreground">
-                🔴 Kesan bahagian yang perlu diperkukuhkan
-              </li>
-            </ul>
-            <p className="mt-3 text-xs text-muted-foreground">
-              KALI kemudian menentukan apa yang patut diberi perhatian seterusnya.
-            </p>
+          <div className="mt-4 space-y-2">
+            <div className="rounded-2xl border border-border bg-muted/40 px-4 py-3">
+              <p className="text-sm font-bold text-foreground">🟢 Mengenal nilai wang</p>
+            </div>
+            <div className="text-center text-muted-foreground">↓</div>
+            <div className="rounded-2xl border border-border bg-muted/40 px-4 py-3">
+              <p className="text-sm font-bold text-foreground">🟠 Operasi melibatkan wang</p>
+            </div>
+            <div className="text-center text-muted-foreground">↓</div>
+            <div className="rounded-2xl border border-destructive/30 bg-destructive/5 px-4 py-3">
+              <p className="text-sm font-bold text-foreground">🔴 Penyelesaian masalah wang</p>
+            </div>
+          </div>
+
+          <div className="mt-5 grid gap-3 sm:grid-cols-2">
+            <div className="rounded-2xl bg-muted/40 p-4">
+              <p className="text-xs font-bold uppercase tracking-wide text-muted-foreground">
+                Markah cuma nampak
+              </p>
+              <p className="mt-1 font-display text-2xl font-extrabold text-foreground">6/10</p>
+            </div>
+            <div className="rounded-2xl border border-primary/30 bg-primary/5 p-4">
+              <p className="text-xs font-bold uppercase tracking-wide text-primary">KALI cuba nampak</p>
+              <p className="mt-1 text-sm text-foreground">
+                Kesukaran mula muncul apabila soalan memerlukan operasi wang. Jadi mungkin tak perlu
+                ulang semuanya dari awal.
+              </p>
+            </div>
           </div>
         </section>
 
-        {/* HOW IT WORKS */}
-        <section className="mt-8 rounded-3xl bg-card p-6 shadow-card">
-          <p className="font-display text-lg font-extrabold text-foreground">Cuba sendiri dulu.</p>
+        {/* PROOF: dua anak, markah sama, punca berbeza */}
+        <section className="mt-6 rounded-3xl bg-card p-6 shadow-card">
+          <p className="font-display text-lg font-extrabold text-foreground">
+            Dua anak sama-sama dapat 6/10. Puncanya belum tentu sama.
+          </p>
 
-          <div className="mt-4 space-y-4">
-            {[
-              { num: "①", title: "Pilih darjah anak", desc: "Darjah 1 hingga Darjah 6." },
-              {
-                num: "②",
-                title: "Anda jawab 6 soalan",
-                desc: "Soalan sebenar berdasarkan darjah yang dipilih.",
-              },
-              {
-                num: "③",
-                title: "KALI baca corak jawapan anda",
-                desc: "Lihat sendiri apa yang KALI dapat kesan.",
-              },
-            ].map((s) => (
-              <div key={s.title} className="flex items-start gap-3">
-                <span className="font-display text-xl font-extrabold text-primary">{s.num}</span>
-                <div>
-                  <p className="font-display text-sm font-extrabold text-foreground">{s.title}</p>
-                  <p className="mt-0.5 text-sm text-muted-foreground">{s.desc}</p>
-                </div>
-              </div>
-            ))}
+          <div className="mt-4 grid gap-3 sm:grid-cols-2">
+            <div className="rounded-2xl border border-border bg-muted/40 p-4">
+              <p className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Anak A</p>
+              <p className="mt-2 text-sm font-bold text-foreground">🔴 Lemah asas</p>
+            </div>
+            <div className="rounded-2xl border border-border bg-muted/40 p-4">
+              <p className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Anak B</p>
+              <p className="mt-2 text-sm font-bold text-foreground">🟢 Asas kukuh</p>
+              <p className="mt-1 text-sm font-bold text-foreground">
+                🔴 Tersangkut bila soalan jadi lebih kompleks
+              </p>
+            </div>
           </div>
 
-          <p className="mt-5 text-sm text-muted-foreground">
-            Lepas anda faham bagaimana KALI berfungsi, barulah cuba dengan anak anda.
+          <p className="mt-4 text-sm font-extrabold text-primary">
+            Markah sama. Apa yang perlu mereka belajar selepas ini berbeza.
+          </p>
+        </section>
+
+        {/* MECHANISM / emotional bridge */}
+        <section className="mt-6 rounded-3xl bg-card p-6 shadow-card">
+          <p className="text-sm text-muted-foreground">
+            Sebab itu kadang-kadang &ldquo;buat lebih banyak latihan&rdquo; belum tentu jawapannya.
+            Kalau kita tak tahu bahagian mana yang sebenarnya belum kukuh, anak mungkin terus diberi
+            soalan yang terlalu sukar — atau mengulang perkara yang dia sebenarnya sudah tahu.
+          </p>
+          <p className="mt-2 text-sm font-bold text-foreground">KALI cuba mulakan dari tempat yang betul.</p>
+        </section>
+
+        {/* PERSONAL CURIOSITY + CTA akhir */}
+        <section className="mt-6 rounded-3xl bg-card p-6 shadow-card">
+          <p className="font-display text-lg font-extrabold text-foreground">
+            Sekarang cuba pada diri anda dulu.
+          </p>
+          <p className="mt-2 text-sm text-muted-foreground">
+            Pilih darjah anak → Jawab 6 soalan → Lihat apa KALI jumpa
           </p>
 
           <a
@@ -223,7 +245,7 @@ function CubaKaliPage() {
             onClick={() => trackTelegramClick("how_it_works")}
             className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full bg-gradient-primary px-6 py-3.5 font-display text-base font-extrabold text-primary-foreground shadow-soft transition hover:-translate-y-0.5 hover:shadow-gold"
           >
-            Cuba KALI — Tengok Sendiri →
+            Cuba KALI Sekarang →
           </a>
           <p className="mt-2 text-center text-xs text-muted-foreground">
             Anda akan dibawa ke Telegram untuk memulakan demo.
