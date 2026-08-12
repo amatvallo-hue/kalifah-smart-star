@@ -477,6 +477,8 @@ function AdminTelegramPage() {
     loadKb();
     loadModeration();
     loadTopQ();
+    loadKali();
+
 
 
   }, [isAdmin]);
