@@ -178,11 +178,11 @@ function KaliHeroCadangan({
 
   return (
     <section className="mt-6">
-      <span className="inline-flex items-center gap-1.5 rounded-full bg-gradient-primary px-3 py-1 font-display text-[11px] font-bold text-primary-foreground shadow-soft">
+      <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-butter px-3 py-1 font-display text-[11px] font-bold text-brand-butter-foreground shadow-soft">
         <Sparkles className="h-3 w-3" />
         CADANGAN KALI HARI INI
       </span>
-      <h2 className="mt-2 font-display text-xl font-extrabold leading-tight text-foreground md:text-2xl">
+      <h2 className="mt-2 font-display text-xl font-extrabold leading-tight text-brand-deep md:text-2xl">
         {tajuk}
       </h2>
       <p className="mt-1 text-sm text-muted-foreground">{subteks}</p>
@@ -190,8 +190,8 @@ function KaliHeroCadangan({
       <div
         className="mt-3 flex flex-col rounded-3xl border p-6 shadow-card md:flex-row"
         style={{
-          background: "linear-gradient(135deg, #ECF9F2 0%, #F7FCF9 55%, #FFF9E8 100%)",
-          borderColor: "#CDEBDD",
+          backgroundColor: "#013E37",
+          borderColor: "#013E37",
         }}
       >
         <div className="min-w-0 flex-1">
@@ -202,17 +202,17 @@ function KaliHeroCadangan({
               className="h-20 w-20 shrink-0 object-contain md:h-24 md:w-24"
             />
             <div className="min-w-0 flex-1">
-              <span className="inline-block rounded-2xl border border-primary/20 bg-primary/10 px-3 py-1.5 text-xs font-bold text-primary">
+              <span className="inline-block rounded-2xl border-0 bg-brand-butter px-3 py-1.5 text-xs font-bold text-brand-butter-foreground">
                 {bubble}
               </span>
-              <p className="mt-3 font-display text-sm font-bold text-primary">
+              <p className="mt-3 font-display text-sm font-bold text-brand-butter">
                 {cadangan.micro_skill_subjek} — {nama}
               </p>
-              <p className="mt-1 font-medium text-foreground">{bukti}</p>
+              <p className="mt-1 font-medium text-white/90">{bukti}</p>
             </div>
           </div>
 
-          <div className="mt-4 flex flex-wrap items-center gap-3 text-xs font-bold text-muted-foreground">
+          <div className="mt-4 flex flex-wrap items-center gap-3 text-xs font-bold text-white/70">
             <span className="inline-flex items-center gap-1.5">
               <FileText className="h-3.5 w-3.5" /> 10 soalan
             </span>
@@ -229,7 +229,7 @@ function KaliHeroCadangan({
           <div className="mt-4 flex flex-wrap items-center gap-3">
             <Link
               to="/kali-test/belajar-untuk-saya"
-              className="inline-flex items-center gap-2 rounded-full bg-gradient-primary px-6 py-3 font-display text-sm font-extrabold text-primary-foreground shadow-soft transition hover:opacity-90"
+              className="inline-flex items-center gap-2 rounded-full bg-brand-butter px-6 py-3 font-display text-sm font-extrabold text-brand-butter-foreground shadow-soft transition hover:opacity-90"
             >
               Mula Belajar Bersama KALI
               <ArrowRight className="h-4 w-4" />
@@ -237,7 +237,7 @@ function KaliHeroCadangan({
             <button
               type="button"
               onClick={() => setDialogOpen(true)}
-              className="text-xs font-bold text-muted-foreground hover:underline"
+              className="text-xs font-bold text-white/70 hover:text-white hover:underline"
             >
               Kenapa KALI pilih latihan ini?
             </button>
@@ -247,7 +247,7 @@ function KaliHeroCadangan({
         <div
           className="mt-5 w-full md:ml-5 md:mt-0 md:w-56 md:self-center md:my-2"
           style={{
-            backgroundColor: "rgba(255, 255, 255, 0.55)",
+            backgroundColor: "rgba(255, 255, 255, 0.12)",
             borderRadius: "16px",
             padding: "20px 24px",
           }}
@@ -255,13 +255,13 @@ function KaliHeroCadangan({
           {cadangan.mastery_score != null ? (
             <div className="space-y-4">
               <div>
-                <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">
+                <p className="text-[11px] font-bold uppercase tracking-wide text-white/60">
                   Penguasaan Semasa
                 </p>
-                <p className="mt-0.5 font-display text-2xl font-extrabold text-foreground">
+                <p className="mt-0.5 font-display text-2xl font-extrabold text-brand-butter">
                   {displayMastery}%
                 </p>
-                <p className="text-xs font-bold text-muted-foreground">
+                <p className="text-xs font-bold text-white/80">
                   {cadangan.mastery_score >= 70
                     ? "Baik"
                     : cadangan.mastery_score >= 40
@@ -271,22 +271,22 @@ function KaliHeroCadangan({
 
               </div>
               <div>
-                <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">
+                <p className="text-[11px] font-bold uppercase tracking-wide text-white/60">
                   Fokus Hari Ini
                 </p>
-                <p className="mt-0.5 text-sm font-bold text-foreground">{nama}</p>
+                <p className="mt-0.5 text-sm font-bold text-white">{nama}</p>
               </div>
               <div>
-                <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">
+                <p className="text-[11px] font-bold uppercase tracking-wide text-white/60">
                   Selepas Sesi
                 </p>
-                <p className="mt-0.5 text-sm font-medium text-muted-foreground">
+                <p className="mt-0.5 text-sm font-medium text-white/70">
                   KALI akan menilai semula
                 </p>
               </div>
             </div>
           ) : (
-            <p className="text-sm font-medium text-muted-foreground">
+            <p className="text-sm font-medium text-white/80">
               Kemahiran baharu — belum ada rekod
             </p>
           )}
@@ -616,26 +616,26 @@ function DarjahDashboard() {
               <div
                 className="relative overflow-hidden rounded-3xl border-2 p-5 shadow-card md:p-6"
                 style={{
-                  borderColor: "#FBC02D",
+                  borderColor: "var(--brand-butter)",
                   background:
-                    "linear-gradient(135deg, #FFF8E1 0%, #FFFDF5 55%, #FFF3D1 100%)",
+                    "linear-gradient(135deg, #FFFCF0 0%, #FFFEFB 60%, #FFF8E5 100%)",
                 }}
               >
-                <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-[#F9A825]/15 blur-3xl" />
+                <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-brand-butter/25 blur-3xl" />
                 <div className="relative flex flex-wrap items-center justify-between gap-4">
                   <div className="flex items-center gap-4">
                     <div
                       className="flex h-14 w-14 items-center justify-center rounded-2xl text-white shadow-soft"
-                      style={{ background: "linear-gradient(135deg, #F5B82E, #E48A0A)" }}
+                      style={{ backgroundColor: "#013E37" }}
                     >
                       <CalendarDays className="h-7 w-7" />
                     </div>
                     <div>
-                      <div className="inline-flex items-center gap-1.5 rounded-full bg-white/80 px-2.5 py-0.5 font-display text-[10px] font-extrabold uppercase tracking-wide text-[#8A5A00] shadow-soft">
+                      <div className="inline-flex items-center gap-1.5 rounded-full bg-white/80 px-2.5 py-0.5 font-display text-[10px] font-extrabold uppercase tracking-wide text-brand-deep shadow-soft">
                         <TrendingUp className="h-3 w-3" />
                         7 Hari Terakhir
                       </div>
-                      <h2 className="mt-1 font-display text-xl font-extrabold text-foreground md:text-2xl">
+                      <h2 className="mt-1 font-display text-xl font-extrabold text-brand-deep md:text-2xl">
                         Progress Minggu Ini
                       </h2>
                     </div>
@@ -658,8 +658,7 @@ function DarjahDashboard() {
                     />
                     <Link
                       to="/dashboard/progress"
-                      className="inline-flex items-center gap-2 rounded-full px-4 py-2.5 font-display text-sm font-extrabold text-white shadow-soft transition hover:opacity-90"
-                      style={{ background: "linear-gradient(135deg, #F5B82E, #E48A0A)" }}
+                      className="inline-flex items-center gap-2 rounded-full bg-gradient-primary px-4 py-2.5 font-display text-sm font-extrabold text-primary-foreground shadow-soft transition hover:opacity-90"
                     >
                       Lihat Penuh
                       <ArrowRight className="h-4 w-4" />
@@ -667,7 +666,7 @@ function DarjahDashboard() {
                   </div>
                 </div>
                 {minggu && minggu.bilAktiviti === 0 && (
-                  <p className="relative mt-3 text-xs font-bold text-[#8A5A00]/80">
+                  <p className="relative mt-3 text-xs font-bold text-brand-deep/70">
                     Belum ada aktiviti minggu ini — jom mula belajar!
                   </p>
                 )}
@@ -752,9 +751,9 @@ function DarjahCard({
 
   const currentCardStyle = isCurrent
     ? {
-        borderColor: "hsl(var(--primary))",
+        borderColor: "#013E37",
         background:
-          "linear-gradient(135deg, hsl(var(--primary) / 0.10) 0%, hsl(var(--card)) 55%)",
+          "linear-gradient(135deg, rgba(255,238,179,0.35) 0%, hsl(var(--card)) 55%)",
       }
     : undefined;
 
@@ -762,19 +761,19 @@ function DarjahCard({
     <div
       className={`relative flex h-full flex-col justify-between gap-5 rounded-3xl bg-card p-6 shadow-card transition group-hover:-translate-y-1 group-hover:shadow-soft ${
         isCurrent
-          ? "border-[3px] ring-2 ring-primary/20"
+          ? "border-[3px] ring-2 ring-brand-deep/20"
           : "border border-border/60"
       } ${!hasAccess ? "opacity-80" : ""}`}
       style={currentCardStyle}
     >
       {isCurrent && (
-        <div className="absolute -top-3 left-5 inline-flex items-center gap-1.5 rounded-full bg-gradient-primary px-3 py-1 font-display text-[10px] font-extrabold uppercase tracking-wide text-primary-foreground shadow-soft">
+        <div className="absolute -top-3 left-5 inline-flex items-center gap-1.5 rounded-full bg-brand-deep px-3 py-1 font-display text-[10px] font-extrabold uppercase tracking-wide text-brand-butter shadow-soft">
           <Sparkles className="h-3 w-3" />
           Darjah Anda
         </div>
       )}
       {!hasAccess && (
-        <div className="absolute right-4 top-4 flex items-center gap-1.5 rounded-full bg-gold/90 px-3 py-1 font-display text-[10px] font-extrabold uppercase tracking-wide text-gold-foreground shadow-soft">
+        <div className="absolute right-4 top-4 flex items-center gap-1.5 rounded-full bg-brand-butter px-3 py-1 font-display text-[10px] font-extrabold uppercase tracking-wide text-brand-butter-foreground shadow-soft">
           <Lock className="h-3 w-3" />
           Naik Taraf
         </div>
@@ -790,8 +789,8 @@ function DarjahCard({
         </div>
         {hasAccess && isMpt4 && (
           <span
-            className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 font-display text-[10px] font-extrabold text-white shadow-soft"
-            style={{ background: "linear-gradient(135deg, #F5B82E, #E48A0A)" }}
+            className="inline-flex items-center gap-1 rounded-full px-2.5 py-1 font-display text-[10px] font-extrabold shadow-soft"
+            style={{ backgroundColor: "#FFEEB3", color: "#013E37" }}
           >
             <Trophy className="h-3 w-3" />
             Percubaan MPT4
@@ -985,11 +984,11 @@ function PraKalifahCard() {
           <span>🚀</span>
         </div>
 
-        <span className="inline-flex items-center gap-1 rounded-full bg-white/90 px-3 py-1 font-display text-xs font-extrabold text-[#0F172A] shadow-sm">
+        <span className="inline-flex items-center gap-1 rounded-full bg-brand-butter px-3 py-1 font-display text-xs font-extrabold text-brand-deep shadow-sm">
           {jumlahAktiviti ? `${jumlahAktiviti}+ Aktiviti` : "Aktiviti Percuma"}
         </span>
 
-        <span className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-white px-5 py-2.5 font-display text-sm font-extrabold text-[#FF7B9C] shadow-soft transition group-hover:translate-x-0.5">
+        <span className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-white px-5 py-2.5 font-display text-sm font-extrabold text-brand-deep shadow-soft transition group-hover:translate-x-0.5">
           Jom Bermain!
           <ArrowRight className="h-4 w-4" />
         </span>
@@ -1000,8 +999,8 @@ function PraKalifahCard() {
 
 function MingguStat({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
   return (
-    <div className="rounded-2xl border border-[#F5B82E]/40 bg-white/85 px-3.5 py-2 shadow-soft">
-      <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide text-[#8A5A00]">
+    <div className="rounded-2xl border border-brand-butter bg-white px-3.5 py-2 shadow-soft">
+      <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wide text-brand-deep/70">
         {icon}
         {label}
       </div>

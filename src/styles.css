@@ -35,6 +35,14 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-brand-deep: var(--brand-deep);
+  --color-brand-deep-foreground: var(--brand-deep-foreground);
+  --color-brand-butter: var(--brand-butter);
+  --color-brand-butter-foreground: var(--brand-butter-foreground);
+  --color-kali: var(--kali);
+  --color-kali-foreground: var(--kali-foreground);
+  --color-highlight: var(--highlight);
+  --color-highlight-foreground: var(--highlight-foreground);
   --font-display: "Baloo 2", system-ui, sans-serif;
   --font-sans: "Nunito", system-ui, sans-serif;
   --shadow-soft: 0 4px 20px -4px color-mix(in oklab, var(--primary) 25%, transparent);
@@ -57,7 +65,16 @@
   --gold: oklch(0.78 0.16 75);
   --gold-foreground: oklch(0.25 0.05 60);
 
-  --background: oklch(0.99 0.012 110);
+  --brand-deep: #013E37;
+  --brand-deep-foreground: #FFEEB3;
+  --brand-butter: #FFEEB3;
+  --brand-butter-foreground: #013E37;
+  --kali: var(--brand-deep);
+  --kali-foreground: var(--brand-butter);
+  --highlight: var(--brand-butter);
+  --highlight-foreground: var(--brand-deep);
+
+  --background: oklch(0.985 0.016 85);
   --foreground: oklch(0.22 0.04 160);
 
   --card: oklch(1 0 0);
