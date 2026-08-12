@@ -984,11 +984,11 @@ function PraKalifahCard() {
           <span>🚀</span>
         </div>
 
-        <span className="inline-flex items-center gap-1 rounded-full bg-white/90 px-3 py-1 font-display text-xs font-extrabold text-[#0F172A] shadow-sm">
+        <span className="inline-flex items-center gap-1 rounded-full bg-brand-butter px-3 py-1 font-display text-xs font-extrabold text-brand-deep shadow-sm">
           {jumlahAktiviti ? `${jumlahAktiviti}+ Aktiviti` : "Aktiviti Percuma"}
         </span>
 
-        <span className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-white px-5 py-2.5 font-display text-sm font-extrabold text-[#FF7B9C] shadow-soft transition group-hover:translate-x-0.5">
+        <span className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-white px-5 py-2.5 font-display text-sm font-extrabold text-brand-deep shadow-soft transition group-hover:translate-x-0.5">
           Jom Bermain!
           <ArrowRight className="h-4 w-4" />
         </span>
