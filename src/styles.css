@@ -35,6 +35,14 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-brand-deep: var(--brand-deep);
+  --color-brand-deep-foreground: var(--brand-deep-foreground);
+  --color-brand-butter: var(--brand-butter);
+  --color-brand-butter-foreground: var(--brand-butter-foreground);
+  --color-kali: var(--kali);
+  --color-kali-foreground: var(--kali-foreground);
+  --color-highlight: var(--highlight);
+  --color-highlight-foreground: var(--highlight-foreground);
   --font-display: "Baloo 2", system-ui, sans-serif;
   --font-sans: "Nunito", system-ui, sans-serif;
   --shadow-soft: 0 4px 20px -4px color-mix(in oklab, var(--primary) 25%, transparent);
