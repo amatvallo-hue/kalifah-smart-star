@@ -60,6 +60,7 @@ interface Tebusan {
   catatan_admin: string | null;
   no_tracking: string | null;
   created_at: string;
+  profiles?: { no_telefon: string | null } | null;
 }
 
 interface ChildInfo {
@@ -148,7 +149,7 @@ function TebusanTab() {
     setLoading(true);
     const { data, error } = await supabase
       .from("hadiah_tebusan")
-      .select("*")
+      .select("*, profiles(no_telefon)")
       .order("created_at", { ascending: false });
     if (error) {
       toast.error("Gagal muat tebusan: " + error.message);
@@ -277,7 +278,10 @@ function TebusanTab() {
                   <TableCell>{r.nama_hadiah_snapshot}</TableCell>
                   <TableCell>⭐ {r.kos_star}</TableCell>
                   <TableCell className="max-w-[200px] truncate" title={r.alamat_penghantaran ?? ""}>
-                    {r.alamat_penghantaran || "-"}
+                    <div>{r.alamat_penghantaran || "-"}</div>
+                    <div className="mt-1 text-xs text-muted-foreground">
+                      📞 {r.profiles?.no_telefon || "-"}
+                    </div>
                   </TableCell>
                   <TableCell className="capitalize">{r.status}</TableCell>
                   <TableCell className="text-xs">{r.no_tracking || "-"}</TableCell>
@@ -359,6 +363,16 @@ function TebusanTab() {
           <p className="text-sm text-muted-foreground">
             Hadiah: <span className="font-bold">{shipFor?.nama_hadiah_snapshot}</span>
           </p>
+          <div className="space-y-1 text-sm">
+            <p>
+              <span className="text-muted-foreground">Alamat:</span>{" "}
+              <span className="font-medium">{shipFor?.alamat_penghantaran || "-"}</span>
+            </p>
+            <p>
+              <span className="text-muted-foreground">No. Telefon:</span>{" "}
+              <span className="font-medium">{shipFor?.profiles?.no_telefon || "-"}</span>
+            </p>
+          </div>
           <div className="space-y-1.5">
             <Label>No. Tracking Pos (pilihan)</Label>
             <Input
