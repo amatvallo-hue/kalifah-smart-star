@@ -149,7 +149,7 @@ function TebusanTab() {
     setLoading(true);
     const { data, error } = await supabase
       .from("hadiah_tebusan")
-      .select("*")
+      .select("*, profiles(no_telefon)")
       .order("created_at", { ascending: false });
     if (error) {
       toast.error("Gagal muat tebusan: " + error.message);
