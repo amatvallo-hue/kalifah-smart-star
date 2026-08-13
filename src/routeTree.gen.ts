@@ -36,6 +36,7 @@ import { Route as AffiliateSyaratRouteImport } from './routes/affiliate.syarat'
 import { Route as ApiCheckoutRouteImport } from './routes/api.checkout'
 import { Route as ApiConfirmPaymentRouteImport } from './routes/api.confirm-payment'
 import { Route as ApiDebugEnvRouteImport } from './routes/api.debug-env'
+import { Route as ApiShopCheckoutRouteImport } from './routes/api.shop-checkout'
 import { Route as ApiTemporaryUnlockRouteImport } from './routes/api.temporary-unlock'
 import { Route as BayaranSelesaiRouteImport } from './routes/bayaran.selesai'
 import { Route as CubaKaliAktifkanRouteImport } from './routes/cuba-kali_.aktifkan'
@@ -205,6 +206,11 @@ const ApiConfirmPaymentRoute = ApiConfirmPaymentRouteImport.update({
 const ApiDebugEnvRoute = ApiDebugEnvRouteImport.update({
   id: '/api/debug-env',
   path: '/api/debug-env',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiShopCheckoutRoute = ApiShopCheckoutRouteImport.update({
+  id: '/api/shop-checkout',
+  path: '/api/shop-checkout',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiTemporaryUnlockRoute = ApiTemporaryUnlockRouteImport.update({
@@ -431,6 +437,7 @@ export interface FileRoutesByFullPath {
   '/api/checkout': typeof ApiCheckoutRoute
   '/api/confirm-payment': typeof ApiConfirmPaymentRoute
   '/api/debug-env': typeof ApiDebugEnvRoute
+  '/api/shop-checkout': typeof ApiShopCheckoutRoute
   '/api/temporary-unlock': typeof ApiTemporaryUnlockRoute
   '/bayaran/selesai': typeof BayaranSelesaiRoute
   '/cuba-kali/aktifkan': typeof CubaKaliAktifkanRoute
@@ -495,6 +502,7 @@ export interface FileRoutesByTo {
   '/api/checkout': typeof ApiCheckoutRoute
   '/api/confirm-payment': typeof ApiConfirmPaymentRoute
   '/api/debug-env': typeof ApiDebugEnvRoute
+  '/api/shop-checkout': typeof ApiShopCheckoutRoute
   '/api/temporary-unlock': typeof ApiTemporaryUnlockRoute
   '/bayaran/selesai': typeof BayaranSelesaiRoute
   '/cuba-kali/aktifkan': typeof CubaKaliAktifkanRoute
@@ -560,6 +568,7 @@ export interface FileRoutesById {
   '/api/checkout': typeof ApiCheckoutRoute
   '/api/confirm-payment': typeof ApiConfirmPaymentRoute
   '/api/debug-env': typeof ApiDebugEnvRoute
+  '/api/shop-checkout': typeof ApiShopCheckoutRoute
   '/api/temporary-unlock': typeof ApiTemporaryUnlockRoute
   '/bayaran/selesai': typeof BayaranSelesaiRoute
   '/cuba-kali_/aktifkan': typeof CubaKaliAktifkanRoute
@@ -626,6 +635,7 @@ export interface FileRouteTypes {
     | '/api/checkout'
     | '/api/confirm-payment'
     | '/api/debug-env'
+    | '/api/shop-checkout'
     | '/api/temporary-unlock'
     | '/bayaran/selesai'
     | '/cuba-kali/aktifkan'
@@ -690,6 +700,7 @@ export interface FileRouteTypes {
     | '/api/checkout'
     | '/api/confirm-payment'
     | '/api/debug-env'
+    | '/api/shop-checkout'
     | '/api/temporary-unlock'
     | '/bayaran/selesai'
     | '/cuba-kali/aktifkan'
@@ -754,6 +765,7 @@ export interface FileRouteTypes {
     | '/api/checkout'
     | '/api/confirm-payment'
     | '/api/debug-env'
+    | '/api/shop-checkout'
     | '/api/temporary-unlock'
     | '/bayaran/selesai'
     | '/cuba-kali_/aktifkan'
@@ -819,6 +831,7 @@ export interface RootRouteChildren {
   ApiCheckoutRoute: typeof ApiCheckoutRoute
   ApiConfirmPaymentRoute: typeof ApiConfirmPaymentRoute
   ApiDebugEnvRoute: typeof ApiDebugEnvRoute
+  ApiShopCheckoutRoute: typeof ApiShopCheckoutRoute
   ApiTemporaryUnlockRoute: typeof ApiTemporaryUnlockRoute
   BayaranSelesaiRoute: typeof BayaranSelesaiRoute
   CubaKaliAktifkanRoute: typeof CubaKaliAktifkanRoute
@@ -1045,6 +1058,13 @@ declare module '@tanstack/react-router' {
       path: '/api/debug-env'
       fullPath: '/api/debug-env'
       preLoaderRoute: typeof ApiDebugEnvRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/shop-checkout': {
+      id: '/api/shop-checkout'
+      path: '/api/shop-checkout'
+      fullPath: '/api/shop-checkout'
+      preLoaderRoute: typeof ApiShopCheckoutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/temporary-unlock': {
@@ -1323,6 +1343,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiCheckoutRoute: ApiCheckoutRoute,
   ApiConfirmPaymentRoute: ApiConfirmPaymentRoute,
   ApiDebugEnvRoute: ApiDebugEnvRoute,
+  ApiShopCheckoutRoute: ApiShopCheckoutRoute,
   ApiTemporaryUnlockRoute: ApiTemporaryUnlockRoute,
   BayaranSelesaiRoute: BayaranSelesaiRoute,
   CubaKaliAktifkanRoute: CubaKaliAktifkanRoute,
