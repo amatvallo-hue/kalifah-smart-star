@@ -60,6 +60,7 @@ interface Tebusan {
   catatan_admin: string | null;
   no_tracking: string | null;
   created_at: string;
+  profiles?: { no_telefon: string | null } | null;
 }
 
 interface ChildInfo {
