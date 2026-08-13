@@ -216,7 +216,7 @@ function KedaiHadiahPage() {
                     disabled={!bolehTebus}
                     onClick={() => {
                       setRedeemTarget(h);
-                      setAlamat("");
+                      setAlamat(alamatDefault);
                     }}
                     className="mt-1"
                   >
