@@ -63,6 +63,7 @@ function KedaiHadiahPage() {
   const [redeemTarget, setRedeemTarget] = useState<Hadiah | null>(null);
   const [alamat, setAlamat] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   useEffect(() => {
     if (shouldSkipChildGuard()) return;
