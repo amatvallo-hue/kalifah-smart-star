@@ -177,18 +177,19 @@ export async function buildSijilCemerlangPdfV2(input: SijilInput): Promise<Blob>
   try {
     await new Promise<void>((resolve) => {
       root.render(
-        <SijilCemerlangTemplate
-          namaPelajar={input.namaMurid}
-          subjekTitle={input.subjekTitle ?? ""}
-          darjahLabel={darjahLabel}
-          skillName={skillName}
-          skillDetail={skillDetail}
-          bintang={input.bintangDiperoleh ?? 0}
-          tarikh={(input.tarikh ?? "").toUpperCase()}
-          certificateId={certId}
-          qrDataUrl={qrDataUrl}
-        />,
+        createElement(SijilCemerlangTemplate, {
+          namaPelajar: input.namaMurid,
+          subjekTitle: input.subjekTitle ?? "",
+          darjahLabel,
+          skillName,
+          skillDetail,
+          bintang: input.bintangDiperoleh ?? 0,
+          tarikh: (input.tarikh ?? "").toUpperCase(),
+          certificateId: certId,
+          qrDataUrl,
+        }),
       );
+
       setTimeout(resolve, 60);
     });
 
