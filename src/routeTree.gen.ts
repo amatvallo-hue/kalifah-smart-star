@@ -50,12 +50,14 @@ import { Route as KaliTestLaporanAnakRouteImport } from './routes/kali-test.lapo
 import { Route as PraKalifahBidangRouteImport } from './routes/pra-kalifah_.$bidang'
 import { Route as PreviewDarjahIdRouteImport } from './routes/preview.$darjahId'
 import { Route as PreviewNamaRouteImport } from './routes/preview.nama'
+import { Route as ShopSlugRouteImport } from './routes/shop_.$slug'
 import { Route as SijilCertificateIdRouteImport } from './routes/sijil.$certificateId'
 import { Route as AdminAffiliatesIdRouteImport } from './routes/admin_.affiliates_.$id'
 import { Route as AdminAffiliatesDashboardRouteImport } from './routes/admin_.affiliates_.dashboard'
 import { Route as DarjahDarjahIdSubjekIdRouteImport } from './routes/darjah.$darjahId_.$subjekId'
 import { Route as DarjahDarjahIdPercubaanMpt4RouteImport } from './routes/darjah.$darjahId_.percubaan-mpt4'
 import { Route as PreviewDarjahIdScoreRouteImport } from './routes/preview.$darjahId_.score'
+import { Route as ShopPesananKodRouteImport } from './routes/shop_.pesanan.$kod'
 import { Route as UjianPercumaKeputusanReportTokenRouteImport } from './routes/ujian-percuma_.keputusan.$reportToken'
 import { Route as UjianPercumaSoalanSessionIdRouteImport } from './routes/ujian-percuma_.soalan.$sessionId'
 import { Route as ApiPublicToyyibpayCallbackRouteImport } from './routes/api.public.toyyibpay.callback'
@@ -280,6 +282,11 @@ const PreviewNamaRoute = PreviewNamaRouteImport.update({
   path: '/preview/nama',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ShopSlugRoute = ShopSlugRouteImport.update({
+  id: '/shop_/$slug',
+  path: '/shop/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SijilCertificateIdRoute = SijilCertificateIdRouteImport.update({
   id: '/sijil/$certificateId',
   path: '/sijil/$certificateId',
@@ -310,6 +317,11 @@ const DarjahDarjahIdPercubaanMpt4Route =
 const PreviewDarjahIdScoreRoute = PreviewDarjahIdScoreRouteImport.update({
   id: '/preview/$darjahId_/score',
   path: '/preview/$darjahId/score',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ShopPesananKodRoute = ShopPesananKodRouteImport.update({
+  id: '/shop_/pesanan/$kod',
+  path: '/shop/pesanan/$kod',
   getParentRoute: () => rootRouteImport,
 } as any)
 const UjianPercumaKeputusanReportTokenRoute =
@@ -457,12 +469,14 @@ export interface FileRoutesByFullPath {
   '/pra-kalifah/$bidang': typeof PraKalifahBidangRoute
   '/preview/$darjahId': typeof PreviewDarjahIdRoute
   '/preview/nama': typeof PreviewNamaRoute
+  '/shop/$slug': typeof ShopSlugRoute
   '/sijil/$certificateId': typeof SijilCertificateIdRoute
   '/admin/affiliates/$id': typeof AdminAffiliatesIdRoute
   '/admin/affiliates/dashboard': typeof AdminAffiliatesDashboardRoute
   '/darjah/$darjahId/$subjekId': typeof DarjahDarjahIdSubjekIdRoute
   '/darjah/$darjahId/percubaan-mpt4': typeof DarjahDarjahIdPercubaanMpt4Route
   '/preview/$darjahId/score': typeof PreviewDarjahIdScoreRoute
+  '/shop/pesanan/$kod': typeof ShopPesananKodRoute
   '/ujian-percuma/keputusan/$reportToken': typeof UjianPercumaKeputusanReportTokenRoute
   '/ujian-percuma/soalan/$sessionId': typeof UjianPercumaSoalanSessionIdRoute
   '/api/public/toyyibpay/callback': typeof ApiPublicToyyibpayCallbackRoute
@@ -523,12 +537,14 @@ export interface FileRoutesByTo {
   '/pra-kalifah/$bidang': typeof PraKalifahBidangRoute
   '/preview/$darjahId': typeof PreviewDarjahIdRoute
   '/preview/nama': typeof PreviewNamaRoute
+  '/shop/$slug': typeof ShopSlugRoute
   '/sijil/$certificateId': typeof SijilCertificateIdRoute
   '/admin/affiliates/$id': typeof AdminAffiliatesIdRoute
   '/admin/affiliates/dashboard': typeof AdminAffiliatesDashboardRoute
   '/darjah/$darjahId/$subjekId': typeof DarjahDarjahIdSubjekIdRoute
   '/darjah/$darjahId/percubaan-mpt4': typeof DarjahDarjahIdPercubaanMpt4Route
   '/preview/$darjahId/score': typeof PreviewDarjahIdScoreRoute
+  '/shop/pesanan/$kod': typeof ShopPesananKodRoute
   '/ujian-percuma/keputusan/$reportToken': typeof UjianPercumaKeputusanReportTokenRoute
   '/ujian-percuma/soalan/$sessionId': typeof UjianPercumaSoalanSessionIdRoute
   '/api/public/toyyibpay/callback': typeof ApiPublicToyyibpayCallbackRoute
@@ -590,12 +606,14 @@ export interface FileRoutesById {
   '/pra-kalifah_/$bidang': typeof PraKalifahBidangRoute
   '/preview/$darjahId': typeof PreviewDarjahIdRoute
   '/preview/nama': typeof PreviewNamaRoute
+  '/shop_/$slug': typeof ShopSlugRoute
   '/sijil/$certificateId': typeof SijilCertificateIdRoute
   '/admin_/affiliates_/$id': typeof AdminAffiliatesIdRoute
   '/admin_/affiliates_/dashboard': typeof AdminAffiliatesDashboardRoute
   '/darjah/$darjahId_/$subjekId': typeof DarjahDarjahIdSubjekIdRoute
   '/darjah/$darjahId_/percubaan-mpt4': typeof DarjahDarjahIdPercubaanMpt4Route
   '/preview/$darjahId_/score': typeof PreviewDarjahIdScoreRoute
+  '/shop_/pesanan/$kod': typeof ShopPesananKodRoute
   '/ujian-percuma_/keputusan/$reportToken': typeof UjianPercumaKeputusanReportTokenRoute
   '/ujian-percuma_/soalan/$sessionId': typeof UjianPercumaSoalanSessionIdRoute
   '/api/public/toyyibpay/callback': typeof ApiPublicToyyibpayCallbackRoute
@@ -658,12 +676,14 @@ export interface FileRouteTypes {
     | '/pra-kalifah/$bidang'
     | '/preview/$darjahId'
     | '/preview/nama'
+    | '/shop/$slug'
     | '/sijil/$certificateId'
     | '/admin/affiliates/$id'
     | '/admin/affiliates/dashboard'
     | '/darjah/$darjahId/$subjekId'
     | '/darjah/$darjahId/percubaan-mpt4'
     | '/preview/$darjahId/score'
+    | '/shop/pesanan/$kod'
     | '/ujian-percuma/keputusan/$reportToken'
     | '/ujian-percuma/soalan/$sessionId'
     | '/api/public/toyyibpay/callback'
@@ -724,12 +744,14 @@ export interface FileRouteTypes {
     | '/pra-kalifah/$bidang'
     | '/preview/$darjahId'
     | '/preview/nama'
+    | '/shop/$slug'
     | '/sijil/$certificateId'
     | '/admin/affiliates/$id'
     | '/admin/affiliates/dashboard'
     | '/darjah/$darjahId/$subjekId'
     | '/darjah/$darjahId/percubaan-mpt4'
     | '/preview/$darjahId/score'
+    | '/shop/pesanan/$kod'
     | '/ujian-percuma/keputusan/$reportToken'
     | '/ujian-percuma/soalan/$sessionId'
     | '/api/public/toyyibpay/callback'
@@ -790,12 +812,14 @@ export interface FileRouteTypes {
     | '/pra-kalifah_/$bidang'
     | '/preview/$darjahId'
     | '/preview/nama'
+    | '/shop_/$slug'
     | '/sijil/$certificateId'
     | '/admin_/affiliates_/$id'
     | '/admin_/affiliates_/dashboard'
     | '/darjah/$darjahId_/$subjekId'
     | '/darjah/$darjahId_/percubaan-mpt4'
     | '/preview/$darjahId_/score'
+    | '/shop_/pesanan/$kod'
     | '/ujian-percuma_/keputusan/$reportToken'
     | '/ujian-percuma_/soalan/$sessionId'
     | '/api/public/toyyibpay/callback'
@@ -857,12 +881,14 @@ export interface RootRouteChildren {
   PraKalifahBidangRoute: typeof PraKalifahBidangRoute
   PreviewDarjahIdRoute: typeof PreviewDarjahIdRoute
   PreviewNamaRoute: typeof PreviewNamaRoute
+  ShopSlugRoute: typeof ShopSlugRoute
   SijilCertificateIdRoute: typeof SijilCertificateIdRoute
   AdminAffiliatesIdRoute: typeof AdminAffiliatesIdRoute
   AdminAffiliatesDashboardRoute: typeof AdminAffiliatesDashboardRoute
   DarjahDarjahIdSubjekIdRoute: typeof DarjahDarjahIdSubjekIdRoute
   DarjahDarjahIdPercubaanMpt4Route: typeof DarjahDarjahIdPercubaanMpt4Route
   PreviewDarjahIdScoreRoute: typeof PreviewDarjahIdScoreRoute
+  ShopPesananKodRoute: typeof ShopPesananKodRoute
   UjianPercumaKeputusanReportTokenRoute: typeof UjianPercumaKeputusanReportTokenRoute
   UjianPercumaSoalanSessionIdRoute: typeof UjianPercumaSoalanSessionIdRoute
   ApiPublicToyyibpayCallbackRoute: typeof ApiPublicToyyibpayCallbackRoute
@@ -1171,6 +1197,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PreviewNamaRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/shop_/$slug': {
+      id: '/shop_/$slug'
+      path: '/shop/$slug'
+      fullPath: '/shop/$slug'
+      preLoaderRoute: typeof ShopSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sijil/$certificateId': {
       id: '/sijil/$certificateId'
       path: '/sijil/$certificateId'
@@ -1211,6 +1244,13 @@ declare module '@tanstack/react-router' {
       path: '/preview/$darjahId/score'
       fullPath: '/preview/$darjahId/score'
       preLoaderRoute: typeof PreviewDarjahIdScoreRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/shop_/pesanan/$kod': {
+      id: '/shop_/pesanan/$kod'
+      path: '/shop/pesanan/$kod'
+      fullPath: '/shop/pesanan/$kod'
+      preLoaderRoute: typeof ShopPesananKodRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/ujian-percuma_/keputusan/$reportToken': {
@@ -1377,12 +1417,14 @@ const rootRouteChildren: RootRouteChildren = {
   PraKalifahBidangRoute: PraKalifahBidangRoute,
   PreviewDarjahIdRoute: PreviewDarjahIdRoute,
   PreviewNamaRoute: PreviewNamaRoute,
+  ShopSlugRoute: ShopSlugRoute,
   SijilCertificateIdRoute: SijilCertificateIdRoute,
   AdminAffiliatesIdRoute: AdminAffiliatesIdRoute,
   AdminAffiliatesDashboardRoute: AdminAffiliatesDashboardRoute,
   DarjahDarjahIdSubjekIdRoute: DarjahDarjahIdSubjekIdRoute,
   DarjahDarjahIdPercubaanMpt4Route: DarjahDarjahIdPercubaanMpt4Route,
   PreviewDarjahIdScoreRoute: PreviewDarjahIdScoreRoute,
+  ShopPesananKodRoute: ShopPesananKodRoute,
   UjianPercumaKeputusanReportTokenRoute: UjianPercumaKeputusanReportTokenRoute,
   UjianPercumaSoalanSessionIdRoute: UjianPercumaSoalanSessionIdRoute,
   ApiPublicToyyibpayCallbackRoute: ApiPublicToyyibpayCallbackRoute,
