@@ -543,6 +543,26 @@ function KatalogTab() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <Dialog open={!!previewUrl} onOpenChange={(o) => !o && setPreviewUrl(null)}>
+        <DialogContent className="max-w-3xl">
+          <DialogHeader>
+            <DialogTitle>Paparan Gambar</DialogTitle>
+          </DialogHeader>
+          {previewUrl && (
+            <img
+              src={previewUrl}
+              alt="Gambar hadiah"
+              className="max-h-[70vh] w-full rounded-2xl object-contain"
+            />
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setPreviewUrl(null)}>
+              Tutup
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
