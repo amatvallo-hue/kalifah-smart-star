@@ -89,7 +89,7 @@ const CSS = `
   text-align:center;
   z-index:1;
 }
-.sijil-v2 .logo-official{ display:block; height:40px; width:auto; }
+.sijil-v2 .logo-official{ display:block; height:40px; width:225px; }
 .sijil-v2 .title{
   margin-top:14px;
   font-family:'Playfair Display',serif;
