@@ -278,7 +278,10 @@ function TebusanTab() {
                   <TableCell>{r.nama_hadiah_snapshot}</TableCell>
                   <TableCell>⭐ {r.kos_star}</TableCell>
                   <TableCell className="max-w-[200px] truncate" title={r.alamat_penghantaran ?? ""}>
-                    {r.alamat_penghantaran || "-"}
+                    <div>{r.alamat_penghantaran || "-"}</div>
+                    <div className="mt-1 text-xs text-muted-foreground">
+                      📞 {r.profiles?.no_telefon || "-"}
+                    </div>
                   </TableCell>
                   <TableCell className="capitalize">{r.status}</TableCell>
                   <TableCell className="text-xs">{r.no_tracking || "-"}</TableCell>
