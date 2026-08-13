@@ -280,6 +280,7 @@ function TebusanTab() {
                     {r.alamat_penghantaran || "-"}
                   </TableCell>
                   <TableCell className="capitalize">{r.status}</TableCell>
+                  <TableCell className="text-xs">{r.no_tracking || "-"}</TableCell>
                   <TableCell>{new Date(r.created_at).toLocaleDateString("ms-MY")}</TableCell>
                   <TableCell className="space-x-2 text-right">
                     {r.status === "menunggu" && (
@@ -288,7 +289,14 @@ function TebusanTab() {
                       </Button>
                     )}
                     {r.status === "diluluskan" && (
-                      <Button size="sm" disabled={busyId === r.id} onClick={() => updateStatus(r.id, "dihantar")}>
+                      <Button
+                        size="sm"
+                        disabled={busyId === r.id}
+                        onClick={() => {
+                          setShipFor(r);
+                          setTracking(r.no_tracking ?? "");
+                        }}
+                      >
                         Tandakan Dihantar
                       </Button>
                     )}
