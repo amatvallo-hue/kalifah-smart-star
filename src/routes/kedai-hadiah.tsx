@@ -210,14 +210,12 @@ function KedaiHadiahPage() {
                   </div>
                   <Button
                     disabled={!bolehTebus}
-                    onClick={() => {
-                      setRedeemTarget(h);
-                      setAlamat(alamatDefault);
-                    }}
+                    onClick={() => setRedeemTarget(h)}
                     className="mt-1"
                   >
-                    {h.stok <= 0 ? "Stok Habis" : mata < h.kos_star ? "Star Tidak Cukup" : "Tebus Sekarang"}
+                    {h.stok <= 0 ? "Stok Habis" : mata < h.kos_star ? "Star Tidak Cukup" : "Saya Nak Hadiah Ini!"}
                   </Button>
+
                 </div>
               );
             })}
@@ -251,7 +249,15 @@ function KedaiHadiahPage() {
                       {t.no_tracking && (
                         <p className="mt-1 text-xs text-muted-foreground">No. Tracking: {t.no_tracking}</p>
                       )}
+                      {t.status === "menunggu_parent" && (
+                        <div className="mt-2">
+                          <Button size="sm" variant="ghost" onClick={() => batalMinta(t.id)}>
+                            Batal
+                          </Button>
+                        </div>
+                      )}
                     </div>
+
                   </li>
                 );
               })}
@@ -263,27 +269,37 @@ function KedaiHadiahPage() {
       <Dialog open={!!redeemTarget} onOpenChange={(o) => !o && setRedeemTarget(null)}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Tebus "{redeemTarget?.nama}"?</DialogTitle>
+            <DialogTitle>Nak hadiah "{redeemTarget?.nama}"?</DialogTitle>
           </DialogHeader>
           <p className="text-sm text-muted-foreground">
-            {redeemTarget?.kos_star} ⭐ akan ditolak dari baki star kamu. Sila isi alamat penghantaran untuk hadiah ini.
+            Ibu/Ayah kena sahkan dulu. ⭐ {redeemTarget?.kos_star} hanya akan digunakan selepas mereka sahkan.
           </p>
-          <Textarea
-            placeholder="Alamat penuh untuk penghantaran hadiah…"
-            value={alamat}
-            onChange={(e) => setAlamat(e.target.value)}
-            rows={4}
-          />
           <DialogFooter>
             <Button variant="outline" onClick={() => setRedeemTarget(null)} disabled={submitting}>
               Batal
             </Button>
-            <Button onClick={submitTebus} disabled={submitting || !alamat.trim()}>
-              {submitting ? "Memproses…" : "Sahkan Tebus"}
+            <Button onClick={submitTebus} disabled={submitting}>
+              {submitting ? "Memproses…" : "Saya Nak Hadiah Ini!"}
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <Dialog open={!!mintaBerjaya} onOpenChange={(o) => !o && setMintaBerjaya(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>🎉 Pilihan yang best!</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-muted-foreground">
+            Minta Ibu/Ayah sahkan penebusan ini melalui Dashboard mereka. ⭐ {mintaBerjaya?.kos} akan digunakan
+            selepas Ibu/Ayah sahkan.
+          </p>
+          <DialogFooter>
+            <Button onClick={() => setMintaBerjaya(null)}>Okey!</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
 
       <Dialog open={!!previewUrl} onOpenChange={(o) => !o && setPreviewUrl(null)}>
         <DialogContent className="max-w-3xl">
