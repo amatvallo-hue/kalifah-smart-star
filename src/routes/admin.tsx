@@ -160,7 +160,14 @@ function AdminDashboard() {
           >
             🎁 Kedai Hadiah
           </Link>
+          <Link
+            to="/admin/shop"
+            className="inline-flex items-center gap-1 rounded-full border border-border bg-card px-4 py-2 text-sm font-bold text-foreground hover:bg-muted"
+          >
+            🛍️ Kalifah Shop
+          </Link>
         </div>
+
         <Tabs defaultValue="pembayaran">
           <TabsList className="flex-wrap">
             <TabsTrigger value="pembayaran">Pembayaran Manual</TabsTrigger>
