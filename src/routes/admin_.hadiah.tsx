@@ -505,6 +505,20 @@ function KatalogTab() {
             <div className="space-y-1.5">
               <Label>URL Gambar (pilihan)</Label>
               <Input value={imejUrl} onChange={(e) => setImejUrl(e.target.value)} placeholder="https://…" />
+              {imejUrl.trim() && (
+                <button
+                  type="button"
+                  onClick={() => setPreviewUrl(imejUrl.trim())}
+                  className="mt-2 block overflow-hidden rounded-xl border border-border"
+                  title="Klik untuk besarkan"
+                >
+                  <img
+                    src={imejUrl.trim()}
+                    alt="Pratonton gambar"
+                    className="h-32 w-auto max-w-full object-contain"
+                  />
+                </button>
+              )}
             </div>
             <div className="space-y-1.5">
               <Label>Status</Label>
