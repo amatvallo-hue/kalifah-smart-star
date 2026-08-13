@@ -250,7 +250,12 @@ function KedaiHadiahPage() {
                         <p className="mt-1 text-xs italic text-muted-foreground">"{t.catatan_admin}"</p>
                       )}
                     </div>
-                    <span className={`rounded-full px-3 py-1 text-xs font-bold ${s.className}`}>{s.label}</span>
+                    <div className="text-right">
+                      <span className={`rounded-full px-3 py-1 text-xs font-bold ${s.className}`}>{s.label}</span>
+                      {t.no_tracking && (
+                        <p className="mt-1 text-xs text-muted-foreground">No. Tracking: {t.no_tracking}</p>
+                      )}
+                    </div>
                   </li>
                 );
               })}
