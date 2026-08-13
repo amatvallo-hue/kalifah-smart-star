@@ -84,10 +84,17 @@ function KedaiHadiahPage() {
     if (user) {
       const { data: tData } = await supabase
         .from("hadiah_tebusan")
-        .select("id, nama_hadiah_snapshot, kos_star, status, catatan_admin, created_at")
+        .select("id, nama_hadiah_snapshot, kos_star, status, catatan_admin, no_tracking, created_at")
         .eq("child_user_id", user.id)
         .order("created_at", { ascending: false });
       setTebusan((tData as Tebusan[] | null) ?? []);
+
+      const { data: cData } = await supabase
+        .from("child_profiles")
+        .select("alamat_default")
+        .eq("child_user_id", user.id)
+        .maybeSingle();
+      setAlamatDefault(((cData as { alamat_default?: string | null } | null)?.alamat_default ?? "").trim());
     }
     setLoadingData(false);
   }
