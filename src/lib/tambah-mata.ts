@@ -1,45 +1,34 @@
 import { supabase } from "@/integrations/supabase/client";
 
+/**
+ * Bagi star melalui RPC server-side `beri_star_generik`.
+ * Server yang tentukan jumlah star (star_sumber_rules) & guna auth.uid().
+ * Param `userId` dan `mata` dikekalkan untuk keserasian call site sedia ada,
+ * tapi TIDAK dihantar ke server (client tak dipercayai).
+ */
 export async function tambahMata({
-  userId,
-  mata,
   sumber,
   darjah,
   subjek,
 }: {
-  userId: string;
-  mata: number;
+  userId?: string;
+  mata?: number;
   sumber: string;
-  darjah: string;
-  subjek: string;
-}) {
-  // Log transaksi
-  await supabase.from("user_points_log").insert({
-    user_id: userId,
-    mata,
-    sumber,
-    darjah,
-    subjek,
-  });
-
-  // Upsert total
-  const { data: existing } = await supabase
-    .from("user_points")
-    .select("jumlah_mata")
-    .eq("user_id", userId)
-    .maybeSingle();
-
-  if (existing) {
-    await supabase
-      .from("user_points")
-      .update({ jumlah_mata: existing.jumlah_mata + mata, updated_at: new Date().toISOString() })
-      .eq("user_id", userId);
-  } else {
-    await supabase
-      .from("user_points")
-      .insert({ user_id: userId, jumlah_mata: mata });
+  darjah?: string;
+  subjek?: string;
+}): Promise<number> {
+  const { data, error } = await supabase.rpc("beri_star_generik" as never, {
+    p_sumber: sumber,
+    p_darjah: darjah ?? null,
+    p_subjek: subjek ?? null,
+  } as never);
+  if (error) {
+    console.error("tambahMata gagal:", error);
+    return 0;
   }
+  return (data as unknown as number) ?? 0;
 }
+
 
 /**
  * Kuiz sahaja: bagi 1 star, tapi HANYA sekali seumur hidup untuk setiap soalan unik
