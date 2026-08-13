@@ -121,6 +121,16 @@ function KedaiHadiahPage() {
       toast.error(error.message || "Gagal tebus hadiah");
       return;
     }
+    const alamatBaru = alamat.trim();
+    if (alamatBaru) {
+      // fire-and-forget: simpan sebagai alamat lalai untuk tebusan akan datang
+      void supabase
+        .rpc("kemaskini_alamat_default_anak", { p_alamat: alamatBaru })
+        .then(({ error: e }) => {
+          if (e) console.warn("kemaskini_alamat_default_anak gagal:", e.message);
+          else setAlamatDefault(alamatBaru);
+        });
+    }
     toast.success(`Berjaya tebus "${redeemTarget.nama}"! Tunggu admin proses.`);
     setRedeemTarget(null);
     setAlamat("");
