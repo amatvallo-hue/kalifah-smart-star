@@ -191,6 +191,26 @@ function TebusanTab() {
     reload();
   }
 
+  async function sahkanDihantar() {
+    if (!shipFor) return;
+    setBusyId(shipFor.id);
+    const { error } = await supabase
+      .from("hadiah_tebusan")
+      .update({ status: "dihantar", no_tracking: tracking.trim() || null })
+      .eq("id", shipFor.id);
+    setBusyId(null);
+    if (error) {
+      toast.error("Gagal kemaskini: " + error.message);
+      return;
+    }
+    toast.success("Ditandakan dihantar");
+    setShipFor(null);
+    setTracking("");
+    reload();
+  }
+
+
+
   async function tolak() {
     if (!rejectFor) return;
     setBusyId(rejectFor.id);
