@@ -58,6 +58,7 @@ interface Tebusan {
   status: string;
   alamat_penghantaran: string | null;
   catatan_admin: string | null;
+  no_tracking: string | null;
   created_at: string;
 }
 
@@ -140,6 +141,8 @@ function TebusanTab() {
   const [rejectFor, setRejectFor] = useState<Tebusan | null>(null);
   const [reason, setReason] = useState("");
   const [busyId, setBusyId] = useState<string | null>(null);
+  const [shipFor, setShipFor] = useState<Tebusan | null>(null);
+  const [tracking, setTracking] = useState("");
 
   async function reload() {
     setLoading(true);
@@ -188,6 +191,26 @@ function TebusanTab() {
     reload();
   }
 
+  async function sahkanDihantar() {
+    if (!shipFor) return;
+    setBusyId(shipFor.id);
+    const { error } = await supabase
+      .from("hadiah_tebusan")
+      .update({ status: "dihantar", no_tracking: tracking.trim() || null })
+      .eq("id", shipFor.id);
+    setBusyId(null);
+    if (error) {
+      toast.error("Gagal kemaskini: " + error.message);
+      return;
+    }
+    toast.success("Ditandakan dihantar");
+    setShipFor(null);
+    setTracking("");
+    reload();
+  }
+
+
+
   async function tolak() {
     if (!rejectFor) return;
     setBusyId(rejectFor.id);
@@ -233,6 +256,7 @@ function TebusanTab() {
               <TableHead>Star</TableHead>
               <TableHead>Alamat</TableHead>
               <TableHead>Status</TableHead>
+              <TableHead>Tracking</TableHead>
               <TableHead>Tarikh</TableHead>
               <TableHead className="text-right">Tindakan</TableHead>
             </TableRow>
@@ -240,7 +264,7 @@ function TebusanTab() {
           <TableBody>
             {filteredRows.length === 0 && (
               <TableRow>
-                <TableCell colSpan={7} className="py-6 text-center text-sm text-muted-foreground">
+                <TableCell colSpan={8} className="py-6 text-center text-sm text-muted-foreground">
                   Tiada rekod.
                 </TableCell>
               </TableRow>
@@ -256,6 +280,7 @@ function TebusanTab() {
                     {r.alamat_penghantaran || "-"}
                   </TableCell>
                   <TableCell className="capitalize">{r.status}</TableCell>
+                  <TableCell className="text-xs">{r.no_tracking || "-"}</TableCell>
                   <TableCell>{new Date(r.created_at).toLocaleDateString("ms-MY")}</TableCell>
                   <TableCell className="space-x-2 text-right">
                     {r.status === "menunggu" && (
@@ -264,7 +289,14 @@ function TebusanTab() {
                       </Button>
                     )}
                     {r.status === "diluluskan" && (
-                      <Button size="sm" disabled={busyId === r.id} onClick={() => updateStatus(r.id, "dihantar")}>
+                      <Button
+                        size="sm"
+                        disabled={busyId === r.id}
+                        onClick={() => {
+                          setShipFor(r);
+                          setTracking(r.no_tracking ?? "");
+                        }}
+                      >
                         Tandakan Dihantar
                       </Button>
                     )}
@@ -314,6 +346,33 @@ function TebusanTab() {
             </Button>
             <Button variant="destructive" onClick={tolak} disabled={busyId === rejectFor?.id}>
               Tolak & Refund
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={!!shipFor} onOpenChange={(o) => !o && setShipFor(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Tandakan Dihantar</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-muted-foreground">
+            Hadiah: <span className="font-bold">{shipFor?.nama_hadiah_snapshot}</span>
+          </p>
+          <div className="space-y-1.5">
+            <Label>No. Tracking Pos (pilihan)</Label>
+            <Input
+              value={tracking}
+              onChange={(e) => setTracking(e.target.value)}
+              placeholder="cth: ERXXXXXXXXXMY"
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShipFor(null)}>
+              Batal
+            </Button>
+            <Button onClick={sahkanDihantar} disabled={busyId === shipFor?.id}>
+              Sahkan Dihantar
             </Button>
           </DialogFooter>
         </DialogContent>

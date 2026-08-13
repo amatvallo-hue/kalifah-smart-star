@@ -40,6 +40,7 @@ interface Tebusan {
   kos_star: number;
   status: string;
   catatan_admin: string | null;
+  no_tracking: string | null;
   created_at: string;
 }
 
@@ -64,6 +65,7 @@ function KedaiHadiahPage() {
   const [alamat, setAlamat] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [alamatDefault, setAlamatDefault] = useState("");
 
   useEffect(() => {
     if (shouldSkipChildGuard()) return;
@@ -82,10 +84,17 @@ function KedaiHadiahPage() {
     if (user) {
       const { data: tData } = await supabase
         .from("hadiah_tebusan")
-        .select("id, nama_hadiah_snapshot, kos_star, status, catatan_admin, created_at")
+        .select("id, nama_hadiah_snapshot, kos_star, status, catatan_admin, no_tracking, created_at")
         .eq("child_user_id", user.id)
         .order("created_at", { ascending: false });
       setTebusan((tData as Tebusan[] | null) ?? []);
+
+      const { data: cData } = await supabase
+        .from("child_profiles")
+        .select("alamat_default")
+        .eq("child_user_id", user.id)
+        .maybeSingle();
+      setAlamatDefault(((cData as { alamat_default?: string | null } | null)?.alamat_default ?? "").trim());
     }
     setLoadingData(false);
   }
@@ -111,6 +120,16 @@ function KedaiHadiahPage() {
     if (error) {
       toast.error(error.message || "Gagal tebus hadiah");
       return;
+    }
+    const alamatBaru = alamat.trim();
+    if (alamatBaru) {
+      // fire-and-forget: simpan sebagai alamat lalai untuk tebusan akan datang
+      void supabase
+        .rpc("kemaskini_alamat_default_anak", { p_alamat: alamatBaru })
+        .then(({ error: e }) => {
+          if (e) console.warn("kemaskini_alamat_default_anak gagal:", e.message);
+          else setAlamatDefault(alamatBaru);
+        });
     }
     toast.success(`Berjaya tebus "${redeemTarget.nama}"! Tunggu admin proses.`);
     setRedeemTarget(null);
@@ -197,7 +216,7 @@ function KedaiHadiahPage() {
                     disabled={!bolehTebus}
                     onClick={() => {
                       setRedeemTarget(h);
-                      setAlamat("");
+                      setAlamat(alamatDefault);
                     }}
                     className="mt-1"
                   >
@@ -231,7 +250,12 @@ function KedaiHadiahPage() {
                         <p className="mt-1 text-xs italic text-muted-foreground">"{t.catatan_admin}"</p>
                       )}
                     </div>
-                    <span className={`rounded-full px-3 py-1 text-xs font-bold ${s.className}`}>{s.label}</span>
+                    <div className="text-right">
+                      <span className={`rounded-full px-3 py-1 text-xs font-bold ${s.className}`}>{s.label}</span>
+                      {t.no_tracking && (
+                        <p className="mt-1 text-xs text-muted-foreground">No. Tracking: {t.no_tracking}</p>
+                      )}
+                    </div>
                   </li>
                 );
               })}
