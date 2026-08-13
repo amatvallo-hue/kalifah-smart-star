@@ -27,6 +27,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
 import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
@@ -1038,6 +1039,9 @@ function ParentDashboard() {
                 );
               })}
             </section>
+
+            <PermintaanTebusanSeksyen anakList={anakList} />
+
 
             {anakAktif && anakAktif.child_user_id && (
               <>
@@ -2556,6 +2560,218 @@ function MaklumatSaya() {
           </div>
         </div>
       )}
+    </section>
+  );
+}
+
+// ============================================================
+// PERMINTAAN TEBUSAN HADIAH (anak minta → parent sahkan)
+// ============================================================
+interface MintaTebusRow {
+  id: string;
+  child_user_id: string;
+  hadiah_id: string | null;
+  nama_hadiah_snapshot: string;
+  kos_star: number;
+  created_at: string;
+  imej_url?: string | null;
+  namaAnak: string;
+  alamatDefault: string;
+}
+
+function PermintaanTebusanSeksyen({ anakList }: { anakList: ChildProfile[] }) {
+  const [rows, setRows] = useState<MintaTebusRow[]>([]);
+  const [pilih, setPilih] = useState<MintaTebusRow | null>(null);
+  const [alamat, setAlamat] = useState("");
+  const [ringkasan, setRingkasan] = useState<{ soalan_betul: number; sesi_kali: number; hari_aktif: number } | null>(null);
+  const [busy, setBusy] = useState(false);
+
+  const anakIds = useMemo(
+    () => anakList.map((a) => a.child_user_id).filter((v): v is string => !!v),
+    [anakList],
+  );
+
+  const muat = useCallback(async () => {
+    if (anakIds.length === 0) {
+      setRows([]);
+      return;
+    }
+    const { data, error } = await supabase
+      .from("hadiah_tebusan")
+      .select("id, child_user_id, hadiah_id, nama_hadiah_snapshot, kos_star, created_at, hadiah_katalog(imej_url)")
+      .eq("status", "menunggu_parent")
+      .in("child_user_id", anakIds)
+      .order("created_at", { ascending: false });
+    if (error) {
+      console.warn("permintaan tebusan gagal:", error.message);
+      setRows([]);
+      return;
+    }
+    const list = ((data ?? []) as unknown as Array<
+      Omit<MintaTebusRow, "imej_url" | "namaAnak" | "alamatDefault"> & {
+        hadiah_katalog?: { imej_url: string | null } | null;
+      }
+    >).map((r) => {
+      const anak = anakList.find((a) => a.child_user_id === r.child_user_id);
+      return {
+        ...r,
+        imej_url: r.hadiah_katalog?.imej_url ?? null,
+        namaAnak: anak?.nama ?? "Anak",
+        alamatDefault: ((anak as unknown as { alamat_default?: string | null })?.alamat_default ?? "").trim(),
+      } as MintaTebusRow;
+    });
+    setRows(list);
+  }, [anakIds, anakList]);
+
+  useEffect(() => {
+    void muat();
+  }, [muat]);
+
+  async function bukaDialog(r: MintaTebusRow) {
+    setPilih(r);
+    setAlamat(r.alamatDefault);
+    setRingkasan(null);
+    const { data } = await supabase.rpc("ringkasan_pembelajaran_anak" as never, {
+      p_child_user_id: r.child_user_id,
+    } as never);
+    const row = Array.isArray(data) ? data[0] : data;
+    if (row) setRingkasan(row as { soalan_betul: number; sesi_kali: number; hari_aktif: number });
+  }
+
+  async function sahkan() {
+    if (!pilih || !alamat.trim()) return;
+    setBusy(true);
+    const { error } = await supabase.rpc("sahkan_tebusan_parent" as never, {
+      p_tebusan_id: pilih.id,
+      p_alamat: alamat.trim(),
+    } as never);
+    setBusy(false);
+    if (error) {
+      toast.error(error.message || "Gagal sahkan tebusan");
+      return;
+    }
+    toast.success("Tebusan disahkan. Admin akan proses penghantaran.");
+    setPilih(null);
+    void muat();
+  }
+
+  async function batal(id: string) {
+    setBusy(true);
+    const { error } = await supabase.rpc("batal_minta_tebus" as never, { p_tebusan_id: id } as never);
+    setBusy(false);
+    if (error) {
+      toast.error(error.message || "Gagal batalkan permintaan");
+      return;
+    }
+    toast.success("Permintaan dibatalkan.");
+    setPilih(null);
+    void muat();
+  }
+
+  if (rows.length === 0) return null;
+
+  return (
+    <section className="mt-6 flex flex-col gap-3">
+      {rows.map((r) => (
+        <div
+          key={r.id}
+          className="flex flex-wrap items-center justify-between gap-3 rounded-2xl p-4 shadow-soft"
+          style={{ background: "#FFF9E8", border: "2px solid #F5C86B" }}
+        >
+          <div className="flex items-center gap-3">
+            <span className="text-2xl">🎁</span>
+            <div>
+              <p className="text-[11px] font-bold uppercase tracking-wide" style={{ color: "#8A6100" }}>
+                Permintaan Tebusan · Menunggu Pengesahan
+              </p>
+              <p className="font-display text-sm font-extrabold text-foreground">
+                {r.namaAnak} nak tebus hadiah!
+              </p>
+              <p className="text-xs text-muted-foreground">
+                {r.namaAnak} memilih: <b>{r.nama_hadiah_snapshot}</b> · ⭐ {r.kos_star} Star
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={() => bukaDialog(r)}
+            className="rounded-xl px-4 py-2 font-display text-sm font-extrabold text-white"
+            style={{ background: HIJAU }}
+          >
+            Semak & Sahkan
+          </button>
+        </div>
+      ))}
+
+      <Dialog open={!!pilih} onOpenChange={(o) => !o && setPilih(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Sahkan Tebusan Hadiah</DialogTitle>
+          </DialogHeader>
+          {pilih && (
+            <div className="flex flex-col gap-3">
+              <div className="flex gap-3">
+                {pilih.imej_url ? (
+                  <img
+                    src={pilih.imej_url}
+                    alt={pilih.nama_hadiah_snapshot}
+                    className="h-24 w-24 rounded-xl object-cover"
+                  />
+                ) : (
+                  <div className="flex h-24 w-24 items-center justify-center rounded-xl bg-muted text-2xl">🎁</div>
+                )}
+                <div>
+                  <p className="font-display text-base font-extrabold text-foreground">
+                    {pilih.nama_hadiah_snapshot}
+                  </p>
+                  <p className="text-sm text-muted-foreground">⭐ {pilih.kos_star} Star</p>
+                </div>
+              </div>
+
+              <div className="rounded-xl bg-muted/50 p-3">
+                <p className="text-sm text-foreground">
+                  {pilih.namaAnak} mengumpul {pilih.kos_star}⭐ melalui aktiviti pembelajaran di Kalifah.
+                </p>
+                <p className="mt-1 text-xs text-muted-foreground">
+                  {ringkasan
+                    ? `${ringkasan.soalan_betul} soalan betul · ${ringkasan.sesi_kali} sesi KALI · ${ringkasan.hari_aktif} hari aktif`
+                    : "Memuatkan ringkasan pembelajaran…"}
+                </p>
+              </div>
+
+              <div>
+                <p className="mb-1 text-xs font-bold text-foreground">Alamat Penghantaran</p>
+                <Textarea
+                  rows={4}
+                  value={alamat}
+                  onChange={(e) => setAlamat(e.target.value)}
+                  placeholder="Alamat penuh untuk penghantaran hadiah…"
+                />
+              </div>
+
+              <div className="flex items-center justify-between gap-2">
+                <button
+                  type="button"
+                  onClick={() => batal(pilih.id)}
+                  disabled={busy}
+                  className="rounded-xl px-3 py-2 text-sm font-bold text-muted-foreground hover:text-foreground"
+                >
+                  Batal Permintaan
+                </button>
+                <button
+                  type="button"
+                  onClick={sahkan}
+                  disabled={busy || !alamat.trim()}
+                  className="rounded-xl px-4 py-2 font-display text-sm font-extrabold text-white disabled:opacity-50"
+                  style={{ background: HIJAU }}
+                >
+                  {busy ? "Memproses…" : "Sahkan Tebusan"}
+                </button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </section>
   );
 }
