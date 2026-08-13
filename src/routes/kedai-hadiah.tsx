@@ -40,6 +40,7 @@ interface Tebusan {
   kos_star: number;
   status: string;
   catatan_admin: string | null;
+  no_tracking: string | null;
   created_at: string;
 }
 
@@ -64,6 +65,7 @@ function KedaiHadiahPage() {
   const [alamat, setAlamat] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [alamatDefault, setAlamatDefault] = useState("");
 
   useEffect(() => {
     if (shouldSkipChildGuard()) return;
