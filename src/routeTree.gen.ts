@@ -24,6 +24,7 @@ import { Route as LupaPasswordRouteImport } from './routes/lupa-password'
 import { Route as PilihDarjahRouteImport } from './routes/pilih-darjah'
 import { Route as PraKalifahRouteImport } from './routes/pra-kalifah'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as ShopRouteImport } from './routes/shop'
 import { Route as UjianPercumaRouteImport } from './routes/ujian-percuma'
 import { Route as AdminAffiliatesRouteImport } from './routes/admin_.affiliates'
 import { Route as AdminChallengeRouteImport } from './routes/admin_.challenge'
@@ -146,6 +147,11 @@ const PraKalifahRoute = PraKalifahRouteImport.update({
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ShopRoute = ShopRouteImport.update({
+  id: '/shop',
+  path: '/shop',
   getParentRoute: () => rootRouteImport,
 } as any)
 const UjianPercumaRoute = UjianPercumaRouteImport.update({
@@ -425,6 +431,7 @@ export interface FileRoutesByFullPath {
   '/pilih-darjah': typeof PilihDarjahRoute
   '/pra-kalifah': typeof PraKalifahRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/shop': typeof ShopRoute
   '/ujian-percuma': typeof UjianPercumaRoute
   '/admin/affiliates': typeof AdminAffiliatesRoute
   '/admin/challenge': typeof AdminChallengeRoute
@@ -490,6 +497,7 @@ export interface FileRoutesByTo {
   '/pilih-darjah': typeof PilihDarjahRoute
   '/pra-kalifah': typeof PraKalifahRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/shop': typeof ShopRoute
   '/ujian-percuma': typeof UjianPercumaRoute
   '/admin/affiliates': typeof AdminAffiliatesRoute
   '/admin/challenge': typeof AdminChallengeRoute
@@ -556,6 +564,7 @@ export interface FileRoutesById {
   '/pilih-darjah': typeof PilihDarjahRoute
   '/pra-kalifah': typeof PraKalifahRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/shop': typeof ShopRoute
   '/ujian-percuma': typeof UjianPercumaRoute
   '/admin_/affiliates': typeof AdminAffiliatesRoute
   '/admin_/challenge': typeof AdminChallengeRoute
@@ -623,6 +632,7 @@ export interface FileRouteTypes {
     | '/pilih-darjah'
     | '/pra-kalifah'
     | '/reset-password'
+    | '/shop'
     | '/ujian-percuma'
     | '/admin/affiliates'
     | '/admin/challenge'
@@ -688,6 +698,7 @@ export interface FileRouteTypes {
     | '/pilih-darjah'
     | '/pra-kalifah'
     | '/reset-password'
+    | '/shop'
     | '/ujian-percuma'
     | '/admin/affiliates'
     | '/admin/challenge'
@@ -753,6 +764,7 @@ export interface FileRouteTypes {
     | '/pilih-darjah'
     | '/pra-kalifah'
     | '/reset-password'
+    | '/shop'
     | '/ujian-percuma'
     | '/admin_/affiliates'
     | '/admin_/challenge'
@@ -819,6 +831,7 @@ export interface RootRouteChildren {
   PilihDarjahRoute: typeof PilihDarjahRoute
   PraKalifahRoute: typeof PraKalifahRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  ShopRoute: typeof ShopRoute
   UjianPercumaRoute: typeof UjianPercumaRoute
   AdminAffiliatesRoute: typeof AdminAffiliatesRoute
   AdminChallengeRoute: typeof AdminChallengeRoute
@@ -974,6 +987,13 @@ declare module '@tanstack/react-router' {
       path: '/reset-password'
       fullPath: '/reset-password'
       preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/shop': {
+      id: '/shop'
+      path: '/shop'
+      fullPath: '/shop'
+      preLoaderRoute: typeof ShopRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/ujian-percuma': {
@@ -1331,6 +1351,7 @@ const rootRouteChildren: RootRouteChildren = {
   PilihDarjahRoute: PilihDarjahRoute,
   PraKalifahRoute: PraKalifahRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  ShopRoute: ShopRoute,
   UjianPercumaRoute: UjianPercumaRoute,
   AdminAffiliatesRoute: AdminAffiliatesRoute,
   AdminChallengeRoute: AdminChallengeRoute,
