@@ -145,7 +145,7 @@ function pecahTopik(topik: string): { skillName: string; skillDetail: string | n
 export async function buildSijilCemerlangPdfV2(input: SijilInput): Promise<Blob> {
   const [{ jsPDF }, html2canvasMod, { createRoot }, { SijilCemerlangTemplate }] = await Promise.all([
     import("jspdf"),
-    import("html2canvas"),
+    import("html2canvas-pro"),
     import("react-dom/client"),
     import("@/components/SijilCemerlangTemplate"),
   ]);
