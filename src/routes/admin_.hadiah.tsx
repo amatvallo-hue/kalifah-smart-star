@@ -363,6 +363,16 @@ function TebusanTab() {
           <p className="text-sm text-muted-foreground">
             Hadiah: <span className="font-bold">{shipFor?.nama_hadiah_snapshot}</span>
           </p>
+          <div className="space-y-1 text-sm">
+            <p>
+              <span className="text-muted-foreground">Alamat:</span>{" "}
+              <span className="font-medium">{shipFor?.alamat_penghantaran || "-"}</span>
+            </p>
+            <p>
+              <span className="text-muted-foreground">No. Telefon:</span>{" "}
+              <span className="font-medium">{shipFor?.profiles?.no_telefon || "-"}</span>
+            </p>
+          </div>
           <div className="space-y-1.5">
             <Label>No. Tracking Pos (pilihan)</Label>
             <Input
