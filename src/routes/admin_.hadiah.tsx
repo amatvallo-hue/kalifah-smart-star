@@ -350,6 +350,33 @@ function TebusanTab() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <Dialog open={!!shipFor} onOpenChange={(o) => !o && setShipFor(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Tandakan Dihantar</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-muted-foreground">
+            Hadiah: <span className="font-bold">{shipFor?.nama_hadiah_snapshot}</span>
+          </p>
+          <div className="space-y-1.5">
+            <Label>No. Tracking Pos (pilihan)</Label>
+            <Input
+              value={tracking}
+              onChange={(e) => setTracking(e.target.value)}
+              placeholder="cth: ERXXXXXXXXXMY"
+            />
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShipFor(null)}>
+              Batal
+            </Button>
+            <Button onClick={sahkanDihantar} disabled={busyId === shipFor?.id}>
+              Sahkan Dihantar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
