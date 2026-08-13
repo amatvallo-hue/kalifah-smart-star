@@ -2577,6 +2577,7 @@ interface MintaTebusRow {
   imej_url?: string | null;
   namaAnak: string;
   alamatDefault: string;
+  bakiStar: number;
 }
 
 function PermintaanTebusanSeksyen({ anakList }: { anakList: ChildProfile[] }) {
@@ -2585,6 +2586,7 @@ function PermintaanTebusanSeksyen({ anakList }: { anakList: ChildProfile[] }) {
   const [alamat, setAlamat] = useState("");
   const [ringkasan, setRingkasan] = useState<{ soalan_betul: number; sesi_kali: number; hari_aktif: number } | null>(null);
   const [busy, setBusy] = useState(false);
+  const [success, setSuccess] = useState<MintaTebusRow | null>(null);
 
   const anakIds = useMemo(
     () => anakList.map((a) => a.child_user_id).filter((v): v is string => !!v),
@@ -2596,19 +2598,28 @@ function PermintaanTebusanSeksyen({ anakList }: { anakList: ChildProfile[] }) {
       setRows([]);
       return;
     }
-    const { data, error } = await supabase
-      .from("hadiah_tebusan")
-      .select("id, child_user_id, hadiah_id, nama_hadiah_snapshot, kos_star, created_at, hadiah_katalog(imej_url)")
-      .eq("status", "menunggu_parent")
-      .in("child_user_id", anakIds)
-      .order("created_at", { ascending: false });
-    if (error) {
-      console.warn("permintaan tebusan gagal:", error.message);
+    const [{ data, error }, { data: pointsData, error: pointsError }] = await Promise.all([
+      supabase
+        .from("hadiah_tebusan")
+        .select("id, child_user_id, hadiah_id, nama_hadiah_snapshot, kos_star, created_at, hadiah_katalog(imej_url)")
+        .eq("status", "menunggu_parent")
+        .in("child_user_id", anakIds)
+        .order("created_at", { ascending: false }),
+      supabase.from("user_points").select("user_id, jumlah_mata").in("user_id", anakIds),
+    ]);
+    if (error || pointsError) {
+      console.warn("permintaan tebusan gagal:", error?.message || pointsError?.message);
       setRows([]);
       return;
     }
+    const pointsMap = new Map<string, number>();
+    (pointsData ?? []).forEach((p) => {
+      if (p.user_id && typeof p.jumlah_mata === "number") {
+        pointsMap.set(p.user_id, p.jumlah_mata);
+      }
+    });
     const list = ((data ?? []) as unknown as Array<
-      Omit<MintaTebusRow, "imej_url" | "namaAnak" | "alamatDefault"> & {
+      Omit<MintaTebusRow, "imej_url" | "namaAnak" | "alamatDefault" | "bakiStar"> & {
         hadiah_katalog?: { imej_url: string | null } | null;
       }
     >).map((r) => {
@@ -2618,6 +2629,7 @@ function PermintaanTebusanSeksyen({ anakList }: { anakList: ChildProfile[] }) {
         imej_url: r.hadiah_katalog?.imej_url ?? null,
         namaAnak: anak?.nama ?? "Anak",
         alamatDefault: ((anak as unknown as { alamat_default?: string | null })?.alamat_default ?? "").trim(),
+        bakiStar: pointsMap.get(r.child_user_id) ?? 0,
       } as MintaTebusRow;
     });
     setRows(list);
@@ -2626,6 +2638,28 @@ function PermintaanTebusanSeksyen({ anakList }: { anakList: ChildProfile[] }) {
   useEffect(() => {
     void muat();
   }, [muat]);
+
+  // Realtime + polling fallback supaya parent nampak perubahan walaupun anak batal dari device lain
+  useEffect(() => {
+    if (anakIds.length === 0) return;
+    const channel = supabase
+      .channel("hadiah_tebusan_parent")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "hadiah_tebusan" },
+        () => {
+          void muat();
+        },
+      )
+      .subscribe();
+    const interval = setInterval(() => {
+      void muat();
+    }, 15000);
+    return () => {
+      clearInterval(interval);
+      void channel.unsubscribe();
+    };
+  }, [anakIds, muat]);
 
   async function bukaDialog(r: MintaTebusRow) {
     setPilih(r);
@@ -2650,8 +2684,9 @@ function PermintaanTebusanSeksyen({ anakList }: { anakList: ChildProfile[] }) {
       toast.error(error.message || "Gagal sahkan tebusan");
       return;
     }
-    toast.success("Tebusan disahkan. Admin akan proses penghantaran.");
+    const approved = pilih;
     setPilih(null);
+    setSuccess(approved);
     void muat();
   }
 
@@ -2690,6 +2725,9 @@ function PermintaanTebusanSeksyen({ anakList }: { anakList: ChildProfile[] }) {
               <p className="text-xs text-muted-foreground">
                 {r.namaAnak} memilih: <b>{r.nama_hadiah_snapshot}</b> · ⭐ {r.kos_star} Star
               </p>
+              <p className="text-[11px] font-semibold" style={{ color: "#8A6100" }}>
+                Baki {r.namaAnak}: ⭐ {r.bakiStar}
+              </p>
             </div>
           </div>
           <button
@@ -2725,6 +2763,10 @@ function PermintaanTebusanSeksyen({ anakList }: { anakList: ChildProfile[] }) {
                     {pilih.nama_hadiah_snapshot}
                   </p>
                   <p className="text-sm text-muted-foreground">⭐ {pilih.kos_star} Star</p>
+                  <p className="text-[11px] font-semibold" style={{ color: "#8A6100" }}>
+                    Baki {pilih.namaAnak}: ⭐ {pilih.bakiStar}
+                    {pilih.bakiStar < pilih.kos_star ? " (tidak cukup — admin akan tahan)" : ""}
+                  </p>
                 </div>
               </div>
 
@@ -2768,6 +2810,34 @@ function PermintaanTebusanSeksyen({ anakList }: { anakList: ChildProfile[] }) {
                   {busy ? "Memproses…" : "Sahkan Tebusan"}
                 </button>
               </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={!!success} onOpenChange={(o) => !o && setSuccess(null)}>
+        <DialogContent className="text-center">
+          <DialogHeader>
+            <DialogTitle className="text-center">🎉 Berjaya Menebus!</DialogTitle>
+          </DialogHeader>
+          {success && (
+            <div className="flex flex-col items-center gap-4">
+              <div className="text-5xl">🎁</div>
+              <p className="text-sm text-foreground">
+                <b>{success.namaAnak}</b> berjaya menebus hadiah menggunakan{" "}
+                <b>⭐ {success.kos_star} Star</b> yang dikumpul melalui pembelajaran.
+              </p>
+              <p className="text-xs text-muted-foreground">
+                Admin akan proses penghantaran hadiah <b>{success.nama_hadiah_snapshot}</b> secepat mungkin.
+              </p>
+              <button
+                type="button"
+                onClick={() => setSuccess(null)}
+                className="rounded-xl px-6 py-2 font-display text-sm font-extrabold text-white"
+                style={{ background: HIJAU }}
+              >
+                Okey!
+              </button>
             </div>
           )}
         </DialogContent>
