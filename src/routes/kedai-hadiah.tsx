@@ -8,7 +8,7 @@ import { usePoints } from "@/hooks/use-points";
 import { useProfile } from "@/hooks/use-profile";
 import { shouldSkipChildGuard } from "@/lib/child-auth";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
+
 import {
   Dialog,
   DialogContent,
@@ -45,6 +45,10 @@ interface Tebusan {
 }
 
 const STATUS_LABEL: Record<string, { label: string; className: string }> = {
+  menunggu_parent: {
+    label: "🎁 Hadiah Pilihan Saya — Menunggu Ibu/Ayah Sahkan",
+    className: "bg-yellow-100 text-yellow-800 ring-1 ring-yellow-300",
+  },
   menunggu: { label: "⏳ Menunggu", className: "bg-amber-100 text-amber-700" },
   diluluskan: { label: "✅ Diluluskan", className: "bg-blue-100 text-blue-700" },
   dihantar: { label: "📦 Dihantar", className: "bg-purple-100 text-purple-700" },
@@ -62,10 +66,10 @@ function KedaiHadiahPage() {
   const [tebusan, setTebusan] = useState<Tebusan[]>([]);
   const [loadingData, setLoadingData] = useState(true);
   const [redeemTarget, setRedeemTarget] = useState<Hadiah | null>(null);
-  const [alamat, setAlamat] = useState("");
+  const [mintaBerjaya, setMintaBerjaya] = useState<{ nama: string; kos: number } | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
-  const [alamatDefault, setAlamatDefault] = useState("");
+  
 
   useEffect(() => {
     if (shouldSkipChildGuard()) return;
@@ -89,12 +93,6 @@ function KedaiHadiahPage() {
         .order("created_at", { ascending: false });
       setTebusan((tData as Tebusan[] | null) ?? []);
 
-      const { data: cData } = await supabase
-        .from("child_profiles")
-        .select("alamat_default")
-        .eq("child_user_id", user.id)
-        .maybeSingle();
-      setAlamatDefault(((cData as { alamat_default?: string | null } | null)?.alamat_default ?? "").trim());
     }
     setLoadingData(false);
   }
@@ -112,28 +110,26 @@ function KedaiHadiahPage() {
   async function submitTebus() {
     if (!redeemTarget) return;
     setSubmitting(true);
-    const { error } = await supabase.rpc("tebus_hadiah", {
+    const { error } = await supabase.rpc("minta_tebus_hadiah" as never, {
       p_hadiah_id: redeemTarget.id,
-      p_alamat: alamat.trim() || null,
-    });
+    } as never);
     setSubmitting(false);
     if (error) {
-      toast.error(error.message || "Gagal tebus hadiah");
+      toast.error(error.message || "Gagal hantar permintaan");
       return;
     }
-    const alamatBaru = alamat.trim();
-    if (alamatBaru) {
-      // fire-and-forget: simpan sebagai alamat lalai untuk tebusan akan datang
-      void supabase
-        .rpc("kemaskini_alamat_default_anak", { p_alamat: alamatBaru })
-        .then(({ error: e }) => {
-          if (e) console.warn("kemaskini_alamat_default_anak gagal:", e.message);
-          else setAlamatDefault(alamatBaru);
-        });
-    }
-    toast.success(`Berjaya tebus "${redeemTarget.nama}"! Tunggu admin proses.`);
+    setMintaBerjaya({ nama: redeemTarget.nama, kos: redeemTarget.kos_star });
     setRedeemTarget(null);
-    setAlamat("");
+    reload();
+  }
+
+  async function batalMinta(id: string) {
+    const { error } = await supabase.rpc("batal_minta_tebus" as never, { p_tebusan_id: id } as never);
+    if (error) {
+      toast.error(error.message || "Gagal batal permintaan");
+      return;
+    }
+    toast.success("Permintaan dibatalkan.");
     reload();
   }
 
