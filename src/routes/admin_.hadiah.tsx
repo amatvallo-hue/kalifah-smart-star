@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { Loader2, Gift } from "lucide-react";
+import { Loader2, Gift, Download } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
@@ -230,22 +230,83 @@ function TebusanTab() {
     reload();
   }
 
+  function escapeCsvCell(value: string | number | null | undefined): string {
+    const str = String(value ?? "");
+    if (str.includes(",") || str.includes('"') || str.includes("\n") || str.includes("\r")) {
+      return `"${str.replace(/"/g, '""')}"`;
+    }
+    return str;
+  }
+
+  function exportCsv() {
+    const rowsToExport =
+      filter === "semua"
+        ? rows.filter((r) => r.status === "menunggu" || r.status === "diluluskan")
+        : filteredRows;
+
+    if (rowsToExport.length === 0) {
+      toast.error("Tiada data untuk dieksport");
+      return;
+    }
+
+    const headers = ["Nama Anak", "Darjah", "Hadiah", "Kos Star", "Alamat", "No Telefon", "Status", "Tarikh Sahkan", "No Tracking"];
+    const lines = [headers.join(",")];
+
+    for (const r of rowsToExport) {
+      const c = children[r.child_user_id];
+      const namaAnak = c?.nama || r.child_user_id.slice(0, 8);
+      const darjah = c?.darjah ? `D${c.darjah}` : "";
+      const tarikhSahkan = new Date(r.created_at).toLocaleDateString("ms-MY");
+      const line = [
+        escapeCsvCell(namaAnak),
+        escapeCsvCell(darjah),
+        escapeCsvCell(r.nama_hadiah_snapshot),
+        escapeCsvCell(r.kos_star),
+        escapeCsvCell(r.alamat_penghantaran),
+        escapeCsvCell(r.profiles?.no_telefon),
+        escapeCsvCell(r.status),
+        escapeCsvCell(tarikhSahkan),
+        escapeCsvCell(r.no_tracking),
+      ].join(",");
+      lines.push(line);
+    }
+
+    const csv = lines.join("\r\n");
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    const today = new Date().toISOString().split("T")[0];
+    a.href = url;
+    a.download = `kalifah-hadiah-tebusan-${today}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    toast.success(`CSV dieksport (${rowsToExport.length} baris)`);
+  }
+
   if (loading) return <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />;
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap gap-2">
-        {["semua", ...STATUS_OPTS].map((s) => (
-          <Button
-            key={s}
-            size="sm"
-            variant={filter === s ? "default" : "outline"}
-            onClick={() => setFilter(s)}
-            className="capitalize"
-          >
-            {s} {s !== "semua" ? `(${rows.filter((r) => r.status === s).length})` : `(${rows.length})`}
-          </Button>
-        ))}
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="flex flex-wrap gap-2">
+          {["semua", ...STATUS_OPTS].map((s) => (
+            <Button
+              key={s}
+              size="sm"
+              variant={filter === s ? "default" : "outline"}
+              onClick={() => setFilter(s)}
+              className="capitalize"
+            >
+              {s} {s !== "semua" ? `(${rows.filter((r) => r.status === s).length})` : `(${rows.length})`}
+            </Button>
+          ))}
+        </div>
+        <Button size="sm" variant="outline" onClick={exportCsv}>
+          <Download className="mr-2 h-4 w-4" />
+          Export CSV
+        </Button>
       </div>
 
       <div className="rounded-md border">
