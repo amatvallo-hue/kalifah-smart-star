@@ -256,6 +256,7 @@ function TebusanTab() {
               <TableHead>Star</TableHead>
               <TableHead>Alamat</TableHead>
               <TableHead>Status</TableHead>
+              <TableHead>Tracking</TableHead>
               <TableHead>Tarikh</TableHead>
               <TableHead className="text-right">Tindakan</TableHead>
             </TableRow>
@@ -263,7 +264,7 @@ function TebusanTab() {
           <TableBody>
             {filteredRows.length === 0 && (
               <TableRow>
-                <TableCell colSpan={7} className="py-6 text-center text-sm text-muted-foreground">
+                <TableCell colSpan={8} className="py-6 text-center text-sm text-muted-foreground">
                   Tiada rekod.
                 </TableCell>
               </TableRow>
