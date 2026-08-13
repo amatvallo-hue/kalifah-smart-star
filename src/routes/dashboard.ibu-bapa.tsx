@@ -27,6 +27,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
 import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
@@ -1038,6 +1039,9 @@ function ParentDashboard() {
                 );
               })}
             </section>
+
+            <PermintaanTebusanSeksyen anakList={anakList} />
+
 
             {anakAktif && anakAktif.child_user_id && (
               <>
