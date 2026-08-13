@@ -146,13 +146,13 @@ function ShopPage() {
         )}
 
         <div className="mt-10 rounded-3xl border border-border/60 bg-muted/30 p-6 text-center">
-          <p className="text-sm text-muted-foreground">Sudah buat pesanan?</p>
-          <Button asChild variant="outline" className="mt-2">
-            <Link to="/shop/pesanan/$kod" params={{ kod: "" }}>
-              Semak status pesanan
-            </Link>
-          </Button>
+          <p className="text-sm text-muted-foreground">
+            Sudah buat pesanan? Semak status melalui pautan yang kami hantar selepas pembayaran,
+            atau buka <span className="font-bold text-foreground">kalifah.my/shop/pesanan/[kod
+            pesanan]</span>.
+          </p>
         </div>
+
       </main>
     </div>
   );
