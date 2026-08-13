@@ -334,6 +334,7 @@ function KatalogTab() {
   const [imejUrl, setImejUrl] = useState("");
   const [status, setStatus] = useState("aktif");
   const [saving, setSaving] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   async function reload() {
     setLoading(true);
