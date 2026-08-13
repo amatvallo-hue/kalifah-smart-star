@@ -438,6 +438,25 @@ function KatalogTab() {
             )}
             {rows.map((h) => (
               <TableRow key={h.id}>
+                <TableCell>
+                  <button
+                    type="button"
+                    onClick={() => h.imej_url && setPreviewUrl(h.imej_url)}
+                    className={`flex h-12 w-12 items-center justify-center overflow-hidden rounded-xl border border-border ${h.imej_url ? "cursor-pointer hover:opacity-90" : "cursor-default bg-muted"}`}
+                    disabled={!h.imej_url}
+                    title={h.imej_url ? "Klik untuk besarkan" : "Tiada gambar"}
+                  >
+                    {h.imej_url ? (
+                      <img
+                        src={h.imej_url}
+                        alt={h.nama}
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      <Gift className="h-5 w-5 text-muted-foreground" />
+                    )}
+                  </button>
+                </TableCell>
                 <TableCell>{h.nama}</TableCell>
                 <TableCell>⭐ {h.kos_star}</TableCell>
                 <TableCell>{h.stok}</TableCell>
