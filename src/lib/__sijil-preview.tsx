@@ -25,3 +25,11 @@ export async function previewSijil() {
     ? [img.src.slice(0, 90), img.naturalWidth, img.complete, img.getBoundingClientRect().width]
     : "no img";
 }
+
+export async function capturePreview() {
+  const mod: any = await import("html2canvas-pro");
+  const h2c = mod.default ?? mod;
+  const el = document.querySelector("#cert-preview > *") as HTMLElement;
+  const canvas = await h2c(el, { scale: 1, useCORS: true, backgroundColor: "#013E37", logging: false });
+  return canvas.toDataURL("image/png");
+}
