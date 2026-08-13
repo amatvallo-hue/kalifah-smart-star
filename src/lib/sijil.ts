@@ -94,7 +94,141 @@ function drawLogo(doc: any, dataUrl: string | null, cx: number, topY: number) {
   doc.text(".my", cx - 2, topY + 12, { align: "left" });
 }
 
+const FONT_HREF =
+  "https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Poppins:wght@400;500;600;700;800;900&family=Pinyon+Script&display=swap";
+
+async function pastikanFontSijil(): Promise<void> {
+  if (typeof document === "undefined") return;
+  if (!document.querySelector(`link[data-sijil-font]`)) {
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = FONT_HREF;
+    link.setAttribute("data-sijil-font", "1");
+    const dimuat = new Promise<void>((resolve) => {
+      link.onload = () => resolve();
+      link.onerror = () => resolve();
+      setTimeout(resolve, 4000);
+    });
+    document.head.appendChild(link);
+    await dimuat;
+  }
+  try {
+    await (document as any).fonts?.ready;
+    await Promise.all([
+      (document as any).fonts?.load?.("900 40px 'Playfair Display'"),
+      (document as any).fonts?.load?.("800 48px 'Playfair Display'"),
+      (document as any).fonts?.load?.("800 25px 'Poppins'"),
+      (document as any).fonts?.load?.("400 76px 'Pinyon Script'"),
+    ]);
+    await (document as any).fonts?.ready;
+  } catch {
+    /* abaikan */
+  }
+}
+
+/** Pecahkan topik → nama kemahiran + detail dalam kurungan. */
+function pecahTopik(topik: string): { skillName: string; skillDetail: string | null } {
+  const bersih = bersihkanTopik(topik ?? "").trim();
+  const m = bersih.match(/^(.*?)\s*\(([^()]*)\)\s*$/);
+  if (!m) return { skillName: bersih, skillDetail: null };
+  const detail = m[2]
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean)
+    .join(" • ");
+  return { skillName: m[1].trim(), skillDetail: detail || null };
+}
+
+/** Renderer v2: render template React → html2canvas → PDF A4 landscape. */
+export async function buildSijilCemerlangPdfV2(input: SijilInput): Promise<Blob> {
+  const [{ jsPDF }, html2canvasMod, { createRoot }, { SijilCemerlangTemplate }] = await Promise.all([
+    import("jspdf"),
+    import("html2canvas"),
+    import("react-dom/client"),
+    import("@/components/SijilCemerlangTemplate"),
+  ]);
+  const html2canvas = (html2canvasMod as any).default ?? html2canvasMod;
+
+  const { skillName, skillDetail } = pecahTopik(input.topik ?? "");
+  const darjahLabel = input.darjahLabel ?? "";
+  const certId = input.certificateUuid
+    ? cosmeticCertId(
+        darjahLabel,
+        input.subjekId ?? input.subjekTitle ?? "",
+        input.tarikh,
+        input.certificateUuid,
+      )
+    : input.kodSijil;
+  const qrDataUrl = input.certificateUuid
+    ? (await buatQrDataUrl(`https://kalifah.my/sijil/${input.certificateUuid}`)) ?? ""
+    : "";
+
+  await pastikanFontSijil();
+
+  const container = document.createElement("div");
+  container.style.position = "fixed";
+  container.style.left = "-9999px";
+  container.style.top = "0";
+  container.style.zIndex = "-1";
+  container.style.background = "#013E37";
+  document.body.appendChild(container);
+
+  const root = createRoot(container);
+  try {
+    await new Promise<void>((resolve) => {
+      root.render(
+        <SijilCemerlangTemplate
+          namaPelajar={input.namaMurid}
+          subjekTitle={input.subjekTitle ?? ""}
+          darjahLabel={darjahLabel}
+          skillName={skillName}
+          skillDetail={skillDetail}
+          bintang={input.bintangDiperoleh ?? 0}
+          tarikh={(input.tarikh ?? "").toUpperCase()}
+          certificateId={certId}
+          qrDataUrl={qrDataUrl}
+        />,
+      );
+      setTimeout(resolve, 60);
+    });
+
+    // Tunggu semua imej (QR) siap dimuat
+    const imgs = Array.from(container.querySelectorAll("img"));
+    await Promise.all(
+      imgs.map(
+        (img) =>
+          new Promise<void>((resolve) => {
+            if (img.complete) return resolve();
+            img.onload = () => resolve();
+            img.onerror = () => resolve();
+            setTimeout(resolve, 3000);
+          }),
+      ),
+    );
+    await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+    const target = container.firstElementChild as HTMLElement;
+    const canvas = await html2canvas(target, {
+      scale: 2,
+      useCORS: true,
+      backgroundColor: "#013E37",
+      logging: false,
+    });
+
+    const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
+    doc.addImage(canvas.toDataURL("image/png"), "PNG", 0, 0, 297, 210);
+    return doc.output("blob");
+  } finally {
+    root.unmount();
+    container.remove();
+  }
+}
+
 export async function buildSijilPDF(input: SijilInput): Promise<Blob> {
+  if (input.jenis === "kuiz-cemerlang") {
+    return await buildSijilCemerlangPdfV2(input);
+  }
+
   const { jsPDF } = await import("jspdf");
   // Landscape A4: 297 x 210 mm
   const doc = new jsPDF({ orientation: "landscape", unit: "mm", format: "a4" });
@@ -102,9 +236,6 @@ export async function buildSijilPDF(input: SijilInput): Promise<Blob> {
   const H = 210;
   const logo = await loadLogoDataUrl();
 
-  if (input.jenis === "kuiz-cemerlang") {
-    return await renderKuizCemerlang(doc, input, W, H, logo);
-  }
 
   // ── Latar kertas
   doc.setFillColor("#FFFDF7");
