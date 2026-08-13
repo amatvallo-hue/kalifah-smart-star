@@ -63,6 +63,7 @@ function KedaiHadiahPage() {
   const [redeemTarget, setRedeemTarget] = useState<Hadiah | null>(null);
   const [alamat, setAlamat] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   useEffect(() => {
     if (shouldSkipChildGuard()) return;
@@ -158,17 +159,26 @@ function KedaiHadiahPage() {
                   key={h.id}
                   className="flex flex-col gap-3 rounded-3xl border border-border/60 bg-card p-5 shadow-card"
                 >
-                  {h.imej_url ? (
-                    <img
-                      src={h.imej_url}
-                      alt={h.nama}
-                      className="h-36 w-full rounded-2xl object-cover"
-                    />
-                  ) : (
-                    <div className="flex h-36 w-full items-center justify-center rounded-2xl bg-muted">
-                      <Gift className="h-10 w-10 text-muted-foreground" />
+                  <button
+                    type="button"
+                    onClick={() => h.imej_url && setPreviewUrl(h.imej_url)}
+                    className={`relative w-full overflow-hidden rounded-2xl ${h.imej_url ? "cursor-pointer" : "cursor-default"}`}
+                    disabled={!h.imej_url}
+                  >
+                    <div className="aspect-square w-full">
+                      {h.imej_url ? (
+                        <img
+                          src={h.imej_url}
+                          alt={h.nama}
+                          className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
+                        />
+                      ) : (
+                        <div className="flex h-full w-full items-center justify-center bg-muted">
+                          <Gift className="h-10 w-10 text-muted-foreground" />
+                        </div>
+                      )}
                     </div>
-                  )}
+                  </button>
                   <div>
                     <h3 className="font-display text-lg font-extrabold text-foreground">{h.nama}</h3>
                     {h.penerangan && (
@@ -250,6 +260,26 @@ function KedaiHadiahPage() {
             </Button>
             <Button onClick={submitTebus} disabled={submitting || !alamat.trim()}>
               {submitting ? "Memproses…" : "Sahkan Tebus"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={!!previewUrl} onOpenChange={(o) => !o && setPreviewUrl(null)}>
+        <DialogContent className="max-w-3xl">
+          <DialogHeader>
+            <DialogTitle>Paparan Gambar</DialogTitle>
+          </DialogHeader>
+          {previewUrl && (
+            <img
+              src={previewUrl}
+              alt="Gambar hadiah"
+              className="max-h-[70vh] w-full rounded-2xl object-contain"
+            />
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setPreviewUrl(null)}>
+              Tutup
             </Button>
           </DialogFooter>
         </DialogContent>

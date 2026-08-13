@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
-import { Loader2 } from "lucide-react";
+import { Loader2, Gift } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
@@ -334,6 +334,7 @@ function KatalogTab() {
   const [imejUrl, setImejUrl] = useState("");
   const [status, setStatus] = useState("aktif");
   const [saving, setSaving] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   async function reload() {
     setLoading(true);
@@ -419,6 +420,7 @@ function KatalogTab() {
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead className="w-16">Gambar</TableHead>
               <TableHead>Nama</TableHead>
               <TableHead>Kos Star</TableHead>
               <TableHead>Stok</TableHead>
@@ -429,13 +431,32 @@ function KatalogTab() {
           <TableBody>
             {rows.length === 0 && (
               <TableRow>
-                <TableCell colSpan={5} className="py-6 text-center text-sm text-muted-foreground">
+                <TableCell colSpan={6} className="py-6 text-center text-sm text-muted-foreground">
                   Tiada hadiah lagi. Tambah satu untuk mula.
                 </TableCell>
               </TableRow>
             )}
             {rows.map((h) => (
               <TableRow key={h.id}>
+                <TableCell>
+                  <button
+                    type="button"
+                    onClick={() => h.imej_url && setPreviewUrl(h.imej_url)}
+                    className={`flex h-12 w-12 items-center justify-center overflow-hidden rounded-xl border border-border ${h.imej_url ? "cursor-pointer hover:opacity-90" : "cursor-default bg-muted"}`}
+                    disabled={!h.imej_url}
+                    title={h.imej_url ? "Klik untuk besarkan" : "Tiada gambar"}
+                  >
+                    {h.imej_url ? (
+                      <img
+                        src={h.imej_url}
+                        alt={h.nama}
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      <Gift className="h-5 w-5 text-muted-foreground" />
+                    )}
+                  </button>
+                </TableCell>
                 <TableCell>{h.nama}</TableCell>
                 <TableCell>⭐ {h.kos_star}</TableCell>
                 <TableCell>{h.stok}</TableCell>
@@ -484,6 +505,20 @@ function KatalogTab() {
             <div className="space-y-1.5">
               <Label>URL Gambar (pilihan)</Label>
               <Input value={imejUrl} onChange={(e) => setImejUrl(e.target.value)} placeholder="https://…" />
+              {imejUrl.trim() && (
+                <button
+                  type="button"
+                  onClick={() => setPreviewUrl(imejUrl.trim())}
+                  className="mt-2 block overflow-hidden rounded-xl border border-border"
+                  title="Klik untuk besarkan"
+                >
+                  <img
+                    src={imejUrl.trim()}
+                    alt="Pratonton gambar"
+                    className="h-32 w-auto max-w-full object-contain"
+                  />
+                </button>
+              )}
             </div>
             <div className="space-y-1.5">
               <Label>Status</Label>
@@ -504,6 +539,26 @@ function KatalogTab() {
             </Button>
             <Button onClick={save} disabled={saving}>
               {saving ? "Menyimpan…" : "Simpan"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={!!previewUrl} onOpenChange={(o) => !o && setPreviewUrl(null)}>
+        <DialogContent className="max-w-3xl">
+          <DialogHeader>
+            <DialogTitle>Paparan Gambar</DialogTitle>
+          </DialogHeader>
+          {previewUrl && (
+            <img
+              src={previewUrl}
+              alt="Gambar hadiah"
+              className="max-h-[70vh] w-full rounded-2xl object-contain"
+            />
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setPreviewUrl(null)}>
+              Tutup
             </Button>
           </DialogFooter>
         </DialogContent>
