@@ -420,6 +420,7 @@ function KatalogTab() {
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead className="w-16">Gambar</TableHead>
               <TableHead>Nama</TableHead>
               <TableHead>Kos Star</TableHead>
               <TableHead>Stok</TableHead>
@@ -430,7 +431,7 @@ function KatalogTab() {
           <TableBody>
             {rows.length === 0 && (
               <TableRow>
-                <TableCell colSpan={5} className="py-6 text-center text-sm text-muted-foreground">
+                <TableCell colSpan={6} className="py-6 text-center text-sm text-muted-foreground">
                   Tiada hadiah lagi. Tambah satu untuk mula.
                 </TableCell>
               </TableRow>
