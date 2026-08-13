@@ -24,11 +24,13 @@ import { Route as LupaPasswordRouteImport } from './routes/lupa-password'
 import { Route as PilihDarjahRouteImport } from './routes/pilih-darjah'
 import { Route as PraKalifahRouteImport } from './routes/pra-kalifah'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as ShopRouteImport } from './routes/shop'
 import { Route as UjianPercumaRouteImport } from './routes/ujian-percuma'
 import { Route as AdminAffiliatesRouteImport } from './routes/admin_.affiliates'
 import { Route as AdminChallengeRouteImport } from './routes/admin_.challenge'
 import { Route as AdminFunnelRouteImport } from './routes/admin_.funnel'
 import { Route as AdminHadiahRouteImport } from './routes/admin_.hadiah'
+import { Route as AdminShopRouteImport } from './routes/admin_.shop'
 import { Route as AdminTelegramRouteImport } from './routes/admin_.telegram'
 import { Route as AffiliateDaftarRouteImport } from './routes/affiliate.daftar'
 import { Route as AffiliateDashboardRouteImport } from './routes/affiliate.dashboard'
@@ -36,6 +38,7 @@ import { Route as AffiliateSyaratRouteImport } from './routes/affiliate.syarat'
 import { Route as ApiCheckoutRouteImport } from './routes/api.checkout'
 import { Route as ApiConfirmPaymentRouteImport } from './routes/api.confirm-payment'
 import { Route as ApiDebugEnvRouteImport } from './routes/api.debug-env'
+import { Route as ApiShopCheckoutRouteImport } from './routes/api.shop-checkout'
 import { Route as ApiTemporaryUnlockRouteImport } from './routes/api.temporary-unlock'
 import { Route as BayaranSelesaiRouteImport } from './routes/bayaran.selesai'
 import { Route as CubaKaliAktifkanRouteImport } from './routes/cuba-kali_.aktifkan'
@@ -48,12 +51,14 @@ import { Route as KaliTestLaporanAnakRouteImport } from './routes/kali-test.lapo
 import { Route as PraKalifahBidangRouteImport } from './routes/pra-kalifah_.$bidang'
 import { Route as PreviewDarjahIdRouteImport } from './routes/preview.$darjahId'
 import { Route as PreviewNamaRouteImport } from './routes/preview.nama'
+import { Route as ShopSlugRouteImport } from './routes/shop_.$slug'
 import { Route as SijilCertificateIdRouteImport } from './routes/sijil.$certificateId'
 import { Route as AdminAffiliatesIdRouteImport } from './routes/admin_.affiliates_.$id'
 import { Route as AdminAffiliatesDashboardRouteImport } from './routes/admin_.affiliates_.dashboard'
 import { Route as DarjahDarjahIdSubjekIdRouteImport } from './routes/darjah.$darjahId_.$subjekId'
 import { Route as DarjahDarjahIdPercubaanMpt4RouteImport } from './routes/darjah.$darjahId_.percubaan-mpt4'
 import { Route as PreviewDarjahIdScoreRouteImport } from './routes/preview.$darjahId_.score'
+import { Route as ShopPesananKodRouteImport } from './routes/shop_.pesanan.$kod'
 import { Route as UjianPercumaKeputusanReportTokenRouteImport } from './routes/ujian-percuma_.keputusan.$reportToken'
 import { Route as UjianPercumaSoalanSessionIdRouteImport } from './routes/ujian-percuma_.soalan.$sessionId'
 import { Route as ApiPublicToyyibpayCallbackRouteImport } from './routes/api.public.toyyibpay.callback'
@@ -147,6 +152,11 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
   path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ShopRoute = ShopRouteImport.update({
+  id: '/shop',
+  path: '/shop',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const UjianPercumaRoute = UjianPercumaRouteImport.update({
   id: '/ujian-percuma',
   path: '/ujian-percuma',
@@ -170,6 +180,11 @@ const AdminFunnelRoute = AdminFunnelRouteImport.update({
 const AdminHadiahRoute = AdminHadiahRouteImport.update({
   id: '/admin_/hadiah',
   path: '/admin/hadiah',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminShopRoute = AdminShopRouteImport.update({
+  id: '/admin_/shop',
+  path: '/admin/shop',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminTelegramRoute = AdminTelegramRouteImport.update({
@@ -205,6 +220,11 @@ const ApiConfirmPaymentRoute = ApiConfirmPaymentRouteImport.update({
 const ApiDebugEnvRoute = ApiDebugEnvRouteImport.update({
   id: '/api/debug-env',
   path: '/api/debug-env',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiShopCheckoutRoute = ApiShopCheckoutRouteImport.update({
+  id: '/api/shop-checkout',
+  path: '/api/shop-checkout',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiTemporaryUnlockRoute = ApiTemporaryUnlockRouteImport.update({
@@ -268,6 +288,11 @@ const PreviewNamaRoute = PreviewNamaRouteImport.update({
   path: '/preview/nama',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ShopSlugRoute = ShopSlugRouteImport.update({
+  id: '/shop_/$slug',
+  path: '/shop/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SijilCertificateIdRoute = SijilCertificateIdRouteImport.update({
   id: '/sijil/$certificateId',
   path: '/sijil/$certificateId',
@@ -298,6 +323,11 @@ const DarjahDarjahIdPercubaanMpt4Route =
 const PreviewDarjahIdScoreRoute = PreviewDarjahIdScoreRouteImport.update({
   id: '/preview/$darjahId_/score',
   path: '/preview/$darjahId/score',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ShopPesananKodRoute = ShopPesananKodRouteImport.update({
+  id: '/shop_/pesanan/$kod',
+  path: '/shop/pesanan/$kod',
   getParentRoute: () => rootRouteImport,
 } as any)
 const UjianPercumaKeputusanReportTokenRoute =
@@ -419,11 +449,13 @@ export interface FileRoutesByFullPath {
   '/pilih-darjah': typeof PilihDarjahRoute
   '/pra-kalifah': typeof PraKalifahRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/shop': typeof ShopRoute
   '/ujian-percuma': typeof UjianPercumaRoute
   '/admin/affiliates': typeof AdminAffiliatesRoute
   '/admin/challenge': typeof AdminChallengeRoute
   '/admin/funnel': typeof AdminFunnelRoute
   '/admin/hadiah': typeof AdminHadiahRoute
+  '/admin/shop': typeof AdminShopRoute
   '/admin/telegram': typeof AdminTelegramRoute
   '/affiliate/daftar': typeof AffiliateDaftarRoute
   '/affiliate/dashboard': typeof AffiliateDashboardRoute
@@ -431,6 +463,7 @@ export interface FileRoutesByFullPath {
   '/api/checkout': typeof ApiCheckoutRoute
   '/api/confirm-payment': typeof ApiConfirmPaymentRoute
   '/api/debug-env': typeof ApiDebugEnvRoute
+  '/api/shop-checkout': typeof ApiShopCheckoutRoute
   '/api/temporary-unlock': typeof ApiTemporaryUnlockRoute
   '/bayaran/selesai': typeof BayaranSelesaiRoute
   '/cuba-kali/aktifkan': typeof CubaKaliAktifkanRoute
@@ -443,12 +476,14 @@ export interface FileRoutesByFullPath {
   '/pra-kalifah/$bidang': typeof PraKalifahBidangRoute
   '/preview/$darjahId': typeof PreviewDarjahIdRoute
   '/preview/nama': typeof PreviewNamaRoute
+  '/shop/$slug': typeof ShopSlugRoute
   '/sijil/$certificateId': typeof SijilCertificateIdRoute
   '/admin/affiliates/$id': typeof AdminAffiliatesIdRoute
   '/admin/affiliates/dashboard': typeof AdminAffiliatesDashboardRoute
   '/darjah/$darjahId/$subjekId': typeof DarjahDarjahIdSubjekIdRoute
   '/darjah/$darjahId/percubaan-mpt4': typeof DarjahDarjahIdPercubaanMpt4Route
   '/preview/$darjahId/score': typeof PreviewDarjahIdScoreRoute
+  '/shop/pesanan/$kod': typeof ShopPesananKodRoute
   '/ujian-percuma/keputusan/$reportToken': typeof UjianPercumaKeputusanReportTokenRoute
   '/ujian-percuma/soalan/$sessionId': typeof UjianPercumaSoalanSessionIdRoute
   '/api/public/toyyibpay/callback': typeof ApiPublicToyyibpayCallbackRoute
@@ -483,11 +518,13 @@ export interface FileRoutesByTo {
   '/pilih-darjah': typeof PilihDarjahRoute
   '/pra-kalifah': typeof PraKalifahRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/shop': typeof ShopRoute
   '/ujian-percuma': typeof UjianPercumaRoute
   '/admin/affiliates': typeof AdminAffiliatesRoute
   '/admin/challenge': typeof AdminChallengeRoute
   '/admin/funnel': typeof AdminFunnelRoute
   '/admin/hadiah': typeof AdminHadiahRoute
+  '/admin/shop': typeof AdminShopRoute
   '/admin/telegram': typeof AdminTelegramRoute
   '/affiliate/daftar': typeof AffiliateDaftarRoute
   '/affiliate/dashboard': typeof AffiliateDashboardRoute
@@ -495,6 +532,7 @@ export interface FileRoutesByTo {
   '/api/checkout': typeof ApiCheckoutRoute
   '/api/confirm-payment': typeof ApiConfirmPaymentRoute
   '/api/debug-env': typeof ApiDebugEnvRoute
+  '/api/shop-checkout': typeof ApiShopCheckoutRoute
   '/api/temporary-unlock': typeof ApiTemporaryUnlockRoute
   '/bayaran/selesai': typeof BayaranSelesaiRoute
   '/cuba-kali/aktifkan': typeof CubaKaliAktifkanRoute
@@ -507,12 +545,14 @@ export interface FileRoutesByTo {
   '/pra-kalifah/$bidang': typeof PraKalifahBidangRoute
   '/preview/$darjahId': typeof PreviewDarjahIdRoute
   '/preview/nama': typeof PreviewNamaRoute
+  '/shop/$slug': typeof ShopSlugRoute
   '/sijil/$certificateId': typeof SijilCertificateIdRoute
   '/admin/affiliates/$id': typeof AdminAffiliatesIdRoute
   '/admin/affiliates/dashboard': typeof AdminAffiliatesDashboardRoute
   '/darjah/$darjahId/$subjekId': typeof DarjahDarjahIdSubjekIdRoute
   '/darjah/$darjahId/percubaan-mpt4': typeof DarjahDarjahIdPercubaanMpt4Route
   '/preview/$darjahId/score': typeof PreviewDarjahIdScoreRoute
+  '/shop/pesanan/$kod': typeof ShopPesananKodRoute
   '/ujian-percuma/keputusan/$reportToken': typeof UjianPercumaKeputusanReportTokenRoute
   '/ujian-percuma/soalan/$sessionId': typeof UjianPercumaSoalanSessionIdRoute
   '/api/public/toyyibpay/callback': typeof ApiPublicToyyibpayCallbackRoute
@@ -548,11 +588,13 @@ export interface FileRoutesById {
   '/pilih-darjah': typeof PilihDarjahRoute
   '/pra-kalifah': typeof PraKalifahRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/shop': typeof ShopRoute
   '/ujian-percuma': typeof UjianPercumaRoute
   '/admin_/affiliates': typeof AdminAffiliatesRoute
   '/admin_/challenge': typeof AdminChallengeRoute
   '/admin_/funnel': typeof AdminFunnelRoute
   '/admin_/hadiah': typeof AdminHadiahRoute
+  '/admin_/shop': typeof AdminShopRoute
   '/admin_/telegram': typeof AdminTelegramRoute
   '/affiliate/daftar': typeof AffiliateDaftarRoute
   '/affiliate/dashboard': typeof AffiliateDashboardRoute
@@ -560,6 +602,7 @@ export interface FileRoutesById {
   '/api/checkout': typeof ApiCheckoutRoute
   '/api/confirm-payment': typeof ApiConfirmPaymentRoute
   '/api/debug-env': typeof ApiDebugEnvRoute
+  '/api/shop-checkout': typeof ApiShopCheckoutRoute
   '/api/temporary-unlock': typeof ApiTemporaryUnlockRoute
   '/bayaran/selesai': typeof BayaranSelesaiRoute
   '/cuba-kali_/aktifkan': typeof CubaKaliAktifkanRoute
@@ -572,12 +615,14 @@ export interface FileRoutesById {
   '/pra-kalifah_/$bidang': typeof PraKalifahBidangRoute
   '/preview/$darjahId': typeof PreviewDarjahIdRoute
   '/preview/nama': typeof PreviewNamaRoute
+  '/shop_/$slug': typeof ShopSlugRoute
   '/sijil/$certificateId': typeof SijilCertificateIdRoute
   '/admin_/affiliates_/$id': typeof AdminAffiliatesIdRoute
   '/admin_/affiliates_/dashboard': typeof AdminAffiliatesDashboardRoute
   '/darjah/$darjahId_/$subjekId': typeof DarjahDarjahIdSubjekIdRoute
   '/darjah/$darjahId_/percubaan-mpt4': typeof DarjahDarjahIdPercubaanMpt4Route
   '/preview/$darjahId_/score': typeof PreviewDarjahIdScoreRoute
+  '/shop_/pesanan/$kod': typeof ShopPesananKodRoute
   '/ujian-percuma_/keputusan/$reportToken': typeof UjianPercumaKeputusanReportTokenRoute
   '/ujian-percuma_/soalan/$sessionId': typeof UjianPercumaSoalanSessionIdRoute
   '/api/public/toyyibpay/callback': typeof ApiPublicToyyibpayCallbackRoute
@@ -614,11 +659,13 @@ export interface FileRouteTypes {
     | '/pilih-darjah'
     | '/pra-kalifah'
     | '/reset-password'
+    | '/shop'
     | '/ujian-percuma'
     | '/admin/affiliates'
     | '/admin/challenge'
     | '/admin/funnel'
     | '/admin/hadiah'
+    | '/admin/shop'
     | '/admin/telegram'
     | '/affiliate/daftar'
     | '/affiliate/dashboard'
@@ -626,6 +673,7 @@ export interface FileRouteTypes {
     | '/api/checkout'
     | '/api/confirm-payment'
     | '/api/debug-env'
+    | '/api/shop-checkout'
     | '/api/temporary-unlock'
     | '/bayaran/selesai'
     | '/cuba-kali/aktifkan'
@@ -638,12 +686,14 @@ export interface FileRouteTypes {
     | '/pra-kalifah/$bidang'
     | '/preview/$darjahId'
     | '/preview/nama'
+    | '/shop/$slug'
     | '/sijil/$certificateId'
     | '/admin/affiliates/$id'
     | '/admin/affiliates/dashboard'
     | '/darjah/$darjahId/$subjekId'
     | '/darjah/$darjahId/percubaan-mpt4'
     | '/preview/$darjahId/score'
+    | '/shop/pesanan/$kod'
     | '/ujian-percuma/keputusan/$reportToken'
     | '/ujian-percuma/soalan/$sessionId'
     | '/api/public/toyyibpay/callback'
@@ -678,11 +728,13 @@ export interface FileRouteTypes {
     | '/pilih-darjah'
     | '/pra-kalifah'
     | '/reset-password'
+    | '/shop'
     | '/ujian-percuma'
     | '/admin/affiliates'
     | '/admin/challenge'
     | '/admin/funnel'
     | '/admin/hadiah'
+    | '/admin/shop'
     | '/admin/telegram'
     | '/affiliate/daftar'
     | '/affiliate/dashboard'
@@ -690,6 +742,7 @@ export interface FileRouteTypes {
     | '/api/checkout'
     | '/api/confirm-payment'
     | '/api/debug-env'
+    | '/api/shop-checkout'
     | '/api/temporary-unlock'
     | '/bayaran/selesai'
     | '/cuba-kali/aktifkan'
@@ -702,12 +755,14 @@ export interface FileRouteTypes {
     | '/pra-kalifah/$bidang'
     | '/preview/$darjahId'
     | '/preview/nama'
+    | '/shop/$slug'
     | '/sijil/$certificateId'
     | '/admin/affiliates/$id'
     | '/admin/affiliates/dashboard'
     | '/darjah/$darjahId/$subjekId'
     | '/darjah/$darjahId/percubaan-mpt4'
     | '/preview/$darjahId/score'
+    | '/shop/pesanan/$kod'
     | '/ujian-percuma/keputusan/$reportToken'
     | '/ujian-percuma/soalan/$sessionId'
     | '/api/public/toyyibpay/callback'
@@ -742,11 +797,13 @@ export interface FileRouteTypes {
     | '/pilih-darjah'
     | '/pra-kalifah'
     | '/reset-password'
+    | '/shop'
     | '/ujian-percuma'
     | '/admin_/affiliates'
     | '/admin_/challenge'
     | '/admin_/funnel'
     | '/admin_/hadiah'
+    | '/admin_/shop'
     | '/admin_/telegram'
     | '/affiliate/daftar'
     | '/affiliate/dashboard'
@@ -754,6 +811,7 @@ export interface FileRouteTypes {
     | '/api/checkout'
     | '/api/confirm-payment'
     | '/api/debug-env'
+    | '/api/shop-checkout'
     | '/api/temporary-unlock'
     | '/bayaran/selesai'
     | '/cuba-kali_/aktifkan'
@@ -766,12 +824,14 @@ export interface FileRouteTypes {
     | '/pra-kalifah_/$bidang'
     | '/preview/$darjahId'
     | '/preview/nama'
+    | '/shop_/$slug'
     | '/sijil/$certificateId'
     | '/admin_/affiliates_/$id'
     | '/admin_/affiliates_/dashboard'
     | '/darjah/$darjahId_/$subjekId'
     | '/darjah/$darjahId_/percubaan-mpt4'
     | '/preview/$darjahId_/score'
+    | '/shop_/pesanan/$kod'
     | '/ujian-percuma_/keputusan/$reportToken'
     | '/ujian-percuma_/soalan/$sessionId'
     | '/api/public/toyyibpay/callback'
@@ -807,11 +867,13 @@ export interface RootRouteChildren {
   PilihDarjahRoute: typeof PilihDarjahRoute
   PraKalifahRoute: typeof PraKalifahRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  ShopRoute: typeof ShopRoute
   UjianPercumaRoute: typeof UjianPercumaRoute
   AdminAffiliatesRoute: typeof AdminAffiliatesRoute
   AdminChallengeRoute: typeof AdminChallengeRoute
   AdminFunnelRoute: typeof AdminFunnelRoute
   AdminHadiahRoute: typeof AdminHadiahRoute
+  AdminShopRoute: typeof AdminShopRoute
   AdminTelegramRoute: typeof AdminTelegramRoute
   AffiliateDaftarRoute: typeof AffiliateDaftarRoute
   AffiliateDashboardRoute: typeof AffiliateDashboardRoute
@@ -819,6 +881,7 @@ export interface RootRouteChildren {
   ApiCheckoutRoute: typeof ApiCheckoutRoute
   ApiConfirmPaymentRoute: typeof ApiConfirmPaymentRoute
   ApiDebugEnvRoute: typeof ApiDebugEnvRoute
+  ApiShopCheckoutRoute: typeof ApiShopCheckoutRoute
   ApiTemporaryUnlockRoute: typeof ApiTemporaryUnlockRoute
   BayaranSelesaiRoute: typeof BayaranSelesaiRoute
   CubaKaliAktifkanRoute: typeof CubaKaliAktifkanRoute
@@ -831,12 +894,14 @@ export interface RootRouteChildren {
   PraKalifahBidangRoute: typeof PraKalifahBidangRoute
   PreviewDarjahIdRoute: typeof PreviewDarjahIdRoute
   PreviewNamaRoute: typeof PreviewNamaRoute
+  ShopSlugRoute: typeof ShopSlugRoute
   SijilCertificateIdRoute: typeof SijilCertificateIdRoute
   AdminAffiliatesIdRoute: typeof AdminAffiliatesIdRoute
   AdminAffiliatesDashboardRoute: typeof AdminAffiliatesDashboardRoute
   DarjahDarjahIdSubjekIdRoute: typeof DarjahDarjahIdSubjekIdRoute
   DarjahDarjahIdPercubaanMpt4Route: typeof DarjahDarjahIdPercubaanMpt4Route
   PreviewDarjahIdScoreRoute: typeof PreviewDarjahIdScoreRoute
+  ShopPesananKodRoute: typeof ShopPesananKodRoute
   UjianPercumaKeputusanReportTokenRoute: typeof UjianPercumaKeputusanReportTokenRoute
   UjianPercumaSoalanSessionIdRoute: typeof UjianPercumaSoalanSessionIdRoute
   ApiPublicToyyibpayCallbackRoute: typeof ApiPublicToyyibpayCallbackRoute
@@ -963,6 +1028,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/shop': {
+      id: '/shop'
+      path: '/shop'
+      fullPath: '/shop'
+      preLoaderRoute: typeof ShopRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/ujian-percuma': {
       id: '/ujian-percuma'
       path: '/ujian-percuma'
@@ -996,6 +1068,13 @@ declare module '@tanstack/react-router' {
       path: '/admin/hadiah'
       fullPath: '/admin/hadiah'
       preLoaderRoute: typeof AdminHadiahRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin_/shop': {
+      id: '/admin_/shop'
+      path: '/admin/shop'
+      fullPath: '/admin/shop'
+      preLoaderRoute: typeof AdminShopRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin_/telegram': {
@@ -1045,6 +1124,13 @@ declare module '@tanstack/react-router' {
       path: '/api/debug-env'
       fullPath: '/api/debug-env'
       preLoaderRoute: typeof ApiDebugEnvRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/shop-checkout': {
+      id: '/api/shop-checkout'
+      path: '/api/shop-checkout'
+      fullPath: '/api/shop-checkout'
+      preLoaderRoute: typeof ApiShopCheckoutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/temporary-unlock': {
@@ -1131,6 +1217,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PreviewNamaRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/shop_/$slug': {
+      id: '/shop_/$slug'
+      path: '/shop/$slug'
+      fullPath: '/shop/$slug'
+      preLoaderRoute: typeof ShopSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/sijil/$certificateId': {
       id: '/sijil/$certificateId'
       path: '/sijil/$certificateId'
@@ -1171,6 +1264,13 @@ declare module '@tanstack/react-router' {
       path: '/preview/$darjahId/score'
       fullPath: '/preview/$darjahId/score'
       preLoaderRoute: typeof PreviewDarjahIdScoreRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/shop_/pesanan/$kod': {
+      id: '/shop_/pesanan/$kod'
+      path: '/shop/pesanan/$kod'
+      fullPath: '/shop/pesanan/$kod'
+      preLoaderRoute: typeof ShopPesananKodRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/ujian-percuma_/keputusan/$reportToken': {
@@ -1311,11 +1411,13 @@ const rootRouteChildren: RootRouteChildren = {
   PilihDarjahRoute: PilihDarjahRoute,
   PraKalifahRoute: PraKalifahRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  ShopRoute: ShopRoute,
   UjianPercumaRoute: UjianPercumaRoute,
   AdminAffiliatesRoute: AdminAffiliatesRoute,
   AdminChallengeRoute: AdminChallengeRoute,
   AdminFunnelRoute: AdminFunnelRoute,
   AdminHadiahRoute: AdminHadiahRoute,
+  AdminShopRoute: AdminShopRoute,
   AdminTelegramRoute: AdminTelegramRoute,
   AffiliateDaftarRoute: AffiliateDaftarRoute,
   AffiliateDashboardRoute: AffiliateDashboardRoute,
@@ -1323,6 +1425,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiCheckoutRoute: ApiCheckoutRoute,
   ApiConfirmPaymentRoute: ApiConfirmPaymentRoute,
   ApiDebugEnvRoute: ApiDebugEnvRoute,
+  ApiShopCheckoutRoute: ApiShopCheckoutRoute,
   ApiTemporaryUnlockRoute: ApiTemporaryUnlockRoute,
   BayaranSelesaiRoute: BayaranSelesaiRoute,
   CubaKaliAktifkanRoute: CubaKaliAktifkanRoute,
@@ -1335,12 +1438,14 @@ const rootRouteChildren: RootRouteChildren = {
   PraKalifahBidangRoute: PraKalifahBidangRoute,
   PreviewDarjahIdRoute: PreviewDarjahIdRoute,
   PreviewNamaRoute: PreviewNamaRoute,
+  ShopSlugRoute: ShopSlugRoute,
   SijilCertificateIdRoute: SijilCertificateIdRoute,
   AdminAffiliatesIdRoute: AdminAffiliatesIdRoute,
   AdminAffiliatesDashboardRoute: AdminAffiliatesDashboardRoute,
   DarjahDarjahIdSubjekIdRoute: DarjahDarjahIdSubjekIdRoute,
   DarjahDarjahIdPercubaanMpt4Route: DarjahDarjahIdPercubaanMpt4Route,
   PreviewDarjahIdScoreRoute: PreviewDarjahIdScoreRoute,
+  ShopPesananKodRoute: ShopPesananKodRoute,
   UjianPercumaKeputusanReportTokenRoute: UjianPercumaKeputusanReportTokenRoute,
   UjianPercumaSoalanSessionIdRoute: UjianPercumaSoalanSessionIdRoute,
   ApiPublicToyyibpayCallbackRoute: ApiPublicToyyibpayCallbackRoute,
