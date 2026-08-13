@@ -91,9 +91,9 @@ const CSS = `
   text-align:center;
   z-index:1;
 }
-.sijil-v2 .logo-official{ display:block; height:40px; width:225px; }
+.sijil-v2 .logo-official{ display:block; height:34px; width:191px; }
 .sijil-v2 .title{
-  margin-top:14px;
+  margin-top:8px;
   font-family:'Playfair Display',serif;
   font-weight:900;
   font-size:40px;
@@ -120,7 +120,7 @@ const CSS = `
 }
 .sijil-v2 .congrats{ margin-top:7px; font-size:12.5px; color:#3E5F56; font-weight:500; }
 .sijil-v2 .medal-wrap{
-  position:relative; margin-top:16px; width:168px; height:168px;
+  position:relative; margin-top:10px; width:152px; height:152px;
   display:flex; align-items:center; justify-content:center;
 }
 .sijil-v2 .medal-wrap .sunburst{
@@ -128,12 +128,12 @@ const CSS = `
   background:radial-gradient(circle, rgba(255,238,179,0.85) 0%, rgba(255,238,179,0.4) 26%, rgba(255,238,179,0) 60%);
   z-index:0;
 }
-.sijil-v2 .medal-svg{ position:relative; z-index:1; width:168px; height:168px; overflow:visible; }
+.sijil-v2 .medal-svg{ position:relative; z-index:1; width:152px; height:152px; overflow:visible; }
 .sijil-v2 .medal-sparkle{ position:absolute; color:#C9A24B; z-index:0; }
 .sijil-v2 .ribbon-wrap{ position:relative; margin-top:4px; z-index:2; display:flex; align-items:center; }
 .sijil-v2 .ribbon-svg{ width:238px; height:40px; display:block; }
 .sijil-v2 .skill-box{
-  position:relative; margin-top:20px; width:90%; max-width:610px;
+  position:relative; margin-top:14px; width:90%; max-width:610px;
   border:1.4px solid #C9A24B; border-radius:12px; padding:8px 44px;
 }
 .sijil-v2 .skill-box .bracket{
@@ -152,7 +152,7 @@ const CSS = `
   font-size:25px; color:#013E37; letter-spacing:-0.2px;
 }
 .sijil-v2 .skill-detail{ margin-top:1px; font-size:12px; letter-spacing:1.5px; font-weight:700; color:#B8862B; }
-.sijil-v2 .achieve-row{ margin-top:9px; display:flex; align-items:center; justify-content:center; gap:0; }
+.sijil-v2 .achieve-row{ margin-top:7px; display:flex; align-items:center; justify-content:center; gap:0; }
 .sijil-v2 .achieve-item{ display:flex; align-items:center; gap:10px; padding:0 28px; text-align:left; }
 .sijil-v2 .achieve-divider{ width:1px; height:32px; background:#C9A24B; opacity:0.4; }
 .sijil-v2 .achieve-icon{ position:relative; width:34px; height:34px; flex-shrink:0; }
@@ -166,7 +166,7 @@ const CSS = `
 .sijil-v2 .achieve-title{ font-size:12px; font-weight:700; color:#013E37; letter-spacing:0.2px; }
 .sijil-v2 .achieve-sub{ margin-top:1px; font-size:10px; color:#5C7A72; font-weight:500; white-space:nowrap; }
 .sijil-v2 .footer{
-  margin-top:auto; padding-top:14px; width:100%;
+  margin-top:auto; padding-top:8px; width:100%;
   display:flex; align-items:flex-end; justify-content:space-between;
 }
 .sijil-v2 .footer-col{ flex:1; display:flex; flex-direction:column; }
