@@ -58,6 +58,7 @@ interface Tebusan {
   status: string;
   alamat_penghantaran: string | null;
   catatan_admin: string | null;
+  no_tracking: string | null;
   created_at: string;
 }
 
@@ -140,6 +141,8 @@ function TebusanTab() {
   const [rejectFor, setRejectFor] = useState<Tebusan | null>(null);
   const [reason, setReason] = useState("");
   const [busyId, setBusyId] = useState<string | null>(null);
+  const [shipFor, setShipFor] = useState<Tebusan | null>(null);
+  const [tracking, setTracking] = useState("");
 
   async function reload() {
     setLoading(true);
