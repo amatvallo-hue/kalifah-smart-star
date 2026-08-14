@@ -1893,6 +1893,10 @@ function KaliInsightCard({
               mastery_score?: number | null;
               total_attempts?: number | null;
               correct_attempts?: number | null;
+              micro_skill_darjah?: number | null;
+              original_skill_nama?: string | null;
+              original_skill_darjah?: number | null;
+              original_mastery_score?: number | null;
             }
           | undefined;
         if (mounted) {
@@ -1907,10 +1911,15 @@ function KaliInsightCard({
                   mastery_score: row.mastery_score ?? null,
                   total_attempts: row.total_attempts ?? null,
                   correct_attempts: row.correct_attempts ?? null,
+                  micro_skill_darjah: row.micro_skill_darjah ?? null,
+                  original_skill_nama: row.original_skill_nama ?? null,
+                  original_skill_darjah: row.original_skill_darjah ?? null,
+                  original_mastery_score: row.original_mastery_score ?? null,
                 }
               : null,
           );
         }
+
       } catch (e) {
         console.error("[KaliInsightCard] RPC error:", e);
         if (mounted) setError(true);
