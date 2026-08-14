@@ -1061,7 +1061,7 @@ function ParentDashboard() {
               })}
             </section>
 
-            <PermintaanTebusanSeksyen anakList={anakList} />
+            <PermintaanTebusanSeksyen anakList={anakList} parentUserId={user?.id} />
 
 
             {anakAktif && anakAktif.child_user_id && (
