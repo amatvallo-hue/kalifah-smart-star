@@ -1841,7 +1841,12 @@ function KaliInsightCard({
     mastery_score: number | null;
     total_attempts: number | null;
     correct_attempts: number | null;
+    micro_skill_darjah: number | null;
+    original_skill_nama: string | null;
+    original_skill_darjah: number | null;
+    original_mastery_score: number | null;
   } | null>(null);
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -1888,6 +1893,10 @@ function KaliInsightCard({
               mastery_score?: number | null;
               total_attempts?: number | null;
               correct_attempts?: number | null;
+              micro_skill_darjah?: number | null;
+              original_skill_nama?: string | null;
+              original_skill_darjah?: number | null;
+              original_mastery_score?: number | null;
             }
           | undefined;
         if (mounted) {
@@ -1902,10 +1911,15 @@ function KaliInsightCard({
                   mastery_score: row.mastery_score ?? null,
                   total_attempts: row.total_attempts ?? null,
                   correct_attempts: row.correct_attempts ?? null,
+                  micro_skill_darjah: row.micro_skill_darjah ?? null,
+                  original_skill_nama: row.original_skill_nama ?? null,
+                  original_skill_darjah: row.original_skill_darjah ?? null,
+                  original_mastery_score: row.original_mastery_score ?? null,
                 }
               : null,
           );
         }
+
       } catch (e) {
         console.error("[KaliInsightCard] RPC error:", e);
         if (mounted) setError(true);
@@ -1927,20 +1941,23 @@ function KaliInsightCard({
         ? { teks: "🟡 Sedang Dipelajari", bg: "rgba(255,255,255,0.15)", fg: "#FFEEB3" }
         : { teks: "🔵 Data Masih Terhad", bg: "rgba(255,255,255,0.15)", fg: "#ffffff" };
 
+  // Guardrail: jangan trust `tier` membuta — kira badge dari mastery_score sendiri
   const tierBadge = useMemo(() => {
-    switch (insight?.tier) {
-      case "GREEN":
-        return { teks: "✅ Sudah Dikuasai · Ulang Kaji", bg: "#1B8A5A", fg: "#ffffff" };
-      case "RED":
-        return { teks: "🔴 Perlu Bantuan", bg: "#EF4444", fg: "#ffffff" };
-      case "YELLOW":
-        return { teks: "🟡 Sedang Berkembang", bg: "#F59E0B", fg: "#1F2937" };
-      case "BLUE":
-        return { teks: "🆕 Kemahiran Baharu", bg: "#3B82F6", fg: "#ffffff" };
-      default:
-        return null;
+    if (!insight) return null;
+    const m = insight.mastery_score;
+    if (m == null) {
+      return insight.tier === "BLUE"
+        ? { teks: "🆕 Kemahiran Baharu", bg: "#3B82F6", fg: "#ffffff" }
+        : null;
     }
-  }, [insight?.tier]);
+    if (insight.original_skill_nama && m >= 80)
+      return { teks: "🟡 Perlu Semakan Ringkas", bg: "#F59E0B", fg: "#1F2937" };
+    if (m < 40) return { teks: "🔴 Perlu Bantuan", bg: "#EF4444", fg: "#ffffff" };
+    if (m < 60) return { teks: "🟠 Perlu Diperkukuhkan", bg: "#F97316", fg: "#ffffff" };
+    if (m < 80) return { teks: "🟡 Sedang Berkembang", bg: "#F59E0B", fg: "#1F2937" };
+    return { teks: "✅ Sudah Dikuasai · Ulang Kaji", bg: "#1B8A5A", fg: "#ffffff" };
+  }, [insight]);
+
 
   return (
     <div
@@ -1977,7 +1994,13 @@ function KaliInsightCard({
         <>
           <p className="mt-3 text-[10px] font-extrabold uppercase tracking-wide text-white/60">Fokus Semasa</p>
           <div className="mt-2 flex flex-wrap items-center gap-2">
-            <p className="font-display text-xl font-extrabold text-white">{insight.micro_skill_nama}</p>
+            <p className="font-display text-xl font-extrabold text-white">
+              {insight.micro_skill_nama}
+              {insight.micro_skill_darjah ? (
+                <span className="ml-1 text-sm font-bold text-white/70">(Darjah {insight.micro_skill_darjah})</span>
+              ) : null}
+            </p>
+
             {tierBadge && (
               <span
                 className="rounded-full px-2 py-0.5 text-[10px] font-bold"
@@ -1996,9 +2019,11 @@ function KaliInsightCard({
           <p className="mt-1 text-sm text-white/85">{insight.sebab}</p>
           {insight.mastery_score != null && (
             <p className="mt-1 text-xs text-white/60">
-              Tahap penguasaan semasa: {insight.mastery_score}%
+              Tahap {insight.micro_skill_nama}
+              {insight.micro_skill_darjah ? ` (Darjah ${insight.micro_skill_darjah})` : ""}: {insight.mastery_score}%
             </p>
           )}
+
 
           <hr className="my-3 border-t" style={{ borderColor: "rgba(255,255,255,0.15)" }} />
 
