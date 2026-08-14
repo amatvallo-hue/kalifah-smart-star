@@ -2601,10 +2601,11 @@ interface MintaTebusRow {
   bakiStar: number;
 }
 
-function PermintaanTebusanSeksyen({ anakList }: { anakList: ChildProfile[] }) {
+function PermintaanTebusanSeksyen({ anakList, parentUserId }: { anakList: ChildProfile[]; parentUserId?: string }) {
   const [rows, setRows] = useState<MintaTebusRow[]>([]);
   const [pilih, setPilih] = useState<MintaTebusRow | null>(null);
   const [alamat, setAlamat] = useState("");
+  const [telefon, setTelefon] = useState("");
   const [ringkasan, setRingkasan] = useState<{ soalan_betul: number; sesi_kali: number; hari_aktif: number } | null>(null);
   const [busy, setBusy] = useState(false);
   const [success, setSuccess] = useState<MintaTebusRow | null>(null);
