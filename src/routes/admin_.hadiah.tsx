@@ -149,7 +149,7 @@ function TebusanTab() {
     setLoading(true);
     const { data, error } = await supabase
       .from("hadiah_tebusan")
-      .select("*, profiles(no_telefon)")
+      .select("*")
       .order("created_at", { ascending: false });
     if (error) {
       toast.error("Gagal muat tebusan: " + error.message);
@@ -157,6 +157,26 @@ function TebusanTab() {
       return;
     }
     const list = (data as Tebusan[] | null) ?? [];
+
+    // parent_id FK points to auth.users(id), not public.profiles(id),
+    // so PostgREST cannot auto-embed profiles. Fetch phone numbers separately.
+    const parentIds = Array.from(new Set(list.map((r) => r.parent_id).filter(Boolean)));
+    if (parentIds.length > 0) {
+      const { data: parents } = await supabase
+        .from("profiles")
+        .select("id, no_telefon")
+        .in("id", parentIds);
+      const phoneMap = new Map<string, string | null>();
+      for (const p of (parents as { id: string; no_telefon: string | null }[] | null) ?? []) {
+        phoneMap.set(p.id, p.no_telefon);
+      }
+      for (const r of list) {
+        if (r.parent_id) {
+          r.profiles = { no_telefon: phoneMap.get(r.parent_id) ?? null };
+        }
+      }
+    }
+
     setRows(list);
     const ids = Array.from(new Set(list.map((r) => r.child_user_id)));
     if (ids.length > 0) {
