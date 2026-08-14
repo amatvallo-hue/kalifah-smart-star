@@ -1836,6 +1836,7 @@ function KaliInsightCard({
     micro_skill_nama: string;
     sebab: string;
     tindakan: string;
+    tier: string | null;
     confidence_level: string | null;
     mastery_score: number | null;
     total_attempts: number | null;
@@ -1882,6 +1883,7 @@ function KaliInsightCard({
               micro_skill_nama?: string;
               sebab?: string;
               tindakan?: string;
+              tier?: string | null;
               confidence_level?: string | null;
               mastery_score?: number | null;
               total_attempts?: number | null;
@@ -1895,6 +1897,7 @@ function KaliInsightCard({
                   micro_skill_nama: row.micro_skill_nama,
                   sebab: row.sebab ?? "",
                   tindakan: row.tindakan ?? "",
+                  tier: row.tier ?? null,
                   confidence_level: row.confidence_level ?? null,
                   mastery_score: row.mastery_score ?? null,
                   total_attempts: row.total_attempts ?? null,
@@ -1923,6 +1926,21 @@ function KaliInsightCard({
       : insight?.confidence_level === "MEDIUM"
         ? { teks: "🟡 Sedang Dipelajari", bg: "rgba(255,255,255,0.15)", fg: "#FFEEB3" }
         : { teks: "🔵 Data Masih Terhad", bg: "rgba(255,255,255,0.15)", fg: "#ffffff" };
+
+  const tierBadge = useMemo(() => {
+    switch (insight?.tier) {
+      case "GREEN":
+        return { teks: "✅ Sudah Dikuasai · Ulang Kaji", bg: "#1B8A5A", fg: "#ffffff" };
+      case "RED":
+        return { teks: "🔴 Perlu Bantuan", bg: "#EF4444", fg: "#ffffff" };
+      case "YELLOW":
+        return { teks: "🟡 Sedang Berkembang", bg: "#F59E0B", fg: "#1F2937" };
+      case "BLUE":
+        return { teks: "🆕 Kemahiran Baharu", bg: "#3B82F6", fg: "#ffffff" };
+      default:
+        return null;
+    }
+  }, [insight?.tier]);
 
   return (
     <div
@@ -1958,27 +1976,34 @@ function KaliInsightCard({
       ) : insight ? (
         <>
           <p className="mt-3 text-[10px] font-extrabold uppercase tracking-wide text-white/60">Fokus Semasa</p>
-          <p className="mt-2 font-display text-xl font-extrabold text-white">{insight.micro_skill_nama}</p>
+          <div className="mt-2 flex flex-wrap items-center gap-2">
+            <p className="font-display text-xl font-extrabold text-white">{insight.micro_skill_nama}</p>
+            {tierBadge && (
+              <span
+                className="rounded-full px-2 py-0.5 text-[10px] font-bold"
+                style={{ backgroundColor: tierBadge.bg, color: tierBadge.fg }}
+              >
+                {tierBadge.teks}
+              </span>
+            )}
+          </div>
 
           <hr className="my-3 border-t" style={{ borderColor: "rgba(255,255,255,0.15)" }} />
 
           <p className="text-[10px] font-extrabold uppercase tracking-wide text-white/60">
-            KALI Sedang Bantu Kerana
+            Kenapa KALI Pilih Ini
           </p>
-          <p className="mt-1 text-sm text-white/85">
-            {insight.total_attempts != null && insight.correct_attempts != null ? (
-              <>
-                {namaAnak} menjawab salah {insight.total_attempts - insight.correct_attempts} daripada{" "}
-                {insight.total_attempts} soalan berkaitan {insight.micro_skill_nama}.
-                {insight.mastery_score != null ? ` Tahap penguasaan semasa: ${insight.mastery_score}%.` : ""}
-              </>
-            ) : (
-              <>
-                KALI sedang membantu {namaAnak} meningkatkan kemahiran {insight.micro_skill_nama} kerana prestasi
-                terkini menunjukkan kemahiran ini masih memerlukan lebih banyak latihan.
-              </>
-            )}
-          </p>
+          <p className="mt-1 text-sm text-white/85">{insight.sebab}</p>
+          {insight.mastery_score != null && (
+            <p className="mt-1 text-xs text-white/60">
+              Tahap penguasaan semasa: {insight.mastery_score}%
+            </p>
+          )}
+
+          <hr className="my-3 border-t" style={{ borderColor: "rgba(255,255,255,0.15)" }} />
+
+          <p className="text-[10px] font-extrabold uppercase tracking-wide text-white/60">Tindakan KALI</p>
+          <p className="mt-1 text-sm text-white/85">{insight.tindakan}</p>
 
           <hr className="my-3 border-t" style={{ borderColor: "rgba(255,255,255,0.15)" }} />
 
