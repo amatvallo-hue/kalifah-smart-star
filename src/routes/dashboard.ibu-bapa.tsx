@@ -1994,7 +1994,13 @@ function KaliInsightCard({
         <>
           <p className="mt-3 text-[10px] font-extrabold uppercase tracking-wide text-white/60">Fokus Semasa</p>
           <div className="mt-2 flex flex-wrap items-center gap-2">
-            <p className="font-display text-xl font-extrabold text-white">{insight.micro_skill_nama}</p>
+            <p className="font-display text-xl font-extrabold text-white">
+              {insight.micro_skill_nama}
+              {insight.micro_skill_darjah ? (
+                <span className="ml-1 text-sm font-bold text-white/70">(Darjah {insight.micro_skill_darjah})</span>
+              ) : null}
+            </p>
+
             {tierBadge && (
               <span
                 className="rounded-full px-2 py-0.5 text-[10px] font-bold"
