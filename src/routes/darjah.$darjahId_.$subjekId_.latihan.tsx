@@ -5,6 +5,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { StarReward } from "@/components/StarReward";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
+import { usePoints } from "@/hooks/use-points";
 import { getDarjah, getSubjek } from "@/lib/curriculum";
 import { simpanProgress, rekodJawapan } from "@/lib/progress";
 import { shouldSkipChildGuard } from "@/lib/child-auth";
@@ -464,6 +465,7 @@ function LatihanSubjekPage() {
   const navigate = useNavigate();
   const { darjahId, subjekId } = useParams({ from: "/darjah/$darjahId_/$subjekId_/latihan" });
   const { user, loading } = useAuth();
+  const mata = usePoints();
   const darjah = getDarjah(darjahId);
   const subjek = getSubjek(subjekId);
 
@@ -626,7 +628,7 @@ function LatihanSubjekPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <SiteHeader stars={42} onLogout={handleLogout} />
+      <SiteHeader stars={mata} onLogout={handleLogout} />
       <main className="container mx-auto max-w-3xl px-4 py-8">
         <Link
           to="/darjah/$darjahId/$subjekId"

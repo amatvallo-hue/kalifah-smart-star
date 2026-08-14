@@ -4,6 +4,7 @@ import { ArrowLeft, BookOpen, Lightbulb, PenLine } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
+import { usePoints } from "@/hooks/use-points";
 import { getDarjah, getSubjek } from "@/lib/curriculum";
 import { simpanProgress } from "@/lib/progress";
 import { useAward } from "@/hooks/use-award";
@@ -40,6 +41,7 @@ function NotaRingkasPage() {
   const subjek = getSubjek(subjekId);
   const [mulaMasa] = useState(() => Date.now());
   const award = useAward();
+  const mata = usePoints();
   const [awardedTopics, setAwardedTopics] = useState<Set<string>>(new Set());
 
   const [notaList, setNotaList] = useState<NotaRow[]>([]);
@@ -142,7 +144,7 @@ function NotaRingkasPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <SiteHeader stars={42} onLogout={handleLogout} />
+      <SiteHeader stars={mata} onLogout={handleLogout} />
       <main className="container mx-auto max-w-4xl px-4 py-8">
         <Link
           to="/darjah/$darjahId/$subjekId"
