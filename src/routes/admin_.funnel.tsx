@@ -118,6 +118,9 @@ function AdminFunnelPage() {
           <div>
             <h1 className="font-display text-2xl font-bold">Hari Ini</h1>
             <p className="text-sm text-muted-foreground">{tarikhMalaysia()} (waktu Malaysia)</p>
+            <Link to="/admin/funnel-kali" className="text-sm text-primary underline">
+              → Lihat Funnel Cuba KALI
+            </Link>
           </div>
           <button
             type="button"
