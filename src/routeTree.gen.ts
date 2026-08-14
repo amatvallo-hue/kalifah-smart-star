@@ -29,6 +29,7 @@ import { Route as UjianPercumaRouteImport } from './routes/ujian-percuma'
 import { Route as AdminAffiliatesRouteImport } from './routes/admin_.affiliates'
 import { Route as AdminChallengeRouteImport } from './routes/admin_.challenge'
 import { Route as AdminFunnelRouteImport } from './routes/admin_.funnel'
+import { Route as AdminFunnelKaliRouteImport } from './routes/admin_.funnel-kali'
 import { Route as AdminHadiahRouteImport } from './routes/admin_.hadiah'
 import { Route as AdminShopRouteImport } from './routes/admin_.shop'
 import { Route as AdminTelegramRouteImport } from './routes/admin_.telegram'
@@ -175,6 +176,11 @@ const AdminChallengeRoute = AdminChallengeRouteImport.update({
 const AdminFunnelRoute = AdminFunnelRouteImport.update({
   id: '/admin_/funnel',
   path: '/admin/funnel',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminFunnelKaliRoute = AdminFunnelKaliRouteImport.update({
+  id: '/admin_/funnel-kali',
+  path: '/admin/funnel-kali',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminHadiahRoute = AdminHadiahRouteImport.update({
@@ -454,6 +460,7 @@ export interface FileRoutesByFullPath {
   '/admin/affiliates': typeof AdminAffiliatesRoute
   '/admin/challenge': typeof AdminChallengeRoute
   '/admin/funnel': typeof AdminFunnelRoute
+  '/admin/funnel-kali': typeof AdminFunnelKaliRoute
   '/admin/hadiah': typeof AdminHadiahRoute
   '/admin/shop': typeof AdminShopRoute
   '/admin/telegram': typeof AdminTelegramRoute
@@ -523,6 +530,7 @@ export interface FileRoutesByTo {
   '/admin/affiliates': typeof AdminAffiliatesRoute
   '/admin/challenge': typeof AdminChallengeRoute
   '/admin/funnel': typeof AdminFunnelRoute
+  '/admin/funnel-kali': typeof AdminFunnelKaliRoute
   '/admin/hadiah': typeof AdminHadiahRoute
   '/admin/shop': typeof AdminShopRoute
   '/admin/telegram': typeof AdminTelegramRoute
@@ -593,6 +601,7 @@ export interface FileRoutesById {
   '/admin_/affiliates': typeof AdminAffiliatesRoute
   '/admin_/challenge': typeof AdminChallengeRoute
   '/admin_/funnel': typeof AdminFunnelRoute
+  '/admin_/funnel-kali': typeof AdminFunnelKaliRoute
   '/admin_/hadiah': typeof AdminHadiahRoute
   '/admin_/shop': typeof AdminShopRoute
   '/admin_/telegram': typeof AdminTelegramRoute
@@ -664,6 +673,7 @@ export interface FileRouteTypes {
     | '/admin/affiliates'
     | '/admin/challenge'
     | '/admin/funnel'
+    | '/admin/funnel-kali'
     | '/admin/hadiah'
     | '/admin/shop'
     | '/admin/telegram'
@@ -733,6 +743,7 @@ export interface FileRouteTypes {
     | '/admin/affiliates'
     | '/admin/challenge'
     | '/admin/funnel'
+    | '/admin/funnel-kali'
     | '/admin/hadiah'
     | '/admin/shop'
     | '/admin/telegram'
@@ -802,6 +813,7 @@ export interface FileRouteTypes {
     | '/admin_/affiliates'
     | '/admin_/challenge'
     | '/admin_/funnel'
+    | '/admin_/funnel-kali'
     | '/admin_/hadiah'
     | '/admin_/shop'
     | '/admin_/telegram'
@@ -872,6 +884,7 @@ export interface RootRouteChildren {
   AdminAffiliatesRoute: typeof AdminAffiliatesRoute
   AdminChallengeRoute: typeof AdminChallengeRoute
   AdminFunnelRoute: typeof AdminFunnelRoute
+  AdminFunnelKaliRoute: typeof AdminFunnelKaliRoute
   AdminHadiahRoute: typeof AdminHadiahRoute
   AdminShopRoute: typeof AdminShopRoute
   AdminTelegramRoute: typeof AdminTelegramRoute
@@ -1061,6 +1074,13 @@ declare module '@tanstack/react-router' {
       path: '/admin/funnel'
       fullPath: '/admin/funnel'
       preLoaderRoute: typeof AdminFunnelRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin_/funnel-kali': {
+      id: '/admin_/funnel-kali'
+      path: '/admin/funnel-kali'
+      fullPath: '/admin/funnel-kali'
+      preLoaderRoute: typeof AdminFunnelKaliRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin_/hadiah': {
@@ -1416,6 +1436,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminAffiliatesRoute: AdminAffiliatesRoute,
   AdminChallengeRoute: AdminChallengeRoute,
   AdminFunnelRoute: AdminFunnelRoute,
+  AdminFunnelKaliRoute: AdminFunnelKaliRoute,
   AdminHadiahRoute: AdminHadiahRoute,
   AdminShopRoute: AdminShopRoute,
   AdminTelegramRoute: AdminTelegramRoute,
