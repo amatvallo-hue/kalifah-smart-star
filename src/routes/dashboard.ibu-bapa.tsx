@@ -753,7 +753,7 @@ function ParentDashboard() {
   }
 
   async function refreshAnak() {
-    const list = await senaraikanAnak();
+    const [list] = await Promise.all([senaraikanAnak(), muatLastSignInAnak()]);
     setAnakList(list);
     const saved = typeof window === "undefined" ? null : localStorage.getItem(AKTIF_ANAK_KEY);
     const savedValid = saved && list.some((a) => a.id === saved);
