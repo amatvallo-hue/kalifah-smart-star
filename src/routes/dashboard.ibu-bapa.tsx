@@ -926,10 +926,11 @@ function ParentDashboard() {
   const streak = kiraStreak(stats);
 
   const hariSejakAktif = useMemo(() => {
-    if (progress.length === 0) return Number.POSITIVE_INFINITY;
-    const last = parseIsoUTC(progress[0].created_at);
+    const lastSignInAt = anakUserId ? lastSignInMap.get(anakUserId) : undefined;
+    if (!lastSignInAt) return Number.POSITIVE_INFINITY;
+    const last = parseIsoUTC(lastSignInAt);
     return Math.floor((Date.now() - last.getTime()) / 86400000);
-  }, [progress]);
+  }, [anakUserId, lastSignInMap]);
 
   async function handleLogout() {
     await supabase.auth.signOut();
