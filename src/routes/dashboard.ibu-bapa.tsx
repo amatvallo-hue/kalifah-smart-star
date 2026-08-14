@@ -602,6 +602,7 @@ function ParentDashboard() {
   const [showAdd, setShowAdd] = useState(false);
   const [showMaklumat, setShowMaklumat] = useState(false);
   const [resetFor, setResetFor] = useState<ChildProfile | null>(null);
+  const [lastSignInMap, setLastSignInMap] = useState<Map<string, string>>(new Map());
 
   const pilihAnak = useCallback((id: string | null) => {
     setAktifId(id);
@@ -627,6 +628,24 @@ function ParentDashboard() {
   }, [loading, user, isChild, navigate]);
 
 
+  async function muatLastSignInAnak() {
+    try {
+      const { data, error } = await supabase.rpc("login_terakhir_semua_anak");
+      if (error) {
+        console.warn("[ParentDashboard] login_terakhir_semua_anak error:", error);
+        return;
+      }
+      const rows = (data ?? []) as { child_user_id: string; last_sign_in_at: string | null }[];
+      const map = new Map<string, string>();
+      for (const r of rows) {
+        if (r.last_sign_in_at) map.set(r.child_user_id, r.last_sign_in_at);
+      }
+      setLastSignInMap(map);
+    } catch (e) {
+      console.warn("[ParentDashboard] muatLastSignInAnak failed:", e);
+    }
+  }
+
   useEffect(() => {
     if (!user) return;
     senaraikanAnak().then((list) => {
@@ -642,6 +661,7 @@ function ParentDashboard() {
         localStorage.removeItem(AKTIF_ANAK_KEY);
       }
     });
+    muatLastSignInAnak();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
@@ -733,7 +753,7 @@ function ParentDashboard() {
   }
 
   async function refreshAnak() {
-    const list = await senaraikanAnak();
+    const [list] = await Promise.all([senaraikanAnak(), muatLastSignInAnak()]);
     setAnakList(list);
     const saved = typeof window === "undefined" ? null : localStorage.getItem(AKTIF_ANAK_KEY);
     const savedValid = saved && list.some((a) => a.id === saved);
@@ -906,10 +926,11 @@ function ParentDashboard() {
   const streak = kiraStreak(stats);
 
   const hariSejakAktif = useMemo(() => {
-    if (progress.length === 0) return Number.POSITIVE_INFINITY;
-    const last = parseIsoUTC(progress[0].created_at);
+    const lastSignInAt = anakUserId ? lastSignInMap.get(anakUserId) : undefined;
+    if (!lastSignInAt) return Number.POSITIVE_INFINITY;
+    const last = parseIsoUTC(lastSignInAt);
     return Math.floor((Date.now() - last.getTime()) / 86400000);
-  }, [progress]);
+  }, [anakUserId, lastSignInMap]);
 
   async function handleLogout() {
     await supabase.auth.signOut();
