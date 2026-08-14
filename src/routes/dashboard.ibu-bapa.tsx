@@ -2814,6 +2814,17 @@ function PermintaanTebusanSeksyen({ anakList, parentUserId }: { anakList: ChildP
               </div>
 
               <div>
+                <p className="mb-1 text-xs font-bold text-foreground">No. Telefon</p>
+                <Input
+                  type="tel"
+                  inputMode="tel"
+                  value={telefon}
+                  onChange={(e) => setTelefon(e.target.value.replace(/\D/g, ""))}
+                  placeholder="0123456789"
+                />
+              </div>
+
+              <div>
                 <p className="mb-1 text-xs font-bold text-foreground">Alamat Penghantaran</p>
                 <Textarea
                   rows={4}
@@ -2835,7 +2846,7 @@ function PermintaanTebusanSeksyen({ anakList, parentUserId }: { anakList: ChildP
                 <button
                   type="button"
                   onClick={sahkan}
-                  disabled={busy || !alamat.trim()}
+                  disabled={busy || !alamat.trim() || !telefon.trim()}
                   className="rounded-xl px-4 py-2 font-display text-sm font-extrabold text-white disabled:opacity-50"
                   style={{ background: HIJAU }}
                 >
