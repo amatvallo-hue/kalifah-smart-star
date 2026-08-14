@@ -11,6 +11,7 @@ import { MatikDragGame } from "@/components/games/MatikDragGame";
 import { MatikNeonGame } from "@/components/games/MatikNeonGame";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
+import { usePoints } from "@/hooks/use-points";
 import { getDarjah, getSubjek } from "@/lib/curriculum";
 import { simpanProgress } from "@/lib/progress";
 import { getQuiz, getQuizSet2 } from "@/lib/quiz-bank";
@@ -533,6 +534,7 @@ function GameSubjekPage() {
   const { darjahId, subjekId } = useParams({ from: "/darjah/$darjahId_/$subjekId_/game" });
   const { user, loading } = useAuth();
   const award = useAward();
+  const mata = usePoints();
   const darjah = getDarjah(darjahId);
   const subjek = getSubjek(subjekId);
 
@@ -689,7 +691,7 @@ function GameSubjekPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <SiteHeader stars={42} onLogout={handleLogout} />
+      <SiteHeader stars={mata} onLogout={handleLogout} />
       <main className="container mx-auto max-w-3xl px-4 py-8">
         <Link
           to="/darjah/$darjahId/$subjekId"
