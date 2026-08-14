@@ -27,6 +27,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
@@ -1061,7 +1062,7 @@ function ParentDashboard() {
               })}
             </section>
 
-            <PermintaanTebusanSeksyen anakList={anakList} />
+            <PermintaanTebusanSeksyen anakList={anakList} parentUserId={user?.id} />
 
 
             {anakAktif && anakAktif.child_user_id && (
@@ -2601,10 +2602,11 @@ interface MintaTebusRow {
   bakiStar: number;
 }
 
-function PermintaanTebusanSeksyen({ anakList }: { anakList: ChildProfile[] }) {
+function PermintaanTebusanSeksyen({ anakList, parentUserId }: { anakList: ChildProfile[]; parentUserId?: string }) {
   const [rows, setRows] = useState<MintaTebusRow[]>([]);
   const [pilih, setPilih] = useState<MintaTebusRow | null>(null);
   const [alamat, setAlamat] = useState("");
+  const [telefon, setTelefon] = useState("");
   const [ringkasan, setRingkasan] = useState<{ soalan_betul: number; sesi_kali: number; hari_aktif: number } | null>(null);
   const [busy, setBusy] = useState(false);
   const [success, setSuccess] = useState<MintaTebusRow | null>(null);
@@ -2685,20 +2687,29 @@ function PermintaanTebusanSeksyen({ anakList }: { anakList: ChildProfile[] }) {
   async function bukaDialog(r: MintaTebusRow) {
     setPilih(r);
     setAlamat(r.alamatDefault);
+    setTelefon("");
     setRingkasan(null);
-    const { data } = await supabase.rpc("ringkasan_pembelajaran_anak" as never, {
-      p_child_user_id: r.child_user_id,
-    } as never);
+    const [{ data }, { data: profil }] = await Promise.all([
+      supabase.rpc("ringkasan_pembelajaran_anak" as never, {
+        p_child_user_id: r.child_user_id,
+      } as never),
+      parentUserId
+        ? supabase.from("profiles").select("no_telefon").eq("id", parentUserId).maybeSingle()
+        : Promise.resolve({ data: null }),
+    ]);
     const row = Array.isArray(data) ? data[0] : data;
     if (row) setRingkasan(row as { soalan_betul: number; sesi_kali: number; hari_aktif: number });
+    const tel = (profil as { no_telefon?: string | null } | null)?.no_telefon ?? "";
+    setTelefon(tel);
   }
 
   async function sahkan() {
-    if (!pilih || !alamat.trim()) return;
+    if (!pilih || !alamat.trim() || !telefon.trim()) return;
     setBusy(true);
     const { error } = await supabase.rpc("sahkan_tebusan_parent" as never, {
       p_tebusan_id: pilih.id,
       p_alamat: alamat.trim(),
+      p_telefon: telefon.trim(),
     } as never);
     setBusy(false);
     if (error) {
@@ -2803,6 +2814,17 @@ function PermintaanTebusanSeksyen({ anakList }: { anakList: ChildProfile[] }) {
               </div>
 
               <div>
+                <p className="mb-1 text-xs font-bold text-foreground">No. Telefon</p>
+                <Input
+                  type="tel"
+                  inputMode="tel"
+                  value={telefon}
+                  onChange={(e) => setTelefon(e.target.value.replace(/\D/g, ""))}
+                  placeholder="0123456789"
+                />
+              </div>
+
+              <div>
                 <p className="mb-1 text-xs font-bold text-foreground">Alamat Penghantaran</p>
                 <Textarea
                   rows={4}
@@ -2824,7 +2846,7 @@ function PermintaanTebusanSeksyen({ anakList }: { anakList: ChildProfile[] }) {
                 <button
                   type="button"
                   onClick={sahkan}
-                  disabled={busy || !alamat.trim()}
+                  disabled={busy || !alamat.trim() || !telefon.trim()}
                   className="rounded-xl px-4 py-2 font-display text-sm font-extrabold text-white disabled:opacity-50"
                   style={{ background: HIJAU }}
                 >
