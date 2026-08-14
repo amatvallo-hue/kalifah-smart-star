@@ -1941,20 +1941,23 @@ function KaliInsightCard({
         ? { teks: "🟡 Sedang Dipelajari", bg: "rgba(255,255,255,0.15)", fg: "#FFEEB3" }
         : { teks: "🔵 Data Masih Terhad", bg: "rgba(255,255,255,0.15)", fg: "#ffffff" };
 
+  // Guardrail: jangan trust `tier` membuta — kira badge dari mastery_score sendiri
   const tierBadge = useMemo(() => {
-    switch (insight?.tier) {
-      case "GREEN":
-        return { teks: "✅ Sudah Dikuasai · Ulang Kaji", bg: "#1B8A5A", fg: "#ffffff" };
-      case "RED":
-        return { teks: "🔴 Perlu Bantuan", bg: "#EF4444", fg: "#ffffff" };
-      case "YELLOW":
-        return { teks: "🟡 Sedang Berkembang", bg: "#F59E0B", fg: "#1F2937" };
-      case "BLUE":
-        return { teks: "🆕 Kemahiran Baharu", bg: "#3B82F6", fg: "#ffffff" };
-      default:
-        return null;
+    if (!insight) return null;
+    const m = insight.mastery_score;
+    if (m == null) {
+      return insight.tier === "BLUE"
+        ? { teks: "🆕 Kemahiran Baharu", bg: "#3B82F6", fg: "#ffffff" }
+        : null;
     }
-  }, [insight?.tier]);
+    if (insight.original_skill_nama && m >= 80)
+      return { teks: "🟡 Perlu Semakan Ringkas", bg: "#F59E0B", fg: "#1F2937" };
+    if (m < 40) return { teks: "🔴 Perlu Bantuan", bg: "#EF4444", fg: "#ffffff" };
+    if (m < 60) return { teks: "🟠 Perlu Diperkukuhkan", bg: "#F97316", fg: "#ffffff" };
+    if (m < 80) return { teks: "🟡 Sedang Berkembang", bg: "#F59E0B", fg: "#1F2937" };
+    return { teks: "✅ Sudah Dikuasai · Ulang Kaji", bg: "#1B8A5A", fg: "#ffffff" };
+  }, [insight]);
+
 
   return (
     <div
