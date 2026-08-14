@@ -1841,7 +1841,12 @@ function KaliInsightCard({
     mastery_score: number | null;
     total_attempts: number | null;
     correct_attempts: number | null;
+    micro_skill_darjah: number | null;
+    original_skill_nama: string | null;
+    original_skill_darjah: number | null;
+    original_mastery_score: number | null;
   } | null>(null);
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [copied, setCopied] = useState(false);
