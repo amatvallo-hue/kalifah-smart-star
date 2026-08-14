@@ -2686,20 +2686,29 @@ function PermintaanTebusanSeksyen({ anakList, parentUserId }: { anakList: ChildP
   async function bukaDialog(r: MintaTebusRow) {
     setPilih(r);
     setAlamat(r.alamatDefault);
+    setTelefon("");
     setRingkasan(null);
-    const { data } = await supabase.rpc("ringkasan_pembelajaran_anak" as never, {
-      p_child_user_id: r.child_user_id,
-    } as never);
+    const [{ data }, { data: profil }] = await Promise.all([
+      supabase.rpc("ringkasan_pembelajaran_anak" as never, {
+        p_child_user_id: r.child_user_id,
+      } as never),
+      parentUserId
+        ? supabase.from("profiles").select("no_telefon").eq("id", parentUserId).maybeSingle()
+        : Promise.resolve({ data: null }),
+    ]);
     const row = Array.isArray(data) ? data[0] : data;
     if (row) setRingkasan(row as { soalan_betul: number; sesi_kali: number; hari_aktif: number });
+    const tel = (profil as { no_telefon?: string | null } | null)?.no_telefon ?? "";
+    setTelefon(tel);
   }
 
   async function sahkan() {
-    if (!pilih || !alamat.trim()) return;
+    if (!pilih || !alamat.trim() || !telefon.trim()) return;
     setBusy(true);
     const { error } = await supabase.rpc("sahkan_tebusan_parent" as never, {
       p_tebusan_id: pilih.id,
       p_alamat: alamat.trim(),
+      p_telefon: telefon.trim(),
     } as never);
     setBusy(false);
     if (error) {
