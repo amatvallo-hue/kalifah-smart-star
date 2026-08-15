@@ -1848,6 +1848,13 @@ function pct(v: number | null | undefined): string {
   return `${Math.round(v * 100)}%`;
 }
 
+function labelMasteryBand(m: number): string {
+  if (m < 40) return "Perlu Bantuan";
+  if (m < 60) return "Perlu Diperkukuhkan";
+  if (m < 80) return "Sedang Berkembang";
+  return "Sudah Dikuasai";
+}
+
 function SeksyenKaliGabungan({
   childUserId,
   childProfileId,
