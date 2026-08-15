@@ -1092,30 +1092,15 @@ function ParentDashboard() {
                       </div>
                     )}
 
-                    {/* BUKTI KEMAJUAN BERSAMA KALI */}
-                    <Seksyen tajuk="Bukti Kemajuan Bersama KALI" ikon={<TrendingUp className="h-5 w-5" />}>
-                      <KaliBuktiKemajuanCard
-                        childUserId={anakAktif.child_user_id}
-                        namaAnak={anakAktif.nama}
-                      />
-                    </Seksyen>
+                    {/* KALI: Bukti Kemajuan + Cadangan (susunan bergantung data kemajuan) */}
+                    <SeksyenKaliGabungan
+                      childUserId={anakAktif.child_user_id}
+                      childProfileId={anakAktif.id}
+                      namaAnak={anakAktif.nama}
+                      darjahAnak={anakAktif.darjah}
+                      anakPaid={anakPaid}
+                    />
 
-                    {/* KALI INSIGHT — penuh untuk anak berbayar, teaser state-language untuk anak percuma */}
-                    <Seksyen tajuk="Cadangan KALI Hari Ini" ikon={<Sparkles className="h-5 w-5" />}>
-                      {anakPaid === null ? (
-                        <div className="rounded-2xl p-5 shadow-card">
-                          <p className="text-sm text-muted-foreground">Memuatkan cadangan KALI...</p>
-                        </div>
-                      ) : anakPaid ? (
-                        <KaliInsightCard childUserId={anakAktif.child_user_id} namaAnak={anakAktif.nama} darjahAnak={anakAktif.darjah} />
-                      ) : (
-                        <KaliUpdateCard
-                          childProfileId={anakAktif.id}
-                          childDarjah={anakAktif.darjah}
-                          namaAnak={anakAktif.nama}
-                        />
-                      )}
-                    </Seksyen>
 
                     {/* HERO SUMMARY: Subjek Terkuat & Perlukan Perhatian */}
                     <Seksyen tajuk="Ringkasan Prestasi" ikon={<Trophy className="h-5 w-5" />}>
