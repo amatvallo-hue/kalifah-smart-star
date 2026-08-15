@@ -778,9 +778,12 @@ function DaftarKaliPage() {
             <button
               type="button"
               onClick={() => void pilihLaluanPantas()}
-              className="text-sm font-bold text-muted-foreground underline underline-offset-2 hover:text-foreground"
+              disabled={sedangPilihLaluanPantas}
+              className="text-sm font-bold text-muted-foreground underline underline-offset-2 hover:text-foreground disabled:opacity-60"
             >
-              Dah yakin dengan KALI? Lihat pelan &amp; harga →
+              {sedangPilihLaluanPantas
+                ? "Menyediakan…"
+                : "Dah yakin dengan KALI? Lihat pelan & harga →"}
             </button>
           </div>
         </section>
