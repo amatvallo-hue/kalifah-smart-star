@@ -1092,6 +1092,14 @@ function ParentDashboard() {
                       </div>
                     )}
 
+                    {/* BUKTI KEMAJUAN BERSAMA KALI */}
+                    <Seksyen tajuk="Bukti Kemajuan Bersama KALI" ikon={<TrendingUp className="h-5 w-5" />}>
+                      <KaliBuktiKemajuanCard
+                        childUserId={anakAktif.child_user_id}
+                        namaAnak={anakAktif.nama}
+                      />
+                    </Seksyen>
+
                     {/* KALI INSIGHT — penuh untuk anak berbayar, teaser state-language untuk anak percuma */}
                     <Seksyen tajuk="Cadangan KALI Hari Ini" ikon={<Sparkles className="h-5 w-5" />}>
                       {anakPaid === null ? (
@@ -1823,7 +1831,221 @@ function FormTambahAnak({ onAdded }: { onAdded: () => void }) {
 
 }
 
+interface KemajuanItem {
+  micro_skill_id: string;
+  nama: string;
+  darjah: number | null;
+  subjek: string | null;
+  sebelum: { mastery_score: number | null; level: string | null } | null;
+  selepas: { mastery_score: number | null; level: string | null } | null;
+  perubahan_mata: number | null;
+  naik_tier: boolean | null;
+  jumlah_percubaan: number | null;
+  jumlah_sesi_berasingan: number | null;
+  hari_berbeza: number | null;
+  bahasa_cadangan: string | null;
+}
+interface LaporanKemajuan {
+  status: "belum_cukup_data" | "mengumpul_data" | "ok";
+  anak_nama: string | null;
+  mesej_belum_cukup: string | null;
+  ringkasan_7_hari: {
+    jumlah_sesi: number | null;
+    jumlah_soalan: number | null;
+    ketepatan_purata: number | null;
+    peratus_daripada_kali: number | null;
+  } | null;
+  kemajuan_30_hari: KemajuanItem[] | null;
+}
+
+function pct(v: number | null | undefined): string {
+  if (v == null) return "—";
+  return `${Math.round(v * 100)}%`;
+}
+
+function KaliBuktiKemajuanCard({
+  childUserId,
+  namaAnak,
+}: {
+  childUserId: string;
+  namaAnak: string;
+}) {
+  const [data, setData] = useState<LaporanKemajuan | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [expand, setExpand] = useState(false);
+
+  useEffect(() => {
+    let mounted = true;
+    setLoading(true);
+    setExpand(false);
+    (async () => {
+      try {
+        const { data: res, error } = await supabase.rpc("kali_laporan_kemajuan", {
+          p_student_id: childUserId,
+        });
+        if (error) throw error;
+        if (mounted) setData((res as unknown as LaporanKemajuan) ?? null);
+      } catch (e) {
+        console.error("[KaliBuktiKemajuanCard] RPC error:", e);
+        if (mounted) setData(null);
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    })();
+    return () => {
+      mounted = false;
+    };
+  }, [childUserId]);
+
+  const nama = data?.anak_nama || namaAnak;
+  const kemajuan = data?.kemajuan_30_hari ?? [];
+  const r7 = data?.ringkasan_7_hari ?? null;
+
+  const shell = (children: React.ReactNode) => (
+    <div
+      className="rounded-2xl p-5 shadow-card"
+      style={{ background: "#F1FAF4", border: "2px solid #BFE7D2" }}
+    >
+      <div className="mb-3 flex items-center gap-2">
+        <TrendingUp className="h-5 w-5" style={{ color: HIJAU }} />
+        <h3 className="font-display text-base font-extrabold" style={{ color: "#013E37" }}>
+          Perkembangan {nama} Bersama KALI
+        </h3>
+      </div>
+      {children}
+    </div>
+  );
+
+  if (loading) return shell(<p className="text-sm text-muted-foreground">Memuatkan laporan kemajuan...</p>);
+  if (!data) return null;
+
+  const ringkasan7 = r7 && (
+    <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
+      {[
+        { l: "Sesi", v: `${r7.jumlah_sesi ?? 0}` },
+        { l: "Soalan", v: `${r7.jumlah_soalan ?? 0}` },
+        { l: "Ketepatan", v: pct(r7.ketepatan_purata) },
+        { l: "Drpd KALI", v: pct(r7.peratus_daripada_kali) },
+      ].map((x) => (
+        <div key={x.l} className="rounded-xl bg-white/80 p-3 text-center">
+          <p className="font-display text-lg font-extrabold" style={{ color: "#013E37" }}>{x.v}</p>
+          <p className="text-[11px] text-muted-foreground">{x.l}</p>
+        </div>
+      ))}
+    </div>
+  );
+
+  if (data.status === "belum_cukup_data") {
+    return shell(<p className="text-sm text-muted-foreground">{data.mesej_belum_cukup}</p>);
+  }
+
+  if (data.status === "mengumpul_data") {
+    return shell(
+      <div className="flex flex-col gap-3">
+        <p className="text-sm text-muted-foreground">{data.mesej_belum_cukup}</p>
+        {r7 && (r7.jumlah_soalan ?? 0) > 0 && ringkasan7}
+      </div>,
+    );
+  }
+
+  const utama = kemajuan[0];
+  return shell(
+    <div className="flex flex-col gap-4">
+      {r7 && (r7.jumlah_soalan ?? 0) === 0 ? (
+        <p className="text-sm text-muted-foreground">Belum ada sesi pembelajaran dalam 7 hari terakhir.</p>
+      ) : (
+        ringkasan7
+      )}
+
+      {utama && (
+        <div className="rounded-2xl bg-white p-4" style={{ border: "2px solid #BFE7D2" }}>
+          <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">Kemajuan Terbesar</p>
+          <p className="mt-1 font-display text-sm font-extrabold" style={{ color: "#013E37" }}>
+            {utama.nama}
+            {utama.subjek ? ` · ${utama.subjek}` : ""}
+            {utama.darjah != null ? ` · Darjah ${utama.darjah}` : ""}
+          </p>
+
+          <div className="mt-3 flex flex-wrap items-center gap-3">
+            <div className="text-center">
+              <p className="font-display text-3xl font-extrabold" style={{ color: "#B0872B" }}>
+                {utama.sebelum?.mastery_score ?? 0}%
+              </p>
+              <p className="text-[11px] text-muted-foreground">Sebelum</p>
+            </div>
+            <span className="font-display text-2xl font-extrabold" style={{ color: HIJAU }}>→</span>
+            <div className="text-center">
+              <p className="font-display text-3xl font-extrabold" style={{ color: HIJAU }}>
+                {utama.selepas?.mastery_score ?? 0}%
+              </p>
+              <p className="text-[11px] text-muted-foreground">Selepas</p>
+            </div>
+            <span
+              className="rounded-full px-2.5 py-1 text-xs font-extrabold"
+              style={{ background: "#E3F6EA", color: HIJAU }}
+            >
+              +{utama.perubahan_mata ?? 0} mata penguasaan
+            </span>
+            {utama.naik_tier && (
+              <span
+                className="rounded-full px-2.5 py-1 text-[11px] font-extrabold"
+                style={{ background: "#FFEEB3", color: "#013E37" }}
+              >
+                Naik tahap: {utama.sebelum?.level ?? "—"} → {utama.selepas?.level ?? "—"}
+              </span>
+            )}
+          </div>
+
+          {utama.bahasa_cadangan && (
+            <p className="mt-3 text-sm" style={{ color: "#134E3A" }}>{utama.bahasa_cadangan}</p>
+          )}
+
+          <p className="mt-2 text-[11px] text-muted-foreground">
+            {utama.jumlah_percubaan ?? 0} percubaan · {utama.jumlah_sesi_berasingan ?? 0} sesi ·{" "}
+            {utama.hari_berbeza ?? 0} hari pembelajaran
+          </p>
+        </div>
+      )}
+
+      {kemajuan.length > 1 && (
+        <div>
+          <button
+            type="button"
+            onClick={() => setExpand((v) => !v)}
+            className="rounded-xl px-3 py-2 text-xs font-extrabold"
+            style={{ background: "#E3F6EA", color: HIJAU }}
+          >
+            {expand ? "Sembunyikan" : "Lihat semua kemajuan"}
+          </button>
+          {expand && (
+            <ul className="mt-2 flex flex-col gap-2">
+              {kemajuan.slice(1).map((k) => (
+                <li
+                  key={k.micro_skill_id}
+                  className="flex flex-wrap items-center justify-between gap-2 rounded-xl bg-white/80 px-3 py-2"
+                >
+                  <span className="text-xs font-bold" style={{ color: "#013E37" }}>
+                    {k.nama}
+                    {k.darjah != null ? ` · Darjah ${k.darjah}` : ""}
+                  </span>
+                  <span className="text-xs font-extrabold">
+                    <span style={{ color: "#B0872B" }}>{k.sebelum?.mastery_score ?? 0}%</span>
+                    <span className="mx-1" style={{ color: HIJAU }}>→</span>
+                    <span style={{ color: HIJAU }}>{k.selepas?.mastery_score ?? 0}%</span>
+                    <span className="ml-2" style={{ color: HIJAU }}>+{k.perubahan_mata ?? 0} mata</span>
+                  </span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
+    </div>,
+  );
+}
+
 function KaliInsightCard({
+
   childUserId,
   namaAnak,
   darjahAnak,
