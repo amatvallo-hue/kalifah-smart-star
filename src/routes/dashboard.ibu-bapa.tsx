@@ -2001,19 +2001,6 @@ function KaliBuktiKemajuanCard({
 
 
 
-  if (data.status === "belum_cukup_data") {
-    return shell(<p className="text-sm text-muted-foreground">{data.mesej_belum_cukup}</p>);
-  }
-
-  if (data.status === "mengumpul_data") {
-    return shell(
-      <div className="flex flex-col gap-3">
-        <p className="text-sm text-muted-foreground">{data.mesej_belum_cukup}</p>
-        {r7 && (r7.jumlah_soalan ?? 0) > 0 && ringkasan7}
-      </div>,
-    );
-  }
-
   const utama = kemajuan[0];
   return shell(
     <div className="flex flex-col gap-4">
