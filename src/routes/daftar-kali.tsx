@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import {
   UserPlus,
   User,
@@ -251,7 +251,8 @@ function DaftarKaliPage() {
     setRalatAnak(null);
     setSedangCiptaAnak(true);
     try {
-      const result = await ciptaAkaunAnak(namaAnak, String(darjah ?? 1));
+      if (!telegramRequestIdRef.current) telegramRequestIdRef.current = crypto.randomUUID();
+      const result = await ciptaAkaunAnak(namaAnak, String(darjah ?? 1), telegramRequestIdRef.current);
       if (!result.ok) {
         console.error("ciptaAkaunAnak gagal:", result.mesej);
         setRalatAnak(result.mesej ?? "Gagal cipta akaun anak.");
