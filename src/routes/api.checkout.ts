@@ -178,6 +178,13 @@ export const Route = createFileRoute("/api/checkout")({
               ? body.customer_email.trim().slice(0, 254)
               : null;
 
+          const packageCode =
+            body.pakej === "satu"
+              ? "annual_single_grade"
+              : body.pakej === "bundle"
+                ? "annual_all_grades"
+                : null;
+
           const {
             data: order,
             error: orderErr,
@@ -193,6 +200,10 @@ export const Route = createFileRoute("/api/checkout")({
               status: "pending",
               ref_code: refCode,
               customer_email: customerEmailInput,
+              duration_months: 12,
+              price_sen_snapshot: amountSen,
+              included_darjah_snapshot: darjah,
+              package_code: packageCode,
             })
             .select("id, amount_sen, status, created_at")
             .single();
