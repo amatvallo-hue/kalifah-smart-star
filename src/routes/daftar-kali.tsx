@@ -352,10 +352,13 @@ function DaftarKaliPage() {
 
   // Laluan pantas: parent terus ke pelan & harga (akaun anak dicipta di belakang).
   async function pilihLaluanPantas() {
+    if (sedangPilihLaluanPantas) return;
+    setSedangPilihLaluanPantas(true);
     const d = String(darjah ?? 1);
     try {
       if (namaAnak.trim() && darjah) {
-        const result = await ciptaAkaunAnak(namaAnak, d);
+        if (!laluanPantasRequestIdRef.current) laluanPantasRequestIdRef.current = crypto.randomUUID();
+        const result = await ciptaAkaunAnak(namaAnak, d, laluanPantasRequestIdRef.current);
         if (result.ok && result.session && typeof window !== "undefined") {
           window.sessionStorage.setItem(
             "kali_fastpath_anak",
@@ -376,9 +379,12 @@ function DaftarKaliPage() {
       }
     } catch (e) {
       console.error("pilihLaluanPantas ralat:", e);
+    } finally {
+      setSedangPilihLaluanPantas(false);
     }
     navigate({ to: "/harga", search: { pakej: "satu", darjah: d, nama: namaAnak } });
   }
+
 
 
 
