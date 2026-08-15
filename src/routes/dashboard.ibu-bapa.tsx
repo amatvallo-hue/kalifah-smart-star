@@ -1716,7 +1716,10 @@ function FormTambahAnak({ onAdded }: { onAdded: () => void }) {
     setLoading(true);
     setErr(null);
     setOk(null);
-    const res = await ciptaAkaunAnak(nama, darjah);
+    // Guna requestId sedia ada (retry selepas gagal) atau jana baharu.
+    const rid = requestId ?? crypto.randomUUID();
+    if (!requestId) setRequestId(rid);
+    const res = await ciptaAkaunAnak(nama, darjah, rid);
     if (!res.ok) {
       setLoading(false);
       setErr(res.mesej ?? "Gagal mencipta akaun anak.");
@@ -1730,9 +1733,11 @@ function FormTambahAnak({ onAdded }: { onAdded: () => void }) {
       password: res.generatedPassword ?? "-",
       session: res.session ?? null,
     });
+    setRequestId(null);
     setLoading(false);
     setNama("");
   }
+
 
 
   return (
