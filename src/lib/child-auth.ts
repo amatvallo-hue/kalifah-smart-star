@@ -66,6 +66,7 @@ function janaUsernameDari(nama: string): string {
 export async function ciptaAkaunAnak(
   nama: string,
   darjah: string,
+  requestId: string,
 ): Promise<{
   ok: boolean;
   mesej?: string;
@@ -79,6 +80,30 @@ export async function ciptaAkaunAnak(
   if (!nama.trim()) {
     return { ok: false, mesej: "Sila isi nama anak." };
   }
+
+  // 0) Idempotency: kalau request_id ni dah pernah berjaya, pulang terus.
+  try {
+    const { data: existing } = await supabase.rpc("find_child_by_creation_request" as never, {
+      p_request_id: requestId,
+    } as never);
+    const row = (Array.isArray(existing) ? existing[0] : existing) as
+      | { id: string; child_user_id: string | null; username: string | null }
+      | null
+      | undefined;
+    if (row && row.id) {
+      return {
+        ok: true,
+        childId: row.id,
+        userId: row.child_user_id ?? undefined,
+        username: row.username ?? undefined,
+        session: null,
+        needsManualLogin: true,
+      };
+    }
+  } catch (e) {
+    console.error("[ciptaAkaunAnak] find_child_by_creation_request gagal:", e);
+  }
+
   const password = janaPassword();
 
 
@@ -86,6 +111,7 @@ export async function ciptaAkaunAnak(
   const { data: parentSess } = await supabase.auth.getSession();
   const parentId = parentSess.session?.user?.id;
   if (!parentId) return { ok: false, mesej: "Anda perlu log masuk sebagai ibu bapa." };
+
 
   // 2) Jana username unik (cuba beberapa kali kalau clash)
   let uname = "";
