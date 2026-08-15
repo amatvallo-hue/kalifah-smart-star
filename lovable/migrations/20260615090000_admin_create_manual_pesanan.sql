@@ -31,14 +31,23 @@ BEGIN
   END IF;
 
   INSERT INTO public.pesanan (
-    user_id, pakej, darjah_dipilih, amount_sen, status, payment_method
+    user_id, pakej, darjah_dipilih, amount_sen, status, payment_method,
+    duration_months, price_sen_snapshot, included_darjah_snapshot, package_code
   ) VALUES (
     p_user_id,
     p_pakej,
     COALESCE(p_darjah_dipilih, '{}'::int[]),
     p_amount_sen,
     'pending',
-    'manual'
+    'manual',
+    12,
+    p_amount_sen,
+    COALESCE(p_darjah_dipilih, '{}'::int[]),
+    CASE
+      WHEN p_pakej = 'single' THEN 'annual_single_grade'
+      WHEN p_pakej = 'bundle' THEN 'annual_all_grades'
+      ELSE NULL
+    END
   )
   RETURNING * INTO v_row;
 
