@@ -145,6 +145,7 @@ export async function ciptaAkaunAnak(
     return { ok: false, mesej: signupErr?.message ?? "Gagal cipta akaun anak." };
   }
   const childUserId = signup.user.id;
+  const newAuthUserId = childUserId;
 
   // 4) Cipta rekod child_profile berserta pautan
   const kod = janaKod();
@@ -157,12 +158,22 @@ export async function ciptaAkaunAnak(
       nama: nama.trim(),
       darjah,
       kod_jemputan: kod,
+      creation_request_id: requestId,
     })
     .select("id")
     .single();
   if (insertErr || !row) {
+    // Cleanup auth user yatim — kegagalan cleanup tak boleh tukar ralat asal.
+    try {
+      await supabase.rpc("cleanup_orphan_child_auth" as never, {
+        p_auth_user_id: newAuthUserId,
+      } as never);
+    } catch (e) {
+      console.error("[ciptaAkaunAnak] cleanup_orphan_child_auth gagal:", e);
+    }
     return { ok: false, mesej: insertErr?.message ?? "Gagal simpan profil anak." };
   }
+
 
   const darjahNumEvt = Number(darjah);
   try {
