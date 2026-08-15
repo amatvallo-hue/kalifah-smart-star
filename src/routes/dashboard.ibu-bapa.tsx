@@ -2294,10 +2294,12 @@ function KaliInsightCard({
           <p className="mt-1 text-sm text-white/85">{insight.sebab}</p>
           {insight.mastery_score != null && (
             <p className="mt-1 text-xs text-white/60">
-              Tahap {insight.micro_skill_nama}
-              {insight.micro_skill_darjah ? ` (Darjah ${insight.micro_skill_darjah})` : ""}: {insight.mastery_score}%
+              {insight.original_skill_nama
+                ? `Penguasaan asas Darjah ${insight.micro_skill_darjah}: ${insight.mastery_score}% · ${labelMasteryBand(insight.mastery_score)}`
+                : `Tahap ${insight.micro_skill_nama}${insight.micro_skill_darjah ? ` (Darjah ${insight.micro_skill_darjah})` : ""}: ${insight.mastery_score}% · ${labelMasteryBand(insight.mastery_score)}`}
             </p>
           )}
+
 
 
           <hr className="my-3 border-t" style={{ borderColor: "rgba(255,255,255,0.15)" }} />
