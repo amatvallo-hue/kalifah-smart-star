@@ -408,6 +408,7 @@ function AllUsers() {
   const [pesananMap, setPesananMap] = useState<Record<string, string>>({});
   const [confirmFor, setConfirmFor] = useState<Profile | null>(null);
   const [approving, setApproving] = useState(false);
+  const [approveRequestId, setApproveRequestId] = useState<string | null>(null);
 
   async function reload() {
     setLoading(true);
@@ -469,7 +470,7 @@ function AllUsers() {
   }
 
   async function approve() {
-    if (!confirmFor) return;
+    if (!confirmFor || !approveRequestId) return;
     const picks = pickedDarjah[confirmFor.id] ?? [];
     if (picks.length === 0) {
       toast.error("Sila pilih sekurang-kurangnya satu darjah");
@@ -485,8 +486,20 @@ function AllUsers() {
         toast.error("Gagal approve: " + (error.message || "Ralat tidak diketahui"));
         return;
       }
+      for (const d of picks) {
+        const { error: v2Error } = await supabase.rpc("admin_grant_darjah_akses_v2", {
+          p_parent_id: confirmFor.id,
+          p_darjah: d,
+          p_duration_months: 12,
+          p_request_id: approveRequestId,
+        });
+        if (v2Error) {
+          console.error("shadow-write admin_grant_darjah_akses_v2 gagal:", v2Error);
+        }
+      }
       toast.success(`Akses diberi: Darjah ${picks.join(", ")}`);
       setConfirmFor(null);
+      setApproveRequestId(null);
       setPickedDarjah((prev) => {
         const next = { ...prev };
         delete next[confirmFor.id];
@@ -720,7 +733,10 @@ function AllUsers() {
                       <Button
                         size="sm"
                         disabled={picks.length === 0}
-                        onClick={() => setConfirmFor(r)}
+                        onClick={() => {
+                          setConfirmFor(r);
+                          setApproveRequestId(crypto.randomUUID());
+                        }}
                       >
                         ✅ Approve
                       </Button>
@@ -756,7 +772,14 @@ function AllUsers() {
             </p>
           )}
           <DialogFooter>
-            <Button variant="outline" onClick={() => setConfirmFor(null)} disabled={approving}>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setConfirmFor(null);
+                setApproveRequestId(null);
+              }}
+              disabled={approving}
+            >
               Batal
             </Button>
             <Button onClick={approve} disabled={approving}>
