@@ -1092,6 +1092,14 @@ function ParentDashboard() {
                       </div>
                     )}
 
+                    {/* BUKTI KEMAJUAN BERSAMA KALI */}
+                    <Seksyen tajuk="Bukti Kemajuan Bersama KALI" ikon={<TrendingUp className="h-5 w-5" />}>
+                      <KaliBuktiKemajuanCard
+                        childUserId={anakAktif.child_user_id}
+                        namaAnak={anakAktif.nama}
+                      />
+                    </Seksyen>
+
                     {/* KALI INSIGHT — penuh untuk anak berbayar, teaser state-language untuk anak percuma */}
                     <Seksyen tajuk="Cadangan KALI Hari Ini" ikon={<Sparkles className="h-5 w-5" />}>
                       {anakPaid === null ? (
