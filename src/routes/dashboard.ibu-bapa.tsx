@@ -1092,30 +1092,15 @@ function ParentDashboard() {
                       </div>
                     )}
 
-                    {/* BUKTI KEMAJUAN BERSAMA KALI */}
-                    <Seksyen tajuk="Bukti Kemajuan Bersama KALI" ikon={<TrendingUp className="h-5 w-5" />}>
-                      <KaliBuktiKemajuanCard
-                        childUserId={anakAktif.child_user_id}
-                        namaAnak={anakAktif.nama}
-                      />
-                    </Seksyen>
+                    {/* KALI: Bukti Kemajuan + Cadangan (susunan bergantung data kemajuan) */}
+                    <SeksyenKaliGabungan
+                      childUserId={anakAktif.child_user_id}
+                      childProfileId={anakAktif.id}
+                      namaAnak={anakAktif.nama}
+                      darjahAnak={anakAktif.darjah}
+                      anakPaid={anakPaid}
+                    />
 
-                    {/* KALI INSIGHT — penuh untuk anak berbayar, teaser state-language untuk anak percuma */}
-                    <Seksyen tajuk="Cadangan KALI Hari Ini" ikon={<Sparkles className="h-5 w-5" />}>
-                      {anakPaid === null ? (
-                        <div className="rounded-2xl p-5 shadow-card">
-                          <p className="text-sm text-muted-foreground">Memuatkan cadangan KALI...</p>
-                        </div>
-                      ) : anakPaid ? (
-                        <KaliInsightCard childUserId={anakAktif.child_user_id} namaAnak={anakAktif.nama} darjahAnak={anakAktif.darjah} />
-                      ) : (
-                        <KaliUpdateCard
-                          childProfileId={anakAktif.id}
-                          childDarjah={anakAktif.darjah}
-                          namaAnak={anakAktif.nama}
-                        />
-                      )}
-                    </Seksyen>
 
                     {/* HERO SUMMARY: Subjek Terkuat & Perlukan Perhatian */}
                     <Seksyen tajuk="Ringkasan Prestasi" ikon={<Trophy className="h-5 w-5" />}>
@@ -1863,21 +1848,32 @@ function pct(v: number | null | undefined): string {
   return `${Math.round(v * 100)}%`;
 }
 
-function KaliBuktiKemajuanCard({
+function labelMasteryBand(m: number): string {
+  if (m < 40) return "Perlu Bantuan";
+  if (m < 60) return "Perlu Diperkukuhkan";
+  if (m < 80) return "Sedang Berkembang";
+  return "Sudah Dikuasai";
+}
+
+function SeksyenKaliGabungan({
   childUserId,
+  childProfileId,
   namaAnak,
+  darjahAnak,
+  anakPaid,
 }: {
   childUserId: string;
+  childProfileId: string;
   namaAnak: string;
+  darjahAnak: string;
+  anakPaid: boolean | null;
 }) {
   const [data, setData] = useState<LaporanKemajuan | null>(null);
   const [loading, setLoading] = useState(true);
-  const [expand, setExpand] = useState(false);
 
   useEffect(() => {
     let mounted = true;
     setLoading(true);
-    setExpand(false);
     (async () => {
       try {
         const { data: res, error } = await supabase.rpc("kali_laporan_kemajuan", {
@@ -1886,7 +1882,7 @@ function KaliBuktiKemajuanCard({
         if (error) throw error;
         if (mounted) setData((res as unknown as LaporanKemajuan) ?? null);
       } catch (e) {
-        console.error("[KaliBuktiKemajuanCard] RPC error:", e);
+        console.error("[SeksyenKaliGabungan] RPC error:", e);
         if (mounted) setData(null);
       } finally {
         if (mounted) setLoading(false);
@@ -1897,9 +1893,87 @@ function KaliBuktiKemajuanCard({
     };
   }, [childUserId]);
 
+  const adaKemajuan = (data?.kemajuan_30_hari?.length ?? 0) > 0;
   const nama = data?.anak_nama || namaAnak;
-  const kemajuan = data?.kemajuan_30_hari ?? [];
-  const r7 = data?.ringkasan_7_hari ?? null;
+
+  const cadangan = (
+    <Seksyen tajuk="Cadangan KALI Hari Ini" ikon={<Sparkles className="h-5 w-5" />}>
+      {anakPaid === null ? (
+        <div className="rounded-2xl p-5 shadow-card">
+          <p className="text-sm text-muted-foreground">Memuatkan cadangan KALI...</p>
+        </div>
+      ) : anakPaid ? (
+        <KaliInsightCard childUserId={childUserId} namaAnak={namaAnak} darjahAnak={darjahAnak} />
+      ) : (
+        <KaliUpdateCard childProfileId={childProfileId} childDarjah={darjahAnak} namaAnak={namaAnak} />
+      )}
+    </Seksyen>
+  );
+
+  if (loading) {
+    return cadangan;
+  }
+
+  if (adaKemajuan && data) {
+    return (
+      <>
+        <Seksyen tajuk="Bukti Kemajuan Bersama KALI" ikon={<TrendingUp className="h-5 w-5" />}>
+          <KaliBuktiKemajuanCard data={data} namaAnak={namaAnak} />
+        </Seksyen>
+        {cadangan}
+      </>
+    );
+  }
+
+  return (
+    <>
+      {cadangan}
+      {data && <KaliKemajuanCompactCard nama={nama} />}
+    </>
+  );
+}
+
+function KaliKemajuanCompactCard({ nama }: { nama: string }) {
+  return (
+    <div
+      className="rounded-2xl p-4 shadow-soft"
+      style={{ background: "#F1FAF4", border: "2px solid #BFE7D2" }}
+    >
+      <div className="flex items-center gap-2">
+        <TrendingUp className="h-4 w-4" style={{ color: HIJAU }} />
+        <h3 className="font-display text-sm font-extrabold" style={{ color: "#013E37" }}>
+          KALI mula merekod kemajuan {nama}
+        </h3>
+      </div>
+      <p className="mt-1.5 text-xs leading-relaxed" style={{ color: "#134E3A" }}>
+        Selepas beberapa sesi pembelajaran, KALI akan membandingkan tahap sebelum dan selepas untuk menunjukkan
+        perubahan penguasaan {nama}.
+      </p>
+      <span
+        className="mt-2 inline-block rounded-full px-2.5 py-1 text-[11px] font-bold"
+        style={{ background: "#FFF7DC", color: "#7A5000" }}
+      >
+        Belum cukup data · Teruskan beberapa sesi bersama KALI
+      </span>
+      <p className="mt-2 text-[11px] text-muted-foreground">
+        Jawab beberapa sesi → KALI bandingkan penguasaan → Laporan tersedia
+      </p>
+    </div>
+  );
+}
+
+function KaliBuktiKemajuanCard({
+  data,
+  namaAnak,
+}: {
+  data: LaporanKemajuan;
+  namaAnak: string;
+}) {
+  const [expand, setExpand] = useState(false);
+
+  const nama = data.anak_nama || namaAnak;
+  const kemajuan = data.kemajuan_30_hari ?? [];
+  const r7 = data.ringkasan_7_hari ?? null;
 
   const shell = (children: React.ReactNode) => (
     <div
@@ -1915,9 +1989,6 @@ function KaliBuktiKemajuanCard({
       {children}
     </div>
   );
-
-  if (loading) return shell(<p className="text-sm text-muted-foreground">Memuatkan laporan kemajuan...</p>);
-  if (!data) return null;
 
   const ringkasan7 = r7 && (
     <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
@@ -1935,18 +2006,7 @@ function KaliBuktiKemajuanCard({
     </div>
   );
 
-  if (data.status === "belum_cukup_data") {
-    return shell(<p className="text-sm text-muted-foreground">{data.mesej_belum_cukup}</p>);
-  }
 
-  if (data.status === "mengumpul_data") {
-    return shell(
-      <div className="flex flex-col gap-3">
-        <p className="text-sm text-muted-foreground">{data.mesej_belum_cukup}</p>
-        {r7 && (r7.jumlah_soalan ?? 0) > 0 && ringkasan7}
-      </div>,
-    );
-  }
 
   const utama = kemajuan[0];
   return shell(
@@ -2241,10 +2301,12 @@ function KaliInsightCard({
           <p className="mt-1 text-sm text-white/85">{insight.sebab}</p>
           {insight.mastery_score != null && (
             <p className="mt-1 text-xs text-white/60">
-              Tahap {insight.micro_skill_nama}
-              {insight.micro_skill_darjah ? ` (Darjah ${insight.micro_skill_darjah})` : ""}: {insight.mastery_score}%
+              {insight.original_skill_nama
+                ? `Penguasaan asas Darjah ${insight.micro_skill_darjah}: ${insight.mastery_score}% · ${labelMasteryBand(insight.mastery_score)}`
+                : `Tahap ${insight.micro_skill_nama}${insight.micro_skill_darjah ? ` (Darjah ${insight.micro_skill_darjah})` : ""}: ${insight.mastery_score}% · ${labelMasteryBand(insight.mastery_score)}`}
             </p>
           )}
+
 
 
           <hr className="my-3 border-t" style={{ borderColor: "rgba(255,255,255,0.15)" }} />
