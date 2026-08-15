@@ -161,7 +161,12 @@ function DaftarKaliPage() {
   const [showTelegram, setShowTelegram] = useState(false);
   const [parentId, setParentId] = useState<string | null>(null);
   const [sedangCiptaAnak, setSedangCiptaAnak] = useState(false);
+  const [sedangPilihLaluanPantas, setSedangPilihLaluanPantas] = useState(false);
+  // requestId stabil: sekali dijana, kekal untuk semua retry dalam flow yang sama
+  const telegramRequestIdRef = useRef<string | null>(null);
+  const laluanPantasRequestIdRef = useRef<string | null>(null);
   const [ralatAnak, setRalatAnak] = useState<string | null>(null);
+
   const [kredensialAnak, setKredensialAnak] = useState<
     { username: string; password: string; session: { access_token: string; refresh_token: string } | null } | null
   >(null);
