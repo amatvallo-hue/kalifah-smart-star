@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import {
   UserPlus,
   User,
@@ -161,7 +161,12 @@ function DaftarKaliPage() {
   const [showTelegram, setShowTelegram] = useState(false);
   const [parentId, setParentId] = useState<string | null>(null);
   const [sedangCiptaAnak, setSedangCiptaAnak] = useState(false);
+  const [sedangPilihLaluanPantas, setSedangPilihLaluanPantas] = useState(false);
+  // requestId stabil: sekali dijana, kekal untuk semua retry dalam flow yang sama
+  const telegramRequestIdRef = useRef<string | null>(null);
+  const laluanPantasRequestIdRef = useRef<string | null>(null);
   const [ralatAnak, setRalatAnak] = useState<string | null>(null);
+
   const [kredensialAnak, setKredensialAnak] = useState<
     { username: string; password: string; session: { access_token: string; refresh_token: string } | null } | null
   >(null);
@@ -246,7 +251,8 @@ function DaftarKaliPage() {
     setRalatAnak(null);
     setSedangCiptaAnak(true);
     try {
-      const result = await ciptaAkaunAnak(namaAnak, String(darjah ?? 1));
+      if (!telegramRequestIdRef.current) telegramRequestIdRef.current = crypto.randomUUID();
+      const result = await ciptaAkaunAnak(namaAnak, String(darjah ?? 1), telegramRequestIdRef.current);
       if (!result.ok) {
         console.error("ciptaAkaunAnak gagal:", result.mesej);
         setRalatAnak(result.mesej ?? "Gagal cipta akaun anak.");
@@ -346,10 +352,13 @@ function DaftarKaliPage() {
 
   // Laluan pantas: parent terus ke pelan & harga (akaun anak dicipta di belakang).
   async function pilihLaluanPantas() {
+    if (sedangPilihLaluanPantas) return;
+    setSedangPilihLaluanPantas(true);
     const d = String(darjah ?? 1);
     try {
       if (namaAnak.trim() && darjah) {
-        const result = await ciptaAkaunAnak(namaAnak, d);
+        if (!laluanPantasRequestIdRef.current) laluanPantasRequestIdRef.current = crypto.randomUUID();
+        const result = await ciptaAkaunAnak(namaAnak, d, laluanPantasRequestIdRef.current);
         if (result.ok && result.session && typeof window !== "undefined") {
           window.sessionStorage.setItem(
             "kali_fastpath_anak",
@@ -370,9 +379,12 @@ function DaftarKaliPage() {
       }
     } catch (e) {
       console.error("pilihLaluanPantas ralat:", e);
+    } finally {
+      setSedangPilihLaluanPantas(false);
     }
     navigate({ to: "/harga", search: { pakej: "satu", darjah: d, nama: namaAnak } });
   }
+
 
 
 
@@ -766,9 +778,12 @@ function DaftarKaliPage() {
             <button
               type="button"
               onClick={() => void pilihLaluanPantas()}
-              className="text-sm font-bold text-muted-foreground underline underline-offset-2 hover:text-foreground"
+              disabled={sedangPilihLaluanPantas}
+              className="text-sm font-bold text-muted-foreground underline underline-offset-2 hover:text-foreground disabled:opacity-60"
             >
-              Dah yakin dengan KALI? Lihat pelan &amp; harga →
+              {sedangPilihLaluanPantas
+                ? "Menyediakan…"
+                : "Dah yakin dengan KALI? Lihat pelan & harga →"}
             </button>
           </div>
         </section>

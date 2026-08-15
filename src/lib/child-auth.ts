@@ -66,6 +66,7 @@ function janaUsernameDari(nama: string): string {
 export async function ciptaAkaunAnak(
   nama: string,
   darjah: string,
+  requestId: string,
 ): Promise<{
   ok: boolean;
   mesej?: string;
@@ -79,6 +80,30 @@ export async function ciptaAkaunAnak(
   if (!nama.trim()) {
     return { ok: false, mesej: "Sila isi nama anak." };
   }
+
+  // 0) Idempotency: kalau request_id ni dah pernah berjaya, pulang terus.
+  try {
+    const { data: existing } = await supabase.rpc("find_child_by_creation_request" as never, {
+      p_request_id: requestId,
+    } as never);
+    const row = (Array.isArray(existing) ? existing[0] : existing) as
+      | { id: string; child_user_id: string | null; username: string | null }
+      | null
+      | undefined;
+    if (row && row.id) {
+      return {
+        ok: true,
+        childId: row.id,
+        userId: row.child_user_id ?? undefined,
+        username: row.username ?? undefined,
+        session: null,
+        needsManualLogin: true,
+      };
+    }
+  } catch (e) {
+    console.error("[ciptaAkaunAnak] find_child_by_creation_request gagal:", e);
+  }
+
   const password = janaPassword();
 
 
@@ -86,6 +111,7 @@ export async function ciptaAkaunAnak(
   const { data: parentSess } = await supabase.auth.getSession();
   const parentId = parentSess.session?.user?.id;
   if (!parentId) return { ok: false, mesej: "Anda perlu log masuk sebagai ibu bapa." };
+
 
   // 2) Jana username unik (cuba beberapa kali kalau clash)
   let uname = "";
@@ -119,6 +145,7 @@ export async function ciptaAkaunAnak(
     return { ok: false, mesej: signupErr?.message ?? "Gagal cipta akaun anak." };
   }
   const childUserId = signup.user.id;
+  const newAuthUserId = childUserId;
 
   // 4) Cipta rekod child_profile berserta pautan
   const kod = janaKod();
@@ -131,12 +158,22 @@ export async function ciptaAkaunAnak(
       nama: nama.trim(),
       darjah,
       kod_jemputan: kod,
+      creation_request_id: requestId,
     })
     .select("id")
     .single();
   if (insertErr || !row) {
+    // Cleanup auth user yatim — kegagalan cleanup tak boleh tukar ralat asal.
+    try {
+      await supabase.rpc("cleanup_orphan_child_auth" as never, {
+        p_auth_user_id: newAuthUserId,
+      } as never);
+    } catch (e) {
+      console.error("[ciptaAkaunAnak] cleanup_orphan_child_auth gagal:", e);
+    }
     return { ok: false, mesej: insertErr?.message ?? "Gagal simpan profil anak." };
   }
+
 
   const darjahNumEvt = Number(darjah);
   try {
