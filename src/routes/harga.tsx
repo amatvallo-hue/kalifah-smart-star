@@ -22,13 +22,23 @@ const EMAS = "#F5A623";
 
 type PakejId = "satu" | "perDarjah" | "bundle";
 
+interface AksesStatusRow {
+  darjah: number;
+  status: "lifetime" | "active" | "expiring_soon" | "expired_shadow" | "missing";
+  expires_at: string | null;
+  hari_baki: number | null;
+}
+
+
 function HargaPage() {
   const navigate = useNavigate();
   const [pickerFor, setPickerFor] = useState<PakejId | null>(null);
   const [pickerInitial, setPickerInitial] = useState<number[]>([]);
   const [loading, setLoading] = useState<PakejId | null>(null);
   const [fastpath, setFastpath] = useState<{ nama: string; darjah: number } | null>(null);
+  const [aksesStatus, setAksesStatus] = useState<AksesStatusRow[]>([]);
   const [showFamilyPakej, setShowFamilyPakej] = useState(false);
+
   const autoRan = useRef(false);
   const [emailGate, setEmailGate] = useState<{ pakej: PakejId; darjah: number[] } | null>(null);
 
@@ -140,7 +150,19 @@ function HargaPage() {
     setPickerFor(pakej);
   }, []);
 
+  useEffect(() => {
+    if (!fastpath) return;
+    supabase.rpc("get_my_akses_status").then(({ data, error }) => {
+      if (error) {
+        console.warn("[harga] get_my_akses_status error:", error);
+        return;
+      }
+      setAksesStatus((data ?? []) as AksesStatusRow[]);
+    });
+  }, [fastpath]);
+
   function renderPakejCard(p: (typeof PAKEJ_LIST)[number]) {
+
     const popular = !!p.popular;
     const isLoading = loading === p.id;
     return (
@@ -196,8 +218,34 @@ function HargaPage() {
     );
   }
 
+  function formatTarikhAkses(iso: string): string {
+    return new Date(iso).toLocaleDateString("ms-MY", {
+      timeZone: "Asia/Kuala_Lumpur",
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
+  }
+
+  function kiraTarikhTamatBaharu(expiresAt: string): string {
+    const current = new Date(expiresAt);
+    const base = current.getTime() > Date.now() ? current : new Date();
+    const next = new Date(base);
+    next.setMonth(next.getMonth() + 12);
+    return formatTarikhAkses(next.toISOString());
+  }
+
+  const renewalRow = fastpath
+    ? aksesStatus.find(
+        (s) =>
+          s.darjah === fastpath.darjah &&
+          (s.status === "active" || s.status === "expiring_soon" || s.status === "expired_shadow") &&
+          s.expires_at,
+      )
+    : undefined;
 
   return (
+
     <div className="min-h-screen bg-background">
       <header className="border-b border-border/60 bg-background/85 backdrop-blur">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
@@ -221,7 +269,9 @@ function HargaPage() {
                 🎉 KALI Dah Bersedia
               </span>
               <h1 className="mt-3 font-display text-3xl font-extrabold text-foreground md:text-4xl">
-                Aktifkan KALI untuk {fastpath.nama}
+                {renewalRow
+                  ? `Sambung Akses Darjah ${fastpath.darjah}`
+                  : `Aktifkan KALI untuk ${fastpath.nama}`}
               </h1>
               <span
                 className="mt-3 inline-flex items-center gap-1 rounded-full bg-card px-4 py-1.5 font-display text-xs font-extrabold shadow-soft"
@@ -234,6 +284,33 @@ function HargaPage() {
                 berdasarkan kemahiran yang perlu diperkukuhkan.
               </p>
             </div>
+
+            {renewalRow && (
+              <div className="mx-auto mt-6 w-full max-w-[420px] rounded-2xl bg-green-50 p-5 text-left md:p-6">
+
+                <p className="font-display text-sm font-extrabold" style={{ color: HIJAU }}>
+                  Ringkasan Pembaharuan
+                </p>
+                <ul className="mt-3 space-y-1.5 text-sm text-foreground">
+                  <li>
+                    <span className="font-bold text-muted-foreground">Tempoh:</span>{" "}
+                    <span className="font-extrabold">12 bulan</span>
+                  </li>
+                  <li>
+                    <span className="font-bold text-muted-foreground">Tarikh tamat semasa:</span>{" "}
+                    <span className="font-extrabold">{formatTarikhAkses(renewalRow.expires_at!)}</span>
+                  </li>
+                  <li>
+                    <span className="font-bold text-muted-foreground">Tarikh tamat baharu:</span>{" "}
+                    <span className="font-extrabold">{kiraTarikhTamatBaharu(renewalRow.expires_at!)}</span>
+                  </li>
+                </ul>
+                <p className="mt-3 text-[11px] leading-snug text-muted-foreground">
+                  Anggaran — tarikh sebenar dikira selepas bayaran berjaya.
+                </p>
+              </div>
+            )}
+
 
             {(() => {
               const satu = PAKEJ_LIST.find((p) => p.id === "satu")!;
