@@ -36,7 +36,9 @@ function HargaPage() {
   const [pickerInitial, setPickerInitial] = useState<number[]>([]);
   const [loading, setLoading] = useState<PakejId | null>(null);
   const [fastpath, setFastpath] = useState<{ nama: string; darjah: number } | null>(null);
+  const [aksesStatus, setAksesStatus] = useState<AksesStatusRow[]>([]);
   const [showFamilyPakej, setShowFamilyPakej] = useState(false);
+
   const autoRan = useRef(false);
   const [emailGate, setEmailGate] = useState<{ pakej: PakejId; darjah: number[] } | null>(null);
 
