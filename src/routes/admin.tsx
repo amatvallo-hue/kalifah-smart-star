@@ -478,24 +478,15 @@ function AllUsers() {
     }
     setApproving(true);
     try {
-      const { error } = await supabase.rpc("admin_grant_darjah_akses", {
+      const { error } = await supabase.rpc("admin_grant_darjah_akses_v3", {
         p_user_id: confirmFor.id,
         p_darjah: picks,
+        p_duration_months: 12,
+        p_request_id: approveRequestId,
       });
       if (error) {
         toast.error("Gagal approve: " + (error.message || "Ralat tidak diketahui"));
         return;
-      }
-      for (const d of picks) {
-        const { error: v2Error } = await supabase.rpc("admin_grant_darjah_akses_v2", {
-          p_parent_id: confirmFor.id,
-          p_darjah: d,
-          p_duration_months: 12,
-          p_request_id: approveRequestId,
-        });
-        if (v2Error) {
-          console.error("shadow-write admin_grant_darjah_akses_v2 gagal:", v2Error);
-        }
       }
       toast.success(`Akses diberi: Darjah ${picks.join(", ")}`);
       setConfirmFor(null);
