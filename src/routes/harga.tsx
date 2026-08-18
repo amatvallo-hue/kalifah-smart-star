@@ -218,8 +218,34 @@ function HargaPage() {
     );
   }
 
+  function formatTarikhAkses(iso: string): string {
+    return new Date(iso).toLocaleDateString("ms-MY", {
+      timeZone: "Asia/Kuala_Lumpur",
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
+  }
+
+  function kiraTarikhTamatBaharu(expiresAt: string): string {
+    const current = new Date(expiresAt);
+    const base = current.getTime() > Date.now() ? current : new Date();
+    const next = new Date(base);
+    next.setMonth(next.getMonth() + 12);
+    return formatTarikhAkses(next.toISOString());
+  }
+
+  const renewalRow = fastpath
+    ? aksesStatus.find(
+        (s) =>
+          s.darjah === fastpath.darjah &&
+          (s.status === "active" || s.status === "expiring_soon" || s.status === "expired_shadow") &&
+          s.expires_at,
+      )
+    : undefined;
 
   return (
+
     <div className="min-h-screen bg-background">
       <header className="border-b border-border/60 bg-background/85 backdrop-blur">
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
