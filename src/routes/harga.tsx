@@ -22,6 +22,14 @@ const EMAS = "#F5A623";
 
 type PakejId = "satu" | "perDarjah" | "bundle";
 
+interface AksesStatusRow {
+  darjah: number;
+  status: "lifetime" | "active" | "expiring_soon" | "expired_shadow" | "missing";
+  expires_at: string | null;
+  hari_baki: number | null;
+}
+
+
 function HargaPage() {
   const navigate = useNavigate();
   const [pickerFor, setPickerFor] = useState<PakejId | null>(null);
