@@ -188,6 +188,35 @@ function formatTarikh(iso: string): string {
   return `${hari} hari lalu`;
 }
 
+function formatTarikhAkses(iso: string | null): string {
+  if (!iso) return "";
+  return new Date(iso).toLocaleDateString("ms-MY", {
+    timeZone: "Asia/Kuala_Lumpur",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+}
+
+function labelStatusAkses(row: AksesStatusRow): { text: string; warna: string } {
+  switch (row.status) {
+    case "lifetime":
+      return { text: "🟢 Akses aktif tanpa tarikh tamat", warna: "#16A34A" };
+    case "active":
+      return { text: `🟢 Akses aktif sehingga ${formatTarikhAkses(row.expires_at)}`, warna: "#16A34A" };
+    case "expiring_soon":
+      return {
+        text: `🟠 Akses tamat dalam ${row.hari_baki ?? 0} hari — ${formatTarikhAkses(row.expires_at)}`,
+        warna: "#F97316",
+      };
+    case "expired_shadow":
+      return { text: "Tempoh akses sedang disemak", warna: "#6B7280" };
+    case "missing":
+    default:
+      return { text: "Akses aktif", warna: "#6B7280" };
+  }
+}
+
 const AKTIVITI_LABEL: Record<string, string> = {
   kuiz: "Kuiz",
   latihan: "Latihan Bertulis",
