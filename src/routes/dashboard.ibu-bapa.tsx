@@ -1088,22 +1088,38 @@ function ParentDashboard() {
             <section className="mt-6 flex flex-wrap gap-2">
               {anakList.map((a) => {
                 const aktif = a.id === aktifId;
+                const statusRow = aksesStatus.find((s) => s.darjah === Number(a.darjah));
+                const statusInfo = statusRow ? labelStatusAkses(statusRow) : null;
                 return (
-                  <button
-                    key={a.id}
-                    onClick={() => pilihAnak(a.id)}
-                    className="rounded-full px-4 py-2 font-display text-sm font-extrabold transition"
-                    style={{
-                      backgroundColor: aktif ? HIJAU : `${HIJAU}14`,
-                      color: aktif ? "#fff" : HIJAU,
-                      border: `2px solid ${aktif ? HIJAU : `${HIJAU}33`}`,
-                    }}
-                  >
-                    {a.nama} • D{a.darjah}
-                    {!a.child_user_id && (
-                      <span className="ml-2 rounded-full bg-white/20 px-2 py-0.5 text-[10px]">Belum link</span>
+                  <div key={a.id} className="flex flex-col gap-1">
+                    <button
+                      onClick={() => pilihAnak(a.id)}
+                      className="rounded-full px-4 py-2 font-display text-sm font-extrabold transition"
+                      style={{
+                        backgroundColor: aktif ? HIJAU : `${HIJAU}14`,
+                        color: aktif ? "#fff" : HIJAU,
+                        border: `2px solid ${aktif ? HIJAU : `${HIJAU}33`}`,
+                      }}
+                    >
+                      {a.nama} • D{a.darjah}
+                      {!a.child_user_id && (
+                        <span className="ml-2 rounded-full bg-white/20 px-2 py-0.5 text-[10px]">Belum link</span>
+                      )}
+                    </button>
+                    {statusInfo && (
+                      <span className="pl-1 text-[10px] leading-tight" style={{ color: statusInfo.warna }}>
+                        {statusInfo.text}
+                      </span>
                     )}
-                  </button>
+                    {statusRow?.status === "expiring_soon" && (
+                      <Link
+                        to={`/harga?pakej=satu&darjah=${Number(a.darjah)}&nama=${encodeURIComponent(a.nama)}`}
+                        className="ml-1 w-fit rounded-full bg-[#F97316] px-2 py-0.5 text-[10px] font-extrabold text-white transition hover:bg-[#EA580C]"
+                      >
+                        Sambung Akses
+                      </Link>
+                    )}
+                  </div>
                 );
               })}
             </section>
