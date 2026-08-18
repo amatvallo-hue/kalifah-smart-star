@@ -114,6 +114,13 @@ interface EmotionRow {
   created_at: string;
 }
 
+interface AksesStatusRow {
+  darjah: number;
+  status: "lifetime" | "active" | "expiring_soon" | "expired_shadow" | "missing";
+  expires_at: string | null;
+  hari_baki: number | null;
+}
+
 const EMOTION_EMOJI: Record<string, string> = {
   gembira: "😊", sedih: "😢", marah: "😡", takut: "😨", tenang: "😌",
 };
@@ -179,6 +186,35 @@ function formatTarikh(iso: string): string {
   if (jam < 24) return `${jam} jam lalu`;
   const hari = Math.round(jam / 24);
   return `${hari} hari lalu`;
+}
+
+function formatTarikhAkses(iso: string | null): string {
+  if (!iso) return "";
+  return new Date(iso).toLocaleDateString("ms-MY", {
+    timeZone: "Asia/Kuala_Lumpur",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+}
+
+function labelStatusAkses(row: AksesStatusRow): { text: string; warna: string } {
+  switch (row.status) {
+    case "lifetime":
+      return { text: "🟢 Akses aktif tanpa tarikh tamat", warna: "#16A34A" };
+    case "active":
+      return { text: `🟢 Akses aktif sehingga ${formatTarikhAkses(row.expires_at)}`, warna: "#16A34A" };
+    case "expiring_soon":
+      return {
+        text: `🟠 Akses tamat dalam ${row.hari_baki ?? 0} hari — ${formatTarikhAkses(row.expires_at)}`,
+        warna: "#F97316",
+      };
+    case "expired_shadow":
+      return { text: "Tempoh akses sedang disemak", warna: "#6B7280" };
+    case "missing":
+    default:
+      return { text: "Akses aktif", warna: "#6B7280" };
+  }
 }
 
 const AKTIVITI_LABEL: Record<string, string> = {
@@ -604,6 +640,7 @@ function ParentDashboard() {
   const [showMaklumat, setShowMaklumat] = useState(false);
   const [resetFor, setResetFor] = useState<ChildProfile | null>(null);
   const [lastSignInMap, setLastSignInMap] = useState<Map<string, string>>(new Map());
+  const [aksesStatus, setAksesStatus] = useState<AksesStatusRow[]>([]);
 
   const pilihAnak = useCallback((id: string | null) => {
     setAktifId(id);
@@ -663,6 +700,15 @@ function ParentDashboard() {
       }
     });
     muatLastSignInAnak();
+    // Muat status akses sekali; gagal = skip senyap
+    supabase.rpc("get_my_akses_status").then(({ data, error }) => {
+      if (error) {
+        console.warn("[ParentDashboard] get_my_akses_status error:", error);
+        return;
+      }
+      const rows = (data ?? []) as AksesStatusRow[];
+      setAksesStatus(rows);
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
@@ -1042,22 +1088,39 @@ function ParentDashboard() {
             <section className="mt-6 flex flex-wrap gap-2">
               {anakList.map((a) => {
                 const aktif = a.id === aktifId;
+                const statusRow = aksesStatus.find((s) => s.darjah === Number(a.darjah));
+                const statusInfo = statusRow ? labelStatusAkses(statusRow) : null;
                 return (
-                  <button
-                    key={a.id}
-                    onClick={() => pilihAnak(a.id)}
-                    className="rounded-full px-4 py-2 font-display text-sm font-extrabold transition"
-                    style={{
-                      backgroundColor: aktif ? HIJAU : `${HIJAU}14`,
-                      color: aktif ? "#fff" : HIJAU,
-                      border: `2px solid ${aktif ? HIJAU : `${HIJAU}33`}`,
-                    }}
-                  >
-                    {a.nama} • D{a.darjah}
-                    {!a.child_user_id && (
-                      <span className="ml-2 rounded-full bg-white/20 px-2 py-0.5 text-[10px]">Belum link</span>
+                  <div key={a.id} className="flex flex-col gap-1">
+                    <button
+                      onClick={() => pilihAnak(a.id)}
+                      className="rounded-full px-4 py-2 font-display text-sm font-extrabold transition"
+                      style={{
+                        backgroundColor: aktif ? HIJAU : `${HIJAU}14`,
+                        color: aktif ? "#fff" : HIJAU,
+                        border: `2px solid ${aktif ? HIJAU : `${HIJAU}33`}`,
+                      }}
+                    >
+                      {a.nama} • D{a.darjah}
+                      {!a.child_user_id && (
+                        <span className="ml-2 rounded-full bg-white/20 px-2 py-0.5 text-[10px]">Belum link</span>
+                      )}
+                    </button>
+                    {statusInfo && (
+                      <span className="pl-1 text-[10px] leading-tight" style={{ color: statusInfo.warna }}>
+                        {statusInfo.text}
+                      </span>
                     )}
-                  </button>
+                    {statusRow?.status === "expiring_soon" && (
+                      <Link
+                        to="/harga"
+                        search={{ pakej: "satu", darjah: Number(a.darjah), nama: a.nama }}
+                        className="ml-1 w-fit rounded-full bg-[#F97316] px-2 py-0.5 text-[10px] font-extrabold text-white transition hover:bg-[#EA580C]"
+                      >
+                        Sambung Akses
+                      </Link>
+                    )}
+                  </div>
                 );
               })}
             </section>
