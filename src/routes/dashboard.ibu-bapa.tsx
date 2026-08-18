@@ -701,19 +701,14 @@ function ParentDashboard() {
     });
     muatLastSignInAnak();
     // Muat status akses sekali; gagal = skip senyap
-    supabase
-      .rpc("get_my_akses_status")
-      .then(({ data, error }) => {
-        if (error) {
-          console.warn("[ParentDashboard] get_my_akses_status error:", error);
-          return;
-        }
-        const rows = (data ?? []) as AksesStatusRow[];
-        setAksesStatus(rows);
-      })
-      .catch((e) => {
-        console.warn("[ParentDashboard] get_my_akses_status failed:", e);
-      });
+    supabase.rpc("get_my_akses_status").then(({ data, error }) => {
+      if (error) {
+        console.warn("[ParentDashboard] get_my_akses_status error:", error);
+        return;
+      }
+      const rows = (data ?? []) as AksesStatusRow[];
+      setAksesStatus(rows);
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
