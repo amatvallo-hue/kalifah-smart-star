@@ -269,7 +269,9 @@ function HargaPage() {
                 🎉 KALI Dah Bersedia
               </span>
               <h1 className="mt-3 font-display text-3xl font-extrabold text-foreground md:text-4xl">
-                Aktifkan KALI untuk {fastpath.nama}
+                {renewalRow
+                  ? `Sambung Akses Darjah ${fastpath.darjah}`
+                  : `Aktifkan KALI untuk ${fastpath.nama}`}
               </h1>
               <span
                 className="mt-3 inline-flex items-center gap-1 rounded-full bg-card px-4 py-1.5 font-display text-xs font-extrabold shadow-soft"
@@ -282,6 +284,32 @@ function HargaPage() {
                 berdasarkan kemahiran yang perlu diperkukuhkan.
               </p>
             </div>
+
+            {renewalRow && (
+              <div className="mx-auto mt-6 w-full max-w-[420px] rounded-2xl bg-[#F0FDF4] p-5 text-left md:p-6">
+                <p className="font-display text-sm font-extrabold" style={{ color: HIJAU }}>
+                  Ringkasan Pembaharuan
+                </p>
+                <ul className="mt-3 space-y-1.5 text-sm text-foreground">
+                  <li>
+                    <span className="font-bold text-muted-foreground">Tempoh:</span>{" "}
+                    <span className="font-extrabold">12 bulan</span>
+                  </li>
+                  <li>
+                    <span className="font-bold text-muted-foreground">Tarikh tamat semasa:</span>{" "}
+                    <span className="font-extrabold">{formatTarikhAkses(renewalRow.expires_at!)}</span>
+                  </li>
+                  <li>
+                    <span className="font-bold text-muted-foreground">Tarikh tamat baharu:</span>{" "}
+                    <span className="font-extrabold">{kiraTarikhTamatBaharu(renewalRow.expires_at!)}</span>
+                  </li>
+                </ul>
+                <p className="mt-3 text-[11px] leading-snug text-muted-foreground">
+                  Anggaran — tarikh sebenar dikira selepas bayaran berjaya.
+                </p>
+              </div>
+            )}
+
 
             {(() => {
               const satu = PAKEJ_LIST.find((p) => p.id === "satu")!;
