@@ -114,6 +114,13 @@ interface EmotionRow {
   created_at: string;
 }
 
+interface AksesStatusRow {
+  darjah: number;
+  status: "lifetime" | "active" | "expiring_soon" | "expired_shadow" | "missing";
+  expires_at: string | null;
+  hari_baki: number | null;
+}
+
 const EMOTION_EMOJI: Record<string, string> = {
   gembira: "😊", sedih: "😢", marah: "😡", takut: "😨", tenang: "😌",
 };
