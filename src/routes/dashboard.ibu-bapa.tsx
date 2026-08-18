@@ -1113,7 +1113,8 @@ function ParentDashboard() {
                     )}
                     {statusRow?.status === "expiring_soon" && (
                       <Link
-                        to={`/harga?pakej=satu&darjah=${Number(a.darjah)}&nama=${encodeURIComponent(a.nama)}`}
+                        to="/harga"
+                        search={{ pakej: "satu", darjah: Number(a.darjah), nama: a.nama }}
                         className="ml-1 w-fit rounded-full bg-[#F97316] px-2 py-0.5 text-[10px] font-extrabold text-white transition hover:bg-[#EA580C]"
                       >
                         Sambung Akses
