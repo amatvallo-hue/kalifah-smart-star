@@ -150,7 +150,19 @@ function HargaPage() {
     setPickerFor(pakej);
   }, []);
 
+  useEffect(() => {
+    if (!fastpath) return;
+    supabase.rpc("get_my_akses_status").then(({ data, error }) => {
+      if (error) {
+        console.warn("[harga] get_my_akses_status error:", error);
+        return;
+      }
+      setAksesStatus((data ?? []) as AksesStatusRow[]);
+    });
+  }, [fastpath]);
+
   function renderPakejCard(p: (typeof PAKEJ_LIST)[number]) {
+
     const popular = !!p.popular;
     const isLoading = loading === p.id;
     return (
