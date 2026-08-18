@@ -286,7 +286,8 @@ function HargaPage() {
             </div>
 
             {renewalRow && (
-              <div className="mx-auto mt-6 w-full max-w-[420px] rounded-2xl bg-[#F0FDF4] p-5 text-left md:p-6">
+              <div className="mx-auto mt-6 w-full max-w-[420px] rounded-2xl bg-green-50 p-5 text-left md:p-6">
+
                 <p className="font-display text-sm font-extrabold" style={{ color: HIJAU }}>
                   Ringkasan Pembaharuan
                 </p>
