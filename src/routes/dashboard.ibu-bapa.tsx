@@ -640,6 +640,7 @@ function ParentDashboard() {
   const [showMaklumat, setShowMaklumat] = useState(false);
   const [resetFor, setResetFor] = useState<ChildProfile | null>(null);
   const [lastSignInMap, setLastSignInMap] = useState<Map<string, string>>(new Map());
+  const [aksesStatus, setAksesStatus] = useState<AksesStatusRow[]>([]);
 
   const pilihAnak = useCallback((id: string | null) => {
     setAktifId(id);
