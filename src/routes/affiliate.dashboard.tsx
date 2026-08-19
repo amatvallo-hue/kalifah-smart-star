@@ -932,11 +932,6 @@ function KempenKad({
     }
   }
 
-  function followUp() {
-    toast.info(
-      "Hubungi keluarga ini melalui saluran yang anda guna semasa kongsi kod tajaan tempoh hari — pantau progress dia di sini.",
-    );
-  }
 
   return (
     <div className="mt-6 rounded-2xl border border-emerald-300 bg-card p-5 shadow-soft">
