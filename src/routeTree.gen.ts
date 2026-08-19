@@ -31,6 +31,7 @@ import { Route as AdminChallengeRouteImport } from './routes/admin_.challenge'
 import { Route as AdminFunnelRouteImport } from './routes/admin_.funnel'
 import { Route as AdminFunnelKaliRouteImport } from './routes/admin_.funnel-kali'
 import { Route as AdminHadiahRouteImport } from './routes/admin_.hadiah'
+import { Route as AdminKempenRouteImport } from './routes/admin_.kempen'
 import { Route as AdminShopRouteImport } from './routes/admin_.shop'
 import { Route as AdminTelegramRouteImport } from './routes/admin_.telegram'
 import { Route as AffiliateDaftarRouteImport } from './routes/affiliate.daftar'
@@ -186,6 +187,11 @@ const AdminFunnelKaliRoute = AdminFunnelKaliRouteImport.update({
 const AdminHadiahRoute = AdminHadiahRouteImport.update({
   id: '/admin_/hadiah',
   path: '/admin/hadiah',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminKempenRoute = AdminKempenRouteImport.update({
+  id: '/admin_/kempen',
+  path: '/admin/kempen',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminShopRoute = AdminShopRouteImport.update({
@@ -462,6 +468,7 @@ export interface FileRoutesByFullPath {
   '/admin/funnel': typeof AdminFunnelRoute
   '/admin/funnel-kali': typeof AdminFunnelKaliRoute
   '/admin/hadiah': typeof AdminHadiahRoute
+  '/admin/kempen': typeof AdminKempenRoute
   '/admin/shop': typeof AdminShopRoute
   '/admin/telegram': typeof AdminTelegramRoute
   '/affiliate/daftar': typeof AffiliateDaftarRoute
@@ -532,6 +539,7 @@ export interface FileRoutesByTo {
   '/admin/funnel': typeof AdminFunnelRoute
   '/admin/funnel-kali': typeof AdminFunnelKaliRoute
   '/admin/hadiah': typeof AdminHadiahRoute
+  '/admin/kempen': typeof AdminKempenRoute
   '/admin/shop': typeof AdminShopRoute
   '/admin/telegram': typeof AdminTelegramRoute
   '/affiliate/daftar': typeof AffiliateDaftarRoute
@@ -603,6 +611,7 @@ export interface FileRoutesById {
   '/admin_/funnel': typeof AdminFunnelRoute
   '/admin_/funnel-kali': typeof AdminFunnelKaliRoute
   '/admin_/hadiah': typeof AdminHadiahRoute
+  '/admin_/kempen': typeof AdminKempenRoute
   '/admin_/shop': typeof AdminShopRoute
   '/admin_/telegram': typeof AdminTelegramRoute
   '/affiliate/daftar': typeof AffiliateDaftarRoute
@@ -675,6 +684,7 @@ export interface FileRouteTypes {
     | '/admin/funnel'
     | '/admin/funnel-kali'
     | '/admin/hadiah'
+    | '/admin/kempen'
     | '/admin/shop'
     | '/admin/telegram'
     | '/affiliate/daftar'
@@ -745,6 +755,7 @@ export interface FileRouteTypes {
     | '/admin/funnel'
     | '/admin/funnel-kali'
     | '/admin/hadiah'
+    | '/admin/kempen'
     | '/admin/shop'
     | '/admin/telegram'
     | '/affiliate/daftar'
@@ -815,6 +826,7 @@ export interface FileRouteTypes {
     | '/admin_/funnel'
     | '/admin_/funnel-kali'
     | '/admin_/hadiah'
+    | '/admin_/kempen'
     | '/admin_/shop'
     | '/admin_/telegram'
     | '/affiliate/daftar'
@@ -886,6 +898,7 @@ export interface RootRouteChildren {
   AdminFunnelRoute: typeof AdminFunnelRoute
   AdminFunnelKaliRoute: typeof AdminFunnelKaliRoute
   AdminHadiahRoute: typeof AdminHadiahRoute
+  AdminKempenRoute: typeof AdminKempenRoute
   AdminShopRoute: typeof AdminShopRoute
   AdminTelegramRoute: typeof AdminTelegramRoute
   AffiliateDaftarRoute: typeof AffiliateDaftarRoute
@@ -1088,6 +1101,13 @@ declare module '@tanstack/react-router' {
       path: '/admin/hadiah'
       fullPath: '/admin/hadiah'
       preLoaderRoute: typeof AdminHadiahRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin_/kempen': {
+      id: '/admin_/kempen'
+      path: '/admin/kempen'
+      fullPath: '/admin/kempen'
+      preLoaderRoute: typeof AdminKempenRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin_/shop': {
@@ -1438,6 +1458,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminFunnelRoute: AdminFunnelRoute,
   AdminFunnelKaliRoute: AdminFunnelKaliRoute,
   AdminHadiahRoute: AdminHadiahRoute,
+  AdminKempenRoute: AdminKempenRoute,
   AdminShopRoute: AdminShopRoute,
   AdminTelegramRoute: AdminTelegramRoute,
   AffiliateDaftarRoute: AffiliateDaftarRoute,
