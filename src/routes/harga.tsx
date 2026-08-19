@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { HARGA_ASAL, PAKEJ_LIST, DARJAH_LIST } from "@/lib/curriculum";
 import { supabase } from "@/integrations/supabase/client";
 import { KalifahLogo } from "@/components/KalifahLogo";
+import { SambungTelegram } from "@/components/SambungTelegram";
 
 export const Route = createFileRoute("/harga")({
   head: () => ({
@@ -38,6 +39,14 @@ function HargaPage() {
   const [fastpath, setFastpath] = useState<{ nama: string; darjah: number } | null>(null);
   const [aksesStatus, setAksesStatus] = useState<AksesStatusRow[]>([]);
   const [showFamilyPakej, setShowFamilyPakej] = useState(false);
+  const [kodTajaan, setKodTajaan] = useState("");
+  const [kodChecking, setKodChecking] = useState(false);
+  const [tajaanBerjaya, setTajaanBerjaya] = useState<{
+    slot_number: number;
+    darjah: number;
+    affiliate_nama?: string;
+    parentId: string;
+  } | null>(null);
 
   const autoRan = useRef(false);
   const [emailGate, setEmailGate] = useState<{ pakej: PakejId; darjah: number[] } | null>(null);
@@ -235,6 +244,79 @@ function HargaPage() {
     return formatTarikhAkses(next.toISOString());
   }
 
+  async function klikAktifkanFastpath(darjah: number) {
+    const kod = kodTajaan.trim();
+    if (!kod) {
+      await mulaBayar("satu", [darjah]);
+      return;
+    }
+    const { data: sess } = await supabase.auth.getSession();
+    if (!sess.session || sess.session.user.is_anonymous) {
+      toast.error("Kod Tajaan perlukan akaun berdaftar. Sila daftar/log masuk dahulu.");
+      return;
+    }
+    setKodChecking(true);
+    try {
+      const { data, error } = await supabase.rpc("redeem_kod_tajaan", {
+        p_kod_affiliate: kod,
+        p_darjah: darjah,
+      });
+      if (error) {
+        toast.error("Gagal menyemak kod. Sila cuba lagi.");
+        return;
+      }
+      const res = data as {
+        ok: boolean;
+        reason?: string;
+        bypass?: boolean;
+        slot_number?: number;
+        darjah?: number;
+        affiliate_nama?: string;
+      } | null;
+      if (!res || res.ok === false) {
+        const mesej =
+          res?.reason === "kod_kosong"
+            ? "Sila masukkan kod affiliate/tajaan."
+            : res?.reason === "darjah_tidak_sah"
+              ? "Darjah tidak sah."
+              : res?.reason === "not_authenticated"
+                ? "Sila log masuk dahulu."
+                : "Kod affiliate/tajaan tidak sah.";
+        toast.error(mesej);
+        return;
+      }
+      if (!res.bypass) {
+        if (res.reason === "sudah_ada_slot_aktif") {
+          toast.info("Anda sudah mempunyai slot tajaan aktif. Teruskan pembayaran seperti biasa.");
+        } else if (res.reason === "slot_habis") {
+          toast.info("Slot tajaan sudah penuh. Teruskan pembayaran seperti biasa.");
+        }
+        await mulaBayar("satu", [darjah]);
+        return;
+      }
+      const { data: userData } = await supabase.auth.getUser();
+      const uid = userData?.user?.id;
+      if (!uid) {
+        toast.error("Sesi tidak sah. Sila log masuk semula.");
+        return;
+      }
+      toast.success(
+        `🎉 Slot Tajaan #${res.slot_number} berjaya! Akses 30 hari Darjah ${res.darjah ?? darjah} diaktifkan.`,
+      );
+      setTajaanBerjaya({
+        slot_number: res.slot_number ?? 0,
+        darjah: res.darjah ?? darjah,
+        affiliate_nama: res.affiliate_nama,
+        parentId: uid,
+      });
+    } catch (e) {
+      console.error("[harga] redeem_kod_tajaan gagal", e);
+      toast.error("Ralat semasa menyemak kod. Sila cuba lagi.");
+    } finally {
+      setKodChecking(false);
+    }
+  }
+
   const renewalRow = fastpath
     ? aksesStatus.find(
         (s) =>
@@ -271,7 +353,7 @@ function HargaPage() {
         </div>
         <SambungTelegram
           parentId={tajaanBerjaya.parentId}
-          onLinked={() => navigate({ to: "/dashboard/ibu-bapa" })}
+          onLinked={() => navigate({ to: "/dashboard/ibu-bapa", search: { tambahAnak: undefined } })}
         />
       </div>
     );
@@ -373,15 +455,41 @@ function HargaPage() {
                     <li className="flex gap-2"><Check className="h-4 w-4 shrink-0" style={{ color: HIJAU }} /> Latihan mengikut tahap</li>
                     <li className="flex gap-2"><Check className="h-4 w-4 shrink-0" style={{ color: HIJAU }} /> Akses semua aktiviti Darjah {fastpath.darjah}</li>
                   </ul>
+                  <div className="mt-6 text-left">
+                    <label
+                      htmlFor="kod-tajaan"
+                      className="font-display text-xs font-extrabold uppercase tracking-wider"
+                      style={{ color: HIJAU }}
+                    >
+                      Kod Affiliate / Kod Tajaan
+                    </label>
+                    <input
+                      id="kod-tajaan"
+                      type="text"
+                      value={kodTajaan}
+                      onChange={(e) => setKodTajaan(e.target.value)}
+                      placeholder="cth. CIKGU01"
+                      autoCapitalize="characters"
+                      autoCorrect="off"
+                      spellCheck={false}
+                      className="mt-2 w-full rounded-2xl border-2 bg-background px-4 py-3 font-display text-sm font-bold uppercase text-foreground outline-none focus:border-[#1B8A5A]"
+                      style={{ borderColor: `${EMAS}66` }}
+                    />
+                    <p className="mt-1.5 text-[11px] leading-snug text-muted-foreground">
+                      Ada kod daripada guru/affiliate? Masukkan di sini (pilihan).
+                    </p>
+                  </div>
                   <button
                     type="button"
-                    onClick={() => void mulaBayar("satu", [fastpath.darjah])}
-                    disabled={isLoading}
+                    onClick={() => void klikAktifkanFastpath(fastpath.darjah)}
+                    disabled={isLoading || kodChecking}
                     className="mt-7 inline-flex w-full items-center justify-center gap-2 rounded-full px-5 py-3.5 font-display text-sm font-extrabold text-white shadow-soft disabled:opacity-60"
                     style={{ backgroundColor: HIJAU }}
                   >
-                    {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
-                    {isLoading
+                    {(isLoading || kodChecking) && <Loader2 className="h-4 w-4 animate-spin" />}
+                    {kodChecking
+                      ? "Menyemak kod…"
+                      : isLoading
                       ? "Memproses…"
                       : `Aktifkan KALI untuk ${fastpath.nama} — RM${satu.jumlahBayar}`}
                   </button>
