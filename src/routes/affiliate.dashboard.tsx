@@ -108,6 +108,9 @@ function AffiliateDashboardPage() {
   const [metrikBulanLepas, setMetrikBulanLepas] = useState<{ jualan: number; komisen: number }>({ jualan: 0, komisen: 0 });
   const [tipHariIni, setTipHariIni] = useState<string | null>(null);
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
+  const [kempenData, setKempenData] = useState<KempenAffDash | null>(null);
+  const [kempenExpanded, setKempenExpanded] = useState(false);
+
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
