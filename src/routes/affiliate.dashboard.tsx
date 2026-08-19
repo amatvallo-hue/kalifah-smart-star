@@ -66,7 +66,8 @@ interface KempenFamily {
 }
 
 type KempenSumber = {
-  label: string;
+  sumber: string | null;
+  kempen: string | null;
   klik: number;
   daftar: number;
   claim: number;
@@ -111,6 +112,37 @@ type KempenAffDash = {
 
 function rm(ringgit: number) {
   return `RM ${(ringgit ?? 0).toFixed(2)}`;
+}
+
+function unslug(s: string): string {
+  return s
+    .split("-")
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
+}
+
+function namaSumber(slug: string): string {
+  const map: Record<string, string> = {
+    threads: "Threads",
+    facebook: "Facebook",
+    instagram: "Instagram",
+    tiktok: "TikTok",
+    "status-whatsapp": "Status WhatsApp",
+  };
+  return map[slug] ?? unslug(slug);
+}
+
+function labelSumberBaris(s: KempenSumber): string {
+  if (s.sumber && s.kempen) {
+    return `${namaSumber(s.sumber)} / ${unslug(s.kempen)}`;
+  }
+  if (s.sumber) {
+    return namaSumber(s.sumber);
+  }
+  if (s.kempen) {
+    return unslug(s.kempen);
+  }
+  return "Tanpa Label";
 }
 
 const AYAT_HERO = [
@@ -1082,21 +1114,24 @@ function KempenKad({
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {sumber!.map((s) => (
-                    <TableRow key={s.label}>
-                      <TableCell className="text-sm font-medium">
-                        {s.label === "Tanpa Label" ? (
-                          <span className="text-muted-foreground">Tiada label (klik/kod terus)</span>
-                        ) : (
-                          s.label
-                        )}
-                      </TableCell>
-                      <TableCell className="text-right text-sm">{s.klik}</TableCell>
-                      <TableCell className="text-right text-sm">{s.daftar}</TableCell>
-                      <TableCell className="text-right text-sm">{s.claim}</TableCell>
-                      <TableCell className="text-right text-sm">{s.aktif}</TableCell>
-                    </TableRow>
-                  ))}
+                  {sumber!.map((s) => {
+                    const label = labelSumberBaris(s);
+                    return (
+                      <TableRow key={`${s.sumber ?? ""}|${s.kempen ?? ""}`}>
+                        <TableCell className="text-sm font-medium">
+                          {label === "Tanpa Label" ? (
+                            <span className="text-muted-foreground">Tiada label (klik/kod terus)</span>
+                          ) : (
+                            label
+                          )}
+                        </TableCell>
+                        <TableCell className="text-right text-sm">{s.klik}</TableCell>
+                        <TableCell className="text-right text-sm">{s.daftar}</TableCell>
+                        <TableCell className="text-right text-sm">{s.claim}</TableCell>
+                        <TableCell className="text-right text-sm">{s.aktif}</TableCell>
+                      </TableRow>
+                    );
+                  })}
                 </TableBody>
               </Table>
             </div>
