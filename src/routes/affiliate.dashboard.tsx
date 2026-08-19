@@ -524,6 +524,9 @@ function AffiliateDashboardPage() {
           <KempenKad
             alokasi={kempenData.alokasi}
             families={kempenData.families ?? []}
+            traffic={kempenData.traffic}
+            funnel={kempenData.funnel}
+            sumber={kempenData.sumber}
             expanded={kempenExpanded}
             onToggle={() => setKempenExpanded((v) => !v)}
             onCopyLink={copyLink}
