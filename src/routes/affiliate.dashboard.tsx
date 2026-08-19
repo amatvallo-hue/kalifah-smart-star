@@ -128,6 +128,13 @@ function AffiliateDashboardPage() {
       }
       setAff(a as Affiliate);
 
+      // Kempen tajaan (berasingan daripada funnel jualan)
+      const { data: kd } = await supabase.rpc("kempen_affiliate_dashboard");
+      if (kd && (kd as unknown as KempenAffDash).ok && (kd as unknown as KempenAffDash).ada_kempen) {
+        setKempenData(kd as unknown as KempenAffDash);
+      }
+
+
       // Tips jual hari ini (deterministic by day)
       const { data: tipsData } = await supabase.from("affiliate_tips").select("id, teks");
       if (tipsData && tipsData.length > 0) {
