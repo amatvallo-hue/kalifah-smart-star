@@ -399,7 +399,11 @@ function DaftarKaliPage() {
     sessionStorage.setItem(sessionKey, "1");
 
     (async () => {
-      await supabase.rpc("increment_affiliate_klik_by_ref", { p_ref: clean });
+      await supabase.rpc("increment_affiliate_klik_by_ref_utm", {
+        p_ref: clean,
+        p_utm_source: window.localStorage.getItem("kalifah_utm_source") || null,
+        p_utm_campaign: window.localStorage.getItem("kalifah_utm_campaign") || null,
+      });
     })();
   }, [ref]);
 
