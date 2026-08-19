@@ -3,6 +3,7 @@ import { Link, useLocation } from "@tanstack/react-router";
 const TABS = [
   { to: "/admin/affiliates/dashboard", label: "📊 Dashboard", match: "/admin/affiliates/dashboard" },
   { to: "/admin/affiliates", label: "👥 Affiliate", match: "/admin/affiliates" },
+  { to: "/admin/kempen", label: "🎁 Kempen", match: "/admin/kempen" },
   { to: "/admin/challenge", label: "🏆 Challenge", match: "/admin/challenge" },
   { to: "/admin/telegram", label: "🤖 Bot Telegram", match: "/admin/telegram" },
 ] as const;
