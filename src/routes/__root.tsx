@@ -250,14 +250,18 @@ function RootComponent() {
       window.localStorage.setItem("kalifah_ref", code);
       if (existing !== code) {
         // Increment klik untuk ref baru
-        fetch("https://pgpkqbdyxoejwvubluqq.supabase.co/rest/v1/rpc/affiliate_increment_klik", {
+        fetch("https://pgpkqbdyxoejwvubluqq.supabase.co/rest/v1/rpc/increment_affiliate_klik_by_ref_utm", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             apikey:
               "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBncGtxYmR5eG9land2dWJsdXFxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA1NjcyMjAsImV4cCI6MjA5NjE0MzIyMH0.dWoxARe5MfuHuCtMn53z50Kxh_-UjnqGnh8XREzPUUo",
           },
-          body: JSON.stringify({ _ref: code }),
+          body: JSON.stringify({
+            p_ref: code,
+            p_utm_source: window.localStorage.getItem("kalifah_utm_source") || null,
+            p_utm_campaign: window.localStorage.getItem("kalifah_utm_campaign") || null,
+          }),
         }).catch((e) => console.warn("[ref] klik gagal", e));
       }
     }
