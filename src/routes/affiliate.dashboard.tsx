@@ -837,3 +837,210 @@ function StatCard({
     </div>
   );
 }
+
+function KempenKad({
+  alokasi,
+  families,
+  expanded,
+  onToggle,
+  onCopyLink,
+  onLepasSlot,
+}: {
+  alokasi: NonNullable<KempenAffDash["alokasi"]>;
+  families: KempenFamily[];
+  expanded: boolean;
+  onToggle: () => void;
+  onCopyLink: () => void;
+  onLepasSlot: (klaimId: string) => void;
+}) {
+  const [memproses, setMemproses] = useState<string | null>(null);
+  const peratus =
+    alokasi.slot_kuota > 0
+      ? Math.min(100, (alokasi.slot_digunakan / alokasi.slot_kuota) * 100)
+      : 0;
+
+  async function gantiSlot(klaimId: string) {
+    setMemproses(klaimId);
+    try {
+      const { data, error } = await supabase.rpc("lepaskan_slot", { p_klaim_id: klaimId });
+      const res = data as unknown as { ok?: boolean; reason?: string } | null;
+      if (error || !res?.ok) {
+        toast.error(res?.reason ?? "Gagal melepaskan slot. Cuba lagi.");
+        return;
+      }
+      toast.success("Slot dilepaskan — sedia untuk keluarga baru");
+      onLepasSlot(klaimId);
+    } finally {
+      setMemproses(null);
+    }
+  }
+
+  function followUp() {
+    toast.info(
+      "Hubungi keluarga ini melalui saluran yang anda guna semasa kongsi kod tajaan tempoh hari — pantau progress dia di sini.",
+    );
+  }
+
+  return (
+    <div className="mt-6 rounded-2xl border border-emerald-300 bg-card p-5 shadow-soft">
+      <h2 className="font-display text-xl font-extrabold">
+        🎁 Kempen Kalifah Belanja 10 Akaun
+      </h2>
+      <p className="mt-1 text-sm text-muted-foreground">
+        Matlamat anda: cari 10 pelajar yang benar-benar aktif, bukan sekadar 10 pendaftaran.
+      </p>
+
+      <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
+        <MiniStat label="Slot Digunakan" value={`${alokasi.slot_digunakan}/${alokasi.slot_kuota}`} />
+        <MiniStat label="Slot Masih Ada" value={String(alokasi.slot_kosong)} />
+        <MiniStat label="Pelajar Mula Belajar" value={String(alokasi.telah_mula)} />
+        <MiniStat label="Pelajar Aktif Penuh" value={String(alokasi.aktif)} tone="emerald" />
+        <MiniStat label="At Risk" value={String(alokasi.at_risk)} tone="amber" />
+        <MiniStat label="Boleh Diganti" value={String(alokasi.boleh_diganti)} tone="amber" />
+      </div>
+
+      <div className="mt-4">
+        <div className="mb-1 text-xs font-bold text-muted-foreground">
+          {alokasi.slot_digunakan} daripada {alokasi.slot_kuota} slot sedang digunakan
+        </div>
+        <div className="h-3 w-full overflow-hidden rounded-full bg-muted">
+          <div
+            className="h-full rounded-full bg-gradient-to-r from-emerald-400 to-emerald-600"
+            style={{ width: `${peratus}%` }}
+          />
+        </div>
+      </div>
+
+      {alokasi.slot_kosong > 0 ? (
+        <div className="mt-3 flex flex-wrap items-center gap-2 rounded-xl bg-muted/50 px-3 py-2 text-sm">
+          <span className="text-muted-foreground">
+            🔍 Masih ada {alokasi.slot_kosong} slot kosong — cari keluarga baru untuk kongsi kod
+            tajaan anda
+          </span>
+          <button
+            onClick={onCopyLink}
+            className="ml-auto inline-flex items-center gap-1 rounded-full border border-primary/40 px-3 py-1 text-xs font-bold text-primary hover:bg-primary/10"
+          >
+            <Copy className="h-3 w-3" /> Salin Pautan
+          </button>
+        </div>
+      ) : null}
+
+      <button
+        onClick={onToggle}
+        className="mt-4 w-full rounded-full bg-primary px-5 py-3 font-display font-extrabold text-primary-foreground shadow-soft hover:opacity-90"
+      >
+        Lihat Pelajar & Follow-up ({families.length})
+      </button>
+
+      {expanded ? (
+        <div className="mt-4 space-y-2">
+          {families.length === 0 ? (
+            <div className="rounded-xl border border-border bg-muted/30 p-4 text-sm text-muted-foreground">
+              Belum ada keluarga claim slot lagi.
+            </div>
+          ) : (
+            families.map((f) => {
+              const penuh = f.hari_aktif >= 5 && f.sesi >= 10 && f.kali_sesi >= 3;
+              const belumMula = f.hari_aktif === 0 && f.sesi === 0 && f.kali_sesi === 0;
+              return (
+                <div
+                  key={f.klaim_id}
+                  className="flex flex-col gap-2 rounded-xl border border-border bg-card p-3 sm:flex-row sm:items-center"
+                >
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="font-bold">{f.nama_anak}</span>
+                      <span className="rounded-full bg-muted px-2 py-0.5 text-[11px] font-bold text-muted-foreground">
+                        Darjah {f.darjah}
+                      </span>
+                    </div>
+                    <div className="mt-1 text-xs text-muted-foreground">
+                      {f.hari_aktif}/5 hari aktif · {f.sesi}/10 sesi · {f.kali_sesi}/3 KALI
+                    </div>
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-2">
+                    {f.boleh_diganti ? (
+                      <>
+                        <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-bold text-amber-700">
+                          ⚠️ Boleh Diganti
+                        </span>
+                        <button
+                          disabled={memproses === f.klaim_id}
+                          onClick={() => gantiSlot(f.klaim_id)}
+                          className="inline-flex items-center gap-1 rounded-full bg-amber-500 px-3 py-1.5 text-xs font-extrabold text-white hover:opacity-90 disabled:opacity-60"
+                        >
+                          {memproses === f.klaim_id ? (
+                            <Loader2 className="h-3 w-3 animate-spin" />
+                          ) : null}
+                          Ganti Slot
+                        </button>
+                      </>
+                    ) : penuh ? (
+                      <>
+                        <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-700">
+                          🟢 Aktif
+                        </span>
+                        <span className="text-xs text-muted-foreground">
+                          Tiada tindakan diperlukan
+                        </span>
+                      </>
+                    ) : belumMula ? (
+                      <>
+                        <span className="rounded-full bg-red-100 px-3 py-1 text-xs font-bold text-red-700">
+                          🔴 Belum Mula
+                        </span>
+                        <button
+                          onClick={followUp}
+                          className="rounded-full border border-border px-3 py-1.5 text-xs font-bold hover:bg-muted"
+                        >
+                          Follow-up
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <span className="rounded-full bg-yellow-100 px-3 py-1 text-xs font-bold text-yellow-700">
+                          🟡 Hampir Aktif
+                        </span>
+                        <button
+                          onClick={followUp}
+                          className="rounded-full border border-border px-3 py-1.5 text-xs font-bold hover:bg-muted"
+                        >
+                          Follow-up
+                        </button>
+                      </>
+                    )}
+                  </div>
+                </div>
+              );
+            })
+          )}
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+function MiniStat({
+  label,
+  value,
+  tone,
+}: {
+  label: string;
+  value: string;
+  tone?: "emerald" | "amber";
+}) {
+  const cls =
+    tone === "emerald"
+      ? "border-emerald-200 bg-emerald-50 text-emerald-700"
+      : tone === "amber"
+        ? "border-amber-200 bg-amber-50 text-amber-700"
+        : "border-border bg-card";
+  return (
+    <div className={`rounded-xl border p-3 shadow-soft ${cls}`}>
+      <div className="text-[11px] font-bold uppercase opacity-70">{label}</div>
+      <div className="mt-1 font-display text-xl font-extrabold">{value}</div>
+    </div>
+  );
+}
