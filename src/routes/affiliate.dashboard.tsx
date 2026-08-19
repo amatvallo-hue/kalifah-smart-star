@@ -1114,21 +1114,24 @@ function KempenKad({
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {sumber!.map((s) => (
-                    <TableRow key={s.label}>
-                      <TableCell className="text-sm font-medium">
-                        {s.label === "Tanpa Label" ? (
-                          <span className="text-muted-foreground">Tiada label (klik/kod terus)</span>
-                        ) : (
-                          s.label
-                        )}
-                      </TableCell>
-                      <TableCell className="text-right text-sm">{s.klik}</TableCell>
-                      <TableCell className="text-right text-sm">{s.daftar}</TableCell>
-                      <TableCell className="text-right text-sm">{s.claim}</TableCell>
-                      <TableCell className="text-right text-sm">{s.aktif}</TableCell>
-                    </TableRow>
-                  ))}
+                  {sumber!.map((s) => {
+                    const label = labelSumberBaris(s);
+                    return (
+                      <TableRow key={`${s.sumber ?? ""}|${s.kempen ?? ""}`}>
+                        <TableCell className="text-sm font-medium">
+                          {label === "Tanpa Label" ? (
+                            <span className="text-muted-foreground">Tiada label (klik/kod terus)</span>
+                          ) : (
+                            label
+                          )}
+                        </TableCell>
+                        <TableCell className="text-right text-sm">{s.klik}</TableCell>
+                        <TableCell className="text-right text-sm">{s.daftar}</TableCell>
+                        <TableCell className="text-right text-sm">{s.claim}</TableCell>
+                        <TableCell className="text-right text-sm">{s.aktif}</TableCell>
+                      </TableRow>
+                    );
+                  })}
                 </TableBody>
               </Table>
             </div>
