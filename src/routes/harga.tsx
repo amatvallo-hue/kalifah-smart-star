@@ -244,7 +244,41 @@ function HargaPage() {
       )
     : undefined;
 
+  if (tajaanBerjaya) {
+    return (
+      <div className="min-h-screen bg-background">
+        <header className="border-b border-border/60 bg-background/85 backdrop-blur">
+          <div className="container mx-auto flex h-16 items-center px-4">
+            <Link to="/" className="flex items-center gap-2">
+              <KalifahLogo className="h-8 md:h-9" />
+            </Link>
+          </div>
+        </header>
+        <div className="container mx-auto max-w-xl px-4 pt-8">
+          <div
+            className="rounded-[2rem] bg-card p-6 text-center shadow-card"
+            style={{ border: `2px solid ${HIJAU}33` }}
+          >
+            <p className="font-display text-lg font-extrabold" style={{ color: HIJAU }}>
+              🎉 Slot Tajaan #{tajaanBerjaya.slot_number} berjaya!
+            </p>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Akses 30 hari Darjah {tajaanBerjaya.darjah} diaktifkan
+              {tajaanBerjaya.affiliate_nama ? ` (tajaan ${tajaanBerjaya.affiliate_nama})` : ""}.
+              Sambungkan Telegram untuk terima peringatan &amp; laporan kemajuan.
+            </p>
+          </div>
+        </div>
+        <SambungTelegram
+          parentId={tajaanBerjaya.parentId}
+          onLinked={() => navigate({ to: "/dashboard/ibu-bapa" })}
+        />
+      </div>
+    );
+  }
+
   return (
+
 
     <div className="min-h-screen bg-background">
       <header className="border-b border-border/60 bg-background/85 backdrop-blur">
