@@ -129,6 +129,10 @@ function AffiliateDashboardPage() {
   const [copied, setCopied] = useState(false);
   const [copiedCubaKali, setCopiedCubaKali] = useState(false);
   const [copiedCaption, setCopiedCaption] = useState<string | null>(null);
+  const [sumberPilihan, setSumberPilihan] = useState("Threads");
+  const [namaPost, setNamaPost] = useState("");
+  const [sumberCustom, setSumberCustom] = useState("");
+  const [copiedSourceLink, setCopiedSourceLink] = useState(false);
   const [challenge, setChallenge] = useState<Challenge | null>(null);
   const [jualanBulanIni, setJualanBulanIni] = useState<number>(0);
   const [metrikBulan, setMetrikBulan] = useState<{ klik: number; jualan: number; komisen: number }>({ klik: 0, jualan: 0, komisen: 0 });
@@ -304,6 +308,36 @@ function AffiliateDashboardPage() {
       await navigator.clipboard.writeText(cubaKaliLink);
       setCopiedCubaKali(true);
       setTimeout(() => setCopiedCubaKali(false), 2000);
+    } catch {
+      /* ignore */
+    }
+  }
+
+  const sourceLink = useMemo(() => {
+    if (!aff) return "";
+    const origin =
+      typeof window !== "undefined" ? window.location.origin : "https://kalifah.my";
+    const base = `${origin}/daftar?ref=${aff.custom_ref_code ?? aff.ref_code}`;
+    const slugify = (s: string) =>
+      s
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/-+/g, "-")
+        .replace(/-$/g, "");
+    const sumber = sumberPilihan === "Lain-lain" ? sumberCustom : sumberPilihan;
+    const sourceSlug = slugify(sumber);
+    const campaignSlug = slugify(namaPost);
+    if (!sourceSlug && !campaignSlug) return base;
+    if (!campaignSlug) return `${base}&utm_source=${sourceSlug}`;
+    return `${base}&utm_source=${sourceSlug}&utm_campaign=${campaignSlug}`;
+  }, [aff, sumberPilihan, sumberCustom, namaPost]);
+
+  async function copySourceLink() {
+    try {
+      await navigator.clipboard.writeText(sourceLink);
+      setCopiedSourceLink(true);
+      setTimeout(() => setCopiedSourceLink(false), 2000);
     } catch {
       /* ignore */
     }
@@ -641,6 +675,76 @@ function AffiliateDashboardPage() {
                   Muat Turun QR
                 </a>
               </div>
+            </div>
+          </div>
+
+          {/* Jana Pautan Ikut Sumber */}
+          <div className="mt-5">
+            <div className="text-xs font-bold uppercase text-muted-foreground">
+              Jana Pautan Ikut Sumber
+            </div>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Tambah UTM pada pautan affiliate supaya anda boleh nampak prestasi ikut channel/kempen.
+            </p>
+            <div className="mt-2 grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <div>
+                <label className="mb-1 block text-xs font-bold uppercase text-muted-foreground">
+                  Sumber
+                </label>
+                <select
+                  value={sumberPilihan}
+                  onChange={(e) => setSumberPilihan(e.target.value)}
+                  className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                >
+                  <option>Threads</option>
+                  <option>Facebook</option>
+                  <option>Instagram</option>
+                  <option>TikTok</option>
+                  <option>Status WhatsApp</option>
+                  <option>Lain-lain</option>
+                </select>
+              </div>
+              <div>
+                <label className="mb-1 block text-xs font-bold uppercase text-muted-foreground">
+                  Nama Post / Kempen (pilihan)
+                </label>
+                <input
+                  type="text"
+                  value={namaPost}
+                  onChange={(e) => setNamaPost(e.target.value)}
+                  placeholder="cth. ogos-1"
+                  className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                />
+              </div>
+            </div>
+            {sumberPilihan === "Lain-lain" ? (
+              <div className="mt-2">
+                <label className="mb-1 block text-xs font-bold uppercase text-muted-foreground">
+                  Nama Sumber Custom
+                </label>
+                <input
+                  type="text"
+                  value={sumberCustom}
+                  onChange={(e) => setSumberCustom(e.target.value)}
+                  placeholder="cth. newsletter"
+                  className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                />
+              </div>
+            ) : null}
+            <div className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center">
+              <input
+                readOnly
+                value={sourceLink}
+                className="w-full rounded-md border border-input bg-muted/50 px-3 py-2 text-sm"
+              />
+              <button
+                type="button"
+                onClick={copySourceLink}
+                className="inline-flex items-center justify-center gap-1 rounded-md bg-primary px-4 py-2 text-sm font-bold text-primary-foreground hover:opacity-90"
+              >
+                <Copy className="h-4 w-4" />
+                {copiedSourceLink ? "Disalin" : "Salin Pautan"}
+              </button>
             </div>
           </div>
 
