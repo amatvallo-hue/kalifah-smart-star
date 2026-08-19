@@ -65,10 +65,37 @@ interface KempenFamily {
   kali_sesi: number;
 }
 
+type KempenSumber = {
+  label: string;
+  klik: number;
+  daftar: number;
+  claim: number;
+  aktif: number;
+};
+
+type KempenTraffic = {
+  klik_kempen: number;
+  daftar_dari_link: number;
+  claim_tajaan: number;
+  nota: string;
+};
+
+type KempenFunnel = {
+  klik: number;
+  daftar: number;
+  claim: number;
+  mula_belajar: number;
+  aktif: number;
+  renew: number;
+};
+
 type KempenAffDash = {
   ok: boolean;
   ada_kempen: boolean;
-  kempen?: { id: string; nama: string; slug: string };
+  kempen?: { id: string; nama: string; slug: string; tarikh_mula?: string };
+  traffic?: KempenTraffic;
+  funnel?: KempenFunnel;
+  sumber?: KempenSumber[];
   alokasi?: {
     slot_kuota: number;
     slot_digunakan: number;
