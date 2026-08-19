@@ -871,6 +871,9 @@ function StatCard({
 function KempenKad({
   alokasi,
   families,
+  traffic,
+  funnel,
+  sumber,
   expanded,
   onToggle,
   onCopyLink,
@@ -878,6 +881,9 @@ function KempenKad({
 }: {
   alokasi: NonNullable<KempenAffDash["alokasi"]>;
   families: KempenFamily[];
+  traffic?: KempenTraffic;
+  funnel?: KempenFunnel;
+  sumber?: KempenSumber[];
   expanded: boolean;
   onToggle: () => void;
   onCopyLink: () => void;
@@ -888,6 +894,27 @@ function KempenKad({
     alokasi.slot_kuota > 0
       ? Math.min(100, (alokasi.slot_digunakan / alokasi.slot_kuota) * 100)
       : 0;
+
+  const conversionKlikClaim =
+    (traffic?.klik_kempen ?? 0) > 0
+      ? (((traffic?.claim_tajaan ?? 0) / traffic!.klik_kempen) * 100).toFixed(1) + "%"
+      : "0%";
+
+  const funnelSteps = funnel
+    ? [
+        { key: "klik", label: "Klik", value: funnel.klik },
+        { key: "daftar", label: "Daftar", value: funnel.daftar },
+        { key: "claim", label: "Claim", value: funnel.claim },
+        { key: "mula_belajar", label: "Mula Belajar", value: funnel.mula_belajar },
+        { key: "aktif", label: "Aktif", value: funnel.aktif },
+        { key: "renew", label: "Renew", value: funnel.renew },
+      ]
+    : [];
+
+  const sumberKosong =
+    !sumber ||
+    sumber.length === 0 ||
+    sumber.every((s) => s.klik === 0 && s.daftar === 0 && s.claim === 0 && s.aktif === 0);
 
   async function gantiSlot(klaimId: string) {
     setMemproses(klaimId);
@@ -920,134 +947,220 @@ function KempenKad({
         Matlamat anda: cari 10 pelajar yang benar-benar aktif, bukan sekadar 10 pendaftaran.
       </p>
 
-      <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
-        <MiniStat label="Slot Digunakan" value={`${alokasi.slot_digunakan}/${alokasi.slot_kuota}`} />
-        <MiniStat label="Slot Masih Ada" value={String(alokasi.slot_kosong)} />
-        <MiniStat label="Pelajar Mula Belajar" value={String(alokasi.telah_mula)} />
-        <MiniStat label="Pelajar Aktif Penuh" value={String(alokasi.aktif)} tone="emerald" />
-        <MiniStat label="At Risk" value={String(alokasi.at_risk)} tone="amber" />
-        <MiniStat label="Boleh Diganti" value={String(alokasi.boleh_diganti)} tone="amber" />
-      </div>
-
-      <div className="mt-4">
-        <div className="mb-1 text-xs font-bold text-muted-foreground">
-          {alokasi.slot_digunakan} daripada {alokasi.slot_kuota} slot sedang digunakan
+      {/* Traffic / Acquisition */}
+      <div className="mt-5">
+        <h3 className="font-display text-lg font-extrabold">📈 Traffic / Acquisition</h3>
+        <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <MiniStat label="Klik Kempen" value={String(traffic?.klik_kempen ?? 0)} tone="emerald" />
+          <MiniStat label="Daftar dari Link" value={String(traffic?.daftar_dari_link ?? 0)} />
+          <MiniStat label="Claim Tajaan" value={String(traffic?.claim_tajaan ?? 0)} tone="amber" />
+          <MiniStat label="Conversion Klik→Claim" value={conversionKlikClaim} tone="emerald" />
         </div>
-        <div className="h-3 w-full overflow-hidden rounded-full bg-muted">
-          <div
-            className="h-full rounded-full bg-gradient-to-r from-emerald-400 to-emerald-600"
-            style={{ width: `${peratus}%` }}
-          />
-        </div>
-      </div>
+        {traffic?.nota ? (
+          <p className="mt-2 text-xs italic text-muted-foreground">{traffic.nota}</p>
+        ) : null}
 
-      {alokasi.slot_kosong > 0 ? (
-        <div className="mt-3 flex flex-wrap items-center gap-2 rounded-xl bg-muted/50 px-3 py-2 text-sm">
-          <span className="text-muted-foreground">
-            🔍 Masih ada {alokasi.slot_kosong} slot kosong — cari keluarga baru untuk kongsi kod
-            tajaan anda
-          </span>
-          <button
-            onClick={onCopyLink}
-            className="ml-auto inline-flex items-center gap-1 rounded-full border border-primary/40 px-3 py-1 text-xs font-bold text-primary hover:bg-primary/10"
-          >
-            <Copy className="h-3 w-3" /> Salin Pautan
-          </button>
-        </div>
-      ) : null}
-
-      <button
-        onClick={onToggle}
-        className="mt-4 w-full rounded-full bg-primary px-5 py-3 font-display font-extrabold text-primary-foreground shadow-soft hover:opacity-90"
-      >
-        Lihat Pelajar & Follow-up ({families.length})
-      </button>
-
-      {expanded ? (
-        <div className="mt-4 space-y-2">
-          {families.length === 0 ? (
-            <div className="rounded-xl border border-border bg-muted/30 p-4 text-sm text-muted-foreground">
-              Belum ada keluarga claim slot lagi.
-            </div>
+        <div className="mt-4">
+          <h4 className="text-xs font-bold uppercase text-muted-foreground">Pecahan ikut sumber</h4>
+          {sumberKosong ? (
+            <p className="mt-2 text-xs text-muted-foreground">
+              Belum ada data tracking ikut sumber lagi. Guna pautan macam{" "}
+              <code className="rounded bg-muted px-1 py-0.5 text-[11px]">
+                ?ref=KOD&utm_source=tiktok&utm_campaign=ogos-1
+              </code>{" "}
+              untuk pantau prestasi ikut iklan/channel.
+            </p>
           ) : (
-            families.map((f) => {
-              const penuh = f.hari_aktif >= 5 && f.sesi >= 10 && f.kali_sesi >= 3;
-              const belumMula = f.hari_aktif === 0 && f.sesi === 0 && f.kali_sesi === 0;
-              return (
-                <div
-                  key={f.klaim_id}
-                  className="flex flex-col gap-2 rounded-xl border border-border bg-card p-3 sm:flex-row sm:items-center"
-                >
-                  <div className="min-w-0 flex-1">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span className="font-bold">{f.nama_anak}</span>
-                      <span className="rounded-full bg-muted px-2 py-0.5 text-[11px] font-bold text-muted-foreground">
-                        Darjah {f.darjah}
-                      </span>
-                    </div>
-                    <div className="mt-1 text-xs text-muted-foreground">
-                      {f.hari_aktif}/5 hari aktif · {f.sesi}/10 sesi · {f.kali_sesi}/3 KALI
-                    </div>
-                  </div>
-
-                  <div className="flex flex-wrap items-center gap-2">
-                    {f.boleh_diganti ? (
-                      <>
-                        <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-bold text-amber-700">
-                          ⚠️ Boleh Diganti
-                        </span>
-                        <button
-                          disabled={memproses === f.klaim_id}
-                          onClick={() => gantiSlot(f.klaim_id)}
-                          className="inline-flex items-center gap-1 rounded-full bg-amber-500 px-3 py-1.5 text-xs font-extrabold text-white hover:opacity-90 disabled:opacity-60"
-                        >
-                          {memproses === f.klaim_id ? (
-                            <Loader2 className="h-3 w-3 animate-spin" />
-                          ) : null}
-                          Ganti Slot
-                        </button>
-                      </>
-                    ) : penuh ? (
-                      <>
-                        <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-700">
-                          🟢 Aktif
-                        </span>
-                        <span className="text-xs text-muted-foreground">
-                          Tiada tindakan diperlukan
-                        </span>
-                      </>
-                    ) : belumMula ? (
-                      <>
-                        <span className="rounded-full bg-red-100 px-3 py-1 text-xs font-bold text-red-700">
-                          🔴 Belum Mula
-                        </span>
-                        <button
-                          onClick={followUp}
-                          className="rounded-full border border-border px-3 py-1.5 text-xs font-bold hover:bg-muted"
-                        >
-                          Follow-up
-                        </button>
-                      </>
-                    ) : (
-                      <>
-                        <span className="rounded-full bg-yellow-100 px-3 py-1 text-xs font-bold text-yellow-700">
-                          🟡 Hampir Aktif
-                        </span>
-                        <button
-                          onClick={followUp}
-                          className="rounded-full border border-border px-3 py-1.5 text-xs font-bold hover:bg-muted"
-                        >
-                          Follow-up
-                        </button>
-                      </>
-                    )}
-                  </div>
-                </div>
-              );
-            })
+            <div className="mt-2 overflow-hidden rounded-xl border border-border">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="text-xs">Sumber</TableHead>
+                    <TableHead className="text-xs text-right">Klik</TableHead>
+                    <TableHead className="text-xs text-right">Daftar</TableHead>
+                    <TableHead className="text-xs text-right">Claim</TableHead>
+                    <TableHead className="text-xs text-right">Aktif</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {sumber!.map((s) => (
+                    <TableRow key={s.label}>
+                      <TableCell className="text-sm font-medium">
+                        {s.label === "Tanpa Label" ? (
+                          <span className="text-muted-foreground">Tiada label (klik/kod terus)</span>
+                        ) : (
+                          s.label
+                        )}
+                      </TableCell>
+                      <TableCell className="text-right text-sm">{s.klik}</TableCell>
+                      <TableCell className="text-right text-sm">{s.daftar}</TableCell>
+                      <TableCell className="text-right text-sm">{s.claim}</TableCell>
+                      <TableCell className="text-right text-sm">{s.aktif}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           )}
         </div>
+      </div>
+
+      {/* Funnel Kempen */}
+      {funnelSteps.length > 0 ? (
+        <div className="mt-5">
+          <h3 className="font-display text-lg font-extrabold">🎯 Funnel Kempen</h3>
+          <div className="mt-3 flex flex-wrap items-center gap-2">
+            {funnelSteps.map((step, idx) => (
+              <div key={step.key} className="flex items-center gap-2">
+                <div className="flex min-w-[4.5rem] flex-col items-center rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2">
+                  <span className="font-display text-lg font-extrabold text-emerald-700">
+                    {step.value}
+                  </span>
+                  <span className="text-center text-[10px] font-bold uppercase text-emerald-700/80">
+                    {step.label}
+                  </span>
+                </div>
+                {idx < funnelSteps.length - 1 ? (
+                  <ArrowRight className="h-4 w-4 shrink-0 text-emerald-300" />
+                ) : null}
+              </div>
+            ))}
+          </div>
+        </div>
       ) : null}
+
+      {/* Engagement Pelajar */}
+      <div className="mt-5 border-t border-emerald-200 pt-5">
+        <h3 className="font-display text-lg font-extrabold">👨‍👩‍👧 Engagement Pelajar</h3>
+        <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3">
+          <MiniStat label="Slot Digunakan" value={`${alokasi.slot_digunakan}/${alokasi.slot_kuota}`} />
+          <MiniStat label="Slot Masih Ada" value={String(alokasi.slot_kosong)} />
+          <MiniStat label="Pelajar Mula Belajar" value={String(alokasi.telah_mula)} />
+          <MiniStat label="Pelajar Aktif Penuh" value={String(alokasi.aktif)} tone="emerald" />
+          <MiniStat label="At Risk" value={String(alokasi.at_risk)} tone="amber" />
+          <MiniStat label="Boleh Diganti" value={String(alokasi.boleh_diganti)} tone="amber" />
+        </div>
+
+        <div className="mt-4">
+          <div className="mb-1 text-xs font-bold text-muted-foreground">
+            {alokasi.slot_digunakan} daripada {alokasi.slot_kuota} slot sedang digunakan
+          </div>
+          <div className="h-3 w-full overflow-hidden rounded-full bg-muted">
+            <div
+              className="h-full rounded-full bg-gradient-to-r from-emerald-400 to-emerald-600"
+              style={{ width: `${peratus}%` }}
+            />
+          </div>
+        </div>
+
+        {alokasi.slot_kosong > 0 ? (
+          <div className="mt-3 flex flex-wrap items-center gap-2 rounded-xl bg-muted/50 px-3 py-2 text-sm">
+            <span className="text-muted-foreground">
+              🔍 Masih ada {alokasi.slot_kosong} slot kosong — cari keluarga baru untuk kongsi kod
+              tajaan anda
+            </span>
+            <button
+              onClick={onCopyLink}
+              className="ml-auto inline-flex items-center gap-1 rounded-full border border-primary/40 px-3 py-1 text-xs font-bold text-primary hover:bg-primary/10"
+            >
+              <Copy className="h-3 w-3" /> Salin Pautan
+            </button>
+          </div>
+        ) : null}
+
+        <button
+          onClick={onToggle}
+          className="mt-4 w-full rounded-full bg-primary px-5 py-3 font-display font-extrabold text-primary-foreground shadow-soft hover:opacity-90"
+        >
+          Lihat Pelajar & Follow-up ({families.length})
+        </button>
+
+        {expanded ? (
+          <div className="mt-4 space-y-2">
+            {families.length === 0 ? (
+              <div className="rounded-xl border border-border bg-muted/30 p-4 text-sm text-muted-foreground">
+                Belum ada keluarga claim slot lagi.
+              </div>
+            ) : (
+              families.map((f) => {
+                const penuh = f.hari_aktif >= 5 && f.sesi >= 10 && f.kali_sesi >= 3;
+                const belumMula = f.hari_aktif === 0 && f.sesi === 0 && f.kali_sesi === 0;
+                return (
+                  <div
+                    key={f.klaim_id}
+                    className="flex flex-col gap-2 rounded-xl border border-border bg-card p-3 sm:flex-row sm:items-center"
+                  >
+                    <div className="min-w-0 flex-1">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="font-bold">{f.nama_anak}</span>
+                        <span className="rounded-full bg-muted px-2 py-0.5 text-[11px] font-bold text-muted-foreground">
+                          Darjah {f.darjah}
+                        </span>
+                      </div>
+                      <div className="mt-1 text-xs text-muted-foreground">
+                        {f.hari_aktif}/5 hari aktif · {f.sesi}/10 sesi · {f.kali_sesi}/3 KALI
+                      </div>
+                    </div>
+
+                    <div className="flex flex-wrap items-center gap-2">
+                      {f.boleh_diganti ? (
+                        <>
+                          <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-bold text-amber-700">
+                            ⚠️ Boleh Diganti
+                          </span>
+                          <button
+                            disabled={memproses === f.klaim_id}
+                            onClick={() => gantiSlot(f.klaim_id)}
+                            className="inline-flex items-center gap-1 rounded-full bg-amber-500 px-3 py-1.5 text-xs font-extrabold text-white hover:opacity-90 disabled:opacity-60"
+                          >
+                            {memproses === f.klaim_id ? (
+                              <Loader2 className="h-3 w-3 animate-spin" />
+                            ) : null}
+                            Ganti Slot
+                          </button>
+                        </>
+                      ) : penuh ? (
+                        <>
+                          <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-bold text-emerald-700">
+                            🟢 Aktif
+                          </span>
+                          <span className="text-xs text-muted-foreground">
+                            Tiada tindakan diperlukan
+                          </span>
+                        </>
+                      ) : belumMula ? (
+                        <>
+                          <span className="rounded-full bg-red-100 px-3 py-1 text-xs font-bold text-red-700">
+                            🔴 Belum Mula
+                          </span>
+                          <button
+                            onClick={followUp}
+                            className="rounded-full border border-border px-3 py-1.5 text-xs font-bold hover:bg-muted"
+                          >
+                            Follow-up
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <span className="rounded-full bg-yellow-100 px-3 py-1 text-xs font-bold text-yellow-700">
+                            🟡 Hampir Aktif
+                          </span>
+                          <button
+                            onClick={followUp}
+                            className="rounded-full border border-border px-3 py-1.5 text-xs font-bold hover:bg-muted"
+                          >
+                            Follow-up
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                );
+              })
+            )}
+          </div>
+        ) : null}
+      </div>
     </div>
   );
 }
