@@ -66,7 +66,8 @@ interface KempenFamily {
 }
 
 type KempenSumber = {
-  label: string;
+  sumber: string | null;
+  kempen: string | null;
   klik: number;
   daftar: number;
   claim: number;
@@ -111,6 +112,37 @@ type KempenAffDash = {
 
 function rm(ringgit: number) {
   return `RM ${(ringgit ?? 0).toFixed(2)}`;
+}
+
+function unslug(s: string): string {
+  return s
+    .split("-")
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
+}
+
+function namaSumber(slug: string): string {
+  const map: Record<string, string> = {
+    threads: "Threads",
+    facebook: "Facebook",
+    instagram: "Instagram",
+    tiktok: "TikTok",
+    "status-whatsapp": "Status WhatsApp",
+  };
+  return map[slug] ?? unslug(slug);
+}
+
+function labelSumberBaris(s: KempenSumber): string {
+  if (s.sumber && s.kempen) {
+    return `${namaSumber(s.sumber)} / ${unslug(s.kempen)}`;
+  }
+  if (s.sumber) {
+    return namaSumber(s.sumber);
+  }
+  if (s.kempen) {
+    return unslug(s.kempen);
+  }
+  return "Tanpa Label";
 }
 
 const AYAT_HERO = [
