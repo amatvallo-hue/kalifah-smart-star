@@ -492,6 +492,37 @@ function AffiliateDashboardPage() {
           </div>
         </div>
 
+        {/* Kempen Kalifah Belanja 10 Akaun */}
+        {kempenData?.ok && kempenData.ada_kempen && kempenData.alokasi ? (
+          <KempenKad
+            alokasi={kempenData.alokasi}
+            families={kempenData.families ?? []}
+            expanded={kempenExpanded}
+            onToggle={() => setKempenExpanded((v) => !v)}
+            onCopyLink={copyLink}
+            onLepasSlot={(klaimId) => {
+              setKempenData((prev) =>
+                prev
+                  ? {
+                      ...prev,
+                      alokasi: prev.alokasi
+                        ? {
+                            ...prev.alokasi,
+                            slot_digunakan: Math.max(0, prev.alokasi.slot_digunakan - 1),
+                            slot_kosong: prev.alokasi.slot_kosong + 1,
+                            boleh_diganti: Math.max(0, prev.alokasi.boleh_diganti - 1),
+                          }
+                        : prev.alokasi,
+                      families: (prev.families ?? []).filter((f) => f.klaim_id !== klaimId),
+                    }
+                  : prev,
+              );
+            }}
+          />
+        ) : null}
+
+
+
         {/* Marketing Tools */}
         <div className="mt-6 rounded-2xl border border-primary/20 bg-card p-5 shadow-soft">
           <h2 className="font-display text-xl font-extrabold">🧰 Marketing Tools</h2>
