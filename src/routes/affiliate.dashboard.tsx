@@ -932,11 +932,6 @@ function KempenKad({
     }
   }
 
-  function followUp() {
-    toast.info(
-      "Hubungi keluarga ini melalui saluran yang anda guna semasa kongsi kod tajaan tempoh hari — pantau progress dia di sini.",
-    );
-  }
 
   return (
     <div className="mt-6 rounded-2xl border border-emerald-300 bg-card p-5 shadow-soft">
@@ -1133,24 +1128,18 @@ function KempenKad({
                           <span className="rounded-full bg-red-100 px-3 py-1 text-xs font-bold text-red-700">
                             🔴 Belum Mula
                           </span>
-                          <button
-                            onClick={followUp}
-                            className="rounded-full border border-border px-3 py-1.5 text-xs font-bold hover:bg-muted"
-                          >
-                            Follow-up
-                          </button>
+                          <span className="text-xs text-muted-foreground">
+                            Kalifah.my dah follow-up automatik
+                          </span>
                         </>
                       ) : (
                         <>
                           <span className="rounded-full bg-yellow-100 px-3 py-1 text-xs font-bold text-yellow-700">
                             🟡 Hampir Aktif
                           </span>
-                          <button
-                            onClick={followUp}
-                            className="rounded-full border border-border px-3 py-1.5 text-xs font-bold hover:bg-muted"
-                          >
-                            Follow-up
-                          </button>
+                          <span className="text-xs text-muted-foreground">
+                            Kalifah.my dah follow-up automatik
+                          </span>
                         </>
                       )}
                     </div>
