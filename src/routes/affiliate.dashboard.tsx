@@ -53,6 +53,35 @@ interface Challenge {
   aktif: boolean;
 }
 
+interface KempenFamily {
+  klaim_id: string;
+  nama_anak: string;
+  darjah: number;
+  status: "claimed" | "active" | "at_risk";
+  boleh_diganti: boolean;
+  claimed_at: string;
+  hari_aktif: number;
+  sesi: number;
+  kali_sesi: number;
+}
+
+type KempenAffDash = {
+  ok: boolean;
+  ada_kempen: boolean;
+  kempen?: { id: string; nama: string; slug: string };
+  alokasi?: {
+    slot_kuota: number;
+    slot_digunakan: number;
+    slot_kosong: number;
+    telah_mula: number;
+    aktif: number;
+    at_risk: number;
+    boleh_diganti: number;
+  };
+  families?: KempenFamily[];
+};
+
+
 function rm(ringgit: number) {
   return `RM ${(ringgit ?? 0).toFixed(2)}`;
 }
