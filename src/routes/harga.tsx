@@ -673,19 +673,55 @@ function DarjahPicker({
           <span className="font-display text-2xl font-extrabold" style={{ color: HIJAU }}>RM{total}</span>
         </div>
 
+        {pakej === "satu" && (
+          <div className="mt-5 text-left">
+            <label
+              htmlFor="kod-tajaan-picker"
+              className="font-display text-xs font-extrabold uppercase tracking-wider"
+              style={{ color: HIJAU }}
+            >
+              Kod Affiliate / Kod Tajaan
+            </label>
+            <input
+              id="kod-tajaan-picker"
+              type="text"
+              value={kodTajaan}
+              onChange={(e) => setKodTajaan(e.target.value)}
+              placeholder="cth. CIKGU01"
+              autoCapitalize="characters"
+              autoCorrect="off"
+              spellCheck={false}
+              className="mt-2 w-full rounded-2xl border-2 bg-background px-4 py-3 font-display text-sm font-bold uppercase text-foreground outline-none focus:border-[#1B8A5A]"
+              style={{ borderColor: `${EMAS}66` }}
+            />
+            <p className="mt-1.5 text-[11px] leading-snug text-muted-foreground">
+              Ada kod daripada guru/affiliate? Masukkan di sini (pilihan).
+            </p>
+          </div>
+        )}
+
         <button
           type="button"
-          disabled={!valid || loading}
+          disabled={!valid || loading || (pakej === "satu" && kodChecking)}
           onClick={() => {
             console.log("[harga] Teruskan ke ToyyibPay diklik", { pakej, selected });
+            if (pakej === "satu") {
+              onConfirmSatu(selected[0]);
+              return;
+            }
             onConfirm(selected);
           }}
           className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full px-5 py-3 font-display text-sm font-extrabold text-white shadow-soft disabled:opacity-50"
           style={{ backgroundColor: HIJAU }}
         >
-          {loading && <Loader2 className="h-4 w-4 animate-spin" />}
-          {loading ? "Memproses…" : "Teruskan ke ToyyibPay"}
+          {(loading || (pakej === "satu" && kodChecking)) && <Loader2 className="h-4 w-4 animate-spin" />}
+          {pakej === "satu" && kodChecking
+            ? "Menyemak kod…"
+            : loading
+              ? "Memproses…"
+              : "Teruskan ke ToyyibPay"}
         </button>
+
       </div>
     </div>
   );
