@@ -597,15 +597,24 @@ function DarjahPicker({
   pakej,
   loading,
   initial,
+  kodTajaan,
+  setKodTajaan,
+  kodChecking,
   onClose,
   onConfirm,
+  onConfirmSatu,
 }: {
   pakej: PakejId;
   loading: boolean;
   initial?: number[];
+  kodTajaan: string;
+  setKodTajaan: (v: string) => void;
+  kodChecking: boolean;
   onClose: () => void;
   onConfirm: (darjah: number[]) => void;
+  onConfirmSatu: (darjah: number) => void;
 }) {
+
   const max = pakej === "satu" ? 1 : 5;
   const [selected, setSelected] = useState<number[]>(() =>
     (initial ?? []).slice(0, max).sort((a, b) => a - b),
