@@ -127,8 +127,10 @@ function HargaPage() {
     if (pakej === "bundle") return mulaBayar("bundle", [1, 2, 3, 4, 5, 6]);
     console.log("[harga] buka pemilih darjah", { pakej });
     setPickerInitial(fastpath ? [fastpath.darjah] : []);
+    setKodTajaan("");
     setPickerFor(pakej);
   }
+
 
   useEffect(() => {
     if (autoRan.current) return;
