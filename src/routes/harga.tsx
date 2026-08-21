@@ -557,9 +557,17 @@ function HargaPage() {
           pakej={pickerFor}
           loading={loading === pickerFor}
           initial={pickerInitial}
-          onClose={() => setPickerFor(null)}
+          kodTajaan={kodTajaan}
+          setKodTajaan={setKodTajaan}
+          kodChecking={kodChecking}
+          onClose={() => {
+            setKodTajaan("");
+            setPickerFor(null);
+          }}
           onConfirm={(darjah) => mulaBayar(pickerFor, darjah)}
+          onConfirmSatu={(darjah) => void klikAktifkanFastpath(darjah)}
         />
+
       )}
 
       {emailGate && (
