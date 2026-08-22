@@ -30,19 +30,20 @@ import { KalifahLogo } from "@/components/KalifahLogo";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Kalifah.my — Kenal Pasti Kelemahan Anak Sebelum Peperiksaan" },
+      { title: "Kalifah.my — Sama-sama Dapat 6/10? Keperluan Anak Anda Mungkin Berbeza" },
       {
         name: "description",
         content:
-          "Portal pembelajaran online untuk Darjah 1–6. Pantau prestasi anak dalam Bahasa Melayu, Matematik dan Bahasa Inggeris dengan latihan, kuiz dan sijil automatik.",
+          "Kalifah.my guna KALI untuk kenal pasti apa anak perlu belajar seterusnya, dan arahkan latihan automatik ikut keperluan sebenar. Darjah 1–6, 5 subjek.",
       },
-      { property: "og:title", content: "Kalifah.my — Pembelajaran Pintar untuk Anak Anda" },
-      { property: "og:description", content: "Lebih 32,000+ soalan latihan. Pantau progress anak. Sesuai untuk D1–D6." },
+      { property: "og:title", content: "Kalifah.my — Sama-sama Dapat 6/10? Keperluan Anak Anda Mungkin Berbeza" },
+      { property: "og:description", content: "Kalifah.my guna KALI untuk kenal pasti apa anak perlu belajar seterusnya, dan arahkan latihan automatik ikut keperluan sebenar. Darjah 1–6, 5 subjek." },
     ],
   }),
   ssr: true,
   component: LandingPage,
 });
+
 
 const HIJAU = "#1B8A5A";
 const EMAS = "#F5A623";
