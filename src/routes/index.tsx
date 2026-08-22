@@ -286,7 +286,48 @@ function MockStat({
   );
 }
 
+function Mekanisme() {
+  const steps = [
+    { ikon: PenLine, t: "Anak Jawab Soalan", d: "Setiap jawapan direkodkan — bukan sekadar markah akhir." },
+    { ikon: Target, t: "KALI Kenal Pasti Keperluan", d: "Sistem mengesan subtopik yang anak masih perlukan perhatian." },
+    { ikon: Zap, t: "Latihan Seterusnya Dipilih Automatik", d: "Anak terus dapat soalan yang sesuai dengan tahapnya sekarang." },
+  ];
+  return (
+    <section id="mekanisme" className="container mx-auto px-4 py-16">
+      <div className="text-center">
+        <p className="font-display text-xs font-bold uppercase tracking-widest" style={{ color: HIJAU }}>Bagaimana Ia Berfungsi</p>
+        <h2 className="mt-2 font-display text-3xl font-extrabold text-foreground md:text-4xl">
+          Bagaimana KALI Membantu
+        </h2>
+        <p className="mx-auto mt-3 max-w-2xl text-base text-muted-foreground">
+          KALI menganalisis setiap jawapan anak, mengenal pasti bahagian yang perlu diperkukuhkan, dan memilih latihan seterusnya secara automatik.
+        </p>
+      </div>
+      <div className="mt-10 flex flex-col items-stretch gap-4 md:flex-row md:justify-center">
+        {steps.map(({ ikon: Ikon, t, d }, i) => (
+          <div key={t} className="flex w-full items-center gap-4 md:w-auto md:max-w-sm">
+            <div
+              className="flex-1 rounded-3xl bg-card p-6 shadow-soft"
+              style={{ border: `2px solid ${HIJAU}1f` }}
+            >
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl text-white" style={{ backgroundColor: HIJAU }}>
+                <Ikon className="h-6 w-6" />
+              </div>
+              <h3 className="mt-4 font-display text-lg font-extrabold text-foreground">{t}</h3>
+              <p className="mt-1 text-sm text-muted-foreground">{d}</p>
+            </div>
+            {i < steps.length - 1 && (
+              <ChevronRight className="hidden h-6 w-6 shrink-0 text-muted-foreground md:block" />
+            )}
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function Ciri() {
+
   const items = [
     { ikon: Target, t: "Kenal Subjek & Topik Lemah", d: "Sistem auto-kesan subjek DAN topik spesifik yang anak perlukan perhatian lebih — bukan setakat subjek, sampai ke topik/subtopik." },
     { ikon: Zap, t: "Latih Tubi", d: "Merangkumi semua subtopik bagi setiap subjek, lebih 10,000+ soalan latih tubi." },
