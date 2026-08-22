@@ -5,7 +5,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { markSkipChildGuard } from "@/lib/child-auth";
 
-export const Route = createFileRoute("/kali-test/mula-percubaan")({
+export const Route = createFileRoute("/cuba-kali-web")({
   head: () => ({
     meta: [
       { title: "Mula Percubaan KALI | Kalifah.my" },
