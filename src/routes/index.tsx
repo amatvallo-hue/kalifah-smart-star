@@ -14,7 +14,9 @@ import {
   Users,
   ShieldCheck,
   ChevronDown,
+  ChevronRight,
   Globe,
+
   Calendar,
   Clock,
   Flame,
