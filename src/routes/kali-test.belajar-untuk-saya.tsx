@@ -587,11 +587,19 @@ function KaliBelajarUntukSayaPage() {
   };
 
   const handleTunjukIbuBapa = async () => {
+    if (search.ct) {
+      if (user) {
+        const darjahParam = search.d ?? childDarjah;
+        window.location.href = `/cuba-kali/aktifkan?child=${encodeURIComponent(user.id)}&token=${encodeURIComponent(search.ct)}&darjah=${encodeURIComponent(darjahParam)}`;
+      }
+      return;
+    }
     await switchBackToParent();
     if (user) {
       void navigate({ to: "/kali-test/laporan-anak", search: { child: user.id } });
     }
   };
+
 
 
   const skillMap = new Map<string, { nama: string; semuaBetul: boolean }>();
