@@ -1,14 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
-  Sparkles,
   Star,
   Check,
-  CheckCircle2,
   PenLine,
   Languages,
   Calculator,
   Award,
-  TrendingUp,
   Target,
   BookOpen,
   Users,
@@ -16,12 +13,10 @@ import {
   ChevronDown,
   ChevronRight,
   Globe,
-
-  Calendar,
-  Clock,
-  Flame,
   Zap,
   Send,
+  FileX,
+  AlertCircle,
 } from "lucide-react";
 import { useState } from "react";
 import { HARGA_ASAL, PAKEJ_LIST } from "@/lib/curriculum";
@@ -30,14 +25,14 @@ import { KalifahLogo } from "@/components/KalifahLogo";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Kalifah.my — Anak Buat Banyak Latihan? Tahu Apa Dia Perlukan Seterusnya" },
+      { title: "Kalifah.my — Tahu Ke Anak Awak Lemah Bab Mana, Atau Just Teka?" },
       {
         name: "description",
         content:
-          "Kalifah.my guna KALI untuk kenal pasti apa anak perlu belajar seterusnya, dan arahkan latihan automatik ikut keperluan sebenar. Darjah 1–6, 5 subjek.",
+          "Ujian sekolah je baru terbongkar anak dah tersangkut bab mana. KALI kesan kelemahan spesifik anak anda dari sekarang — percuma, 10 soalan, 2 minit.",
       },
-      { property: "og:title", content: "Kalifah.my — Anak Buat Banyak Latihan? Tahu Apa Dia Perlukan Seterusnya" },
-      { property: "og:description", content: "Kalifah.my guna KALI untuk kenal pasti apa anak perlu belajar seterusnya, dan arahkan latihan automatik ikut keperluan sebenar. Darjah 1–6, 5 subjek." },
+      { property: "og:title", content: "Kalifah.my — Tahu Ke Anak Awak Lemah Bab Mana, Atau Just Teka?" },
+      { property: "og:description", content: "Ujian sekolah je baru terbongkar anak dah tersangkut bab mana. KALI kesan kelemahan spesifik anak anda dari sekarang — percuma, 10 soalan, 2 minit." },
     ],
   }),
   ssr: true,
@@ -53,6 +48,8 @@ function LandingPage() {
     <div className="min-h-screen bg-background">
       <LandingHeader />
       <Hero />
+      <PainAmplifier />
+      <Twist />
       <Mekanisme />
       <Ciri />
       <UntukSiapa />
@@ -108,43 +105,29 @@ function Hero() {
     <section className="relative overflow-hidden">
       <div className="absolute -right-32 -top-32 h-96 w-96 rounded-full blur-3xl" style={{ backgroundColor: `${EMAS}33` }} />
       <div className="absolute -bottom-32 -left-32 h-96 w-96 rounded-full blur-3xl" style={{ backgroundColor: `${HIJAU}33` }} />
-      <div className="container relative mx-auto grid items-center gap-12 px-4 py-16 md:grid-cols-2 md:py-24">
-        <div>
-          <span
-            className="inline-flex items-center gap-2 rounded-full bg-card px-4 py-1.5 font-display text-xs font-bold shadow-soft"
-            style={{ color: HIJAU }}
-          >
-            <Sparkles className="h-3.5 w-3.5" />
-            Untuk ibu bapa anak Darjah 1–6
-          </span>
-          <h1 className="mt-4 font-display text-4xl font-extrabold leading-tight text-foreground md:text-6xl">
-            Anak Dah Buat Banyak Latihan.
+      <div className="container relative mx-auto px-4 py-16 md:py-24">
+        <div className="mx-auto max-w-3xl">
+          <h1 className="font-display text-4xl font-extrabold leading-tight text-foreground md:text-5xl lg:text-6xl">
+            Ibu Bapa Yang Hantar Anak Ke Tuisyen —
             <br />
-            Tapi Kita Masih Meneka Apa Yang Dia Perlukan.
+            Tapi Tak Pernah Tahu Anak Dia Sebenarnya Lemah Bab Mana
           </h1>
-          <p className="mt-5 max-w-xl text-base text-muted-foreground md:text-lg">
-            Markah hanya menunjukkan berapa banyak yang betul. KALI menganalisis jawapan anak, mengenal pasti bahagian yang perlu diperkukuhkan dan memilih latihan seterusnya—supaya anak belajar dengan lebih terarah.
+          <p className="mt-6 max-w-2xl text-base text-muted-foreground md:text-lg">
+            Setiap bulan RM150 keluar. Setiap minggu hantar pergi balik. Tapi bila tanya cikgu tuisyen — 'Okay lah tu, dia tengah improve' — tak pernah ada laporan spesifik.
+          </p>
+          <p className="mt-4 max-w-2xl text-base text-muted-foreground md:text-lg">
+            Ujian sekolah je baru terbongkar: anak dah tersangkut 3 bab, tapi masa tu dah terlambat.
           </p>
 
-          <div className="mt-7 flex w-full flex-col gap-3 sm:flex-row">
+          <div className="mt-8 flex w-full flex-col gap-3 sm:flex-row">
             <Link
               to="/cuba-kali-web"
-              className="flex w-full items-center justify-center gap-2 rounded-full px-6 py-3.5 font-display text-base font-extrabold text-white shadow-soft transition hover:-translate-y-0.5 sm:flex-1"
+              className="flex w-full items-center justify-center gap-2 rounded-full px-6 py-3.5 font-display text-base font-extrabold text-white shadow-soft transition hover:-translate-y-0.5 sm:w-auto"
               style={{ backgroundColor: HIJAU }}
             >
-              <Target className="h-5 w-5" /> Cuba KALI Percuma
+              🧪 Uji Anak Saya Dengan KALI — Percuma, 2 Minit
             </Link>
-            <a
-              href="#mekanisme"
-              className="flex w-full items-center justify-center gap-2 rounded-full bg-card px-6 py-3.5 font-display text-base font-extrabold shadow-soft sm:flex-1"
-              style={{ color: HIJAU, border: `2px solid ${HIJAU}33` }}
-            >
-              <Star className="h-5 w-5" /> Lihat Cara KALI Berfungsi
-            </a>
           </div>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Percuma • 10 soalan • Tiada kad bank diperlukan
-          </p>
           <div className="mt-4 flex items-center gap-4 text-xs text-muted-foreground">
             <span className="inline-flex items-center gap-1">
               <ShieldCheck className="h-4 w-4" style={{ color: HIJAU }} /> Selamat & sesuai untuk kanak-kanak
@@ -154,15 +137,86 @@ function Hero() {
             </span>
           </div>
         </div>
+      </div>
+    </section>
+  );
+}
 
-        <div className="relative">
-          <KaliCardsMockup />
+function PainAmplifier() {
+  const cards = [
+    {
+      ikon: FileX,
+      tajuk: "Tuisyen Tiada Report",
+      teks: "Anak pergi tuisyen 6 bulan. Bila tanya cikgu — 'Dia okay, tengah improve.' Improve kat mana? Tak tahu. Bayar RM900, dapat jawapan 4 perkataan.",
+    },
+    {
+      ikon: Target,
+      tajuk: "Buku Latihan = Tembak Serampang",
+      teks: "Beli buku latihan tebal 200 muka surat. Anak buat 50 soalan. 30 soalan tu bab yang dia dah kuat. 10 soalan bab yang dia lemah — tapi tak perasan sebab campur-campur. Masa habis, kelemahan tetap kelemahan.",
+    },
+    {
+      ikon: AlertCircle,
+      tajuk: "Baru Tahu Lepas Exam",
+      teks: "Ujian Darjah 4, anak 60%. Rupanya dia tersangkut kat 'Pecahan Tak Wajar' sejak Darjah 3. Kalau tahu awal, 10 minit sehari fokus situ je dah cukup. Tapi sekarang? Kena kejar balik 3 bulan.",
+    },
+  ];
+
+  return (
+    <section className="border-y border-border/60 bg-muted/20 py-16">
+      <div className="container mx-auto px-4">
+        <div className="grid gap-4 md:grid-cols-3">
+          {cards.map(({ ikon: Ikon, tajuk, teks }) => (
+            <div
+              key={tajuk}
+              className="rounded-2xl bg-card p-6 shadow-soft"
+              style={{ border: "2px solid hsl(var(--border))" }}
+            >
+              <div className="flex items-center gap-2">
+                <Ikon className="h-5 w-5 text-muted-foreground" />
+                <h3 className="font-display text-sm font-extrabold text-foreground">{tajuk}</h3>
+              </div>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{teks}</p>
+            </div>
+          ))}
         </div>
       </div>
     </section>
   );
 }
 
+function Twist() {
+  return (
+    <section className="container mx-auto px-4 py-16">
+      <div className="mx-auto max-w-4xl">
+        <div className="text-center">
+          <h2 className="font-display text-2xl font-extrabold leading-snug text-foreground md:text-3xl lg:text-4xl">
+            Bukan Anak Anda Tak Rajin. Bukan Ibu Bapa Tak Prihatin.
+          </h2>
+        </div>
+        <div className="mx-auto mt-6 max-w-2xl space-y-4 text-center">
+          <p className="text-base text-muted-foreground md:text-lg">
+            Masalahnya: tiada siapa yang betul-betul kenal kelemahan spesifik anak anda — sampai ke subtopik yang tepat.
+          </p>
+          <p className="text-base text-muted-foreground md:text-lg">
+            KALI buat benda yang cikgu tuisyen tak sempat buat: analisis 824 kemahiran kecil, satu persatu, untuk anak anda seorang.
+          </p>
+        </div>
+        <div className="mt-10">
+          <KaliCardsMockup />
+        </div>
+        <div className="mt-10 flex justify-center">
+          <Link
+            to="/cuba-kali-web"
+            className="flex items-center justify-center gap-2 rounded-full px-6 py-3.5 font-display text-base font-extrabold text-white shadow-soft transition hover:-translate-y-0.5"
+            style={{ backgroundColor: HIJAU }}
+          >
+            <Zap className="h-5 w-5" /> Cuba KALI Percuma — 10 Soalan, 2 Minit
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
+}
 
 function KaliCardsMockup() {
   return (
