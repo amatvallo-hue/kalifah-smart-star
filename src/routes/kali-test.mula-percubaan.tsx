@@ -65,15 +65,21 @@ function MulaPercubaanPage() {
       });
 
       if (error) {
-        const mesej = String(error.message ?? "");
-        const kadar =
-          mesej.includes("429") ||
-          mesej.toLowerCase().includes("rate limit") ||
-          (error as { status?: number }).status === 429;
+        const status = (error as { context?: { status?: number } })?.context?.status;
+        let mesejServer: string | null = null;
+        try {
+          const ctx = (error as { context?: Response })?.context;
+          if (ctx && typeof ctx.clone === "function") {
+            const body = await ctx.clone().json();
+            if (body && typeof body.error === "string") mesejServer = body.error;
+          }
+        } catch {
+          // abaikan -- fallback ke mesej generik di bawah
+        }
         setRalat(
-          kadar
+          status === 429
             ? "Terlalu banyak percubaan, sila cuba lagi sebentar."
-            : "Maaf, ada masalah teknikal. Sila cuba lagi.",
+            : mesejServer ?? "Maaf, ada masalah teknikal. Sila cuba lagi.",
         );
         setLoadingDarjah(null);
         return;
