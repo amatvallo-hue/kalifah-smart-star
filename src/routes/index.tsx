@@ -113,67 +113,38 @@ function Hero() {
             style={{ color: HIJAU }}
           >
             <Sparkles className="h-3.5 w-3.5" />
-            Untuk Darjah 1 hingga 6
+            Pembelajaran adaptif untuk Darjah 1–6
           </span>
           <h1 className="mt-4 font-display text-4xl font-extrabold leading-tight text-foreground md:text-6xl">
-            Kenal Pasti{" "}
-            <span style={{ color: HIJAU }}>Kelemahan Anak</span> Sebelum Peperiksaan
+            Sama-sama Dapat 6/10.
+            <br />
+            Tapi Keperluan Mereka Berbeza.
           </h1>
           <p className="mt-5 max-w-xl text-base text-muted-foreground md:text-lg">
-            Portal pembelajaran yang bantu ibu bapa pantau prestasi anak dalam{" "}
-            <b>Bahasa Melayu</b>, <b>Matematik</b>, <b>Bahasa Inggeris</b>, <b>Sains</b> dan <b>Pendidikan Islam</b>.
-            Lebih 32,000+ soalan latihan & sijil automatik.
+            Setiap jawapan anak dianalisis, dan latihan seterusnya dipilih ikut apa yang dia perlukan sekarang — dibantu oleh KALI.
           </p>
-
-          <div className="mt-7 grid w-full max-w-xl gap-4 sm:grid-cols-2">
-            <div className="rounded-2xl border border-border/60 bg-muted/30 p-5">
-              <h3 className="font-display text-sm font-extrabold text-muted-foreground">Tuisyen biasa</h3>
-              <p className="mt-1 font-display text-2xl font-extrabold text-foreground">RM100–200<span className="text-base font-bold text-muted-foreground">/bulan</span></p>
-              <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-                <li className="flex items-center gap-2"><span className="text-rose-500">✗</span> Tiada tracking kemajuan</li>
-                <li className="flex items-center gap-2"><span className="text-rose-500">✗</span> Ibu bapa tak nampak progress</li>
-                <li className="flex items-center gap-2"><span className="text-rose-500">✗</span> Bergantung pada jadual cikgu</li>
-              </ul>
-            </div>
-            <div className="rounded-2xl border p-5" style={{ borderColor: `${HIJAU}44`, backgroundColor: `${HIJAU}08` }}>
-              <h3 className="font-display text-sm font-extrabold" style={{ color: HIJAU }}>Kalifah.my</h3>
-              <p className="mt-1 font-display text-2xl font-extrabold" style={{ color: HIJAU }}>RM49<span className="text-base font-bold text-muted-foreground">/tahun sahaja</span></p>
-              <ul className="mt-3 space-y-2 text-sm text-foreground">
-                <li className="flex items-center gap-2"><span style={{ color: HIJAU }}>✓</span> Dashboard pantau ibu bapa</li>
-                <li className="flex items-center gap-2"><span style={{ color: HIJAU }}>✓</span> 32,000+ soalan latihan</li>
-                <li className="flex items-center gap-2"><span style={{ color: HIJAU }}>✓</span> Belajar bila-bila masa</li>
-              </ul>
-            </div>
-          </div>
-
-          <blockquote className="mt-5 max-w-xl border-l-4 pl-4 italic text-foreground" style={{ borderColor: HIJAU }}>
-            "Anak saya naik dari 60% ke 82% dalam masa 2 bulan. Dashboard tu memang membantu saya pantau dia setiap hari."
-            <footer className="mt-1 text-xs not-italic text-muted-foreground">— Cikgu Eema Rahman, ibu kepada pelajar Darjah 4</footer>
-          </blockquote>
+          <p className="mt-3 max-w-xl text-base text-foreground md:text-lg">
+            Anak belajar dengan lebih terarah. Ibu bapa tahu apa yang perlu diberi perhatian — tanpa perlu menyemak semuanya sendiri.
+          </p>
 
           <div className="mt-7 flex w-full flex-col gap-3 sm:flex-row">
             <Link
-              to="/daftar"
-              search={{ ref: undefined }}
+              to="/ujian-percuma"
               className="flex w-full items-center justify-center gap-2 rounded-full px-6 py-3.5 font-display text-base font-extrabold text-white shadow-soft transition hover:-translate-y-0.5 sm:flex-1"
               style={{ backgroundColor: HIJAU }}
             >
-              <Sparkles className="h-5 w-5" /> Cuba Sekarang
+              <Target className="h-5 w-5" /> Cuba Ujian Percuma
             </Link>
             <a
-              href="#harga"
+              href="#mekanisme"
               className="flex w-full items-center justify-center gap-2 rounded-full bg-card px-6 py-3.5 font-display text-base font-extrabold shadow-soft sm:flex-1"
               style={{ color: HIJAU, border: `2px solid ${HIJAU}33` }}
             >
-              <Star className="h-5 w-5" /> Lihat Harga
+              <Star className="h-5 w-5" /> Lihat Cara KALI Berfungsi
             </a>
           </div>
           <p className="mt-2 text-sm text-muted-foreground">
-            Daftar percuma — cuba dulu, bayar kalau suka
-          </p>
-          <p className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700">
-            <Check className="h-3.5 w-3.5" />
-            Terus tahu anak lemah subjek apa & topik apa
+            Percuma • 3 minit • Tiada kad bank diperlukan
           </p>
           <div className="mt-4 flex items-center gap-4 text-xs text-muted-foreground">
             <span className="inline-flex items-center gap-1">
@@ -186,12 +157,13 @@ function Hero() {
         </div>
 
         <div className="relative">
-          <DashboardMockup />
+          <KaliCardsMockup />
         </div>
       </div>
     </section>
   );
 }
+
 
 function DashboardMockup() {
   const subjects = [
