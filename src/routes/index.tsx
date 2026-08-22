@@ -529,11 +529,6 @@ function Harga() {
 function Testimoni() {
   const items = [
     {
-      n: "Cikgu Eema Rahman",
-      r: "Tanjung Malim",
-      t: "Baru 3 minggu guna, anak dah ada pertambahan masa belajar di rumah. Saya suka sebab boleh tengok apa latihan yang anak buat. Anak pula suka kuiz dan game!",
-    },
-    {
       n: "Encik Rizal",
       r: "Bapa kepada D6",
       t: "Anak saya seronok dengan game dan kuiz. Sijil PDF buat dia lebih bersemangat belajar.",
@@ -553,8 +548,9 @@ function Testimoni() {
             Apa kata ibu bapa
           </h2>
         </div>
-        <div className="mt-10 grid gap-6 md:grid-cols-3">
+        <div className="mt-10 grid gap-6 md:grid-cols-2">
           {items.map((it) => (
+
             <div key={it.n} className="rounded-3xl bg-card p-6 shadow-soft">
               <div className="flex gap-1 text-xl" style={{ color: EMAS }}>★★★★★</div>
               <p className="mt-3 text-sm text-foreground">"{it.t}"</p>
