@@ -589,6 +589,7 @@ function KaliBelajarUntukSayaPage() {
   const handleTunjukIbuBapa = async () => {
     if (search.ct) {
       if (user) {
+        await supabase.auth.signOut();
         const darjahParam = search.d ?? childDarjah;
         window.location.href = `/cuba-kali/aktifkan?child=${encodeURIComponent(user.id)}&token=${encodeURIComponent(search.ct)}&darjah=${encodeURIComponent(darjahParam)}`;
       }
