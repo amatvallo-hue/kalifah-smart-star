@@ -30,13 +30,13 @@ import { KalifahLogo } from "@/components/KalifahLogo";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Kalifah.my — Sama-sama Dapat 6/10? Keperluan Anak Anda Mungkin Berbeza" },
+      { title: "Kalifah.my — Anak Buat Banyak Latihan? Tahu Apa Dia Perlukan Seterusnya" },
       {
         name: "description",
         content:
           "Kalifah.my guna KALI untuk kenal pasti apa anak perlu belajar seterusnya, dan arahkan latihan automatik ikut keperluan sebenar. Darjah 1–6, 5 subjek.",
       },
-      { property: "og:title", content: "Kalifah.my — Sama-sama Dapat 6/10? Keperluan Anak Anda Mungkin Berbeza" },
+      { property: "og:title", content: "Kalifah.my — Anak Buat Banyak Latihan? Tahu Apa Dia Perlukan Seterusnya" },
       { property: "og:description", content: "Kalifah.my guna KALI untuk kenal pasti apa anak perlu belajar seterusnya, dan arahkan latihan automatik ikut keperluan sebenar. Darjah 1–6, 5 subjek." },
     ],
   }),
@@ -115,18 +115,15 @@ function Hero() {
             style={{ color: HIJAU }}
           >
             <Sparkles className="h-3.5 w-3.5" />
-            Pembelajaran adaptif untuk Darjah 1–6
+            Untuk ibu bapa anak Darjah 1–6
           </span>
           <h1 className="mt-4 font-display text-4xl font-extrabold leading-tight text-foreground md:text-6xl">
-            Sama-sama Dapat 6/10.
+            Anak Dah Buat Banyak Latihan.
             <br />
-            Tapi Keperluan Mereka Berbeza.
+            Tapi Kita Masih Meneka Apa Yang Dia Perlukan.
           </h1>
           <p className="mt-5 max-w-xl text-base text-muted-foreground md:text-lg">
-            Setiap jawapan anak dianalisis, dan latihan seterusnya dipilih ikut apa yang dia perlukan sekarang — dibantu oleh KALI.
-          </p>
-          <p className="mt-3 max-w-xl text-base text-foreground md:text-lg">
-            Anak belajar dengan lebih terarah. Ibu bapa tahu apa yang perlu diberi perhatian — tanpa perlu menyemak semuanya sendiri.
+            Markah hanya menunjukkan berapa banyak yang betul. KALI menganalisis jawapan anak, mengenal pasti bahagian yang perlu diperkukuhkan dan memilih latihan seterusnya—supaya anak belajar dengan lebih terarah.
           </p>
 
           <div className="mt-7 flex w-full flex-col gap-3 sm:flex-row">
@@ -135,7 +132,7 @@ function Hero() {
               className="flex w-full items-center justify-center gap-2 rounded-full px-6 py-3.5 font-display text-base font-extrabold text-white shadow-soft transition hover:-translate-y-0.5 sm:flex-1"
               style={{ backgroundColor: HIJAU }}
             >
-              <Target className="h-5 w-5" /> Cuba KALI Bersama Anak
+              <Target className="h-5 w-5" /> Cuba KALI Percuma
             </Link>
             <a
               href="#mekanisme"
