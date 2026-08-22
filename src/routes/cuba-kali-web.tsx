@@ -5,16 +5,16 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { markSkipChildGuard } from "@/lib/child-auth";
 
-export const Route = createFileRoute("/kali-test/mula-percubaan")({
+export const Route = createFileRoute("/cuba-kali-web")({
   head: () => ({
     meta: [
-      { title: "Mula Percubaan KALI | Kalifah.my" },
+      { title: "Cuba KALI Bersama Anak | Kalifah.my" },
       {
         name: "description",
         content:
           "Mulakan ujian ringkas KALI terus dari pelayar web — pilih darjah anak dan mula dalam beberapa saat.",
       },
-      { property: "og:title", content: "Mula Percubaan KALI | Kalifah.my" },
+      { property: "og:title", content: "Cuba KALI Bersama Anak | Kalifah.my" },
       {
         property: "og:description",
         content: "Ujian ringkas KALI terus dari pelayar web, tanpa daftar.",

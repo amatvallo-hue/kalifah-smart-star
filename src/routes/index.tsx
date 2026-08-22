@@ -131,11 +131,11 @@ function Hero() {
 
           <div className="mt-7 flex w-full flex-col gap-3 sm:flex-row">
             <Link
-              to="/ujian-percuma"
+              to="/cuba-kali-web"
               className="flex w-full items-center justify-center gap-2 rounded-full px-6 py-3.5 font-display text-base font-extrabold text-white shadow-soft transition hover:-translate-y-0.5 sm:flex-1"
               style={{ backgroundColor: HIJAU }}
             >
-              <Target className="h-5 w-5" /> Cuba Ujian Percuma
+              <Target className="h-5 w-5" /> Cuba KALI Bersama Anak
             </Link>
             <a
               href="#mekanisme"
@@ -146,7 +146,7 @@ function Hero() {
             </a>
           </div>
           <p className="mt-2 text-sm text-muted-foreground">
-            Percuma • 3 minit • Tiada kad bank diperlukan
+            Percuma • 10 soalan • Tiada kad bank diperlukan
           </p>
           <div className="mt-4 flex items-center gap-4 text-xs text-muted-foreground">
             <span className="inline-flex items-center gap-1">

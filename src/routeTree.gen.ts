@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as CikguAffiliateRouteImport } from './routes/cikgu-affiliate'
 import { Route as CubaKaliRouteImport } from './routes/cuba-kali'
+import { Route as CubaKaliWebRouteImport } from './routes/cuba-kali-web'
 import { Route as DaftarRouteImport } from './routes/daftar'
 import { Route as DaftarKaliRouteImport } from './routes/daftar-kali'
 import { Route as DaftarMpt4RouteImport } from './routes/daftar-mpt4'
@@ -50,7 +51,6 @@ import { Route as DashboardIbuBapaRouteImport } from './routes/dashboard.ibu-bap
 import { Route as DashboardProgressRouteImport } from './routes/dashboard.progress'
 import { Route as KaliTestBelajarUntukSayaRouteImport } from './routes/kali-test.belajar-untuk-saya'
 import { Route as KaliTestLaporanAnakRouteImport } from './routes/kali-test.laporan-anak'
-import { Route as KaliTestMulaPercubaanRouteImport } from './routes/kali-test.mula-percubaan'
 import { Route as PraKalifahBidangRouteImport } from './routes/pra-kalifah_.$bidang'
 import { Route as PreviewDarjahIdRouteImport } from './routes/preview.$darjahId'
 import { Route as PreviewNamaRouteImport } from './routes/preview.nama'
@@ -98,6 +98,11 @@ const CikguAffiliateRoute = CikguAffiliateRouteImport.update({
 const CubaKaliRoute = CubaKaliRouteImport.update({
   id: '/cuba-kali',
   path: '/cuba-kali',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CubaKaliWebRoute = CubaKaliWebRouteImport.update({
+  id: '/cuba-kali-web',
+  path: '/cuba-kali-web',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DaftarRoute = DaftarRouteImport.update({
@@ -286,11 +291,6 @@ const KaliTestLaporanAnakRoute = KaliTestLaporanAnakRouteImport.update({
   path: '/kali-test/laporan-anak',
   getParentRoute: () => rootRouteImport,
 } as any)
-const KaliTestMulaPercubaanRoute = KaliTestMulaPercubaanRouteImport.update({
-  id: '/kali-test/mula-percubaan',
-  path: '/kali-test/mula-percubaan',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const PraKalifahBidangRoute = PraKalifahBidangRouteImport.update({
   id: '/pra-kalifah_/$bidang',
   path: '/pra-kalifah/$bidang',
@@ -456,6 +456,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRoute
   '/cikgu-affiliate': typeof CikguAffiliateRoute
   '/cuba-kali': typeof CubaKaliRoute
+  '/cuba-kali-web': typeof CubaKaliWebRoute
   '/daftar': typeof DaftarRoute
   '/daftar-kali': typeof DaftarKaliRoute
   '/daftar-mpt4': typeof DaftarMpt4Route
@@ -493,7 +494,6 @@ export interface FileRoutesByFullPath {
   '/dashboard/progress': typeof DashboardProgressRoute
   '/kali-test/belajar-untuk-saya': typeof KaliTestBelajarUntukSayaRoute
   '/kali-test/laporan-anak': typeof KaliTestLaporanAnakRoute
-  '/kali-test/mula-percubaan': typeof KaliTestMulaPercubaanRoute
   '/pra-kalifah/$bidang': typeof PraKalifahBidangRoute
   '/preview/$darjahId': typeof PreviewDarjahIdRoute
   '/preview/nama': typeof PreviewNamaRoute
@@ -528,6 +528,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminRoute
   '/cikgu-affiliate': typeof CikguAffiliateRoute
   '/cuba-kali': typeof CubaKaliRoute
+  '/cuba-kali-web': typeof CubaKaliWebRoute
   '/daftar': typeof DaftarRoute
   '/daftar-kali': typeof DaftarKaliRoute
   '/daftar-mpt4': typeof DaftarMpt4Route
@@ -565,7 +566,6 @@ export interface FileRoutesByTo {
   '/dashboard/progress': typeof DashboardProgressRoute
   '/kali-test/belajar-untuk-saya': typeof KaliTestBelajarUntukSayaRoute
   '/kali-test/laporan-anak': typeof KaliTestLaporanAnakRoute
-  '/kali-test/mula-percubaan': typeof KaliTestMulaPercubaanRoute
   '/pra-kalifah/$bidang': typeof PraKalifahBidangRoute
   '/preview/$darjahId': typeof PreviewDarjahIdRoute
   '/preview/nama': typeof PreviewNamaRoute
@@ -601,6 +601,7 @@ export interface FileRoutesById {
   '/admin': typeof AdminRoute
   '/cikgu-affiliate': typeof CikguAffiliateRoute
   '/cuba-kali': typeof CubaKaliRoute
+  '/cuba-kali-web': typeof CubaKaliWebRoute
   '/daftar': typeof DaftarRoute
   '/daftar-kali': typeof DaftarKaliRoute
   '/daftar-mpt4': typeof DaftarMpt4Route
@@ -638,7 +639,6 @@ export interface FileRoutesById {
   '/dashboard/progress': typeof DashboardProgressRoute
   '/kali-test/belajar-untuk-saya': typeof KaliTestBelajarUntukSayaRoute
   '/kali-test/laporan-anak': typeof KaliTestLaporanAnakRoute
-  '/kali-test/mula-percubaan': typeof KaliTestMulaPercubaanRoute
   '/pra-kalifah_/$bidang': typeof PraKalifahBidangRoute
   '/preview/$darjahId': typeof PreviewDarjahIdRoute
   '/preview/nama': typeof PreviewNamaRoute
@@ -675,6 +675,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/cikgu-affiliate'
     | '/cuba-kali'
+    | '/cuba-kali-web'
     | '/daftar'
     | '/daftar-kali'
     | '/daftar-mpt4'
@@ -712,7 +713,6 @@ export interface FileRouteTypes {
     | '/dashboard/progress'
     | '/kali-test/belajar-untuk-saya'
     | '/kali-test/laporan-anak'
-    | '/kali-test/mula-percubaan'
     | '/pra-kalifah/$bidang'
     | '/preview/$darjahId'
     | '/preview/nama'
@@ -747,6 +747,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/cikgu-affiliate'
     | '/cuba-kali'
+    | '/cuba-kali-web'
     | '/daftar'
     | '/daftar-kali'
     | '/daftar-mpt4'
@@ -784,7 +785,6 @@ export interface FileRouteTypes {
     | '/dashboard/progress'
     | '/kali-test/belajar-untuk-saya'
     | '/kali-test/laporan-anak'
-    | '/kali-test/mula-percubaan'
     | '/pra-kalifah/$bidang'
     | '/preview/$darjahId'
     | '/preview/nama'
@@ -819,6 +819,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/cikgu-affiliate'
     | '/cuba-kali'
+    | '/cuba-kali-web'
     | '/daftar'
     | '/daftar-kali'
     | '/daftar-mpt4'
@@ -856,7 +857,6 @@ export interface FileRouteTypes {
     | '/dashboard/progress'
     | '/kali-test/belajar-untuk-saya'
     | '/kali-test/laporan-anak'
-    | '/kali-test/mula-percubaan'
     | '/pra-kalifah_/$bidang'
     | '/preview/$darjahId'
     | '/preview/nama'
@@ -892,6 +892,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRoute
   CikguAffiliateRoute: typeof CikguAffiliateRoute
   CubaKaliRoute: typeof CubaKaliRoute
+  CubaKaliWebRoute: typeof CubaKaliWebRoute
   DaftarRoute: typeof DaftarRoute
   DaftarKaliRoute: typeof DaftarKaliRoute
   DaftarMpt4Route: typeof DaftarMpt4Route
@@ -929,7 +930,6 @@ export interface RootRouteChildren {
   DashboardProgressRoute: typeof DashboardProgressRoute
   KaliTestBelajarUntukSayaRoute: typeof KaliTestBelajarUntukSayaRoute
   KaliTestLaporanAnakRoute: typeof KaliTestLaporanAnakRoute
-  KaliTestMulaPercubaanRoute: typeof KaliTestMulaPercubaanRoute
   PraKalifahBidangRoute: typeof PraKalifahBidangRoute
   PreviewDarjahIdRoute: typeof PreviewDarjahIdRoute
   PreviewNamaRoute: typeof PreviewNamaRoute
@@ -988,6 +988,13 @@ declare module '@tanstack/react-router' {
       path: '/cuba-kali'
       fullPath: '/cuba-kali'
       preLoaderRoute: typeof CubaKaliRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cuba-kali-web': {
+      id: '/cuba-kali-web'
+      path: '/cuba-kali-web'
+      fullPath: '/cuba-kali-web'
+      preLoaderRoute: typeof CubaKaliWebRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/daftar': {
@@ -1249,13 +1256,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof KaliTestLaporanAnakRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/kali-test/mula-percubaan': {
-      id: '/kali-test/mula-percubaan'
-      path: '/kali-test/mula-percubaan'
-      fullPath: '/kali-test/mula-percubaan'
-      preLoaderRoute: typeof KaliTestMulaPercubaanRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/pra-kalifah_/$bidang': {
       id: '/pra-kalifah_/$bidang'
       path: '/pra-kalifah/$bidang'
@@ -1460,6 +1460,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRoute,
   CikguAffiliateRoute: CikguAffiliateRoute,
   CubaKaliRoute: CubaKaliRoute,
+  CubaKaliWebRoute: CubaKaliWebRoute,
   DaftarRoute: DaftarRoute,
   DaftarKaliRoute: DaftarKaliRoute,
   DaftarMpt4Route: DaftarMpt4Route,
@@ -1497,7 +1498,6 @@ const rootRouteChildren: RootRouteChildren = {
   DashboardProgressRoute: DashboardProgressRoute,
   KaliTestBelajarUntukSayaRoute: KaliTestBelajarUntukSayaRoute,
   KaliTestLaporanAnakRoute: KaliTestLaporanAnakRoute,
-  KaliTestMulaPercubaanRoute: KaliTestMulaPercubaanRoute,
   PraKalifahBidangRoute: PraKalifahBidangRoute,
   PreviewDarjahIdRoute: PreviewDarjahIdRoute,
   PreviewNamaRoute: PreviewNamaRoute,
