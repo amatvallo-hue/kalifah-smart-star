@@ -165,185 +165,83 @@ function Hero() {
 }
 
 
-function DashboardMockup() {
-  const subjects = [
-    { nama: "Bahasa Melayu", purata: 94, siap: 100, aktiviti: 8, terkini: "14/15" },
-    { nama: "Matematik", purata: 88, siap: 80, aktiviti: 6, terkini: "13/15" },
-    { nama: "Pendidikan Islam", purata: 96, siap: 60, aktiviti: 4, terkini: "12/15" },
-    { nama: "Bahasa Inggeris", purata: 76, siap: 40, aktiviti: 3, terkini: null },
-    { nama: "Sains", purata: 82, siap: 40, aktiviti: 3, terkini: null },
-  ];
+function KaliCardsMockup() {
   return (
-    <div
-      className="rounded-[2rem] bg-card p-5 shadow-card"
-      style={{ border: `2px solid ${HIJAU}22`, backgroundColor: "#FFFBF2" }}
-    >
-      {/* Header */}
-      <div className="flex items-center gap-3">
+    <div>
+      <div className="flex flex-col gap-4 md:flex-row md:items-stretch">
+        {/* Kad Anak A */}
         <div
-          className="flex h-10 w-10 items-center justify-center rounded-2xl text-white shadow-soft"
-          style={{ backgroundColor: HIJAU }}
+          className="flex-1 rounded-3xl bg-card p-6 shadow-card"
+          style={{ border: `2px solid ${HIJAU}22`, backgroundColor: "#FFFBF2" }}
         >
-          <Users className="h-5 w-5" />
-        </div>
-        <div>
-          <h3 className="font-display text-lg font-extrabold leading-tight text-foreground">
-            Dashboard Ibu Bapa
-          </h3>
-          <p className="text-[11px] text-muted-foreground">Pantau pembelajaran anak anda</p>
-        </div>
-      </div>
-
-      {/* Pemilih anak */}
-      <div className="mt-4 flex flex-wrap gap-2">
-        <span
-          className="rounded-full px-3 py-1 font-display text-[11px] font-extrabold text-white"
-          style={{ backgroundColor: HIJAU, border: `2px solid ${HIJAU}` }}
-        >
-          Musa • D4
-        </span>
-        <span
-          className="rounded-full px-3 py-1 font-display text-[11px] font-extrabold"
-          style={{ backgroundColor: `${HIJAU}14`, color: HIJAU, border: `2px solid ${HIJAU}33` }}
-        >
-          Airis • D2
-        </span>
-      </div>
-
-      {/* Progress Minggu Ini */}
-      <SectionHead ikon={<Calendar className="h-3.5 w-3.5" />} tajuk="Progress Minggu Ini" />
-      <div
-        className="relative overflow-hidden rounded-2xl border-2 p-3 shadow-soft"
-        style={{
-          borderColor: "#FBC02D",
-          background:
-            "linear-gradient(135deg, #FFF8E1 0%, #FFFDF5 55%, #FFF3D1 100%)",
-        }}
-      >
-        <div className="absolute -right-6 -top-6 h-20 w-20 rounded-full bg-[#F9A825]/15 blur-2xl" />
-        <div className="relative flex items-center gap-3">
-          <div
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white shadow-soft"
-            style={{ background: "linear-gradient(135deg, #F5B82E, #E48A0A)" }}
-          >
-            <TrendingUp className="h-5 w-5" />
+          <div className="flex items-center justify-between">
+            <h3 className="font-display text-lg font-extrabold text-foreground">Anak A</h3>
+            <span
+              className="rounded-full px-2.5 py-1 font-display text-[10px] font-extrabold text-white"
+              style={{ backgroundColor: HIJAU }}
+            >
+              Matematik
+            </span>
           </div>
-          <div className="min-w-0 flex-1">
-            <p className="text-[10px] font-extrabold uppercase tracking-wide text-[#8A5A00]">7 Hari Terakhir</p>
-            <div className="mt-1 flex flex-wrap gap-3">
-              <span className="font-display text-lg font-extrabold leading-tight text-foreground">
-                124 <span className="text-[10px] font-bold text-muted-foreground">soalan</span>
-              </span>
-              <span className="font-display text-lg font-extrabold leading-tight text-foreground">
-                92% <span className="text-[10px] font-bold text-muted-foreground">ketepatan</span>
-              </span>
-            </div>
+          <div className="mt-4 text-center">
+            <p className="font-display text-5xl font-extrabold" style={{ color: HIJAU }}>6/10</p>
+            <p className="mt-1 text-xs text-muted-foreground">Markah ujian terkini</p>
+          </div>
+          <div className="mt-5 rounded-2xl bg-white/60 p-4" style={{ border: `2px solid ${HIJAU}1a` }}>
+            <p className="font-display text-xs font-extrabold text-foreground">Latihan seterusnya:</p>
+            <ul className="mt-2 space-y-1.5 text-sm text-muted-foreground">
+              <li className="flex items-start gap-2">
+                <span className="mt-0.5 text-emerald-600">✓</span>
+                <span>Pecahan (ulang asas)</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="mt-0.5 text-emerald-600">✓</span>
+                <span>Masa & Waktu (pengenalan)</span>
+              </li>
+            </ul>
           </div>
         </div>
-      </div>
 
-      {/* Misi Harian */}
-      <SectionHead ikon={<Target className="h-3.5 w-3.5" />} tajuk="Misi Harian" />
-      <div className="grid gap-2">
+        {/* Kad Anak B */}
         <div
-          className="flex items-center gap-2 rounded-xl bg-card p-2 shadow-soft"
-          style={{ border: `2px solid ${HIJAU}1f` }}
+          className="flex-1 rounded-3xl bg-card p-6 shadow-card"
+          style={{ border: `2px solid ${EMAS}44`, backgroundColor: "#FFFBF2" }}
         >
-          <CheckCircle2 className="h-4 w-4 shrink-0" style={{ color: HIJAU }} />
-          <span className="text-[10px] font-bold text-foreground">10 Soalan</span>
-          <span className="ml-auto text-[9px] font-extrabold text-emerald-600">Selesai</span>
-        </div>
-        <div
-          className="flex items-center gap-2 rounded-xl bg-card p-2 shadow-soft"
-          style={{ border: `2px solid ${HIJAU}1f` }}
-        >
-          <CheckCircle2 className="h-4 w-4 shrink-0" style={{ color: HIJAU }} />
-          <span className="text-[10px] font-bold text-foreground">15 Minit</span>
-          <span className="ml-auto text-[9px] font-extrabold text-emerald-600">Selesai</span>
-        </div>
-        <div
-          className="flex items-center gap-2 rounded-xl bg-card p-2 shadow-soft"
-          style={{ border: `2px solid ${HIJAU}1f` }}
-        >
-          <Award className="h-4 w-4 shrink-0" style={{ color: EMAS }} />
-          <span className="text-[10px] font-bold text-foreground">Skor 80%+</span>
-          <span className="ml-auto text-[9px] font-extrabold text-muted-foreground">○</span>
-        </div>
-      </div>
-
-      {/* Kesediaan Peperiksaan */}
-      <SectionHead ikon={<ShieldCheck className="h-3.5 w-3.5" />} tajuk="Kesediaan Peperiksaan" />
-      <div className="flex flex-wrap gap-2">
-        <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-1 text-[10px] font-extrabold text-emerald-700">
-          <Check className="h-3 w-3" /> BM SEDIA
-        </span>
-        <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-1 text-[10px] font-extrabold text-emerald-700">
-          <Check className="h-3 w-3" /> Matematik SEDIA
-        </span>
-        <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2.5 py-1 text-[10px] font-extrabold text-amber-700">
-          <Clock className="h-3 w-3" /> BI 65%
-        </span>
-      </div>
-
-      {/* Kemajuan Subjek */}
-      <SectionHead ikon={<BookOpen className="h-3.5 w-3.5" />} tajuk="Kemajuan Subjek" />
-      <div className="grid gap-2 sm:grid-cols-2">
-        {subjects.slice(0, 4).map((s) => (
-          <div
-            key={s.nama}
-            className="rounded-xl bg-card p-2.5 shadow-soft"
-            style={{ border: `2px solid ${HIJAU}1f` }}
-          >
-            <div className="flex items-center justify-between gap-1">
-              <h4 className="font-display text-[11px] font-extrabold text-foreground">{s.nama}</h4>
-              <span
-                className="rounded-full px-1.5 py-0.5 text-[9px] font-extrabold"
-                style={{ backgroundColor: `${EMAS}33`, color: "#7a5300" }}
-              >
-                ⭐ {s.purata}%
-              </span>
-            </div>
-            <div className="mt-1.5 h-2 overflow-hidden rounded-full" style={{ backgroundColor: `${HIJAU}1a` }}>
-              <div className="h-full" style={{ width: `${s.siap}%`, backgroundColor: HIJAU }} />
-            </div>
-            <p className="mt-1 text-[9px] text-muted-foreground">
-              {s.siap}% siap • {s.aktiviti} aktiviti
-              {s.terkini && <> • <b>{s.terkini}</b></>}
-            </p>
+          <div className="flex items-center justify-between">
+            <h3 className="font-display text-lg font-extrabold text-foreground">Anak B</h3>
+            <span
+              className="rounded-full px-2.5 py-1 font-display text-[10px] font-extrabold text-white"
+              style={{ backgroundColor: EMAS }}
+            >
+              Bahasa Melayu
+            </span>
           </div>
-        ))}
-      </div>
-
-      {/* Insight cards */}
-      <div className="mt-3 grid gap-2 sm:grid-cols-2">
-        <div
-          className="rounded-xl bg-card p-3 shadow-soft"
-          style={{ border: `2px solid ${HIJAU}33` }}
-        >
-          <p className="text-[10px] font-extrabold text-muted-foreground">Subjek Terkuat 💪</p>
-          <p className="mt-1 font-display text-sm font-extrabold text-foreground">Matematik</p>
-          <p className="text-[10px] text-muted-foreground">Purata 88% • 6 aktiviti</p>
-        </div>
-        <div
-          className="rounded-xl p-3 shadow-soft"
-          style={{ border: `2px solid #dc262633`, backgroundColor: "#fef2f2" }}
-        >
-          <p className="text-[10px] font-extrabold text-muted-foreground">Perlukan Perhatian ⚠️</p>
-          <p className="mt-1 font-display text-sm font-extrabold text-foreground">Bahasa Inggeris</p>
-          <p className="text-[10px] text-muted-foreground">Purata 76% • 3 aktiviti</p>
+          <div className="mt-4 text-center">
+            <p className="font-display text-5xl font-extrabold" style={{ color: EMAS }}>6/10</p>
+            <p className="mt-1 text-xs text-muted-foreground">Markah ujian terkini</p>
+          </div>
+          <div className="mt-5 rounded-2xl bg-white/60 p-4" style={{ border: `2px solid ${EMAS}1a` }}>
+            <p className="font-display text-xs font-extrabold text-foreground">Latihan seterusnya:</p>
+            <ul className="mt-2 space-y-1.5 text-sm text-muted-foreground">
+              <li className="flex items-start gap-2">
+                <span className="mt-0.5" style={{ color: EMAS }}>✓</span>
+                <span>Ayat Majmuk (Tatabahasa BM)</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="mt-0.5" style={{ color: EMAS }}>✓</span>
+                <span>Kata Adjektif (perkatan)</span>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
-
-      {/* Streak & Lencana */}
-      <SectionHead ikon={<Flame className="h-3.5 w-3.5" />} tajuk="Streak & Lencana" />
-      <div className="grid grid-cols-3 gap-2">
-        <MockStat label="Streak" nilai="14 hari 🔥" icon={<Flame className="h-3.5 w-3.5" />} warna="#dc2626" />
-        <MockStat label="Lencana" nilai="12" icon={<Award className="h-3.5 w-3.5" />} warna={EMAS} light />
-        <MockStat label="Bab Siap" nilai="7" icon={<TrendingUp className="h-3.5 w-3.5" />} warna={HIJAU} />
-      </div>
+      <p className="mt-4 text-center text-xs text-muted-foreground">
+        Contoh cara KALI memilih latihan — bukan data sebenar.
+      </p>
     </div>
   );
 }
+
 
 function SectionHead({ ikon, tajuk }: { ikon: React.ReactNode; tajuk: string }) {
   return (
