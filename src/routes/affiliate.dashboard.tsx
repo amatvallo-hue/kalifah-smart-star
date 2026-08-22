@@ -33,6 +33,8 @@ interface Affiliate {
   total_dibayar: number;
   komisyen_rate: number;
   avatar_url?: string | null;
+  telegram_chat_id?: number | null;
+  telegram_linked_at?: string | null;
 }
 
 interface Jualan {
@@ -588,6 +590,20 @@ function AffiliateDashboardPage() {
         {/* Kempen Kalifah Belanja 10 Akaun */}
         {kempenData?.ok && kempenData.ada_kempen && kempenData.alokasi ? (
           <KempenKad
+            affiliateId={aff.id}
+            telegramChatId={aff.telegram_chat_id}
+            onTelegramLinked={async () => {
+              const { data } = await supabase
+                .from("affiliates")
+                .select("telegram_chat_id")
+                .eq("id", aff.id)
+                .maybeSingle();
+              if (data) {
+                setAff((prev) =>
+                  prev ? { ...prev, telegram_chat_id: data.telegram_chat_id } : prev,
+                );
+              }
+            }}
             alokasi={kempenData.alokasi}
             families={kempenData.families ?? []}
             traffic={kempenData.traffic}
