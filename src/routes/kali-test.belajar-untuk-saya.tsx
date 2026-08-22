@@ -31,8 +31,11 @@ export const Route = createFileRoute("/kali-test/belajar-untuk-saya")({
   ssr: false,
   validateSearch: (search: Record<string, unknown>) => {
     const src = typeof search.src === "string" ? search.src : undefined;
-    return src ? { src } : {};
+    const ct = typeof search.ct === "string" && search.ct ? search.ct : undefined;
+    const d = typeof search.d === "string" && search.d ? search.d : undefined;
+    return { ...(src ? { src } : {}), ...(ct ? { ct } : {}), ...(d ? { d } : {}) };
   },
+
   component: KaliBelajarUntukSayaPage,
 });
 
@@ -584,11 +587,19 @@ function KaliBelajarUntukSayaPage() {
   };
 
   const handleTunjukIbuBapa = async () => {
+    if (search.ct) {
+      if (user) {
+        const darjahParam = search.d ?? childDarjah;
+        window.location.href = `/cuba-kali/aktifkan?child=${encodeURIComponent(user.id)}&token=${encodeURIComponent(search.ct)}&darjah=${encodeURIComponent(darjahParam)}`;
+      }
+      return;
+    }
     await switchBackToParent();
     if (user) {
       void navigate({ to: "/kali-test/laporan-anak", search: { child: user.id } });
     }
   };
+
 
 
   const skillMap = new Map<string, { nama: string; semuaBetul: boolean }>();
