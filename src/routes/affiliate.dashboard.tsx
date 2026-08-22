@@ -1021,6 +1021,9 @@ function StatCard({
 }
 
 function KempenKad({
+  affiliateId,
+  telegramChatId,
+  onTelegramLinked,
   alokasi,
   families,
   traffic,
@@ -1031,6 +1034,9 @@ function KempenKad({
   onCopyLink,
   onLepasSlot,
 }: {
+  affiliateId: string;
+  telegramChatId: number | null | undefined;
+  onTelegramLinked: () => void;
   alokasi: NonNullable<KempenAffDash["alokasi"]>;
   families: KempenFamily[];
   traffic?: KempenTraffic;
@@ -1041,6 +1047,40 @@ function KempenKad({
   onCopyLink: () => void;
   onLepasSlot: (klaimId: string) => void;
 }) {
+  const [menungguTelegram, setMenungguTelegram] = useState(false);
+
+  useEffect(() => {
+    if (!menungguTelegram) return;
+    let cancelled = false;
+    const timer = window.setInterval(async () => {
+      const { data } = await supabase
+        .from("affiliates")
+        .select("telegram_chat_id")
+        .eq("id", affiliateId)
+        .maybeSingle();
+      if (cancelled) return;
+      const chatId = data?.telegram_chat_id;
+      if (chatId !== null && chatId !== undefined) {
+        window.clearInterval(timer);
+        setMenungguTelegram(false);
+        onTelegramLinked();
+      }
+    }, 3000);
+    return () => {
+      cancelled = true;
+      window.clearInterval(timer);
+    };
+  }, [menungguTelegram, affiliateId, onTelegramLinked]);
+
+  function sambungTelegram() {
+    setMenungguTelegram(true);
+    window.open(
+      `https://t.me/kalifahassistantbot?start=affiliate_${affiliateId}`,
+      "_blank",
+      "noopener,noreferrer",
+    );
+  }
+
   const [memproses, setMemproses] = useState<string | null>(null);
   const peratus =
     alokasi.slot_kuota > 0
