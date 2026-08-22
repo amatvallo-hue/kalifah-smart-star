@@ -39,7 +39,28 @@ interface FunnelData {
   sumber_bot: SumberBot[];
 }
 
+interface HarianRow {
+  tarikh: string;
+  landing: number;
+  klik_telegram: number;
+  bot_mula: number;
+  darjah_dipilih: number;
+  demo_selesai: number;
+  anak_dicipta: number;
+  diagnostic_selesai: number;
+}
+
+interface FunnelHarianData {
+  tempoh_hari: number;
+  harian: HarianRow[];
+}
+
 const TEMPOH: number[] = [7, 14, 30];
+
+function formatTarikh(tarikh: string) {
+  const d = new Date(tarikh);
+  return new Intl.DateTimeFormat("ms-MY", { day: "numeric", month: "long" }).format(d);
+}
 
 function AdminFunnelKaliPage() {
   const { user, loading: authLoading } = useAuth();
@@ -47,7 +68,9 @@ function AdminFunnelKaliPage() {
   const [checking, setChecking] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
   const [tempohHari, setTempohHari] = useState(7);
+  const [modePaparan, setModePaparan] = useState<"ringkasan" | "harian">("ringkasan");
   const [data, setData] = useState<FunnelData | null>(null);
+  const [dataHarian, setDataHarian] = useState<FunnelHarianData | null>(null);
   const [memuat, setMemuat] = useState(false);
   const [ralat, setRalat] = useState<string | null>(null);
 
@@ -87,9 +110,29 @@ function AdminFunnelKaliPage() {
     setMemuat(false);
   }, [tempohHari]);
 
+  const muatHarian = useCallback(async () => {
+    setMemuat(true);
+    setRalat(null);
+    const { data: hasil, error } = await supabase.rpc(
+      "kali_admin_funnel_cuba_kali_harian" as never,
+      { p_hari: tempohHari } as never,
+    );
+    if (error) {
+      setRalat(error.message);
+    } else {
+      setDataHarian(hasil as unknown as FunnelHarianData);
+    }
+    setMemuat(false);
+  }, [tempohHari]);
+
   useEffect(() => {
-    if (isAdmin) void muatFunnel();
-  }, [isAdmin, muatFunnel]);
+    if (!isAdmin) return;
+    if (modePaparan === "harian") {
+      void muatHarian();
+    } else {
+      void muatFunnel();
+    }
+  }, [isAdmin, modePaparan, tempohHari, muatFunnel, muatHarian]);
 
   if (authLoading || checking) {
     return (
@@ -130,7 +173,7 @@ function AdminFunnelKaliPage() {
           </div>
           <button
             type="button"
-            onClick={() => void muatFunnel()}
+            onClick={() => void (modePaparan === "harian" ? muatHarian() : muatFunnel())}
             disabled={memuat}
             className="rounded-md border border-border bg-card px-3 py-2 text-sm font-bold text-foreground hover:bg-muted disabled:opacity-60"
           >
@@ -138,7 +181,7 @@ function AdminFunnelKaliPage() {
           </button>
         </div>
 
-        <div className="mt-4 flex flex-wrap gap-2">
+        <div className="mt-4 flex flex-wrap items-center gap-2">
           {TEMPOH.map((h) => (
             <button
               key={h}
@@ -153,6 +196,29 @@ function AdminFunnelKaliPage() {
               {h} hari
             </button>
           ))}
+          <span className="mx-1 hidden h-6 w-px bg-border sm:inline-block" />
+          <button
+            type="button"
+            onClick={() => setModePaparan("ringkasan")}
+            className={
+              modePaparan === "ringkasan"
+                ? "rounded-full bg-primary px-4 py-2 text-sm font-bold text-primary-foreground"
+                : "rounded-full border border-border bg-card px-4 py-2 text-sm font-bold text-foreground hover:bg-muted"
+            }
+          >
+            Ringkasan
+          </button>
+          <button
+            type="button"
+            onClick={() => setModePaparan("harian")}
+            className={
+              modePaparan === "harian"
+                ? "rounded-full bg-primary px-4 py-2 text-sm font-bold text-primary-foreground"
+                : "rounded-full border border-border bg-card px-4 py-2 text-sm font-bold text-foreground hover:bg-muted"
+            }
+          >
+            Harian
+          </button>
         </div>
 
         {ralat && (
@@ -161,20 +227,70 @@ function AdminFunnelKaliPage() {
           </p>
         )}
 
-        <h2 className="mt-8 font-display text-lg font-bold">Langkah Funnel</h2>
-        <div className="mt-2 divide-y divide-border rounded-md border border-border">
-          {(data?.langkah ?? []).map((l) => (
-            <div key={l.label} className="flex items-baseline justify-between px-4 py-3">
-              <span className="text-sm text-muted-foreground">{l.label}</span>
-              <span className="font-display text-3xl font-bold text-foreground">
-                {memuat ? "—" : l.jumlah}
-              </span>
+        {modePaparan === "harian" ? (
+          <>
+            <h2 className="mt-8 font-display text-lg font-bold">Langkah Funnel — Harian</h2>
+            <div className="mt-2 overflow-x-auto rounded-md border border-border">
+              <table className="w-full min-w-[44rem] text-sm">
+                <thead>
+                  <tr className="bg-muted text-left">
+                    <th className="border-b border-border px-3 py-2 font-bold">Tarikh</th>
+                    <th className="border-b border-border px-3 py-2 font-bold">Landing</th>
+                    <th className="border-b border-border px-3 py-2 font-bold">Klik Telegram</th>
+                    <th className="border-b border-border px-3 py-2 font-bold">Bot Mula</th>
+                    <th className="border-b border-border px-3 py-2 font-bold">Darjah Dipilih</th>
+                    <th className="border-b border-border px-3 py-2 font-bold">Demo Selesai</th>
+                    <th className="border-b border-border px-3 py-2 font-bold">Anak Dicipta</th>
+                    <th className="border-b border-border px-3 py-2 font-bold">Diagnostic Selesai</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {(dataHarian?.harian ?? []).length === 0 ? (
+                    <tr>
+                      <td colSpan={8} className="px-3 py-3 text-center italic text-muted-foreground">
+                        Tiada data.
+                      </td>
+                    </tr>
+                  ) : (
+                    [...(dataHarian?.harian ?? [])]
+                      .reverse()
+                      .map((row, i) => (
+                        <tr key={row.tarikh + i} className={i % 2 === 0 ? "bg-white" : "bg-muted/30"}>
+                          <td className="border-b border-border px-3 py-2 font-semibold">
+                            {memuat ? "—" : formatTarikh(row.tarikh)}
+                          </td>
+                          <td className="border-b border-border px-3 py-2">{memuat ? "—" : row.landing}</td>
+                          <td className="border-b border-border px-3 py-2">{memuat ? "—" : row.klik_telegram}</td>
+                          <td className="border-b border-border px-3 py-2">{memuat ? "—" : row.bot_mula}</td>
+                          <td className="border-b border-border px-3 py-2">{memuat ? "—" : row.darjah_dipilih}</td>
+                          <td className="border-b border-border px-3 py-2">{memuat ? "—" : row.demo_selesai}</td>
+                          <td className="border-b border-border px-3 py-2">{memuat ? "—" : row.anak_dicipta}</td>
+                          <td className="border-b border-border px-3 py-2">{memuat ? "—" : row.diagnostic_selesai}</td>
+                        </tr>
+                      ))
+                  )}
+                </tbody>
+              </table>
             </div>
-          ))}
-          {!memuat && (data?.langkah ?? []).length === 0 && (
-            <p className="px-4 py-3 text-sm text-muted-foreground">Tiada data.</p>
-          )}
-        </div>
+          </>
+        ) : (
+          <>
+            <h2 className="mt-8 font-display text-lg font-bold">Langkah Funnel</h2>
+            <div className="mt-2 divide-y divide-border rounded-md border border-border">
+              {(data?.langkah ?? []).map((l) => (
+                <div key={l.label} className="flex items-baseline justify-between px-4 py-3">
+                  <span className="text-sm text-muted-foreground">{l.label}</span>
+                  <span className="font-display text-3xl font-bold text-foreground">
+                    {memuat ? "—" : l.jumlah}
+                  </span>
+                </div>
+              ))}
+              {!memuat && (data?.langkah ?? []).length === 0 && (
+                <p className="px-4 py-3 text-sm text-muted-foreground">Tiada data.</p>
+              )}
+            </div>
+          </>
+        )}
 
         <h2 className="mt-8 font-display text-lg font-bold">Status Anak Tetamu (Sepanjang Masa)</h2>
         <p className="text-xs text-muted-foreground">
