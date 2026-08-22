@@ -53,6 +53,7 @@ function LandingPage() {
     <div className="min-h-screen bg-background">
       <LandingHeader />
       <Hero />
+      <Mekanisme />
       <Ciri />
       <UntukSiapa />
       <Subjek />
@@ -63,6 +64,7 @@ function LandingPage() {
     </div>
   );
 }
+
 
 function LandingHeader() {
   return (
