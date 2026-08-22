@@ -14,7 +14,9 @@ import {
   Users,
   ShieldCheck,
   ChevronDown,
+  ChevronRight,
   Globe,
+
   Calendar,
   Clock,
   Flame,
@@ -28,19 +30,20 @@ import { KalifahLogo } from "@/components/KalifahLogo";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Kalifah.my — Kenal Pasti Kelemahan Anak Sebelum Peperiksaan" },
+      { title: "Kalifah.my — Sama-sama Dapat 6/10? Keperluan Anak Anda Mungkin Berbeza" },
       {
         name: "description",
         content:
-          "Portal pembelajaran online untuk Darjah 1–6. Pantau prestasi anak dalam Bahasa Melayu, Matematik dan Bahasa Inggeris dengan latihan, kuiz dan sijil automatik.",
+          "Kalifah.my guna KALI untuk kenal pasti apa anak perlu belajar seterusnya, dan arahkan latihan automatik ikut keperluan sebenar. Darjah 1–6, 5 subjek.",
       },
-      { property: "og:title", content: "Kalifah.my — Pembelajaran Pintar untuk Anak Anda" },
-      { property: "og:description", content: "Lebih 32,000+ soalan latihan. Pantau progress anak. Sesuai untuk D1–D6." },
+      { property: "og:title", content: "Kalifah.my — Sama-sama Dapat 6/10? Keperluan Anak Anda Mungkin Berbeza" },
+      { property: "og:description", content: "Kalifah.my guna KALI untuk kenal pasti apa anak perlu belajar seterusnya, dan arahkan latihan automatik ikut keperluan sebenar. Darjah 1–6, 5 subjek." },
     ],
   }),
   ssr: true,
   component: LandingPage,
 });
+
 
 const HIJAU = "#1B8A5A";
 const EMAS = "#F5A623";
@@ -50,6 +53,7 @@ function LandingPage() {
     <div className="min-h-screen bg-background">
       <LandingHeader />
       <Hero />
+      <Mekanisme />
       <Ciri />
       <UntukSiapa />
       <Subjek />
@@ -60,6 +64,7 @@ function LandingPage() {
     </div>
   );
 }
+
 
 function LandingHeader() {
   return (
@@ -110,67 +115,38 @@ function Hero() {
             style={{ color: HIJAU }}
           >
             <Sparkles className="h-3.5 w-3.5" />
-            Untuk Darjah 1 hingga 6
+            Pembelajaran adaptif untuk Darjah 1–6
           </span>
           <h1 className="mt-4 font-display text-4xl font-extrabold leading-tight text-foreground md:text-6xl">
-            Kenal Pasti{" "}
-            <span style={{ color: HIJAU }}>Kelemahan Anak</span> Sebelum Peperiksaan
+            Sama-sama Dapat 6/10.
+            <br />
+            Tapi Keperluan Mereka Berbeza.
           </h1>
           <p className="mt-5 max-w-xl text-base text-muted-foreground md:text-lg">
-            Portal pembelajaran yang bantu ibu bapa pantau prestasi anak dalam{" "}
-            <b>Bahasa Melayu</b>, <b>Matematik</b>, <b>Bahasa Inggeris</b>, <b>Sains</b> dan <b>Pendidikan Islam</b>.
-            Lebih 32,000+ soalan latihan & sijil automatik.
+            Setiap jawapan anak dianalisis, dan latihan seterusnya dipilih ikut apa yang dia perlukan sekarang — dibantu oleh KALI.
           </p>
-
-          <div className="mt-7 grid w-full max-w-xl gap-4 sm:grid-cols-2">
-            <div className="rounded-2xl border border-border/60 bg-muted/30 p-5">
-              <h3 className="font-display text-sm font-extrabold text-muted-foreground">Tuisyen biasa</h3>
-              <p className="mt-1 font-display text-2xl font-extrabold text-foreground">RM100–200<span className="text-base font-bold text-muted-foreground">/bulan</span></p>
-              <ul className="mt-3 space-y-2 text-sm text-muted-foreground">
-                <li className="flex items-center gap-2"><span className="text-rose-500">✗</span> Tiada tracking kemajuan</li>
-                <li className="flex items-center gap-2"><span className="text-rose-500">✗</span> Ibu bapa tak nampak progress</li>
-                <li className="flex items-center gap-2"><span className="text-rose-500">✗</span> Bergantung pada jadual cikgu</li>
-              </ul>
-            </div>
-            <div className="rounded-2xl border p-5" style={{ borderColor: `${HIJAU}44`, backgroundColor: `${HIJAU}08` }}>
-              <h3 className="font-display text-sm font-extrabold" style={{ color: HIJAU }}>Kalifah.my</h3>
-              <p className="mt-1 font-display text-2xl font-extrabold" style={{ color: HIJAU }}>RM49<span className="text-base font-bold text-muted-foreground">/tahun sahaja</span></p>
-              <ul className="mt-3 space-y-2 text-sm text-foreground">
-                <li className="flex items-center gap-2"><span style={{ color: HIJAU }}>✓</span> Dashboard pantau ibu bapa</li>
-                <li className="flex items-center gap-2"><span style={{ color: HIJAU }}>✓</span> 32,000+ soalan latihan</li>
-                <li className="flex items-center gap-2"><span style={{ color: HIJAU }}>✓</span> Belajar bila-bila masa</li>
-              </ul>
-            </div>
-          </div>
-
-          <blockquote className="mt-5 max-w-xl border-l-4 pl-4 italic text-foreground" style={{ borderColor: HIJAU }}>
-            "Anak saya naik dari 60% ke 82% dalam masa 2 bulan. Dashboard tu memang membantu saya pantau dia setiap hari."
-            <footer className="mt-1 text-xs not-italic text-muted-foreground">— Cikgu Eema Rahman, ibu kepada pelajar Darjah 4</footer>
-          </blockquote>
+          <p className="mt-3 max-w-xl text-base text-foreground md:text-lg">
+            Anak belajar dengan lebih terarah. Ibu bapa tahu apa yang perlu diberi perhatian — tanpa perlu menyemak semuanya sendiri.
+          </p>
 
           <div className="mt-7 flex w-full flex-col gap-3 sm:flex-row">
             <Link
-              to="/daftar"
-              search={{ ref: undefined }}
+              to="/ujian-percuma"
               className="flex w-full items-center justify-center gap-2 rounded-full px-6 py-3.5 font-display text-base font-extrabold text-white shadow-soft transition hover:-translate-y-0.5 sm:flex-1"
               style={{ backgroundColor: HIJAU }}
             >
-              <Sparkles className="h-5 w-5" /> Cuba Sekarang
+              <Target className="h-5 w-5" /> Cuba Ujian Percuma
             </Link>
             <a
-              href="#harga"
+              href="#mekanisme"
               className="flex w-full items-center justify-center gap-2 rounded-full bg-card px-6 py-3.5 font-display text-base font-extrabold shadow-soft sm:flex-1"
               style={{ color: HIJAU, border: `2px solid ${HIJAU}33` }}
             >
-              <Star className="h-5 w-5" /> Lihat Harga
+              <Star className="h-5 w-5" /> Lihat Cara KALI Berfungsi
             </a>
           </div>
           <p className="mt-2 text-sm text-muted-foreground">
-            Daftar percuma — cuba dulu, bayar kalau suka
-          </p>
-          <p className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-700">
-            <Check className="h-3.5 w-3.5" />
-            Terus tahu anak lemah subjek apa & topik apa
+            Percuma • 3 minit • Tiada kad bank diperlukan
           </p>
           <div className="mt-4 flex items-center gap-4 text-xs text-muted-foreground">
             <span className="inline-flex items-center gap-1">
@@ -183,192 +159,91 @@ function Hero() {
         </div>
 
         <div className="relative">
-          <DashboardMockup />
+          <KaliCardsMockup />
         </div>
       </div>
     </section>
   );
 }
 
-function DashboardMockup() {
-  const subjects = [
-    { nama: "Bahasa Melayu", purata: 94, siap: 100, aktiviti: 8, terkini: "14/15" },
-    { nama: "Matematik", purata: 88, siap: 80, aktiviti: 6, terkini: "13/15" },
-    { nama: "Pendidikan Islam", purata: 96, siap: 60, aktiviti: 4, terkini: "12/15" },
-    { nama: "Bahasa Inggeris", purata: 76, siap: 40, aktiviti: 3, terkini: null },
-    { nama: "Sains", purata: 82, siap: 40, aktiviti: 3, terkini: null },
-  ];
+
+function KaliCardsMockup() {
   return (
-    <div
-      className="rounded-[2rem] bg-card p-5 shadow-card"
-      style={{ border: `2px solid ${HIJAU}22`, backgroundColor: "#FFFBF2" }}
-    >
-      {/* Header */}
-      <div className="flex items-center gap-3">
+    <div>
+      <div className="flex flex-col gap-4 md:flex-row md:items-stretch">
+        {/* Kad Anak A */}
         <div
-          className="flex h-10 w-10 items-center justify-center rounded-2xl text-white shadow-soft"
-          style={{ backgroundColor: HIJAU }}
+          className="flex-1 rounded-3xl bg-card p-6 shadow-card"
+          style={{ border: `2px solid ${HIJAU}22`, backgroundColor: "#FFFBF2" }}
         >
-          <Users className="h-5 w-5" />
-        </div>
-        <div>
-          <h3 className="font-display text-lg font-extrabold leading-tight text-foreground">
-            Dashboard Ibu Bapa
-          </h3>
-          <p className="text-[11px] text-muted-foreground">Pantau pembelajaran anak anda</p>
-        </div>
-      </div>
-
-      {/* Pemilih anak */}
-      <div className="mt-4 flex flex-wrap gap-2">
-        <span
-          className="rounded-full px-3 py-1 font-display text-[11px] font-extrabold text-white"
-          style={{ backgroundColor: HIJAU, border: `2px solid ${HIJAU}` }}
-        >
-          Musa • D4
-        </span>
-        <span
-          className="rounded-full px-3 py-1 font-display text-[11px] font-extrabold"
-          style={{ backgroundColor: `${HIJAU}14`, color: HIJAU, border: `2px solid ${HIJAU}33` }}
-        >
-          Airis • D2
-        </span>
-      </div>
-
-      {/* Progress Minggu Ini */}
-      <SectionHead ikon={<Calendar className="h-3.5 w-3.5" />} tajuk="Progress Minggu Ini" />
-      <div
-        className="relative overflow-hidden rounded-2xl border-2 p-3 shadow-soft"
-        style={{
-          borderColor: "#FBC02D",
-          background:
-            "linear-gradient(135deg, #FFF8E1 0%, #FFFDF5 55%, #FFF3D1 100%)",
-        }}
-      >
-        <div className="absolute -right-6 -top-6 h-20 w-20 rounded-full bg-[#F9A825]/15 blur-2xl" />
-        <div className="relative flex items-center gap-3">
-          <div
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-white shadow-soft"
-            style={{ background: "linear-gradient(135deg, #F5B82E, #E48A0A)" }}
-          >
-            <TrendingUp className="h-5 w-5" />
+          <div className="flex items-center justify-between">
+            <h3 className="font-display text-lg font-extrabold text-foreground">Anak A</h3>
+            <span
+              className="rounded-full px-2.5 py-1 font-display text-[10px] font-extrabold text-white"
+              style={{ backgroundColor: HIJAU }}
+            >
+              Matematik
+            </span>
           </div>
-          <div className="min-w-0 flex-1">
-            <p className="text-[10px] font-extrabold uppercase tracking-wide text-[#8A5A00]">7 Hari Terakhir</p>
-            <div className="mt-1 flex flex-wrap gap-3">
-              <span className="font-display text-lg font-extrabold leading-tight text-foreground">
-                124 <span className="text-[10px] font-bold text-muted-foreground">soalan</span>
-              </span>
-              <span className="font-display text-lg font-extrabold leading-tight text-foreground">
-                92% <span className="text-[10px] font-bold text-muted-foreground">ketepatan</span>
-              </span>
-            </div>
+          <div className="mt-4 text-center">
+            <p className="font-display text-5xl font-extrabold" style={{ color: HIJAU }}>6/10</p>
+            <p className="mt-1 text-xs text-muted-foreground">Markah ujian terkini</p>
+          </div>
+          <div className="mt-5 rounded-2xl bg-white/60 p-4" style={{ border: `2px solid ${HIJAU}1a` }}>
+            <p className="font-display text-xs font-extrabold text-foreground">Latihan seterusnya:</p>
+            <ul className="mt-2 space-y-1.5 text-sm text-muted-foreground">
+              <li className="flex items-start gap-2">
+                <span className="mt-0.5 text-emerald-600">✓</span>
+                <span>Pecahan (ulang asas)</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="mt-0.5 text-emerald-600">✓</span>
+                <span>Masa & Waktu (pengenalan)</span>
+              </li>
+            </ul>
           </div>
         </div>
-      </div>
 
-      {/* Misi Harian */}
-      <SectionHead ikon={<Target className="h-3.5 w-3.5" />} tajuk="Misi Harian" />
-      <div className="grid gap-2">
+        {/* Kad Anak B */}
         <div
-          className="flex items-center gap-2 rounded-xl bg-card p-2 shadow-soft"
-          style={{ border: `2px solid ${HIJAU}1f` }}
+          className="flex-1 rounded-3xl bg-card p-6 shadow-card"
+          style={{ border: `2px solid ${EMAS}44`, backgroundColor: "#FFFBF2" }}
         >
-          <CheckCircle2 className="h-4 w-4 shrink-0" style={{ color: HIJAU }} />
-          <span className="text-[10px] font-bold text-foreground">10 Soalan</span>
-          <span className="ml-auto text-[9px] font-extrabold text-emerald-600">Selesai</span>
-        </div>
-        <div
-          className="flex items-center gap-2 rounded-xl bg-card p-2 shadow-soft"
-          style={{ border: `2px solid ${HIJAU}1f` }}
-        >
-          <CheckCircle2 className="h-4 w-4 shrink-0" style={{ color: HIJAU }} />
-          <span className="text-[10px] font-bold text-foreground">15 Minit</span>
-          <span className="ml-auto text-[9px] font-extrabold text-emerald-600">Selesai</span>
-        </div>
-        <div
-          className="flex items-center gap-2 rounded-xl bg-card p-2 shadow-soft"
-          style={{ border: `2px solid ${HIJAU}1f` }}
-        >
-          <Award className="h-4 w-4 shrink-0" style={{ color: EMAS }} />
-          <span className="text-[10px] font-bold text-foreground">Skor 80%+</span>
-          <span className="ml-auto text-[9px] font-extrabold text-muted-foreground">○</span>
-        </div>
-      </div>
-
-      {/* Kesediaan Peperiksaan */}
-      <SectionHead ikon={<ShieldCheck className="h-3.5 w-3.5" />} tajuk="Kesediaan Peperiksaan" />
-      <div className="flex flex-wrap gap-2">
-        <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-1 text-[10px] font-extrabold text-emerald-700">
-          <Check className="h-3 w-3" /> BM SEDIA
-        </span>
-        <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-1 text-[10px] font-extrabold text-emerald-700">
-          <Check className="h-3 w-3" /> Matematik SEDIA
-        </span>
-        <span className="inline-flex items-center gap-1 rounded-full bg-amber-100 px-2.5 py-1 text-[10px] font-extrabold text-amber-700">
-          <Clock className="h-3 w-3" /> BI 65%
-        </span>
-      </div>
-
-      {/* Kemajuan Subjek */}
-      <SectionHead ikon={<BookOpen className="h-3.5 w-3.5" />} tajuk="Kemajuan Subjek" />
-      <div className="grid gap-2 sm:grid-cols-2">
-        {subjects.slice(0, 4).map((s) => (
-          <div
-            key={s.nama}
-            className="rounded-xl bg-card p-2.5 shadow-soft"
-            style={{ border: `2px solid ${HIJAU}1f` }}
-          >
-            <div className="flex items-center justify-between gap-1">
-              <h4 className="font-display text-[11px] font-extrabold text-foreground">{s.nama}</h4>
-              <span
-                className="rounded-full px-1.5 py-0.5 text-[9px] font-extrabold"
-                style={{ backgroundColor: `${EMAS}33`, color: "#7a5300" }}
-              >
-                ⭐ {s.purata}%
-              </span>
-            </div>
-            <div className="mt-1.5 h-2 overflow-hidden rounded-full" style={{ backgroundColor: `${HIJAU}1a` }}>
-              <div className="h-full" style={{ width: `${s.siap}%`, backgroundColor: HIJAU }} />
-            </div>
-            <p className="mt-1 text-[9px] text-muted-foreground">
-              {s.siap}% siap • {s.aktiviti} aktiviti
-              {s.terkini && <> • <b>{s.terkini}</b></>}
-            </p>
+          <div className="flex items-center justify-between">
+            <h3 className="font-display text-lg font-extrabold text-foreground">Anak B</h3>
+            <span
+              className="rounded-full px-2.5 py-1 font-display text-[10px] font-extrabold text-white"
+              style={{ backgroundColor: EMAS }}
+            >
+              Bahasa Melayu
+            </span>
           </div>
-        ))}
-      </div>
-
-      {/* Insight cards */}
-      <div className="mt-3 grid gap-2 sm:grid-cols-2">
-        <div
-          className="rounded-xl bg-card p-3 shadow-soft"
-          style={{ border: `2px solid ${HIJAU}33` }}
-        >
-          <p className="text-[10px] font-extrabold text-muted-foreground">Subjek Terkuat 💪</p>
-          <p className="mt-1 font-display text-sm font-extrabold text-foreground">Matematik</p>
-          <p className="text-[10px] text-muted-foreground">Purata 88% • 6 aktiviti</p>
-        </div>
-        <div
-          className="rounded-xl p-3 shadow-soft"
-          style={{ border: `2px solid #dc262633`, backgroundColor: "#fef2f2" }}
-        >
-          <p className="text-[10px] font-extrabold text-muted-foreground">Perlukan Perhatian ⚠️</p>
-          <p className="mt-1 font-display text-sm font-extrabold text-foreground">Bahasa Inggeris</p>
-          <p className="text-[10px] text-muted-foreground">Purata 76% • 3 aktiviti</p>
+          <div className="mt-4 text-center">
+            <p className="font-display text-5xl font-extrabold" style={{ color: EMAS }}>6/10</p>
+            <p className="mt-1 text-xs text-muted-foreground">Markah ujian terkini</p>
+          </div>
+          <div className="mt-5 rounded-2xl bg-white/60 p-4" style={{ border: `2px solid ${EMAS}1a` }}>
+            <p className="font-display text-xs font-extrabold text-foreground">Latihan seterusnya:</p>
+            <ul className="mt-2 space-y-1.5 text-sm text-muted-foreground">
+              <li className="flex items-start gap-2">
+                <span className="mt-0.5" style={{ color: EMAS }}>✓</span>
+                <span>Ayat Majmuk (Tatabahasa BM)</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="mt-0.5" style={{ color: EMAS }}>✓</span>
+                <span>Kata Adjektif (perkatan)</span>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
-
-      {/* Streak & Lencana */}
-      <SectionHead ikon={<Flame className="h-3.5 w-3.5" />} tajuk="Streak & Lencana" />
-      <div className="grid grid-cols-3 gap-2">
-        <MockStat label="Streak" nilai="14 hari 🔥" icon={<Flame className="h-3.5 w-3.5" />} warna="#dc2626" />
-        <MockStat label="Lencana" nilai="12" icon={<Award className="h-3.5 w-3.5" />} warna={EMAS} light />
-        <MockStat label="Bab Siap" nilai="7" icon={<TrendingUp className="h-3.5 w-3.5" />} warna={HIJAU} />
-      </div>
+      <p className="mt-4 text-center text-xs text-muted-foreground">
+        Contoh cara KALI memilih latihan — bukan data sebenar.
+      </p>
     </div>
   );
 }
+
 
 function SectionHead({ ikon, tajuk }: { ikon: React.ReactNode; tajuk: string }) {
   return (
@@ -411,7 +286,48 @@ function MockStat({
   );
 }
 
+function Mekanisme() {
+  const steps = [
+    { ikon: PenLine, t: "Anak Jawab Soalan", d: "Setiap jawapan direkodkan — bukan sekadar markah akhir." },
+    { ikon: Target, t: "KALI Kenal Pasti Keperluan", d: "Sistem mengesan subtopik yang anak masih perlukan perhatian." },
+    { ikon: Zap, t: "Latihan Seterusnya Dipilih Automatik", d: "Anak terus dapat soalan yang sesuai dengan tahapnya sekarang." },
+  ];
+  return (
+    <section id="mekanisme" className="container mx-auto px-4 py-16">
+      <div className="text-center">
+        <p className="font-display text-xs font-bold uppercase tracking-widest" style={{ color: HIJAU }}>Bagaimana Ia Berfungsi</p>
+        <h2 className="mt-2 font-display text-3xl font-extrabold text-foreground md:text-4xl">
+          Bagaimana KALI Membantu
+        </h2>
+        <p className="mx-auto mt-3 max-w-2xl text-base text-muted-foreground">
+          KALI menganalisis setiap jawapan anak, mengenal pasti bahagian yang perlu diperkukuhkan, dan memilih latihan seterusnya secara automatik.
+        </p>
+      </div>
+      <div className="mt-10 flex flex-col items-stretch gap-4 md:flex-row md:justify-center">
+        {steps.map(({ ikon: Ikon, t, d }, i) => (
+          <div key={t} className="flex w-full items-center gap-4 md:w-auto md:max-w-sm">
+            <div
+              className="flex-1 rounded-3xl bg-card p-6 shadow-soft"
+              style={{ border: `2px solid ${HIJAU}1f` }}
+            >
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl text-white" style={{ backgroundColor: HIJAU }}>
+                <Ikon className="h-6 w-6" />
+              </div>
+              <h3 className="mt-4 font-display text-lg font-extrabold text-foreground">{t}</h3>
+              <p className="mt-1 text-sm text-muted-foreground">{d}</p>
+            </div>
+            {i < steps.length - 1 && (
+              <ChevronRight className="hidden h-6 w-6 shrink-0 text-muted-foreground md:block" />
+            )}
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function Ciri() {
+
   const items = [
     { ikon: Target, t: "Kenal Subjek & Topik Lemah", d: "Sistem auto-kesan subjek DAN topik spesifik yang anak perlukan perhatian lebih — bukan setakat subjek, sampai ke topik/subtopik." },
     { ikon: Zap, t: "Latih Tubi", d: "Merangkumi semua subtopik bagi setiap subjek, lebih 10,000+ soalan latih tubi." },
@@ -613,11 +529,6 @@ function Harga() {
 function Testimoni() {
   const items = [
     {
-      n: "Cikgu Eema Rahman",
-      r: "Tanjung Malim",
-      t: "Baru 3 minggu guna, anak dah ada pertambahan masa belajar di rumah. Saya suka sebab boleh tengok apa latihan yang anak buat. Anak pula suka kuiz dan game!",
-    },
-    {
       n: "Encik Rizal",
       r: "Bapa kepada D6",
       t: "Anak saya seronok dengan game dan kuiz. Sijil PDF buat dia lebih bersemangat belajar.",
@@ -637,8 +548,9 @@ function Testimoni() {
             Apa kata ibu bapa
           </h2>
         </div>
-        <div className="mt-10 grid gap-6 md:grid-cols-3">
+        <div className="mt-10 grid gap-6 md:grid-cols-2">
           {items.map((it) => (
+
             <div key={it.n} className="rounded-3xl bg-card p-6 shadow-soft">
               <div className="flex gap-1 text-xl" style={{ color: EMAS }}>★★★★★</div>
               <p className="mt-3 text-sm text-foreground">"{it.t}"</p>
