@@ -33,6 +33,8 @@ interface Affiliate {
   total_dibayar: number;
   komisyen_rate: number;
   avatar_url?: string | null;
+  telegram_chat_id?: number | null;
+  telegram_linked_at?: string | null;
 }
 
 interface Jualan {
@@ -588,6 +590,20 @@ function AffiliateDashboardPage() {
         {/* Kempen Kalifah Belanja 10 Akaun */}
         {kempenData?.ok && kempenData.ada_kempen && kempenData.alokasi ? (
           <KempenKad
+            affiliateId={aff.id}
+            telegramChatId={aff.telegram_chat_id}
+            onTelegramLinked={async () => {
+              const { data } = await supabase
+                .from("affiliates")
+                .select("telegram_chat_id")
+                .eq("id", aff.id)
+                .maybeSingle();
+              if (data) {
+                setAff((prev) =>
+                  prev ? { ...prev, telegram_chat_id: data.telegram_chat_id } : prev,
+                );
+              }
+            }}
             alokasi={kempenData.alokasi}
             families={kempenData.families ?? []}
             traffic={kempenData.traffic}
@@ -1005,6 +1021,9 @@ function StatCard({
 }
 
 function KempenKad({
+  affiliateId,
+  telegramChatId,
+  onTelegramLinked,
   alokasi,
   families,
   traffic,
@@ -1015,6 +1034,9 @@ function KempenKad({
   onCopyLink,
   onLepasSlot,
 }: {
+  affiliateId: string;
+  telegramChatId: number | null | undefined;
+  onTelegramLinked: () => void;
   alokasi: NonNullable<KempenAffDash["alokasi"]>;
   families: KempenFamily[];
   traffic?: KempenTraffic;
@@ -1025,6 +1047,40 @@ function KempenKad({
   onCopyLink: () => void;
   onLepasSlot: (klaimId: string) => void;
 }) {
+  const [menungguTelegram, setMenungguTelegram] = useState(false);
+
+  useEffect(() => {
+    if (!menungguTelegram) return;
+    let cancelled = false;
+    const timer = window.setInterval(async () => {
+      const { data } = await supabase
+        .from("affiliates")
+        .select("telegram_chat_id")
+        .eq("id", affiliateId)
+        .maybeSingle();
+      if (cancelled) return;
+      const chatId = data?.telegram_chat_id;
+      if (chatId !== null && chatId !== undefined) {
+        window.clearInterval(timer);
+        setMenungguTelegram(false);
+        onTelegramLinked();
+      }
+    }, 3000);
+    return () => {
+      cancelled = true;
+      window.clearInterval(timer);
+    };
+  }, [menungguTelegram, affiliateId, onTelegramLinked]);
+
+  function sambungTelegram() {
+    setMenungguTelegram(true);
+    window.open(
+      `https://t.me/kalifahassistantbot?start=affiliate_${affiliateId}`,
+      "_blank",
+      "noopener,noreferrer",
+    );
+  }
+
   const [memproses, setMemproses] = useState<string | null>(null);
   const peratus =
     alokasi.slot_kuota > 0
@@ -1077,6 +1133,33 @@ function KempenKad({
       <p className="mt-1 text-sm text-muted-foreground">
         Matlamat anda: cari 10 pelajar yang benar-benar aktif, bukan sekadar 10 pendaftaran.
       </p>
+
+      {telegramChatId ? (
+        <div className="mt-4 inline-flex items-center gap-2 rounded-full bg-emerald-100 px-3 py-1.5 text-sm font-bold text-emerald-700">
+          ✅ Telegram disambung — anda akan terima follow-up terus di sini pasal kempen ni.
+        </div>
+      ) : (
+        <div className="mt-4 rounded-xl border border-sky-200 bg-sky-50 p-4">
+          <p className="text-sm text-sky-900">
+            Sambung Telegram peribadi supaya kami boleh follow-up terus pasal kempen ni
+            (kemaskini, peringatan slot boleh diganti, dll.) — tak perlu buka dashboard setiap
+            kali.
+          </p>
+          <button
+            type="button"
+            onClick={sambungTelegram}
+            disabled={menungguTelegram}
+            className="mt-3 inline-flex items-center gap-2 rounded-full bg-[#0088cc] px-4 py-2 text-sm font-extrabold text-white shadow-soft transition hover:opacity-90 disabled:opacity-60"
+          >
+            💬 Sambung Telegram
+          </button>
+          {menungguTelegram ? (
+            <p className="mt-2 animate-pulse text-xs font-bold text-sky-700">
+              Menunggu sambungan... Tekan “Start” dalam Telegram.
+            </p>
+          ) : null}
+        </div>
+      )}
 
       {/* Traffic / Acquisition */}
       <div className="mt-5">
