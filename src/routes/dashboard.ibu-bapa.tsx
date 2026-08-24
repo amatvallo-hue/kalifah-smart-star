@@ -3255,14 +3255,63 @@ function PermintaanTebusanSeksyen({ anakList, parentUserId }: { anakList: ChildP
               </div>
 
               <div>
-                <p className="mb-1 text-xs font-bold text-foreground">Alamat Penghantaran</p>
-                <Textarea
-                  rows={4}
-                  value={alamat}
-                  onChange={(e) => setAlamat(e.target.value)}
-                  placeholder="Alamat penuh untuk penghantaran hadiah…"
-                />
+                <p className="mb-1 text-xs font-bold text-foreground">Kaedah Penghantaran</p>
+                <div className="flex gap-2">
+                  {([
+                    { key: "pos" as const, label: "📮 Pos" },
+                    { key: "pickup" as const, label: "🏠 Ambil Sendiri (Pickup)" },
+                  ]).map((opt) => {
+                    const aktif = kaedahPenghantaran === opt.key;
+                    return (
+                      <button
+                        key={opt.key}
+                        type="button"
+                        onClick={() => setKaedahPenghantaran(opt.key)}
+                        className={`flex-1 rounded-xl border-2 px-3 py-2 text-xs font-bold transition ${
+                          aktif
+                            ? "border-primary bg-primary/10 text-foreground"
+                            : "border-border text-muted-foreground hover:text-foreground"
+                        }`}
+                      >
+                        {opt.label}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
+
+              {kaedahPenghantaran === "pos" ? (
+                <div>
+                  <p className="mb-1 text-xs font-bold text-foreground">Alamat Penghantaran</p>
+                  <Textarea
+                    rows={4}
+                    value={alamat}
+                    onChange={(e) => setAlamat(e.target.value)}
+                    placeholder="Alamat penuh untuk penghantaran hadiah…"
+                  />
+                </div>
+              ) : (
+                <div className="rounded-xl border border-border bg-muted/40 p-3">
+                  <p className="text-xs font-bold text-foreground">Lokasi Pickup</p>
+                  {lokasiPickup ? (
+                    <>
+                      <p className="mt-1 text-sm font-extrabold text-foreground">{lokasiPickup.nama}</p>
+                      <p className="whitespace-pre-line text-xs text-muted-foreground">{lokasiPickup.alamat}</p>
+                      {lokasiPickup.waktu_pickup ? (
+                        <p className="mt-1 text-xs font-semibold text-foreground">
+                          Waktu: {lokasiPickup.waktu_pickup}
+                        </p>
+                      ) : null}
+                    </>
+                  ) : (
+                    <p className="mt-1 text-xs text-muted-foreground">Memuatkan lokasi pickup…</p>
+                  )}
+                  <p className="mt-2 text-[11px] text-muted-foreground">
+                    Sila datang ambil di lokasi ini selepas admin sahkan hadiah sedia.
+                  </p>
+                </div>
+              )}
+
 
               <div className="flex items-center justify-between gap-2">
                 <button
