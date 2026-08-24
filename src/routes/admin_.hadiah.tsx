@@ -337,6 +337,8 @@ function TebusanTab() {
         </Button>
       </div>
 
+      <LokasiPickupSeksyen />
+
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -344,6 +346,7 @@ function TebusanTab() {
               <TableHead>Anak</TableHead>
               <TableHead>Hadiah</TableHead>
               <TableHead>Star</TableHead>
+              <TableHead>Kaedah</TableHead>
               <TableHead>Kos Penghantaran</TableHead>
               <TableHead>Alamat</TableHead>
               <TableHead>Status</TableHead>
@@ -355,25 +358,38 @@ function TebusanTab() {
           <TableBody>
             {filteredRows.length === 0 && (
               <TableRow>
-                <TableCell colSpan={9} className="py-6 text-center text-sm text-muted-foreground">
+                <TableCell colSpan={10} className="py-6 text-center text-sm text-muted-foreground">
                   Tiada rekod.
                 </TableCell>
               </TableRow>
             )}
             {filteredRows.map((r) => {
               const c = children[r.child_user_id];
+              const isPickup = r.kaedah_penghantaran === "pickup";
               return (
                 <TableRow key={r.id}>
                   <TableCell>{c?.nama || r.child_user_id.slice(0, 8)} {c?.darjah ? `(D${c.darjah})` : ""}</TableCell>
                   <TableCell>{r.nama_hadiah_snapshot}</TableCell>
                   <TableCell>⭐ {r.kos_star}</TableCell>
-                  <TableCell className="text-xs font-semibold">{formatRM(r.kos_penghantaran_sen_snapshot ?? 0)}</TableCell>
+                  <TableCell>
+                    <span className="rounded-full border px-2 py-0.5 text-xs font-semibold">
+                      {isPickup ? "🏠 Pickup" : "📮 Pos"}
+                    </span>
+                  </TableCell>
+                  <TableCell className="text-xs font-semibold">
+                    {isPickup ? "Percuma (pickup)" : formatRM(r.kos_penghantaran_sen_snapshot ?? 0)}
+                  </TableCell>
                   <TableCell className="max-w-[200px] truncate" title={r.alamat_penghantaran ?? ""}>
-                    <div>{r.alamat_penghantaran || "-"}</div>
+                    {isPickup ? (
+                      <div className="text-xs italic text-muted-foreground">— (Pickup, bukan pos)</div>
+                    ) : (
+                      <div>{r.alamat_penghantaran || "-"}</div>
+                    )}
                     <div className="mt-1 text-xs text-muted-foreground">
                       📞 {r.profiles?.no_telefon || "-"}
                     </div>
                   </TableCell>
+
                   <TableCell className="capitalize">{r.status}</TableCell>
                   <TableCell className="text-xs">{r.no_tracking || "-"}</TableCell>
                   <TableCell>{new Date(r.created_at).toLocaleDateString("ms-MY")}</TableCell>
