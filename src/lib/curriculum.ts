@@ -16,6 +16,7 @@ export interface Subjek {
   icon: LucideIcon;
   tone: Tone;
   emoji: string;
+  minDarjah?: number;
 }
 
 // Semua darjah kini berbayar — `locked` ditentukan oleh profile.darjah_akses
