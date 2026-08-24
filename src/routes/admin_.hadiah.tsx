@@ -32,6 +32,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
+import { formatRM } from "@/lib/format";
 
 export const Route = createFileRoute("/admin_/hadiah")({
   head: () => ({ meta: [{ title: "Kedai Hadiah — Admin Kalifah.my" }] }),
@@ -44,6 +45,7 @@ interface HadiahKatalog {
   nama: string;
   penerangan: string | null;
   kos_star: number;
+  kos_penghantaran_sen: number;
   stok: number;
   imej_url: string | null;
   status: string;
@@ -55,6 +57,7 @@ interface Tebusan {
   parent_id: string | null;
   nama_hadiah_snapshot: string;
   kos_star: number;
+  kos_penghantaran_sen_snapshot: number;
   status: string;
   alamat_penghantaran: string | null;
   catatan_admin: string | null;
@@ -269,7 +272,7 @@ function TebusanTab() {
       return;
     }
 
-    const headers = ["Nama Anak", "Darjah", "Hadiah", "Kos Star", "Alamat", "No Telefon", "Status", "Tarikh Sahkan", "No Tracking"];
+    const headers = ["Nama Anak", "Darjah", "Hadiah", "Kos Star", "Kos Penghantaran (RM)", "Alamat", "No Telefon", "Status", "Tarikh Sahkan", "No Tracking"];
     const lines = [headers.join(",")];
 
     for (const r of rowsToExport) {
@@ -282,6 +285,7 @@ function TebusanTab() {
         escapeCsvCell(darjah),
         escapeCsvCell(r.nama_hadiah_snapshot),
         escapeCsvCell(r.kos_star),
+        escapeCsvCell(formatRM(r.kos_penghantaran_sen_snapshot ?? 0)),
         escapeCsvCell(r.alamat_penghantaran),
         escapeCsvCell(r.profiles?.no_telefon),
         escapeCsvCell(r.status),
@@ -336,6 +340,7 @@ function TebusanTab() {
               <TableHead>Anak</TableHead>
               <TableHead>Hadiah</TableHead>
               <TableHead>Star</TableHead>
+              <TableHead>Kos Penghantaran</TableHead>
               <TableHead>Alamat</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Tracking</TableHead>
@@ -346,7 +351,7 @@ function TebusanTab() {
           <TableBody>
             {filteredRows.length === 0 && (
               <TableRow>
-                <TableCell colSpan={8} className="py-6 text-center text-sm text-muted-foreground">
+                <TableCell colSpan={9} className="py-6 text-center text-sm text-muted-foreground">
                   Tiada rekod.
                 </TableCell>
               </TableRow>
@@ -358,6 +363,7 @@ function TebusanTab() {
                   <TableCell>{c?.nama || r.child_user_id.slice(0, 8)} {c?.darjah ? `(D${c.darjah})` : ""}</TableCell>
                   <TableCell>{r.nama_hadiah_snapshot}</TableCell>
                   <TableCell>⭐ {r.kos_star}</TableCell>
+                  <TableCell className="text-xs font-semibold">{formatRM(r.kos_penghantaran_sen_snapshot ?? 0)}</TableCell>
                   <TableCell className="max-w-[200px] truncate" title={r.alamat_penghantaran ?? ""}>
                     <div>{r.alamat_penghantaran || "-"}</div>
                     <div className="mt-1 text-xs text-muted-foreground">
@@ -484,6 +490,7 @@ function KatalogTab() {
   const [nama, setNama] = useState("");
   const [penerangan, setPenerangan] = useState("");
   const [kosStar, setKosStar] = useState("");
+  const [kosHantarRM, setKosHantarRM] = useState("0");
   const [stok, setStok] = useState("");
   const [imejUrl, setImejUrl] = useState("");
   const [status, setStatus] = useState("aktif");
@@ -510,6 +517,7 @@ function KatalogTab() {
     setNama("");
     setPenerangan("");
     setKosStar("");
+    setKosHantarRM("0");
     setStok("");
     setImejUrl("");
     setStatus("aktif");
@@ -520,6 +528,7 @@ function KatalogTab() {
     setNama(h.nama);
     setPenerangan(h.penerangan ?? "");
     setKosStar(String(h.kos_star));
+    setKosHantarRM(((h.kos_penghantaran_sen ?? 0) / 100).toFixed(2));
     setStok(String(h.stok));
     setImejUrl(h.imej_url ?? "");
     setStatus(h.status);
@@ -540,11 +549,17 @@ function KatalogTab() {
       toast.error("Stok tidak sah");
       return;
     }
+    const kosHantarSen = Math.round((Number(kosHantarRM) || 0) * 100);
+    if (!Number.isFinite(kosHantarSen) || kosHantarSen < 0) {
+      toast.error("Kos penghantaran tidak sah");
+      return;
+    }
     setSaving(true);
     const payload = {
       nama: nama.trim(),
       penerangan: penerangan.trim() || null,
       kos_star: kos,
+      kos_penghantaran_sen: kosHantarSen,
       stok: stokNum,
       imej_url: imejUrl.trim() || null,
       status,
@@ -577,6 +592,7 @@ function KatalogTab() {
               <TableHead className="w-16">Gambar</TableHead>
               <TableHead>Nama</TableHead>
               <TableHead>Kos Star</TableHead>
+              <TableHead>Kos Penghantaran</TableHead>
               <TableHead>Stok</TableHead>
               <TableHead>Status</TableHead>
               <TableHead className="text-right">Tindakan</TableHead>
@@ -585,7 +601,7 @@ function KatalogTab() {
           <TableBody>
             {rows.length === 0 && (
               <TableRow>
-                <TableCell colSpan={6} className="py-6 text-center text-sm text-muted-foreground">
+                <TableCell colSpan={7} className="py-6 text-center text-sm text-muted-foreground">
                   Tiada hadiah lagi. Tambah satu untuk mula.
                 </TableCell>
               </TableRow>
@@ -613,6 +629,7 @@ function KatalogTab() {
                 </TableCell>
                 <TableCell>{h.nama}</TableCell>
                 <TableCell>⭐ {h.kos_star}</TableCell>
+                <TableCell className="text-xs font-semibold">{formatRM(h.kos_penghantaran_sen ?? 0)}</TableCell>
                 <TableCell>{h.stok}</TableCell>
                 <TableCell>
                   {h.status === "aktif" ? (
@@ -654,6 +671,17 @@ function KatalogTab() {
               <div className="space-y-1.5">
                 <Label>Stok</Label>
                 <Input type="number" min="0" value={stok} onChange={(e) => setStok(e.target.value)} />
+              </div>
+              <div className="space-y-1.5">
+                <Label>Kos Penghantaran (RM)</Label>
+                <Input
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  value={kosHantarRM}
+                  onChange={(e) => setKosHantarRM(e.target.value)}
+                  placeholder="0.00"
+                />
               </div>
             </div>
             <div className="space-y-1.5">

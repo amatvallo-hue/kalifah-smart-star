@@ -21,6 +21,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { toast } from "sonner";
+import { formatRM } from "@/lib/format";
 import {
   Dialog,
   DialogContent,
@@ -2999,6 +3000,7 @@ interface MintaTebusRow {
   hadiah_id: string | null;
   nama_hadiah_snapshot: string;
   kos_star: number;
+  kos_penghantaran_sen_snapshot: number;
   created_at: string;
   imej_url?: string | null;
   namaAnak: string;
@@ -3028,7 +3030,7 @@ function PermintaanTebusanSeksyen({ anakList, parentUserId }: { anakList: ChildP
     const [{ data, error }, { data: pointsData, error: pointsError }] = await Promise.all([
       supabase
         .from("hadiah_tebusan")
-        .select("id, child_user_id, hadiah_id, nama_hadiah_snapshot, kos_star, created_at, hadiah_katalog(imej_url)")
+        .select("id, child_user_id, hadiah_id, nama_hadiah_snapshot, kos_star, kos_penghantaran_sen_snapshot, created_at, hadiah_katalog(imej_url)")
         .eq("status", "menunggu_parent")
         .in("child_user_id", anakIds)
         .order("created_at", { ascending: false }),
@@ -3199,6 +3201,9 @@ function PermintaanTebusanSeksyen({ anakList, parentUserId }: { anakList: ChildP
                     {pilih.nama_hadiah_snapshot}
                   </p>
                   <p className="text-sm text-muted-foreground">⭐ {pilih.kos_star} Star</p>
+                  <p className="text-xs font-semibold text-muted-foreground">
+                    Kos Penghantaran: {formatRM(pilih.kos_penghantaran_sen_snapshot ?? 0)}
+                  </p>
                   <p className="text-[11px] font-semibold" style={{ color: "#8A6100" }}>
                     Baki {pilih.namaAnak}: ⭐ {pilih.bakiStar}
                     {pilih.bakiStar < pilih.kos_star ? " (tidak cukup — admin akan tahan)" : ""}

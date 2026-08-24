@@ -17,6 +17,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
+import { formatRM } from "@/lib/format";
 
 export const Route = createFileRoute("/kedai-hadiah")({
   head: () => ({ meta: [{ title: "Kedai Hadiah — Kalifah.my" }] }),
@@ -29,6 +30,7 @@ interface Hadiah {
   nama: string;
   penerangan: string | null;
   kos_star: number;
+  kos_penghantaran_sen: number;
   stok: number;
   imej_url: string | null;
   status: string;
@@ -80,7 +82,7 @@ function KedaiHadiahPage() {
     setLoadingData(true);
     const { data: hData } = await supabase
       .from("hadiah_katalog")
-      .select("id, nama, penerangan, kos_star, stok, imej_url, status")
+      .select("id, nama, penerangan, kos_star, kos_penghantaran_sen, stok, imej_url, status")
       .eq("status", "aktif")
       .order("kos_star", { ascending: true });
     setHadiah((hData as Hadiah[] | null) ?? []);
@@ -208,6 +210,11 @@ function KedaiHadiahPage() {
                       <Package className="h-3.5 w-3.5" /> {h.stok > 0 ? `${h.stok} baki` : "Habis stok"}
                     </span>
                   </div>
+                  <p className="text-xs font-semibold text-muted-foreground">
+                    {(h.kos_penghantaran_sen ?? 0) === 0
+                      ? "🚚 Penghantaran percuma"
+                      : `🚚 + ${formatRM(h.kos_penghantaran_sen)} penghantaran`}
+                  </p>
                   <Button
                     disabled={!bolehTebus}
                     onClick={() => setRedeemTarget(h)}
