@@ -768,3 +768,120 @@ function KatalogTab() {
     </div>
   );
 }
+
+// ---------------- Lokasi Pickup (singleton) ----------------
+interface LokasiPickupRow {
+  id: string;
+  nama: string;
+  alamat: string;
+  waktu_pickup: string | null;
+}
+
+function LokasiPickupSeksyen() {
+  const [lokasi, setLokasi] = useState<LokasiPickupRow | null>(null);
+  const [open, setOpen] = useState(false);
+  const [nama, setNama] = useState("");
+  const [alamat, setAlamat] = useState("");
+  const [waktu, setWaktu] = useState("");
+  const [busy, setBusy] = useState(false);
+
+  async function muat() {
+    const { data } = await supabase
+      .from("hadiah_lokasi_pickup" as never)
+      .select("id, nama, alamat, waktu_pickup")
+      .limit(1)
+      .maybeSingle();
+    setLokasi((data as unknown as LokasiPickupRow | null) ?? null);
+  }
+
+  useEffect(() => {
+    void muat();
+  }, []);
+
+  function buka() {
+    setNama(lokasi?.nama ?? "");
+    setAlamat(lokasi?.alamat ?? "");
+    setWaktu(lokasi?.waktu_pickup ?? "");
+    setOpen(true);
+  }
+
+  async function simpan() {
+    if (!lokasi) return;
+    if (!nama.trim() || !alamat.trim()) {
+      toast.error("Nama dan alamat wajib diisi");
+      return;
+    }
+    setBusy(true);
+    const { error } = await supabase
+      .from("hadiah_lokasi_pickup" as never)
+      .update({
+        nama: nama.trim(),
+        alamat: alamat.trim(),
+        waktu_pickup: waktu.trim() || null,
+      } as never)
+      .eq("id", lokasi.id);
+    setBusy(false);
+    if (error) {
+      toast.error("Gagal simpan: " + error.message);
+      return;
+    }
+    toast.success("Lokasi pickup dikemaskini");
+    setOpen(false);
+    void muat();
+  }
+
+  return (
+    <div className="rounded-md border p-3">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <p className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Lokasi Pickup</p>
+          {lokasi ? (
+            <>
+              <p className="text-sm font-semibold">{lokasi.nama}</p>
+              <p className="whitespace-pre-line text-xs text-muted-foreground">{lokasi.alamat}</p>
+              {lokasi.waktu_pickup ? (
+                <p className="text-xs text-muted-foreground">Waktu: {lokasi.waktu_pickup}</p>
+              ) : null}
+            </>
+          ) : (
+            <p className="text-xs text-muted-foreground">Tiada lokasi pickup ditetapkan.</p>
+          )}
+        </div>
+        <Button size="sm" variant="outline" onClick={buka} disabled={!lokasi}>
+          Edit
+        </Button>
+      </div>
+
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Lokasi Pickup</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3">
+            <div>
+              <Label>Nama</Label>
+              <Input value={nama} onChange={(e) => setNama(e.target.value)} />
+            </div>
+            <div>
+              <Label>Alamat</Label>
+              <Textarea rows={4} value={alamat} onChange={(e) => setAlamat(e.target.value)} />
+            </div>
+            <div>
+              <Label>Waktu Pickup (optional)</Label>
+              <Input
+                value={waktu}
+                onChange={(e) => setWaktu(e.target.value)}
+                placeholder="Cth: Isnin–Jumaat, 9pagi–5petang"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button onClick={simpan} disabled={busy}>
+              {busy ? "Menyimpan…" : "Simpan"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
