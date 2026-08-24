@@ -60,6 +60,7 @@ interface Tebusan {
   kos_penghantaran_sen_snapshot: number;
   status: string;
   alamat_penghantaran: string | null;
+  kaedah_penghantaran: string | null;
   catatan_admin: string | null;
   no_tracking: string | null;
   created_at: string;
@@ -272,7 +273,7 @@ function TebusanTab() {
       return;
     }
 
-    const headers = ["Nama Anak", "Darjah", "Hadiah", "Kos Star", "Kos Penghantaran (RM)", "Alamat", "No Telefon", "Status", "Tarikh Sahkan", "No Tracking"];
+    const headers = ["Nama Anak", "Darjah", "Hadiah", "Kos Star", "Kaedah Penghantaran", "Kos Penghantaran (RM)", "Alamat", "No Telefon", "Status", "Tarikh Sahkan", "No Tracking"];
     const lines = [headers.join(",")];
 
     for (const r of rowsToExport) {
@@ -280,13 +281,15 @@ function TebusanTab() {
       const namaAnak = c?.nama || r.child_user_id.slice(0, 8);
       const darjah = c?.darjah ? `D${c.darjah}` : "";
       const tarikhSahkan = new Date(r.created_at).toLocaleDateString("ms-MY");
+      const isPickup = r.kaedah_penghantaran === "pickup";
       const line = [
         escapeCsvCell(namaAnak),
         escapeCsvCell(darjah),
         escapeCsvCell(r.nama_hadiah_snapshot),
         escapeCsvCell(r.kos_star),
-        escapeCsvCell(formatRM(r.kos_penghantaran_sen_snapshot ?? 0)),
-        escapeCsvCell(r.alamat_penghantaran),
+        escapeCsvCell(isPickup ? "Pickup" : "Pos"),
+        escapeCsvCell(isPickup ? "Percuma (pickup)" : formatRM(r.kos_penghantaran_sen_snapshot ?? 0)),
+        escapeCsvCell(isPickup ? "— (Pickup, bukan pos)" : r.alamat_penghantaran),
         escapeCsvCell(r.profiles?.no_telefon),
         escapeCsvCell(r.status),
         escapeCsvCell(tarikhSahkan),
@@ -294,6 +297,7 @@ function TebusanTab() {
       ].join(",");
       lines.push(line);
     }
+
 
     const csv = lines.join("\r\n");
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
@@ -333,6 +337,8 @@ function TebusanTab() {
         </Button>
       </div>
 
+      <LokasiPickupSeksyen />
+
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -340,6 +346,7 @@ function TebusanTab() {
               <TableHead>Anak</TableHead>
               <TableHead>Hadiah</TableHead>
               <TableHead>Star</TableHead>
+              <TableHead>Kaedah</TableHead>
               <TableHead>Kos Penghantaran</TableHead>
               <TableHead>Alamat</TableHead>
               <TableHead>Status</TableHead>
@@ -351,25 +358,38 @@ function TebusanTab() {
           <TableBody>
             {filteredRows.length === 0 && (
               <TableRow>
-                <TableCell colSpan={9} className="py-6 text-center text-sm text-muted-foreground">
+                <TableCell colSpan={10} className="py-6 text-center text-sm text-muted-foreground">
                   Tiada rekod.
                 </TableCell>
               </TableRow>
             )}
             {filteredRows.map((r) => {
               const c = children[r.child_user_id];
+              const isPickup = r.kaedah_penghantaran === "pickup";
               return (
                 <TableRow key={r.id}>
                   <TableCell>{c?.nama || r.child_user_id.slice(0, 8)} {c?.darjah ? `(D${c.darjah})` : ""}</TableCell>
                   <TableCell>{r.nama_hadiah_snapshot}</TableCell>
                   <TableCell>⭐ {r.kos_star}</TableCell>
-                  <TableCell className="text-xs font-semibold">{formatRM(r.kos_penghantaran_sen_snapshot ?? 0)}</TableCell>
+                  <TableCell>
+                    <span className="rounded-full border px-2 py-0.5 text-xs font-semibold">
+                      {isPickup ? "🏠 Pickup" : "📮 Pos"}
+                    </span>
+                  </TableCell>
+                  <TableCell className="text-xs font-semibold">
+                    {isPickup ? "Percuma (pickup)" : formatRM(r.kos_penghantaran_sen_snapshot ?? 0)}
+                  </TableCell>
                   <TableCell className="max-w-[200px] truncate" title={r.alamat_penghantaran ?? ""}>
-                    <div>{r.alamat_penghantaran || "-"}</div>
+                    {isPickup ? (
+                      <div className="text-xs italic text-muted-foreground">— (Pickup, bukan pos)</div>
+                    ) : (
+                      <div>{r.alamat_penghantaran || "-"}</div>
+                    )}
                     <div className="mt-1 text-xs text-muted-foreground">
                       📞 {r.profiles?.no_telefon || "-"}
                     </div>
                   </TableCell>
+
                   <TableCell className="capitalize">{r.status}</TableCell>
                   <TableCell className="text-xs">{r.no_tracking || "-"}</TableCell>
                   <TableCell>{new Date(r.created_at).toLocaleDateString("ms-MY")}</TableCell>
@@ -741,6 +761,123 @@ function KatalogTab() {
           <DialogFooter>
             <Button variant="outline" onClick={() => setPreviewUrl(null)}>
               Tutup
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
+
+// ---------------- Lokasi Pickup (singleton) ----------------
+interface LokasiPickupRow {
+  id: string;
+  nama: string;
+  alamat: string;
+  waktu_pickup: string | null;
+}
+
+function LokasiPickupSeksyen() {
+  const [lokasi, setLokasi] = useState<LokasiPickupRow | null>(null);
+  const [open, setOpen] = useState(false);
+  const [nama, setNama] = useState("");
+  const [alamat, setAlamat] = useState("");
+  const [waktu, setWaktu] = useState("");
+  const [busy, setBusy] = useState(false);
+
+  async function muat() {
+    const { data } = await supabase
+      .from("hadiah_lokasi_pickup" as never)
+      .select("id, nama, alamat, waktu_pickup")
+      .limit(1)
+      .maybeSingle();
+    setLokasi((data as unknown as LokasiPickupRow | null) ?? null);
+  }
+
+  useEffect(() => {
+    void muat();
+  }, []);
+
+  function buka() {
+    setNama(lokasi?.nama ?? "");
+    setAlamat(lokasi?.alamat ?? "");
+    setWaktu(lokasi?.waktu_pickup ?? "");
+    setOpen(true);
+  }
+
+  async function simpan() {
+    if (!lokasi) return;
+    if (!nama.trim() || !alamat.trim()) {
+      toast.error("Nama dan alamat wajib diisi");
+      return;
+    }
+    setBusy(true);
+    const { error } = await supabase
+      .from("hadiah_lokasi_pickup" as never)
+      .update({
+        nama: nama.trim(),
+        alamat: alamat.trim(),
+        waktu_pickup: waktu.trim() || null,
+      } as never)
+      .eq("id", lokasi.id);
+    setBusy(false);
+    if (error) {
+      toast.error("Gagal simpan: " + error.message);
+      return;
+    }
+    toast.success("Lokasi pickup dikemaskini");
+    setOpen(false);
+    void muat();
+  }
+
+  return (
+    <div className="rounded-md border p-3">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <p className="text-xs font-bold uppercase tracking-wide text-muted-foreground">Lokasi Pickup</p>
+          {lokasi ? (
+            <>
+              <p className="text-sm font-semibold">{lokasi.nama}</p>
+              <p className="whitespace-pre-line text-xs text-muted-foreground">{lokasi.alamat}</p>
+              {lokasi.waktu_pickup ? (
+                <p className="text-xs text-muted-foreground">Waktu: {lokasi.waktu_pickup}</p>
+              ) : null}
+            </>
+          ) : (
+            <p className="text-xs text-muted-foreground">Tiada lokasi pickup ditetapkan.</p>
+          )}
+        </div>
+        <Button size="sm" variant="outline" onClick={buka} disabled={!lokasi}>
+          Edit
+        </Button>
+      </div>
+
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Lokasi Pickup</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3">
+            <div>
+              <Label>Nama</Label>
+              <Input value={nama} onChange={(e) => setNama(e.target.value)} />
+            </div>
+            <div>
+              <Label>Alamat</Label>
+              <Textarea rows={4} value={alamat} onChange={(e) => setAlamat(e.target.value)} />
+            </div>
+            <div>
+              <Label>Waktu Pickup (optional)</Label>
+              <Input
+                value={waktu}
+                onChange={(e) => setWaktu(e.target.value)}
+                placeholder="Cth: Isnin–Jumaat, 9pagi–5petang"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button onClick={simpan} disabled={busy}>
+              {busy ? "Menyimpan…" : "Simpan"}
             </Button>
           </DialogFooter>
         </DialogContent>

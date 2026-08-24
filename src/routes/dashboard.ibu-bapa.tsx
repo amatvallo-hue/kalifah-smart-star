@@ -3008,14 +3008,23 @@ interface MintaTebusRow {
   bakiStar: number;
 }
 
+interface LokasiPickup {
+  nama: string;
+  alamat: string;
+  waktu_pickup: string | null;
+}
+
 function PermintaanTebusanSeksyen({ anakList, parentUserId }: { anakList: ChildProfile[]; parentUserId?: string }) {
   const [rows, setRows] = useState<MintaTebusRow[]>([]);
   const [pilih, setPilih] = useState<MintaTebusRow | null>(null);
   const [alamat, setAlamat] = useState("");
   const [telefon, setTelefon] = useState("");
+  const [kaedahPenghantaran, setKaedahPenghantaran] = useState<"pos" | "pickup">("pos");
+  const [lokasiPickup, setLokasiPickup] = useState<LokasiPickup | null>(null);
   const [ringkasan, setRingkasan] = useState<{ soalan_betul: number; sesi_kali: number; hari_aktif: number } | null>(null);
   const [busy, setBusy] = useState(false);
   const [success, setSuccess] = useState<MintaTebusRow | null>(null);
+
 
   const anakIds = useMemo(
     () => anakList.map((a) => a.child_user_id).filter((v): v is string => !!v),
@@ -3094,29 +3103,37 @@ function PermintaanTebusanSeksyen({ anakList, parentUserId }: { anakList: ChildP
     setPilih(r);
     setAlamat(r.alamatDefault);
     setTelefon("");
+    setKaedahPenghantaran("pos");
     setRingkasan(null);
-    const [{ data }, { data: profil }] = await Promise.all([
+    const [{ data }, { data: profil }, { data: lokasi }] = await Promise.all([
       supabase.rpc("ringkasan_pembelajaran_anak" as never, {
         p_child_user_id: r.child_user_id,
       } as never),
       parentUserId
         ? supabase.from("profiles").select("no_telefon").eq("id", parentUserId).maybeSingle()
         : Promise.resolve({ data: null }),
+      supabase.from("hadiah_lokasi_pickup" as never).select("nama, alamat, waktu_pickup").limit(1).maybeSingle(),
     ]);
     const row = Array.isArray(data) ? data[0] : data;
     if (row) setRingkasan(row as { soalan_betul: number; sesi_kali: number; hari_aktif: number });
     const tel = (profil as { no_telefon?: string | null } | null)?.no_telefon ?? "";
     setTelefon(tel);
+    setLokasiPickup((lokasi as unknown as LokasiPickup | null) ?? null);
   }
 
+  const perluAlamat = kaedahPenghantaran === "pos";
+  const bolehSahkan = !!telefon.trim() && (!perluAlamat || !!alamat.trim());
+
   async function sahkan() {
-    if (!pilih || !alamat.trim() || !telefon.trim()) return;
+    if (!pilih || !bolehSahkan) return;
     setBusy(true);
     const { error } = await supabase.rpc("sahkan_tebusan_parent" as never, {
       p_tebusan_id: pilih.id,
-      p_alamat: alamat.trim(),
+      p_alamat: perluAlamat ? alamat.trim() : "",
       p_telefon: telefon.trim(),
+      p_kaedah_penghantaran: kaedahPenghantaran,
     } as never);
+
     setBusy(false);
     if (error) {
       toast.error(error.message || "Gagal sahkan tebusan");
@@ -3202,8 +3219,12 @@ function PermintaanTebusanSeksyen({ anakList, parentUserId }: { anakList: ChildP
                   </p>
                   <p className="text-sm text-muted-foreground">⭐ {pilih.kos_star} Star</p>
                   <p className="text-xs font-semibold text-muted-foreground">
-                    Kos Penghantaran: {formatRM(pilih.kos_penghantaran_sen_snapshot ?? 0)}
+                    Kos Penghantaran:{" "}
+                    {kaedahPenghantaran === "pickup"
+                      ? "Percuma (pickup)"
+                      : formatRM(pilih.kos_penghantaran_sen_snapshot ?? 0)}
                   </p>
+
                   <p className="text-[11px] font-semibold" style={{ color: "#8A6100" }}>
                     Baki {pilih.namaAnak}: ⭐ {pilih.bakiStar}
                     {pilih.bakiStar < pilih.kos_star ? " (tidak cukup — admin akan tahan)" : ""}
@@ -3234,14 +3255,63 @@ function PermintaanTebusanSeksyen({ anakList, parentUserId }: { anakList: ChildP
               </div>
 
               <div>
-                <p className="mb-1 text-xs font-bold text-foreground">Alamat Penghantaran</p>
-                <Textarea
-                  rows={4}
-                  value={alamat}
-                  onChange={(e) => setAlamat(e.target.value)}
-                  placeholder="Alamat penuh untuk penghantaran hadiah…"
-                />
+                <p className="mb-1 text-xs font-bold text-foreground">Kaedah Penghantaran</p>
+                <div className="flex gap-2">
+                  {([
+                    { key: "pos" as const, label: "📮 Pos" },
+                    { key: "pickup" as const, label: "🏠 Ambil Sendiri (Pickup)" },
+                  ]).map((opt) => {
+                    const aktif = kaedahPenghantaran === opt.key;
+                    return (
+                      <button
+                        key={opt.key}
+                        type="button"
+                        onClick={() => setKaedahPenghantaran(opt.key)}
+                        className={`flex-1 rounded-xl border-2 px-3 py-2 text-xs font-bold transition ${
+                          aktif
+                            ? "border-primary bg-primary/10 text-foreground"
+                            : "border-border text-muted-foreground hover:text-foreground"
+                        }`}
+                      >
+                        {opt.label}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
+
+              {kaedahPenghantaran === "pos" ? (
+                <div>
+                  <p className="mb-1 text-xs font-bold text-foreground">Alamat Penghantaran</p>
+                  <Textarea
+                    rows={4}
+                    value={alamat}
+                    onChange={(e) => setAlamat(e.target.value)}
+                    placeholder="Alamat penuh untuk penghantaran hadiah…"
+                  />
+                </div>
+              ) : (
+                <div className="rounded-xl border border-border bg-muted/40 p-3">
+                  <p className="text-xs font-bold text-foreground">Lokasi Pickup</p>
+                  {lokasiPickup ? (
+                    <>
+                      <p className="mt-1 text-sm font-extrabold text-foreground">{lokasiPickup.nama}</p>
+                      <p className="whitespace-pre-line text-xs text-muted-foreground">{lokasiPickup.alamat}</p>
+                      {lokasiPickup.waktu_pickup ? (
+                        <p className="mt-1 text-xs font-semibold text-foreground">
+                          Waktu: {lokasiPickup.waktu_pickup}
+                        </p>
+                      ) : null}
+                    </>
+                  ) : (
+                    <p className="mt-1 text-xs text-muted-foreground">Memuatkan lokasi pickup…</p>
+                  )}
+                  <p className="mt-2 text-[11px] text-muted-foreground">
+                    Sila datang ambil di lokasi ini selepas admin sahkan hadiah sedia.
+                  </p>
+                </div>
+              )}
+
 
               <div className="flex items-center justify-between gap-2">
                 <button
@@ -3255,7 +3325,7 @@ function PermintaanTebusanSeksyen({ anakList, parentUserId }: { anakList: ChildP
                 <button
                   type="button"
                   onClick={sahkan}
-                  disabled={busy || !alamat.trim() || !telefon.trim()}
+                  disabled={busy || !bolehSahkan}
                   className="rounded-xl px-4 py-2 font-display text-sm font-extrabold text-white disabled:opacity-50"
                   style={{ background: HIJAU }}
                 >
