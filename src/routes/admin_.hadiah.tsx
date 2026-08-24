@@ -60,6 +60,7 @@ interface Tebusan {
   kos_penghantaran_sen_snapshot: number;
   status: string;
   alamat_penghantaran: string | null;
+  kaedah_penghantaran: string | null;
   catatan_admin: string | null;
   no_tracking: string | null;
   created_at: string;
