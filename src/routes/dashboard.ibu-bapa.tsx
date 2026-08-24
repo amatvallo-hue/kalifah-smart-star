@@ -3008,14 +3008,23 @@ interface MintaTebusRow {
   bakiStar: number;
 }
 
+interface LokasiPickup {
+  nama: string;
+  alamat: string;
+  waktu_pickup: string | null;
+}
+
 function PermintaanTebusanSeksyen({ anakList, parentUserId }: { anakList: ChildProfile[]; parentUserId?: string }) {
   const [rows, setRows] = useState<MintaTebusRow[]>([]);
   const [pilih, setPilih] = useState<MintaTebusRow | null>(null);
   const [alamat, setAlamat] = useState("");
   const [telefon, setTelefon] = useState("");
+  const [kaedahPenghantaran, setKaedahPenghantaran] = useState<"pos" | "pickup">("pos");
+  const [lokasiPickup, setLokasiPickup] = useState<LokasiPickup | null>(null);
   const [ringkasan, setRingkasan] = useState<{ soalan_betul: number; sesi_kali: number; hari_aktif: number } | null>(null);
   const [busy, setBusy] = useState(false);
   const [success, setSuccess] = useState<MintaTebusRow | null>(null);
+
 
   const anakIds = useMemo(
     () => anakList.map((a) => a.child_user_id).filter((v): v is string => !!v),
