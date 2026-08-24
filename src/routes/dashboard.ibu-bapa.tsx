@@ -3325,7 +3325,7 @@ function PermintaanTebusanSeksyen({ anakList, parentUserId }: { anakList: ChildP
                 <button
                   type="button"
                   onClick={sahkan}
-                  disabled={busy || !alamat.trim() || !telefon.trim()}
+                  disabled={busy || !bolehSahkan}
                   className="rounded-xl px-4 py-2 font-display text-sm font-extrabold text-white disabled:opacity-50"
                   style={{ background: HIJAU }}
                 >
