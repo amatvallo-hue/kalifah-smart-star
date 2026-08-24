@@ -1,4 +1,4 @@
-import { BookOpen, Calculator, Globe, Languages, Moon, PenLine, type LucideIcon } from "lucide-react";
+import { BookOpen, Calculator, Globe, Landmark, Languages, Moon, PenLine, type LucideIcon } from "lucide-react";
 
 export type Tone = "emerald" | "gold" | "sky" | "rose" | "violet" | "amber" | "teal";
 
@@ -16,6 +16,7 @@ export interface Subjek {
   icon: LucideIcon;
   tone: Tone;
   emoji: string;
+  minDarjah?: number;
 }
 
 // Semua darjah kini berbayar — `locked` ditentukan oleh profile.darjah_akses
@@ -35,7 +36,9 @@ export const SUBJEK_LIST: Subjek[] = [
   { id: "sains", title: "Sains", description: "Alam sekitar dan ciptaan Allah.", icon: Globe, tone: "teal", emoji: "🔬" },
   { id: "jawi", title: "Jawi", description: "Tulisan jawi asas.", icon: Moon, tone: "amber", emoji: "🌙" },
   { id: "pendidikan-islam", title: "Pendidikan Islam", description: "Rukun Iman, doa & sirah.", icon: BookOpen, tone: "emerald", emoji: "⭐" },
+  { id: "sejarah", title: "Sejarah", description: "Tokoh, warisan & kisah negara.", icon: Landmark, tone: "rose", emoji: "🏛️", minDarjah: 4 },
 ];
+
 
 export function getDarjah(id: string) {
   return DARJAH_LIST.find((d) => d.id === id);
@@ -47,9 +50,9 @@ export function getSubjek(id: string) {
 
 // Jawi disembunyikan daripada pelajar & ibu bapa.
 // Hanya admin boleh melihat/mengakses Jawi untuk penyuntingan kandungan.
-export function subjekListUntukRole(role?: string | null): Subjek[] {
-  if (role === "admin") return SUBJEK_LIST;
-  return SUBJEK_LIST.filter((s) => s.id !== "jawi");
+export function subjekListUntukRole(role?: string | null, darjahId?: string | number): Subjek[] {
+  const asas = role === "admin" ? SUBJEK_LIST : SUBJEK_LIST.filter((s) => s.id !== "jawi");
+  return asas.filter((s) => s.minDarjah == null || darjahId == null || Number(darjahId) >= s.minDarjah);
 }
 
 export const TONE_GRADIENT: Record<Tone, string> = {
