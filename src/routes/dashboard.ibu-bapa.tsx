@@ -3219,8 +3219,12 @@ function PermintaanTebusanSeksyen({ anakList, parentUserId }: { anakList: ChildP
                   </p>
                   <p className="text-sm text-muted-foreground">⭐ {pilih.kos_star} Star</p>
                   <p className="text-xs font-semibold text-muted-foreground">
-                    Kos Penghantaran: {formatRM(pilih.kos_penghantaran_sen_snapshot ?? 0)}
+                    Kos Penghantaran:{" "}
+                    {kaedahPenghantaran === "pickup"
+                      ? "Percuma (pickup)"
+                      : formatRM(pilih.kos_penghantaran_sen_snapshot ?? 0)}
                   </p>
+
                   <p className="text-[11px] font-semibold" style={{ color: "#8A6100" }}>
                     Baki {pilih.namaAnak}: ⭐ {pilih.bakiStar}
                     {pilih.bakiStar < pilih.kos_star ? " (tidak cukup — admin akan tahan)" : ""}
