@@ -36,7 +36,9 @@ export const SUBJEK_LIST: Subjek[] = [
   { id: "sains", title: "Sains", description: "Alam sekitar dan ciptaan Allah.", icon: Globe, tone: "teal", emoji: "🔬" },
   { id: "jawi", title: "Jawi", description: "Tulisan jawi asas.", icon: Moon, tone: "amber", emoji: "🌙" },
   { id: "pendidikan-islam", title: "Pendidikan Islam", description: "Rukun Iman, doa & sirah.", icon: BookOpen, tone: "emerald", emoji: "⭐" },
+  { id: "sejarah", title: "Sejarah", description: "Tokoh, warisan & kisah negara.", icon: Landmark, tone: "rose", emoji: "🏛️", minDarjah: 4 },
 ];
+
 
 export function getDarjah(id: string) {
   return DARJAH_LIST.find((d) => d.id === id);
