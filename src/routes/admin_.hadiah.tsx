@@ -273,7 +273,7 @@ function TebusanTab() {
       return;
     }
 
-    const headers = ["Nama Anak", "Darjah", "Hadiah", "Kos Star", "Kos Penghantaran (RM)", "Alamat", "No Telefon", "Status", "Tarikh Sahkan", "No Tracking"];
+    const headers = ["Nama Anak", "Darjah", "Hadiah", "Kos Star", "Kaedah Penghantaran", "Kos Penghantaran (RM)", "Alamat", "No Telefon", "Status", "Tarikh Sahkan", "No Tracking"];
     const lines = [headers.join(",")];
 
     for (const r of rowsToExport) {
@@ -281,13 +281,15 @@ function TebusanTab() {
       const namaAnak = c?.nama || r.child_user_id.slice(0, 8);
       const darjah = c?.darjah ? `D${c.darjah}` : "";
       const tarikhSahkan = new Date(r.created_at).toLocaleDateString("ms-MY");
+      const isPickup = r.kaedah_penghantaran === "pickup";
       const line = [
         escapeCsvCell(namaAnak),
         escapeCsvCell(darjah),
         escapeCsvCell(r.nama_hadiah_snapshot),
         escapeCsvCell(r.kos_star),
-        escapeCsvCell(formatRM(r.kos_penghantaran_sen_snapshot ?? 0)),
-        escapeCsvCell(r.alamat_penghantaran),
+        escapeCsvCell(isPickup ? "Pickup" : "Pos"),
+        escapeCsvCell(isPickup ? "Percuma (pickup)" : formatRM(r.kos_penghantaran_sen_snapshot ?? 0)),
+        escapeCsvCell(isPickup ? "— (Pickup, bukan pos)" : r.alamat_penghantaran),
         escapeCsvCell(r.profiles?.no_telefon),
         escapeCsvCell(r.status),
         escapeCsvCell(tarikhSahkan),
@@ -295,6 +297,7 @@ function TebusanTab() {
       ].join(",");
       lines.push(line);
     }
+
 
     const csv = lines.join("\r\n");
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
