@@ -50,9 +50,9 @@ export function getSubjek(id: string) {
 
 // Jawi disembunyikan daripada pelajar & ibu bapa.
 // Hanya admin boleh melihat/mengakses Jawi untuk penyuntingan kandungan.
-export function subjekListUntukRole(role?: string | null): Subjek[] {
-  if (role === "admin") return SUBJEK_LIST;
-  return SUBJEK_LIST.filter((s) => s.id !== "jawi");
+export function subjekListUntukRole(role?: string | null, darjahId?: string | number): Subjek[] {
+  const asas = role === "admin" ? SUBJEK_LIST : SUBJEK_LIST.filter((s) => s.id !== "jawi");
+  return asas.filter((s) => s.minDarjah == null || darjahId == null || Number(darjahId) >= s.minDarjah);
 }
 
 export const TONE_GRADIENT: Record<Tone, string> = {
