@@ -17,6 +17,7 @@ import {
   Send,
   FileX,
   AlertCircle,
+  Landmark,
 } from "lucide-react";
 import { useState } from "react";
 import { HARGA_ASAL, PAKEJ_LIST } from "@/lib/curriculum";
@@ -198,7 +199,7 @@ function Twist() {
             Masalahnya: tiada siapa yang betul-betul kenal kelemahan spesifik anak anda — sampai ke subtopik yang tepat.
           </p>
           <p className="text-base text-muted-foreground md:text-lg">
-            KALI buat benda yang cikgu tuisyen tak sempat buat: analisis 824 kemahiran kecil, satu persatu, untuk anak anda seorang.
+            KALI buat benda yang cikgu tuisyen tak sempat buat: analisis 857 kemahiran kecil, satu persatu, untuk anak anda seorang.
           </p>
         </div>
         <div className="mt-10">
@@ -463,6 +464,7 @@ function Subjek() {
     { ikon: Languages, t: "Bahasa Inggeris", warna: "#8B5CF6" },
     { ikon: Globe, t: "Sains", warna: "#22C55E" },
     { ikon: BookOpen, t: "Pendidikan Islam", warna: "#D97706" },
+    { ikon: Landmark, t: "Sejarah", warna: "#8B3A3A" },
   ];
   return (
     <section id="subjek" className="py-16">
@@ -472,10 +474,10 @@ function Subjek() {
             Subjek Utama
           </p>
           <h2 className="mt-2 font-display text-3xl font-extrabold text-foreground md:text-4xl">
-            Fokus pada 5 subjek utama
+            Fokus pada 6 subjek utama
           </h2>
         </div>
-        <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+        <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-3">
           {items.map(({ ikon: Ikon, t, warna }) => (
             <div
               key={t}
