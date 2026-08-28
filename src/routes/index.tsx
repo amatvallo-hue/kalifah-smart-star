@@ -109,13 +109,13 @@ function Hero() {
       <div className="container relative mx-auto px-4 py-16 md:py-24">
         <div className="mx-auto max-w-3xl">
           <h1 className="font-display text-4xl font-extrabold leading-tight text-foreground md:text-5xl lg:text-6xl">
-            8/10 Dalam Kuiz. Tapi Anak Betul-Betul Faham, Ke Baru Nasib Baik?
+            ANAK PANDAI BUKAN SEBAB SUPLEMEN.
           </h1>
           <p className="mt-6 max-w-2xl text-base text-muted-foreground md:text-lg">
-            Sekali jawapan betul tak bermakna anak dah faham sepenuhnya. Tapi macam mana nak tahu — sebelum ujian sekolah yang sebenar?
+            Mereka perlukan latihan yang tepat—bukan sekadar lebih banyak latihan.
           </p>
           <p className="mt-4 max-w-2xl text-base text-muted-foreground md:text-lg">
-            KALI tak nilai anak dari satu jawapan sahaja. Ia perlukan bukti konsisten daripada BANYAK soalan — merentasi hari yang berbeza — sebelum sahkan anak betul-betul dah kuasai sesuatu kemahiran.
+            KALI membantu mengenal pasti apa yang sudah dikuasai, apa yang perlu diperkukuhkan dan latihan yang patut dibuat seterusnya.
           </p>
 
           <div className="mt-8 flex w-full flex-col gap-3 sm:flex-row">
@@ -124,7 +124,7 @@ function Hero() {
               className="flex w-full items-center justify-center gap-2 rounded-full px-6 py-3.5 font-display text-base font-extrabold text-white shadow-soft transition hover:-translate-y-0.5 sm:w-auto"
               style={{ backgroundColor: HIJAU }}
             >
-              🧪 Uji Anak Saya Dengan KALI — Percuma, 2 Minit
+              🧪 Cuba KALI Percuma
             </Link>
           </div>
           <div className="mt-4 flex items-center gap-4 text-xs text-muted-foreground">
