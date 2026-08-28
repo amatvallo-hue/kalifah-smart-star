@@ -109,15 +109,13 @@ function Hero() {
       <div className="container relative mx-auto px-4 py-16 md:py-24">
         <div className="mx-auto max-w-3xl">
           <h1 className="font-display text-4xl font-extrabold leading-tight text-foreground md:text-5xl lg:text-6xl">
-            Ibu Bapa Yang Hantar Anak Ke Tuisyen —
-            <br />
-            Tapi Tak Pernah Tahu Anak Dia Sebenarnya Lemah Bab Mana
+            8/10 Dalam Kuiz. Tapi Anak Betul-Betul Faham, Ke Baru Nasib Baik?
           </h1>
           <p className="mt-6 max-w-2xl text-base text-muted-foreground md:text-lg">
-            Setiap bulan RM150 keluar. Setiap minggu hantar pergi balik. Tapi bila tanya cikgu tuisyen — 'Okay lah tu, dia tengah improve' — tak pernah ada laporan spesifik.
+            Sekali jawapan betul tak bermakna anak dah faham sepenuhnya. Tapi macam mana nak tahu — sebelum ujian sekolah yang sebenar?
           </p>
           <p className="mt-4 max-w-2xl text-base text-muted-foreground md:text-lg">
-            Ujian sekolah je baru terbongkar: anak dah tersangkut 3 bab, tapi masa tu dah terlambat.
+            KALI tak nilai anak dari satu jawapan sahaja. Ia perlukan bukti konsisten daripada BANYAK soalan — merentasi hari yang berbeza — sebelum sahkan anak betul-betul dah kuasai sesuatu kemahiran.
           </p>
 
           <div className="mt-8 flex w-full flex-col gap-3 sm:flex-row">
