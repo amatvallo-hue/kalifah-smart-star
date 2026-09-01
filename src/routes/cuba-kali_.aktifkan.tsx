@@ -13,6 +13,12 @@ function sanitizeRef(value: string | null | undefined): string | null {
 export const Route = createFileRoute("/cuba-kali_/aktifkan")({
   head: () => ({
     meta: [{ title: "Analisis KALI — Kalifah.my" }],
+    links: [
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap",
+      },
+    ],
   }),
   ssr: false,
   component: AktifkanPage,
@@ -49,84 +55,165 @@ type LaporanPreview = {
   bocor_gejala?: string | null;
 };
 
+const KALI_BLUE = "#3654C9";
+const KALI_BLUE_BORDER = "#D8DEF6";
+const TIER_RED = "#C85A45";
+const TIER_RED_BG = "#F5E1DB";
+const TIER_GREEN = "#2F7A50";
+const FONT_SERIF = "'Source Serif 4', Georgia, serif";
+const FONT_SANS = "'Plus Jakarta Sans', system-ui, sans-serif";
+
 function AnalisisScreen({ laporan, onTeruskan }: { laporan: LaporanPreview; onTeruskan: () => void }) {
   const nama = laporan.nama || "anak anda";
   const adaBocor = !!laporan.bocor_nama;
-  const adaCounts = laporan.jumlah_menguasai != null || laporan.jumlah_diperkukuh != null;
+  const menguasai = laporan.jumlah_menguasai ?? null;
+  const diperkukuh = laporan.jumlah_diperkukuh ?? null;
+  const adaCounts = menguasai != null || diperkukuh != null;
+  const jumlahDinilai = (menguasai ?? 0) + (diperkukuh ?? 0);
+  const nisbahMenguasai = jumlahDinilai > 0 ? (menguasai ?? 0) / jumlahDinilai : null;
 
   return (
     <PageShell>
       <Kad>
-        <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">🧠 Analisis KALI</p>
-        <h1 className="mt-1 font-display text-2xl font-extrabold text-foreground">
-          KALI dah mula mengenali {nama}
-        </h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          {adaBocor
-            ? `Daripada ${laporan.betul != null ? laporan.betul : "10"} jawapan pertama, KALI dah nampak satu perkara yang patut diberi perhatian.`
-            : `Daripada ${laporan.betul != null ? laporan.betul : "10"} jawapan pertama, KALI dah mula nampak corak jawapan ${nama}.`}
+        <p
+          className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground"
+          style={{ fontFamily: FONT_SANS }}
+        >
+          🧠 Analisis KALI
         </p>
 
-        {adaCounts ? (
-          <div className="mt-5 flex flex-wrap gap-x-5 gap-y-1 text-sm font-bold">
-            {laporan.jumlah_menguasai != null ? (
-              <span className="text-primary">🟢 {laporan.jumlah_menguasai} kemahiran dikuasai</span>
-            ) : null}
-            {laporan.jumlah_diperkukuh != null ? (
-              <span className="text-destructive">🔴 {laporan.jumlah_diperkukuh} perlu diperkukuhkan</span>
-            ) : null}
-          </div>
-        ) : null}
+        {/* 1. Apa yang berlaku */}
+        <h1
+          className="mt-1 text-2xl font-extrabold leading-snug text-foreground md:text-[1.75rem]"
+          style={{ fontFamily: FONT_SERIF }}
+        >
+          KALI dah mula mengenali {nama}
+        </h1>
+        <p className="mt-2 text-sm text-muted-foreground" style={{ fontFamily: FONT_SANS }}>
+          {laporan.betul != null ? (
+            <>
+              <strong className="font-extrabold text-foreground">{laporan.betul} daripada 10</strong> soalan
+              pertama dijawab betul.
+            </>
+          ) : (
+            "10 soalan pertama sudah dijawab."
+          )}
+        </p>
 
-        {adaBocor ? (
-          <div className="mt-5 rounded-2xl border border-border bg-muted/40 p-5">
+        {/* 2. Apa yang KALI nampak */}
+        {adaCounts && (
+          <div className="mt-5" style={{ fontFamily: FONT_SANS }}>
             <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">
-              🔍 KALI perasan {nama} masih belum konsisten dalam
+              Apa yang KALI nampak
             </p>
-            <p className="mt-1 font-display text-lg font-extrabold text-foreground">{laporan.bocor_nama}</p>
+            {jumlahDinilai > 0 && (
+              <div className="mt-2 flex h-2.5 w-full overflow-hidden rounded-full bg-muted">
+                {menguasai != null && menguasai > 0 && (
+                  <div style={{ width: `${(nisbahMenguasai ?? 0) * 100}%`, backgroundColor: TIER_GREEN }} />
+                )}
+                {diperkukuh != null && diperkukuh > 0 && (
+                  <div
+                    style={{ width: `${(1 - (nisbahMenguasai ?? 0)) * 100}%`, backgroundColor: TIER_RED }}
+                  />
+                )}
+              </div>
+            )}
+            <div className="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-sm font-bold">
+              {menguasai != null && <span style={{ color: TIER_GREEN }}>🟢 {menguasai} sudah dikuasai</span>}
+              {diperkukuh != null && (
+                <span style={{ color: TIER_RED }}>🟠 {diperkukuh} perlu diperkukuhkan</span>
+              )}
+            </div>
+          </div>
+        )}
+
+        {adaBocor && (
+          <div
+            className="mt-4 rounded-2xl border border-border bg-card p-5"
+            style={{ borderLeftWidth: "3px", borderLeftColor: KALI_BLUE }}
+          >
+            <div className="flex items-center gap-2">
+              <span
+                className="h-2 w-2 rounded-full"
+                style={{ backgroundColor: KALI_BLUE, boxShadow: `0 0 0 3px ${KALI_BLUE_BORDER}` }}
+              />
+              <p className="text-[11px] font-bold uppercase tracking-wide" style={{ color: KALI_BLUE }}>
+                Dikesan oleh KALI
+              </p>
+            </div>
+            <span
+              className="mt-2 inline-flex rounded-full px-2.5 py-0.5 text-[11px] font-bold"
+              style={{ backgroundColor: TIER_RED_BG, color: TIER_RED }}
+            >
+              Perlu Diperkukuhkan
+            </span>
+            <p className="mt-1.5 text-lg font-extrabold text-foreground" style={{ fontFamily: FONT_SERIF }}>
+              {laporan.bocor_nama}
+            </p>
             {laporan.bocor_gejala ? (
-              <p className="mt-2 text-sm text-muted-foreground">{laporan.bocor_gejala}</p>
+              <p className="mt-1 text-sm text-muted-foreground" style={{ fontFamily: FONT_SANS }}>
+                {laporan.bocor_gejala}
+              </p>
             ) : null}
           </div>
-        ) : null}
+        )}
 
-        {adaBocor ? (
-          <div className="mt-5">
-            <p className="text-sm font-bold text-foreground">
-              🌱 Kelemahan kecil lebih mudah diperbaiki bila kita tahu di mana ia bermula.
+        {/* 3. Apa maksudnya */}
+        <div className="mt-5" style={{ fontFamily: FONT_SANS }}>
+          {adaBocor ? (
+            <>
+              <p className="text-sm font-bold text-foreground">
+                🌱 Kelemahan kecil lebih mudah diperbaiki bila kita tahu di mana ia bermula.
+              </p>
+              <p className="mt-2 text-sm text-muted-foreground">
+                Sebab itu KALI tidak hanya melihat berapa banyak {nama} betul atau salah. KALI cuba mengenal
+                pasti bahagian yang patut diberi perhatian sekarang, sebelum bergerak kepada kemahiran
+                seterusnya.
+              </p>
+            </>
+          ) : (
+            <p className="text-sm text-muted-foreground">
+              KALI dah mula nampak corak jawapan {nama}. Semakin {nama} belajar bersama KALI, semakin jelas
+              gambaran kemahiran yang sudah kukuh dan yang masih memerlukan perhatian.
             </p>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Sebab itu KALI tidak hanya melihat berapa banyak {nama} betul atau salah. KALI cuba mengenal pasti
-              bahagian yang patut diberi perhatian sekarang, sebelum bergerak kepada kemahiran seterusnya.
-            </p>
-          </div>
-        ) : null}
+          )}
+        </div>
 
-        <div className="mt-5">
+        {/* 4. Apa patut dibuat selepas ini */}
+        <div className="mt-5" style={{ fontFamily: FONT_SANS }}>
           <p className="text-sm font-bold text-foreground">❤️ Di sinilah KALI akan bantu {nama}</p>
           <p className="mt-2 text-sm text-muted-foreground">
             KALI akan terus melihat jawapan {nama}, mengenal pasti kemahiran yang belum stabil, dan memilih
-            latihan seterusnya berdasarkan apa yang {nama} perlukan — bukan sekadar bagi soalan secara rawak.
+            latihan seterusnya berdasarkan apa yang {nama} perlukan
+            {adaBocor ? (
+              <>
+                {" "}
+                — bermula dengan <strong className="font-bold text-foreground">{laporan.bocor_nama}</strong>
+              </>
+            ) : null}{" "}
+            — bukan sekadar bagi soalan secara rawak.
           </p>
         </div>
 
-        <p className="mt-4 text-sm text-muted-foreground">
-          {laporan.betul != null ? laporan.betul : "10"} soalan pertama ini baru permulaan. Semakin {nama} belajar
-          bersama KALI, semakin jelas gambaran tentang apa yang {nama} dah kuasai, apa yang masih menghalangnya,
-          dan apa yang patut dipelajari seterusnya.
+        <p className="mt-4 text-sm text-muted-foreground" style={{ fontFamily: FONT_SANS }}>
+          {laporan.betul != null ? laporan.betul : "10"} soalan pertama ini baru permulaan. Semakin {nama}
+          belajar bersama KALI, semakin jelas gambaran tentang apa yang {nama} dah kuasai, apa yang masih
+          menghalangnya, dan apa yang patut dipelajari seterusnya.
         </p>
 
+        {/* 5. CTA — kekal sama destinasi & teks */}
         <div className="mt-6 rounded-2xl border border-primary/30 bg-primary/5 p-5 text-center">
-          <p className="font-display text-base font-extrabold text-foreground">
+          <p className="text-base font-extrabold text-foreground" style={{ fontFamily: FONT_SANS }}>
             Teruskan perjalanan {nama} bersama KALI
           </p>
-          <p className="mt-1 text-sm text-muted-foreground">
+          <p className="mt-1 text-sm text-muted-foreground" style={{ fontFamily: FONT_SANS }}>
             RM49 / tahun{laporan.darjah ? ` · Darjah ${laporan.darjah}` : ""}
           </p>
           <button
             type="button"
             onClick={onTeruskan}
-            className="mt-4 w-full rounded-2xl bg-primary px-5 py-3 font-display text-base font-extrabold text-primary-foreground shadow-card transition hover:opacity-90"
+            className="mt-4 w-full rounded-2xl bg-primary px-5 py-3 text-base font-extrabold text-primary-foreground shadow-card transition hover:opacity-90"
+            style={{ fontFamily: FONT_SANS }}
           >
             Aktifkan KALI untuk {nama} →
           </button>
