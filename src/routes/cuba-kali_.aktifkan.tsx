@@ -40,7 +40,17 @@ function Kad({ children }: { children: ReactNode }) {
   return <div className="rounded-3xl bg-card p-7 shadow-card md:p-8">{children}</div>;
 }
 
-type Phase = "loading" | "invalid" | "analisis" | "form" | "claiming" | "success" | "error" | "semak-emel" | "sudah-ada-akaun";
+type Phase =
+  | "loading"
+  | "invalid"
+  | "analisis"
+  | "form"
+  | "claiming"
+  | "success"
+  | "error"
+  | "gagal-preview"
+  | "semak-emel"
+  | "sudah-ada-akaun";
 
 type LaporanPreview = {
   valid: boolean;
@@ -219,6 +229,53 @@ function AktifkanPage() {
   const paramsRef = useRef<{ child: string; token: string; darjah: string } | null>(null);
   const dahJalan = useRef(false);
 
+  // Cuba dapatkan preview laporan tetamu. Backend RPC ini kadangkala gagal/timeout
+  // (bukan sekali insiden -- projek ni ada isu kestabilan PostgREST berterusan).
+  // PRINSIP: backend gagal ≠ laporan tidak wujud. Kalau RPC gagal (error, bukan
+  // sekadar respons "tiada laporan"), retry sekali; kalau dua-dua percubaan gagal,
+  // JANGAN terus anggap tiada laporan dan JANGAN terus bawa pengguna ke signup
+  // form -- kekalkan pengguna di sini dengan state gagal yang selamat + retry manual.
+  async function muatLaporan(child: string, token: string) {
+    const { data: sessionData } = await supabase.auth.getSession();
+    const punyaSesiSemasa = !!sessionData.session?.user;
+    setAdaSesi(punyaSesiSemasa);
+
+    const cubaPreview = () =>
+      supabase.rpc("kali_preview_laporan_tetamu" as never, {
+        p_child_user_id: child,
+        p_claim_token: token,
+      } as never);
+
+    let { data: laporanData, error: laporanError } = await cubaPreview();
+
+    if (laporanError) {
+      await new Promise((resolve) => setTimeout(resolve, 900));
+      ({ data: laporanData, error: laporanError } = await cubaPreview());
+    }
+
+    if (laporanError) {
+      // Dua-dua percubaan gagal (network/backend) -- bukan tanda laporan tak
+      // wujud. Kekal di sini, jangan dedahkan technical error.
+      setPhase("gagal-preview");
+      return;
+    }
+
+    const lap = laporanData as LaporanPreview | null;
+
+    if (lap?.valid && lap.diagnostic_completed) {
+      // Sentiasa tunjuk analisis dulu -- claim/redirect harga HANYA lepas
+      // parent tekan CTA sendiri, tak kira ada sesi aktif atau tidak.
+      setLaporan(lap);
+      setPhase("analisis");
+    } else if (punyaSesiSemasa) {
+      // RPC berjaya balas, tapi memang tiada laporan untuk ditunjuk (edge
+      // case) -- fallback ke claim terus.
+      await buatClaim();
+    } else {
+      setPhase("form");
+    }
+  }
+
   useEffect(() => {
     if (dahJalan.current) return;
     dahJalan.current = true;
@@ -244,32 +301,15 @@ function AktifkanPage() {
       window.localStorage.setItem("kalifah_ref", refFromLink);
     }
 
-    void (async () => {
-      const [{ data: sessionData }, { data: laporanData }] = await Promise.all([
-        supabase.auth.getSession(),
-        supabase.rpc("kali_preview_laporan_tetamu" as never, {
-          p_child_user_id: child,
-          p_claim_token: token,
-        } as never),
-      ]);
-
-      const lap = laporanData as LaporanPreview | null;
-      const punyaSesi = !!sessionData.session?.user;
-      setAdaSesi(punyaSesi);
-
-      if (lap?.valid && lap.diagnostic_completed) {
-        // Sentiasa tunjuk analisis dulu -- claim/redirect harga HANYA lepas
-        // parent tekan CTA sendiri, tak kira ada sesi aktif atau tidak.
-        setLaporan(lap);
-        setPhase("analisis");
-      } else if (punyaSesi) {
-        // Tiada laporan untuk ditunjuk (edge case) -- fallback ke claim terus.
-        await buatClaim();
-      } else {
-        setPhase("form");
-      }
-    })();
+    void muatLaporan(child, token);
   }, []);
+
+  function cubaLagiPreview() {
+    const p = paramsRef.current;
+    if (!p) return;
+    setPhase("loading");
+    void muatLaporan(p.child, p.token);
+  }
 
   async function buatClaim() {
     const p = paramsRef.current;
@@ -433,6 +473,20 @@ function AktifkanPage() {
           <>
             <h1 className="font-display text-2xl font-extrabold text-foreground">Pautan tidak sah atau sudah luput</h1>
             <p className="mt-2 text-sm text-muted-foreground">Sila buka semula pautan dari Telegram.</p>
+          </>
+        ) : null}
+
+        {phase === "gagal-preview" ? (
+          <>
+            <h1 className="font-display text-2xl font-extrabold text-foreground">Analisis KALI belum dapat dimuatkan</h1>
+            <p className="mt-2 text-sm text-muted-foreground">Cuba semula.</p>
+            <button
+              type="button"
+              onClick={cubaLagiPreview}
+              className="mt-5 flex w-full items-center justify-center rounded-2xl bg-primary px-5 py-3 font-display text-base font-extrabold text-primary-foreground shadow-card transition hover:opacity-90"
+            >
+              Cuba Lagi →
+            </button>
           </>
         ) : null}
 
