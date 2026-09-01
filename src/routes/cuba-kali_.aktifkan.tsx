@@ -161,48 +161,29 @@ function AnalisisScreen({ laporan, onTeruskan }: { laporan: LaporanPreview; onTe
           </div>
         )}
 
-        {/* 3. Apa maksudnya */}
+        {/* 3. Apa maksudnya — 1 blok ringkas */}
         <div className="mt-5" style={{ fontFamily: FONT_SANS }}>
-          {adaBocor ? (
-            <>
-              <p className="text-sm font-bold text-foreground">
-                🌱 Kelemahan kecil lebih mudah diperbaiki bila kita tahu di mana ia bermula.
-              </p>
-              <p className="mt-2 text-sm text-muted-foreground">
-                Sebab itu KALI tidak hanya melihat berapa banyak {nama} betul atau salah. KALI cuba mengenal
-                pasti bahagian yang patut diberi perhatian sekarang, sebelum bergerak kepada kemahiran
-                seterusnya.
-              </p>
-            </>
-          ) : (
-            <p className="text-sm text-muted-foreground">
-              KALI dah mula nampak corak jawapan {nama}. Semakin {nama} belajar bersama KALI, semakin jelas
-              gambaran kemahiran yang sudah kukuh dan yang masih memerlukan perhatian.
-            </p>
-          )}
-        </div>
-
-        {/* 4. Apa patut dibuat selepas ini */}
-        <div className="mt-5" style={{ fontFamily: FONT_SANS }}>
-          <p className="text-sm font-bold text-foreground">❤️ Di sinilah KALI akan bantu {nama}</p>
-          <p className="mt-2 text-sm text-muted-foreground">
-            KALI akan terus melihat jawapan {nama}, mengenal pasti kemahiran yang belum stabil, dan memilih
-            latihan seterusnya berdasarkan apa yang {nama} perlukan
-            {adaBocor ? (
-              <>
-                {" "}
-                — bermula dengan <strong className="font-bold text-foreground">{laporan.bocor_nama}</strong>
-              </>
-            ) : null}{" "}
-            — bukan sekadar bagi soalan secara rawak.
+          <p className="text-sm font-bold text-foreground">
+            {adaBocor
+              ? "🌱 Kelemahan kecil lebih mudah dibaiki apabila kita tahu di mana ia bermula."
+              : `KALI mula nampak corak pembelajaran ${nama} — makin banyak sesi, makin jelas gambarannya.`}
           </p>
         </div>
 
-        <p className="mt-4 text-sm text-muted-foreground" style={{ fontFamily: FONT_SANS }}>
-          {laporan.betul != null ? laporan.betul : "10"} soalan pertama ini baru permulaan. Semakin {nama}
-          belajar bersama KALI, semakin jelas gambaran tentang apa yang {nama} dah kuasai, apa yang masih
-          menghalangnya, dan apa yang patut dipelajari seterusnya.
-        </p>
+        {/* 4. Apa patut dibuat selepas ini — 1 blok ringkas */}
+        <div className="mt-5" style={{ fontFamily: FONT_SANS }}>
+          <p className="text-sm text-muted-foreground">
+            {adaBocor ? (
+              <>
+                ❤️ Latihan seterusnya akan bermula terus dari{" "}
+                <strong className="font-bold text-foreground">{laporan.bocor_nama}</strong> — bukan soalan
+                rawak.
+              </>
+            ) : (
+              `❤️ KALI akan pilih latihan seterusnya berdasarkan apa yang ${nama} perlukan — bukan soalan rawak.`
+            )}
+          </p>
+        </div>
 
         {/* 5. CTA — kekal sama destinasi & teks */}
         <div className="mt-6 rounded-2xl border border-primary/30 bg-primary/5 p-5 text-center">
