@@ -43,6 +43,7 @@ export const Route = createFileRoute("/")({
 
 const HIJAU = "#1B8A5A";
 const EMAS = "#F5A623";
+const KALI_BLUE = "#3654C9";
 
 function LandingPage() {
   return (
@@ -101,24 +102,72 @@ function LandingHeader() {
   );
 }
 
+function HeroBuktiVisual() {
+  const anak = [
+    { nama: "Anak A", dikuasai: "Tambah", diperkukuhkan: "Bahagi" },
+    { nama: "Anak B", dikuasai: "Bahagi", diperkukuhkan: "Pecahan" },
+  ];
+  return (
+    <div className="mx-auto max-w-xl">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4">
+        {anak.map((a) => (
+          <div
+            key={a.nama}
+            className="rounded-2xl bg-card p-4 text-left shadow-soft sm:p-5"
+            style={{ border: `2px solid ${HIJAU}22` }}
+          >
+            <p className="font-display text-xs font-extrabold text-foreground sm:text-sm">{a.nama}</p>
+            <p className="mt-1 font-display text-3xl font-extrabold sm:text-4xl" style={{ color: HIJAU }}>6/10</p>
+            <div className="mt-3 space-y-1.5">
+              <span className="flex items-center gap-1.5 text-xs text-foreground sm:text-sm">
+                <span className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: HIJAU }} />
+                {a.dikuasai}
+              </span>
+              <span
+                className="flex items-center gap-1.5 rounded-md px-1.5 py-1 text-xs sm:text-sm"
+                style={{ backgroundColor: `${EMAS}1a`, color: "#7a5300" }}
+              >
+                <span className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: EMAS }} />
+                {a.diperkukuhkan} — Perlu Diperkukuhkan
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+      <p className="mt-3 text-center text-sm font-semibold text-foreground">
+        Markah sama. Tapi apa yang mereka perlukan selepas ini tak sama.
+      </p>
+      <p className="mt-1 text-center text-xs text-muted-foreground">
+        Contoh — bukan data sebenar.
+      </p>
+    </div>
+  );
+}
+
 function Hero() {
   return (
     <section className="relative overflow-hidden">
       <div className="absolute -right-32 -top-32 h-96 w-96 rounded-full blur-3xl" style={{ backgroundColor: `${EMAS}33` }} />
       <div className="absolute -bottom-32 -left-32 h-96 w-96 rounded-full blur-3xl" style={{ backgroundColor: `${HIJAU}33` }} />
       <div className="container relative mx-auto px-4 py-16 md:py-24">
-        <div className="mx-auto max-w-3xl">
-          <h1 className="font-display text-4xl font-extrabold leading-tight text-foreground md:text-5xl lg:text-6xl">
-            ANAK PANDAI BUKAN SEBAB SUPLEMEN.
+        <div className="mx-auto max-w-2xl text-center">
+          <h1 className="font-display text-3xl font-extrabold leading-tight text-foreground md:text-5xl lg:text-6xl">
+            Yang paling susah bukan bila anak salah. Yang susah bila kita tak tahu dia mula tak faham di mana.
           </h1>
-          <p className="mt-6 max-w-2xl text-base text-muted-foreground md:text-lg">
-            Mereka perlukan latihan yang tepat—bukan sekadar lebih banyak latihan.
-          </p>
-          <p className="mt-4 max-w-2xl text-base text-muted-foreground md:text-lg">
-            KALI membantu mengenal pasti apa yang sudah dikuasai, apa yang perlu diperkukuhkan dan latihan yang patut dibuat seterusnya.
+          <p className="mx-auto mt-6 max-w-xl text-base text-muted-foreground md:text-lg">
+            Markah cuma tunjuk berapa yang betul. Ia tak tunjuk bahagian mana yang anak sebenarnya belum faham.
           </p>
 
-          <div className="mt-8 flex w-full flex-col gap-3 sm:flex-row">
+          <div className="mt-8">
+            <HeroBuktiVisual />
+          </div>
+
+          <p className="mx-auto mt-8 max-w-xl text-base font-semibold text-foreground md:text-lg">
+            <span className="mr-1.5 inline-block h-2 w-2 rounded-full align-middle" style={{ backgroundColor: KALI_BLUE }} />
+            KALI bantu cari bahagian yang perlu diberi perhatian — supaya anak tak sekadar buat lebih banyak latihan, tapi latihan yang lebih tepat.
+          </p>
+
+          <div className="mt-8 flex w-full flex-col items-center gap-3 sm:flex-row sm:justify-center">
             <Link
               to="/cuba-kali-web"
               className="flex w-full items-center justify-center gap-2 rounded-full px-6 py-3.5 font-display text-base font-extrabold text-white shadow-soft transition hover:-translate-y-0.5 sm:w-auto"
@@ -127,7 +176,7 @@ function Hero() {
               🧪 Cuba KALI Percuma
             </Link>
           </div>
-          <div className="mt-4 flex items-center gap-4 text-xs text-muted-foreground">
+          <div className="mt-4 flex items-center justify-center gap-4 text-xs text-muted-foreground">
             <span className="inline-flex items-center gap-1">
               <ShieldCheck className="h-4 w-4" style={{ color: HIJAU }} /> Selamat & sesuai untuk kanak-kanak
             </span>
@@ -338,36 +387,89 @@ function MockStat({
 
 function Mekanisme() {
   const steps = [
-    { ikon: PenLine, t: "Anak Jawab Soalan", d: "Setiap jawapan direkodkan — bukan sekadar markah akhir." },
-    { ikon: Target, t: "KALI Kenal Pasti Keperluan", d: "Sistem mengesan subtopik yang anak masih perlukan perhatian." },
-    { ikon: Zap, t: "Latihan Seterusnya Dipilih Automatik", d: "Anak terus dapat soalan yang sesuai dengan tahapnya sekarang." },
+    {
+      label: "1. Anak Jawab",
+      visual: (
+        <div className="mt-3 flex items-center gap-1.5">
+          {["✓", "✗", "✓", "✓", "✗"].map((tanda, i) => (
+            <span
+              key={i}
+              className="flex h-6 w-6 items-center justify-center rounded-md text-xs font-extrabold"
+              style={{
+                backgroundColor: tanda === "✓" ? `${HIJAU}1a` : `${EMAS}1a`,
+                color: tanda === "✓" ? HIJAU : "#7a5300",
+              }}
+            >
+              {tanda}
+            </span>
+          ))}
+        </div>
+      ),
+      d: "Setiap jawapan direkodkan — bukan sekadar markah akhir.",
+    },
+    {
+      label: "2. KALI Nampak Corak",
+      visual: (
+        <div className="mt-3">
+          <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">Contoh: Anak A</p>
+          <div className="mt-1.5 space-y-1.5">
+            <span className="flex items-center gap-1.5 text-sm text-foreground">
+              <span className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: HIJAU }} />
+              Tambah
+            </span>
+            <span
+              className="flex items-center gap-1.5 rounded-md px-1.5 py-1 text-sm"
+              style={{ backgroundColor: `${EMAS}1a`, color: "#7a5300" }}
+            >
+              <span className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: EMAS }} />
+              Bahagi — Perlu Diperkukuhkan
+            </span>
+          </div>
+        </div>
+      ),
+      d: "KALI kenal pasti bahagian yang masih perlu diperkukuhkan — corak yang markah sahaja tidak tunjukkan.",
+    },
+    {
+      label: "3. Latihan Seterusnya",
+      visual: (
+        <div className="mt-3">
+          <span
+            className="inline-flex items-center gap-1.5 rounded-md px-2 py-1.5 text-sm font-extrabold"
+            style={{ backgroundColor: `${EMAS}1a`, color: "#7a5300", border: `1.5px solid ${EMAS}55` }}
+          >
+            <Zap className="h-3.5 w-3.5" />
+            Latihan: Bahagi
+          </span>
+        </div>
+      ),
+      d: "Anak terus dapat latihan yang sesuai dengan tahapnya sekarang — automatik.",
+    },
   ];
+
   return (
     <section id="mekanisme" className="container mx-auto px-4 py-16">
       <div className="text-center">
-        <p className="font-display text-xs font-bold uppercase tracking-widest" style={{ color: HIJAU }}>Bagaimana Ia Berfungsi</p>
+        <p className="font-display text-xs font-bold uppercase tracking-widest" style={{ color: HIJAU }}>
+          Dari Jawapan Kepada Latihan Yang Tepat
+        </p>
         <h2 className="mt-2 font-display text-3xl font-extrabold text-foreground md:text-4xl">
           Bagaimana KALI Membantu
         </h2>
         <p className="mx-auto mt-3 max-w-2xl text-base text-muted-foreground">
-          KALI menganalisis setiap jawapan anak, mengenal pasti bahagian yang perlu diperkukuhkan, dan memilih latihan seterusnya secara automatik.
+          Ingat Anak A dan Anak B tadi? Ini macam mana KALI tahu apa yang setiap seorang sebenarnya perlukan.
         </p>
       </div>
-      <div className="mt-10 flex flex-col items-stretch gap-4 md:flex-row md:justify-center">
-        {steps.map(({ ikon: Ikon, t, d }, i) => (
-          <div key={t} className="flex w-full items-center gap-4 md:w-auto md:max-w-sm">
-            <div
-              className="flex-1 rounded-3xl bg-card p-6 shadow-soft"
-              style={{ border: `2px solid ${HIJAU}1f` }}
-            >
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl text-white" style={{ backgroundColor: HIJAU }}>
-                <Ikon className="h-6 w-6" />
-              </div>
-              <h3 className="mt-4 font-display text-lg font-extrabold text-foreground">{t}</h3>
-              <p className="mt-1 text-sm text-muted-foreground">{d}</p>
+
+      <div className="mx-auto mt-12 flex max-w-4xl flex-col items-stretch gap-2 md:flex-row md:items-start">
+        {steps.map((s, i) => (
+          <div key={s.label} className="flex flex-1 flex-col items-stretch gap-2 md:flex-row md:items-start">
+            <div className="flex-1 rounded-2xl bg-card p-5 shadow-soft" style={{ border: `2px solid ${HIJAU}1f` }}>
+              <p className="font-display text-xs font-extrabold" style={{ color: HIJAU }}>{s.label}</p>
+              {s.visual}
+              <p className="mt-3 text-sm text-muted-foreground">{s.d}</p>
             </div>
             {i < steps.length - 1 && (
-              <ChevronRight className="hidden h-6 w-6 shrink-0 text-muted-foreground md:block" />
+              <ChevronRight className="mx-auto h-6 w-6 shrink-0 rotate-90 text-muted-foreground md:mx-0 md:mt-8 md:rotate-0" />
             )}
           </div>
         ))}
