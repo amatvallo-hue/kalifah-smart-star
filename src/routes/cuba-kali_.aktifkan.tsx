@@ -175,9 +175,9 @@ function AnalisisScreen({ laporan, onTeruskan }: { laporan: LaporanPreview; onTe
           <p className="text-sm text-muted-foreground">
             {adaBocor ? (
               <>
-                ❤️ Latihan seterusnya akan bermula terus dari{" "}
-                <strong className="font-bold text-foreground">{laporan.bocor_nama}</strong> — bukan soalan
-                rawak.
+                ❤️ Latihan seterusnya akan bermula dengan{" "}
+                <strong className="font-bold text-foreground">{laporan.bocor_nama}</strong> — berdasarkan apa
+                yang {nama} perlukan, bukan soalan rawak.
               </>
             ) : (
               `❤️ KALI akan pilih latihan seterusnya berdasarkan apa yang ${nama} perlukan — bukan soalan rawak.`
