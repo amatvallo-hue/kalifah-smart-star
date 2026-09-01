@@ -16,7 +16,7 @@ import { usePoints } from "@/hooks/use-points";
 import { rekodJawapan } from "@/lib/progress";
 import { awardKaliStar, awardKaliSesiBonus } from "@/lib/tambah-mata";
 import { renderSoalanSvg } from "@/lib/render-soalan-svg";
-import { shouldSkipChildGuard, switchBackToParent } from "@/lib/child-auth";
+import { markSkipChildGuard, shouldSkipChildGuard, switchBackToParent } from "@/lib/child-auth";
 
 export const Route = createFileRoute("/kali-test/belajar-untuk-saya")({
   head: () => ({
@@ -589,6 +589,13 @@ function KaliBelajarUntukSayaPage() {
   const handleTunjukIbuBapa = async () => {
     if (search.ct) {
       if (user) {
+        // Refresh window skip-guard di sini (bukan hanya sekali di
+        // /cuba-kali-web) -- sesi kuiz 10 soalan boleh ambil 60-120+ saat,
+        // jauh melebihi SKIP_GUARD_WINDOW_MS asal. Tanpa refresh ini,
+        // signOut() di bawah trigger useAuth() -> user=null -> guard
+        // effect di atas dah luput -> navigate("/login") mendahului
+        // redirect ke /cuba-kali/aktifkan. Lihat diagnosis root cause.
+        markSkipChildGuard();
         await supabase.auth.signOut();
         const darjahParam = search.d ?? childDarjah;
         window.location.href = `/cuba-kali/aktifkan?child=${encodeURIComponent(user.id)}&token=${encodeURIComponent(search.ct)}&darjah=${encodeURIComponent(darjahParam)}`;
