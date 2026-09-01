@@ -57,8 +57,8 @@ type LaporanPreview = {
 
 const KALI_BLUE = "#3654C9";
 const KALI_BLUE_BORDER = "#D8DEF6";
-const TIER_RED = "#C85A45";
-const TIER_RED_BG = "#F5E1DB";
+const TIER_AMBER = "#C98A2E";
+const TIER_AMBER_BG = "#F3E7CE";
 const TIER_GREEN = "#2F7A50";
 const FONT_SERIF = "'Source Serif 4', Georgia, serif";
 const FONT_SANS = "'Plus Jakarta Sans', system-ui, sans-serif";
@@ -70,7 +70,6 @@ function AnalisisScreen({ laporan, onTeruskan }: { laporan: LaporanPreview; onTe
   const diperkukuh = laporan.jumlah_diperkukuh ?? null;
   const adaCounts = menguasai != null || diperkukuh != null;
   const jumlahDinilai = (menguasai ?? 0) + (diperkukuh ?? 0);
-  const nisbahMenguasai = jumlahDinilai > 0 ? (menguasai ?? 0) / jumlahDinilai : null;
 
   return (
     <PageShell>
@@ -82,7 +81,7 @@ function AnalisisScreen({ laporan, onTeruskan }: { laporan: LaporanPreview; onTe
           🧠 Analisis KALI
         </p>
 
-        {/* 1. Apa yang berlaku */}
+        {/* 1. Apa yang berlaku — context sahaja, bukan hero */}
         <h1
           className="mt-1 text-2xl font-extrabold leading-snug text-foreground md:text-[1.75rem]"
           style={{ fontFamily: FONT_SERIF }}
@@ -90,38 +89,39 @@ function AnalisisScreen({ laporan, onTeruskan }: { laporan: LaporanPreview; onTe
           KALI dah mula mengenali {nama}
         </h1>
         <p className="mt-2 text-sm text-muted-foreground" style={{ fontFamily: FONT_SANS }}>
-          {laporan.betul != null ? (
-            <>
-              <strong className="font-extrabold text-foreground">{laporan.betul} daripada 10</strong> soalan
-              pertama dijawab betul.
-            </>
-          ) : (
-            "10 soalan pertama sudah dijawab."
-          )}
+          {laporan.betul != null
+            ? `${laporan.betul} daripada 10 soalan pertama dijawab betul.`
+            : "10 soalan pertama sudah dijawab."}
         </p>
 
-        {/* 2. Apa yang KALI nampak */}
+        {/* 2. Apa yang KALI nampak — discrete chips, bukan bar berkadar */}
         {adaCounts && (
           <div className="mt-5" style={{ fontFamily: FONT_SANS }}>
             <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">
               Apa yang KALI nampak
             </p>
             {jumlahDinilai > 0 && (
-              <div className="mt-2 flex h-2.5 w-full overflow-hidden rounded-full bg-muted">
-                {menguasai != null && menguasai > 0 && (
-                  <div style={{ width: `${(nisbahMenguasai ?? 0) * 100}%`, backgroundColor: TIER_GREEN }} />
-                )}
-                {diperkukuh != null && diperkukuh > 0 && (
-                  <div
-                    style={{ width: `${(1 - (nisbahMenguasai ?? 0)) * 100}%`, backgroundColor: TIER_RED }}
+              <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
+                {Array.from({ length: menguasai ?? 0 }).map((_, i) => (
+                  <span
+                    key={`m-${i}`}
+                    className="h-3 w-3 rounded-full"
+                    style={{ backgroundColor: TIER_GREEN }}
                   />
-                )}
+                ))}
+                {Array.from({ length: diperkukuh ?? 0 }).map((_, i) => (
+                  <span
+                    key={`d-${i}`}
+                    className="h-3 w-3 rounded-full"
+                    style={{ backgroundColor: TIER_AMBER }}
+                  />
+                ))}
               </div>
             )}
             <div className="mt-2 flex flex-wrap gap-x-5 gap-y-1 text-sm font-bold">
               {menguasai != null && <span style={{ color: TIER_GREEN }}>🟢 {menguasai} sudah dikuasai</span>}
               {diperkukuh != null && (
-                <span style={{ color: TIER_RED }}>🟠 {diperkukuh} perlu diperkukuhkan</span>
+                <span style={{ color: TIER_AMBER }}>🟠 {diperkukuh} perlu diperkukuhkan</span>
               )}
             </div>
           </div>
@@ -143,11 +143,14 @@ function AnalisisScreen({ laporan, onTeruskan }: { laporan: LaporanPreview; onTe
             </div>
             <span
               className="mt-2 inline-flex rounded-full px-2.5 py-0.5 text-[11px] font-bold"
-              style={{ backgroundColor: TIER_RED_BG, color: TIER_RED }}
+              style={{ backgroundColor: TIER_AMBER_BG, color: TIER_AMBER }}
             >
               Perlu Diperkukuhkan
             </span>
-            <p className="mt-1.5 text-lg font-extrabold text-foreground" style={{ fontFamily: FONT_SERIF }}>
+            <p
+              className="mt-1.5 text-lg font-extrabold text-foreground"
+              style={{ fontFamily: FONT_SANS }}
+            >
               {laporan.bocor_nama}
             </p>
             {laporan.bocor_gejala ? (
