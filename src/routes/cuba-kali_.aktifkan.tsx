@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
-import { User, Mail, Lock } from "lucide-react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import { Mail } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { AuthShell, Field } from "./login";
 
@@ -49,7 +49,6 @@ type Phase =
   | "success"
   | "error"
   | "gagal-preview"
-  | "semak-emel"
   | "sudah-ada-akaun";
 
 type LaporanPreview = {
@@ -217,13 +216,68 @@ function AnalisisScreen({ laporan, onTeruskan }: { laporan: LaporanPreview; onTe
   );
 }
 
+// Fasa "Claim-Before-Pay, Anonymous" — pengumpul EMEL SAHAJA sebelum bayaran.
+// Reuse pattern EmailGateModal drpd /harga (harga.tsx): emel sahaja, tiada
+// Nama/Kata Laluan di sini. Nama+Kata Laluan dikumpul SELEPAS bayaran via
+// laluan lengkapkan-akaun sedia ada (bayaran.selesai.tsx -> LengkapkanAkaunCard
+// -> edge function lengkapkan-akaun), TIDAK DIUBAH langsung dalam kerja ini.
+function EmailGateKali({
+  namaAnak,
+  darjah,
+  checking,
+  err,
+  onSubmit,
+}: {
+  namaAnak: string;
+  darjah?: string;
+  checking: boolean;
+  err: string | null;
+  onSubmit: (email: string) => void;
+}) {
+  const [email, setEmail] = useState("");
+  return (
+    <AuthShell
+      title={`Aktifkan KALI untuk ${namaAnak}`}
+      subtitle={`RM49 / 1 tahun${darjah ? ` · Darjah ${darjah}` : ""}`}
+    >
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          onSubmit(email);
+        }}
+        className="space-y-4"
+      >
+        <Field
+          icon={Mail}
+          label="Email Ibu/Ayah"
+          type="email"
+          value={email}
+          onChange={setEmail}
+          placeholder="contoh@email.com"
+          autoComplete="email"
+        />
+        {err ? <p className="text-sm font-semibold text-destructive">{err}</p> : null}
+        <button
+          type="submit"
+          disabled={checking}
+          className="w-full rounded-2xl bg-primary px-5 py-3 font-display text-base font-extrabold text-primary-foreground shadow-card transition hover:opacity-90 disabled:opacity-60"
+        >
+          {checking ? "Memproses…" : "Teruskan Pembayaran RM49 →"}
+        </button>
+        <p className="text-xs leading-snug text-muted-foreground">
+          Email ini digunakan untuk resit dan akses akaun Kalifah selepas pembayaran.
+        </p>
+      </form>
+    </AuthShell>
+  );
+}
+
 function AktifkanPage() {
   const [phase, setPhase] = useState<Phase>("loading");
   const [ralat, setRalat] = useState<string | null>(null);
-  const [nama, setNama] = useState("");
   const [emel, setEmel] = useState("");
-  const [kataLaluan, setKataLaluan] = useState("");
   const [menghantar, setMenghantar] = useState(false);
+  const [emailErr, setEmailErr] = useState<string | null>(null);
   const [laporan, setLaporan] = useState<LaporanPreview | null>(null);
   const [adaSesi, setAdaSesi] = useState(false);
   const paramsRef = useRef<{ child: string; token: string; darjah: string } | null>(null);
@@ -237,8 +291,16 @@ function AktifkanPage() {
   // form -- kekalkan pengguna di sini dengan state gagal yang selamat + retry manual.
   async function muatLaporan(child: string, token: string) {
     const { data: sessionData } = await supabase.auth.getSession();
-    const punyaSesiSemasa = !!sessionData.session?.user;
-    setAdaSesi(punyaSesiSemasa);
+    const sesiUser = sessionData.session?.user ?? null;
+    // PENTING (susulan flow "Claim-Before-Pay, Anonymous"): sesi ANONYMOUS
+    // (dicipta oleh EmailGateKali di bawah) TIDAK dikira sesi "log masuk
+    // penuh" di sini. Kalau parent kembali dgn sesi anonymous lapuk (cth.
+    // tab ditutup separuh jalan sebelum bayar selesai), kita nak papar
+    // gate emel semula (bukan skip terus claim macam sesi penuh), supaya
+    // emel utk resit/checkout tetap dikumpul semula. Sesi bukan-anonymous
+    // (akaun sedia ada yang log masuk) kekal terus ke claim macam sebelum ini.
+    const punyaSesiSahAsli = !!sesiUser && sesiUser.is_anonymous !== true;
+    setAdaSesi(punyaSesiSahAsli);
 
     const cubaPreview = () =>
       supabase.rpc("kali_preview_laporan_tetamu" as never, {
@@ -267,9 +329,9 @@ function AktifkanPage() {
       // parent tekan CTA sendiri, tak kira ada sesi aktif atau tidak.
       setLaporan(lap);
       setPhase("analisis");
-    } else if (punyaSesiSemasa) {
+    } else if (punyaSesiSahAsli) {
       // RPC berjaya balas, tapi memang tiada laporan untuk ditunjuk (edge
-      // case) -- fallback ke claim terus.
+      // case) -- fallback ke claim terus (HANYA utk sesi PENUH sedia ada).
       await buatClaim();
     } else {
       setPhase("form");
@@ -311,7 +373,15 @@ function AktifkanPage() {
     void muatLaporan(p.child, p.token);
   }
 
-  async function buatClaim() {
+  // buatClaim: panggil RPC kali_claim_anak_tetamu -- TIDAK DIUBAH langsung
+  // (sama pemanggilan RPC macam sebelum ini). `onSuccess` pilihan
+  // membolehkan caller tentukan apa berlaku SELEPAS claim berjaya:
+  //  - default (tiada onSuccess): laluan LAMA -- parent yang dah log masuk
+  //    dgn akaun PENUH sedia ada -> redirect ke /harga (TIDAK DIUBAH).
+  //  - dgn onSuccess: laluan BAHARU (email-sahaja/anonymous) -> terus ke
+  //    checkout tanpa singgah /harga, supaya EmailGateModal /harga tak
+  //    tanya emel sekali lagi (emel dah dikumpul kat sini).
+  async function buatClaim(onSuccess?: () => void) {
     const p = paramsRef.current;
     if (!p) return;
     setPhase("claiming");
@@ -322,6 +392,10 @@ function AktifkanPage() {
     if (error || data !== true) {
       setRalat("Pautan tidak sah, sudah luput, atau anak ini sudah diaktifkan sebelum ini.");
       setPhase("error");
+      return;
+    }
+    if (onSuccess) {
+      onSuccess();
       return;
     }
     setPhase("success");
@@ -338,77 +412,105 @@ function AktifkanPage() {
     }
   }
 
-  async function handleDaftar(e: FormEvent) {
-    e.preventDefault();
-    const p = paramsRef.current;
-    if (!p || menghantar) return;
-    setMenghantar(true);
-    setRalat(null);
-
-    // Sama pattern dgn daftar.tsx: lookup affiliate drpd ref tersimpan,
-    // tanam affiliate_id/ref_code ke user_metadata (saluran sandaran,
-    // kekal merentas device selagi guna akaun sama -- localStorage ialah
-    // saluran utama, dah ditetapkan di useEffect atas).
-    const storedRef =
-      typeof window !== "undefined" ? sanitizeRef(window.localStorage.getItem("kalifah_ref")) : null;
-    let affiliateId: string | null = null;
-    let resolvedRefCode: string | null = null;
-    if (storedRef) {
-      const { data: aff } = await supabase
-        .from("affiliates")
-        .select("id, ref_code, custom_ref_code")
-        .or(`ref_code.ilike.${storedRef},custom_ref_code.ilike.${storedRef}`)
-        .maybeSingle();
-      if (aff) {
-        affiliateId = (aff as { id: string }).id;
-        resolvedRefCode =
-          (aff as { ref_code: string; custom_ref_code: string | null }).custom_ref_code ??
-          (aff as { ref_code: string }).ref_code;
-      }
+  // mulaCheckoutAnon: panggil /api/checkout SEDIA ADA (route TIDAK DIUBAH)
+  // terus drpd sini -- elak singgah skrin /harga supaya emel yg dah
+  // dikumpul di EmailGateKali tak ditanya sekali lagi oleh EmailGateModal
+  // /harga. Sertakan ref_code (dari localStorage "kalifah_ref", saluran
+  // sedia ada) supaya komisyen affiliate (apply_payment_unlock, TIDAK
+  // DIUBAH) tetap berfungsi -- trigger tu baca pesanan.ref_code terus,
+  // bukan profiles.affiliate_id, jadi tiada signUp/user_metadata diperlukan.
+  async function mulaCheckoutAnon(email: string, darjahRaw: string) {
+    const darjahNum = Number(darjahRaw) || 1;
+    const { data: sess } = await supabase.auth.getSession();
+    const token = sess.session?.access_token;
+    if (!token) {
+      setMenghantar(false);
+      setRalat("Sesi tidak sah. Sila cuba lagi.");
+      setPhase("error");
+      return;
     }
-
-    const redirect =
-      `${window.location.origin}/cuba-kali/aktifkan?child=${p.child}&token=${p.token}&darjah=${p.darjah}` +
-      (storedRef ? `&ref=${storedRef}` : "");
-    const { data, error } = await supabase.auth.signUp({
-      email: emel.trim(),
-      password: kataLaluan,
-      options: {
-        data: {
-          name: nama.trim(),
-          full_name: nama.trim(),
-          ...(affiliateId ? { affiliate_id: affiliateId, ref_code: resolvedRefCode } : {}),
-        },
-        emailRedirectTo: redirect,
-      },
-    });
-
-    if (error) {
-      const sudahWujud = /already registered|already exists/i.test(error.message);
-      if (sudahWujud) {
+    const refCode =
+      typeof window !== "undefined" ? sanitizeRef(window.localStorage.getItem("kalifah_ref")) : null;
+    try {
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({
+          pakej: "satu",
+          darjah: [darjahNum],
+          customer_email: email,
+          ref_code: refCode,
+        }),
+      });
+      const data = (await res.json()) as { url?: string; payment_url?: string; error?: string };
+      const paymentUrl = data.url ?? data.payment_url;
+      if (!res.ok || !paymentUrl) {
         setMenghantar(false);
-        setPhase("sudah-ada-akaun");
+        setRalat(data.error ?? "Gagal mula pembayaran. Sila cuba lagi.");
+        setPhase("error");
         return;
       }
-      setRalat(error.message);
+      window.location.assign(paymentUrl);
+    } catch (e) {
+      console.error("[cuba-kali/aktifkan] checkout anonymous gagal", e);
       setMenghantar(false);
+      setRalat("Ralat rangkaian. Sila cuba lagi.");
+      setPhase("error");
+    }
+  }
+
+  // handleEmailGateSubmit: laluan baharu "Claim-Before-Pay, Anonymous".
+  // 1) semak emel wujud via checkout_semak_emel_wujud (RPC SEDIA ADA, TIDAK
+  //    DIUBAH) -- kalau emel dah ada akaun SEBENAR, JANGAN cipta anonymous
+  //    account, arah parent log masuk (requirement #4).
+  // 2) kalau emel belum wujud: signInAnonymously() (SEDIA ADA, TIDAK DIUBAH)
+  //    -- guna sesi anonymous SEDIA ADA dulu kalau dah wujud drpd percubaan
+  //    lepas (elak cipta berbilang akaun anonymous utk 1 percubaan claim).
+  // 3) claim (kali_claim_anak_tetamu, TIDAK DIUBAH) guna auth.uid() anonymous
+  //    yang baru terbentuk -- RPC ni cuma perlukan auth.uid() bukan-null,
+  //    tiada semakan is_anonymous, jadi berfungsi tanpa perubahan (disahkan).
+  // 4) terus checkout (/api/checkout, TIDAK DIUBAH) -- redirect ToyyibPay.
+  async function handleEmailGateSubmit(emailRaw: string) {
+    const p = paramsRef.current;
+    if (!p) return;
+    const trimmed = emailRaw.trim();
+    if (!trimmed || !trimmed.includes("@")) {
+      setEmailErr("Sila masukkan emel yang sah.");
+      return;
+    }
+    setEmailErr(null);
+    setMenghantar(true);
+
+    const { data: wujud, error: semakErr } = await supabase.rpc("checkout_semak_emel_wujud", {
+      p_email: trimmed,
+    });
+    if (semakErr) {
+      setMenghantar(false);
+      setEmailErr("Ralat menyemak emel. Sila cuba lagi.");
       return;
     }
 
-    if (data.session) {
-      await buatClaim();
-      return;
-    }
+    setEmel(trimmed);
 
-    const isNewAccount = !!data.user?.identities && data.user.identities.length > 0;
-    if (!isNewAccount) {
+    if (wujud === true) {
       setMenghantar(false);
       setPhase("sudah-ada-akaun");
       return;
     }
 
-    setMenghantar(false);
-    setPhase("semak-emel");
+    const { data: sess } = await supabase.auth.getSession();
+    if (!sess.session) {
+      const { error: anonErr } = await supabase.auth.signInAnonymously();
+      if (anonErr) {
+        setMenghantar(false);
+        setEmailErr("Gagal mula sesi. Sila cuba lagi.");
+        return;
+      }
+    }
+
+    await buatClaim(() => {
+      void mulaCheckoutAnon(trimmed, p.darjah);
+    });
   }
 
   function pergiLogMasuk() {
@@ -426,29 +528,15 @@ function AktifkanPage() {
 
   if (phase === "form") {
     const namaAnak = laporan?.nama || "anak anda";
+    const darjahParam = laporan?.darjah ? String(laporan.darjah) : paramsRef.current?.darjah;
     return (
-      <AuthShell
-        title={laporan ? `Daftar untuk teruskan ${namaAnak}` : "Aktifkan Akaun KALI"}
-        subtitle={
-          laporan
-            ? `Langkah terakhir sebelum ${namaAnak} teruskan bersama KALI.`
-            : "Daftar untuk lihat analisis penuh anak anda dan teruskan dengan KALI."
-        }
-      >
-        <form onSubmit={handleDaftar} className="space-y-4">
-          <Field icon={User} label="Nama Ibu/Bapa" type="text" value={nama} onChange={setNama} placeholder="Nama penuh" autoComplete="name" />
-          <Field icon={Mail} label="Emel" type="email" value={emel} onChange={setEmel} placeholder="contoh@email.com" autoComplete="email" />
-          <Field icon={Lock} label="Kata Laluan" type="password" value={kataLaluan} onChange={setKataLaluan} placeholder="••••••••" autoComplete="new-password" />
-          {ralat ? <p className="text-sm font-semibold text-destructive">{ralat}</p> : null}
-          <button
-            type="submit"
-            disabled={menghantar}
-            className="w-full rounded-2xl bg-primary px-5 py-3 font-display text-base font-extrabold text-primary-foreground shadow-card transition hover:opacity-90 disabled:opacity-60"
-          >
-            {menghantar ? "Sedang mendaftar…" : "Daftar & Teruskan →"}
-          </button>
-        </form>
-      </AuthShell>
+      <EmailGateKali
+        namaAnak={namaAnak}
+        darjah={darjahParam}
+        checking={menghantar}
+        err={emailErr}
+        onSubmit={handleEmailGateSubmit}
+      />
     );
   }
 
@@ -517,15 +605,6 @@ function AktifkanPage() {
             >
               Log Masuk →
             </button>
-          </>
-        ) : null}
-
-        {phase === "semak-emel" ? (
-          <>
-            <h1 className="font-display text-2xl font-extrabold text-foreground">Akaun dicipta</h1>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Sila semak emel anda untuk pengesahan, kemudian buka pautan Telegram ini sekali lagi.
-            </p>
           </>
         ) : null}
       </Kad>
