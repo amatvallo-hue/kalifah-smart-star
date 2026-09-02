@@ -1,15 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   Check,
-  Target,
   Users,
   ShieldCheck,
   ChevronDown,
   ChevronRight,
   Zap,
   Send,
-  FileX,
-  AlertCircle,
 } from "lucide-react";
 import { useState } from "react";
 import { HARGA_ASAL, PAKEJ_LIST } from "@/lib/curriculum";
