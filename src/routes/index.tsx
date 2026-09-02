@@ -181,39 +181,37 @@ function Hero() {
 function PainAmplifier() {
   const cards = [
     {
-      ikon: FileX,
       tajuk: "Tuisyen Tiada Report",
       teks: "Anak pergi tuisyen 6 bulan. Bila tanya cikgu — 'Dia okay, tengah improve.' Improve kat mana? Tak tahu. Bayar RM900, dapat jawapan 4 perkataan.",
     },
     {
-      ikon: Target,
       tajuk: "Buku Latihan = Tembak Serampang",
       teks: "Beli buku latihan tebal 200 muka surat. Anak buat 50 soalan. 30 soalan tu bab yang dia dah kuat. 10 soalan bab yang dia lemah — tapi tak perasan sebab campur-campur. Masa habis, kelemahan tetap kelemahan.",
     },
     {
-      ikon: AlertCircle,
       tajuk: "Baru Tahu Lepas Exam",
       teks: "Ujian Darjah 4, anak 60%. Rupanya dia tersangkut kat 'Pecahan Tak Wajar' sejak Darjah 3. Kalau tahu awal, 10 minit sehari fokus situ je dah cukup. Tapi sekarang? Kena kejar balik 3 bulan.",
     },
   ];
-
   return (
     <section className="border-y border-border/60 bg-muted/20 py-16">
       <div className="container mx-auto px-4">
-        <div className="grid gap-4 md:grid-cols-3">
-          {cards.map(({ ikon: Ikon, tajuk, teks }) => (
-            <div
-              key={tajuk}
-              className="rounded-2xl bg-card p-6 shadow-soft"
-              style={{ border: "2px solid hsl(var(--border))" }}
-            >
-              <div className="flex items-center gap-2">
-                <Ikon className="h-5 w-5 text-muted-foreground" />
-                <h3 className="font-display text-sm font-extrabold text-foreground">{tajuk}</h3>
-              </div>
-              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">{teks}</p>
-            </div>
-          ))}
+        <div className="mx-auto max-w-2xl space-y-10 md:space-y-12">
+          <div className="max-w-xs sm:max-w-sm">
+            <h3 className="font-display text-base font-extrabold text-foreground">{cards[0].tajuk}</h3>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{cards[0].teks}</p>
+          </div>
+          <div className="max-w-sm sm:max-w-md sm:ml-6 md:ml-12">
+            <h3 className="font-display text-base font-extrabold text-foreground sm:text-lg">{cards[1].tajuk}</h3>
+            <p className="mt-2 text-sm leading-relaxed text-muted-foreground sm:text-base">{cards[1].teks}</p>
+          </div>
+          <div
+            className="max-w-md pt-6 sm:max-w-lg sm:ml-10 md:ml-20 md:max-w-xl"
+            style={{ borderTop: `1px solid ${HIJAU}1f` }}
+          >
+            <h3 className="font-display text-lg font-extrabold text-foreground sm:text-xl md:text-2xl">{cards[2].tajuk}</h3>
+            <p className="mt-2 text-base leading-relaxed text-foreground sm:text-lg">{cards[2].teks}</p>
+          </div>
         </div>
       </div>
     </section>
@@ -223,111 +221,23 @@ function PainAmplifier() {
 function Twist() {
   return (
     <section className="container mx-auto px-4 py-16">
-      <div className="mx-auto max-w-4xl">
-        <div className="text-center">
+      <div className="mx-auto grid max-w-4xl gap-8 md:grid-cols-[1.6fr_1fr] md:items-center md:gap-12">
+        <div>
           <h2 className="font-display text-2xl font-extrabold leading-snug text-foreground md:text-3xl lg:text-4xl">
             Bukan Anak Anda Tak Rajin. Bukan Ibu Bapa Tak Prihatin.
           </h2>
-        </div>
-        <div className="mx-auto mt-6 max-w-2xl space-y-4 text-center">
-          <p className="text-base text-muted-foreground md:text-lg">
+          <p className="mt-4 max-w-xl text-base text-muted-foreground md:text-lg">
             Masalahnya: tiada siapa yang betul-betul kenal kelemahan spesifik anak anda — sampai ke subtopik yang tepat.
           </p>
-          <p className="text-base text-muted-foreground md:text-lg">
-            KALI buat benda yang cikgu tuisyen tak sempat buat: analisis 857 kemahiran kecil, satu persatu, untuk anak anda seorang.
+        </div>
+        <div className="border-t pt-6 md:border-l md:border-t-0 md:pl-12 md:pt-0" style={{ borderColor: `${HIJAU}1f` }}>
+          <p className="font-display text-4xl font-extrabold sm:text-5xl" style={{ color: `${HIJAU}55` }}>857</p>
+          <p className="mt-2 text-sm text-muted-foreground sm:text-base">
+            kemahiran kecil yang KALI boleh teliti satu persatu untuk mengenal pasti bahagian yang perlu diberi perhatian.
           </p>
-        </div>
-        <div className="mt-10">
-          <KaliCardsMockup />
-        </div>
-        <div className="mt-10 flex justify-center">
-          <Link
-            to="/cuba-kali-web"
-            className="flex items-center justify-center gap-2 rounded-full px-6 py-3.5 font-display text-base font-extrabold text-white shadow-soft transition hover:-translate-y-0.5"
-            style={{ backgroundColor: HIJAU }}
-          >
-            <Zap className="h-5 w-5" /> Cuba KALI Percuma — 10 Soalan, 2 Minit
-          </Link>
         </div>
       </div>
     </section>
-  );
-}
-
-function KaliCardsMockup() {
-  return (
-    <div>
-      <div className="flex flex-col gap-4 md:flex-row md:items-stretch">
-        {/* Kad Anak A */}
-        <div
-          className="flex-1 rounded-3xl bg-card p-6 shadow-card"
-          style={{ border: `2px solid ${HIJAU}22`, backgroundColor: "#FFFBF2" }}
-        >
-          <div className="flex items-center justify-between">
-            <h3 className="font-display text-lg font-extrabold text-foreground">Anak A</h3>
-            <span
-              className="rounded-full px-2.5 py-1 font-display text-[10px] font-extrabold text-white"
-              style={{ backgroundColor: HIJAU }}
-            >
-              Matematik
-            </span>
-          </div>
-          <div className="mt-4 text-center">
-            <p className="font-display text-5xl font-extrabold" style={{ color: HIJAU }}>6/10</p>
-            <p className="mt-1 text-xs text-muted-foreground">Markah ujian terkini</p>
-          </div>
-          <div className="mt-5 rounded-2xl bg-white/60 p-4" style={{ border: `2px solid ${HIJAU}1a` }}>
-            <p className="font-display text-xs font-extrabold text-foreground">Latihan seterusnya:</p>
-            <ul className="mt-2 space-y-1.5 text-sm text-muted-foreground">
-              <li className="flex items-start gap-2">
-                <span className="mt-0.5 text-emerald-600">✓</span>
-                <span>Pecahan (ulang asas)</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="mt-0.5 text-emerald-600">✓</span>
-                <span>Masa & Waktu (pengenalan)</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        {/* Kad Anak B */}
-        <div
-          className="flex-1 rounded-3xl bg-card p-6 shadow-card"
-          style={{ border: `2px solid ${EMAS}44`, backgroundColor: "#FFFBF2" }}
-        >
-          <div className="flex items-center justify-between">
-            <h3 className="font-display text-lg font-extrabold text-foreground">Anak B</h3>
-            <span
-              className="rounded-full px-2.5 py-1 font-display text-[10px] font-extrabold text-white"
-              style={{ backgroundColor: EMAS }}
-            >
-              Bahasa Melayu
-            </span>
-          </div>
-          <div className="mt-4 text-center">
-            <p className="font-display text-5xl font-extrabold" style={{ color: EMAS }}>6/10</p>
-            <p className="mt-1 text-xs text-muted-foreground">Markah ujian terkini</p>
-          </div>
-          <div className="mt-5 rounded-2xl bg-white/60 p-4" style={{ border: `2px solid ${EMAS}1a` }}>
-            <p className="font-display text-xs font-extrabold text-foreground">Latihan seterusnya:</p>
-            <ul className="mt-2 space-y-1.5 text-sm text-muted-foreground">
-              <li className="flex items-start gap-2">
-                <span className="mt-0.5" style={{ color: EMAS }}>✓</span>
-                <span>Ayat Majmuk (Tatabahasa BM)</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="mt-0.5" style={{ color: EMAS }}>✓</span>
-                <span>Kata Adjektif (perkatan)</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-      <p className="mt-4 text-center text-xs text-muted-foreground">
-        Contoh cara KALI memilih latihan — bukan data sebenar.
-      </p>
-    </div>
   );
 }
 
