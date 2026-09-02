@@ -176,7 +176,7 @@ function Hero() {
               🧪 Cuba KALI Percuma
             </Link>
           </div>
-          <div className="mt-4 flex items-center justify-center gap-4 text-xs text-muted-foreground">
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-1.5 text-xs text-muted-foreground">
             <span className="inline-flex items-center gap-1">
               <ShieldCheck className="h-4 w-4" style={{ color: HIJAU }} /> Selamat & sesuai untuk kanak-kanak
             </span>
@@ -390,11 +390,11 @@ function Mekanisme() {
     {
       label: "1. Anak Jawab",
       visual: (
-        <div className="mt-3 flex items-center gap-1.5">
+        <div className="mt-2 flex items-center gap-1.5 md:mt-3">
           {["✓", "✗", "✓", "✓", "✗"].map((tanda, i) => (
             <span
               key={i}
-              className="flex h-6 w-6 items-center justify-center rounded-md text-xs font-extrabold"
+              className="flex h-5 w-5 items-center justify-center rounded-md text-xs font-extrabold md:h-6 md:w-6"
               style={{
                 backgroundColor: tanda === "✓" ? `${HIJAU}1a` : `${EMAS}1a`,
                 color: tanda === "✓" ? HIJAU : "#7a5300",
@@ -410,7 +410,7 @@ function Mekanisme() {
     {
       label: "2. KALI Nampak Corak",
       visual: (
-        <div className="mt-3">
+        <div className="mt-2 md:mt-3">
           <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">Contoh: Anak A</p>
           <div className="mt-1.5 space-y-1.5">
             <span className="flex items-center gap-1.5 text-sm text-foreground">
@@ -432,7 +432,7 @@ function Mekanisme() {
     {
       label: "3. Latihan Seterusnya",
       visual: (
-        <div className="mt-3">
+        <div className="mt-2 md:mt-3">
           <span
             className="inline-flex items-center gap-1.5 rounded-md px-2 py-1.5 text-sm font-extrabold"
             style={{ backgroundColor: `${EMAS}1a`, color: "#7a5300", border: `1.5px solid ${EMAS}55` }}
@@ -460,16 +460,16 @@ function Mekanisme() {
         </p>
       </div>
 
-      <div className="mx-auto mt-12 flex max-w-4xl flex-col items-stretch gap-2 md:flex-row md:items-start">
+      <div className="mx-auto mt-8 flex max-w-4xl flex-col items-stretch gap-2 md:mt-12 md:flex-row md:items-start">
         {steps.map((s, i) => (
           <div key={s.label} className="flex flex-1 flex-col items-stretch gap-2 md:flex-row md:items-start">
-            <div className="flex-1 rounded-2xl bg-card p-5 shadow-soft" style={{ border: `2px solid ${HIJAU}1f` }}>
+            <div className="flex-1 rounded-2xl bg-card p-4 shadow-soft md:p-5" style={{ border: `2px solid ${HIJAU}1f` }}>
               <p className="font-display text-xs font-extrabold" style={{ color: HIJAU }}>{s.label}</p>
               {s.visual}
-              <p className="mt-3 text-sm text-muted-foreground">{s.d}</p>
+              <p className="mt-2 text-sm text-muted-foreground md:mt-3">{s.d}</p>
             </div>
             {i < steps.length - 1 && (
-              <ChevronRight className="mx-auto h-6 w-6 shrink-0 rotate-90 text-muted-foreground md:mx-0 md:mt-8 md:rotate-0" />
+              <ChevronRight className="mx-auto h-5 w-5 shrink-0 rotate-90 text-muted-foreground md:mx-0 md:mt-8 md:h-6 md:w-6 md:rotate-0" />
             )}
           </div>
         ))}
