@@ -45,7 +45,6 @@ function LandingPage() {
       <Ciri />
       <LiputanKurikulum />
       <Harga />
-      <Testimoni />
       <Faq />
       <Footer />
     </div>
@@ -495,7 +494,7 @@ function Harga() {
           return (
             <div
               key={p.id}
-              className={`relative rounded-[2rem] bg-card p-7 shadow-card transition ${popular ? "scale-[1.02] md:scale-105" : ""}`}
+              className={`relative rounded-[2rem] bg-card p-7 shadow-card transition ${popular ? "order-first scale-[1.02] md:order-none md:scale-105" : ""}`}
               style={{
                 border: popular ? `3px solid ${EMAS}` : `2px solid ${HIJAU}22`,
               }}
@@ -510,7 +509,7 @@ function Harga() {
               )}
               <h3 className="font-display text-xl font-extrabold text-foreground">{p.nama}</h3>
               <span className="mt-2 inline-block rounded-full bg-amber-100 px-2 py-0.5 text-xs font-bold text-amber-700">
-                Harga Beta
+                Harga Pengenalan
               </span>
               <div className="mt-3">
                 <p className="text-sm text-muted-foreground line-through">
@@ -530,9 +529,9 @@ function Harga() {
               </div>
               <p className="mt-3 text-sm text-muted-foreground">{p.deskripsi}</p>
               <ul className="mt-5 space-y-2 text-sm text-foreground">
-                <li className="flex gap-2"><Check className="h-4 w-4 shrink-0" style={{ color: HIJAU }} /> Akses penuh nota, latih tubi, kuiz, game</li>
-                <li className="flex gap-2"><Check className="h-4 w-4 shrink-0" style={{ color: HIJAU }} /> Dashboard ibu bapa</li>
-                <li className="flex gap-2"><Check className="h-4 w-4 shrink-0" style={{ color: HIJAU }} /> Sijil automatik</li>
+                <li className="flex gap-2"><Check className="h-4 w-4 shrink-0" style={{ color: HIJAU }} /> Akses penuh nota, latih tubi, kuiz & game</li>
+                <li className="flex gap-2"><Check className="h-4 w-4 shrink-0" style={{ color: HIJAU }} /> Ibu bapa boleh lihat perkembangan anak</li>
+                <li className="flex gap-2"><Check className="h-4 w-4 shrink-0" style={{ color: HIJAU }} /> Sijil cemerlang automatik bila skor kuiz penuh</li>
                 {p.id === "bundle" && <li className="flex gap-2"><Check className="h-4 w-4 shrink-0" style={{ color: HIJAU }} /> Untuk semua anak (D1–D6)</li>}
               </ul>
               <div className="mt-6 flex flex-col items-center">
@@ -547,7 +546,7 @@ function Harga() {
                 >
                   Pilih Pakej Ini
                 </Link>
-                <p className="mt-1 text-sm text-muted-foreground">Daftar percuma — pilih darjah &amp; bayar selepas daftar</p>
+                <p className="mt-1 text-sm font-semibold text-foreground">Daftar percuma — pilih darjah & bayar selepas daftar</p>
               </div>
             </div>
           );
@@ -634,23 +633,27 @@ function Faq() {
         <p className="font-display text-xs font-bold uppercase tracking-widest" style={{ color: HIJAU }}>FAQ</p>
         <h2 className="mt-2 font-display text-3xl font-extrabold text-foreground md:text-4xl">Soalan Lazim</h2>
       </div>
-      <div className="mt-8 space-y-3">
+      <div className="mx-auto mt-10 max-w-2xl">
         {items.map((it, i) => (
-          <FaqItem key={i} q={it.q} a={it.a} />
+          <FaqItem key={i} q={it.q} a={it.a} isFirst={i === 0} />
         ))}
       </div>
     </section>
   );
 }
-function FaqItem({ q, a }: { q: string; a: string }) {
+function FaqItem({ q, a, isFirst }: { q: string; a: string; isFirst?: boolean }) {
   const [open, setOpen] = useState(false);
   return (
-    <div className="rounded-2xl bg-card p-5 shadow-soft" style={{ border: `2px solid ${HIJAU}1f` }}>
+    <div className="py-5" style={{ borderTop: isFirst ? "none" : `1px solid ${HIJAU}1f` }}>
       <button onClick={() => setOpen((v) => !v)} className="flex w-full items-center justify-between gap-4 text-left">
         <span className="font-display text-sm font-extrabold text-foreground md:text-base">{q}</span>
         <ChevronDown className={`h-5 w-5 shrink-0 transition ${open ? "rotate-180" : ""}`} style={{ color: HIJAU }} />
       </button>
-      {open && <p className="mt-3 text-sm text-muted-foreground">{a}</p>}
+      {open && (
+        <p className="mt-3 pl-4 text-sm text-muted-foreground" style={{ borderLeft: `2px solid ${HIJAU}` }}>
+          {a}
+        </p>
+      )}
     </div>
   );
 }
