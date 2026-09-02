@@ -1,23 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
-  Star,
   Check,
-  PenLine,
-  Languages,
-  Calculator,
-  Award,
   Target,
-  BookOpen,
   Users,
   ShieldCheck,
   ChevronDown,
   ChevronRight,
-  Globe,
   Zap,
   Send,
   FileX,
   AlertCircle,
-  Landmark,
 } from "lucide-react";
 import { useState } from "react";
 import { HARGA_ASAL, PAKEJ_LIST } from "@/lib/curriculum";
@@ -54,8 +46,7 @@ function LandingPage() {
       <Twist />
       <Mekanisme />
       <Ciri />
-      <UntukSiapa />
-      <Subjek />
+      <LiputanKurikulum />
       <Harga />
       <Testimoni />
       <Faq />
@@ -479,30 +470,50 @@ function Mekanisme() {
 }
 
 function Ciri() {
-
-  const items = [
-    { ikon: Target, t: "Kenal Subjek & Topik Lemah", d: "Sistem auto-kesan subjek DAN topik spesifik yang anak perlukan perhatian lebih — bukan setakat subjek, sampai ke topik/subtopik." },
-    { ikon: Zap, t: "Latih Tubi", d: "Merangkumi semua subtopik bagi setiap subjek, lebih 10,000+ soalan latih tubi." },
-    { ikon: Award, t: "Kuiz", d: "Topik kuiz disusun mengikut standard kurikulum KSSR. Anak dapat sijil cemerlang bila skor penuh!" },
-    { ikon: BookOpen, t: "Nota Ringkas", d: "Nota disusun mengikut topik, termasuk formula matematik yang disediakan untuk rujukan pantas." },
-    { ikon: Star, t: "Ganjaran & Mata", d: "Anak kumpul mata setiap kali jawab soalan betul — sistem reward untuk galakan berterusan." },
+  const temas = [
+    {
+      no: "01",
+      t: "Faham Dulu",
+      d: "Nota ringkas disusun ikut topik — termasuk formula matematik untuk rujukan pantas semasa buat latihan.",
+    },
+    {
+      no: "02",
+      t: "Berlatih Dengan Cara Berbeza",
+      d: "Latih tubi merentasi semua subtopik dengan lebih 13,000 soalan tersedia, ditambah kuiz ikut standard kurikulum KSSR — supaya anak tak bosan ulang benda yang sama.",
+    },
+    {
+      no: "03",
+      t: "Kekal Bermotivasi",
+      d: "Anak kumpul mata setiap jawapan betul, dan dapat sijil cemerlang automatik bila skor kuiz penuh.",
+    },
   ];
   return (
     <section id="ciri" className="container mx-auto px-4 py-16">
-      <div className="text-center">
-        <p className="font-display text-xs font-bold uppercase tracking-widest" style={{ color: HIJAU }}>Ciri-Ciri</p>
-        <h2 className="mt-2 font-display text-3xl font-extrabold text-foreground md:text-4xl">
-          Semua yang anda perlu untuk bantu anak cemerlang
+      <div className="max-w-2xl">
+        <h2 className="font-display text-3xl font-extrabold text-foreground md:text-4xl">
+          Anak Bukan Hanya Jawab Soalan.
         </h2>
+        <p className="mt-3 text-base text-muted-foreground md:text-lg">
+          Selepas KALI kenal pasti bahagian yang perlu diberi perhatian, ini bagaimana anak belajar setiap hari.
+        </p>
       </div>
-      <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {items.map(({ ikon: Ikon, t, d }) => (
-          <div key={t} className="rounded-3xl bg-card p-6 shadow-soft transition hover:-translate-y-1" style={{ border: `2px solid ${HIJAU}1f` }}>
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl text-white" style={{ backgroundColor: HIJAU }}>
-              <Ikon className="h-6 w-6" />
+      <div className="mx-auto mt-10 max-w-3xl">
+        {temas.map((tema, i) => (
+          <div
+            key={tema.no}
+            className="flex gap-5 py-6 sm:gap-8"
+            style={{ borderTop: i === 0 ? "none" : `1px solid ${HIJAU}1f` }}
+          >
+            <span
+              className="shrink-0 font-display text-3xl font-extrabold sm:text-4xl"
+              style={{ color: `${HIJAU}55` }}
+            >
+              {tema.no}
+            </span>
+            <div>
+              <h3 className="font-display text-lg font-extrabold text-foreground sm:text-xl">{tema.t}</h3>
+              <p className="mt-1.5 text-sm text-muted-foreground sm:text-base">{tema.d}</p>
             </div>
-            <h3 className="mt-4 font-display text-lg font-extrabold text-foreground">{t}</h3>
-            <p className="mt-1 text-sm text-muted-foreground">{d}</p>
           </div>
         ))}
       </div>
@@ -510,91 +521,51 @@ function Ciri() {
   );
 }
 
-function UntukSiapa() {
-  const darjahs = [
-    { d: "1", warna: "#F4C542", hoverBg: "hover:bg-[#F4C542]/10" },
-    { d: "2", warna: "#F28C28", hoverBg: "hover:bg-[#F28C28]/10" },
-    { d: "3", warna: "#2E9F5B", hoverBg: "hover:bg-[#2E9F5B]/10" },
-    { d: "4", warna: "#3B82F6", hoverBg: "hover:bg-[#3B82F6]/10" },
-    { d: "5", warna: "#8B5CF6", hoverBg: "hover:bg-[#8B5CF6]/10" },
-    { d: "6", warna: "#EF4444", hoverBg: "hover:bg-[#EF4444]/10" },
+function LiputanKurikulum() {
+  const darjahList = ["1", "2", "3", "4", "5", "6"];
+  const subjekList = [
+    "Bahasa Melayu",
+    "Bahasa Inggeris",
+    "Matematik",
+    "Sains",
+    "Pendidikan Islam",
+    "Sejarah*",
   ];
   return (
-    <section className="bg-muted/30 py-16">
+    <section className="bg-muted/20 py-16">
       <div className="container mx-auto px-4">
-        <div className="text-center">
-          <p className="font-display text-xs font-bold uppercase tracking-widest" style={{ color: EMAS }}>
-            Untuk Siapa
-          </p>
-          <h2 className="mt-2 font-display text-3xl font-extrabold text-foreground md:text-4xl">
-            Kalifah.my untuk siapa?
-          </h2>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Sesuai untuk pelajar sekolah rendah, Darjah 1 hingga 6
+        <div className="mx-auto max-w-2xl text-center">
+          <p className="text-base text-muted-foreground md:text-lg">
+            Untuk Darjah 1 hingga 6, dengan sehingga 6 subjek mengikut darjah.
           </p>
         </div>
-        <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
-          {darjahs.map(({ d, warna, hoverBg }) => (
-            <div
-              key={d}
-              className={`flex flex-col items-center justify-center gap-2 rounded-3xl border-2 bg-card p-6 shadow-soft transition hover:-translate-y-1 ${hoverBg}`}
-              style={{ borderColor: warna }}
-            >
+
+        <div className="mx-auto mt-8 flex max-w-xl flex-wrap items-center justify-center gap-2">
+          {darjahList.map((d, i) => (
+            <div key={d} className="flex items-center gap-2">
               <span
-                className="font-display text-4xl font-extrabold"
-                style={{ color: warna }}
+                className="flex h-9 w-9 items-center justify-center rounded-full font-display text-sm font-extrabold"
+                style={{ backgroundColor: `${HIJAU}14`, color: HIJAU }}
               >
                 {d}
               </span>
-              <span className="font-display text-sm font-extrabold text-foreground">
-                Darjah {d}
-              </span>
+              {i < darjahList.length - 1 && (
+                <span className="h-px w-4 sm:w-6" style={{ backgroundColor: `${HIJAU}33` }} />
+              )}
             </div>
           ))}
         </div>
-      </div>
-    </section>
-  );
-}
 
-function Subjek() {
-  const items = [
-    { ikon: PenLine, t: "Bahasa Melayu", warna: "#EF4444" },
-    { ikon: Calculator, t: "Matematik", warna: "#3B82F6" },
-    { ikon: Languages, t: "Bahasa Inggeris", warna: "#8B5CF6" },
-    { ikon: Globe, t: "Sains", warna: "#22C55E" },
-    { ikon: BookOpen, t: "Pendidikan Islam", warna: "#D97706" },
-    { ikon: Landmark, t: "Sejarah", warna: "#8B3A3A" },
-  ];
-  return (
-    <section id="subjek" className="py-16">
-      <div className="container mx-auto px-4">
-        <div className="text-center">
-          <p className="font-display text-xs font-bold uppercase tracking-widest" style={{ color: EMAS }}>
-            Subjek Utama
+        <div className="mx-auto mt-8 max-w-2xl pt-6 text-center" style={{ borderTop: `1px solid ${HIJAU}1f` }}>
+          <p className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1.5 text-sm font-semibold text-foreground sm:text-base">
+            {subjekList.map((s, i) => (
+              <span key={s} className="inline-flex items-center gap-2">
+                {s}
+                {i < subjekList.length - 1 && <span className="text-muted-foreground">·</span>}
+              </span>
+            ))}
           </p>
-          <h2 className="mt-2 font-display text-3xl font-extrabold text-foreground md:text-4xl">
-            Fokus pada 6 subjek utama
-          </h2>
-        </div>
-        <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-3">
-          {items.map(({ ikon: Ikon, t, warna }) => (
-            <div
-              key={t}
-              className="flex flex-col items-center justify-center gap-4 rounded-3xl border bg-card p-6 shadow-soft transition hover:-translate-y-1"
-              style={{ border: `2px solid ${EMAS}22` }}
-            >
-              <div
-                className="flex h-14 w-14 items-center justify-center rounded-2xl text-white"
-                style={{ backgroundColor: warna }}
-              >
-                <Ikon className="h-7 w-7" />
-              </div>
-              <h3 className="text-center font-display text-base font-extrabold text-foreground">
-                {t}
-              </h3>
-            </div>
-          ))}
+          <p className="mt-2 text-xs text-muted-foreground">*Sejarah tersedia bermula Darjah 4.</p>
         </div>
       </div>
     </section>
