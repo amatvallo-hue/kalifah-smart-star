@@ -532,7 +532,7 @@ function LiputanKurikulum() {
     "Sejarah*",
   ];
   return (
-    <section className="bg-muted/20 py-16">
+    <section id="subjek" className="bg-muted/20 py-16">
       <div className="container mx-auto px-4">
         <div className="mx-auto max-w-2xl text-center">
           <p className="text-base text-muted-foreground md:text-lg">
