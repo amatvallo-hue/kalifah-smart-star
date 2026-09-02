@@ -1240,7 +1240,7 @@ function ParentDashboard() {
                     </Seksyen>
 
                     {/* AKTIVITI TERKINI (ringkas — 3 terbaru) */}
-                    <Seksyen tajuk="Aktiviti Terkini" ikon={<BookOpen className="h-5 w-5" />}>
+                    <Seksyen tajuk="3 Aktiviti Terkini" ikon={<BookOpen className="h-5 w-5" />}>
                       {progress.length === 0 ? (
                         <div className="rounded-2xl bg-card p-5 text-center shadow-soft">
                           <p className="text-sm text-muted-foreground">Belum ada aktiviti direkodkan.</p>
@@ -2447,7 +2447,7 @@ function KaliInsightCard({
           <button
             type="button"
             onClick={salinArahanKali}
-            className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-brand-butter px-3.5 py-1.5 text-xs font-extrabold text-brand-butter-foreground shadow-soft transition hover:opacity-90"
+            className="mt-2 inline-flex w-full items-center justify-center gap-1.5 rounded-full bg-brand-butter px-3.5 py-1.5 text-xs font-extrabold text-brand-butter-foreground shadow-soft transition hover:opacity-90 sm:w-auto"
           >
             <Copy className="h-3.5 w-3.5" />
             {copied ? "Disalin!" : "Salin Arahan untuk Anak"}
