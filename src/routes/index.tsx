@@ -470,30 +470,50 @@ function Mekanisme() {
 }
 
 function Ciri() {
-
-  const items = [
-    { ikon: Target, t: "Kenal Subjek & Topik Lemah", d: "Sistem auto-kesan subjek DAN topik spesifik yang anak perlukan perhatian lebih — bukan setakat subjek, sampai ke topik/subtopik." },
-    { ikon: Zap, t: "Latih Tubi", d: "Merangkumi semua subtopik bagi setiap subjek, lebih 10,000+ soalan latih tubi." },
-    { ikon: Award, t: "Kuiz", d: "Topik kuiz disusun mengikut standard kurikulum KSSR. Anak dapat sijil cemerlang bila skor penuh!" },
-    { ikon: BookOpen, t: "Nota Ringkas", d: "Nota disusun mengikut topik, termasuk formula matematik yang disediakan untuk rujukan pantas." },
-    { ikon: Star, t: "Ganjaran & Mata", d: "Anak kumpul mata setiap kali jawab soalan betul — sistem reward untuk galakan berterusan." },
+  const temas = [
+    {
+      no: "01",
+      t: "Faham Dulu",
+      d: "Nota ringkas disusun ikut topik — termasuk formula matematik untuk rujukan pantas semasa buat latihan.",
+    },
+    {
+      no: "02",
+      t: "Berlatih Dengan Cara Berbeza",
+      d: "Latih tubi merentasi semua subtopik dengan lebih 13,000 soalan tersedia, ditambah kuiz ikut standard kurikulum KSSR — supaya anak tak bosan ulang benda yang sama.",
+    },
+    {
+      no: "03",
+      t: "Kekal Bermotivasi",
+      d: "Anak kumpul mata setiap jawapan betul, dan dapat sijil cemerlang automatik bila skor kuiz penuh.",
+    },
   ];
   return (
     <section id="ciri" className="container mx-auto px-4 py-16">
-      <div className="text-center">
-        <p className="font-display text-xs font-bold uppercase tracking-widest" style={{ color: HIJAU }}>Ciri-Ciri</p>
-        <h2 className="mt-2 font-display text-3xl font-extrabold text-foreground md:text-4xl">
-          Semua yang anda perlu untuk bantu anak cemerlang
+      <div className="max-w-2xl">
+        <h2 className="font-display text-3xl font-extrabold text-foreground md:text-4xl">
+          Anak Bukan Hanya Jawab Soalan.
         </h2>
+        <p className="mt-3 text-base text-muted-foreground md:text-lg">
+          Selepas KALI kenal pasti bahagian yang perlu diberi perhatian, ini bagaimana anak belajar setiap hari.
+        </p>
       </div>
-      <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {items.map(({ ikon: Ikon, t, d }) => (
-          <div key={t} className="rounded-3xl bg-card p-6 shadow-soft transition hover:-translate-y-1" style={{ border: `2px solid ${HIJAU}1f` }}>
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl text-white" style={{ backgroundColor: HIJAU }}>
-              <Ikon className="h-6 w-6" />
+      <div className="mx-auto mt-10 max-w-3xl">
+        {temas.map((tema, i) => (
+          <div
+            key={tema.no}
+            className="flex gap-5 py-6 sm:gap-8"
+            style={{ borderTop: i === 0 ? "none" : `1px solid ${HIJAU}1f` }}
+          >
+            <span
+              className="shrink-0 font-display text-3xl font-extrabold sm:text-4xl"
+              style={{ color: `${HIJAU}55` }}
+            >
+              {tema.no}
+            </span>
+            <div>
+              <h3 className="font-display text-lg font-extrabold text-foreground sm:text-xl">{tema.t}</h3>
+              <p className="mt-1.5 text-sm text-muted-foreground sm:text-base">{tema.d}</p>
             </div>
-            <h3 className="mt-4 font-display text-lg font-extrabold text-foreground">{t}</h3>
-            <p className="mt-1 text-sm text-muted-foreground">{d}</p>
           </div>
         ))}
       </div>
