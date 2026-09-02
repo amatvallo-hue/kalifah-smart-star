@@ -1,23 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
-  Star,
   Check,
-  PenLine,
-  Languages,
-  Calculator,
-  Award,
   Target,
-  BookOpen,
   Users,
   ShieldCheck,
   ChevronDown,
   ChevronRight,
-  Globe,
   Zap,
   Send,
   FileX,
   AlertCircle,
-  Landmark,
 } from "lucide-react";
 import { useState } from "react";
 import { HARGA_ASAL, PAKEJ_LIST } from "@/lib/curriculum";
