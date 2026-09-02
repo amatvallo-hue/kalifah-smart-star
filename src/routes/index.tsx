@@ -46,8 +46,7 @@ function LandingPage() {
       <Twist />
       <Mekanisme />
       <Ciri />
-      <UntukSiapa />
-      <Subjek />
+      <LiputanKurikulum />
       <Harga />
       <Testimoni />
       <Faq />
