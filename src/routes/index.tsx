@@ -344,7 +344,7 @@ function Mekanisme() {
   ];
 
   return (
-    <section id="mekanisme" className="container mx-auto px-4 py-16">
+    <section id="mekanisme" className="bg-muted/15 container mx-auto px-4 py-16">
       <div className="text-center">
         <p className="font-display text-xs font-bold uppercase tracking-widest" style={{ color: HIJAU }}>
           Dari Jawapan Kepada Latihan Yang Tepat
@@ -628,7 +628,7 @@ function Faq() {
     },
   ];
   return (
-    <section id="faq" className="container mx-auto max-w-3xl px-4 py-16">
+    <section id="faq" className="border-t border-border/60 container mx-auto max-w-3xl px-4 py-16">
       <div className="text-center">
         <p className="font-display text-xs font-bold uppercase tracking-widest" style={{ color: HIJAU }}>FAQ</p>
         <h2 className="mt-2 font-display text-3xl font-extrabold text-foreground md:text-4xl">Soalan Lazim</h2>
