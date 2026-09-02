@@ -230,9 +230,9 @@ function Twist() {
           </p>
         </div>
         <div className="border-t pt-6 md:border-l md:border-t-0 md:pl-12 md:pt-0" style={{ borderColor: `${HIJAU}1f` }}>
-          <p className="font-display text-4xl font-extrabold sm:text-5xl" style={{ color: `${HIJAU}55` }}>857</p>
+          <p className="font-display text-lg font-extrabold text-foreground sm:text-xl">Sampai ke kemahiran yang spesifik</p>
           <p className="mt-2 text-sm text-muted-foreground sm:text-base">
-            kemahiran kecil yang KALI boleh teliti satu persatu untuk mengenal pasti bahagian yang perlu diberi perhatian.
+            KALI teliti corak jawapan anak untuk mengenal pasti bahagian yang benar-benar perlu diberi perhatian.
           </p>
         </div>
       </div>
@@ -385,12 +385,12 @@ function Ciri() {
     {
       no: "02",
       t: "Berlatih Dengan Cara Berbeza",
-      d: "Latih tubi merentasi semua subtopik dengan lebih 13,000 soalan tersedia, ditambah kuiz ikut standard kurikulum KSSR — supaya anak tak bosan ulang benda yang sama.",
+      d: "Latih tubi merentasi pelbagai subtopik, ditambah kuiz ikut standard kurikulum KSSR — supaya anak tak bosan ulang benda yang sama.",
     },
     {
       no: "03",
       t: "Kekal Bermotivasi",
-      d: "Anak kumpul mata setiap jawapan betul, dan dapat sijil cemerlang automatik bila skor kuiz penuh.",
+      d: "Anak kumpul star bagi setiap jawapan betul, kemudian boleh tebus hadiah sebagai ganjaran untuk terus bersemangat belajar. Bila skor kuiz penuh, sijil cemerlang dijana secara automatik.",
     },
   ];
   return (
