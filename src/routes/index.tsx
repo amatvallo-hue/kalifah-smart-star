@@ -676,6 +676,8 @@ function Footer() {
             <li><a href="#ciri" className="text-muted-foreground hover:text-foreground">Ciri-Ciri</a></li>
             <li><a href="#harga" className="text-muted-foreground hover:text-foreground">Harga</a></li>
             <li><a href="#faq" className="text-muted-foreground hover:text-foreground">FAQ</a></li>
+            <li><Link to="/blog" className="text-muted-foreground hover:text-foreground">Blog</Link></li>
+
             <li><Link to="/login" className="text-muted-foreground hover:text-foreground">Log Masuk</Link></li>
             <li><Link to="/daftar" search={{ ref: undefined }} className="text-muted-foreground hover:text-foreground">Daftar</Link></li>
           </ul>

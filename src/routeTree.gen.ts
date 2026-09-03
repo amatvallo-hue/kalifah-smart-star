@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminRouteImport } from './routes/admin'
+import { Route as BlogRouteImport } from './routes/blog'
 import { Route as CikguAffiliateRouteImport } from './routes/cikgu-affiliate'
 import { Route as CubaKaliRouteImport } from './routes/cuba-kali'
 import { Route as CubaKaliWebRouteImport } from './routes/cuba-kali-web'
@@ -25,9 +26,12 @@ import { Route as LupaPasswordRouteImport } from './routes/lupa-password'
 import { Route as PilihDarjahRouteImport } from './routes/pilih-darjah'
 import { Route as PraKalifahRouteImport } from './routes/pra-kalifah'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as ShopRouteImport } from './routes/shop'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as UjianPercumaRouteImport } from './routes/ujian-percuma'
 import { Route as AdminAffiliatesRouteImport } from './routes/admin_.affiliates'
+import { Route as AdminBlogRouteImport } from './routes/admin_.blog'
 import { Route as AdminChallengeRouteImport } from './routes/admin_.challenge'
 import { Route as AdminFunnelRouteImport } from './routes/admin_.funnel'
 import { Route as AdminFunnelKaliRouteImport } from './routes/admin_.funnel-kali'
@@ -44,6 +48,7 @@ import { Route as ApiDebugEnvRouteImport } from './routes/api.debug-env'
 import { Route as ApiShopCheckoutRouteImport } from './routes/api.shop-checkout'
 import { Route as ApiTemporaryUnlockRouteImport } from './routes/api.temporary-unlock'
 import { Route as BayaranSelesaiRouteImport } from './routes/bayaran.selesai'
+import { Route as BlogSlugRouteImport } from './routes/blog_.$slug'
 import { Route as CubaKaliAktifkanRouteImport } from './routes/cuba-kali_.aktifkan'
 import { Route as CubaKaliDemoRouteImport } from './routes/cuba-kali_.demo'
 import { Route as DarjahDarjahIdRouteImport } from './routes/darjah.$darjahId'
@@ -88,6 +93,11 @@ const IndexRoute = IndexRouteImport.update({
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogRoute = BlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CikguAffiliateRoute = CikguAffiliateRouteImport.update({
@@ -160,9 +170,19 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
   path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
+  id: '/robots.txt',
+  path: '/robots.txt',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ShopRoute = ShopRouteImport.update({
   id: '/shop',
   path: '/shop',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const UjianPercumaRoute = UjianPercumaRouteImport.update({
@@ -173,6 +193,11 @@ const UjianPercumaRoute = UjianPercumaRouteImport.update({
 const AdminAffiliatesRoute = AdminAffiliatesRouteImport.update({
   id: '/admin_/affiliates',
   path: '/admin/affiliates',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminBlogRoute = AdminBlogRouteImport.update({
+  id: '/admin_/blog',
+  path: '/admin/blog',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminChallengeRoute = AdminChallengeRouteImport.update({
@@ -253,6 +278,11 @@ const ApiTemporaryUnlockRoute = ApiTemporaryUnlockRouteImport.update({
 const BayaranSelesaiRoute = BayaranSelesaiRouteImport.update({
   id: '/bayaran/selesai',
   path: '/bayaran/selesai',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/blog_/$slug',
+  path: '/blog/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CubaKaliAktifkanRoute = CubaKaliAktifkanRouteImport.update({
@@ -454,6 +484,7 @@ const DarjahDarjahIdPercubaanMpt4SubjekIdSetIdKeputusanRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/blog': typeof BlogRoute
   '/cikgu-affiliate': typeof CikguAffiliateRoute
   '/cuba-kali': typeof CubaKaliRoute
   '/cuba-kali-web': typeof CubaKaliWebRoute
@@ -468,9 +499,12 @@ export interface FileRoutesByFullPath {
   '/pilih-darjah': typeof PilihDarjahRoute
   '/pra-kalifah': typeof PraKalifahRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/shop': typeof ShopRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/ujian-percuma': typeof UjianPercumaRoute
   '/admin/affiliates': typeof AdminAffiliatesRoute
+  '/admin/blog': typeof AdminBlogRoute
   '/admin/challenge': typeof AdminChallengeRoute
   '/admin/funnel': typeof AdminFunnelRoute
   '/admin/funnel-kali': typeof AdminFunnelKaliRoute
@@ -487,6 +521,7 @@ export interface FileRoutesByFullPath {
   '/api/shop-checkout': typeof ApiShopCheckoutRoute
   '/api/temporary-unlock': typeof ApiTemporaryUnlockRoute
   '/bayaran/selesai': typeof BayaranSelesaiRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/cuba-kali/aktifkan': typeof CubaKaliAktifkanRoute
   '/cuba-kali/demo': typeof CubaKaliDemoRoute
   '/darjah/$darjahId': typeof DarjahDarjahIdRoute
@@ -526,6 +561,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/blog': typeof BlogRoute
   '/cikgu-affiliate': typeof CikguAffiliateRoute
   '/cuba-kali': typeof CubaKaliRoute
   '/cuba-kali-web': typeof CubaKaliWebRoute
@@ -540,9 +576,12 @@ export interface FileRoutesByTo {
   '/pilih-darjah': typeof PilihDarjahRoute
   '/pra-kalifah': typeof PraKalifahRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/shop': typeof ShopRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/ujian-percuma': typeof UjianPercumaRoute
   '/admin/affiliates': typeof AdminAffiliatesRoute
+  '/admin/blog': typeof AdminBlogRoute
   '/admin/challenge': typeof AdminChallengeRoute
   '/admin/funnel': typeof AdminFunnelRoute
   '/admin/funnel-kali': typeof AdminFunnelKaliRoute
@@ -559,6 +598,7 @@ export interface FileRoutesByTo {
   '/api/shop-checkout': typeof ApiShopCheckoutRoute
   '/api/temporary-unlock': typeof ApiTemporaryUnlockRoute
   '/bayaran/selesai': typeof BayaranSelesaiRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/cuba-kali/aktifkan': typeof CubaKaliAktifkanRoute
   '/cuba-kali/demo': typeof CubaKaliDemoRoute
   '/darjah/$darjahId': typeof DarjahDarjahIdRoute
@@ -599,6 +639,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/blog': typeof BlogRoute
   '/cikgu-affiliate': typeof CikguAffiliateRoute
   '/cuba-kali': typeof CubaKaliRoute
   '/cuba-kali-web': typeof CubaKaliWebRoute
@@ -613,9 +654,12 @@ export interface FileRoutesById {
   '/pilih-darjah': typeof PilihDarjahRoute
   '/pra-kalifah': typeof PraKalifahRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/shop': typeof ShopRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/ujian-percuma': typeof UjianPercumaRoute
   '/admin_/affiliates': typeof AdminAffiliatesRoute
+  '/admin_/blog': typeof AdminBlogRoute
   '/admin_/challenge': typeof AdminChallengeRoute
   '/admin_/funnel': typeof AdminFunnelRoute
   '/admin_/funnel-kali': typeof AdminFunnelKaliRoute
@@ -632,6 +676,7 @@ export interface FileRoutesById {
   '/api/shop-checkout': typeof ApiShopCheckoutRoute
   '/api/temporary-unlock': typeof ApiTemporaryUnlockRoute
   '/bayaran/selesai': typeof BayaranSelesaiRoute
+  '/blog_/$slug': typeof BlogSlugRoute
   '/cuba-kali_/aktifkan': typeof CubaKaliAktifkanRoute
   '/cuba-kali_/demo': typeof CubaKaliDemoRoute
   '/darjah/$darjahId': typeof DarjahDarjahIdRoute
@@ -673,6 +718,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/admin'
+    | '/blog'
     | '/cikgu-affiliate'
     | '/cuba-kali'
     | '/cuba-kali-web'
@@ -687,9 +733,12 @@ export interface FileRouteTypes {
     | '/pilih-darjah'
     | '/pra-kalifah'
     | '/reset-password'
+    | '/robots.txt'
     | '/shop'
+    | '/sitemap.xml'
     | '/ujian-percuma'
     | '/admin/affiliates'
+    | '/admin/blog'
     | '/admin/challenge'
     | '/admin/funnel'
     | '/admin/funnel-kali'
@@ -706,6 +755,7 @@ export interface FileRouteTypes {
     | '/api/shop-checkout'
     | '/api/temporary-unlock'
     | '/bayaran/selesai'
+    | '/blog/$slug'
     | '/cuba-kali/aktifkan'
     | '/cuba-kali/demo'
     | '/darjah/$darjahId'
@@ -745,6 +795,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/admin'
+    | '/blog'
     | '/cikgu-affiliate'
     | '/cuba-kali'
     | '/cuba-kali-web'
@@ -759,9 +810,12 @@ export interface FileRouteTypes {
     | '/pilih-darjah'
     | '/pra-kalifah'
     | '/reset-password'
+    | '/robots.txt'
     | '/shop'
+    | '/sitemap.xml'
     | '/ujian-percuma'
     | '/admin/affiliates'
+    | '/admin/blog'
     | '/admin/challenge'
     | '/admin/funnel'
     | '/admin/funnel-kali'
@@ -778,6 +832,7 @@ export interface FileRouteTypes {
     | '/api/shop-checkout'
     | '/api/temporary-unlock'
     | '/bayaran/selesai'
+    | '/blog/$slug'
     | '/cuba-kali/aktifkan'
     | '/cuba-kali/demo'
     | '/darjah/$darjahId'
@@ -817,6 +872,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/admin'
+    | '/blog'
     | '/cikgu-affiliate'
     | '/cuba-kali'
     | '/cuba-kali-web'
@@ -831,9 +887,12 @@ export interface FileRouteTypes {
     | '/pilih-darjah'
     | '/pra-kalifah'
     | '/reset-password'
+    | '/robots.txt'
     | '/shop'
+    | '/sitemap.xml'
     | '/ujian-percuma'
     | '/admin_/affiliates'
+    | '/admin_/blog'
     | '/admin_/challenge'
     | '/admin_/funnel'
     | '/admin_/funnel-kali'
@@ -850,6 +909,7 @@ export interface FileRouteTypes {
     | '/api/shop-checkout'
     | '/api/temporary-unlock'
     | '/bayaran/selesai'
+    | '/blog_/$slug'
     | '/cuba-kali_/aktifkan'
     | '/cuba-kali_/demo'
     | '/darjah/$darjahId'
@@ -890,6 +950,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
+  BlogRoute: typeof BlogRoute
   CikguAffiliateRoute: typeof CikguAffiliateRoute
   CubaKaliRoute: typeof CubaKaliRoute
   CubaKaliWebRoute: typeof CubaKaliWebRoute
@@ -904,9 +965,12 @@ export interface RootRouteChildren {
   PilihDarjahRoute: typeof PilihDarjahRoute
   PraKalifahRoute: typeof PraKalifahRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  RobotsDottxtRoute: typeof RobotsDottxtRoute
   ShopRoute: typeof ShopRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   UjianPercumaRoute: typeof UjianPercumaRoute
   AdminAffiliatesRoute: typeof AdminAffiliatesRoute
+  AdminBlogRoute: typeof AdminBlogRoute
   AdminChallengeRoute: typeof AdminChallengeRoute
   AdminFunnelRoute: typeof AdminFunnelRoute
   AdminFunnelKaliRoute: typeof AdminFunnelKaliRoute
@@ -923,6 +987,7 @@ export interface RootRouteChildren {
   ApiShopCheckoutRoute: typeof ApiShopCheckoutRoute
   ApiTemporaryUnlockRoute: typeof ApiTemporaryUnlockRoute
   BayaranSelesaiRoute: typeof BayaranSelesaiRoute
+  BlogSlugRoute: typeof BlogSlugRoute
   CubaKaliAktifkanRoute: typeof CubaKaliAktifkanRoute
   CubaKaliDemoRoute: typeof CubaKaliDemoRoute
   DarjahDarjahIdRoute: typeof DarjahDarjahIdRoute
@@ -974,6 +1039,13 @@ declare module '@tanstack/react-router' {
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog': {
+      id: '/blog'
+      path: '/blog'
+      fullPath: '/blog'
+      preLoaderRoute: typeof BlogRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/cikgu-affiliate': {
@@ -1074,11 +1146,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/robots.txt': {
+      id: '/robots.txt'
+      path: '/robots.txt'
+      fullPath: '/robots.txt'
+      preLoaderRoute: typeof RobotsDottxtRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/shop': {
       id: '/shop'
       path: '/shop'
       fullPath: '/shop'
       preLoaderRoute: typeof ShopRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/ujian-percuma': {
@@ -1093,6 +1179,13 @@ declare module '@tanstack/react-router' {
       path: '/admin/affiliates'
       fullPath: '/admin/affiliates'
       preLoaderRoute: typeof AdminAffiliatesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin_/blog': {
+      id: '/admin_/blog'
+      path: '/admin/blog'
+      fullPath: '/admin/blog'
+      preLoaderRoute: typeof AdminBlogRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin_/challenge': {
@@ -1205,6 +1298,13 @@ declare module '@tanstack/react-router' {
       path: '/bayaran/selesai'
       fullPath: '/bayaran/selesai'
       preLoaderRoute: typeof BayaranSelesaiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog_/$slug': {
+      id: '/blog_/$slug'
+      path: '/blog/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/cuba-kali_/aktifkan': {
@@ -1458,6 +1558,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
+  BlogRoute: BlogRoute,
   CikguAffiliateRoute: CikguAffiliateRoute,
   CubaKaliRoute: CubaKaliRoute,
   CubaKaliWebRoute: CubaKaliWebRoute,
@@ -1472,9 +1573,12 @@ const rootRouteChildren: RootRouteChildren = {
   PilihDarjahRoute: PilihDarjahRoute,
   PraKalifahRoute: PraKalifahRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  RobotsDottxtRoute: RobotsDottxtRoute,
   ShopRoute: ShopRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   UjianPercumaRoute: UjianPercumaRoute,
   AdminAffiliatesRoute: AdminAffiliatesRoute,
+  AdminBlogRoute: AdminBlogRoute,
   AdminChallengeRoute: AdminChallengeRoute,
   AdminFunnelRoute: AdminFunnelRoute,
   AdminFunnelKaliRoute: AdminFunnelKaliRoute,
@@ -1491,6 +1595,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiShopCheckoutRoute: ApiShopCheckoutRoute,
   ApiTemporaryUnlockRoute: ApiTemporaryUnlockRoute,
   BayaranSelesaiRoute: BayaranSelesaiRoute,
+  BlogSlugRoute: BlogSlugRoute,
   CubaKaliAktifkanRoute: CubaKaliAktifkanRoute,
   CubaKaliDemoRoute: CubaKaliDemoRoute,
   DarjahDarjahIdRoute: DarjahDarjahIdRoute,
