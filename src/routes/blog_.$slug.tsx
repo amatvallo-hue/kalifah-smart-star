@@ -1,9 +1,12 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { useRef } from "react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { CubaKaliCTA } from "@/components/blog/CubaKaliCTA";
 import { MarkdownArtikel } from "@/components/blog/MarkdownArtikel";
+import { PromoPopupKali } from "@/components/blog/PromoPopupKali";
 import logoUrl from "@/assets/kalifah-logo.png";
+
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -120,6 +123,9 @@ function formatTarikh(iso: string | null) {
 
 function ArtikelPage() {
   const a = Route.useLoaderData();
+  const kandunganRef = useRef<HTMLDivElement>(null);
+
+
 
   return (
     <div className="min-h-screen bg-background">
@@ -176,10 +182,15 @@ function ArtikelPage() {
 
           <CubaKaliCTA className="my-8" />
 
-          <MarkdownArtikel kandungan={a.kandungan_markdown ?? ""} />
+          <div ref={kandunganRef}>
+            <MarkdownArtikel kandungan={a.kandungan_markdown ?? ""} />
+          </div>
 
           <CubaKaliCTA className="my-10" />
         </article>
+
+        <PromoPopupKali kandunganRef={kandunganRef} />
+
 
         <Link
           to="/blog"
