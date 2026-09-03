@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminRouteImport } from './routes/admin'
+import { Route as BlogRouteImport } from './routes/blog'
 import { Route as CikguAffiliateRouteImport } from './routes/cikgu-affiliate'
 import { Route as CubaKaliRouteImport } from './routes/cuba-kali'
 import { Route as CubaKaliWebRouteImport } from './routes/cuba-kali-web'
@@ -25,7 +26,9 @@ import { Route as LupaPasswordRouteImport } from './routes/lupa-password'
 import { Route as PilihDarjahRouteImport } from './routes/pilih-darjah'
 import { Route as PraKalifahRouteImport } from './routes/pra-kalifah'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as ShopRouteImport } from './routes/shop'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as UjianPercumaRouteImport } from './routes/ujian-percuma'
 import { Route as AdminAffiliatesRouteImport } from './routes/admin_.affiliates'
 import { Route as AdminChallengeRouteImport } from './routes/admin_.challenge'
@@ -88,6 +91,11 @@ const IndexRoute = IndexRouteImport.update({
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogRoute = BlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CikguAffiliateRoute = CikguAffiliateRouteImport.update({
@@ -160,9 +168,19 @@ const ResetPasswordRoute = ResetPasswordRouteImport.update({
   path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
+  id: '/robots.txt',
+  path: '/robots.txt',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ShopRoute = ShopRouteImport.update({
   id: '/shop',
   path: '/shop',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const UjianPercumaRoute = UjianPercumaRouteImport.update({
@@ -454,6 +472,7 @@ const DarjahDarjahIdPercubaanMpt4SubjekIdSetIdKeputusanRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/blog': typeof BlogRoute
   '/cikgu-affiliate': typeof CikguAffiliateRoute
   '/cuba-kali': typeof CubaKaliRoute
   '/cuba-kali-web': typeof CubaKaliWebRoute
@@ -468,7 +487,9 @@ export interface FileRoutesByFullPath {
   '/pilih-darjah': typeof PilihDarjahRoute
   '/pra-kalifah': typeof PraKalifahRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/shop': typeof ShopRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/ujian-percuma': typeof UjianPercumaRoute
   '/admin/affiliates': typeof AdminAffiliatesRoute
   '/admin/challenge': typeof AdminChallengeRoute
@@ -526,6 +547,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/blog': typeof BlogRoute
   '/cikgu-affiliate': typeof CikguAffiliateRoute
   '/cuba-kali': typeof CubaKaliRoute
   '/cuba-kali-web': typeof CubaKaliWebRoute
@@ -540,7 +562,9 @@ export interface FileRoutesByTo {
   '/pilih-darjah': typeof PilihDarjahRoute
   '/pra-kalifah': typeof PraKalifahRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/shop': typeof ShopRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/ujian-percuma': typeof UjianPercumaRoute
   '/admin/affiliates': typeof AdminAffiliatesRoute
   '/admin/challenge': typeof AdminChallengeRoute
@@ -599,6 +623,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
+  '/blog': typeof BlogRoute
   '/cikgu-affiliate': typeof CikguAffiliateRoute
   '/cuba-kali': typeof CubaKaliRoute
   '/cuba-kali-web': typeof CubaKaliWebRoute
@@ -613,7 +638,9 @@ export interface FileRoutesById {
   '/pilih-darjah': typeof PilihDarjahRoute
   '/pra-kalifah': typeof PraKalifahRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/robots.txt': typeof RobotsDottxtRoute
   '/shop': typeof ShopRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/ujian-percuma': typeof UjianPercumaRoute
   '/admin_/affiliates': typeof AdminAffiliatesRoute
   '/admin_/challenge': typeof AdminChallengeRoute
@@ -673,6 +700,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/admin'
+    | '/blog'
     | '/cikgu-affiliate'
     | '/cuba-kali'
     | '/cuba-kali-web'
@@ -687,7 +715,9 @@ export interface FileRouteTypes {
     | '/pilih-darjah'
     | '/pra-kalifah'
     | '/reset-password'
+    | '/robots.txt'
     | '/shop'
+    | '/sitemap.xml'
     | '/ujian-percuma'
     | '/admin/affiliates'
     | '/admin/challenge'
@@ -745,6 +775,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/admin'
+    | '/blog'
     | '/cikgu-affiliate'
     | '/cuba-kali'
     | '/cuba-kali-web'
@@ -759,7 +790,9 @@ export interface FileRouteTypes {
     | '/pilih-darjah'
     | '/pra-kalifah'
     | '/reset-password'
+    | '/robots.txt'
     | '/shop'
+    | '/sitemap.xml'
     | '/ujian-percuma'
     | '/admin/affiliates'
     | '/admin/challenge'
@@ -817,6 +850,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/admin'
+    | '/blog'
     | '/cikgu-affiliate'
     | '/cuba-kali'
     | '/cuba-kali-web'
@@ -831,7 +865,9 @@ export interface FileRouteTypes {
     | '/pilih-darjah'
     | '/pra-kalifah'
     | '/reset-password'
+    | '/robots.txt'
     | '/shop'
+    | '/sitemap.xml'
     | '/ujian-percuma'
     | '/admin_/affiliates'
     | '/admin_/challenge'
@@ -890,6 +926,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
+  BlogRoute: typeof BlogRoute
   CikguAffiliateRoute: typeof CikguAffiliateRoute
   CubaKaliRoute: typeof CubaKaliRoute
   CubaKaliWebRoute: typeof CubaKaliWebRoute
@@ -904,7 +941,9 @@ export interface RootRouteChildren {
   PilihDarjahRoute: typeof PilihDarjahRoute
   PraKalifahRoute: typeof PraKalifahRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  RobotsDottxtRoute: typeof RobotsDottxtRoute
   ShopRoute: typeof ShopRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   UjianPercumaRoute: typeof UjianPercumaRoute
   AdminAffiliatesRoute: typeof AdminAffiliatesRoute
   AdminChallengeRoute: typeof AdminChallengeRoute
@@ -974,6 +1013,13 @@ declare module '@tanstack/react-router' {
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog': {
+      id: '/blog'
+      path: '/blog'
+      fullPath: '/blog'
+      preLoaderRoute: typeof BlogRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/cikgu-affiliate': {
@@ -1074,11 +1120,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/robots.txt': {
+      id: '/robots.txt'
+      path: '/robots.txt'
+      fullPath: '/robots.txt'
+      preLoaderRoute: typeof RobotsDottxtRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/shop': {
       id: '/shop'
       path: '/shop'
       fullPath: '/shop'
       preLoaderRoute: typeof ShopRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/ujian-percuma': {
@@ -1458,6 +1518,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
+  BlogRoute: BlogRoute,
   CikguAffiliateRoute: CikguAffiliateRoute,
   CubaKaliRoute: CubaKaliRoute,
   CubaKaliWebRoute: CubaKaliWebRoute,
@@ -1472,7 +1533,9 @@ const rootRouteChildren: RootRouteChildren = {
   PilihDarjahRoute: PilihDarjahRoute,
   PraKalifahRoute: PraKalifahRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  RobotsDottxtRoute: RobotsDottxtRoute,
   ShopRoute: ShopRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   UjianPercumaRoute: UjianPercumaRoute,
   AdminAffiliatesRoute: AdminAffiliatesRoute,
   AdminChallengeRoute: AdminChallengeRoute,
