@@ -41,7 +41,7 @@ export const Route = createFileRoute("/blog_/$slug")({
       .eq("slug", params.slug)
       .eq("status", "published")
       .maybeSingle();
-    if (error) console.error("[blog/$slug] gagal query", error);
+    if (error) console.error("[blog/$slug] ralat query", error);
     if (!data) throw notFound();
     return data as Artikel;
   },
