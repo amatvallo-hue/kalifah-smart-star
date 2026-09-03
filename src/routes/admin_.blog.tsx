@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Loader2, Newspaper, Plus, Eye } from "lucide-react";
+import { Loader2, Newspaper, Plus, Eye, Link2 } from "lucide-react";
 import { SiteHeader } from "@/components/SiteHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
@@ -299,9 +299,25 @@ function AdminBlogPage() {
                         {a.updated_at ? new Date(a.updated_at).toLocaleDateString("ms-MY") : "—"}
                       </TableCell>
                       <TableCell className="text-right">
-                        <Button variant="outline" size="sm" onClick={() => bukaEdit(a)}>
-                          Edit
-                        </Button>
+                        <div className="flex items-center justify-end gap-2">
+                          <Button variant="outline" size="sm" onClick={() => bukaEdit(a)}>
+                            Edit
+                          </Button>
+                          {a.status === "published" && (
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => {
+                                const url = `https://kalifah.my/blog/${a.slug}`;
+                                navigator.clipboard.writeText(url).then(() => {
+                                  toast.success("Pautan disalin: " + url);
+                                });
+                              }}
+                            >
+                              <Link2 className="mr-1 h-4 w-4" /> Salin Pautan
+                            </Button>
+                          )}
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))}
