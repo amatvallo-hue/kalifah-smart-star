@@ -7,7 +7,7 @@ export function CubaKaliCTA({ className = "" }: { className?: string }) {
     >
       <div>
         <p className="font-display text-base font-extrabold text-foreground">
-          Tak pasti anak lemah di mana?
+          Tak pasti nak mula dari mana?
         </p>
         <p className="mt-1 text-sm text-muted-foreground">
           KALI kesan kemahiran spesifik yang anak belum kuasai — percuma, tanpa daftar.
