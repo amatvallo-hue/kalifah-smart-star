@@ -47,6 +47,7 @@ import { Route as ApiDebugEnvRouteImport } from './routes/api.debug-env'
 import { Route as ApiShopCheckoutRouteImport } from './routes/api.shop-checkout'
 import { Route as ApiTemporaryUnlockRouteImport } from './routes/api.temporary-unlock'
 import { Route as BayaranSelesaiRouteImport } from './routes/bayaran.selesai'
+import { Route as BlogSlugRouteImport } from './routes/blog_.$slug'
 import { Route as CubaKaliAktifkanRouteImport } from './routes/cuba-kali_.aktifkan'
 import { Route as CubaKaliDemoRouteImport } from './routes/cuba-kali_.demo'
 import { Route as DarjahDarjahIdRouteImport } from './routes/darjah.$darjahId'
@@ -271,6 +272,11 @@ const ApiTemporaryUnlockRoute = ApiTemporaryUnlockRouteImport.update({
 const BayaranSelesaiRoute = BayaranSelesaiRouteImport.update({
   id: '/bayaran/selesai',
   path: '/bayaran/selesai',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/blog_/$slug',
+  path: '/blog/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CubaKaliAktifkanRoute = CubaKaliAktifkanRouteImport.update({
@@ -508,6 +514,7 @@ export interface FileRoutesByFullPath {
   '/api/shop-checkout': typeof ApiShopCheckoutRoute
   '/api/temporary-unlock': typeof ApiTemporaryUnlockRoute
   '/bayaran/selesai': typeof BayaranSelesaiRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/cuba-kali/aktifkan': typeof CubaKaliAktifkanRoute
   '/cuba-kali/demo': typeof CubaKaliDemoRoute
   '/darjah/$darjahId': typeof DarjahDarjahIdRoute
@@ -583,6 +590,7 @@ export interface FileRoutesByTo {
   '/api/shop-checkout': typeof ApiShopCheckoutRoute
   '/api/temporary-unlock': typeof ApiTemporaryUnlockRoute
   '/bayaran/selesai': typeof BayaranSelesaiRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/cuba-kali/aktifkan': typeof CubaKaliAktifkanRoute
   '/cuba-kali/demo': typeof CubaKaliDemoRoute
   '/darjah/$darjahId': typeof DarjahDarjahIdRoute
@@ -659,6 +667,7 @@ export interface FileRoutesById {
   '/api/shop-checkout': typeof ApiShopCheckoutRoute
   '/api/temporary-unlock': typeof ApiTemporaryUnlockRoute
   '/bayaran/selesai': typeof BayaranSelesaiRoute
+  '/blog_/$slug': typeof BlogSlugRoute
   '/cuba-kali_/aktifkan': typeof CubaKaliAktifkanRoute
   '/cuba-kali_/demo': typeof CubaKaliDemoRoute
   '/darjah/$darjahId': typeof DarjahDarjahIdRoute
@@ -736,6 +745,7 @@ export interface FileRouteTypes {
     | '/api/shop-checkout'
     | '/api/temporary-unlock'
     | '/bayaran/selesai'
+    | '/blog/$slug'
     | '/cuba-kali/aktifkan'
     | '/cuba-kali/demo'
     | '/darjah/$darjahId'
@@ -811,6 +821,7 @@ export interface FileRouteTypes {
     | '/api/shop-checkout'
     | '/api/temporary-unlock'
     | '/bayaran/selesai'
+    | '/blog/$slug'
     | '/cuba-kali/aktifkan'
     | '/cuba-kali/demo'
     | '/darjah/$darjahId'
@@ -886,6 +897,7 @@ export interface FileRouteTypes {
     | '/api/shop-checkout'
     | '/api/temporary-unlock'
     | '/bayaran/selesai'
+    | '/blog_/$slug'
     | '/cuba-kali_/aktifkan'
     | '/cuba-kali_/demo'
     | '/darjah/$darjahId'
@@ -962,6 +974,7 @@ export interface RootRouteChildren {
   ApiShopCheckoutRoute: typeof ApiShopCheckoutRoute
   ApiTemporaryUnlockRoute: typeof ApiTemporaryUnlockRoute
   BayaranSelesaiRoute: typeof BayaranSelesaiRoute
+  BlogSlugRoute: typeof BlogSlugRoute
   CubaKaliAktifkanRoute: typeof CubaKaliAktifkanRoute
   CubaKaliDemoRoute: typeof CubaKaliDemoRoute
   DarjahDarjahIdRoute: typeof DarjahDarjahIdRoute
@@ -1267,6 +1280,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BayaranSelesaiRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/blog_/$slug': {
+      id: '/blog_/$slug'
+      path: '/blog/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/cuba-kali_/aktifkan': {
       id: '/cuba-kali_/aktifkan'
       path: '/cuba-kali/aktifkan'
@@ -1554,6 +1574,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiShopCheckoutRoute: ApiShopCheckoutRoute,
   ApiTemporaryUnlockRoute: ApiTemporaryUnlockRoute,
   BayaranSelesaiRoute: BayaranSelesaiRoute,
+  BlogSlugRoute: BlogSlugRoute,
   CubaKaliAktifkanRoute: CubaKaliAktifkanRoute,
   CubaKaliDemoRoute: CubaKaliDemoRoute,
   DarjahDarjahIdRoute: DarjahDarjahIdRoute,
