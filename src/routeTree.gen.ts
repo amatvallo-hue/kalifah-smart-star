@@ -31,6 +31,7 @@ import { Route as ShopRouteImport } from './routes/shop'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as UjianPercumaRouteImport } from './routes/ujian-percuma'
 import { Route as AdminAffiliatesRouteImport } from './routes/admin_.affiliates'
+import { Route as AdminBlogRouteImport } from './routes/admin_.blog'
 import { Route as AdminChallengeRouteImport } from './routes/admin_.challenge'
 import { Route as AdminFunnelRouteImport } from './routes/admin_.funnel'
 import { Route as AdminFunnelKaliRouteImport } from './routes/admin_.funnel-kali'
@@ -192,6 +193,11 @@ const UjianPercumaRoute = UjianPercumaRouteImport.update({
 const AdminAffiliatesRoute = AdminAffiliatesRouteImport.update({
   id: '/admin_/affiliates',
   path: '/admin/affiliates',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminBlogRoute = AdminBlogRouteImport.update({
+  id: '/admin_/blog',
+  path: '/admin/blog',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdminChallengeRoute = AdminChallengeRouteImport.update({
@@ -498,6 +504,7 @@ export interface FileRoutesByFullPath {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/ujian-percuma': typeof UjianPercumaRoute
   '/admin/affiliates': typeof AdminAffiliatesRoute
+  '/admin/blog': typeof AdminBlogRoute
   '/admin/challenge': typeof AdminChallengeRoute
   '/admin/funnel': typeof AdminFunnelRoute
   '/admin/funnel-kali': typeof AdminFunnelKaliRoute
@@ -574,6 +581,7 @@ export interface FileRoutesByTo {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/ujian-percuma': typeof UjianPercumaRoute
   '/admin/affiliates': typeof AdminAffiliatesRoute
+  '/admin/blog': typeof AdminBlogRoute
   '/admin/challenge': typeof AdminChallengeRoute
   '/admin/funnel': typeof AdminFunnelRoute
   '/admin/funnel-kali': typeof AdminFunnelKaliRoute
@@ -651,6 +659,7 @@ export interface FileRoutesById {
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/ujian-percuma': typeof UjianPercumaRoute
   '/admin_/affiliates': typeof AdminAffiliatesRoute
+  '/admin_/blog': typeof AdminBlogRoute
   '/admin_/challenge': typeof AdminChallengeRoute
   '/admin_/funnel': typeof AdminFunnelRoute
   '/admin_/funnel-kali': typeof AdminFunnelKaliRoute
@@ -729,6 +738,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/ujian-percuma'
     | '/admin/affiliates'
+    | '/admin/blog'
     | '/admin/challenge'
     | '/admin/funnel'
     | '/admin/funnel-kali'
@@ -805,6 +815,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/ujian-percuma'
     | '/admin/affiliates'
+    | '/admin/blog'
     | '/admin/challenge'
     | '/admin/funnel'
     | '/admin/funnel-kali'
@@ -881,6 +892,7 @@ export interface FileRouteTypes {
     | '/sitemap.xml'
     | '/ujian-percuma'
     | '/admin_/affiliates'
+    | '/admin_/blog'
     | '/admin_/challenge'
     | '/admin_/funnel'
     | '/admin_/funnel-kali'
@@ -958,6 +970,7 @@ export interface RootRouteChildren {
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   UjianPercumaRoute: typeof UjianPercumaRoute
   AdminAffiliatesRoute: typeof AdminAffiliatesRoute
+  AdminBlogRoute: typeof AdminBlogRoute
   AdminChallengeRoute: typeof AdminChallengeRoute
   AdminFunnelRoute: typeof AdminFunnelRoute
   AdminFunnelKaliRoute: typeof AdminFunnelKaliRoute
@@ -1166,6 +1179,13 @@ declare module '@tanstack/react-router' {
       path: '/admin/affiliates'
       fullPath: '/admin/affiliates'
       preLoaderRoute: typeof AdminAffiliatesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin_/blog': {
+      id: '/admin_/blog'
+      path: '/admin/blog'
+      fullPath: '/admin/blog'
+      preLoaderRoute: typeof AdminBlogRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin_/challenge': {
@@ -1558,6 +1578,7 @@ const rootRouteChildren: RootRouteChildren = {
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   UjianPercumaRoute: UjianPercumaRoute,
   AdminAffiliatesRoute: AdminAffiliatesRoute,
+  AdminBlogRoute: AdminBlogRoute,
   AdminChallengeRoute: AdminChallengeRoute,
   AdminFunnelRoute: AdminFunnelRoute,
   AdminFunnelKaliRoute: AdminFunnelKaliRoute,
