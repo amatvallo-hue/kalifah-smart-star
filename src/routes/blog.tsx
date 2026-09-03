@@ -45,7 +45,6 @@ export const Route = createFileRoute("/blog")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [{ rel: "canonical", href: "https://kalifah.my/blog" }],
-    scripts: [{ type: "application/ld+json", children: JSON.stringify({ "@type": "TEMPPROBE" }) }],
   }),
   component: BlogIndex,
 });
