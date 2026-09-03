@@ -172,6 +172,12 @@ function AdminDashboard() {
           >
             🛍️ Kalifah Shop
           </Link>
+          <Link
+            to="/admin/blog"
+            className="inline-flex items-center gap-1 rounded-full border border-border bg-card px-4 py-2 text-sm font-bold text-foreground hover:bg-muted"
+          >
+            📝 Blog
+          </Link>
         </div>
 
         <Tabs defaultValue="pembayaran">
