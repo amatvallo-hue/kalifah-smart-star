@@ -31,7 +31,7 @@ export const Route = createFileRoute("/blog")({
       .select("slug, tajuk, ringkasan, gambar_utama_url, gambar_utama_alt, kategori, tarikh_terbit")
       .eq("status", "published")
       .order("tarikh_terbit", { ascending: false });
-    if (error) console.error("[blog] gagal query senarai", error);
+    if (error) console.error("[blog] ralat query senarai", error);
     return { artikel: (data ?? []) as ArtikelSenarai[] };
   },
   head: () => ({

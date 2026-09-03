@@ -119,7 +119,7 @@ function AdminBlogPage() {
         "id, slug, tajuk, ringkasan, kandungan_markdown, gambar_utama_url, gambar_utama_alt, kategori, status, tarikh_terbit, updated_at, meta_title, meta_description",
       )
       .order("updated_at", { ascending: false });
-    if (error) toast.error("Gagal muat artikel: " + error.message);
+    if (error) toast.error("Ralat muat artikel: " + error.message);
     setItems((data ?? []) as Artikel[]);
     setLoading(false);
   }
@@ -221,7 +221,7 @@ function AdminBlogPage() {
       const msg = res.error.message.includes("duplicate") || res.error.code === "23505"
         ? "Slug ini sudah wujud. Sila guna slug lain."
         : res.error.message;
-      toast.error("Gagal simpan: " + msg);
+      toast.error("Ralat simpan: " + msg);
       return;
     }
     toast.success(form.id ? "Artikel dikemaskini." : "Artikel disimpan.");
