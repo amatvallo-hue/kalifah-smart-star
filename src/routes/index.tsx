@@ -15,6 +15,8 @@ import heroStudyRoom from "@/assets/hero-study-room.jpg";
 import ciriNotaAsset from "@/assets/product-proof/ciri-nota.png.asset.json";
 import ciriGameAsset from "@/assets/product-proof/ciri-game.png.asset.json";
 import ciriGanjaranAsset from "@/assets/product-proof/ciri-ganjaran.png.asset.json";
+import parentEvidenceAsset from "@/assets/product-proof/parent-evidence.png.asset.json";
+import parentEvidenceMobileAsset from "@/assets/product-proof/parent-evidence-mobile.png.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -47,6 +49,7 @@ function LandingPage() {
       <Twist />
       <Mekanisme />
       <Ciri />
+      <ParentEvidence />
       <LiputanKurikulum />
       <Harga />
       <Faq />
@@ -722,6 +725,75 @@ function Ciri() {
           </article>
         ))}
       </div>
+      </div>
+    </section>
+  );
+}
+
+function ParentEvidence() {
+  const points = [
+    {
+      title: "Tahu apa yang perlu diberi perhatian",
+      description: "Ibu bapa tidak perlu teka subtopik mana yang anak perlukan bantuan.",
+    },
+    {
+      title: "Nampak perkembangan dari masa ke masa",
+      description: "Perubahan pembelajaran lebih mudah dilihat, bukan tunggu keputusan peperiksaan sahaja.",
+    },
+    {
+      title: "Ada bukti anak benar-benar belajar",
+      description: "Aktiviti dan perkembangan anak direkodkan supaya ibu bapa lebih yakin dengan apa yang sedang berlaku.",
+    },
+  ];
+
+  return (
+    <section className="border-y border-border/60 bg-muted/20 py-14 sm:py-16">
+      <div className="container mx-auto px-4">
+        <div className="max-w-3xl">
+          <p className="font-display text-xs font-extrabold uppercase tracking-wider text-primary">
+            Untuk Ibu Bapa
+          </p>
+          <h2 className="mt-3 font-display text-3xl font-extrabold leading-tight text-foreground md:text-4xl">
+            Anak Belajar. Ibu Bapa Nampak Apa Yang Berubah.
+          </h2>
+          <p className="mt-3 max-w-2xl text-base text-muted-foreground md:text-lg">
+            Bukan sekadar tahu anak sudah buat latihan. Kalifah bantu ibu bapa nampak bahagian yang perlu diberi perhatian dan perkembangan yang sedang berlaku.
+          </p>
+        </div>
+
+        <div className="mt-8 grid items-center gap-8 lg:grid-cols-[minmax(0,1.7fr)_minmax(280px,0.75fr)] lg:gap-12">
+          <div className="min-w-0 overflow-hidden rounded-lg border border-border/70 bg-card shadow-card">
+            <picture>
+              <source media="(max-width: 639px)" srcSet={parentEvidenceMobileAsset.url} />
+              <img
+                src={parentEvidenceAsset.url}
+                alt="Komposit paparan Dashboard Ibu Bapa Kalifah yang menunjukkan status penguasaan dan rekod aktiviti pembelajaran"
+                width={1400}
+                height={940}
+                loading="lazy"
+                className="aspect-[18/35] w-full object-cover sm:aspect-[1400/940]"
+              />
+            </picture>
+          </div>
+
+          <div className="space-y-6">
+            {points.map((point) => (
+              <div key={point.title} className="flex gap-3 border-b border-border/70 pb-6 last:border-b-0 last:pb-0">
+                <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
+                  <Check className="h-4 w-4" aria-hidden="true" />
+                </span>
+                <div>
+                  <h3 className="font-display text-base font-extrabold text-foreground sm:text-lg">
+                    {point.title}
+                  </h3>
+                  <p className="mt-1 text-sm leading-relaxed text-muted-foreground sm:text-base">
+                    {point.description}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );
