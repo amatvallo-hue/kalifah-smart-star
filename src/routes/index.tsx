@@ -8,7 +8,7 @@ import {
   Zap,
   Send,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { HARGA_ASAL, PAKEJ_LIST } from "@/lib/curriculum";
 import { KalifahLogo } from "@/components/KalifahLogo";
 import heroStudyRoom from "@/assets/hero-study-room.jpg";
@@ -317,42 +317,169 @@ function Hero() {
 }
 
 function PainAmplifier() {
-  const cards = [
-    {
-      tajuk: "Tuisyen Tiada Report",
-      teks: "Anak pergi tuisyen 6 bulan. Bila tanya cikgu — 'Dia okay, tengah improve.' Improve kat mana? Tak tahu. Bayar RM900, dapat jawapan 4 perkataan.",
-    },
-    {
-      tajuk: "Buku Latihan = Tembak Serampang",
-      teks: "Beli buku latihan tebal 200 muka surat. Anak buat 50 soalan. 30 soalan tu bab yang dia dah kuat. 10 soalan bab yang dia lemah — tapi tak perasan sebab campur-campur. Masa habis, kelemahan tetap kelemahan.",
-    },
-    {
-      tajuk: "Baru Tahu Lepas Exam",
-      teks: "Ujian Darjah 4, anak 60%. Rupanya dia tersangkut kat 'Pecahan Tak Wajar' sejak Darjah 3. Kalau tahu awal, 10 minit sehari fokus situ je dah cukup. Tapi sekarang? Kena kejar balik 3 bulan.",
-    },
-  ];
   return (
-    <section className="border-y border-border/60 bg-muted/20 py-16">
+    <section className="overflow-hidden border-y border-border/60 bg-muted/20 py-12 sm:py-16">
       <div className="container mx-auto px-4">
-        <div className="mx-auto max-w-2xl space-y-10 md:space-y-12">
-          <div className="max-w-xs sm:max-w-sm">
-            <h3 className="font-display text-base font-extrabold text-foreground">{cards[0].tajuk}</h3>
-            <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{cards[0].teks}</p>
-          </div>
-          <div className="max-w-sm sm:max-w-md sm:ml-6 md:ml-12">
-            <h3 className="font-display text-base font-extrabold text-foreground sm:text-lg">{cards[1].tajuk}</h3>
-            <p className="mt-2 text-sm leading-relaxed text-muted-foreground sm:text-base">{cards[1].teks}</p>
-          </div>
-          <div
-            className="max-w-md pt-6 sm:max-w-lg sm:ml-10 md:ml-20 md:max-w-xl"
-            style={{ borderTop: `1px solid ${HIJAU}1f` }}
-          >
-            <h3 className="font-display text-lg font-extrabold text-foreground sm:text-xl md:text-2xl">{cards[2].tajuk}</h3>
-            <p className="mt-2 text-base leading-relaxed text-foreground sm:text-lg">{cards[2].teks}</p>
-          </div>
+        <p className="mx-auto mb-10 max-w-2xl text-center text-xs font-extrabold uppercase tracking-[0.14em] text-muted-foreground sm:mb-14">
+          Kebanyakan ibu bapa menghadapi ini
+        </p>
+        <div className="relative mx-auto max-w-4xl space-y-10 md:space-y-14">
+          <div className="pointer-events-none absolute left-1/2 top-0 bottom-0 hidden w-px -translate-x-1/2 bg-border md:block" />
+
+          <SceneCard
+            align="left"
+            number={1}
+            visual={<Scene1Visual />}
+            title="Tuisyen Tiada Report"
+            support="Bayar setiap bulan, tapi masih tak tahu anak sebenarnya perlu bantuan di bahagian mana."
+          />
+          <SceneCard
+            align="right"
+            number={2}
+            visual={<Scene2Visual />}
+            title="Banyak Latihan Tak Semestinya Tepat"
+            support="Anak boleh buat banyak soalan, tetapi bahagian yang benar-benar perlu diperkukuhkan masih tenggelam."
+          />
+          <SceneCard
+            align="left"
+            number={3}
+            visual={<Scene3Visual />}
+            title="Baru Tahu Lepas Exam"
+            support="Bila keputusan keluar, kadang-kadang masalah sebenar sudah bermula lebih awal."
+          />
         </div>
       </div>
     </section>
+  );
+}
+
+function SceneCard({
+  align,
+  number,
+  visual,
+  title,
+  support,
+}: {
+  align: "left" | "right";
+  number: number;
+  visual: ReactNode;
+  title: string;
+  support: string;
+}) {
+  const isRight = align === "right";
+  return (
+    <div className={`relative flex items-center ${isRight ? "md:flex-row-reverse" : ""}`}>
+      <div className="absolute left-1/2 top-1/2 z-10 hidden h-8 w-8 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-background text-xs font-extrabold text-muted-foreground md:flex">
+        {number}
+      </div>
+      <div
+        className={`w-full rounded-2xl border border-border/60 bg-card p-5 shadow-card sm:p-6 md:max-w-sm lg:max-w-md ${
+          isRight ? "md:ml-auto" : ""
+        }`}
+      >
+        <div className="mb-4">{visual}</div>
+        <h3 className="font-display text-lg font-extrabold text-foreground sm:text-xl">{title}</h3>
+        <p className="mt-1.5 text-sm leading-snug text-muted-foreground">{support}</p>
+      </div>
+    </div>
+  );
+}
+
+function Scene1Visual() {
+  return (
+    <div className="flex items-end justify-center gap-3 sm:gap-5" aria-hidden="true">
+      <div className="relative w-28 rounded-lg border border-dashed border-border bg-background p-3 shadow-card sm:w-32">
+        <div className="absolute -top-2 left-1/2 h-4 w-10 -translate-x-1/2 rounded-full border border-border bg-muted/50" />
+        <div className="mt-2 space-y-1.5">
+          <div className="h-1 w-full rounded bg-muted/70" />
+          <div className="h-1 w-5/6 rounded bg-muted/70" />
+          <div className="h-1 w-4/6 rounded bg-muted/70" />
+        </div>
+        <div className="mt-3 border-t border-border pt-2 text-center">
+          <span className="font-display text-lg font-extrabold text-foreground">RM 900</span>
+        </div>
+      </div>
+      <div className="relative max-w-[10rem] rounded-2xl rounded-bl-none border border-border bg-card p-3 shadow-card sm:max-w-[12rem]">
+        <p className="text-xs font-bold text-foreground sm:text-sm">“Dia okay, tengah improve.”</p>
+        <div className="mt-2 flex items-center gap-1.5 text-[10px] font-bold text-gold">
+          <span className="h-1.5 w-1.5 rounded-full bg-gold" />
+          Info tidak lengkap
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Scene2Visual() {
+  const items = [
+    ...Array.from({ length: 8 }, () => "green" as const),
+    ...Array.from({ length: 2 }, () => "gold" as const),
+    ...Array.from({ length: 2 }, () => "neutral" as const),
+  ];
+  return (
+    <div className="mx-auto max-w-[16rem]" aria-hidden="true">
+      <div className="rounded-xl border border-border bg-card p-4 shadow-card">
+        <div className="mb-3 flex items-center gap-2 border-b border-border pb-2">
+          <div className="h-6 w-5 rounded-sm bg-primary/20" />
+          <div className="h-2 w-20 rounded bg-muted" />
+        </div>
+        <div className="grid grid-cols-5 gap-2">
+          {items.map((type, i) => (
+            <div
+              key={i}
+              className={`flex aspect-square items-center justify-center rounded-md text-xs font-extrabold ${
+                type === "green"
+                  ? "bg-primary/15 text-primary"
+                  : type === "gold"
+                    ? "bg-gold/20 text-gold"
+                    : "bg-muted/40 text-muted-foreground"
+              }`}
+            >
+              {type === "green" ? <Check className="h-3.5 w-3.5" /> : type === "gold" ? "!" : "?"}
+            </div>
+          ))}
+        </div>
+        <div className="mt-3 flex items-center justify-between text-[10px] font-bold">
+          <span className="inline-flex items-center gap-1 text-primary">
+            <span className="h-2 w-2 rounded-full bg-primary" />
+            Dah kuat
+          </span>
+          <span className="inline-flex items-center gap-1 text-gold">
+            <span className="h-2 w-2 rounded-full bg-gold" />
+            Perlu fokus
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function Scene3Visual() {
+  return (
+    <div className="flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6" aria-hidden="true">
+      <div className="rounded-xl border border-border bg-card px-6 py-4 text-center shadow-card">
+        <p className="text-[10px] font-extrabold uppercase tracking-wider text-muted-foreground">Keputusan Ujian</p>
+        <p className="font-display text-4xl font-extrabold text-foreground">60%</p>
+      </div>
+      <div className="flex flex-col items-center">
+        <svg width="24" height="48" viewBox="0 0 24 48" fill="none" aria-hidden="true">
+          <path d="M12 0 V36" stroke="var(--color-border)" strokeWidth="2" strokeDasharray="4 3" />
+          <path
+            d="M6 30 L12 36 L18 30"
+            stroke="var(--color-gold)"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+        <span className="mt-1 text-[10px] font-bold text-muted-foreground">lebih awal</span>
+      </div>
+      <div className="rounded-xl border border-gold/40 bg-gold/10 px-5 py-3 text-center">
+        <p className="text-[10px] font-extrabold uppercase tracking-wider text-gold">Masalah sebenar</p>
+        <p className="font-display text-base font-extrabold text-gold-foreground">Pecahan Tak Wajar</p>
+        <p className="text-[10px] font-bold text-muted-foreground">Darjah 3</p>
+      </div>
+    </div>
   );
 }
 
