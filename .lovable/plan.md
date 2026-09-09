@@ -1,43 +1,28 @@
-# Flow ujian web-native "Cuba KALI" (tanpa Telegram)
+# Hero v1 Cinematic Enhancement
 
-## Jaminan utama
-- `src/routes/cuba-kali.tsx` — TIDAK disentuh.
-- `src/routes/cuba-kali_.aktifkan.tsx` — TIDAK disentuh (guna sedia ada dengan `?child=&token=&darjah=`).
-- Tiada RPC atau edge function diubah/dicipta.
-- Flow Telegram/WhatsApp sedia ada kekal 100%: bila param `ct` tiada, laluan lama (`switchBackToParent()` → `/kali-test/laporan-anak`) berjalan tanpa sebarang perbezaan.
+## Scope
+- Change only `Hero()` and `HeroBuktiVisual()` in `src/routes/index.tsx`.
+- Preserve the locked headline, support copy, KALI bridge sentence, CTA label/route, trust line, and all sections outside the hero.
+- Preview only; no production deployment.
 
-## Fail yang akan disentuh
-1. **Baharu:** `src/routes/kali-test.mula-percubaan.tsx`
-2. **Kecil & bersyarat:** `src/routes/kali-test.belajar-untuk-saya.tsx`
+## Visual implementation
+- Replace the two-card proof with a single editorial learning canvas on a warm cream base.
+- Center one shared `6/10` score and caption, then branch into Anak A and Anak B learning paths.
+- Show mastery in green and strengthening needs in amber, with a small KALI Blue marker and “KALI nampak perbezaannya.” at the branch.
+- Add integrated CSS-only green/amber atmospheric washes and a faint learning-map grid; avoid floating blur blobs, photos, heavy glass effects, and decorative particles.
+- Keep the conclusion and example disclaimer unchanged.
 
-## 1. Laman baharu `/kali-test/mula-percubaan`
-- `ssr: false`, ada `head()` sendiri (title + description unik), tidak dipautkan dari mana-mana laman.
-- UI: kad `rounded-3xl`, HIJAU `#1B8A5A` / EMAS `#F5A623`, font display — konsisten dengan laman `/kali-test/`.
-- Butang Darjah 1–6. Bila diklik:
-  1. Dapat/janakan `creation_request_id` (`crypto.randomUUID()`) yang disimpan dalam `sessionStorage` (kunci per-darjah) supaya reload tidak cipta akaun berganda.
-  2. `supabase.functions.invoke("kali-cipta-sesi-tetamu-web", { body: { darjah, nama_anak: "Anak", creation_request_id } })`.
-  3. `supabase.auth.verifyOtp({ token_hash: hashed_token, type: "recovery" })`.
-  4. `markSkipChildGuard()` dari `@/lib/child-auth`.
-  5. `navigate` ke `/kali-test/belajar-untuk-saya?src=same_device&ct=<claim_token>&d=<darjah>`.
-- State: `loading` per-butang (semua butang disable semasa proses), papar spinner.
-- Ralat: status/mesej 429 → "Terlalu banyak percubaan, sila cuba lagi sebentar."; lain-lain → mesej generik + boleh cuba semula.
+## Responsive behavior
+- Desktop: wide horizontal branch composition within an approximately `max-w-4xl` proof area while keeping headline width controlled.
+- Mobile: centered score followed by a readable two-column comparison, falling back cleanly without horizontal scrolling.
+- Maintain readable labels and a full-width mobile CTA.
 
-## 2. Perubahan bersyarat pada `kali-test.belajar-untuk-saya.tsx`
-Dua suntingan sahaja, tiada refactor:
+## Motion and accessibility
+- Use local SVG/CSS transitions for a one-time branch draw, node entrance, and single KALI Blue pulse.
+- Disable nonessential motion under `prefers-reduced-motion`.
+- Keep SSR-safe static markup with no browser-only render logic.
 
-- `validateSearch` (kini hanya baca `src`): tambah baca `ct` dan `d` sebagai string pilihan; kekalkan bentuk objek sedia ada bila tiada.
-- `handleTunjukIbuBapa`:
-  ```
-  if (search.ct) {
-    navigate ke /cuba-kali/aktifkan?child=<user.id>&token=<search.ct>&darjah=<search.d ?? childDarjah>
-    // tiada switchBackToParent()
-    return;
-  }
-  // kes sedia ada, tak berubah:
-  await switchBackToParent(); navigate → /kali-test/laporan-anak?child=<user.id>
-  ```
-
-## Nota teknikal
-- `/cuba-kali/aktifkan` guna `URLSearchParams` sedia ada, jadi navigasi boleh guna URL string penuh — tiada perubahan pada route itu.
-- Route baharu perlu regenerasi `routeTree.gen.ts` secara automatik oleh dev server; tiada edit manual.
-- Selepas siap: `bunx tsgo --noEmit`.
+## Validation
+- Run TypeScript typecheck.
+- Inspect desktop and 390px mobile previews for layout, overflow, readability, and console errors.
+- Report the exact changed file, visual summary, and preview URL; do not deploy.
