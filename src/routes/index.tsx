@@ -8,7 +8,7 @@ import {
   Zap,
   Send,
 } from "lucide-react";
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { HARGA_ASAL, PAKEJ_LIST } from "@/lib/curriculum";
 import { KalifahLogo } from "@/components/KalifahLogo";
 import heroStudyRoom from "@/assets/hero-study-room.jpg";
