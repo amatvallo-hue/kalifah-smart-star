@@ -264,36 +264,36 @@ function Hero() {
       />
       <div className="container relative mx-auto px-4 pb-10 pt-8 sm:pt-14 md:min-h-[940px] md:pb-14 md:pt-14 lg:min-h-[980px] lg:pt-16">
         <div className="mx-auto text-center">
-          <div className="mx-auto max-w-3xl rounded-lg bg-background/70 px-2 py-1.5 backdrop-blur-[2px] sm:px-5 sm:py-2 md:bg-background/55">
-            <h1 className="font-display text-2xl font-extrabold leading-tight text-foreground sm:text-3xl md:text-5xl lg:text-6xl">
+          <div className="mx-auto max-w-3xl rounded-lg bg-background/70 px-2 py-1 backdrop-blur-[2px] sm:px-5 sm:py-2 md:bg-background/55">
+            <h1 className="font-display text-xl font-extrabold leading-tight text-foreground sm:text-3xl md:text-5xl lg:text-6xl">
               Yang paling susah bukan bila anak salah. Yang susah bila kita tak tahu dia mula tak faham di mana.
             </h1>
-            <p className="mx-auto mt-4 max-w-xl text-base text-muted-foreground sm:mt-5 md:mt-6 md:text-lg">
+            <p className="mx-auto mt-3 max-w-xl text-sm text-muted-foreground sm:mt-5 md:mt-6 md:text-lg">
               Markah cuma tunjuk berapa yang betul. Ia tak tunjuk bahagian mana yang anak sebenarnya belum faham.
             </p>
           </div>
 
-          <div className="relative mx-[-1rem] mt-4 h-44 overflow-hidden border-y border-border/50 sm:h-72 md:hidden">
+          <div className="relative z-0 mx-[-1rem] mt-3 h-36 overflow-hidden md:hidden">
             <img
               src={heroStudyRoom}
               alt="Dua murid sekolah rendah sedang berfikir di meja belajar"
               width={1920}
               height={1088}
-              className="h-full w-full object-cover object-[center_40%]"
+              className="h-full w-full object-cover object-[center_38%]"
             />
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-background/10 via-transparent to-background/40" aria-hidden="true" />
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-background/10 via-transparent to-background/70" aria-hidden="true" />
           </div>
 
-          <div className="relative z-10 mt-4 sm:mt-9 md:mx-auto md:mt-10 md:max-w-3xl lg:mt-12">
+          <div className="relative z-10 -mt-8 sm:-mt-9 md:mx-auto md:mt-10 md:max-w-3xl lg:mt-12">
             <HeroBuktiVisual />
           </div>
 
-          <p className="mx-auto mt-5 max-w-2xl rounded-md bg-background/75 px-4 py-3 text-base font-semibold leading-relaxed text-foreground backdrop-blur-sm sm:mt-7 md:mt-8 md:text-lg">
+          <p className="mx-auto mt-3 max-w-2xl rounded-md bg-background/75 px-3 py-2 text-sm font-semibold leading-relaxed text-foreground backdrop-blur-sm sm:mt-7 md:mt-8 md:text-lg">
             <span className="mr-1.5 inline-block h-2 w-2 rounded-full align-middle" style={{ backgroundColor: KALI_BLUE }} />
             KALI bantu cari bahagian yang perlu diberi perhatian — supaya anak tak sekadar buat lebih banyak latihan, tapi latihan yang lebih tepat.
           </p>
 
-          <div className="mt-5 flex w-full flex-col items-center gap-3 sm:flex-row sm:justify-center md:mt-7">
+          <div className="mt-3 flex w-full flex-col items-center gap-3 sm:flex-row sm:justify-center md:mt-7">
             <Link
               to="/cuba-kali-web"
               className="flex w-full items-center justify-center gap-2 rounded-full px-6 py-3.5 font-display text-base font-extrabold text-white shadow-soft transition hover:-translate-y-0.5 sm:w-auto"
@@ -302,7 +302,7 @@ function Hero() {
               🧪 Cuba KALI Percuma
             </Link>
           </div>
-          <div className="mx-auto mt-4 flex w-fit flex-wrap items-center justify-center gap-x-4 gap-y-1.5 rounded-full bg-background/75 px-4 py-2 text-xs text-muted-foreground backdrop-blur-sm">
+          <div className="mx-auto mt-3 flex w-fit flex-wrap items-center justify-center gap-x-4 gap-y-1.5 rounded-full bg-background/75 px-4 py-2 text-xs text-muted-foreground backdrop-blur-sm">
             <span className="inline-flex items-center gap-1">
               <ShieldCheck className="h-4 w-4" style={{ color: HIJAU }} /> Selamat & sesuai untuk kanak-kanak
             </span>
