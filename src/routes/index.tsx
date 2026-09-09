@@ -94,34 +94,145 @@ function HeroBuktiVisual() {
     { nama: "Anak A", dikuasai: "Tambah", diperkukuhkan: "Bahagi" },
     { nama: "Anak B", dikuasai: "Bahagi", diperkukuhkan: "Pecahan" },
   ];
+
   return (
-    <div className="mx-auto max-w-xl">
-      <div className="grid grid-cols-2 gap-3 sm:gap-4">
-        {anak.map((a) => (
-          <div
-            key={a.nama}
-            className="rounded-2xl bg-card p-4 text-left shadow-soft sm:p-5"
-            style={{ border: `2px solid ${HIJAU}22` }}
+    <div className="mx-auto w-full max-w-4xl" aria-label="Perbandingan perjalanan pembelajaran Anak A dan Anak B">
+      <style>{`
+        @keyframes hero-path-draw {
+          to { stroke-dashoffset: 0; }
+        }
+        @keyframes hero-node-in {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes hero-kali-pulse {
+          0% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--color-kali) 28%, transparent); }
+          55% { box-shadow: 0 0 0 9px color-mix(in oklab, var(--color-kali) 0%, transparent); }
+          100% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--color-kali) 0%, transparent); }
+        }
+        .hero-branch-path {
+          stroke-dasharray: 1;
+          stroke-dashoffset: 1;
+          animation: hero-path-draw 900ms ease-out 180ms forwards;
+        }
+        .hero-journey-node {
+          opacity: 0;
+          animation: hero-node-in 550ms ease-out 820ms forwards;
+        }
+        .hero-journey-node:nth-child(2) { animation-delay: 940ms; }
+        .hero-kali-marker { animation: hero-kali-pulse 900ms ease-out 660ms 1; }
+        @media (prefers-reduced-motion: reduce) {
+          .hero-branch-path { animation: none; stroke-dashoffset: 0; }
+          .hero-journey-node { animation: none; opacity: 1; transform: none; }
+          .hero-kali-marker { animation: none; }
+        }
+      `}</style>
+
+      <div className="relative pt-1">
+        <div className="relative z-10 mx-auto flex h-24 w-24 flex-col items-center justify-center rounded-full border border-primary/25 bg-background shadow-card sm:h-28 sm:w-28">
+          <span className="font-display text-3xl font-extrabold leading-none text-primary sm:text-4xl">6/10</span>
+          <span className="mt-1 text-[10px] font-bold text-muted-foreground sm:text-xs">Markah yang sama</span>
+        </div>
+
+        <div className="relative mx-auto h-24 max-w-3xl sm:h-28">
+          <svg
+            className="absolute inset-0 hidden h-full w-full overflow-visible sm:block"
+            viewBox="0 0 800 112"
+            preserveAspectRatio="none"
+            aria-hidden="true"
           >
-            <p className="font-display text-xs font-extrabold text-foreground sm:text-sm">{a.nama}</p>
-            <p className="mt-1 font-display text-3xl font-extrabold sm:text-4xl" style={{ color: HIJAU }}>6/10</p>
-            <div className="mt-3 space-y-1.5">
-              <span className="flex items-center gap-1.5 text-xs text-foreground sm:text-sm">
-                <span className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: HIJAU }} />
-                {a.dikuasai}
-              </span>
-              <span
-                className="flex items-center gap-1.5 rounded-md px-1.5 py-1 text-xs sm:text-sm"
-                style={{ backgroundColor: `${EMAS}1a`, color: "#7a5300" }}
-              >
-                <span className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: EMAS }} />
-                {a.diperkukuhkan} — Perlu Diperkukuhkan
-              </span>
-            </div>
+            <path
+              className="hero-branch-path"
+              pathLength="1"
+              d="M400 0 V28 C400 62 205 44 205 112"
+              fill="none"
+              stroke="var(--color-primary)"
+              strokeOpacity="0.48"
+              strokeWidth="2"
+              vectorEffect="non-scaling-stroke"
+            />
+            <path
+              className="hero-branch-path"
+              pathLength="1"
+              d="M400 28 C400 62 595 44 595 112"
+              fill="none"
+              stroke="var(--color-gold)"
+              strokeOpacity="0.58"
+              strokeWidth="2"
+              vectorEffect="non-scaling-stroke"
+            />
+          </svg>
+          <svg
+            className="absolute inset-0 h-full w-full overflow-visible sm:hidden"
+            viewBox="0 0 360 96"
+            preserveAspectRatio="none"
+            aria-hidden="true"
+          >
+            <path
+              className="hero-branch-path"
+              pathLength="1"
+              d="M180 0 V24 C180 50 88 40 88 96"
+              fill="none"
+              stroke="var(--color-primary)"
+              strokeOpacity="0.48"
+              strokeWidth="2"
+              vectorEffect="non-scaling-stroke"
+            />
+            <path
+              className="hero-branch-path"
+              pathLength="1"
+              d="M180 24 C180 50 272 40 272 96"
+              fill="none"
+              stroke="var(--color-gold)"
+              strokeOpacity="0.58"
+              strokeWidth="2"
+              vectorEffect="non-scaling-stroke"
+            />
+          </svg>
+
+          <div className="absolute left-1/2 top-5 z-10 -translate-x-1/2 text-center sm:top-6">
+            <span
+              className="hero-kali-marker mx-auto block h-2.5 w-2.5 rounded-full border-2 border-background"
+              style={{ backgroundColor: KALI_BLUE }}
+            />
+            <span className="mt-1.5 block whitespace-nowrap text-[10px] font-extrabold sm:text-xs" style={{ color: KALI_BLUE }}>
+              KALI nampak perbezaannya.
+            </span>
           </div>
-        ))}
+        </div>
+
+        <div className="grid grid-cols-2 gap-3 sm:gap-8 lg:gap-14">
+          {anak.map((a) => (
+            <div
+              key={a.nama}
+              className="hero-journey-node rounded-lg border border-border/80 bg-card/90 p-3 text-left shadow-card sm:p-5"
+            >
+              <div className="flex items-center justify-between gap-2 border-b border-border/60 pb-2.5 sm:pb-3">
+                <p className="font-display text-sm font-extrabold text-foreground sm:text-base">{a.nama}</p>
+                <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground sm:text-[10px]">Perjalanan</span>
+              </div>
+              <div className="mt-3 space-y-3 sm:mt-4">
+                <div className="flex items-start gap-2.5">
+                  <span className="mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full bg-primary ring-4 ring-primary/10" />
+                  <div>
+                    <p className="font-display text-sm font-extrabold leading-tight text-foreground sm:text-base">{a.dikuasai}</p>
+                    <p className="mt-0.5 text-[10px] leading-tight text-primary sm:text-xs">Sudah dikuasai</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-2.5 rounded-md bg-gold/10 px-2 py-2 sm:px-3">
+                  <span className="mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full bg-gold ring-4 ring-gold/10" />
+                  <div>
+                    <p className="font-display text-sm font-extrabold leading-tight text-foreground sm:text-base">{a.diperkukuhkan}</p>
+                    <p className="mt-0.5 text-[10px] leading-tight text-gold-foreground sm:text-xs">Perlu Diperkukuhkan</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
-      <p className="mt-3 text-center text-sm font-semibold text-foreground">
+
+      <p className="mx-auto mt-5 max-w-xl text-center text-sm font-semibold text-foreground sm:mt-7 sm:text-base">
         Markah sama. Tapi apa yang mereka perlukan selepas ini tak sama.
       </p>
       <p className="mt-1 text-center text-xs text-muted-foreground">
@@ -133,23 +244,42 @@ function HeroBuktiVisual() {
 
 function Hero() {
   return (
-    <section className="relative overflow-hidden">
-      <div className="absolute -right-32 -top-32 h-96 w-96 rounded-full blur-3xl" style={{ backgroundColor: `${EMAS}33` }} />
-      <div className="absolute -bottom-32 -left-32 h-96 w-96 rounded-full blur-3xl" style={{ backgroundColor: `${HIJAU}33` }} />
-      <div className="container relative mx-auto px-4 py-16 md:py-24">
-        <div className="mx-auto max-w-2xl text-center">
+    <section
+      className="relative overflow-hidden border-b border-border/50 bg-background"
+      style={{
+        backgroundImage: `radial-gradient(ellipse 70% 48% at 12% 32%, ${HIJAU}12, transparent 72%), radial-gradient(ellipse 62% 42% at 90% 52%, ${EMAS}14, transparent 74%)`,
+      }}
+    >
+      <div
+        className="pointer-events-none absolute inset-x-0 bottom-0 top-[38%] opacity-40"
+        style={{
+          backgroundImage: `linear-gradient(${HIJAU}0d 1px, transparent 1px), linear-gradient(90deg, ${HIJAU}0d 1px, transparent 1px)`,
+          backgroundSize: "40px 40px",
+          maskImage: "linear-gradient(to bottom, transparent, black 28%, black 78%, transparent)",
+        }}
+        aria-hidden="true"
+      />
+      <div
+        className="pointer-events-none absolute left-1/2 top-[48%] h-24 w-24 -translate-x-1/2 rounded-full blur-2xl"
+        style={{ backgroundColor: `${KALI_BLUE}0b` }}
+        aria-hidden="true"
+      />
+      <div className="container relative mx-auto px-4 py-14 sm:py-16 md:py-20 lg:py-24">
+        <div className="mx-auto text-center">
+          <div className="mx-auto max-w-3xl">
           <h1 className="font-display text-3xl font-extrabold leading-tight text-foreground md:text-5xl lg:text-6xl">
             Yang paling susah bukan bila anak salah. Yang susah bila kita tak tahu dia mula tak faham di mana.
           </h1>
           <p className="mx-auto mt-6 max-w-xl text-base text-muted-foreground md:text-lg">
             Markah cuma tunjuk berapa yang betul. Ia tak tunjuk bahagian mana yang anak sebenarnya belum faham.
           </p>
+          </div>
 
-          <div className="mt-8">
+          <div className="mt-9 sm:mt-11 md:mt-12">
             <HeroBuktiVisual />
           </div>
 
-          <p className="mx-auto mt-8 max-w-xl text-base font-semibold text-foreground md:text-lg">
+          <p className="mx-auto mt-8 max-w-2xl text-base font-semibold leading-relaxed text-foreground md:mt-10 md:text-lg">
             <span className="mr-1.5 inline-block h-2 w-2 rounded-full align-middle" style={{ backgroundColor: KALI_BLUE }} />
             KALI bantu cari bahagian yang perlu diberi perhatian — supaya anak tak sekadar buat lebih banyak latihan, tapi latihan yang lebih tepat.
           </p>
