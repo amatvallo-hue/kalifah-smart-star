@@ -683,7 +683,11 @@ function Ciri() {
         {temas.map((tema, i) => (
           <article
             key={tema.no}
-            className="grid items-center gap-5 md:grid-cols-[minmax(0,1.45fr)_minmax(260px,0.55fr)] md:gap-10 lg:gap-14"
+            className={`grid items-center gap-5 md:gap-10 lg:gap-14 ${
+              i % 2 === 1
+                ? "md:grid-cols-[minmax(260px,0.55fr)_minmax(0,1.45fr)]"
+                : "md:grid-cols-[minmax(0,1.45fr)_minmax(260px,0.55fr)]"
+            }`}
           >
             <div className={`min-w-0 ${i % 2 === 1 ? "md:order-2" : ""}`}>
               <div className="overflow-hidden rounded-lg border border-border/70 bg-card shadow-card">
