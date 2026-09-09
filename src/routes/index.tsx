@@ -11,6 +11,7 @@ import {
 import { useState } from "react";
 import { HARGA_ASAL, PAKEJ_LIST } from "@/lib/curriculum";
 import { KalifahLogo } from "@/components/KalifahLogo";
+import heroStudyRoom from "@/assets/hero-study-room.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -96,7 +97,7 @@ function HeroBuktiVisual() {
   ];
 
   return (
-    <div className="mx-auto w-full max-w-4xl" aria-label="Perbandingan perjalanan pembelajaran Anak A dan Anak B">
+    <div className="mx-auto w-full max-w-3xl" aria-label="Perbandingan perjalanan pembelajaran Anak A dan Anak B">
       <style>{`
         @keyframes hero-path-draw {
           to { stroke-dashoffset: 0; }
@@ -106,8 +107,8 @@ function HeroBuktiVisual() {
           to { opacity: 1; transform: translateY(0); }
         }
         @keyframes hero-kali-pulse {
-          0% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--color-kali) 28%, transparent); }
-          55% { box-shadow: 0 0 0 9px color-mix(in oklab, var(--color-kali) 0%, transparent); }
+          0% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--color-kali) 32%, transparent); }
+          55% { box-shadow: 0 0 0 10px color-mix(in oklab, var(--color-kali) 0%, transparent); }
           100% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--color-kali) 0%, transparent); }
         }
         .hero-branch-path {
@@ -128,23 +129,23 @@ function HeroBuktiVisual() {
         }
       `}</style>
 
-      <div className="relative pt-1">
-        <div className="relative z-10 mx-auto flex h-24 w-24 flex-col items-center justify-center rounded-full border border-primary/25 bg-background shadow-card sm:h-28 sm:w-28">
-          <span className="font-display text-3xl font-extrabold leading-none text-primary sm:text-4xl">6/10</span>
-          <span className="mt-1 text-[10px] font-bold text-muted-foreground sm:text-xs">Markah yang sama</span>
+      <div className="relative rounded-lg border border-background/70 bg-background/55 px-3 pb-4 pt-4 shadow-card backdrop-blur-sm sm:px-6 sm:pb-5 sm:pt-5">
+        <div className="relative z-10 mx-auto flex h-20 w-20 flex-col items-center justify-center rounded-full border border-primary/25 bg-background/95 shadow-card sm:h-24 sm:w-24">
+          <span className="font-display text-2xl font-extrabold leading-none text-primary sm:text-3xl">6/10</span>
+          <span className="mt-1 text-[9px] font-bold text-muted-foreground sm:text-[10px]">Markah yang sama</span>
         </div>
 
-        <div className="relative mx-auto h-24 max-w-3xl sm:h-28">
+        <div className="relative mx-auto h-20 max-w-2xl sm:h-24">
           <svg
             className="absolute inset-0 hidden h-full w-full overflow-visible sm:block"
-            viewBox="0 0 800 112"
+            viewBox="0 0 720 96"
             preserveAspectRatio="none"
             aria-hidden="true"
           >
             <path
               className="hero-branch-path"
               pathLength="1"
-              d="M400 0 V28 C400 62 205 44 205 112"
+              d="M360 0 V24 C360 54 180 38 180 96"
               fill="none"
               stroke="var(--color-primary)"
               strokeOpacity="0.48"
@@ -154,7 +155,7 @@ function HeroBuktiVisual() {
             <path
               className="hero-branch-path"
               pathLength="1"
-              d="M400 28 C400 62 595 44 595 112"
+              d="M360 24 C360 54 540 38 540 96"
               fill="none"
               stroke="var(--color-gold)"
               strokeOpacity="0.58"
@@ -164,14 +165,14 @@ function HeroBuktiVisual() {
           </svg>
           <svg
             className="absolute inset-0 h-full w-full overflow-visible sm:hidden"
-            viewBox="0 0 360 96"
+            viewBox="0 0 360 80"
             preserveAspectRatio="none"
             aria-hidden="true"
           >
             <path
               className="hero-branch-path"
               pathLength="1"
-              d="M180 0 V24 C180 50 88 40 88 96"
+              d="M180 0 V20 C180 44 88 32 88 80"
               fill="none"
               stroke="var(--color-primary)"
               strokeOpacity="0.48"
@@ -181,7 +182,7 @@ function HeroBuktiVisual() {
             <path
               className="hero-branch-path"
               pathLength="1"
-              d="M180 24 C180 50 272 40 272 96"
+              d="M180 20 C180 44 272 32 272 80"
               fill="none"
               stroke="var(--color-gold)"
               strokeOpacity="0.58"
@@ -190,7 +191,7 @@ function HeroBuktiVisual() {
             />
           </svg>
 
-          <div className="absolute left-1/2 top-5 z-10 -translate-x-1/2 text-center sm:top-6">
+          <div className="absolute left-1/2 top-4 z-10 -translate-x-1/2 text-center sm:top-5">
             <span
               className="hero-kali-marker mx-auto block h-2.5 w-2.5 rounded-full border-2 border-background"
               style={{ backgroundColor: KALI_BLUE }}
@@ -201,28 +202,28 @@ function HeroBuktiVisual() {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-3 sm:gap-8 lg:gap-14">
+        <div className="grid grid-cols-2 gap-2.5 sm:gap-5">
           {anak.map((a) => (
             <div
               key={a.nama}
-              className="hero-journey-node rounded-lg border border-border/80 bg-card/90 p-3 text-left shadow-card sm:p-5"
+              className="hero-journey-node rounded-md border border-background/80 bg-background/90 p-3 text-left shadow-card backdrop-blur-md sm:p-4"
             >
-              <div className="flex items-center justify-between gap-2 border-b border-border/60 pb-2.5 sm:pb-3">
+              <div className="flex items-center justify-between gap-2 border-b border-border/60 pb-2.5">
                 <p className="font-display text-sm font-extrabold text-foreground sm:text-base">{a.nama}</p>
-                <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground sm:text-[10px]">Perjalanan</span>
+                <span className="hidden text-[9px] font-bold uppercase tracking-wider text-muted-foreground sm:inline">Perjalanan</span>
               </div>
-              <div className="mt-3 space-y-3 sm:mt-4">
+              <div className="mt-3 space-y-2.5">
                 <div className="flex items-start gap-2.5">
                   <span className="mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full bg-primary ring-4 ring-primary/10" />
                   <div>
-                    <p className="font-display text-sm font-extrabold leading-tight text-foreground sm:text-base">{a.dikuasai}</p>
+                    <p className="font-display text-sm font-extrabold leading-tight text-foreground">{a.dikuasai}</p>
                     <p className="mt-0.5 text-[10px] leading-tight text-primary sm:text-xs">Sudah dikuasai</p>
                   </div>
                 </div>
-                <div className="flex items-start gap-2.5 rounded-md bg-gold/10 px-2 py-2 sm:px-3">
+                <div className="flex items-start gap-2.5 rounded-sm bg-gold/10 px-2 py-2 sm:px-3">
                   <span className="mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full bg-gold ring-4 ring-gold/10" />
                   <div>
-                    <p className="font-display text-sm font-extrabold leading-tight text-foreground sm:text-base">{a.diperkukuhkan}</p>
+                    <p className="font-display text-sm font-extrabold leading-tight text-foreground">{a.diperkukuhkan}</p>
                     <p className="mt-0.5 text-[10px] leading-tight text-gold-foreground sm:text-xs">Perlu Diperkukuhkan</p>
                   </div>
                 </div>
@@ -232,7 +233,7 @@ function HeroBuktiVisual() {
         </div>
       </div>
 
-      <p className="mx-auto mt-5 max-w-xl text-center text-sm font-semibold text-foreground sm:mt-7 sm:text-base">
+      <p className="mx-auto mt-4 max-w-xl text-center text-sm font-bold text-foreground sm:mt-5 sm:text-base">
         Markah sama. Tapi apa yang mereka perlukan selepas ini tak sama.
       </p>
       <p className="mt-1 text-center text-xs text-muted-foreground">
@@ -244,47 +245,55 @@ function HeroBuktiVisual() {
 
 function Hero() {
   return (
-    <section
-      className="relative overflow-hidden border-b border-border/50 bg-background"
-      style={{
-        backgroundImage: `radial-gradient(ellipse 70% 48% at 12% 32%, ${HIJAU}12, transparent 72%), radial-gradient(ellipse 62% 42% at 90% 52%, ${EMAS}14, transparent 74%)`,
-      }}
-    >
+    <section className="relative overflow-hidden border-b border-border/50 bg-background">
+      <img
+        src={heroStudyRoom}
+        alt="Dua murid sekolah rendah sedang berfikir di meja belajar"
+        width={1920}
+        height={1088}
+        fetchPriority="high"
+        className="pointer-events-none absolute inset-0 hidden h-full w-full object-cover object-center md:block"
+      />
+      <div className="pointer-events-none absolute inset-0 hidden bg-background/20 md:block" aria-hidden="true" />
       <div
-        className="pointer-events-none absolute inset-x-0 bottom-0 top-[38%] opacity-40"
+        className="pointer-events-none absolute inset-0 hidden md:block"
         style={{
-          backgroundImage: `linear-gradient(${HIJAU}0d 1px, transparent 1px), linear-gradient(90deg, ${HIJAU}0d 1px, transparent 1px)`,
-          backgroundSize: "40px 40px",
-          maskImage: "linear-gradient(to bottom, transparent, black 28%, black 78%, transparent)",
+          backgroundImage: `linear-gradient(to bottom, color-mix(in oklab, var(--color-background) 90%, transparent) 0%, color-mix(in oklab, var(--color-background) 52%, transparent) 32%, color-mix(in oklab, var(--color-background) 18%, transparent) 72%, color-mix(in oklab, var(--color-background) 82%, transparent) 100%), radial-gradient(ellipse 35% 76% at 50% 52%, color-mix(in oklab, var(--color-background) 88%, transparent), transparent 78%)`,
         }}
         aria-hidden="true"
       />
-      <div
-        className="pointer-events-none absolute left-1/2 top-[48%] h-24 w-24 -translate-x-1/2 rounded-full blur-2xl"
-        style={{ backgroundColor: `${KALI_BLUE}0b` }}
-        aria-hidden="true"
-      />
-      <div className="container relative mx-auto px-4 py-14 sm:py-16 md:py-20 lg:py-24">
+      <div className="container relative mx-auto px-4 pb-12 pt-10 sm:pt-14 md:min-h-[940px] md:pb-14 md:pt-14 lg:min-h-[980px] lg:pt-16">
         <div className="mx-auto text-center">
-          <div className="mx-auto max-w-3xl">
-          <h1 className="font-display text-3xl font-extrabold leading-tight text-foreground md:text-5xl lg:text-6xl">
-            Yang paling susah bukan bila anak salah. Yang susah bila kita tak tahu dia mula tak faham di mana.
-          </h1>
-          <p className="mx-auto mt-6 max-w-xl text-base text-muted-foreground md:text-lg">
-            Markah cuma tunjuk berapa yang betul. Ia tak tunjuk bahagian mana yang anak sebenarnya belum faham.
-          </p>
+          <div className="mx-auto max-w-3xl rounded-lg bg-background/70 px-2 py-2 backdrop-blur-[2px] sm:px-5 md:bg-background/55">
+            <h1 className="font-display text-3xl font-extrabold leading-tight text-foreground md:text-5xl lg:text-6xl">
+              Yang paling susah bukan bila anak salah. Yang susah bila kita tak tahu dia mula tak faham di mana.
+            </h1>
+            <p className="mx-auto mt-5 max-w-xl text-base text-muted-foreground md:mt-6 md:text-lg">
+              Markah cuma tunjuk berapa yang betul. Ia tak tunjuk bahagian mana yang anak sebenarnya belum faham.
+            </p>
           </div>
 
-          <div className="mt-9 sm:mt-11 md:mt-12">
+          <div className="relative mx-[-1rem] mt-6 h-56 overflow-hidden border-y border-border/50 sm:h-72 md:hidden">
+            <img
+              src={heroStudyRoom}
+              alt="Dua murid sekolah rendah sedang berfikir di meja belajar"
+              width={1920}
+              height={1088}
+              className="h-full w-full object-cover object-center"
+            />
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-background/10 via-transparent to-background/40" aria-hidden="true" />
+          </div>
+
+          <div className="relative z-10 mt-7 sm:mt-9 md:mx-auto md:mt-10 md:max-w-3xl lg:mt-12">
             <HeroBuktiVisual />
           </div>
 
-          <p className="mx-auto mt-8 max-w-2xl text-base font-semibold leading-relaxed text-foreground md:mt-10 md:text-lg">
+          <p className="mx-auto mt-7 max-w-2xl rounded-md bg-background/75 px-4 py-3 text-base font-semibold leading-relaxed text-foreground backdrop-blur-sm md:mt-8 md:text-lg">
             <span className="mr-1.5 inline-block h-2 w-2 rounded-full align-middle" style={{ backgroundColor: KALI_BLUE }} />
             KALI bantu cari bahagian yang perlu diberi perhatian — supaya anak tak sekadar buat lebih banyak latihan, tapi latihan yang lebih tepat.
           </p>
 
-          <div className="mt-8 flex w-full flex-col items-center gap-3 sm:flex-row sm:justify-center">
+          <div className="mt-6 flex w-full flex-col items-center gap-3 sm:flex-row sm:justify-center md:mt-7">
             <Link
               to="/cuba-kali-web"
               className="flex w-full items-center justify-center gap-2 rounded-full px-6 py-3.5 font-display text-base font-extrabold text-white shadow-soft transition hover:-translate-y-0.5 sm:w-auto"
@@ -293,7 +302,7 @@ function Hero() {
               🧪 Cuba KALI Percuma
             </Link>
           </div>
-          <div className="mt-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-1.5 text-xs text-muted-foreground">
+          <div className="mx-auto mt-4 flex w-fit flex-wrap items-center justify-center gap-x-4 gap-y-1.5 rounded-full bg-background/75 px-4 py-2 text-xs text-muted-foreground backdrop-blur-sm">
             <span className="inline-flex items-center gap-1">
               <ShieldCheck className="h-4 w-4" style={{ color: HIJAU }} /> Selamat & sesuai untuk kanak-kanak
             </span>
