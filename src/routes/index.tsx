@@ -12,6 +12,9 @@ import { useState, type ReactNode } from "react";
 import { HARGA_ASAL, PAKEJ_LIST } from "@/lib/curriculum";
 import { KalifahLogo } from "@/components/KalifahLogo";
 import heroStudyRoom from "@/assets/hero-study-room.jpg";
+import ciriNotaAsset from "@/assets/product-proof/ciri-nota.png.asset.json";
+import ciriGameAsset from "@/assets/product-proof/ciri-game.png.asset.json";
+import ciriGanjaranAsset from "@/assets/product-proof/ciri-ganjaran.png.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -646,21 +649,28 @@ function Ciri() {
     {
       no: "01",
       t: "Faham Dulu",
-      d: "Nota ringkas disusun ikut topik — termasuk formula matematik untuk rujukan pantas semasa buat latihan.",
+      d: "Nota ringkas ikut topik bantu anak faham semula sebelum terus berlatih.",
+      image: ciriNotaAsset.url,
+      alt: "Paparan sebenar Nota Ringkas Matematik Kalifah dengan topik Pecahan dan formula penting",
     },
     {
       no: "02",
       t: "Berlatih Dengan Cara Berbeza",
-      d: "Latih tubi merentasi pelbagai subtopik, ditambah kuiz ikut standard kurikulum KSSR — supaya anak tak bosan ulang benda yang sama.",
+      d: "Latihan, kuiz dan game bantu anak belajar dengan lebih aktif dan tidak membosankan.",
+      image: ciriGameAsset.url,
+      alt: "Paparan sebenar game MatikStar Kalifah dengan soalan Matematik interaktif",
     },
     {
       no: "03",
       t: "Kekal Bermotivasi",
-      d: "Anak kumpul star bagi setiap jawapan betul, kemudian boleh tebus hadiah sebagai ganjaran untuk terus bersemangat belajar. Bila skor kuiz penuh, sijil cemerlang dijana secara automatik.",
+      d: "Setiap jawapan betul beri star. Anak boleh tebus hadiah dan raikan pencapaian dengan sijil.",
+      image: ciriGanjaranAsset.url,
+      alt: "Gabungan paparan star, Kedai Hadiah dan Sijil Cemerlang dalam Kalifah",
     },
   ];
   return (
-    <section id="ciri" className="container mx-auto px-4 py-16">
+    <section id="ciri" className="overflow-hidden py-14 sm:py-16">
+      <div className="container mx-auto px-4">
       <div className="max-w-2xl">
         <h2 className="font-display text-3xl font-extrabold text-foreground md:text-4xl">
           Anak Bukan Hanya Jawab Soalan.
@@ -669,25 +679,45 @@ function Ciri() {
           Selepas KALI kenal pasti bahagian yang perlu diberi perhatian, ini bagaimana anak belajar setiap hari.
         </p>
       </div>
-      <div className="mx-auto mt-10 max-w-3xl">
+      <div className="mt-9 space-y-12 sm:mt-12 sm:space-y-16">
         {temas.map((tema, i) => (
-          <div
+          <article
             key={tema.no}
-            className="flex gap-5 py-6 sm:gap-8"
-            style={{ borderTop: i === 0 ? "none" : `1px solid ${HIJAU}1f` }}
+            className="grid items-center gap-5 md:grid-cols-[minmax(0,1.45fr)_minmax(260px,0.55fr)] md:gap-10 lg:gap-14"
           >
-            <span
-              className="shrink-0 font-display text-3xl font-extrabold sm:text-4xl"
-              style={{ color: `${HIJAU}55` }}
-            >
-              {tema.no}
-            </span>
-            <div>
-              <h3 className="font-display text-lg font-extrabold text-foreground sm:text-xl">{tema.t}</h3>
-              <p className="mt-1.5 text-sm text-muted-foreground sm:text-base">{tema.d}</p>
+            <div className={`min-w-0 ${i % 2 === 1 ? "md:order-2" : ""}`}>
+              <div className="overflow-hidden rounded-lg border border-border/70 bg-card shadow-card">
+                <div className="flex h-7 items-center gap-1.5 border-b border-border/70 bg-muted/35 px-3" aria-hidden="true">
+                  <span className="h-2 w-2 rounded-full bg-destructive/45" />
+                  <span className="h-2 w-2 rounded-full bg-gold/60" />
+                  <span className="h-2 w-2 rounded-full bg-primary/55" />
+                  <span className="ml-2 h-2.5 w-28 rounded-full bg-border/65 sm:w-40" />
+                </div>
+                <img
+                  src={tema.image}
+                  alt={tema.alt}
+                  width={1200}
+                  height={760}
+                  loading="lazy"
+                  className="aspect-[1200/760] w-full object-cover"
+                />
+              </div>
             </div>
-          </div>
+            <div className={`flex gap-4 md:block ${i % 2 === 1 ? "md:order-1 md:text-right" : ""}`}>
+              <span
+                className="shrink-0 font-display text-3xl font-extrabold leading-none sm:text-4xl md:text-5xl"
+                style={{ color: `${HIJAU}55` }}
+              >
+                {tema.no}
+              </span>
+              <div className="min-w-0 md:mt-4">
+                <h3 className="font-display text-xl font-extrabold leading-tight text-foreground sm:text-2xl">{tema.t}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted-foreground sm:text-base">{tema.d}</p>
+              </div>
+            </div>
+          </article>
         ))}
+      </div>
       </div>
     </section>
   );
