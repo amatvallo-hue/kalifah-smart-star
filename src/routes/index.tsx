@@ -129,13 +129,13 @@ function HeroBuktiVisual() {
         }
       `}</style>
 
-      <div className="relative rounded-lg border border-background/70 bg-background/55 px-3 pb-4 pt-4 shadow-card backdrop-blur-sm sm:px-6 sm:pb-5 sm:pt-5">
-        <div className="relative z-10 mx-auto flex h-20 w-20 flex-col items-center justify-center rounded-full border border-primary/25 bg-background/95 shadow-card sm:h-24 sm:w-24">
-          <span className="font-display text-2xl font-extrabold leading-none text-primary sm:text-3xl">6/10</span>
+      <div className="relative rounded-lg border border-background/70 bg-background/55 px-2.5 pb-3 pt-3 shadow-card backdrop-blur-sm sm:px-6 sm:pb-5 sm:pt-5">
+        <div className="relative z-10 mx-auto flex h-[72px] w-[72px] flex-col items-center justify-center rounded-full border border-primary/25 bg-background/95 shadow-card sm:h-24 sm:w-24">
+          <span className="font-display text-xl font-extrabold leading-none text-primary sm:text-3xl">6/10</span>
           <span className="mt-1 text-[9px] font-bold text-muted-foreground sm:text-[10px]">Markah yang sama</span>
         </div>
 
-        <div className="relative mx-auto h-20 max-w-2xl sm:h-24">
+        <div className="relative mx-auto h-16 max-w-2xl sm:h-24">
           <svg
             className="absolute inset-0 hidden h-full w-full overflow-visible sm:block"
             viewBox="0 0 720 96"
@@ -165,14 +165,14 @@ function HeroBuktiVisual() {
           </svg>
           <svg
             className="absolute inset-0 h-full w-full overflow-visible sm:hidden"
-            viewBox="0 0 360 80"
+            viewBox="0 0 360 64"
             preserveAspectRatio="none"
             aria-hidden="true"
           >
             <path
               className="hero-branch-path"
               pathLength="1"
-              d="M180 0 V20 C180 44 88 32 88 80"
+              d="M180 0 V16 C180 36 88 26 88 64"
               fill="none"
               stroke="var(--color-primary)"
               strokeOpacity="0.48"
@@ -182,7 +182,7 @@ function HeroBuktiVisual() {
             <path
               className="hero-branch-path"
               pathLength="1"
-              d="M180 20 C180 44 272 32 272 80"
+              d="M180 16 C180 36 272 26 272 64"
               fill="none"
               stroke="var(--color-gold)"
               strokeOpacity="0.58"
@@ -191,37 +191,37 @@ function HeroBuktiVisual() {
             />
           </svg>
 
-          <div className="absolute left-1/2 top-4 z-10 -translate-x-1/2 text-center sm:top-5">
+          <div className="absolute left-1/2 top-3 z-10 -translate-x-1/2 text-center sm:top-5">
             <span
-              className="hero-kali-marker mx-auto block h-2.5 w-2.5 rounded-full border-2 border-background"
+              className="hero-kali-marker mx-auto block h-2 w-2 rounded-full border-2 border-background sm:h-2.5 sm:w-2.5"
               style={{ backgroundColor: KALI_BLUE }}
             />
-            <span className="mt-1.5 block whitespace-nowrap text-[10px] font-extrabold sm:text-xs" style={{ color: KALI_BLUE }}>
+            <span className="mt-1 block whitespace-nowrap text-[9px] font-extrabold sm:text-xs" style={{ color: KALI_BLUE }}>
               KALI nampak perbezaannya.
             </span>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-2.5 sm:gap-5">
+        <div className="grid grid-cols-2 gap-2 sm:gap-5">
           {anak.map((a) => (
             <div
               key={a.nama}
-              className="hero-journey-node rounded-md border border-background/80 bg-background/90 p-3 text-left shadow-card backdrop-blur-md sm:p-4"
+              className="hero-journey-node rounded-md border border-background/80 bg-background/90 p-2.5 text-left shadow-card backdrop-blur-md sm:p-4"
             >
-              <div className="flex items-center justify-between gap-2 border-b border-border/60 pb-2.5">
+              <div className="flex items-center justify-between gap-2 border-b border-border/60 pb-2">
                 <p className="font-display text-sm font-extrabold text-foreground sm:text-base">{a.nama}</p>
                 <span className="hidden text-[9px] font-bold uppercase tracking-wider text-muted-foreground sm:inline">Perjalanan</span>
               </div>
-              <div className="mt-3 space-y-2.5">
-                <div className="flex items-start gap-2.5">
-                  <span className="mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full bg-primary ring-4 ring-primary/10" />
+              <div className="mt-2 space-y-2">
+                <div className="flex items-start gap-2">
+                  <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-primary ring-4 ring-primary/10 sm:h-2.5 sm:w-2.5" />
                   <div>
                     <p className="font-display text-sm font-extrabold leading-tight text-foreground">{a.dikuasai}</p>
                     <p className="mt-0.5 text-[10px] leading-tight text-primary sm:text-xs">Sudah dikuasai</p>
                   </div>
                 </div>
-                <div className="flex items-start gap-2.5 rounded-sm bg-gold/10 px-2 py-2 sm:px-3">
-                  <span className="mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full bg-gold ring-4 ring-gold/10" />
+                <div className="flex items-start gap-2 rounded-sm bg-gold/10 px-1.5 py-1.5 sm:px-3">
+                  <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-gold ring-4 ring-gold/10 sm:h-2.5 sm:w-2.5" />
                   <div>
                     <p className="font-display text-sm font-extrabold leading-tight text-foreground">{a.diperkukuhkan}</p>
                     <p className="mt-0.5 text-[10px] leading-tight text-gold-foreground sm:text-xs">Perlu Diperkukuhkan</p>
@@ -233,7 +233,7 @@ function HeroBuktiVisual() {
         </div>
       </div>
 
-      <p className="mx-auto mt-4 max-w-xl text-center text-sm font-bold text-foreground sm:mt-5 sm:text-base">
+      <p className="mx-auto mt-3 max-w-xl text-center text-sm font-bold text-foreground sm:mt-5 sm:text-base">
         Markah sama. Tapi apa yang mereka perlukan selepas ini tak sama.
       </p>
       <p className="mt-1 text-center text-xs text-muted-foreground">
