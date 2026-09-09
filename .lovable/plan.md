@@ -1,22 +1,28 @@
-# Hero v2 Cinematic Study-Room Enhancement
+# Hero v1 Cinematic Enhancement
 
 ## Scope
-- Change only `Hero()` and `HeroBuktiVisual()` in `src/routes/index.tsx`, plus new Hero-only image assets.
-- Preserve the locked headline, support copy, KALI bridge sentence, CTA label/route, conclusion, disclaimer, trust line, and all sections outside the Hero.
-- Keep the existing header and all application logic unchanged. Preview only; no production deployment.
+- Change only `Hero()` and `HeroBuktiVisual()` in `src/routes/index.tsx`.
+- Preserve the locked headline, support copy, KALI bridge sentence, CTA label/route, trust line, and all sections outside the hero.
+- Preview only; no production deployment.
 
-## Hero artwork and composition
-- Generate a cohesive warm study-room campaign image with a thoughtful Malay/Asian boy anchored left and a thoughtful Malay/Asian girl in a light beige hijab anchored right, both seated at a study table in dark green tops.
-- Leave calm, bright negative space through the center for the headline and proof; use warm cream walls, books, stationery, subtle plants, daylight, and shallow depth without a stock-photo look.
-- Integrate the existing `6/10` branching proof into the scene using restrained warm translucent surfaces: green mastery, amber strengthening needs, and one tiny KALI Blue intelligence signal.
-- Preserve the elegant one-time branch draw, node entrance, and KALI marker pulse with reduced-motion support.
+## Visual implementation
+- Replace the two-card proof with a single editorial learning canvas on a warm cream base.
+- Center one shared `6/10` score and caption, then branch into Anak A and Anak B learning paths.
+- Show mastery in green and strengthening needs in amber, with a small KALI Blue marker and “KALI nampak perbezaannya.” at the branch.
+- Add integrated CSS-only green/amber atmospheric washes and a faint learning-map grid; avoid floating blur blobs, photos, heavy glass effects, and decorative particles.
+- Keep the conclusion and example disclaimer unchanged.
 
 ## Responsive behavior
-- Desktop: use the children as lower-left and lower-right emotional anchors while the centered headline and proof remain readable in a cinematic wide composition.
-- Mobile at 390px: recompose the image as edge/background anchors below the headline, preserve faces with deliberate object positioning, and stack the proof without horizontal scrolling.
-- Keep text, CTA, and trust indicators readable and accessible at both sizes.
+- Desktop: wide horizontal branch composition within an approximately `max-w-4xl` proof area while keeping headline width controlled.
+- Mobile: centered score followed by a readable two-column comparison, falling back cleanly without horizontal scrolling.
+- Maintain readable labels and a full-width mobile CTA.
+
+## Motion and accessibility
+- Use local SVG/CSS transitions for a one-time branch draw, node entrance, and single KALI Blue pulse.
+- Disable nonessential motion under `prefers-reduced-motion`.
+- Keep SSR-safe static markup with no browser-only render logic.
 
 ## Validation
 - Run TypeScript typecheck.
-- Inspect desktop and 390px mobile previews for image framing, face crops, layout, overflow, readability, and console errors.
-- Confirm only Hero code/assets changed, report the preview URL, and stop without deployment.
+- Inspect desktop and 390px mobile previews for layout, overflow, readability, and console errors.
+- Report the exact changed file, visual summary, and preview URL; do not deploy.
