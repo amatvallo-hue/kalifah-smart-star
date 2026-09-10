@@ -12,11 +12,10 @@ import { useState, type ReactNode } from "react";
 import { HARGA_ASAL, PAKEJ_LIST } from "@/lib/curriculum";
 import { KalifahLogo } from "@/components/KalifahLogo";
 import heroStudyRoom from "@/assets/hero-study-room.jpg";
-import ciriNotaAsset from "@/assets/product-proof/ciri-nota.png.asset.json";
-import ciriGameAsset from "@/assets/product-proof/ciri-game.png.asset.json";
-import ciriGanjaranAsset from "@/assets/product-proof/ciri-ganjaran.png.asset.json";
-import parentEvidenceAsset from "@/assets/product-proof/parent-evidence.png.asset.json";
-import parentEvidenceMobileAsset from "@/assets/product-proof/parent-evidence-mobile.png.asset.json";
+import ciriNotaAsset from "@/assets/product-proof/real-nota.jpg.asset.json";
+import ciriGameAsset from "@/assets/product-proof/real-soalan.jpg.asset.json";
+import ciriGanjaranAsset from "@/assets/product-proof/real-hadiah.jpg.asset.json";
+import parentEvidenceAsset from "@/assets/product-proof/real-parent-private.jpg.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -654,21 +653,21 @@ function Ciri() {
       t: "Faham Dulu",
       d: "Nota ringkas ikut topik bantu anak faham semula sebelum terus berlatih.",
       image: ciriNotaAsset.url,
-      alt: "Paparan sebenar Nota Ringkas Matematik Kalifah dengan topik Pecahan dan formula penting",
+      alt: "Screenshot Nota Ringkas Sains Kalifah dengan pilihan topik, rajah tumbuhan dan isi pembelajaran",
     },
     {
       no: "02",
       t: "Berlatih Dengan Cara Berbeza",
       d: "Latihan, kuiz dan game bantu anak belajar dengan lebih aktif dan tidak membosankan.",
       image: ciriGameAsset.url,
-      alt: "Paparan sebenar game MatikStar Kalifah dengan soalan Matematik interaktif",
+      alt: "Screenshot pilihan set soalan bergambar Sains Kalifah",
     },
     {
       no: "03",
       t: "Kekal Bermotivasi",
       d: "Setiap jawapan betul beri star. Anak boleh tebus hadiah dan raikan pencapaian dengan sijil.",
       image: ciriGanjaranAsset.url,
-      alt: "Gabungan paparan star, Kedai Hadiah dan Sijil Cemerlang dalam Kalifah",
+      alt: "Screenshot Kedai Hadiah Kalifah dengan baki star dan hadiah untuk ditebus",
     },
   ];
   return (
@@ -693,20 +692,14 @@ function Ciri() {
             }`}
           >
             <div className={`min-w-0 ${i % 2 === 1 ? "md:order-2" : ""}`}>
-              <div className="overflow-hidden rounded-lg border border-border/70 bg-card shadow-card">
-                <div className="flex h-7 items-center gap-1.5 border-b border-border/70 bg-muted/35 px-3" aria-hidden="true">
-                  <span className="h-2 w-2 rounded-full bg-destructive/45" />
-                  <span className="h-2 w-2 rounded-full bg-gold/60" />
-                  <span className="h-2 w-2 rounded-full bg-primary/55" />
-                  <span className="ml-2 h-2.5 w-28 rounded-full bg-border/65 sm:w-40" />
-                </div>
+              <div className="overflow-hidden rounded-lg border border-border/70 bg-card">
                 <img
                   src={tema.image}
                   alt={tema.alt}
-                  width={1200}
-                  height={760}
+                  width={725}
+                  height={732}
                   loading="lazy"
-                  className="aspect-[1200/760] w-full object-cover"
+                  className="h-auto w-full"
                 />
               </div>
             </div>
@@ -762,18 +755,15 @@ function ParentEvidence() {
         </div>
 
         <div className="mt-8 grid items-center gap-8 lg:grid-cols-[minmax(0,1.7fr)_minmax(280px,0.75fr)] lg:gap-12">
-          <div className="min-w-0 overflow-hidden rounded-lg border border-border/70 bg-card shadow-card">
-            <picture>
-              <source media="(max-width: 639px)" srcSet={parentEvidenceMobileAsset.url} />
-              <img
-                src={parentEvidenceAsset.url}
-                alt="Komposit paparan Dashboard Ibu Bapa Kalifah yang menunjukkan status penguasaan dan rekod aktiviti pembelajaran"
-                width={1400}
-                height={940}
-                loading="lazy"
-                className="aspect-[18/35] w-full object-cover sm:aspect-[1400/940]"
-              />
-            </picture>
+          <div className="min-w-0 overflow-hidden rounded-lg border border-border/70 bg-card">
+            <img
+              src={parentEvidenceAsset.url}
+              alt="Screenshot Dashboard Ibu Bapa: Apa KALI Nampak, Bukti Kemajuan Bersama KALI dan Ringkasan Prestasi; identiti peribadi ditutup"
+              width={796}
+              height={1010}
+              loading="lazy"
+              className="h-auto w-full"
+            />
           </div>
 
           <div className="space-y-6">
