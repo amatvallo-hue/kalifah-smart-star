@@ -554,93 +554,174 @@ function MockStat({
 }
 
 function Mekanisme() {
-  const steps = [
-    {
-      label: "1. Anak Jawab",
-      visual: (
-        <div className="mt-2 flex items-center gap-1.5 md:mt-3">
-          {["✓", "✗", "✓", "✓", "✗"].map((tanda, i) => (
-            <span
-              key={i}
-              className="flex h-5 w-5 items-center justify-center rounded-md text-xs font-extrabold md:h-6 md:w-6"
-              style={{
-                backgroundColor: tanda === "✓" ? `${HIJAU}1a` : `${EMAS}1a`,
-                color: tanda === "✓" ? HIJAU : "#7a5300",
-              }}
-            >
-              {tanda}
-            </span>
-          ))}
-        </div>
-      ),
-      d: "Setiap jawapan direkodkan — bukan sekadar markah akhir.",
-    },
-    {
-      label: "2. KALI Nampak Corak",
-      visual: (
-        <div className="mt-2 md:mt-3">
-          <p className="text-[11px] font-bold uppercase tracking-wide text-muted-foreground">Contoh: Anak A</p>
-          <div className="mt-1.5 space-y-1.5">
-            <span className="flex items-center gap-1.5 text-sm text-foreground">
-              <span className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: HIJAU }} />
-              Tambah
-            </span>
-            <span
-              className="flex items-center gap-1.5 rounded-md px-1.5 py-1 text-sm"
-              style={{ backgroundColor: `${EMAS}1a`, color: "#7a5300" }}
-            >
-              <span className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: EMAS }} />
-              Bahagi — Perlu Diperkukuhkan
-            </span>
-          </div>
-        </div>
-      ),
-      d: "KALI kenal pasti bahagian yang masih perlu diperkukuhkan — corak yang markah sahaja tidak tunjukkan.",
-    },
-    {
-      label: "3. Latihan Seterusnya",
-      visual: (
-        <div className="mt-2 md:mt-3">
-          <span
-            className="inline-flex items-center gap-1.5 rounded-md px-2 py-1.5 text-sm font-extrabold"
-            style={{ backgroundColor: `${EMAS}1a`, color: "#7a5300", border: `1.5px solid ${EMAS}55` }}
-          >
-            <Zap className="h-3.5 w-3.5" />
-            Latihan: Bahagi
-          </span>
-        </div>
-      ),
-      d: "Anak terus dapat latihan yang sesuai dengan tahapnya sekarang — automatik.",
-    },
-  ];
-
   return (
-    <section id="mekanisme" className="bg-muted/15 container mx-auto px-4 py-16">
-      <div className="text-center">
-        <p className="font-display text-xs font-bold uppercase tracking-widest" style={{ color: HIJAU }}>
-          Dari Jawapan Kepada Latihan Yang Tepat
-        </p>
-        <h2 className="mt-2 font-display text-3xl font-extrabold text-foreground md:text-4xl">
-          Bagaimana KALI Membantu
-        </h2>
-        <p className="mx-auto mt-3 max-w-2xl text-base text-muted-foreground">
-          Ingat Anak A dan Anak B tadi? Ini macam mana KALI tahu apa yang setiap seorang sebenarnya perlukan.
-        </p>
-      </div>
+    <section id="mekanisme" className="overflow-hidden bg-muted/15 py-14 sm:py-16">
+      <style>{`
+        @keyframes mekanisme-path-draw {
+          from { stroke-dashoffset: 1; }
+          to { stroke-dashoffset: 0; }
+        }
+        @keyframes mekanisme-answer-in {
+          from { opacity: 0; transform: translateY(5px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes mekanisme-insight-pulse {
+          0%, 100% { box-shadow: 0 0 0 0 color-mix(in oklab, ${KALI_BLUE} 0%, transparent); }
+          45% { box-shadow: 0 0 0 8px color-mix(in oklab, ${KALI_BLUE} 16%, transparent); }
+        }
+        .mekanisme-path {
+          stroke-dasharray: 1;
+          stroke-dashoffset: 1;
+          animation: mekanisme-path-draw 900ms ease-out 150ms forwards;
+        }
+        .mekanisme-answer {
+          opacity: 0;
+          animation: mekanisme-answer-in 300ms ease-out forwards;
+        }
+        .mekanisme-answer:nth-child(2) { animation-delay: 120ms; }
+        .mekanisme-answer:nth-child(3) { animation-delay: 210ms; }
+        .mekanisme-answer:nth-child(4) { animation-delay: 300ms; }
+        .mekanisme-answer:nth-child(5) { animation-delay: 390ms; }
+        .mekanisme-insight { animation: mekanisme-insight-pulse 1000ms ease-out 650ms 1; }
+        @media (prefers-reduced-motion: reduce) {
+          .mekanisme-path { animation: none; stroke-dashoffset: 0; }
+          .mekanisme-answer { animation: none; opacity: 1; transform: none; }
+          .mekanisme-insight { animation: none; }
+        }
+      `}</style>
 
-      <div className="mx-auto mt-8 flex max-w-4xl flex-col items-stretch gap-2 md:mt-12 md:flex-row md:items-start">
-        {steps.map((s, i) => (
-          <div key={s.label} className="flex flex-1 flex-col items-stretch gap-2 md:flex-row md:items-start">
-            <div className="flex-1 rounded-2xl bg-card p-4 shadow-soft md:p-5" style={{ border: `2px solid ${HIJAU}1f` }}>
-              <p className="font-display text-xs font-extrabold" style={{ color: HIJAU }}>{s.label}</p>
-              {s.visual}
-              <p className="mt-2 text-sm text-muted-foreground md:mt-3">{s.d}</p>
-            </div>
-            {i < steps.length - 1 && (
-              <ChevronRight className="mx-auto h-5 w-5 shrink-0 rotate-90 text-muted-foreground md:mx-0 md:mt-8 md:h-6 md:w-6 md:rotate-0" />
-            )}
-          </div>
-        ))}
+      <div className="container mx-auto px-4">
+        <div className="text-center">
+          <p className="font-display text-xs font-bold uppercase tracking-widest text-primary">
+            MEKANISME KALI
+          </p>
+          <h2 className="mt-2 font-display text-3xl font-extrabold text-foreground md:text-4xl">
+            Bagaimana KALI Membantu
+          </h2>
+          <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+            KALI bukan sekadar kira markah — ia guna corak jawapan untuk tentukan apa anak perlu buat selepas ini.
+          </p>
+        </div>
+
+        <div className="relative mx-auto mt-8 max-w-5xl sm:mt-10">
+          <svg
+            className="pointer-events-none absolute left-[9%] right-[9%] top-0 hidden h-10 w-[82%] overflow-visible md:block"
+            viewBox="0 0 820 40"
+            preserveAspectRatio="none"
+            aria-hidden="true"
+          >
+            <path
+              className="mekanisme-path"
+              pathLength="1"
+              d="M0 18 C170 18 650 18 820 18"
+              fill="none"
+              stroke="var(--color-primary)"
+              strokeOpacity="0.42"
+              strokeWidth="3"
+              strokeLinecap="round"
+              vectorEffect="non-scaling-stroke"
+            />
+          </svg>
+
+          <ol className="relative grid grid-cols-1 gap-0 md:grid-cols-[1fr_1.18fr_1fr] md:items-center">
+            <li className="relative pb-12 pl-12 md:pb-0 md:pl-0 md:pr-7">
+              <div className="absolute bottom-0 left-[1.15rem] top-6 w-px bg-primary/30 md:hidden" aria-hidden="true" />
+              <span className="absolute left-0 top-0 z-10 flex h-9 w-9 items-center justify-center rounded-full border-2 border-primary bg-background font-display text-sm font-extrabold text-primary md:left-1/2 md:top-[-1.1rem] md:-translate-x-1/2">
+                1
+              </span>
+              <div className="rounded-lg border border-primary/20 bg-card p-4 shadow-sm sm:p-5 md:mt-5">
+                <div className="rounded-md bg-secondary/60 p-3 text-center">
+                  <p className="font-display text-xl font-extrabold text-foreground">8 ÷ 2 = ?</p>
+                  <div className="mt-3 grid grid-cols-4 gap-1.5" aria-label="Pilihan jawapan; 4 ialah jawapan betul">
+                    {["2", "3", "4", "6"].map((jawapan) => (
+                      <span
+                        key={jawapan}
+                        className={`flex h-8 items-center justify-center rounded-md border text-sm font-extrabold ${
+                          jawapan === "4"
+                            ? "border-primary bg-primary text-primary-foreground"
+                            : "border-border bg-card text-muted-foreground"
+                        }`}
+                      >
+                        {jawapan}{jawapan === "4" ? " ✓" : ""}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="mt-3 flex justify-center gap-1.5" aria-label="Corak jawapan: betul, salah, betul, betul, salah">
+                    {["✓", "✗", "✓", "✓", "✗"].map((tanda, index) => (
+                      <span
+                        key={`${tanda}-${index}`}
+                        className="mekanisme-answer flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-extrabold"
+                        style={{
+                          backgroundColor: tanda === "✓" ? `${HIJAU}1a` : `${EMAS}24`,
+                          color: tanda === "✓" ? HIJAU : "#7a5300",
+                        }}
+                      >
+                        {tanda}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+                <h3 className="mt-4 font-display text-lg font-extrabold text-foreground">Anak Jawab</h3>
+                <p className="mt-1 text-sm leading-relaxed text-muted-foreground">Anak menjawab soalan seperti biasa.</p>
+              </div>
+              <ChevronRight className="absolute bottom-3 left-[0.7rem] h-4 w-4 rotate-90 text-primary md:hidden" aria-hidden="true" />
+            </li>
+
+            <li className="relative pb-12 pl-12 md:z-10 md:pb-0 md:pl-0">
+              <div className="absolute bottom-0 left-[1.15rem] top-6 w-px bg-primary/30 md:hidden" aria-hidden="true" />
+              <span
+                className="absolute left-0 top-0 z-20 flex h-9 w-9 items-center justify-center rounded-full border-2 border-background font-display text-sm font-extrabold text-primary-foreground shadow-sm md:left-1/2 md:top-[-1.2rem] md:-translate-x-1/2"
+                style={{ backgroundColor: KALI_BLUE }}
+              >
+                2
+              </span>
+              <div
+                className="mekanisme-insight rounded-lg border p-4 shadow-card sm:p-5 md:scale-[1.04] md:p-6"
+                style={{ backgroundColor: `${KALI_BLUE}0d`, borderColor: `${KALI_BLUE}40` }}
+              >
+                <div className="rounded-md border bg-card p-3.5" style={{ borderColor: `${KALI_BLUE}38` }}>
+                  <div className="flex items-center justify-between gap-3 border-b border-border pb-2.5">
+                    <div className="flex items-center gap-2">
+                      <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: KALI_BLUE }} aria-hidden="true" />
+                      <p className="font-display text-sm font-extrabold" style={{ color: KALI_BLUE }}>KALI Insight</p>
+                    </div>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Corak dikesan</span>
+                  </div>
+                  <div className="mt-3 space-y-2">
+                    <div className="flex items-center justify-between gap-3 rounded-md bg-secondary/60 px-3 py-2">
+                      <span className="font-display text-sm font-extrabold text-foreground">Tambah</span>
+                      <span className="inline-flex items-center gap-1 text-xs font-bold text-primary"><Check className="h-3.5 w-3.5" /> Sudah Dikuasai</span>
+                    </div>
+                    <div className="flex items-center justify-between gap-3 rounded-md px-3 py-2" style={{ backgroundColor: `${EMAS}1a` }}>
+                      <span className="font-display text-sm font-extrabold text-foreground">Bahagi</span>
+                      <span className="inline-flex items-center gap-1 text-right text-xs font-bold" style={{ color: "#7a5300" }}><span aria-hidden="true">!</span> Perlu Diperkukuhkan</span>
+                    </div>
+                  </div>
+                </div>
+                <h3 className="mt-4 font-display text-lg font-extrabold text-foreground">KALI Nampak Corak</h3>
+                <p className="mt-1 text-sm leading-relaxed text-muted-foreground">KALI menganalisis corak jawapan untuk mengenal pasti bahagian yang perlu diberi perhatian.</p>
+              </div>
+              <ChevronRight className="absolute bottom-3 left-[0.7rem] h-4 w-4 rotate-90 text-primary md:hidden" aria-hidden="true" />
+            </li>
+
+            <li className="relative pl-12 md:pl-7">
+              <span className="absolute left-0 top-0 z-10 flex h-9 w-9 items-center justify-center rounded-full border-2 border-primary bg-background font-display text-sm font-extrabold text-primary md:left-1/2 md:top-[-1.1rem] md:-translate-x-1/2">
+                3
+              </span>
+              <div className="rounded-lg border border-primary/20 bg-card p-4 shadow-sm sm:p-5 md:mt-5">
+                <div className="rounded-md border border-primary/20 bg-secondary/60 p-4">
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Seterusnya</p>
+                  <p className="mt-1 font-display text-xl font-extrabold text-foreground">Bahagi</p>
+                  <span className="mt-4 inline-flex items-center gap-1.5 rounded-md bg-primary px-3 py-2 font-display text-xs font-extrabold text-primary-foreground" aria-label="Contoh tindakan Mulakan Latihan">
+                    <Zap className="h-3.5 w-3.5" /> Mulakan Latihan <span aria-hidden="true">→</span>
+                  </span>
+                </div>
+                <h3 className="mt-4 font-display text-lg font-extrabold text-foreground">Latihan Seterusnya</h3>
+                <p className="mt-1 text-sm leading-relaxed text-muted-foreground">KALI pilih latihan yang lebih tepat berdasarkan dapatan ini.</p>
+              </div>
+            </li>
+          </ol>
+        </div>
       </div>
     </section>
   );
