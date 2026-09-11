@@ -8,7 +8,7 @@ import {
   Zap,
   Send,
 } from "lucide-react";
-import { useState, type ReactNode } from "react";
+import { useState } from "react";
 import { HARGA_ASAL, PAKEJ_LIST } from "@/lib/curriculum";
 import { KalifahLogo } from "@/components/KalifahLogo";
 import heroStudyRoom from "@/assets/hero-study-room.jpg";
@@ -16,6 +16,9 @@ import ciriNotaAsset from "@/assets/product-proof/real-nota.jpg.asset.json";
 import ciriGameAsset from "@/assets/product-proof/real-soalan.jpg.asset.json";
 import ciriGanjaranAsset from "@/assets/product-proof/real-hadiah.jpg.asset.json";
 import parentEvidenceAsset from "@/assets/product-proof/real-parent-private.jpg.asset.json";
+import painTuisyenAsset from "@/assets/product-proof/pain-tuisyen-tiada-report.png.asset.json";
+import painLatihanAsset from "@/assets/product-proof/pain-latihan-tidak-tepat.png.asset.json";
+import painExamAsset from "@/assets/product-proof/pain-baru-tahu-exam.png.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -322,169 +325,78 @@ function Hero() {
 }
 
 function PainAmplifier() {
+  const painPoints = [
+    {
+      number: "01",
+      image: painTuisyenAsset.url,
+      alt: "Ibu bapa risau kerana tuisyen tidak memberi gambaran jelas tentang masalah anak",
+      title: "Tuisyen Tiada Report",
+      support: "Bayar setiap bulan, tapi masih tak tahu anak sebenarnya perlu bantuan di bahagian mana.",
+    },
+    {
+      number: "02",
+      image: painLatihanAsset.url,
+      alt: "Anak menjawab banyak latihan tetapi bahagian yang perlu difokuskan masih tidak jelas",
+      title: "Banyak Latihan Tak Semestinya Tepat",
+      support: "Anak boleh buat banyak soalan, tetapi bahagian yang benar-benar perlu diperkukuhkan masih tenggelam.",
+    },
+    {
+      number: "03",
+      image: painExamAsset.url,
+      alt: "Keputusan peperiksaan menunjukkan masalah sebenar yang disedari terlalu lewat",
+      title: "Baru Tahu Lepas Exam",
+      support: "Bila keputusan keluar, kadang-kadang masalah sebenar sudah bermula lebih awal.",
+    },
+  ];
+
   return (
     <section className="overflow-hidden border-y border-border/60 bg-muted/20 py-12 sm:py-16">
       <div className="container mx-auto px-4">
         <p className="mx-auto mb-10 max-w-2xl text-center text-xs font-extrabold uppercase tracking-[0.14em] text-muted-foreground sm:mb-14">
           Kebanyakan ibu bapa menghadapi ini
         </p>
-        <div className="relative mx-auto max-w-4xl space-y-10 md:space-y-14">
-          <div className="pointer-events-none absolute left-1/2 top-0 bottom-0 hidden w-px -translate-x-1/2 bg-border md:block" />
+        <div className="mx-auto max-w-5xl space-y-12 sm:space-y-16 md:space-y-20">
+          {painPoints.map((pain, index) => (
+            <article
+              key={pain.number}
+              className={`grid items-center gap-5 sm:gap-7 md:gap-10 lg:gap-14 ${
+                index === 1
+                  ? "md:grid-cols-[minmax(16rem,0.65fr)_minmax(0,1.35fr)]"
+                  : "md:grid-cols-[minmax(0,1.35fr)_minmax(16rem,0.65fr)]"
+              }`}
+            >
+              <div
+                className={`overflow-hidden rounded-2xl border border-border/60 bg-card shadow-card ${
+                  index === 1 ? "md:order-2" : ""
+                }`}
+              >
+                <img
+                  src={pain.image}
+                  alt={pain.alt}
+                  width={1536}
+                  height={1024}
+                  loading="lazy"
+                  className="aspect-[3/2] w-full object-cover"
+                />
+              </div>
 
-          <SceneCard
-            align="left"
-            number={1}
-            visual={<Scene1Visual />}
-            title="Tuisyen Tiada Report"
-            support="Bayar setiap bulan, tapi masih tak tahu anak sebenarnya perlu bantuan di bahagian mana."
-          />
-          <SceneCard
-            align="right"
-            number={2}
-            visual={<Scene2Visual />}
-            title="Banyak Latihan Tak Semestinya Tepat"
-            support="Anak boleh buat banyak soalan, tetapi bahagian yang benar-benar perlu diperkukuhkan masih tenggelam."
-          />
-          <SceneCard
-            align="left"
-            number={3}
-            visual={<Scene3Visual />}
-            title="Baru Tahu Lepas Exam"
-            support="Bila keputusan keluar, kadang-kadang masalah sebenar sudah bermula lebih awal."
-          />
+              <div className={index === 1 ? "md:order-1" : ""}>
+                <div className="mb-3 flex items-center gap-3" aria-hidden="true">
+                  <span className="font-display text-sm font-extrabold text-primary">{pain.number}</span>
+                  <span className="h-px w-12 bg-gold/70" />
+                </div>
+                <h3 className="font-display text-2xl font-extrabold leading-tight text-foreground sm:text-3xl">
+                  {pain.title}
+                </h3>
+                <p className="mt-3 max-w-md text-base leading-relaxed text-muted-foreground sm:text-lg">
+                  {pain.support}
+                </p>
+              </div>
+            </article>
+          ))}
         </div>
       </div>
     </section>
-  );
-}
-
-function SceneCard({
-  align,
-  number,
-  visual,
-  title,
-  support,
-}: {
-  align: "left" | "right";
-  number: number;
-  visual: ReactNode;
-  title: string;
-  support: string;
-}) {
-  const isRight = align === "right";
-  return (
-    <div className={`relative flex items-center ${isRight ? "md:flex-row-reverse" : ""}`}>
-      <div className="absolute left-1/2 top-1/2 z-10 hidden h-8 w-8 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-background text-xs font-extrabold text-muted-foreground md:flex">
-        {number}
-      </div>
-      <div
-        className={`w-full rounded-2xl border border-border/60 bg-card p-5 shadow-card sm:p-6 md:max-w-sm lg:max-w-md ${
-          isRight ? "md:ml-auto" : ""
-        }`}
-      >
-        <div className="mb-4">{visual}</div>
-        <h3 className="font-display text-lg font-extrabold text-foreground sm:text-xl">{title}</h3>
-        <p className="mt-1.5 text-sm leading-snug text-muted-foreground">{support}</p>
-      </div>
-    </div>
-  );
-}
-
-function Scene1Visual() {
-  return (
-    <div className="flex items-end justify-center gap-3 sm:gap-5" aria-hidden="true">
-      <div className="relative w-28 rounded-lg border border-dashed border-border bg-background p-3 shadow-card sm:w-32">
-        <div className="absolute -top-2 left-1/2 h-4 w-10 -translate-x-1/2 rounded-full border border-border bg-muted/50" />
-        <div className="mt-2 space-y-1.5">
-          <div className="h-1 w-full rounded bg-muted/70" />
-          <div className="h-1 w-5/6 rounded bg-muted/70" />
-          <div className="h-1 w-4/6 rounded bg-muted/70" />
-        </div>
-        <div className="mt-3 border-t border-border pt-2 text-center">
-          <span className="font-display text-lg font-extrabold text-foreground">RM 900</span>
-        </div>
-      </div>
-      <div className="relative max-w-[10rem] rounded-2xl rounded-bl-none border border-border bg-card p-3 shadow-card sm:max-w-[12rem]">
-        <p className="text-xs font-bold text-foreground sm:text-sm">“Dia okay, tengah improve.”</p>
-        <div className="mt-2 flex items-center gap-1.5 text-[10px] font-bold text-gold">
-          <span className="h-1.5 w-1.5 rounded-full bg-gold" />
-          Info tidak lengkap
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function Scene2Visual() {
-  const items = [
-    ...Array.from({ length: 8 }, () => "green" as const),
-    ...Array.from({ length: 2 }, () => "gold" as const),
-    ...Array.from({ length: 2 }, () => "neutral" as const),
-  ];
-  return (
-    <div className="mx-auto max-w-[16rem]" aria-hidden="true">
-      <div className="rounded-xl border border-border bg-card p-4 shadow-card">
-        <div className="mb-3 flex items-center gap-2 border-b border-border pb-2">
-          <div className="h-6 w-5 rounded-sm bg-primary/20" />
-          <div className="h-2 w-20 rounded bg-muted" />
-        </div>
-        <div className="grid grid-cols-5 gap-2">
-          {items.map((type, i) => (
-            <div
-              key={i}
-              className={`flex aspect-square items-center justify-center rounded-md text-xs font-extrabold ${
-                type === "green"
-                  ? "bg-primary/15 text-primary"
-                  : type === "gold"
-                    ? "bg-gold/20 text-gold"
-                    : "bg-muted/40 text-muted-foreground"
-              }`}
-            >
-              {type === "green" ? <Check className="h-3.5 w-3.5" /> : type === "gold" ? "!" : "?"}
-            </div>
-          ))}
-        </div>
-        <div className="mt-3 flex items-center justify-between text-[10px] font-bold">
-          <span className="inline-flex items-center gap-1 text-primary">
-            <span className="h-2 w-2 rounded-full bg-primary" />
-            Dah kuat
-          </span>
-          <span className="inline-flex items-center gap-1 text-gold">
-            <span className="h-2 w-2 rounded-full bg-gold" />
-            Perlu fokus
-          </span>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function Scene3Visual() {
-  return (
-    <div className="flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-6" aria-hidden="true">
-      <div className="rounded-xl border border-border bg-card px-6 py-4 text-center shadow-card">
-        <p className="text-[10px] font-extrabold uppercase tracking-wider text-muted-foreground">Keputusan Ujian</p>
-        <p className="font-display text-4xl font-extrabold text-foreground">60%</p>
-      </div>
-      <div className="flex flex-col items-center">
-        <svg width="24" height="48" viewBox="0 0 24 48" fill="none" aria-hidden="true">
-          <path d="M12 0 V36" stroke="var(--color-border)" strokeWidth="2" strokeDasharray="4 3" />
-          <path
-            d="M6 30 L12 36 L18 30"
-            stroke="var(--color-gold)"
-            strokeWidth="2.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-        <span className="mt-1 text-[10px] font-bold text-muted-foreground">lebih awal</span>
-      </div>
-      <div className="rounded-xl border border-gold/40 bg-gold/10 px-5 py-3 text-center">
-        <p className="text-[10px] font-extrabold uppercase tracking-wider text-gold">Masalah sebenar</p>
-        <p className="font-display text-base font-extrabold text-gold-foreground">Pecahan Tak Wajar</p>
-        <p className="text-[10px] font-bold text-muted-foreground">Darjah 3</p>
-      </div>
-    </div>
   );
 }
 
