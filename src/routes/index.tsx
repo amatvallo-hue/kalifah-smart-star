@@ -605,15 +605,15 @@ function Mekanisme() {
 
         <div className="relative mx-auto mt-8 max-w-5xl sm:mt-10">
           <svg
-            className="pointer-events-none absolute left-[9%] right-[9%] top-[11.5rem] hidden h-16 w-[82%] overflow-visible md:block"
-            viewBox="0 0 820 64"
+            className="pointer-events-none absolute left-[9%] right-[9%] top-0 hidden h-10 w-[82%] overflow-visible md:block"
+            viewBox="0 0 820 40"
             preserveAspectRatio="none"
             aria-hidden="true"
           >
             <path
               className="mekanisme-path"
               pathLength="1"
-              d="M0 32 C118 32 138 7 272 7 S440 57 548 57 S685 32 820 32"
+              d="M0 18 C170 18 650 18 820 18"
               fill="none"
               stroke="var(--color-primary)"
               strokeOpacity="0.42"
