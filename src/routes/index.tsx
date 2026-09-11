@@ -359,7 +359,11 @@ function PainAmplifier() {
           {painPoints.map((pain, index) => (
             <article
               key={pain.number}
-              className="grid items-center gap-5 sm:gap-7 md:grid-cols-[minmax(0,1.35fr)_minmax(16rem,0.65fr)] md:gap-10 lg:gap-14"
+              className={`grid items-center gap-5 sm:gap-7 md:gap-10 lg:gap-14 ${
+                index === 1
+                  ? "md:grid-cols-[minmax(16rem,0.65fr)_minmax(0,1.35fr)]"
+                  : "md:grid-cols-[minmax(0,1.35fr)_minmax(16rem,0.65fr)]"
+              }`}
             >
               <div
                 className={`overflow-hidden rounded-2xl border border-border/60 bg-card shadow-card ${
