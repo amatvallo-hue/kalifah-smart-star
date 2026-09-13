@@ -63,6 +63,7 @@ export const Route = createFileRoute("/daftar")({
       { title: "Daftar Akaun — Kalifah.my" },
       { name: "description", content: "Daftar akaun baru untuk Kalifah.my." },
     ],
+    links: [{ rel: "canonical", href: "https://kalifah.my/daftar" }],
   }),
   ssr: false,
   component: DaftarPage,

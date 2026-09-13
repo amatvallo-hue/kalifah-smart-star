@@ -3,7 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 
 const BASE = "https://kalifah.my";
 
-const STATIC_PATHS = ["/", "/harga", "/blog", "/cuba-kali-web"];
+const STATIC_PATHS = ["/", "/harga", "/blog", "/cuba-kali-web", "/ujian-percuma"];
 
 export const Route = createFileRoute("/sitemap.xml")({
   server: {

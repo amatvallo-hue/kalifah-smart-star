@@ -6,7 +6,6 @@ Disallow: /admin
 Disallow: /dashboard
 Disallow: /api
 Disallow: /login
-Disallow: /daftar
 Disallow: /cuba-kali/aktifkan
 
 Sitemap: https://kalifah.my/sitemap.xml
