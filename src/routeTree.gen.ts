@@ -23,6 +23,7 @@ import { Route as KedaiHadiahRouteImport } from './routes/kedai-hadiah'
 import { Route as LatihanRouteImport } from './routes/latihan'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LupaPasswordRouteImport } from './routes/lupa-password'
+import { Route as Mpt4PercumaRouteImport } from './routes/mpt4-percuma'
 import { Route as PilihDarjahRouteImport } from './routes/pilih-darjah'
 import { Route as PraKalifahRouteImport } from './routes/pra-kalifah'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
@@ -153,6 +154,11 @@ const LoginRoute = LoginRouteImport.update({
 const LupaPasswordRoute = LupaPasswordRouteImport.update({
   id: '/lupa-password',
   path: '/lupa-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Mpt4PercumaRoute = Mpt4PercumaRouteImport.update({
+  id: '/mpt4-percuma',
+  path: '/mpt4-percuma',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PilihDarjahRoute = PilihDarjahRouteImport.update({
@@ -496,6 +502,7 @@ export interface FileRoutesByFullPath {
   '/latihan': typeof LatihanRoute
   '/login': typeof LoginRoute
   '/lupa-password': typeof LupaPasswordRoute
+  '/mpt4-percuma': typeof Mpt4PercumaRoute
   '/pilih-darjah': typeof PilihDarjahRoute
   '/pra-kalifah': typeof PraKalifahRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -573,6 +580,7 @@ export interface FileRoutesByTo {
   '/latihan': typeof LatihanRoute
   '/login': typeof LoginRoute
   '/lupa-password': typeof LupaPasswordRoute
+  '/mpt4-percuma': typeof Mpt4PercumaRoute
   '/pilih-darjah': typeof PilihDarjahRoute
   '/pra-kalifah': typeof PraKalifahRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -651,6 +659,7 @@ export interface FileRoutesById {
   '/latihan': typeof LatihanRoute
   '/login': typeof LoginRoute
   '/lupa-password': typeof LupaPasswordRoute
+  '/mpt4-percuma': typeof Mpt4PercumaRoute
   '/pilih-darjah': typeof PilihDarjahRoute
   '/pra-kalifah': typeof PraKalifahRoute
   '/reset-password': typeof ResetPasswordRoute
@@ -730,6 +739,7 @@ export interface FileRouteTypes {
     | '/latihan'
     | '/login'
     | '/lupa-password'
+    | '/mpt4-percuma'
     | '/pilih-darjah'
     | '/pra-kalifah'
     | '/reset-password'
@@ -807,6 +817,7 @@ export interface FileRouteTypes {
     | '/latihan'
     | '/login'
     | '/lupa-password'
+    | '/mpt4-percuma'
     | '/pilih-darjah'
     | '/pra-kalifah'
     | '/reset-password'
@@ -884,6 +895,7 @@ export interface FileRouteTypes {
     | '/latihan'
     | '/login'
     | '/lupa-password'
+    | '/mpt4-percuma'
     | '/pilih-darjah'
     | '/pra-kalifah'
     | '/reset-password'
@@ -962,6 +974,7 @@ export interface RootRouteChildren {
   LatihanRoute: typeof LatihanRoute
   LoginRoute: typeof LoginRoute
   LupaPasswordRoute: typeof LupaPasswordRoute
+  Mpt4PercumaRoute: typeof Mpt4PercumaRoute
   PilihDarjahRoute: typeof PilihDarjahRoute
   PraKalifahRoute: typeof PraKalifahRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
@@ -1123,6 +1136,13 @@ declare module '@tanstack/react-router' {
       path: '/lupa-password'
       fullPath: '/lupa-password'
       preLoaderRoute: typeof LupaPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/mpt4-percuma': {
+      id: '/mpt4-percuma'
+      path: '/mpt4-percuma'
+      fullPath: '/mpt4-percuma'
+      preLoaderRoute: typeof Mpt4PercumaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/pilih-darjah': {
@@ -1570,6 +1590,7 @@ const rootRouteChildren: RootRouteChildren = {
   LatihanRoute: LatihanRoute,
   LoginRoute: LoginRoute,
   LupaPasswordRoute: LupaPasswordRoute,
+  Mpt4PercumaRoute: Mpt4PercumaRoute,
   PilihDarjahRoute: PilihDarjahRoute,
   PraKalifahRoute: PraKalifahRoute,
   ResetPasswordRoute: ResetPasswordRoute,
