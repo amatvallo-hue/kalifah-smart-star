@@ -716,28 +716,13 @@ function ParentDashboard() {
   const anakAktif = anakList.find((a) => a.id === aktifId) ?? null;
   const anakUserId = anakAktif?.child_user_id ?? null;
 
-  // Status bayaran anak aktif (untuk pilih antara KaliInsightCard penuh vs KaliUpdateCard percuma)
-  const [anakPaid, setAnakPaid] = useState<boolean | null>(null);
-  useEffect(() => {
-    if (!anakUserId) {
-      setAnakPaid(null);
-      return;
-    }
-    let mounted = true;
-    supabase
-      .from("profiles")
-      .select("darjah_akses")
-      .eq("id", anakUserId)
-      .maybeSingle()
-      .then(({ data }) => {
-        if (!mounted) return;
-        const akses = data?.darjah_akses;
-        setAnakPaid(Array.isArray(akses) && akses.length > 0);
-      });
-    return () => {
-      mounted = false;
-    };
-  }, [anakUserId]);
+  // Sumber kebenaran akses ialah status entitlement bagi darjah anak aktif.
+  const anakPaid = useMemo<boolean | null>(() => {
+    if (!anakAktif) return null;
+    const row = aksesStatus.find((status) => status.darjah === Number(anakAktif.darjah));
+    if (!row) return false;
+    return row.status === "lifetime" || row.status === "active" || row.status === "expiring_soon";
+  }, [aksesStatus, anakAktif]);
 
   async function fetchAnakData(uid: string, showSpinner = true) {
     if (showSpinner) setFetching(true);
@@ -979,6 +964,7 @@ function ParentDashboard() {
     darjahAnak: anakAktif?.darjah ?? "",
     anakPaid,
   });
+  const kaliV2 = useParentKaliV2(anakPaid ? anakUserId : null, anakAktif?.darjah ?? null);
 
   const streak = kiraStreak(stats);
 
@@ -1170,23 +1156,40 @@ function ParentDashboard() {
                       </div>
                     )}
 
-                    {/* LAYER 1 HERO: Apa KALI Nampak */}
-                    {kaliHero}
-
-                    {/* Divider: Progress Ringkas */}
-                    <div className="mt-8 mb-2 flex items-center gap-2">
-                      <span className="text-xs font-extrabold uppercase tracking-wide text-muted-foreground">Progress Ringkas</span>
-                      <div className="h-px flex-1" style={{ backgroundColor: `${HIJAU}22` }} />
-                    </div>
-
-                    {/* LAYER 2: Bukti kemajuan KALI dahulu */}
-                    {kaliEvidence}
-                    {kaliNotEnoughData}
+                    {anakPaid ? (
+                      <>
+                        <ParentV2Ringkasan namaAnak={anakAktif.nama} data={kaliV2} />
+                        <Seksyen tajuk="Fokus KALI Sekarang" ikon={<Sparkles className="h-5 w-5" />}>
+                          <KaliInsightCard childUserId={anakUserId} namaAnak={anakAktif.nama} darjahAnak={anakAktif.darjah} compact />
+                        </Seksyen>
+                        <ParentV2Kemahiran data={kaliV2} />
+                        <ParentV2Corak data={kaliV2} namaAnak={anakAktif.nama} />
+                        <ParentV2Perubahan data={kaliV2} />
+                        <Seksyen tajuk="Ringkasan Minggu Ini" ikon={<Calendar className="h-5 w-5" />}>
+                          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                            <Stat label="Soalan Dijawab" nilai={minggu.soalan} icon={<BookOpen className="h-5 w-5" />} warna={STAT_HIJAU} light />
+                            <Stat label="Ketepatan" nilai={progress.length ? `${minggu.peratus}%` : "—"} icon={<Target className="h-5 w-5" />} warna={STAT_HIJAU} light />
+                            <Stat label="Masa Belajar" nilai={formatMasa(minggu.masa)} icon={<Clock className="h-5 w-5" />} warna={STAT_BIRU} light />
+                            <Stat label="Aktiviti" nilai={minggu.bab} icon={<TrendingUp className="h-5 w-5" />} warna={STAT_OREN} light />
+                          </div>
+                        </Seksyen>
+                      </>
+                    ) : (
+                      <>
+                        {kaliHero}
+                        <div className="mt-8 mb-2 flex items-center gap-2">
+                          <span className="text-xs font-extrabold uppercase tracking-wide text-muted-foreground">Progress Ringkas</span>
+                          <div className="h-px flex-1" style={{ backgroundColor: `${HIJAU}22` }} />
+                        </div>
+                        {kaliEvidence}
+                        {kaliNotEnoughData}
+                      </>
+                    )}
 
 
 
                     {/* HERO SUMMARY: Subjek Terkuat & Perlukan Perhatian */}
-                    <Seksyen tajuk="Ringkasan Prestasi" ikon={<Trophy className="h-5 w-5" />}>
+                    {!anakPaid && <Seksyen tajuk="Ringkasan Prestasi" ikon={<Trophy className="h-5 w-5" />}>
                       <div className="grid gap-3 md:grid-cols-2">
                         <KadSubjekTrend label="Subjek Terkuat 💪" sj={bulan.terkuat} warna={STAT_HIJAU} />
                         <KadSubjekTrend
@@ -1201,10 +1204,10 @@ function ParentDashboard() {
                           namaAnak={anakAktif.nama}
                         />
                       </div>
-                    </Seksyen>
+                    </Seksyen>}
 
                     {/* LIPUTAN AKTIVITI MENGIKUT SUBJEK */}
-                    <Seksyen tajuk="Liputan Aktiviti Mengikut Subjek" ikon={<BookOpen className="h-5 w-5" />}>
+                    {!anakPaid && <Seksyen tajuk="Liputan Aktiviti Mengikut Subjek" ikon={<BookOpen className="h-5 w-5" />}>
                       <div className="grid gap-3 sm:grid-cols-2">
                         {kemajuanSubjek.map((k) => (
                           <div
@@ -1237,7 +1240,7 @@ function ParentDashboard() {
                           </div>
                         ))}
                       </div>
-                    </Seksyen>
+                    </Seksyen>}
 
                     {/* AKTIVITI TERKINI (ringkas — 3 terbaru) */}
                     <Seksyen tajuk="3 Aktiviti Terkini" ikon={<BookOpen className="h-5 w-5" />}>
@@ -1289,7 +1292,7 @@ function ParentDashboard() {
                     </Seksyen>
 
                     {/* STREAK & PENCAPAIAN (ringkas) */}
-                    <Seksyen tajuk="Streak & Pencapaian" ikon={<Flame className="h-5 w-5" />}>
+                    {!anakPaid && <Seksyen tajuk="Streak & Pencapaian" ikon={<Flame className="h-5 w-5" />}>
                       <div className="grid gap-3 md:grid-cols-3">
                         <Stat label="Streak Semasa" nilai={`${streak} hari 🔥`} icon={<Flame className="h-5 w-5" />} warna={STAT_OREN} light />
                       </div>
@@ -1303,7 +1306,7 @@ function ParentDashboard() {
                           </div>
                         </div>
                       )}
-                    </Seksyen>
+                    </Seksyen>}
 
                     {/* LAYER 3: Butiran penuh (collapsed) */}
                     <details className="mt-6 rounded-2xl border-2 p-1" style={{ borderColor: `${HIJAU}1f` }}>
@@ -1311,6 +1314,38 @@ function ParentDashboard() {
                         Lihat butiran penuh ▾
                       </summary>
                       <div className="space-y-5 p-3">
+
+                    {anakPaid && (
+                      <>
+                        <Seksyen tajuk="Ringkasan Prestasi" ikon={<Trophy className="h-5 w-5" />}>
+                          <div className="grid gap-3 md:grid-cols-2">
+                            <KadSubjekTrend label="Subjek Terkuat 💪" sj={bulan.terkuat} warna={STAT_HIJAU} />
+                            <KadSubjekTrend
+                              label="Perlukan Perhatian ⚠️"
+                              sj={bulan.lemah && bulan.terkuat?.subjek !== bulan.lemah.subjek ? bulan.lemah : null}
+                              warna={STAT_OREN}
+                              topikLemah={bulan.lemah && bulan.terkuat?.subjek !== bulan.lemah.subjek ? (bulanTopikLemah.get(bulan.lemah.subjek) ?? []).slice(0, 3) : []}
+                              namaAnak={anakAktif.nama}
+                            />
+                          </div>
+                        </Seksyen>
+                        <Seksyen tajuk="Liputan Aktiviti Mengikut Subjek" ikon={<BookOpen className="h-5 w-5" />}>
+                          <div className="grid gap-3 sm:grid-cols-2">
+                            {kemajuanSubjek.map((k) => (
+                              <div key={k.subjek.id} className="rounded-2xl border-2 p-4 shadow-card" style={{ background: "linear-gradient(135deg, #FFFCF0 0%, #FFFEFB 60%, #FFF8E5 100%)", borderColor: "var(--brand-butter)" }}>
+                                <div className="flex items-center justify-between gap-2">
+                                  <h3 className="font-display text-base font-extrabold text-foreground">{k.subjek.title}</h3>
+                                  <span className="rounded-full bg-brand-butter px-3 py-1 text-xs font-extrabold text-brand-butter-foreground shadow-soft">Skor: {k.jumlah ? `${k.purata}%` : "—"}</span>
+                                </div>
+                                <p className="mt-2 text-[11px] font-extrabold uppercase tracking-wide text-muted-foreground">Liputan Aktiviti</p>
+                                <LiputanAktivitiDots aktivitiUnik={k.aktivitiUnik} />
+                                <p className="mt-1 text-xs text-muted-foreground">Jenis latihan yang pernah dicuba — bukan tahap penguasaan.</p>
+                              </div>
+                            ))}
+                          </div>
+                        </Seksyen>
+                      </>
+                    )}
 
                     {/* PERCUBAAN MPT4 — Darjah 4 sahaja */}
                     {Number(anakAktif.darjah) === 4 && (
