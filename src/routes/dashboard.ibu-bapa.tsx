@@ -2040,6 +2040,30 @@ interface LaporanKemajuan {
   kemajuan_30_hari: KemajuanItem[] | null;
 }
 
+interface ParentKaliSkill {
+  id: string;
+  nama: string;
+  subjek: string | null;
+  score: number;
+  attempts: number;
+  previousScore: number | null;
+  records: number;
+}
+
+interface ParentKaliFocus {
+  nama: string;
+  subjek: string | null;
+  score: number | null;
+  attempts: number;
+}
+
+interface ParentKaliV2Data {
+  loading: boolean;
+  skills: ParentKaliSkill[];
+  focus: ParentKaliFocus | null;
+  unavailable: boolean;
+}
+
 function pct(v: number | null | undefined): string {
   if (v == null) return "—";
   return `${Math.round(v * 100)}%`;
@@ -2050,6 +2074,213 @@ function labelMasteryBand(m: number): string {
   if (m < 60) return "Perlu Diperkukuhkan";
   if (m < 80) return "Sedang Berkembang";
   return "Sudah Dikuasai";
+}
+
+function useParentKaliV2(childUserId: string | null, darjahAnak: string | null): ParentKaliV2Data {
+  const [state, setState] = useState<ParentKaliV2Data>({
+    loading: false,
+    skills: [],
+    focus: null,
+    unavailable: false,
+  });
+
+  useEffect(() => {
+    if (!childUserId) {
+      setState({ loading: false, skills: [], focus: null, unavailable: false });
+      return;
+    }
+    let mounted = true;
+    setState((current) => ({ ...current, loading: true, unavailable: false }));
+    (async () => {
+      const darjah = Number(darjahAnak);
+      const [laporanResult, focusResult] = await Promise.all([
+        supabase.rpc("kali_laporan_kemajuan", { p_student_id: childUserId }),
+        supabase.rpc("kali_next_best_question", {
+          p_student_id: childUserId,
+          ...(Number.isFinite(darjah) && darjah > 0 ? { p_darjah: darjah } : {}),
+        } as never),
+      ]);
+      if (!mounted) return;
+
+      const laporan = laporanResult.data as unknown as LaporanKemajuan | null;
+      const skills = (laporan?.kemajuan_30_hari ?? []).flatMap((item): ParentKaliSkill[] => {
+        const score = item.selepas?.mastery_score;
+        if (score == null || !Number.isFinite(Number(score))) return [];
+        return [{
+          id: item.micro_skill_id,
+          nama: item.nama,
+          subjek: item.subjek,
+          score: Number(score),
+          attempts: Number(item.jumlah_percubaan ?? 0),
+          previousScore: item.sebelum?.mastery_score == null ? null : Number(item.sebelum.mastery_score),
+          records: Math.max(Number(item.jumlah_sesi_berasingan ?? 0), Number(item.hari_berbeza ?? 0)),
+        }];
+      });
+      const rawFocus = (Array.isArray(focusResult.data) ? focusResult.data[0] : focusResult.data) as
+        | { micro_skill_nama?: string; micro_skill_subjek?: string | null; mastery_score?: number | null; total_attempts?: number | null }
+        | null;
+      const focus = rawFocus?.micro_skill_nama ? {
+        nama: rawFocus.micro_skill_nama,
+        subjek: rawFocus.micro_skill_subjek ?? null,
+        score: rawFocus.mastery_score == null ? null : Number(rawFocus.mastery_score),
+        attempts: Number(rawFocus.total_attempts ?? 0),
+      } : null;
+
+      setState({
+        loading: false,
+        skills,
+        focus,
+        unavailable: Boolean(laporanResult.error && focusResult.error),
+      });
+    })();
+    return () => { mounted = false; };
+  }, [childUserId, darjahAnak]);
+
+  return state;
+}
+
+function ParentV2Empty({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="rounded-2xl border border-border bg-card p-5 text-center shadow-soft">
+      <p className="text-sm leading-relaxed text-muted-foreground">{children}</p>
+    </div>
+  );
+}
+
+function ParentV2Ringkasan({ namaAnak, data }: { namaAnak: string; data: ParentKaliV2Data }) {
+  const reliable = data.skills.filter((skill) => skill.attempts >= 5);
+  const sorted = [...reliable].sort((a, b) => b.score - a.score);
+  const strongest = sorted[0] ?? null;
+  const attention = [...reliable].sort((a, b) => a.score - b.score).find((skill) => skill.score < 60) ?? null;
+  const critical = reliable.some((skill) => skill.score < 40);
+  const strengthening = reliable.some((skill) => skill.score >= 40 && skill.score < 60);
+  const majorityGood = reliable.length > 0 && reliable.filter((skill) => skill.score >= 60).length > reliable.length / 2;
+  const status = reliable.length < 2
+    ? "KALI sedang mengenali corak pembelajaran"
+    : critical
+      ? "Perlu perhatian pada beberapa kemahiran"
+      : strengthening
+        ? "Sedang mengukuhkan beberapa kemahiran"
+        : majorityGood
+          ? "Pembelajaran berjalan baik"
+          : "KALI sedang mengenali corak pembelajaran";
+  const sentence = strongest && attention
+    ? `${namaAnak} menunjukkan penguasaan yang baik dalam ${strongest.nama}, tetapi ${attention.nama} masih menjadi fokus utama sekarang.`
+    : strongest
+      ? `${namaAnak} menunjukkan perkembangan yang baik dalam ${strongest.nama}. KALI akan terus mengumpul data untuk menentukan fokus seterusnya.`
+      : `${namaAnak} baru mula membina rekod pembelajaran. Selepas beberapa sesi lagi, KALI boleh memberi ringkasan yang lebih jelas.`;
+
+  return (
+    <section className="mt-6 overflow-hidden rounded-2xl border-2 border-primary/20 bg-card shadow-card">
+      <div className="border-b border-border bg-primary/5 p-5 sm:p-6">
+        <p className="text-xs font-extrabold uppercase text-primary">Ringkasan Anak</p>
+        <div className="mt-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <h2 className="font-display text-2xl font-extrabold text-foreground">{namaAnak}</h2>
+          <span className="w-fit rounded-full bg-primary/10 px-3 py-1 text-xs font-extrabold text-primary">{status}</span>
+        </div>
+        <p className="mt-3 max-w-3xl text-sm leading-relaxed text-muted-foreground">{sentence}</p>
+      </div>
+      <div className="grid gap-px bg-border sm:grid-cols-3">
+        {[
+          { icon: "💪", label: "Kekuatan utama", value: strongest?.nama ?? "Belum cukup data" },
+          { icon: "⚠️", label: "Perlu perhatian", value: attention?.nama ?? "Belum dikenal pasti" },
+          { icon: "🎯", label: "Fokus seterusnya", value: data.focus?.nama ?? "KALI sedang memilih" },
+        ].map((item) => (
+          <div key={item.label} className="bg-card p-4">
+            <p className="text-xs font-bold text-muted-foreground">{item.icon} {item.label}</p>
+            <p className="mt-1 text-sm font-extrabold text-foreground">{item.value}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function ParentSkillRow({ skill }: { skill: ParentKaliSkill }) {
+  const isCritical = skill.score < 40;
+  return (
+    <div className="flex items-center justify-between gap-3 border-b border-border py-3 last:border-0">
+      <div className="min-w-0">
+        <p className="truncate text-sm font-extrabold text-foreground">{skill.nama}</p>
+        <p className="text-xs text-muted-foreground">{skill.subjek ?? "Kemahiran KALI"} · {labelMasteryBand(skill.score)}</p>
+      </div>
+      <span className={isCritical ? "font-display text-lg font-extrabold text-destructive" : "font-display text-lg font-extrabold text-primary"}>{Math.round(skill.score)}%</span>
+    </div>
+  );
+}
+
+function ParentV2Kemahiran({ data }: { data: ParentKaliV2Data }) {
+  const reliable = data.skills.filter((skill) => skill.attempts >= 5);
+  const strongest = [...reliable].sort((a, b) => b.score - a.score).slice(0, 3);
+  const attention = [...reliable].sort((a, b) => a.score - b.score).slice(0, 3);
+  return (
+    <Seksyen tajuk="Kekuatan & Perlu Diperkukuhkan" ikon={<Trophy className="h-5 w-5" />}>
+      {data.loading ? <ParentV2Empty>Memuatkan kemahiran {"…"}</ParentV2Empty> : reliable.length === 0 ? (
+        <ParentV2Empty>Belum cukup percubaan untuk membandingkan kemahiran. Tiada skor kosong akan dianggap sebagai 0%.</ParentV2Empty>
+      ) : (
+        <div className="grid gap-3 md:grid-cols-2">
+          <div className="rounded-2xl border border-primary/20 bg-card p-4 shadow-soft">
+            <h3 className="font-display text-sm font-extrabold text-primary">Sudah Kuat 💪</h3>
+            {strongest.map((skill) => <ParentSkillRow key={skill.id} skill={skill} />)}
+          </div>
+          <div className="rounded-2xl border border-amber-500/30 bg-card p-4 shadow-soft">
+            <h3 className="font-display text-sm font-extrabold text-foreground">Perlu Diperkukuhkan 🎯</h3>
+            {attention.map((skill) => <ParentSkillRow key={skill.id} skill={skill} />)}
+          </div>
+        </div>
+      )}
+    </Seksyen>
+  );
+}
+
+function ParentV2Corak({ data, namaAnak }: { data: ParentKaliV2Data; namaAnak: string }) {
+  const insights = data.skills.flatMap((skill) => {
+    const delta = skill.previousScore == null ? null : skill.score - skill.previousScore;
+    if (skill.attempts >= 20 && skill.score < 40) return [{ priority: 1, text: `${namaAnak} sudah mencuba ${skill.nama} beberapa kali. Kemahiran ini wajar diberi perhatian dahulu.` }];
+    if (skill.attempts >= 5 && skill.attempts < 20 && skill.score < 40) return [{ priority: 2, text: `${skill.nama} mula menunjukkan jurang yang boleh dibantu melalui latihan lebih terarah.` }];
+    if (delta != null && delta >= 10 && skill.records >= 2) return [{ priority: 3, text: `${skill.nama} sedang menunjukkan peningkatan yang jelas.` }];
+    if (skill.score >= 80 && skill.attempts >= 10) return [{ priority: 4, text: `${skill.nama} kelihatan stabil dan sudah dikuasai dengan baik.` }];
+    return [];
+  }).sort((a, b) => a.priority - b.priority).slice(0, 3);
+  return (
+    <Seksyen tajuk="Apa Yang KALI Perasan" ikon={<Sparkles className="h-5 w-5" />}>
+      {insights.length === 0 ? <ParentV2Empty>Belum cukup rekod berulang untuk mengenal pasti corak yang kukuh.</ParentV2Empty> : (
+        <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-soft">
+          {insights.map((insight, index) => <p key={`${insight.text}-${index}`} className="border-b border-border p-4 text-sm leading-relaxed text-foreground last:border-0">{insight.text}</p>)}
+        </div>
+      )}
+    </Seksyen>
+  );
+}
+
+function ParentV2Perubahan({ data }: { data: ParentKaliV2Data }) {
+  const valid = data.skills.filter((skill) => skill.previousScore != null && skill.records >= 2);
+  const improved = valid.filter((skill) => skill.score - Number(skill.previousScore) >= 10);
+  const stable = valid.filter((skill) => skill.score >= 80 && skill.score - Number(skill.previousScore) < 10);
+  const attention = valid.filter((skill) => skill.score < 40);
+  const examples = [...valid].sort((a, b) => (b.score - Number(b.previousScore)) - (a.score - Number(a.previousScore))).slice(0, 3);
+  return (
+    <Seksyen tajuk="Perubahan 30 Hari" ikon={<TrendingUp className="h-5 w-5" />}>
+      {valid.length === 0 ? <ParentV2Empty>Belum cukup data pada masa berbeza untuk menunjukkan perubahan 30 hari.</ParentV2Empty> : (
+        <div className="rounded-2xl border border-border bg-card p-4 shadow-soft">
+          <div className="grid grid-cols-3 gap-2 text-center">
+            {[{ value: improved.length, label: "Meningkat" }, { value: stable.length, label: "Stabil / dikuasai" }, { value: attention.length, label: "Perlu perhatian" }].map((item) => (
+              <div key={item.label} className="rounded-xl bg-muted/40 p-3">
+                <p className="font-display text-2xl font-extrabold text-primary">{item.value}</p>
+                <p className="text-[11px] text-muted-foreground">{item.label}</p>
+              </div>
+            ))}
+          </div>
+          <div className="mt-3 divide-y divide-border">
+            {examples.map((skill) => {
+              const delta = skill.score - Number(skill.previousScore);
+              return <p key={skill.id} className="py-2 text-sm font-semibold text-foreground">{skill.nama} {Math.round(Number(skill.previousScore))}% → {Math.round(skill.score)}% ({delta >= 0 ? "+" : ""}{Math.round(delta)})</p>;
+            })}
+          </div>
+        </div>
+      )}
+    </Seksyen>
+  );
 }
 
 function useKaliGabungan({ childUserId, childProfileId, namaAnak, darjahAnak, anakPaid }: {
