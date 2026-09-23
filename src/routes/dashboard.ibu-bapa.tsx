@@ -2520,10 +2520,12 @@ function KaliInsightCard({
   childUserId,
   namaAnak,
   darjahAnak,
+  compact = false,
 }: {
   childUserId: string;
   namaAnak: string;
   darjahAnak?: string | null;
+  compact?: boolean;
 }) {
   const [insight, setInsight] = useState<{
     micro_skill_nama: string;
@@ -2704,7 +2706,7 @@ function KaliInsightCard({
             )}
           </div>
 
-          <p className="mt-3 text-sm text-white/90">KALI perasan {insight.sebab}</p>
+          {!compact && <p className="mt-3 text-sm text-white/90">KALI perasan {insight.sebab}</p>}
 
           <p className="mt-3 text-sm font-semibold text-white">
             Langkah seterusnya: minta {namaAnak} buat sesi {insight.micro_skill_nama} hari ini.
@@ -2719,7 +2721,7 @@ function KaliInsightCard({
             {copied ? "Disalin!" : "Salin Arahan untuk Anak"}
           </button>
 
-          <details className="mt-3 rounded-xl" style={{ backgroundColor: "rgba(255,255,255,0.06)" }}>
+          {!compact && <details className="mt-3 rounded-xl" style={{ backgroundColor: "rgba(255,255,255,0.06)" }}>
             <summary className="cursor-pointer list-none px-3 py-2 text-xs font-bold text-white/70">Lihat butiran insight ▾</summary>
             <div className="space-y-2 px-3 pb-3 pt-1 text-xs text-white/70">
               {insight.mastery_score != null && (
@@ -2735,7 +2737,7 @@ function KaliInsightCard({
                 Cadangan ini dijana berdasarkan jawapan sebenar {namaAnak} dan dikemas kini secara automatik setiap kali dia buat latihan.
               </p>
             </div>
-          </details>
+          </details>}
         </>
       ) : (
         <p className="mt-3 text-sm text-white/70">
