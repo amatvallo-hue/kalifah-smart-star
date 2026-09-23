@@ -2304,7 +2304,9 @@ function useKaliGabungan({ childUserId, childProfileId, namaAnak, darjahAnak, an
 
   useEffect(() => {
     let mounted = true;
-    if (!childUserId) {
+    // V2 berbayar memuat data melalui useParentKaliV2. Kekalkan laporan lama
+    // hanya untuk aliran percuma supaya RPC yang sama tidak dipanggil dua kali.
+    if (!childUserId || anakPaid === true) {
       setData(null);
       setLoading(false);
       return;
@@ -2327,7 +2329,7 @@ function useKaliGabungan({ childUserId, childProfileId, namaAnak, darjahAnak, an
     return () => {
       mounted = false;
     };
-  }, [childUserId]);
+  }, [childUserId, anakPaid]);
 
   const adaKemajuan = (data?.kemajuan_30_hari?.length ?? 0) > 0;
   const nama = data?.anak_nama || namaAnak;

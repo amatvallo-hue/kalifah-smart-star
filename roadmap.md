@@ -5,4 +5,4 @@
 - [x] Preserve unpaid flow and all legacy detail sections.
 - [x] Validate typecheck/build and public desktop/mobile route behavior.
 - [x] Keep changes preview-only; do not deploy production.
-- [ ] Manually verify paid, unpaid, and no-data parent states (blocked: no authenticated parent preview session available).
+- [ ] Manually verify paid, unpaid, and no-data parent states (blocked: no authenticated parent preview session or live policy inspection available).
