@@ -642,6 +642,7 @@ function ParentDashboard() {
   const [resetFor, setResetFor] = useState<ChildProfile | null>(null);
   const [lastSignInMap, setLastSignInMap] = useState<Map<string, string>>(new Map());
   const [aksesStatus, setAksesStatus] = useState<AksesStatusRow[]>([]);
+  const [aksesStatusLoaded, setAksesStatusLoaded] = useState(false);
 
   const pilihAnak = useCallback((id: string | null) => {
     setAktifId(id);
@@ -705,10 +706,12 @@ function ParentDashboard() {
     supabase.rpc("get_my_akses_status").then(({ data, error }) => {
       if (error) {
         console.warn("[ParentDashboard] get_my_akses_status error:", error);
+        setAksesStatusLoaded(true);
         return;
       }
       const rows = (data ?? []) as AksesStatusRow[];
       setAksesStatus(rows);
+      setAksesStatusLoaded(true);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
@@ -719,10 +722,11 @@ function ParentDashboard() {
   // Sumber kebenaran akses ialah status entitlement bagi darjah anak aktif.
   const anakPaid = useMemo<boolean | null>(() => {
     if (!anakAktif) return null;
+    if (!aksesStatusLoaded) return null;
     const row = aksesStatus.find((status) => status.darjah === Number(anakAktif.darjah));
     if (!row) return false;
     return row.status === "lifetime" || row.status === "active" || row.status === "expiring_soon";
-  }, [aksesStatus, anakAktif]);
+  }, [aksesStatus, aksesStatusLoaded, anakAktif]);
 
   async function fetchAnakData(uid: string, showSpinner = true) {
     if (showSpinner) setFetching(true);
@@ -1160,7 +1164,7 @@ function ParentDashboard() {
                       <>
                         <ParentV2Ringkasan namaAnak={anakAktif.nama} data={kaliV2} />
                         <Seksyen tajuk="Fokus KALI Sekarang" ikon={<Sparkles className="h-5 w-5" />}>
-                          <KaliInsightCard childUserId={anakUserId} namaAnak={anakAktif.nama} darjahAnak={anakAktif.darjah} compact />
+                          <KaliInsightCard childUserId={anakAktif.child_user_id} namaAnak={anakAktif.nama} darjahAnak={anakAktif.darjah} compact />
                         </Seksyen>
                         <ParentV2Kemahiran data={kaliV2} />
                         <ParentV2Corak data={kaliV2} namaAnak={anakAktif.nama} />
