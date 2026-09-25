@@ -16,7 +16,7 @@ import ciriNotaAsset from "@/assets/product-proof/real-nota.jpg.asset.json";
 import ciriGameAsset from "@/assets/product-proof/real-soalan.jpg.asset.json";
 import ciriGanjaranAsset from "@/assets/product-proof/real-hadiah.jpg.asset.json";
 import parentEvidenceAsset from "@/assets/product-proof/real-parent-private.jpg.asset.json";
-import painTuisyenAsset from "@/assets/product-proof/pain-tuisyen-tiada-report.png.asset.json";
+import painTuisyenAsset from "@/assets/product-proof/pain-tuisyen-tiada-report-real.jpg.asset.json";
 import painLatihanAsset from "@/assets/product-proof/pain-latihan-tidak-tepat.png.asset.json";
 import painExamAsset from "@/assets/product-proof/pain-baru-tahu-exam.png.asset.json";
 
