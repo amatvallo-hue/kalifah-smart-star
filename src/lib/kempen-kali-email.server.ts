@@ -150,7 +150,7 @@ export async function binaAudiens(admin: SupabaseClient) {
   const amaran: string[] = [];
   const [users, children, profiles, pesanan, suppress, progress, kuiz] = await Promise.all([
     semuaAuthUsers(admin),
-    semua(admin, "child_profiles", "child_user_id"),
+    semua(admin, "child_profiles", "parent_id, child_user_id"),
     semua(admin, "profiles", "id, role"),
     semua(admin, "pesanan", "user_id, status"),
     semua(admin, "email_suppression", "email"),
@@ -171,7 +171,10 @@ export async function binaAudiens(admin: SupabaseClient) {
     else if (s === "pending") pendingIds.add(p.user_id as string);
   }
   const suppressed = new Set(suppress.rows.map((r) => String(r.email).toLowerCase()));
-  const berlatih = new Set(progress.rows.map((r) => r.user_id as string));
+  const adaProgress = new Set(progress.rows.map((r) => r.user_id as string));
+  // Ibu bapa "pernah berlatih" jika akaun sendiri atau mana-mana anak ada rekod latihan.
+  const berlatih = new Set(adaProgress);
+  for (const c of children.rows) if (c.parent_id && adaProgress.has(c.child_user_id as string)) berlatih.add(c.parent_id as string);
 
   const keluar = { anak: 0, admin: 0, paid: 0, suppression: 0, tidak_sah: 0, pendua: 0 };
   const byEmail = new Map<string, Penerima>();
@@ -191,8 +194,6 @@ export async function binaAudiens(admin: SupabaseClient) {
     if (paidIds.has(u.id)) { keluar.paid++; if (e) emelBerbayar.add(e); continue; }
     if (!e) { keluar.tidak_sah++; continue; }
     if (suppressed.has(e)) { keluar.suppression++; continue; }
-    // Nota: user_progress disimpan di bawah akaun anak; bagi ibu bapa, semak anak berkaitan tidak boleh
-    // dibuat tanpa parent_id — gunakan user_id sendiri (akaun lama tanpa child) sebagai proksi.
     const segmen: Segmen = pendingIds.has(u.id) ? "pending_order" : berlatih.has(u.id) ? "pernah_latihan" : "lain";
     tambah({ email: e, segmen, userId: u.id });
   }
