@@ -155,7 +155,7 @@ export async function binaAudiens(admin: SupabaseClient) {
     semua(admin, "pesanan", "user_id, status"),
     semua(admin, "email_suppression", "email"),
     semua(admin, "user_progress", "user_id"),
-    semua(admin, "kuiz_sesi", "email"),
+    semua(admin, "kuiz_percuma_sesi", "email"),
   ]);
   for (const r of [children, profiles, pesanan, suppress, progress, kuiz]) if (r.ralat) amaran.push(r.ralat);
   // Jadual kritikal: gagal = hentikan (lebih selamat daripada tersalah hantar).
