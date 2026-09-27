@@ -63,8 +63,6 @@ import { Route as ShopSlugRouteImport } from './routes/shop_.$slug'
 import { Route as SijilCertificateIdRouteImport } from './routes/sijil.$certificateId'
 import { Route as AdminAffiliatesIdRouteImport } from './routes/admin_.affiliates_.$id'
 import { Route as AdminAffiliatesDashboardRouteImport } from './routes/admin_.affiliates_.dashboard'
-import { Route as ApiAdminKempenKaliRouteImport } from './routes/api.admin.kempen-kali'
-import { Route as ApiPublicBerhentiLangganRouteImport } from './routes/api.public.berhenti-langgan'
 import { Route as DarjahDarjahIdSubjekIdRouteImport } from './routes/darjah.$darjahId_.$subjekId'
 import { Route as DarjahDarjahIdPercubaanMpt4RouteImport } from './routes/darjah.$darjahId_.percubaan-mpt4'
 import { Route as PreviewDarjahIdScoreRouteImport } from './routes/preview.$darjahId_.score'
@@ -359,17 +357,6 @@ const AdminAffiliatesDashboardRoute =
     path: '/admin/affiliates/dashboard',
     getParentRoute: () => rootRouteImport,
   } as any)
-const ApiAdminKempenKaliRoute = ApiAdminKempenKaliRouteImport.update({
-  id: '/api/admin/kempen-kali',
-  path: '/api/admin/kempen-kali',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiPublicBerhentiLangganRoute =
-  ApiPublicBerhentiLangganRouteImport.update({
-    id: '/api/public/berhenti-langgan',
-    path: '/api/public/berhenti-langgan',
-    getParentRoute: () => rootRouteImport,
-  } as any)
 const DarjahDarjahIdSubjekIdRoute = DarjahDarjahIdSubjekIdRouteImport.update({
   id: '/darjah/$darjahId_/$subjekId',
   path: '/darjah/$darjahId/$subjekId',
@@ -549,8 +536,6 @@ export interface FileRoutesByFullPath {
   '/sijil/$certificateId': typeof SijilCertificateIdRoute
   '/admin/affiliates/$id': typeof AdminAffiliatesIdRoute
   '/admin/affiliates/dashboard': typeof AdminAffiliatesDashboardRoute
-  '/api/admin/kempen-kali': typeof ApiAdminKempenKaliRoute
-  '/api/public/berhenti-langgan': typeof ApiPublicBerhentiLangganRoute
   '/darjah/$darjahId/$subjekId': typeof DarjahDarjahIdSubjekIdRoute
   '/darjah/$darjahId/percubaan-mpt4': typeof DarjahDarjahIdPercubaanMpt4Route
   '/preview/$darjahId/score': typeof PreviewDarjahIdScoreRoute
@@ -628,8 +613,6 @@ export interface FileRoutesByTo {
   '/sijil/$certificateId': typeof SijilCertificateIdRoute
   '/admin/affiliates/$id': typeof AdminAffiliatesIdRoute
   '/admin/affiliates/dashboard': typeof AdminAffiliatesDashboardRoute
-  '/api/admin/kempen-kali': typeof ApiAdminKempenKaliRoute
-  '/api/public/berhenti-langgan': typeof ApiPublicBerhentiLangganRoute
   '/darjah/$darjahId/$subjekId': typeof DarjahDarjahIdSubjekIdRoute
   '/darjah/$darjahId/percubaan-mpt4': typeof DarjahDarjahIdPercubaanMpt4Route
   '/preview/$darjahId/score': typeof PreviewDarjahIdScoreRoute
@@ -708,8 +691,6 @@ export interface FileRoutesById {
   '/sijil/$certificateId': typeof SijilCertificateIdRoute
   '/admin_/affiliates_/$id': typeof AdminAffiliatesIdRoute
   '/admin_/affiliates_/dashboard': typeof AdminAffiliatesDashboardRoute
-  '/api/admin/kempen-kali': typeof ApiAdminKempenKaliRoute
-  '/api/public/berhenti-langgan': typeof ApiPublicBerhentiLangganRoute
   '/darjah/$darjahId_/$subjekId': typeof DarjahDarjahIdSubjekIdRoute
   '/darjah/$darjahId_/percubaan-mpt4': typeof DarjahDarjahIdPercubaanMpt4Route
   '/preview/$darjahId_/score': typeof PreviewDarjahIdScoreRoute
@@ -789,8 +770,6 @@ export interface FileRouteTypes {
     | '/sijil/$certificateId'
     | '/admin/affiliates/$id'
     | '/admin/affiliates/dashboard'
-    | '/api/admin/kempen-kali'
-    | '/api/public/berhenti-langgan'
     | '/darjah/$darjahId/$subjekId'
     | '/darjah/$darjahId/percubaan-mpt4'
     | '/preview/$darjahId/score'
@@ -868,8 +847,6 @@ export interface FileRouteTypes {
     | '/sijil/$certificateId'
     | '/admin/affiliates/$id'
     | '/admin/affiliates/dashboard'
-    | '/api/admin/kempen-kali'
-    | '/api/public/berhenti-langgan'
     | '/darjah/$darjahId/$subjekId'
     | '/darjah/$darjahId/percubaan-mpt4'
     | '/preview/$darjahId/score'
@@ -947,8 +924,6 @@ export interface FileRouteTypes {
     | '/sijil/$certificateId'
     | '/admin_/affiliates_/$id'
     | '/admin_/affiliates_/dashboard'
-    | '/api/admin/kempen-kali'
-    | '/api/public/berhenti-langgan'
     | '/darjah/$darjahId_/$subjekId'
     | '/darjah/$darjahId_/percubaan-mpt4'
     | '/preview/$darjahId_/score'
@@ -1027,8 +1002,6 @@ export interface RootRouteChildren {
   SijilCertificateIdRoute: typeof SijilCertificateIdRoute
   AdminAffiliatesIdRoute: typeof AdminAffiliatesIdRoute
   AdminAffiliatesDashboardRoute: typeof AdminAffiliatesDashboardRoute
-  ApiAdminKempenKaliRoute: typeof ApiAdminKempenKaliRoute
-  ApiPublicBerhentiLangganRoute: typeof ApiPublicBerhentiLangganRoute
   DarjahDarjahIdSubjekIdRoute: typeof DarjahDarjahIdSubjekIdRoute
   DarjahDarjahIdPercubaanMpt4Route: typeof DarjahDarjahIdPercubaanMpt4Route
   PreviewDarjahIdScoreRoute: typeof PreviewDarjahIdScoreRoute
@@ -1432,20 +1405,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAffiliatesDashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/admin/kempen-kali': {
-      id: '/api/admin/kempen-kali'
-      path: '/api/admin/kempen-kali'
-      fullPath: '/api/admin/kempen-kali'
-      preLoaderRoute: typeof ApiAdminKempenKaliRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/public/berhenti-langgan': {
-      id: '/api/public/berhenti-langgan'
-      path: '/api/public/berhenti-langgan'
-      fullPath: '/api/public/berhenti-langgan'
-      preLoaderRoute: typeof ApiPublicBerhentiLangganRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/darjah/$darjahId_/$subjekId': {
       id: '/darjah/$darjahId_/$subjekId'
       path: '/darjah/$darjahId/$subjekId'
@@ -1651,8 +1610,6 @@ const rootRouteChildren: RootRouteChildren = {
   SijilCertificateIdRoute: SijilCertificateIdRoute,
   AdminAffiliatesIdRoute: AdminAffiliatesIdRoute,
   AdminAffiliatesDashboardRoute: AdminAffiliatesDashboardRoute,
-  ApiAdminKempenKaliRoute: ApiAdminKempenKaliRoute,
-  ApiPublicBerhentiLangganRoute: ApiPublicBerhentiLangganRoute,
   DarjahDarjahIdSubjekIdRoute: DarjahDarjahIdSubjekIdRoute,
   DarjahDarjahIdPercubaanMpt4Route: DarjahDarjahIdPercubaanMpt4Route,
   PreviewDarjahIdScoreRoute: PreviewDarjahIdScoreRoute,
