@@ -9,4 +9,5 @@
 - [x] KALI email campaign (unpaid parents): template 3 segments, dry-run/test endpoint (admin/secret, POST only), unsubscribe + suppression, idempotency log. Production blast disabled.
 - [ ] Apply migration `20260927120000_kempen_email_kali.sql` (blocked: no database access from this project).
 - [ ] Add RESEND_API_KEY + SUPABASE_SERVICE_ROLE_KEY to app secrets, then run dry-run + single test to amatvallo@gmail.com (blocked: keys missing).
-- [ ] Confirm free-quiz lead table name `kuiz_sesi.email` (blocked: not in local migrations).
+- [x] Lead table corrected to `kuiz_percuma_sesi.email`.
+- [x] Removed public `/api/debug-env` (publish needed to remove from live site).
