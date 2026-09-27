@@ -45,7 +45,6 @@ import { Route as AffiliateDashboardRouteImport } from './routes/affiliate.dashb
 import { Route as AffiliateSyaratRouteImport } from './routes/affiliate.syarat'
 import { Route as ApiCheckoutRouteImport } from './routes/api.checkout'
 import { Route as ApiConfirmPaymentRouteImport } from './routes/api.confirm-payment'
-import { Route as ApiDebugEnvRouteImport } from './routes/api.debug-env'
 import { Route as ApiShopCheckoutRouteImport } from './routes/api.shop-checkout'
 import { Route as ApiTemporaryUnlockRouteImport } from './routes/api.temporary-unlock'
 import { Route as BayaranSelesaiRouteImport } from './routes/bayaran.selesai'
@@ -266,11 +265,6 @@ const ApiCheckoutRoute = ApiCheckoutRouteImport.update({
 const ApiConfirmPaymentRoute = ApiConfirmPaymentRouteImport.update({
   id: '/api/confirm-payment',
   path: '/api/confirm-payment',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiDebugEnvRoute = ApiDebugEnvRouteImport.update({
-  id: '/api/debug-env',
-  path: '/api/debug-env',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiShopCheckoutRoute = ApiShopCheckoutRouteImport.update({
@@ -537,7 +531,6 @@ export interface FileRoutesByFullPath {
   '/affiliate/syarat': typeof AffiliateSyaratRoute
   '/api/checkout': typeof ApiCheckoutRoute
   '/api/confirm-payment': typeof ApiConfirmPaymentRoute
-  '/api/debug-env': typeof ApiDebugEnvRoute
   '/api/shop-checkout': typeof ApiShopCheckoutRoute
   '/api/temporary-unlock': typeof ApiTemporaryUnlockRoute
   '/bayaran/selesai': typeof BayaranSelesaiRoute
@@ -617,7 +610,6 @@ export interface FileRoutesByTo {
   '/affiliate/syarat': typeof AffiliateSyaratRoute
   '/api/checkout': typeof ApiCheckoutRoute
   '/api/confirm-payment': typeof ApiConfirmPaymentRoute
-  '/api/debug-env': typeof ApiDebugEnvRoute
   '/api/shop-checkout': typeof ApiShopCheckoutRoute
   '/api/temporary-unlock': typeof ApiTemporaryUnlockRoute
   '/bayaran/selesai': typeof BayaranSelesaiRoute
@@ -698,7 +690,6 @@ export interface FileRoutesById {
   '/affiliate/syarat': typeof AffiliateSyaratRoute
   '/api/checkout': typeof ApiCheckoutRoute
   '/api/confirm-payment': typeof ApiConfirmPaymentRoute
-  '/api/debug-env': typeof ApiDebugEnvRoute
   '/api/shop-checkout': typeof ApiShopCheckoutRoute
   '/api/temporary-unlock': typeof ApiTemporaryUnlockRoute
   '/bayaran/selesai': typeof BayaranSelesaiRoute
@@ -780,7 +771,6 @@ export interface FileRouteTypes {
     | '/affiliate/syarat'
     | '/api/checkout'
     | '/api/confirm-payment'
-    | '/api/debug-env'
     | '/api/shop-checkout'
     | '/api/temporary-unlock'
     | '/bayaran/selesai'
@@ -860,7 +850,6 @@ export interface FileRouteTypes {
     | '/affiliate/syarat'
     | '/api/checkout'
     | '/api/confirm-payment'
-    | '/api/debug-env'
     | '/api/shop-checkout'
     | '/api/temporary-unlock'
     | '/bayaran/selesai'
@@ -940,7 +929,6 @@ export interface FileRouteTypes {
     | '/affiliate/syarat'
     | '/api/checkout'
     | '/api/confirm-payment'
-    | '/api/debug-env'
     | '/api/shop-checkout'
     | '/api/temporary-unlock'
     | '/bayaran/selesai'
@@ -1021,7 +1009,6 @@ export interface RootRouteChildren {
   AffiliateSyaratRoute: typeof AffiliateSyaratRoute
   ApiCheckoutRoute: typeof ApiCheckoutRoute
   ApiConfirmPaymentRoute: typeof ApiConfirmPaymentRoute
-  ApiDebugEnvRoute: typeof ApiDebugEnvRoute
   ApiShopCheckoutRoute: typeof ApiShopCheckoutRoute
   ApiTemporaryUnlockRoute: typeof ApiTemporaryUnlockRoute
   BayaranSelesaiRoute: typeof BayaranSelesaiRoute
@@ -1317,13 +1304,6 @@ declare module '@tanstack/react-router' {
       path: '/api/confirm-payment'
       fullPath: '/api/confirm-payment'
       preLoaderRoute: typeof ApiConfirmPaymentRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/debug-env': {
-      id: '/api/debug-env'
-      path: '/api/debug-env'
-      fullPath: '/api/debug-env'
-      preLoaderRoute: typeof ApiDebugEnvRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/shop-checkout': {
@@ -1653,7 +1633,6 @@ const rootRouteChildren: RootRouteChildren = {
   AffiliateSyaratRoute: AffiliateSyaratRoute,
   ApiCheckoutRoute: ApiCheckoutRoute,
   ApiConfirmPaymentRoute: ApiConfirmPaymentRoute,
-  ApiDebugEnvRoute: ApiDebugEnvRoute,
   ApiShopCheckoutRoute: ApiShopCheckoutRoute,
   ApiTemporaryUnlockRoute: ApiTemporaryUnlockRoute,
   BayaranSelesaiRoute: BayaranSelesaiRoute,
